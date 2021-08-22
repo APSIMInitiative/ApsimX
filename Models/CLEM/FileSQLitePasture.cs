@@ -33,11 +33,8 @@ namespace Models.CLEM
     [HelpUri(@"Content/Features/DataReaders/PastureDataReaderSQL.htm")]
     public class FileSQLitePasture : CLEMModel, IFilePasture, IValidatableObject
     {
-        /// <summary>
-        /// A link to the clock model.
-        /// </summary>
         [Link]
-        private readonly Clock clock = null;
+        private Clock clock = null;
 
         private List<ValidationResult> validationResults;
         private RainfallShuffler shuffler = null;

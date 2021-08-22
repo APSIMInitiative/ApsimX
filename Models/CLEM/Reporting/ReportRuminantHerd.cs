@@ -25,7 +25,7 @@ namespace Models.CLEM.Reporting
     public class ReportRuminantHerd : CLEMModel
     {
         [Link]
-        private ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
         private RuminantHerd ruminantHerd;
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("CLEMValidate")]
         private void OncCLEMValidate(object sender, EventArgs e)
         {
-            ruminantHerd = Resources.FindResourceGroup<RuminantHerd>();
+            ruminantHerd = resources.FindResourceGroup<RuminantHerd>();
             ReportHerd();
         }
 

@@ -41,54 +41,6 @@ namespace Models.CLEM.Activities
             TransactionCategory = "Folder";
         }
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
         #region descriptive summary
 
         /// <summary>

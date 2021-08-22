@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -27,15 +28,15 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBuySell.htm")]
     public class RuminantActivityBuySell : CLEMRuminantActivityBase
     {
+        private FinanceType bankAccount = null;
+        private TruckingSettings trucking = null;
+
         /// <summary>
         /// Bank account to use
         /// </summary>
         [Description("Bank account to use")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
         public string BankAccountName { get; set; }
-
-        private FinanceType bankAccount = null;
-        private TruckingSettings trucking = null;
 
         /// <summary>
         /// Constructor
@@ -58,14 +59,10 @@ namespace Models.CLEM.Activities
             if (Resources.ResourceItemsExist<Finance>())
             {
                 if (BankAccountName == "")
-                {
                     Summary.WriteWarning(this, $"No bank account has been specified in [a={this.Name}] while Finances are available in the simulation. No financial transactions will be recorded for the purchase and sale of animals.");
-                }
             }
             if (BankAccountName != "")
-            {
-                bankAccount = Resources.GetResourceItem(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
-            }
+                bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // get trucking settings
             trucking = this.FindAllChildren<TruckingSettings>().FirstOrDefault() as TruckingSettings;
@@ -75,12 +72,8 @@ namespace Models.CLEM.Activities
             {
                 var breeds = HerdResource.Herd.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).GroupBy(a => a.HerdName);
                 foreach (var herd in breeds)
-                {
                     if (!herd.FirstOrDefault().BreedParams.PricingAvailable())
-                    {
                         Summary.WriteWarning(this, String.Format("No pricing schedule has been provided for herd [r={0}]. No transactions will be recorded for activity [a={1}]", herd.Key, this.Name));
-                    }
-                }
             }
         }
 
@@ -93,13 +86,9 @@ namespace Models.CLEM.Activities
             if (TimingOK)
             {
                 if (trucking == null)
-                {
                     BuyWithoutTrucking();
-                }
                 else
-                {
                     BuyWithTrucking();
-                }
             }
         }
 
@@ -128,9 +117,7 @@ namespace Models.CLEM.Activities
 
             // no individuals to sell
             if(herd.Count() == 0)
-            {
                 return;
-            }
 
             List<Ruminant> soldIndividuals = new List<Ruminant>();
 
@@ -143,9 +130,8 @@ namespace Models.CLEM.Activities
                     aESum += ind.AdultEquivalent;
                     var pricing = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
                     if (pricing != null)
-                    {
                         saleValue += pricing.CalculateValue(ind);
-                    }
+
                     saleWeight += ind.Weight;
                     soldIndividuals.Add(ind);
                     HerdResource.RemoveRuminant(ind, this);
@@ -198,7 +184,6 @@ namespace Models.CLEM.Activities
                 }
             }
             
-            
             if (bankAccount != null && head > 0) //(trucks > 0 || trucking == null)
             {
                 ResourceRequest expenseRequest = new ResourceRequest
@@ -227,12 +212,8 @@ namespace Models.CLEM.Activities
                     //bankAccount.Add(saleValue, this, this.PredictedHerdName, TransactionCategory);
                     var groupedIndividuals = HerdResource.SummarizeIndividualsByGroups(soldIndividuals, PurchaseOrSalePricingStyleType.Sale);
                     foreach (var item in groupedIndividuals)
-                    {
                         foreach (var item2 in item.RuminantTypeGroup)
-                        {
                             bankAccount.Add(item2.TotalPrice, this, item.RuminantTypeName, $"{TransactionCategory}.{item2.GroupName}");
-                        }
-                    }
                 }
 
                 // perform activity fee payments
@@ -271,22 +252,17 @@ namespace Models.CLEM.Activities
             if (herd.Count() > 0)
             {
                 if(this.Status!= ActivityStatus.Warning)
-                {
                     this.Status = ActivityStatus.Success;
-                }
             }
             else
-            {
                 return;
-            }
 
             List<Ruminant> boughtIndividuals = new List<Ruminant>();
 
             double fundsAvailable = 0;
             if (bankAccount != null)
-            {
                 fundsAvailable = bankAccount.FundsAvailable;
-            }
+
             double cost = 0;
             double shortfall = 0;
             bool fundsexceeded = false;
@@ -297,17 +273,12 @@ namespace Models.CLEM.Activities
                     double value = 0;
                     AnimalPriceGroup pricing = null;
                     if (newind.SaleFlag == HerdChangeReason.SirePurchase)
-                    {
                         pricing = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase, RuminantFilterParameters.IsSire, "true");
-                    }
                     else
-                    {
                         pricing = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase);
-                    }
+
                     if (pricing != null)
-                    {
                         value = pricing.CalculateValue(newind);
-                    }
 
                     if (cost + value <= fundsAvailable && fundsexceeded == false)
                     {
@@ -390,9 +361,7 @@ namespace Models.CLEM.Activities
             // get current untrucked list of animal purchases
             List<Ruminant> herd = HerdResource.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).OrderByDescending(a => a.Weight).ToList();
             if (herd.Count() == 0)
-            {
                 return;
-            }
 
             List<Ruminant> boughtIndividuals = new List<Ruminant>();
 
@@ -420,17 +389,12 @@ namespace Models.CLEM.Activities
                                 double value = 0;
                                 AnimalPriceGroup pricing = null;
                                 if (ind.SaleFlag == HerdChangeReason.SirePurchase)
-                                {
                                     pricing = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase, RuminantFilterParameters.IsSire, "true");
-                                }
                                 else
-                                {
                                     pricing = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase);
-                                }
+
                                 if (pricing != null)
-                                {
                                     value = pricing.CalculateValue(ind);
-                                }
 
                                 if (cost + value <= fundsAvailable && fundsexceeded == false)
                                 {
@@ -462,9 +426,7 @@ namespace Models.CLEM.Activities
                         break;
                     }
                     if (shortfall > 0)
-                    {
                         break;
-                    }
 
                     herd = HerdResource.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).OrderByDescending(a => a.Weight).ToList();
                 }
@@ -472,20 +434,14 @@ namespace Models.CLEM.Activities
                 if (Status != ActivityStatus.Warning)
                 {
                     if(HerdResource.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).Count() == 0)
-                    {
                         SetStatusSuccess();
-                    }
                     else
-                    {
                         Status = ActivityStatus.Partial;
-                    }
                 }
 
                 // create trucking emissions
                 if (trucking != null && trucks > 0 )
-                {
                     trucking.ReportEmissions(trucks, false);
-                }
 
                 if (bankAccount != null && (trucks > 0 || trucking == null))
                 {
@@ -547,15 +503,7 @@ namespace Models.CLEM.Activities
                 }
             }
             else
-            {
                 this.Status = ActivityStatus.Warning;
-            }
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
         }
 
         /// <inheritdoc/>
@@ -574,18 +522,14 @@ namespace Models.CLEM.Activities
                 case LabourUnitType.perHead:
                     numberUnits = head / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
 
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perAE:
                     numberUnits = animalEquivalents / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
 
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
@@ -602,58 +546,18 @@ namespace Models.CLEM.Activities
             return; 
         }
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        #region transactions
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
-        #endregion
-
         #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            html += "\r\n<div class=\"activityentry\">Purchases and sales will use ";
-            if (BankAccountName == null || BankAccountName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Purchases and sales will use ");
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(BankAccountName, "Not set", HTMLSummaryStyle.Resource));
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString();
             }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + BankAccountName + "</span>";
-            }
-            html += "</div>";
-
-            return html;
         } 
         #endregion
     }

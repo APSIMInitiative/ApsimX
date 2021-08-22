@@ -30,7 +30,7 @@ namespace Models.CLEM.Activities
         private LabourRequirement labourRequirement;
 
         /// <summary>
-        /// Name of Porcust store to place clip (with Resource Group name appended to the front [separated with a '.'])
+        /// Name of Product store to place clip (with Resource Group name appended to the front [separated with a '.'])
         /// </summary>
         [Description("Store to place clip")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(ProductStore) } })]
@@ -38,7 +38,7 @@ namespace Models.CLEM.Activities
         public string ProductStoreName { get; set; }
 
         /// <summary>
-        /// Feed type
+        /// Produc store for clip
         /// </summary>
         [JsonIgnore]
         public ProductStoreType StoreType { get; set; }
@@ -61,13 +61,7 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(true, true);
 
             // locate StoreType resource
-            StoreType = Resources.GetResourceItem(this, ProductStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as ProductStoreType;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
+            StoreType = Resources.FindResourceType<ProductStore, ProductStoreType>(this, ProductStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <inheritdoc/>
@@ -90,18 +84,14 @@ namespace Models.CLEM.Activities
                     case LabourUnitType.perHead:
                         numberUnits = head / requirement.UnitSize;
                         if (requirement.WholeUnitBlocks)
-                        {
                             numberUnits = Math.Ceiling(numberUnits);
-                        }
 
                         daysNeeded = numberUnits * requirement.LabourPerUnit;
                         break;
                     case LabourUnitType.perAE:
                         numberUnits = adultEquivalents / requirement.UnitSize;
                         if (requirement.WholeUnitBlocks)
-                        {
                             numberUnits = Math.Ceiling(numberUnits);
-                        }
 
                         daysNeeded = numberUnits * requirement.LabourPerUnit;
                         break;
@@ -111,9 +101,7 @@ namespace Models.CLEM.Activities
                     case LabourUnitType.perUnit:
                         numberUnits = herd.Sum(a => a.Wool) / requirement.UnitSize;
                         if (requirement.WholeUnitBlocks)
-                        {
                             numberUnits = Math.Ceiling(numberUnits);
-                        }
 
                         daysNeeded = numberUnits * requirement.LabourPerUnit;
                         break;
@@ -130,12 +118,8 @@ namespace Models.CLEM.Activities
             //add limit to amount collected based on labour shortfall
             double labourLimit = this.LabourLimitProportion;
             foreach (ResourceRequest item in ResourceRequestList)
-            {
                 if (item.ResourceType != typeof(LabourType))
-                {
                     item.Required *= labourLimit;
-                }
-            }
             return;
         }
 
@@ -171,9 +155,7 @@ namespace Models.CLEM.Activities
                             foreach (var item in herd)
                             {
                                 if(aETrack + item.AdultEquivalent > aELimit)
-                                {
                                     break;
-                                }
                                 aETrack += item.AdultEquivalent;
                                 woolTotal += item.Wool;
                                 item.Wool = 0;
@@ -186,9 +168,7 @@ namespace Models.CLEM.Activities
                             foreach (var item in herd)
                             {
                                 if (kgTrack + item.Wool > kgLimit)
-                                {
                                     break;
-                                }
                                 kgTrack += item.Wool;
                                 woolTotal += item.Wool;
                                 item.Wool = 0;
@@ -198,17 +178,14 @@ namespace Models.CLEM.Activities
                             // stop shearing when unit limit reached
                             double unitLimit = herd.Sum(a => a.Wool) / labourRequirement.UnitSize  * LabourLimitProportion;
                             if(labourRequirement.WholeUnitBlocks)
-                            {
                                 unitLimit = Math.Floor(unitLimit);
-                            }
+
                             kgLimit = unitLimit * labourRequirement.UnitSize;
                             kgTrack = 0;
                             foreach (var item in herd)
                             {
                                 if (kgTrack + item.Wool > kgLimit)
-                                {
                                     break;
-                                }
                                 kgTrack += item.Wool;
                                 woolTotal += item.Wool;
                                 item.Wool = 0;
@@ -226,30 +203,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
         #region descriptive summary
 
         /// <inheritdoc/>
@@ -257,15 +210,7 @@ namespace Models.CLEM.Activities
         {
             string html = "";
             html += "\r\n<div class=\"activityentry\">Shear selected herd and place clip in ";
-
-            if (ProductStoreName == null || ProductStoreName == "")
-            {
-                html += "<span class=\"errorlink\">[Store TYPE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + ProductStoreName + "</span>";
-            }
+            html += CLEMModel.DisplaySummaryValueSnippet(ProductStoreName, "Store Type not set");
             html += "</div>";
             return html;
         } 

@@ -34,9 +34,9 @@ namespace Models.CLEM.Reporting
     public class ReportResourceBalances: Models.Report, ICLEMUI
     {
         [Link]
-        private ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
         [Link]
-        private Summary Summary = null;
+        private Summary summary = null;
 
         /// <summary>
         /// Gets or sets report groups for outputting
@@ -134,10 +134,10 @@ namespace Models.CLEM.Reporting
                         else
                         {
                             // check it is a ResourceGroup
-                            CLEMModel model = Resources.GetResourceGroupByName(this.ResourceGroupsToReport[i]) as CLEMModel;
+                            CLEMModel model = resources.GetResourceGroupByName(this.ResourceGroupsToReport[i]) as CLEMModel;
                             if (model == null)
                             {
-                                Summary.WriteWarning(this, $"Invalid resource group [r={this.ResourceGroupsToReport[i]}] in ReportResourceBalances [{this.Name}]{Environment.NewLine}Entry has been ignored");
+                                summary.WriteWarning(this, $"Invalid resource group [r={this.ResourceGroupsToReport[i]}] in ReportResourceBalances [{this.Name}]{Environment.NewLine}Entry has been ignored");
                             }
                             else
                             {

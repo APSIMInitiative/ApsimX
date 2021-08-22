@@ -44,42 +44,6 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
         public override void DoActivity()
         {
             Status = ActivityStatus.NotNeeded;
@@ -134,19 +98,11 @@ namespace Models.CLEM.Activities
                                 }
                             }
                             else
-                            {
                                 Status = ActivityStatus.Success;
-                            }
                         }
                     }
                 }
             }
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
         }
 
         #region descriptive summary
@@ -164,35 +120,23 @@ namespace Models.CLEM.Activities
                     resHolder = clemParent.FindAllChildren<ResourcesHolder>().FirstOrDefault() as ResourcesHolder;
                     finance = resHolder.FindResourceGroup<Finance>();
                     if (!finance.Enabled)
-                    {
                         finance = null;
-                    }
                 }
 
                 if (finance == null)
-                {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not required as no <span class=\"resourcelink\">Finance</span> resource is available.</div>");
-                }
                 else
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">Interest rates are set in the <span class=\"resourcelink\">FinanceType</span> component</div>");
                     foreach (FinanceType accnt in finance.FindAllChildren<FinanceType>().Where(a => a.Enabled))
                     {
                         if (accnt.InterestRateCharged == 0 & accnt.InterestRatePaid == 0)
-                        {
                             htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not needed for <span class=\"resourcelink\">" + accnt.Name + "</span> as no interest rates are set.</div>");
-                        }
                         else
-                        {
                             if (accnt.InterestRateCharged > 0)
-                            {
                                 htmlWriter.Write("\r\n<div class=\"activityentry\">This activity will calculate interest charged for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRateCharged.ToString("#.00") + "</span>%</div>");
-                            }
                             else
-                            {
                                 htmlWriter.Write("\r\n<div class=\"activityentry\">This activity will calculate interest paid for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRatePaid.ToString("#.00") + "</span>%</div>");
-                            }
-                        }
                     }
                 }
                 return htmlWriter.ToString(); 

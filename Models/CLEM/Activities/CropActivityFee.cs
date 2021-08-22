@@ -23,6 +23,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class CropActivityFee: CLEMActivityBase, IValidatableObject
     {
+        private string relatesToResourceName = "";
+
         /// <summary>
         /// Account to use
         /// </summary>
@@ -51,8 +53,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public FinanceType BankAccount { get; set; }
 
-        private string RelatesToResourceName = "";
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -69,9 +69,9 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            BankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
+            BankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
 
-            RelatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
+            relatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
         }
 
         #region validation
@@ -134,55 +134,20 @@ namespace Models.CLEM.Activities
                 }
                 resourcesNeeded.Add(new ResourceRequest()
                 {
+                    Resource = BankAccount,
                     AllowTransmutation = false,
                     Required = sumneeded,
                     ResourceType = typeof(Finance),
                     ResourceTypeName = AccountName,
                     ActivityModel = this,
                     FilterDetails = null,
-                    RelatesToResource = RelatesToResourceName,
+                    RelatesToResource = relatesToResourceName,
                     Category = TransactionCategory
                 }
                 );
                 return resourcesNeeded;
             }
             return null;
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
         }
 
         #region descriptive summary
