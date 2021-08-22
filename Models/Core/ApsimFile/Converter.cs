@@ -6,6 +6,7 @@
     using Models.Functions;
     using Models.LifeCycle;
     using Models.PMF;
+    using Models.PMF.Interfaces;
     using Models.Soils;
     using Newtonsoft.Json.Linq;
     using System;
@@ -23,7 +24,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 138; } }
+        public static int LatestVersion { get { return 139; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3554,6 +3555,95 @@
                     sugar["IncludeInDocumentation"] = true;
                     sugar["Enabled"] = true;
                     sugar["ReadOnly"] = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add priority factor functions into each demand function 
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion139(JObject root, string fileName)
+        {
+            foreach (JObject organ in JsonUtilities.ChildrenInNameSpace(root, "Models.PMF.Organs"))
+            {
+                // Add priority factors to leaf and reproductive organ where they are currently optional
+                if ((JsonUtilities.Type(organ) == "Leaf") || (JsonUtilities.Type(organ) == "ReproductiveOrgan"))
+                {
+                    JObject PriorityFactors = JsonUtilities.ChildWithName(organ, "dmDemandPriorityFactors");
+                    if (PriorityFactors == null)
+                    {
+                        PriorityFactors = JsonUtilities.ChildWithName(organ, "DMDemandPriorityFactors");
+                    }
+                    if (PriorityFactors == null)
+                    {
+                        JObject PFactors = new JObject();
+                        PFactors["$type"] = "Models.PMF.BiomassDemand, Models";
+                        PFactors["Name"] = "DMDemandPriorityFactors";
+                        JsonUtilities.AddConstantFunctionIfNotExists(PFactors, "Structural", "1");
+                        JsonUtilities.AddConstantFunctionIfNotExists(PFactors, "Metabolic", "1");
+                        JsonUtilities.AddConstantFunctionIfNotExists(PFactors, "Storage", "1");
+                        (organ["Children"] as JArray).Add(PFactors);
+                    }
+
+                    JObject NPFactors = new JObject();
+                    NPFactors["$type"] = "Models.PMF.BiomassDemand, Models";
+                    NPFactors["Name"] = "NDemandPriorityFactors";
+                    JsonUtilities.AddConstantFunctionIfNotExists(NPFactors, "Structural", "1");
+                    JsonUtilities.AddConstantFunctionIfNotExists(NPFactors, "Metabolic", "1");
+                    JsonUtilities.AddConstantFunctionIfNotExists(NPFactors, "Storage", "1");
+                    (organ["Children"] as JArray).Add(NPFactors);
+                }
+                else if ((JsonUtilities.Type(organ) == "SimpleLeaf") || (JsonUtilities.Type(organ) == "GenericOrgan")
+                    || (JsonUtilities.Type(organ) == "Root"))
+                // Move proority factors into Demand node and add if not currently there
+                {
+                    JObject PriorityFactors = JsonUtilities.ChildWithName(organ, "DMDemandPriorityFactors");
+                    if (PriorityFactors != null)
+                    {
+                        JsonUtilities.RemoveChild(organ, "DMDemandPriorityFactors");
+                    }
+                    if (PriorityFactors == null)
+                    {
+                        PriorityFactors = JsonUtilities.ChildWithName(organ, "dmDemandPriorityFactors");
+
+                        if (PriorityFactors != null)
+                        {
+                            JsonUtilities.RemoveChild(organ, "dmDemandPriorityFactors");
+                        }
+                    }
+                    JObject DMDemands = JsonUtilities.ChildWithName(organ, "DMDemands");
+                    if (DMDemands != null)
+                    {
+                        DMDemands["$type"] = "Models.PMF.BiomassDemandAndPriority, Models";
+                        if (PriorityFactors != null)
+                        {
+                            JObject Structural = JsonUtilities.ChildWithName(PriorityFactors, "Structural");
+                            Structural["Name"] = "QStructuralPriority";
+                            (DMDemands["Children"] as JArray).Add(Structural);
+                            JObject Metabolic = JsonUtilities.ChildWithName(PriorityFactors, "Metabolic");
+                            Metabolic["Name"] = "QMetabolicPriority";
+                            (DMDemands["Children"] as JArray).Add(Metabolic);
+                            JObject Storage = JsonUtilities.ChildWithName(PriorityFactors, "Storage");
+                            Storage["Name"] = "QStoragePriority";
+                            (DMDemands["Children"] as JArray).Add(Storage);
+                        }
+                        else
+                        {
+                            JsonUtilities.AddConstantFunctionIfNotExists(DMDemands, "QStructuralPriority", "1");
+                            JsonUtilities.AddConstantFunctionIfNotExists(DMDemands, "QMetabolicPriority", "1");
+                            JsonUtilities.AddConstantFunctionIfNotExists(DMDemands, "QStoragePriority", "1");
+                        }
+                    }
+                    JObject NDemands = JsonUtilities.ChildWithName(organ, "NDemands");
+                    if (NDemands != null)
+                    {
+                        NDemands["$type"] = "Models.PMF.BiomassDemandAndPriority, Models";
+                        JsonUtilities.AddConstantFunctionIfNotExists(NDemands, "QStructuralPriority", "1");
+                        JsonUtilities.AddConstantFunctionIfNotExists(NDemands, "QMetabolicPriority", "1");
+                        JsonUtilities.AddConstantFunctionIfNotExists(NDemands, "QStoragePriority", "1");
+                    }
                 }
             }
         }

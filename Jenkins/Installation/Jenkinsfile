@@ -10,6 +10,7 @@ pipeline {
 					environment {
 						APSIM_SITE_CREDS = credentials('apsim-site-creds')
 						SOYBEAN_PASSWORD = credentials('soybean-validation-password')
+						CORNSOY_PASSWORD = credentials('cornsoy-archive-password')
 						GRAPEVINE_PASSWORD = credentials('grapevine-validation-password')
 						NPI_PASSWORD = credentials('npi-archive-password')
 					}
