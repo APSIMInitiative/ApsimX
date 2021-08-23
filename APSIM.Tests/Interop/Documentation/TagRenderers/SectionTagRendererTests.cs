@@ -18,6 +18,9 @@ namespace APSIM.Tests.Interop.Documentation.TagRenderers
     /// <summary>
     /// Tests for the <see cref="PdfBuilder"/> class.
     /// </summary>
+    /// <remarks>
+    /// todo: mock out PdfBuilder API.
+    /// </remarks>
     [TestFixture]
     public class SectionTagRendererTests
     {
