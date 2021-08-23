@@ -75,16 +75,10 @@
       "MinimumGreenWt": 50.0,
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
-      "PhotosyntheticEfficiency": 0.01,
-      "PhotosynthesisCurveFactor": 0.8,
-      "FractionPAR": 0.5,
-      "LightExtinctionCoefficients": 0.6,
-      "ReferenceCO2": 380.0,
       "CO2EffectScaleFactor": 150.0,
       "CO2EffectOffsetFactor": 600.0,
       "CO2EffectMinimum": 0.7,
       "CO2EffectExponent": 2.0,
-      "NuptakeSWFactor": 0.25,
       "Name": "AGPPaspalum",
       "Children": [
         {
