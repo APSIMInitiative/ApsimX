@@ -66,7 +66,7 @@ namespace APSIM.Tests.Interop.Documentation.TagRenderers
         public void SetUp()
         {
             document = new MigraDocCore.DocumentObjectModel.Document();
-            // Workaround for a quick in the migradoc API.
+            // Workaround for a quirk in the migradoc API.
             _ = document.AddSection().Elements;
             pdfBuilder = new PdfBuilder(document, PdfOptions.Default);
             pdfBuilder.UseTagRenderer(new MockTagRenderer());

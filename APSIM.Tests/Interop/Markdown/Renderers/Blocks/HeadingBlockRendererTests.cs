@@ -45,8 +45,32 @@ namespace APSIM.Tests.Interop.Markdown.Renderers.Blocks
         public void Setup()
         {
             document = new MigraDocCore.DocumentObjectModel.Document();
+            // Workaround for a quirk in the migradoc API.
+            _ = document.AddSection().Elements;
             pdfBuilder = new PdfBuilder(document, PdfOptions.Default);
             renderer = new HeadingBlockRenderer();
+        }
+
+        /// <summary>
+        /// Ensure that an empty heading block is not written to the document.
+        /// </summary>
+        [Test]
+        public void EnsureEmptyHeadingNotWritten()
+        {
+            HeadingBlock block = new HeadingBlock(new HeadingBlockParser()) { Level = 1, Inline = new ContainerInline() };
+            renderer.Write(pdfBuilder, block);
+            Assert.AreEqual(0, document.LastSection.Elements.Count);
+        }
+
+        /// <summary>
+        /// Ensure that passing a heading block with a negative heading level into
+        /// the HeadingBlockRenderer will trigger an exception.
+        /// </summary>
+        [Test]
+        public void EnsureNegativeHeadingLevelThrows()
+        {
+            HeadingBlock block = CreateHeading("heading", -1);
+            Assert.Throws<InvalidOperationException>(() => renderer.Write(pdfBuilder, block));
         }
 
         /// <summary>

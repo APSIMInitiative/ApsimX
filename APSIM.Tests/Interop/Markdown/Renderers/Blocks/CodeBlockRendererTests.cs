@@ -51,6 +51,7 @@ namespace APSIM.Tests.Interop.Markdown.Renderers.Blocks
         public void Setup()
         {
             document = new MigraDocCore.DocumentObjectModel.Document();
+            // Workaround for a quirk in the migradoc API.
             _ = document.AddSection().Elements;
             pdfBuilder = new PdfBuilder(document, PdfOptions.Default);
             renderer = new CodeBlockRenderer();

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using Markdig.Syntax;
 
 namespace APSIM.Interop.Markdown.Renderers.Blocks
@@ -18,13 +19,16 @@ namespace APSIM.Interop.Markdown.Renderers.Blocks
             if (heading.Level < 0)
                 throw new InvalidOperationException($"Heading level is negative (heading text: '{heading}')");
 
-            renderer.StartNewParagraph();
+            if (heading.Inline.Any())
+            {
+                renderer.StartNewParagraph();
 
-            renderer.SetHeadingLevel((uint)heading.Level);
-            renderer.WriteChildren(heading.Inline);
-            renderer.ClearHeadingLevel();
+                renderer.SetHeadingLevel((uint)heading.Level);
+                renderer.WriteChildren(heading.Inline);
+                renderer.ClearHeadingLevel();
 
-            renderer.StartNewParagraph();
+                renderer.StartNewParagraph();
+            }
         }
     }
 }
