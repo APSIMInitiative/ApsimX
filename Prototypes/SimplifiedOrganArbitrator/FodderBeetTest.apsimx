@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 281,
   "Version": 139,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -137,7 +137,7 @@
           "Name": "FodderBeet",
           "Children": [
             {
-              "$type": "Models.PMF.OrganArbitrator, Models",
+              "$type": "Models.PMF.BiomassArbitrator, Models",
               "Name": "Arbitrator",
               "Children": [
                 {
