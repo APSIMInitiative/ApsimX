@@ -39,6 +39,17 @@ namespace APSIM.Interop.Markdown.Renderers
     /// </summary>
     public class PdfBuilder : RendererBase
     {
+#if NETCOREAPP
+        /// <summary>
+        /// Static constructor to initialise PDFSharp ImageSource.
+        /// </summary>
+        static PdfBuilder()
+        {
+            if (ImageSource.ImageSourceImpl == null)
+                ImageSource.ImageSourceImpl = new PdfSharpCore.Utils.ImageSharpImageSource<SixLabors.ImageSharp.PixelFormats.Rgba32>();
+        }
+#endif
+
         /// <summary>
         /// This struct describes a link in the PDF document. This provides
         /// a convenient way to insert multiple pieces of formatted text
@@ -756,8 +767,6 @@ namespace APSIM.Interop.Markdown.Renderers
             // Note: the first argument passed to the FromStream() function
             // is the name of the image. Thist must be unique throughout the document,
             // otherwise you will run into problems with duplicate imgages.
-            if (ImageSource.ImageSourceImpl == null)
-                ImageSource.ImageSourceImpl = new PdfSharpCore.Utils.ImageSharpImageSource<SixLabors.ImageSharp.PixelFormats.Rgba32>();
             IImageSource imageSource = ImageSource.FromStream(Guid.NewGuid().ToString().Replace("-", ""), () =>
             {
                 image = ReadAndResizeImage(image, pageWidth, pageHeight);

@@ -51,14 +51,27 @@ namespace APSIM.Tests.Interop.Documentation.TagRenderers
             renderer = new GraphTagRenderer(mockExporter.Object);
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            image.Dispose();
+        }
+
         [Test]
-        public void Test()
+        public void EnsureGraphImageIsAdded()
         {
             renderer.Render(graph, pdfBuilder);
 
             List<Paragraph> paragraphs = document.LastSection.Elements.OfType<Paragraph>().ToList();
             Assert.AreEqual(1, paragraphs.Count);
-            Assert.AreEqual(image, paragraphs[0].Elements.OfType<MigraDocCore.DocumentObjectModel.Shapes.Image>().First());
+            var actual = paragraphs[0].Elements.OfType<MigraDocCore.DocumentObjectModel.Shapes.Image>().First();
+            Assert.NotNull(actual);
+
+            // Note: actual.Width is not the actual width in this case (that would be too easy);
+            // instead, it represents a custom user-settable width. We're more interested in the
+            // width of the underlying image.
+            Assert.AreEqual(image.Width, actual.Source.Width);
+            Assert.AreEqual(image.Height, actual.Source.Height);
         }
     }
 }

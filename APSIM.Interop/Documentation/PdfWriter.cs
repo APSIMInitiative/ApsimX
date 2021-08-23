@@ -25,17 +25,6 @@ namespace APSIM.Interop.Documentation
     /// </summary>
     public class PdfWriter
     {
-#if NETCOREAPP
-        /// <summary>
-        /// Static constructor to initialise PDFSharp ImageSource.
-        /// </summary>
-        static PdfWriter()
-        {
-            if (ImageSource.ImageSourceImpl == null)
-                ImageSource.ImageSourceImpl = new PdfSharpCore.Utils.ImageSharpImageSource<Rgba32>();
-        }
-#endif
-
         /// <summary>
         /// PDF generation options.
         /// </summary>
