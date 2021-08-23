@@ -47,7 +47,7 @@ namespace APSIM.Interop.Documentation.Renderers
             height /= 3;
 
             renderer.StartNewParagraph();
-            foreach (Graph graph in page.Graphs)
+            foreach (IGraph graph in page.Graphs)
             {
                 var model = exporter.ToPlotModel(graph);
                 if (model is OxyPlot.PlotModel plot)

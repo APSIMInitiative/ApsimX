@@ -11,13 +11,13 @@ namespace APSIM.Services.Documentation
         /// <summary>
         /// The graphs to be displayed.
         /// </summary>
-        public IEnumerable<Graph> Graphs { get; private set; }
+        public IEnumerable<IGraph> Graphs { get; private set; }
 
         /// <summary>
         /// Constructs a graph tag instance.
         /// </summary>
         /// <param name="graphs">Graphs to be displayed.</param>
         /// <param name="indent">Indentation level.</param>
-        public GraphPage(IEnumerable<Graph> graphs) => Graphs = graphs;
+        public GraphPage(IEnumerable<IGraph> graphs) => Graphs = graphs;
     }
 }
