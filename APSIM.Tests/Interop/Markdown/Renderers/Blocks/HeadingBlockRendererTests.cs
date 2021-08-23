@@ -1,14 +1,11 @@
 using NUnit.Framework;
 using APSIM.Interop.Documentation;
 using APSIM.Interop.Markdown.Renderers;
-using APSIM.Services.Documentation;
-using APSIM.Interop.Documentation.Renderers;
 using Document = MigraDocCore.DocumentObjectModel.Document;
 using Paragraph = MigraDocCore.DocumentObjectModel.Paragraph;
 using FormattedText = MigraDocCore.DocumentObjectModel.FormattedText;
 using APSIM.Interop.Markdown.Renderers.Blocks;
 using Markdig.Syntax;
-using Moq;
 using System;
 using Markdig.Parsers;
 using Markdig.Syntax.Inlines;
@@ -146,6 +143,27 @@ namespace APSIM.Tests.Interop.Markdown.Renderers.Blocks
             // heading0 is heading level 1, so should haved larger font size than
             // heading1, which is a level 2 heading.
             Assert.Greater(fontSize0, fontSize1);
+        }
+
+        /// <summary>
+        /// Ensure that any content added to the document after the heading block
+        /// doesn't retain the style applied to the heading block.
+        /// </summary>
+        [Test]
+        public void EnsureHeadingStyleNotAppliedToSubsequentInsertions()
+        {
+            renderer.Write(pdfBuilder, CreateHeading("sample heading"));
+            pdfBuilder.AppendText("a new paragraph", TextStyle.Normal);
+
+            Paragraph headingParagraph = (Paragraph)document.LastSection.Elements[0];
+            FormattedText headingText = (FormattedText)headingParagraph.Elements[0];
+            double headingTextSize = document.Styles[headingText.Style].Font.Size.Point;
+
+            Paragraph plainParagraph = (Paragraph)document.LastSection.Elements[1];
+            FormattedText plainText = (FormattedText)plainParagraph.Elements[0];
+            double plainTextSize = document.Styles[plainText.Style].Font.Size.Point;
+
+            Assert.Greater(headingTextSize, plainTextSize);
         }
 
         /// <summary>
