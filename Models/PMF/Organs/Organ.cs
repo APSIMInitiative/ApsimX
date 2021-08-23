@@ -58,7 +58,7 @@
         /// <summary>The DM retranslocation factor</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
-        public IFunction DMRetranslocationFactor = null;
+        public IFunction dmRetranslocationFactor = null;
 
         /// <summary>The DM reallocation factor</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -124,10 +124,6 @@
         [Units("g/m2")]
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction Photosynthesis = null;
-
-        /// <summary>The RetranslocationMethod</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IRetranslocateMethod RetranslocateNitrogen = null;
 
         /// <summary>The live biomass state at start of the computation round</summary>
         public Biomass StartLive = null;
@@ -254,7 +250,11 @@
         /// <summary>Computes the amount of DM available for retranslocation.</summary>
         public double AvailableDMRetranslocation()
         {
-            return RetranslocateNitrogen.CalculateBiomass(this);
+            double availableDM = (StartLive.StorageWt - DMSupply.Reallocation) * dmRetranslocationFactor.Value();
+            if (availableDM < -BiomassToleranceValue)
+                throw new Exception("Negative DM reallocation value computed for " + Name);
+
+            return availableDM;
         }
 
         /// <summary>Computes the amount of DM available for reallocation.</summary>
@@ -285,10 +285,9 @@
             if (NSupply.Reallocation < -BiomassToleranceValue)
                 throw new Exception("Negative N reallocation value computed for " + Name);
 
-            NSupply.Retranslocation = RetranslocateNitrogen.Calculate(this);
+            NSupply.Retranslocation = Math.Max(0, (StartLive.StorageN + StartLive.MetabolicN) * (1 - SenescenceRate.Value()) * NRetranslocationFactor.Value()); ;
             if (NSupply.Retranslocation < -BiomassToleranceValue)
                 throw new Exception("Negative N retranslocation value computed for " + Name);
-
 
             NSupply.Fixation = 0;
             NSupply.Uptake = 0;
@@ -369,7 +368,22 @@
                 throw new Exception("Non structural DM allocation to " + Name + " is in excess of its capacity");
             // Allocated.StorageWt = dryMatter.Storage * dmConversionEfficiency.Value();
 
-            RetranslocateNitrogen.AllocateBiomass(this, dryMatter);
+            // Check retranslocation
+            if (MathUtilities.IsGreaterThan(dryMatter.Retranslocation, StartLive.StorageWt))
+                throw new Exception("Retranslocation exceeds non structural biomass in organ: " + Name);
+
+            double diffWt = dryMatter.Storage - dryMatter.Retranslocation;
+            if (diffWt > 0)
+            {
+                diffWt *= DMConversionEfficiency.Value();
+                GrowthRespiration += diffWt * growthRespFactor;
+            }
+            Allocated.StorageWt = diffWt;
+            Live.StorageWt += diffWt;
+            // allocate metabolic DM
+            Allocated.MetabolicWt = dryMatter.Metabolic * DMConversionEfficiency.Value();
+            GrowthRespiration += Allocated.MetabolicWt * growthRespFactor;
+            Live.MetabolicWt += Allocated.MetabolicWt;
         }
 
         /// <summary>Sets the n allocation.</summary>
@@ -384,7 +398,16 @@
             Allocated.StorageN += nitrogen.Storage;
             Allocated.MetabolicN += nitrogen.Metabolic;
 
-            RetranslocateNitrogen.Allocate(this, nitrogen);
+            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, StartLive.StorageN + StartLive.MetabolicN - NSupply.Reallocation))
+                throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
+
+            double storageRetranslocation = Math.Min(Live.StorageN, nitrogen.Retranslocation);
+            Live.StorageN -= storageRetranslocation;
+            Allocated.StorageN -= storageRetranslocation;
+
+            double metabolicRetranslocation = nitrogen.Retranslocation - storageRetranslocation;
+            Live.MetabolicN -= metabolicRetranslocation;
+            Allocated.MetabolicN -= metabolicRetranslocation;
 
             // Reallocation
             double senescedFrac = SenescenceRate.Value();
