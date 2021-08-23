@@ -43,9 +43,14 @@ namespace APSIM.Interop.Documentation.Extensions
             if (paragraph == null)
                 throw new ArgumentNullException(nameof(paragraph));
 
-            IEnumerable<Text> raw = paragraph.Elements.OfType<Text>();
-            IEnumerable<Text> formatted = paragraph.Elements.OfType<FormattedText>().SelectMany(f => f.Elements.OfType<Text>());
-            return formatted.Union(raw);
+            foreach (DocumentObject obj in paragraph.Elements)
+            {
+                if (obj is Text text)
+                    yield return text;
+                else if (obj is FormattedText formattedText)
+                    foreach (Text subtext in formattedText.Elements.OfType<Text>())
+                        yield return subtext;
+            }
         }
 
         /// <summary>

@@ -30,12 +30,12 @@ namespace APSIM.Tests.Interop.PdfRendering
 
         /// <summary>
         /// Ensure that calls to GetTextElements() fail with an appropriate
-        /// exception if we pass in a null section.
+        /// exception if we pass in a null paragraph.
         /// </summary>
         [Test]
         public void TestGetTextElementsNullParagraph()
         {
-            Assert.Throws<ArgumentNullException>(() => ParagraphExtensions.GetTextElements(null));
+            Assert.Throws<ArgumentNullException>(() => ParagraphExtensions.GetTextElements(null).ToArray());
         }
 
         /// <summary>
@@ -73,6 +73,27 @@ namespace APSIM.Tests.Interop.PdfRendering
         {
             document.LastSection.AddParagraph().AddFormattedText(text, format);
             Assert.AreEqual(text, document.LastSection.LastParagraph.GetRawText());
+        }
+
+        /// <summary>
+        /// Ensure that the GetRawTextElements() function will return
+        /// the text elements in the correct order.
+        /// </summary>
+        [Test]
+        public void TestGetTextElementsOrder()
+        {
+            Paragraph paragraph = document.LastSection.AddParagraph();
+            string text0 = "formatted text 0";
+            string text1 = "plaintext 1";
+            string text2 = "formatted text 2";
+            paragraph.AddFormattedText(text0);
+            paragraph.AddText(text1);
+            paragraph.AddFormattedText(text2);
+
+            Text[] elements = paragraph.GetTextElements().ToArray();
+            Assert.AreEqual(text0, elements[0].Content);
+            Assert.AreEqual(text1, elements[1].Content);
+            Assert.AreEqual(text2, elements[2].Content);
         }
 
         /// <summary>
