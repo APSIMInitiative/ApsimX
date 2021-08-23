@@ -1,0 +1,151 @@
+using NUnit.Framework;
+using APSIM.Interop.Documentation;
+using APSIM.Interop.Markdown.Renderers;
+using APSIM.Services.Documentation;
+using APSIM.Interop.Documentation.Renderers;
+using Document = MigraDocCore.DocumentObjectModel.Document;
+using Paragraph = MigraDocCore.DocumentObjectModel.Paragraph;
+using FormattedText = MigraDocCore.DocumentObjectModel.FormattedText;
+using APSIM.Interop.Markdown.Renderers.Blocks;
+using Markdig.Syntax;
+using Moq;
+using System;
+using Markdig.Parsers;
+using Markdig.Syntax.Inlines;
+using APSIM.Interop.Documentation.Extensions;
+using APSIM.Interop.Markdown;
+
+namespace APSIM.Tests.Interop.Markdown.Renderers.Blocks
+{
+    /// <summary>
+    /// Tests for <see cref="HeadingBlockRenderer"/>.
+    /// </summary>
+    [TestFixture]
+    public class HeadingBlockRendererTests
+    {
+        /// <summary>
+        /// PDF Builder API instance.
+        /// </summary>
+        private PdfBuilder pdfBuilder;
+
+        /// <summary>
+        /// MigraDoc document to which the renderer will write.
+        /// </summary>
+        private Document document;
+
+        /// <summary>
+        /// The <see cref="HeadingBlockRenderer"/> instance being tested.
+        /// </summary>
+        private HeadingBlockRenderer renderer;
+
+        /// <summary>
+        /// Initialise the testing environment.
+        /// </summary>
+        [SetUp]
+        public void Setup()
+        {
+            document = new MigraDocCore.DocumentObjectModel.Document();
+            pdfBuilder = new PdfBuilder(document, PdfOptions.Default);
+            renderer = new HeadingBlockRenderer();
+        }
+
+        /// <summary>
+        /// Ensure that all children of the heading are written as part of the heading.
+        /// </summary>
+        /// <remarks>
+        /// This test relies on <see cref="LiteralInlineRenderer"/>. It would be better
+        /// to mock out this dependency.
+        /// </remarks>
+        [Test]
+        public void EnsureChildrenIsWritten()
+        {
+            string text = "heading text";
+            renderer.Write(pdfBuilder, CreateHeading(text));
+            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
+            Assert.AreEqual($"1 {text}", paragraph.GetRawText());
+        }
+
+        /// <summary>
+        /// Ensure that heading text is not added to the previous paragraph of text.
+        /// </summary>
+        [Test]
+        public void EnsureHeadingGoesIntoNewParagraph()
+        {
+            // Append text to the document - this will cause a new paragraph to be created.
+            pdfBuilder.AppendText("some paragraph", TextStyle.Normal);
+
+            // Write the heading block.
+            renderer.Write(pdfBuilder, CreateHeading("contents"));
+
+            // There should be two paragraphs in the document.
+            Assert.AreEqual(2, document.LastSection.Elements.Count);
+        }
+
+        /// <summary>
+        /// Ensure that any content added after the heading does not go into the same
+        /// paragraph as the heading.
+        /// </summary>
+        [Test]
+        public void EnsureSubsequentContentGoesIntoNewParagraph()
+        {
+            // Write a heaing block.
+            renderer.Write(pdfBuilder, CreateHeading("a heading"));
+
+            // Write some text - should go in a new paragraph.
+            pdfBuilder.AppendText("this should be in a new paragraph", TextStyle.Normal);
+
+            // There should be two paragarphs in the document.
+            Assert.AreEqual(2, document.LastSection.Elements.Count);
+        }
+
+        /// <summary>
+        /// Ensure that the headings are added with the correct heading level.
+        /// </summary>
+        [Test]
+        public void EnsureHeadingLevelIsRespected()
+        {
+            renderer.Write(pdfBuilder, CreateHeading("heading level 1", 1));
+            renderer.Write(pdfBuilder, CreateHeading("heading level 2", 2));
+
+            Assert.AreEqual(2, document.LastSection.Elements.Count);
+
+            Paragraph paragraph0 = (Paragraph)document.LastSection.Elements[0];
+            Paragraph paragraph1 = (Paragraph)document.LastSection.Elements[1];
+
+            FormattedText text0 = (FormattedText)paragraph0.Elements[0];
+            FormattedText text1 = (FormattedText)paragraph1.Elements[0];
+
+            double fontSize0 = document.Styles[text0.Style].Font.Size.Point;
+            double fontSize1 = document.Styles[text1.Style].Font.Size.Point;
+
+            // heading0 is heading level 1, so should haved larger font size than
+            // heading1, which is a level 2 heading.
+            Assert.Greater(fontSize0, fontSize1);
+        }
+
+        /// <summary>
+        /// Create a HeadingBlock object which contains the specified plaintext.
+        /// </summary>
+        /// <param name="text">Text to go into the heading.</param>
+        private HeadingBlock CreateHeading(string text)
+        {
+            return CreateHeading(text, 1);
+        }
+
+        /// <summary>
+        /// Create a HeadingBlock object which contains the specified plaintext.
+        /// </summary>
+        /// <param name="text">Text to go into the heading.</param>
+        /// <param name="headingLevel">Heading level.</param>
+        private HeadingBlock CreateHeading(string text, int headingLevel)
+        {
+            return new HeadingBlock(new HeadingBlockParser())
+            {
+                HeaderChar = '#',
+                Level = headingLevel,
+                Inline = new ContainerInline().AppendChild(new LiteralInline(text))
+            };
+        }
+    }
+}
