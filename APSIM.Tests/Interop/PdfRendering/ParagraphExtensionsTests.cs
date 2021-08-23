@@ -76,6 +76,24 @@ namespace APSIM.Tests.Interop.PdfRendering
         }
 
         /// <summary>
+        /// Test GetRawText() on a paragraph with linebreaks.
+        /// </summary>
+        [Test]
+        public void TestParagraphWithLinebreaks()
+        {
+            Paragraph paragraph = document.LastSection.AddParagraph();
+            string text0 = "before line break";
+            string text1 = "\n";
+            string text2 = "afterlinebreak";
+            paragraph.AddText(text0);
+            paragraph.AddText(text1);
+            paragraph.AddText(text2);
+
+            string expected = $"{text0}{text1}{text2}";
+            Assert.AreEqual(expected, paragraph.GetRawText());
+        }
+
+        /// <summary>
         /// Ensure that the GetRawTextElements() function will return
         /// the text elements in the correct order.
         /// </summary>
@@ -90,10 +108,10 @@ namespace APSIM.Tests.Interop.PdfRendering
             paragraph.AddText(text1);
             paragraph.AddFormattedText(text2);
 
-            Text[] elements = paragraph.GetTextElements().ToArray();
-            Assert.AreEqual(text0, elements[0].Content);
-            Assert.AreEqual(text1, elements[1].Content);
-            Assert.AreEqual(text2, elements[2].Content);
+            string[] elements = paragraph.Elements.GetTextElements().ToArray();
+            Assert.AreEqual(text0, elements[0]);
+            Assert.AreEqual(text1, elements[1]);
+            Assert.AreEqual(text2, elements[2]);
         }
 
         /// <summary>
@@ -162,10 +180,10 @@ namespace APSIM.Tests.Interop.PdfRendering
                 else
                     paragraph.AddText(text);
             }
-            List<Text> textElements = paragraph.GetTextElements().ToList();
+            List<string> textElements = paragraph.Elements.GetTextElements().ToList();
             Assert.AreEqual(elements.Length, textElements.Count);
             for (int i = 0; i < elements.Length; i++)
-                Assert.AreEqual(elements[i], textElements[i].Content);
+                Assert.AreEqual(elements[i], textElements[i]);
         }
     }
 }

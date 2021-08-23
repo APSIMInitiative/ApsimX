@@ -648,7 +648,6 @@ namespace APSIM.Interop.Markdown.Renderers
         {
             // Only add a new paragraph if the last paragraph contains any text.
             Paragraph lastParagraph = GetLastParagraph();
-            IEnumerable<Text> textElements = lastParagraph.GetTextElements();
             if (lastParagraph.IsEmpty())
                 return lastParagraph;
             else

@@ -29,8 +29,8 @@ namespace APSIM.Interop.Documentation.Extensions
 
             if (paragraph.Elements.OfType<Image>().Any())
                 return false;
-            IEnumerable<Text> textElements = paragraph.GetTextElements();
-            return textElements.All(t => string.IsNullOrEmpty(t.Content));
+            IEnumerable<string> textElements = paragraph.Elements.GetTextElements();
+            return textElements.All(string.IsNullOrEmpty);
         }
 
         /// <summary>
@@ -38,17 +38,25 @@ namespace APSIM.Interop.Documentation.Extensions
         /// inside the FormattedText elements.
         /// </summary>
         /// <param name="paragraph">The paragraph.</param>
-        internal static IEnumerable<Text> GetTextElements(this Paragraph paragraph)
+        internal static IEnumerable<string> GetTextElements(this ParagraphElements paragraph)
         {
             if (paragraph == null)
                 throw new ArgumentNullException(nameof(paragraph));
 
-            foreach (DocumentObject obj in paragraph.Elements)
+            foreach (DocumentObject obj in paragraph)
             {
                 if (obj is Text text)
-                    yield return text;
+                    yield return text.Content;
+                else if (obj is Character character)
+                {
+                    if (character.SymbolName == SymbolName.LineBreak)
+                        yield return Environment.NewLine;
+                    else
+                        // This probably doesn't work.
+                        yield return new string(character.Char, character.Count);
+                }
                 else if (obj is FormattedText formattedText)
-                    foreach (Text subtext in formattedText.Elements.OfType<Text>())
+                    foreach (string subtext in formattedText.Elements.GetTextElements())
                         yield return subtext;
             }
         }
@@ -65,7 +73,7 @@ namespace APSIM.Interop.Documentation.Extensions
             if (paragraph == null)
                 throw new ArgumentNullException(nameof(paragraph));
 
-            return string.Join("", paragraph.GetTextElements().Select(t => t.Content));
+            return string.Join("", paragraph.Elements.GetTextElements());
         }
     }
 }
