@@ -18,7 +18,7 @@ using MigraDocCore.DocumentObjectModel;
 namespace APSIM.Tests.Interop.Documentation.TagRenderers
 {
     /// <summary>
-    /// Tests for the <see cref="PdfBuilder"/> class.
+    /// Tests for the <see cref="ParagraphTagRenderer"/> class.
     /// </summary>
     /// <remarks>
     /// todo: mock out PdfBuilder API.

@@ -9,6 +9,10 @@ namespace APSIM.Interop.Documentation.Renderers
     /// <see cref="Graph" /> to a PDF document.
     /// </summary>
     /// <typeparam name="T">The type of tag which this class can render.</typeparam>
+    /// <remarks>
+    /// This should maybe extend the <see cref="ImageTagRenderer"/>. However,
+    /// doing so would prevent us from implementing <see cref="TagRendererBase{IGraph}"/>.
+    /// </remarks>
     internal class GraphTagRenderer : TagRendererBase<IGraph>
     {
         /// <summary>
