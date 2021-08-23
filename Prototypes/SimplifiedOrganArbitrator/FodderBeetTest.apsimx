@@ -4656,7 +4656,9 @@
       "Children": [
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileNames": null,
+          "FileNames": [
+            "0bserved.xlsx"
+          ],
           "SheetNames": [
             "ObservedData"
           ],
