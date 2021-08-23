@@ -371,7 +371,7 @@
         internal void DoCleanTransferAmounts()
         {
             for (int t = 0; t < tissue.Length; t++)
-                tissue[t].ClearDailyTransferAmounts();
+                tissue[t].ClearDailyTransferredAmounts();
         }
 
         /// <summary>Kills part of the organ (transfer DM and N to dead tissue).</summary>

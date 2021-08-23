@@ -271,7 +271,7 @@
         public void DoCleanTransferAmounts()
         {
             for (int t = 0; t < Tissue.Length; t++)
-                Tissue[t].ClearDailyFlows();
+                Tissue[t].ClearDailyTransferredAmounts();
         }
 
         /// <summary>Preparation before the main daily processes.</summary>

@@ -90,7 +90,7 @@
         {
             DMRemoved = 0;
             NRemoved = 0;
-            ClearDailyFlows();
+            ClearDailyTransferredAmounts();
         }
 
         /// <summary>Updates the tissue state, make changes in DM and N effective.</summary>
@@ -147,11 +147,11 @@
             dryMatter.Wt = dmAmount;
             dryMatter.N = nAmount;
             CalculateStates();
-            ClearDailyFlows();
+            ClearDailyTransferredAmounts();
         }
 
         /// <summary>Clear the daily flows of DM and N.</summary>
-        public void ClearDailyFlows()
+        public void ClearDailyTransferredAmounts()
         {
             DMTransferedIn = 0.0;
             DMTransferedOut = 0.0;
@@ -182,7 +182,7 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs args)
         {
-            ClearDailyFlows();
+            ClearDailyTransferredAmounts();
         }
     }
 }

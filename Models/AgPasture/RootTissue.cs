@@ -328,11 +328,11 @@
             }
 
             UpdateDM();
-            ClearDailyTransferAmounts();
+            ClearDailyTransferredAmounts();
         }
 
         /// <summary>Clear the daily flows of DM and N.</summary>
-        public void ClearDailyTransferAmounts()
+        public void ClearDailyTransferredAmounts()
         {
             dmTransferedIn = 0.0;
             dmTransferedOut = 0.0;
