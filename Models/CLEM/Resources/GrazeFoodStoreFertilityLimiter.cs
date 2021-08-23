@@ -25,7 +25,11 @@ namespace Models.CLEM.Resources
     public class GrazeFoodStoreFertilityLimiter: CLEMModel
     {
         [Link]
-        Clock Clock = null;
+        private Clock clock = null;
+
+        private double annualNUsed = 0;
+        private GrazeFoodStoreType parentPasture;
+        private bool timingPresent;
 
         /// <summary>
         /// Annual supply of N (kg per ha) before there is a nitrogen reduction in new growth
@@ -53,10 +57,6 @@ namespace Models.CLEM.Resources
         [GreaterThanValue(0)]
         public Single NitrogenReduction { get; set; }
 
-        private double annualNUsed = 0;
-        private GrazeFoodStoreType parentPasture;
-        private bool timingPresent;
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -72,7 +72,7 @@ namespace Models.CLEM.Resources
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             parentPasture = this.Parent as GrazeFoodStoreType;
-            timingPresent = FindAllChildren<ActivityTimerMonthRange>().Count() >= 1;
+            timingPresent = FindAllChildren<ActivityTimerMonthRange>().Any();
         }
 
         /// <summary>
@@ -107,7 +107,7 @@ namespace Models.CLEM.Resources
         [EventSubscribe("StartOfMonth")]
         private void OnStartOfMonth(object sender, EventArgs e)
         {
-            if(Clock.Today.Month == (int)AnnualYieldStartMonth)
+            if(clock.Today.Month == (int)AnnualYieldStartMonth)
             {
                 annualNUsed = 0;
             }

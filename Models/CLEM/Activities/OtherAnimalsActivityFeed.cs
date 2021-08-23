@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
     public class OtherAnimalsActivityFeed : CLEMActivityBase
     {
         [Link]
-        Clock Clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Name of Feed to use
@@ -56,6 +56,7 @@ namespace Models.CLEM.Activities
         public OtherAnimalsActivityFeed()
         {
             this.SetDefaults();
+            TransactionCategory = "OtherAnimal.Feed";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -65,7 +66,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // locate FeedType resource
-            FeedType = Resources.GetResourceItem(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
+            FeedType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
         }
 
         /// <summary>
@@ -78,7 +79,7 @@ namespace Models.CLEM.Activities
 
             // get feed required
             // zero based month index for array
-            int month = Clock.Today.Month - 1;
+            int month = clock.Today.Month - 1;
             double allIndividuals = 0;
             double amount = 0;
             foreach (OtherAnimalsFilterGroup filtergroup in this.FindAllChildren<OtherAnimalsFilterGroup>())
@@ -107,10 +108,11 @@ namespace Models.CLEM.Activities
                     {
                         AllowTransmutation = true,
                         Required = amount,
+                        Resource = FeedType,
                         ResourceType = typeof(AnimalFoodStore),
                         ResourceTypeName = FeedTypeName,
                         ActivityModel = this,
-                        Category = "Feed",
+                        Category = TransactionCategory,
                         RelatesToResource = "Other animals",
                         FilterDetails = null
                     }
@@ -120,56 +122,7 @@ namespace Models.CLEM.Activities
             return resourcesNeeded;
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
-        public override event EventHandler ActivityPerformed;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Determines how much labour is required from this activity based on the requirement provided
-        /// </summary>
-        /// <param name="requirement">The details of how labour are to be provided</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double allIndividuals = 0;
@@ -195,16 +148,9 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Feed", "Other animals");
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, "Other animals");
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
     }
 
     /// <summary>

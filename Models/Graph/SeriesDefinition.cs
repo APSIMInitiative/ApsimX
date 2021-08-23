@@ -19,10 +19,10 @@
     public class SeriesDefinition
     {
         /// <summary>Base series where most properties come from.</summary>
-        private Series series;
+        public Series Series { get; set; }
 
         /// <summary>Series definition filter.</summary>
-        private IEnumerable<string> inScopeSimulationNames;
+        public IEnumerable<string> InScopeSimulationNames { get; set; }
 
         /// <summary>User specified filter.</summary>
         private string userFilter;
@@ -57,7 +57,7 @@
                                 List<SimulationDescription.Descriptor> descriptors = null,
                                 string customTitle = null)
         {
-            this.series = series;
+            this.Series = series;
             CheckpointName = checkpoint;
             ColourModifier = colModifier;
             MarkerModifier = markerModifier;
@@ -95,7 +95,7 @@
             if (CheckpointName != "Current")
                 Title += " (" + CheckpointName + ")";
 
-            this.inScopeSimulationNames = inScopeSimulationNames;
+            this.InScopeSimulationNames = inScopeSimulationNames;
             userFilter = filter;
         }
 
@@ -152,10 +152,10 @@
         {
             get
             {
-                if (series == null) // Can be null for regression lines or 1:1 lines
+                if (Series == null) // Can be null for regression lines or 1:1 lines
                     return MarkerSizeType.Normal;
 
-                return series.MarkerSize;
+                return Series.MarkerSize;
             }
         }
 
@@ -164,10 +164,10 @@
         {
             get
             {
-                if (series == null) // Can be null for regression lines or 1:1 lines
+                if (Series == null) // Can be null for regression lines or 1:1 lines
                     return LineThicknessType.Normal;
                 else
-                    return series.LineThickness;
+                    return Series.LineThickness;
             }
         }
 
@@ -202,7 +202,7 @@
         public string Title { get; }
 
         /// <summary>Gets the dataview</summary>
-        public DataTable Data { get; private set; }
+        public DataView View { get; private set; }
 
         /// <summary>Gets the x values</summary>
         public IEnumerable X { get; private set; }
@@ -265,107 +265,145 @@
         }
 
         /// <summary>Reads all data from the specified reader.</summary>
-        /// <param name="reader">Storage reader.</param>
+        /// <param name="data">Data to read from.</param>
         /// <param name="simulationDescriptions">Complete list of simulation descriptions.</param>
-        public void ReadData(IStorageReader reader, List<SimulationDescription> simulationDescriptions)
+        /// <param name="reader">Data store reader.</param>
+        public void ReadData(DataTable data, List<SimulationDescription> simulationDescriptions, IStorageReader reader)
         {
             if (X != null && Y != null)
                 return;
 
-            if (series.TableName == null)
-            {
-                if (!String.IsNullOrEmpty(XFieldName))
-                    X = GetDataFromModels(XFieldName);
-                if (!String.IsNullOrEmpty(YFieldName))
-                    Y = GetDataFromModels(YFieldName);
-                if (!String.IsNullOrEmpty(X2FieldName))
-                    X2 = GetDataFromModels(X2FieldName);
-                if (!String.IsNullOrEmpty(Y2FieldName))
-                    Y2 = GetDataFromModels(Y2FieldName);
-            }
+            if (Series.TableName == null)
+                GetDataFromModels();
             else
             {
-                var fieldsThatExist = reader.ColumnNames(series.TableName);
+                var fieldsThatExist = DataTableUtilities.GetColumnNames(data).ToList();
 
                 // If we have descriptors, then use them to filter the data for this series.
-                List<string> simulationNameFilter = null;
-                string filter = null;
+                List<string> simulationNameFilter = new List<string>(); ;
+                IEnumerable<SimulationDescription> simulationNamesWithDescriptors = new List<SimulationDescription>();
                 if (Descriptors != null)
                 {
                     foreach (var descriptor in Descriptors)
                     {
-                        if (fieldsThatExist.Contains(descriptor.Name))
-                            filter = AddToFilter(filter, $"[{descriptor.Name}] = '{descriptor.Value}'");
-                        else
+                        if (!fieldsThatExist.Contains(descriptor.Name))
                         {
-                            simulationNameFilter = new List<string>();
-                            simulationNameFilter.AddRange(simulationDescriptions.FindAll(sim => sim.HasDescriptor(descriptor)).Select(sim => sim.Name));
+                            if (simulationNamesWithDescriptors.Any())
+                                simulationNamesWithDescriptors = simulationNamesWithDescriptors.Where(s => s.HasDescriptor(descriptor));
+                            else
+                                simulationNamesWithDescriptors = simulationDescriptions.Where(sim => sim.HasDescriptor(descriptor));
                         }
                     }
-
+                    if (simulationNamesWithDescriptors.Any())
+                        simulationNameFilter = simulationNamesWithDescriptors.Select(s => s.Name).ToList();
                     // Incorporate our scope filter if we haven't limited filter to particular simulations.
-                    if (simulationNameFilter == null && inScopeSimulationNames != null)
-                        simulationNameFilter = new List<string>(inScopeSimulationNames);
+                    if (!simulationNameFilter.Any() && InScopeSimulationNames != null)
+                        simulationNameFilter = new List<string>(InScopeSimulationNames);
                 }
-                else if (inScopeSimulationNames != null)
-                    simulationNameFilter = new List<string>(inScopeSimulationNames ?? Enumerable.Empty<string>());
+                else if (InScopeSimulationNames != null)
+                    simulationNameFilter = new List<string>(InScopeSimulationNames ?? Enumerable.Empty<string>());
 
-                if (!string.IsNullOrEmpty(userFilter))
-                    filter = AddToFilter(filter, userFilter);
+                string filter = GetFilter(fieldsThatExist);
 
-                // Get a list of fields to read from data store.
-                var fieldsToRead = new List<string>();
-                fieldsToRead.Add(XFieldName);
-                fieldsToRead.Add(YFieldName);
-                if (X2FieldName != null)
-                    fieldsToRead.Add(X2FieldName);
-                if (Y2FieldName != null)
-                    fieldsToRead.Add(Y2FieldName);
-
-                // Add any error fields to the list of fields to read.
-                var fieldsToAdd = new List<string>();
-                foreach (var fieldName in fieldsToRead)
+                if (simulationNameFilter.Any())
                 {
-                    if (fieldsThatExist.Contains(fieldName + "Error"))
-                        fieldsToAdd.Add(fieldName + "Error");
+                    var simulationIds = reader.ToSimulationIDs(simulationNameFilter);
+                    var simulationIdsCSV = StringUtilities.Build(simulationIds, ",");
+                    if (fieldsThatExist.Contains("SimulationID"))
+                        filter = AddToFilter(filter, $"SimulationID in ({simulationIdsCSV})");
                 }
-                fieldsToRead.AddRange(fieldsToAdd);
 
-                // Add any field names from the filter.
-                fieldsToRead.AddRange(ExtractFieldNamesFromFilter(filter));
-
-                // Add any fields from child graphable models.
-                foreach (IGraphable series in series.FindAllChildren<IGraphable>())
-                    fieldsToRead.AddRange(series.GetExtraFieldsToRead(this));
-
-                // Checkpoints don't exist in observed files so don't pass a checkpoint name to 
-                // GetData in this situation.
-                string localCheckpointName = CheckpointName;
-                if (!reader.ColumnNames(series.TableName).Contains("CheckpointID"))
-                    localCheckpointName = null;
-
-                // Go get the data.
-                Data = reader.GetData(series.TableName, localCheckpointName, simulationNameFilter, fieldNames: fieldsToRead.Distinct(), filter: filter);
+                filter = filter?.Replace('\"', '\'');
+                View = new DataView(data);
+                View.RowFilter = filter;
 
                 // Get the units for our x and y variables.
-                XFieldUnits = reader.Units(series.TableName, XFieldName);
-                YFieldUnits = reader.Units(series.TableName, YFieldName);
+                XFieldUnits = reader.Units(Series.TableName, XFieldName);
+                YFieldUnits = reader.Units(Series.TableName, YFieldName);
 
                 // If data was found, populate our data (e.g. X and Y) properties.
-                if (Data?.Rows.Count > 0)
+                if (View?.Count > 0)
                 {
-                    X = GetDataFromTable(Data, XFieldName);
-                    Y = GetDataFromTable(Data, YFieldName);
-                    X2 = GetDataFromTable(Data, X2FieldName);
-                    Y2 = GetDataFromTable(Data, Y2FieldName);
-                    XError = GetErrorDataFromTable(Data, XFieldName);
-                    YError = GetErrorDataFromTable(Data, YFieldName);
-                    if (series.Cumulative)
+                    X = GetDataFromView(View, XFieldName);
+                    Y = GetDataFromView(View, YFieldName);
+                    X2 = GetDataFromView(View, X2FieldName);
+                    Y2 = GetDataFromView(View, Y2FieldName);
+                    XError = GetErrorDataFromView(View, XFieldName);
+                    YError = GetErrorDataFromView(View, YFieldName);
+                    if (Series.Cumulative)   
                         Y = MathUtilities.Cumulative(Y as IEnumerable<double>);
-                    if (series.CumulativeX)
+                    if (Series.CumulativeX)
                         X = MathUtilities.Cumulative(X as IEnumerable<double>);
                 }
             }
+        }
+
+        /// <summary>
+        /// Return a list of field names that this definition will read from the data table.
+        /// </summary>
+        /// <param name="fieldsThatExist"></param>
+        /// <returns></returns>
+        public List<string> GetFieldNames(List<string> fieldsThatExist)
+        {
+            var filter = GetFilter(fieldsThatExist);
+            var fieldsToRead = new List<string>();
+            fieldsToRead.Add(XFieldName);
+            fieldsToRead.Add(YFieldName);
+            if (!string.IsNullOrEmpty(X2FieldName))
+                fieldsToRead.Add(X2FieldName);
+            if (!string.IsNullOrEmpty(Y2FieldName))
+                fieldsToRead.Add(Y2FieldName);
+            var fieldsToAdd = new List<string>();
+            foreach (var fieldName in fieldsToRead)
+            {
+                if (fieldsThatExist.Contains(fieldName + "Error"))
+                    fieldsToAdd.Add(fieldName + "Error");
+            }
+            fieldsToRead.AddRange(fieldsToAdd);
+
+            // Add any field names from the filter.
+            fieldsToRead.AddRange(ExtractFieldNamesFromFilter(filter));
+
+            // Add any fields from child graphable models.
+            foreach (IGraphable series in Series.FindAllChildren<IGraphable>())
+                fieldsToRead.AddRange(series.GetExtraFieldsToRead(this));
+            return fieldsToRead;
+        }
+
+        /// <summary>
+        /// Get the filter to use for filtering the data.
+        /// </summary>
+        /// <param name="fieldsThatExist"></param>
+        /// <returns></returns>
+        public string GetFilter(IEnumerable<string> fieldsThatExist)
+        {
+            string filter = null;
+            if (Descriptors != null)
+            {
+                foreach (var descriptor in Descriptors)
+                {
+                    if (fieldsThatExist.Contains(descriptor.Name))
+                        filter = AddToFilter(filter, $"[{descriptor.Name}] = '{descriptor.Value}'");
+                }
+            }
+            if (!string.IsNullOrEmpty(userFilter))
+                filter = AddToFilter(filter, userFilter);
+            return filter;
+        }
+
+        /// <summary>
+        /// Get all data from models.
+        /// </summary>
+        public void GetDataFromModels()
+        {
+            if (!String.IsNullOrEmpty(XFieldName))
+                X = GetDataFromModels(XFieldName);
+            if (!String.IsNullOrEmpty(YFieldName))
+                Y = GetDataFromModels(YFieldName);
+            if (!String.IsNullOrEmpty(X2FieldName))
+                X2 = GetDataFromModels(X2FieldName);
+            if (!String.IsNullOrEmpty(Y2FieldName))
+                Y2 = GetDataFromModels(Y2FieldName);
         }
 
         /// <summary>Extract and return a list of field names from the filter.</summary>
@@ -395,10 +433,25 @@
                 // Remove brackets.
                 localFilter = localFilter.Replace("(", "");
                 localFilter = localFilter.Replace(")", "");
+                localFilter = localFilter.Replace("[", "");
+                localFilter = localFilter.Replace("]", "");
 
                 // Look for individual filter clauses (e.g. A = B).
                 string clausePattern = @"\[?(?<FieldName>[^\s\]]+)\]?\s*(=|>|<|>=|<=)\s*(|'|\[|\w)";
                 match = Regex.Match(localFilter, clausePattern);
+                while (match.Success)
+                {
+                    if (!string.IsNullOrWhiteSpace(match.Groups["FieldName"].Value))
+                    {
+                        fieldNames.Add(match.Groups["FieldName"].Value);
+                        localFilter = localFilter.Remove(match.Index, match.Length);
+                    }
+                    match = Regex.Match(localFilter, clausePattern);
+                }
+
+                // Look for LIKE keyword
+                string likePattern = @"(?<FieldName>\S+)\s+LIKE";
+                match = Regex.Match(localFilter, likePattern);
                 while (match.Success)
                 {
                     if (!string.IsNullOrWhiteSpace(match.Groups["FieldName"].Value))
@@ -419,22 +472,22 @@
         /// <returns>The return data or null if not found</returns>
         private IEnumerable GetDataFromModels(string fieldName)
         {
-            return series.FindByPath(fieldName)?.Value as IEnumerable;
+            return Series.FindByPath(fieldName)?.Value as IEnumerable;
         }
 
-        /// <summary>Gets a column of data from a table.</summary>
+        /// <summary>Gets a column of data from a view.</summary>
         /// <param name="data">The table</param>
         /// <param name="fieldName">Name of the field.</param>
         /// <returns>The column of data.</returns>
-        private IEnumerable GetDataFromTable(DataTable data, string fieldName)
+        private IEnumerable GetDataFromView(DataView data, string fieldName)
         {
-            if (fieldName != null && data != null && data.Columns.Contains(fieldName))
+            if (fieldName != null && data != null && data.Table.Columns.Contains(fieldName))
             {
-                if (data.Columns[fieldName].DataType == typeof(DateTime))
+                if (data.Table.Columns[fieldName].DataType == typeof(DateTime))
                     return DataTableUtilities.GetColumnAsDates(data, fieldName);
-                else if (data.Columns[fieldName].DataType == typeof(string))
+                else if (data.Table.Columns[fieldName].DataType == typeof(string))
                     return DataTableUtilities.GetColumnAsStrings(data, fieldName);
-                else if (data.Columns[fieldName].DataType == typeof(int))
+                else if (data.Table.Columns[fieldName].DataType == typeof(int))
                     return DataTableUtilities.GetColumnAsIntegers(data, fieldName);
                 else
                     return DataTableUtilities.GetColumnAsDoubles(data, fieldName);
@@ -442,17 +495,17 @@
             return null;
         }
 
-        /// <summary>Gets a column of error data from a table.</summary>
+        /// <summary>Gets a column of error data from a view.</summary>
         /// <param name="data">The table</param>
         /// <param name="fieldName">Name of the field.</param>
         /// <returns>The column of data.</returns>
-        private IEnumerable<double> GetErrorDataFromTable(DataTable data, string fieldName)
+        private IEnumerable<double> GetErrorDataFromView(DataView data, string fieldName)
         {
             string errorFieldName = fieldName + "Error";
-            if (fieldName != null && data != null && data.Columns.Contains(errorFieldName))
+            if (fieldName != null && data != null && data.Table.Columns.Contains(errorFieldName))
             {
-                if (data.Columns[errorFieldName].DataType == typeof(float) ||
-                    data.Columns[errorFieldName].DataType == typeof(double))
+                if (data.Table.Columns[errorFieldName].DataType == typeof(float) ||
+                    data.Table.Columns[errorFieldName].DataType == typeof(double))
                     return DataTableUtilities.GetColumnAsDoubles(data, errorFieldName);
             }
             return null;

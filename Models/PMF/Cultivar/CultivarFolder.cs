@@ -35,11 +35,7 @@ namespace Models.PMF
 
                 // write a sorted list of cultivar names.
                 List<string> cultivarNames = new List<string>();
-                foreach (Cultivar cultivar in this.FindAllChildren<Cultivar>())
-                {
-                    cultivarNames.Add(cultivar.Name);
-                    cultivarNames.AddRange(cultivar.Alias);
-                }
+                cultivarNames.AddRange(FindAllChildren<Cultivar>().SelectMany(c => c.GetNames()));
                 cultivarNames.Sort();
 
                 string text = StringUtilities.BuildString(cultivarNames.ToArray(), ", ");

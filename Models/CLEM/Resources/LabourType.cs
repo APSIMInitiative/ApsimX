@@ -25,9 +25,18 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Labour/LabourType.htm")]
     public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
+        private double ageInMonths = 0;
+
+        /// <summary>
+        /// A list of attributes added to this individual
+        /// </summary>
+        [JsonIgnore]
+        public IndividualAttributeList Attributes { get; set; } = new IndividualAttributeList();
+
         /// <summary>
         /// Unit type
         /// </summary>
+        [JsonIgnore]
         public string Units { get { return "NA"; } }
 
         /// <summary>
@@ -49,9 +58,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         public double Age { get { return Math.Floor(AgeInMonths/12); } }
-
-        private double ageInMonths = 0;
-        
+       
         /// <summary>
         /// Age in months.
         /// </summary>
@@ -99,8 +106,21 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return null;
+            }
+        }
+
+
+        /// <summary>
         /// Monthly dietary components
         /// </summary>
+        [JsonIgnore]
         public List<LabourDietComponent> DietaryComponentList { get; set; }
 
         /// <summary>
@@ -275,7 +295,7 @@ namespace Models.CLEM.Resources
             this.AvailableDays += addAmount;
             ResourceTransaction details = new ResourceTransaction
             {
-                Style = TransactionStyle.Gain,
+                TransactionType = TransactionType.Gain,
                 Amount = addAmount,
                 Activity = activity,
                 RelatesToResource = relatesToResource,
@@ -320,6 +340,11 @@ namespace Models.CLEM.Resources
                 return;
             }
 
+            if (this.Individuals > 1)
+            {
+                throw new NotImplementedException("Cannot currently use labour transactions while using cohort-based style labour");
+            }
+
             double amountRemoved = request.Required;
             // avoid taking too much
             amountRemoved = Math.Min(this.AvailableDays, amountRemoved);
@@ -329,7 +354,7 @@ namespace Models.CLEM.Resources
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,
-                Style = TransactionStyle.Loss,
+                TransactionType = TransactionType.Loss,
                 Amount = amountRemoved,
                 Activity = request.ActivityModel,
                 Category = request.Category,

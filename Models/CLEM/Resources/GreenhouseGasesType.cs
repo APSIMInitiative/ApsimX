@@ -22,6 +22,9 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Greenhouse gases/GreenhouseGasType.htm")]
     public class GreenhouseGasesType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
+        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
+        private double roundedAmount;
+
         /// <summary>
         /// Unit type
         /// </summary>
@@ -40,8 +43,17 @@ namespace Models.CLEM.Resources
         /// Current amount of this resource
         /// </summary>
         public double Amount { get { return amount; } }
-        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
-        private double roundedAmount;
+
+        /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
+            }
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -98,7 +110,7 @@ namespace Models.CLEM.Resources
 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    Style = TransactionStyle.Gain,
+                    TransactionType = TransactionType.Gain,
                     Amount = addAmount,
                     Activity = activity,
                     RelatesToResource = relatesToResource,
@@ -144,7 +156,7 @@ namespace Models.CLEM.Resources
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,
-                Style = TransactionStyle.Loss,
+                TransactionType = TransactionType.Loss,
                 Amount = amountRemoved,
                 Activity = request.ActivityModel,
                 Category = request.Category,

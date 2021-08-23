@@ -71,6 +71,17 @@ namespace Models.CLEM.Resources
             Units = "kg";
         }
 
+        /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
+            }
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -118,7 +129,7 @@ namespace Models.CLEM.Resources
 
             ResourceTransaction details = new ResourceTransaction
             {
-                Style = TransactionStyle.Gain,
+                TransactionType = TransactionType.Gain,
                 Amount = addAmount,
                 Activity = activity,
                 RelatesToResource = relatesToResource,
@@ -175,7 +186,7 @@ namespace Models.CLEM.Resources
                 ResourceTransaction details = new ResourceTransaction
                 {
                     ResourceType = this,
-                    Style = TransactionStyle.Loss,
+                    TransactionType = TransactionType.Loss,
                     Amount = amountRemoved,
                     Activity = request.ActivityModel,
                     RelatesToResource = request.RelatesToResource,

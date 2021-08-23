@@ -84,8 +84,8 @@
         {
             this.model = model as Model;
             this.view = view as IProfileView;
-            profileGrid.Attach(model, this.view.ProfileGrid, explorerPresenter);
             this.explorerPresenter = explorerPresenter;
+            profileGrid.Attach(model, this.view.ProfileGrid, explorerPresenter);
 
             this.view.ShowView(false);
 

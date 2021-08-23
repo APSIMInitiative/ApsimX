@@ -8,7 +8,7 @@ if "%apsimx%"=="" (
 	set apsimx=!cd!
 	popd>nul
 )
-set "bin=%apsimx%\Bin"
+set "bin=%apsimx%\bin\Release\netcoreapp3.1"
 
 rem Next, check which tests we want to run.
 set unitsyntax=Unit
@@ -22,7 +22,7 @@ if "%1"=="%unitsyntax%" (
 	call :numTempFiles
 	set count=!result!
 
-	nunit3-console "%apsimx%\Bin\UnitTests.dll"
+	nunit3-console "%bin%\UnitTests.dll"
 	if errorlevel 1 exit /b 1
 
 	call :numTempFiles
@@ -64,6 +64,9 @@ if "%1"=="%validationsyntax%" (
 	rem Extract restricted soybean dataset
 	set soybean=%apsimx%\Tests\Validation\Soybean
 	echo %SOYBEAN_PASSWORD%| 7z x !soybean!\ObservedFACTS.7z -o!soybean!
+	rem Extract restricted cornsoy dataset
+	set cornsoy=%apsimx%\Tests\Validation\System\FACTS_CornSoy
+	echo %CORNSOY_PASSWORD%| 7z x !cornsoy!\FACTS_CornSoy.7z -o!cornsoy!
 	rem Extract restricted NPI wheat dataset
 	set wheat=%apsimx%\Tests\Validation\Wheat
 	echo %NPI_PASSWORD%| 7z x !wheat!\NPIValidation.7z -o!wheat!

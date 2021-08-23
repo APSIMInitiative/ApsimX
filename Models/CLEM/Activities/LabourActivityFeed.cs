@@ -28,6 +28,7 @@ namespace Models.CLEM.Activities
     public class LabourActivityFeed : CLEMActivityBase
     {
         private double feedRequired = 0;
+        private Labour labour;
 
         /// <summary>
         /// Name of Human Food to use (with Resource Group name appended to the front [separated with a '.'])
@@ -45,7 +46,6 @@ namespace Models.CLEM.Activities
         [Required]
         public LabourFeedActivityTypes FeedStyle { get; set; }
 
-
         /// <summary>
         /// Feed type
         /// </summary>
@@ -58,6 +58,7 @@ namespace Models.CLEM.Activities
         public LabourActivityFeed()
         {
             this.SetDefaults();
+            TransactionCategory = "Labour.Feed";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -67,23 +68,22 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // locate FeedType resource
-            FeedType = Resources.GetResourceItem(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as HumanFoodStoreType;
+            FeedType = Resources.FindResourceType<HumanFoodStore, HumanFoodStoreType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            // locate labour resource
+            labour = Resources.FindResourceGroup<Labour>();
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             feedRequired = 0;
 
             // get list from filters
-            foreach (Model child in this.FindAllChildren<LabourFeedGroup>())
+            foreach (LabourFeedGroup child in this.FindAllChildren<LabourFeedGroup>())
             {
-                double value = (child as LabourFeedGroup).Value;
+                double value = child.Value;
 
-                foreach (LabourType ind in Resources.Labour().Items.Filter(child))
+                foreach (LabourType ind in labour?.Items.Filter(child))
                 {
                     // feed limited to the daily intake per ae set in HumanFoodStoreType
                     switch (FeedStyle)
@@ -110,32 +110,27 @@ namespace Models.CLEM.Activities
                     {
                         AllowTransmutation = true,
                         Required = feedRequired,
+                        Resource = FeedType,
                         ResourceType = typeof(HumanFoodStore),
                         ResourceTypeName = feedItemName,
                         ActivityModel = this,
-                        Category = "Consumption"
+                        Category = TransactionCategory
                     }
                 };
             }
             else
-            {
                 return null;
-            }
         }
 
-        /// <summary>
-        /// Determines how much labour is required from this activity based on the requirement provided
-        /// </summary>
-        /// <param name="requirement">The details of how labour are to be provided</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<LabourType> group = Resources.Labour().Items.Where(a => a.Hired != true).ToList();
+            IEnumerable<LabourType> group = labour?.Items.Where(a => a.Hired != true);
             int head = 0;
             double adultEquivalents = 0;
             foreach (Model child in this.FindAllChildren<LabourFeedGroup>())
             {
-                var subgroup = group.Filter(child).ToList();
+                var subgroup = group.Filter(child);
                 head += subgroup.Count();
                 adultEquivalents += subgroup.Sum(a => a.AdultEquivalent);
             }
@@ -150,18 +145,14 @@ namespace Models.CLEM.Activities
                 case LabourUnitType.perHead:
                     numberUnits = head / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
 
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perAE:
                     numberUnits = adultEquivalents / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
 
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
@@ -171,21 +162,17 @@ namespace Models.CLEM.Activities
                 case LabourUnitType.perUnit:
                     numberUnits = feedRequired / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
 
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Feeding", null);
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, null);
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             //add limit to amout collected based on labour shortfall
@@ -193,29 +180,23 @@ namespace Models.CLEM.Activities
             foreach (ResourceRequest item in ResourceRequestList)
             {
                 if (item.ResourceType != typeof(LabourType))
-                {
                     item.Required *= labourLimit;
-                }
             }
             return;
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
-            List<LabourType> group = Resources.Labour().Items.Where(a => a.Hired != true).ToList();
-            if (group != null && group.Count > 0)
+            IEnumerable<LabourType> group = labour?.Items.Where(a => a.Hired != true);
+            if (group != null && group.Any())
             {
                 // calculate feed limit
                 double feedLimit = 0.0;
 
                 ResourceRequest feedRequest = ResourceRequestList.Where(a => a.ResourceType == typeof(HumanFoodStore)).FirstOrDefault();
                 if (feedRequest != null)
-                {
                     feedLimit = Math.Min(1.0, feedRequest.Provided / feedRequest.Required);
-                }
 
                 if (feedRequest == null || (feedRequest.Required == 0 | feedRequest.Available == 0))
                 {
@@ -223,11 +204,11 @@ namespace Models.CLEM.Activities
                     return;
                 }
 
-                foreach (Model child in this.FindAllChildren<LabourFeedGroup>())
+                foreach (LabourFeedGroup child in this.FindAllChildren<LabourFeedGroup>())
                 {
-                    double value = (child as LabourFeedGroup).Value;
+                    double value = child.Value;
 
-                    foreach (LabourType ind in Resources.Labour().Items.Filter(child))
+                    foreach (LabourType ind in labour?.Items.Filter(child))
                     {
                         switch (FeedStyle)
                         {
@@ -262,65 +243,16 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
-        public override event EventHandler ActivityPerformed;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Feed people ");
-                if (FeedTypeName == null || FeedTypeName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[Feed TYPE NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + FeedTypeName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(FeedTypeName, "Feed type not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
-
                 return htmlWriter.ToString(); 
             }
         } 

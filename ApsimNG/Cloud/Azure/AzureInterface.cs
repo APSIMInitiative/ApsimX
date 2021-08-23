@@ -176,7 +176,7 @@ namespace ApsimNG.Cloud
 
             // Generate .apsimx file for each simulation to be run.
             Runner run = new Runner(job.Model);
-            GenerateApsimXFiles.Generate(run, job.ModelPath, p => { /* Don't bother with progress reporting */ }, collectExternalFiles:true);
+            GenerateApsimXFiles.Generate(run, 1, job.ModelPath, p => { /* Don't bother with progress reporting */ }, collectExternalFiles:true);
 
             if (ct.IsCancellationRequested)
             {
@@ -677,9 +677,7 @@ namespace ApsimNG.Cloud
         {
             try
             {
-                string bin = srcPath;
-                if (!bin.EndsWith("Bin"))
-                    bin = Path.Combine(srcPath, "Bin");
+                string bin = Path.GetDirectoryName(GetType().Assembly.Location);
                 string[] extensions = new string[] { "*.dll", "*.exe" };
 
                 using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Create))

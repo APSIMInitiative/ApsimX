@@ -91,7 +91,7 @@ namespace Models.CLEM
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             List<ValidationResult> results = new List<ValidationResult>();
-            if (Maximum <= Minimum)
+            if (Maximum < Minimum)
             {
                 string[] memberNames = new string[] { "Maximum" };
                 results.Add(new ValidationResult("The maximum running value must be greater than the Minimum value", memberNames));

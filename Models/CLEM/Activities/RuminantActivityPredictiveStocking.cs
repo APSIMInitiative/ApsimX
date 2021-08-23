@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityPredictiveStocking: CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
-        Clock Clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Month for assessing dry season feed requirements
@@ -83,6 +83,14 @@ namespace Models.CLEM.Activities
         /// </summary>
         public double AeShortfall { get {return AeToDestock - AeDestocked; } }
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public RuminantActivityPredictiveStocking()
+        {
+            TransactionCategory = "Livestock.Destock";
+        }
+
         #region validation
 
         /// <summary>
@@ -130,13 +138,12 @@ namespace Models.CLEM.Activities
             AeToDestock = 0;
             AeDestocked = 0;
             // this event happens after management has marked individuals for purchase or sale.
-            if (Clock.Today.Month == (int)AssessmentMonth)
+            if (clock.Today.Month == (int)AssessmentMonth)
             {
                 this.Status = ActivityStatus.NotNeeded;
                 // calculate dry season pasture available for each managed paddock holding stock not flagged for sale
-                RuminantHerd ruminantHerd = Resources.RuminantHerd();
 
-                foreach (var paddockGroup in ruminantHerd.Herd.Where(a => (a.Location??"") != "").GroupBy(a => a.Location))
+                foreach (var paddockGroup in HerdResource.Herd.Where(a => (a.Location??"") != "").GroupBy(a => a.Location))
                 {
                     // multiple breeds are currently not supported as we need to work out what to do with diferent AEs
                     if(paddockGroup.GroupBy(a => a.Breed).Count() > 1)
@@ -151,7 +158,7 @@ namespace Models.CLEM.Activities
                     // Determine total feed requirements for dry season for all ruminants on the pasture
                     // We assume that all ruminant have the BaseAnimalEquivalent to the specified herd
 
-                    GrazeFoodStoreType pasture = Resources.GetResourceItem(this, typeof(GrazeFoodStore), paddockGroup.Key, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+                    GrazeFoodStoreType pasture = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, paddockGroup.Key, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
                     double pastureBiomass = pasture.Amount;
 
                     // Adjust fodder balance for detachment rate (6%/month in NABSA, user defined in CLEM, 3%)
@@ -163,13 +170,10 @@ namespace Models.CLEM.Activities
                     {
                         // only include detachemnt if current biomass is positive, not already overeaten
                         if (pastureBiomass > 0)
-                        {
                             pastureBiomass *= (1.0 - detachrate);
-                        }
+
                         if (i > 0) // not in current month as already consumed by this time.
-                        {
                             pastureBiomass -= (feedRequiredAE * totalAE);
-                        }
                     }
 
                     // Shortfall in Fodder in kg per hectare
@@ -182,9 +186,7 @@ namespace Models.CLEM.Activities
                     double pastureShortFallKg = pastureShortFallKgHa * pasture.Manager.Area;
 
                     if (pastureShortFallKg == 0)
-                    {
                         return;
-                    }
 
                     // number of AE to sell to balance shortfall_kg over entire season
                     shortfallAE = pastureShortFallKg / (feedRequiredAE* this.DrySeasonLength);
@@ -198,9 +200,7 @@ namespace Models.CLEM.Activities
                 }
             }
             else
-            {
                 this.Status = ActivityStatus.Ignored;
-            }
         }
 
         private void HandleDestocking(double animalEquivalentsforSale, string paddockName)
@@ -217,33 +217,33 @@ namespace Models.CLEM.Activities
 
             // remove all potential purchases from list as they can't be supported.
             // This does not change the shortfall AE as they were not counted in TotalAE pressure.
-            RuminantHerd ruminantHerd = Resources.RuminantHerd();
-            ruminantHerd.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
+            HerdResource.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
             // remove individuals to sale as specified by destock groups
-            foreach (IModel item in FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock))
+            foreach (var item in FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock))
             {
                 // works with current filtered herd to obey filtering.
-                List<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == paddockName && !a.ReadyForSale).ToList();
-                herd = herd.Filter(item);
-                int cnt = 0;
-                while (cnt < herd.Count() && animalEquivalentsforSale > 0)
+                var herd = CurrentHerd(false)
+                    .Where(a => a.Location == paddockName && !a.ReadyForSale)
+                    .FilterRuminants(item);
+
+                foreach (Ruminant ruminant in herd)
                 {
-                    this.Status = ActivityStatus.Success;
-                    if(herd[cnt].SaleFlag != HerdChangeReason.DestockSale)
+                    if (ruminant.SaleFlag != HerdChangeReason.DestockSale)
                     {
-                        animalEquivalentsforSale -= herd[cnt].AdultEquivalent;
-                        herd[cnt].SaleFlag = HerdChangeReason.DestockSale;
+                        animalEquivalentsforSale -= ruminant.AdultEquivalent;
+                        ruminant.SaleFlag = HerdChangeReason.DestockSale;
                     }
-                    cnt++;
-                }
-                if (animalEquivalentsforSale <= 0)
-                {
-                    AeDestocked = 0;
-                    this.Status = ActivityStatus.Success;
-                    return;
+
+                    if (animalEquivalentsforSale <= 0)
+                    {
+                        AeDestocked = 0;
+                        this.Status = ActivityStatus.Success;
+                        return;
+                    }
                 }
             }
+
             AeDestocked = AeToDestock - animalEquivalentsforSale;
             this.Status = ActivityStatus.Partial;
             
@@ -251,87 +251,10 @@ namespace Models.CLEM.Activities
             // buy or sell is handled by the buy sell activity
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <summary>
-        /// Determine the labour required for this activity based on LabourRequired items in tree
-        /// </summary>
-        /// <param name="requirement">Labour requirement model</param>
-        /// <returns></returns>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Activity performed event handler
-        /// </summary>
-        public override event EventHandler ActivityPerformed;
-
-        /// <summary>
-        /// Activity occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Report destock status
-        /// </summary>
+        /// <inheritdoc/>
         public event EventHandler ReportStatus;
 
-        /// <summary>
-        /// Report status occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         protected void OnReportStatus(EventArgs e)
         {
             ReportStatus?.Invoke(this, e);
@@ -339,11 +262,7 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -355,9 +274,8 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write(AssessmentMonth.ToString());
                 }
                 else
-                {
                     htmlWriter.Write("<span class=\"errorlink\">No month set");
-                }
+
                 htmlWriter.Write("</span> for a dry season of ");
                 if (DrySeasonLength > 0)
                 {
@@ -365,9 +283,8 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write(DrySeasonLength.ToString("#0"));
                 }
                 else
-                {
                     htmlWriter.Write("<span class=\"errorlink\">No length");
-                }
+
                 htmlWriter.Write("</span> months ");
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">The herd will be sold to maintain ");
@@ -379,19 +296,13 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             return "\r\n</div>";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
@@ -399,9 +310,7 @@ namespace Models.CLEM.Activities
             html += "<div class=\"labournote\">Individuals will be sold in the following order</div>";
 
             if (FindAllChildren<RuminantGroup>().Count() == 0)
-            {
                 html += "\r\n<div class=\"errorlink\">No ruminant filter groups provided</div>";
-            }
             return html;
         } 
         #endregion

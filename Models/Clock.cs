@@ -226,6 +226,8 @@
         public event EventHandler CLEMAgeResources;
         /// <summary>CLEM event to calculate monthly herd summary</summary>
         public event EventHandler CLEMHerdSummary;
+        /// <summary>CLEM finalize time-step before end</summary>
+        public event EventHandler CLEMFinalizeTimeStep;
         /// <summary>CLEM end of timestep event</summary>
         public event EventHandler CLEMEndOfTimeStep;
 
@@ -430,6 +432,8 @@
                         CLEMAgeResources.Invoke(this, args);
                     if (CLEMAnimalBuy != null)
                         CLEMAnimalBuy.Invoke(this, args);
+                    if (CLEMFinalizeTimeStep != null)
+                        CLEMFinalizeTimeStep.Invoke(this, args);
                     if (CLEMEndOfTimeStep != null)
                         CLEMEndOfTimeStep.Invoke(this, args);
                     EndOfMonth.Invoke(this, args);

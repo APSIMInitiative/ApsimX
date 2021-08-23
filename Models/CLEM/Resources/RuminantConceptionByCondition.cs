@@ -22,18 +22,11 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantConceptionCondition.htm")]
     public class RuminantConceptionByCondition : CLEMModel, IConceptionModel
     {
-        /// <summary>
-        /// constructor
-        /// </summary>
-        public RuminantConceptionByCondition()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
-        }
 
         /// <summary>
         /// Condition cutoff for conception
         /// </summary>
-        [Description("Condition index (wt/normalised wt) below which no conception")]
+        [Description("Condition index (wt/normalised wt for age) below which no conception")]
         [Required, GreaterThanValue(0)]
         public double ConditionCutOff { get; set; }
 
@@ -44,6 +37,14 @@ namespace Models.CLEM.Resources
         [Required, Proportion, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValueAttribute(1)]
         public double MaximumConceptionProbability { get; set; }
+
+        /// <summary>
+        /// constructor
+        /// </summary>
+        public RuminantConceptionByCondition()
+        {
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
+        }
 
         /// <summary>
         /// Calculate conception rate for a female based on condition score

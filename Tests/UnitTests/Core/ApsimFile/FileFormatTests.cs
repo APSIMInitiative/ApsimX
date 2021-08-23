@@ -76,10 +76,7 @@
         public void FileFormat_ReadFromString()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.FileFormatTestsReadFromString.json");
-            List<Exception> creationExceptions;
-            var simulations = FileFormat.ReadFromString<Simulations>(json, out creationExceptions);
-            Assert.AreEqual(creationExceptions.Count, 0);
-
+            var simulations = FileFormat.ReadFromString<Simulations>(json, e => throw e, false);
             Assert.IsNotNull(simulations);
             Assert.AreEqual(simulations.Children.Count, 1);
             var simulation = simulations.Children[0];
@@ -99,8 +96,8 @@
         public void FileFormat_CheckThatModelsCanThrowExceptionsDuringCreation()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Core.ApsimFile.FileFormatTestsCheckThatModelsCanThrowExceptionsDuringCreation.json");
-            List<Exception> creationExceptions;
-            var simulations = FileFormat.ReadFromString<Simulations>(json, out creationExceptions);
+            List<Exception> creationExceptions = new List<Exception>();
+            var simulations = FileFormat.ReadFromString<Simulations>(json, e => creationExceptions.Add(e), false);
             Assert.AreEqual(creationExceptions.Count, 1);
             Assert.IsTrue(creationExceptions[0].Message.StartsWith("Errors found"));
 

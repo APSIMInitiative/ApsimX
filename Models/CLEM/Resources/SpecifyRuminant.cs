@@ -1,4 +1,5 @@
 ﻿using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -22,17 +23,16 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
     [ValidParent(ParentType = typeof(RuminantActivityTrade))]
-    [Description("This component allows the details of a individual ruminant to be defined for")]
-    [HelpUri(@"Content/Features/Filters/SpecifyRuminant.htm")]
+    [ValidParent(ParentType = typeof(RuminantActivityManage))]
+    [Description("This component allows the details of a individual ruminant to be defined")]
+    [HelpUri(@"Content/Resources/Ruminanta/SpecifyRuminant.htm")]
+    [Version(1, 0, 1, "Includes attribute specification")]
     public class SpecifyRuminant : CLEMModel, IValidatableObject
     {
         [Link]
-        ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
 
-        /// <summary>
-        /// Records if a warning about set weight occurred
-        /// </summary>
-        public bool WeightWarningOccurred = false;
+        private RuminantType ruminantType;
 
         /// <summary>
         /// The type of ruminant
@@ -56,12 +56,22 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public RuminantTypeCohort Details { get; private set; }
 
-        private RuminantType ruminantType;
+        /// <summary>
+        /// The local store of an example individual for checking against filters
+        /// </summary>
+        [JsonIgnore]
+        public Ruminant ExampleIndividual { get; private set; }
 
         /// <summary>
         /// The ruminant type for this specified ruminant
         /// </summary>
         public RuminantType BreedParams { get { return ruminantType;} }
+
+        /// <summary>
+        /// Records if a warning about set weight occurred
+        /// </summary>
+        [JsonIgnore]
+        public bool WeightWarningOccurred { get; private set; } = false;
 
         /// <summary>
         /// Constructor
@@ -74,11 +84,15 @@ namespace Models.CLEM.Resources
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseResources")]
-        private void OnCLEMInitialiseResources(object sender, EventArgs e)
+        [EventSubscribe("CLEMInitialiseResource")]
+        private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             Details = this.FindAllChildren<RuminantTypeCohort>().FirstOrDefault();
-            ruminantType = Resources.GetResourceItem(this.Parent as Model, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
+            ruminantType = resources.FindResourceType<RuminantHerd, RuminantType>(this.Parent as Model, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+
+            // create example ruminant
+            Details.Number = 1;
+            ExampleIndividual = Details.CreateIndividuals(null, BreedParams).FirstOrDefault();
         }
 
         #region validation
@@ -112,69 +126,28 @@ namespace Models.CLEM.Resources
 
         private bool cohortFound;
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"setvalue\">{Proportion.ToString("p0")}</span> of the individuals will be ");
                 if (RuminantTypeName == null || RuminantTypeName == "")
-                {
                     htmlWriter.Write("<span class=\"errorlink\">TYPE NOT SET</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"resourcelink\">" + RuminantTypeName + "</span>");
-                }
+
                 cohortFound = FindAllChildren<RuminantTypeCohort>().Count() > 0;
                 if (cohortFound)
-                {
                     htmlWriter.Write($" with the following details:</div>");
-                }
                 else
                 {
                     htmlWriter.Write($"</div>");
                     htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"resourcelink\">RuminantCohort</span> describing the individuals was provided!</div>");
                 }
+
                 return htmlWriter.ToString();
             }
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
-        {
-            string html = "";
-            //if (cohortFound)
-            //{
-            //    html = "</table></div>";
-            //}
-
-            //if (WeightWarningOccurred)
-            //{
-            //    html += "</br><span class=\"errorlink\">Warning: Initial weight differs from the expected normalised weight by more than 20%</span>";
-            //}
-            return html;
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
-        {
-            //WeightWarningOccurred = false;
-            //if (cohortFound)
-            //{
-            //    return "<div class=\"activityentry\"><table><tr><th>Name</th><th>Gender</th><th>Age</th><th>Weight</th><th>Norm.Wt.</th><th>Number</th><th>Suckling</th><th>Sire</th></tr>"; 
-            //}
-            return "";
         }
 
         #endregion

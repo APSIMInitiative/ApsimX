@@ -321,6 +321,9 @@
                         tempSetupFileName = Path.Combine(Path.GetTempPath(), "APSIMSetup.exe");
 
                         string sourceURL;
+#if NETCOREAPP
+                        upgrade.ReleaseURL = upgrade.ReleaseURL.Replace("ApsimSetup", "apsim-");
+#endif
                         if (ProcessUtilities.CurrentOS.IsMac)
                         {
                             sourceURL = Path.ChangeExtension(upgrade.ReleaseURL, "dmg");
@@ -419,11 +422,14 @@
         {
             try
             {
-                if (waitDlg != null)
+                Application.Invoke((_, __) =>
                 {
-                    waitDlg.Cleanup();
-                    waitDlg = null;
-                }
+                    if (waitDlg != null)
+                    {
+                        waitDlg.Cleanup();
+                        waitDlg = null;
+                    }
+                });
                 if (!e.Cancelled && !string.IsNullOrEmpty(tempSetupFileName) && versionNumber != null)
                 {
                     try
@@ -433,6 +439,7 @@
 
                         if (File.Exists(tempSetupFileName))
                         {
+#if NETFRAMEWORK
                             // Copy the separate upgrader executable to the temp directory.
                             string sourceUpgraderFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Updater.exe");
                             string upgraderFileName = Path.Combine(Path.GetTempPath(), "Updater.exe");
@@ -449,8 +456,7 @@
                             File.Copy(sourceUpgraderFileName, upgraderFileName, true);
 
                             // Run the upgrader.
-                            string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                            string ourDirectory = Path.GetFullPath(Path.Combine(binDirectory, ".."));
+                            string ourDirectory = PathUtilities.GetApsimXDirectory();
                             string newDirectory = Path.GetFullPath(Path.Combine(ourDirectory, "..", "APSIM" + versionNumber));
                             string arguments = StringUtilities.DQuote(ourDirectory) + " " +
                                                StringUtilities.DQuote(newDirectory);
@@ -468,18 +474,44 @@
                             }
                             info.WorkingDirectory = Path.GetTempPath();
                             Process.Start(info);
-                            window1.GetGdkWindow().Cursor = null;
+#else
+                            if (ProcessUtilities.CurrentOS.IsWindows)
+                            {
+                                // The InnoSetup installer can be run with the /upgradefrom:xxx parameter
+                                // and will handle the removal of the previous version.
+                                string oldVersion = new Models.Core.Simulations().ApsimVersion;
+                                Process.Start(tempSetupFileName, $"/upgradefrom={oldVersion}");
+                            }
+                            else if (ProcessUtilities.CurrentOS.IsMac)
+                            {
+                                string script = Path.Combine(Path.GetTempPath(), $"apsim-upgrade-mac-{Guid.NewGuid()}.sh");
+                                ReflectionUtilities.WriteResourceToFile(GetType().Assembly, "ApsimNG.Resources.Scripts.upgrade-mac.sh", script);
+                                string apsimxDir = PathUtilities.GetAbsolutePath("%root%", null);
+                                Process.Start("/bin/sh", $"{script} {tempSetupFileName} {apsimxDir}");
+                            }
+                            else
+                            {
+                                // Assume (Debian) Linux and hope for the best.
+                                string script = Path.Combine(Path.GetTempPath(), $"apsim-upgrade-debian-{Guid.NewGuid()}.sh");
+                                ReflectionUtilities.WriteResourceToFile(GetType().Assembly, "ApsimNG.Resources.Scripts.upgrade-debian.sh", script);
+                                Process.Start("/bin/sh", $"{script} {tempSetupFileName}");
+                            }
+#endif
+                            Application.Invoke((_, __) =>
+                            {
+                                window1.GetGdkWindow().Cursor = null;
 
-                            // Shutdown the user interface
-                            window1.Cleanup();
-                            tabbedExplorerView.Close();
+                                // Shutdown the user interface
+                                window1.Cleanup();
+                                tabbedExplorerView.Close();
+                            });
                         }
                     }
                     catch (Exception err)
                     {
-                        window1.GetGdkWindow().Cursor = null;
                         Application.Invoke(delegate
                         {
+                            window1.GetGdkWindow().Cursor = null;
                             ViewBase.MasterView.ShowMsgDialog(err.Message, "Installation Error", MessageType.Error, ButtonsType.Ok, window1);
                         });
                     }

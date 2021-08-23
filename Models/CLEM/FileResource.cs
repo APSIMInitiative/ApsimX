@@ -32,12 +32,23 @@ namespace Models.CLEM
     public class FileResource : CLEMModel, IValidatableObject
     {
         /// <summary>
+        /// The entire Crop File read in as a DataTable with Primary Keys assigned.
+        /// </summary>
+        private DataTable resourceFileAsTable;
+
+        /// <summary>
+        /// A reference to the text file reader object
+        /// </summary>
+        [NonSerialized]
+        private ApsimTextFile reader = null;
+
+        /// <summary>
         /// Gets or sets the file name. Should be relative filename where possible.
         /// </summary>
         [Summary]
-        [Description("Resource file name")]
+        [Description("File name")]
         [Models.Core.Display(Type = DisplayType.FileName)]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Resource file name must be supplied")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "File name must be supplied")]
         public string FileName { get; set; }
 
         /// <summary>
@@ -48,12 +59,12 @@ namespace Models.CLEM
         public string ExcelWorkSheetName { get; set; }
 
         /// <summary>
-        /// Name of column holding year data
+        /// Name of column holding year or date data
         /// </summary>
         [Summary]
         [System.ComponentModel.DefaultValueAttribute("Year")]
         [Description("Column name for year")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Year column name must be supplied")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Year/Date column name must be supplied")]
         public string YearColumnName { get; set; }
 
         /// <summary>
@@ -62,7 +73,6 @@ namespace Models.CLEM
         [Summary]
         [System.ComponentModel.DefaultValueAttribute("Month")]
         [Description("Column name for month")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Month column name must be supplied")]
         public string MonthColumnName { get; set; }
 
         /// <summary>
@@ -83,17 +93,11 @@ namespace Models.CLEM
         [Required(AllowEmptyStrings = false, ErrorMessage = "Amount column name must be supplied")]
         public string AmountColumnName { get; set; }
 
-
         /// <summary>
-        /// A reference to the text file reader object
+        /// Style of date input to use
         /// </summary>
-        [NonSerialized]
-        private ApsimTextFile reader = null;
-
-        /// <summary>
-        /// The entire Crop File read in as a DataTable with Primary Keys assigned.
-        /// </summary>
-        private DataTable resourceFileAsTable;
+        [JsonIgnore]
+        public DateStyle StyleOfDateEntry { get; set; }
 
         /// <summary>
         /// Gets or sets the full file name (with path). 
@@ -145,7 +149,7 @@ namespace Models.CLEM
                 {
                     filename = "Not set";
                 }
-                string errorMsg = String.Format("@error:Could not locate file [o={0}] for [x={1}]", filename, this.Name);
+                string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", filename, this.Name);
                 throw new ApsimXException(this, errorMsg);
             }
             this.resourceFileAsTable = GetAllData();
@@ -181,10 +185,11 @@ namespace Models.CLEM
         {
             base.SetDefaults();
             base.ModelSummaryStyle = HTMLSummaryStyle.FileReader;
+            StyleOfDateEntry = DateStyle.YearAndMonth;
         }
 
         /// <summary>
-        /// 
+        /// Read data from data file to DataTable
         /// </summary>
         /// <returns></returns>
         public DataTable GetTable()
@@ -223,7 +228,10 @@ namespace Models.CLEM
                 DataColumn[] primarykeys = new DataColumn[5];
                 primarykeys[1] = table.Columns[ResourceNameColumnName];
                 primarykeys[2] = table.Columns[YearColumnName];
-                primarykeys[3] = table.Columns[MonthColumnName];
+                if (StyleOfDateEntry == DateStyle.YearAndMonth)
+                {
+                    primarykeys[3] = table.Columns[MonthColumnName];
+                }
 
                 table.PrimaryKey = primarykeys;
                 CloseDataFile();
@@ -246,7 +254,17 @@ namespace Models.CLEM
         /// </returns>
         public DataView GetCurrentResourceData(int month, int year)
         {
-            string filter = $"( { YearColumnName} = " + year + $" AND { MonthColumnName} = " + month + ")";
+            string filter = "";
+            switch (StyleOfDateEntry)
+            {
+                case DateStyle.DateStamp:
+                    throw new NotImplementedException();
+                    //filter = $"({YearColumnName} = {year})";
+                    //break;
+                case DateStyle.YearAndMonth:
+                    filter = $"( { YearColumnName} = " + year + $" AND { MonthColumnName} = " + month + ")";
+                    break;
+            }
             DataView dataView = new DataView(resourceFileAsTable);
             dataView.RowFilter = filter;
             dataView.Sort = $" {AmountColumnName} ASC";
@@ -254,7 +272,7 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// Open the forage data file.
+        /// Open the data file.
         /// </summary>
         /// <returns>True if the file was successfully opened</returns>
         public bool OpenDataFile()
@@ -279,14 +297,14 @@ namespace Models.CLEM
                             fileType = "Excel file";
                             extra = "";
                         }
-                        throw new Exception($"@error:Invalid {fileType} format of datafile [x={this.FullFileName.Replace("\\", "\\&shy;")}]{extra}");
+                        throw new Exception($"Invalid {fileType} format of datafile [x={this.FullFileName.Replace("\\", "\\&shy;")}]{extra}");
                     }
 
                     if (StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, ResourceNameColumnName) == -1)
                     {
                         if (this.reader == null || this.reader.Constant(ResourceNameColumnName) == null)
                         {
-                            throw new Exception($"@error:Cannot find ResourceName column [o={ResourceNameColumnName ?? "Empty"}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                            throw new Exception($"Cannot find ResourceName column [o={ResourceNameColumnName ?? "Empty"}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                         }
                     }
 
@@ -294,23 +312,26 @@ namespace Models.CLEM
                     {
                         if (this.reader == null || this.reader.Constant(YearColumnName) == null)
                         {
-                            throw new Exception($"@error:Cannot find Year column [o={YearColumnName ?? "Empty"}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                            throw new Exception($"Cannot find Year column [o={YearColumnName ?? "Empty"}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                         }
                     }
 
-                    if (StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, MonthColumnName) == -1)
+                    if (StyleOfDateEntry == DateStyle.YearAndMonth)
                     {
-                        if (this.reader == null || this.reader.Constant(MonthColumnName) == null)
+                        if (StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, MonthColumnName) == -1)
                         {
-                            throw new Exception($"@error:Cannot find Month column [o={MonthColumnName ?? "Empty"}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                            if (this.reader == null || this.reader.Constant(MonthColumnName) == null)
+                            {
+                                throw new Exception($"Cannot find Month column [o={MonthColumnName ?? "Empty"}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                            }
                         }
-                    }
 
+                    }
                     if (StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, AmountColumnName) == -1)
                     {
                         if (this.reader == null || this.reader.Constant(AmountColumnName) == null)
                         {
-                            throw new Exception($"@error:Cannot find Amount column [o={AmountColumnName}] in crop file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
+                            throw new Exception($"Cannot find Amount column [o={AmountColumnName}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                         }
                     }
                 }
@@ -386,7 +407,8 @@ namespace Models.CLEM
                 {
                     htmlWriter.Write("<span class=\"setvalue\">" + ResourceNameColumnName + "</span></div>");
                 }
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ");
+                string yearLabel = (StyleOfDateEntry == DateStyle.DateStamp) ? "Date" : "Year";
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">{yearLabel}</span> is ");
                 if (YearColumnName is null || YearColumnName == "")
                 {
                     htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
@@ -395,14 +417,18 @@ namespace Models.CLEM
                 {
                     htmlWriter.Write("<span class=\"setvalue\">" + YearColumnName + "</span></div>");
                 }
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
-                if (MonthColumnName is null || MonthColumnName == "")
+
+                if (StyleOfDateEntry == DateStyle.YearAndMonth)
                 {
-                    htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">" + MonthColumnName + "</span></div>");
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
+                    if (MonthColumnName is null || MonthColumnName == "")
+                    {
+                        htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                    }
+                    else
+                    {
+                        htmlWriter.Write("<span class=\"setvalue\">" + MonthColumnName + "</span></div>");
+                    } 
                 }
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Amount</span> is ");
@@ -436,6 +462,11 @@ namespace Models.CLEM
             {
                 string[] memberNames = new string[] { "WorksheetName" };
                 results.Add(new ValidationResult("You must specify a worksheet name containing the data when reading an Excel spreadsheet", memberNames));
+            }
+            if(StyleOfDateEntry == DateStyle.YearAndMonth && (MonthColumnName is null || MonthColumnName == ""))
+            {
+                string[] memberNames = new string[] { "MonthColumnName" };
+                results.Add(new ValidationResult("You must specify a column for month data when using YearAndMonth style date entry", memberNames));
             }
             return results;
         } 

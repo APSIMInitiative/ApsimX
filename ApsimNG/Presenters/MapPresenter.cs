@@ -134,7 +134,7 @@
         /// <param name="changedModel">The model that has changed.</param>
         private void OnModelChanged(object changedModel)
         {
-            if (view != null && changedModel == this.map)
+            if (view != null && (changedModel == this.map || changedModel == this.map.Center))
             {
                 this.view.Zoom = this.map.Zoom;
                 this.view.Center = this.map.Center;

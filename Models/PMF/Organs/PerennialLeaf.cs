@@ -88,8 +88,6 @@ namespace Models.PMF.Organs
 
         /// <summary>The dry matter demand</summary>
         public BiomassPoolType DMDemand { get; set; }
-        /// <summary>The dry matter demand</summary>
-        public BiomassPoolType DMDemandPriorityFactor { get; set; }
 
         /// <summary>Structural nitrogen demand</summary>
         public BiomassPoolType NDemand { get;  set; }
@@ -448,6 +446,8 @@ namespace Models.PMF.Organs
             NSupply.Clear();
             Detached.Clear();
             Leaves.Clear();
+            GrowthRespiration = 0;
+            FRGR = 0;
             if (Structure != null)
                 Structure.LeafTipsAppeared = 0;
 
@@ -709,10 +709,6 @@ namespace Models.PMF.Organs
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
             DMDemand = new BiomassPoolType();
-            DMDemandPriorityFactor = new BiomassPoolType();
-            DMDemandPriorityFactor.Structural = 1.0;
-            DMDemandPriorityFactor.Metabolic = 1.0;
-            DMDemandPriorityFactor.Storage = 1.0;
             NDemand = new BiomassPoolType();
             DMSupply = new BiomassSupplyType();
             NSupply = new BiomassSupplyType();

@@ -27,28 +27,25 @@
             {
                 ResidueType residueType = ResidueType.Find(type => StringUtilities.StringsAreEqual(type.fom_type, name));
                 if (residueType != null)
-                {
-                    FillDerived(residueType);
-                    return residueType;
-                }
+                    return FillDerived(residueType);
             }
-            throw new Exception("Could not find residue type " + name);
+            throw new Exception($"Could not find residue type '{name}'");
         }
 
         /// <summary>Looks at a residue type and copies properties from the base type if one was specified.</summary>
         /// <param name="residueType">The residue to examine and change</param>
-        private void FillDerived(ResidueType residueType)
+        private ResidueType FillDerived(ResidueType residueType)
         {
             ResidueType baseType = null;
             if (residueType.derived_from != null)
             {
                 baseType = ResidueType.Find(type => StringUtilities.StringsAreEqual(type.fom_type, residueType.derived_from));
                 if (baseType != null)
-                    FillDerived(baseType); // Make sure the base residue type has itself been filled
-                residueType.derived_from = null;
+                    baseType = FillDerived(baseType); // Make sure the base residue type has itself been filled
             }
             if (baseType != null)
             {
+                residueType = (ResidueType)ReflectionUtilities.Clone(residueType);
                 if (residueType.fraction_C == 0)
                     residueType.fraction_C = baseType.fraction_C;
                 if (residueType.po4ppm == 0)
@@ -70,6 +67,7 @@
                 if (residueType.fr_p == null)
                     residueType.fr_p = (double[])baseType.fr_p.Clone();
             }
+            return residueType;
         }
     }
 }
