@@ -24,7 +24,7 @@ namespace Models.PMF.Arbitrator
 
         /// <summary>The method used to arbitrate N allocations</summary>
         [Link(Type = LinkType.Ancestor, ByName = true)]
-        protected OrganArbitrator Arbitrator = null;
+        protected IArbitrator Arbitrator = null;
 
         private const double kgha2gsm = 0.1;
 
