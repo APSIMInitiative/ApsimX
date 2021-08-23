@@ -16,7 +16,7 @@ using APSIM.Interop.Documentation.Extensions;
 namespace APSIM.Tests.Interop.Documentation.TagRenderers
 {
     /// <summary>
-    /// Tests for the <see cref="PdfBuilder"/> class.
+    /// Tests for the <see cref="Section"/> class.
     /// </summary>
     /// <remarks>
     /// todo: mock out PdfBuilder API.
