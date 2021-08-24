@@ -226,7 +226,10 @@ namespace APSIM.Interop.Markdown.Renderers
         /// all additions to the PDF until it is removed, via <see cref="PopStyle"/>.
         /// </summary>
         /// <param name="style">The style to be added to the style stack.</param>
-        public void PushStyle(TextStyle style)
+        /// <remarks>
+        /// Virtual, to facilitate unit tests.
+        /// </remarks>
+        public virtual void PushStyle(TextStyle style)
         {
             styleStack.Push(style);
         }
