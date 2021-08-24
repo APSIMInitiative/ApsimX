@@ -6,6 +6,7 @@
     using Models.PMF.Interfaces;
     using System;
     using Newtonsoft.Json;
+    using APSIM.Shared.Utilities;
 
     /// <summary>
     /// This organ is simulated using a  organ type.  It provides the core functions of intercepting radiation
@@ -14,6 +15,7 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(GenericOrgan))]
+    [ValidParent(ParentType = typeof(Organ))]
     public class EnergyBalance : Model, ICanopy, IHasWaterDemand
     {
         /// <summary>The plant</summary>
@@ -30,7 +32,7 @@
 
         /// <summary>The parent organ</summary>
         [Link(Type = LinkType.Ancestor)]
-        private GenericOrgan parentOrgan= null;
+        private IOrgan parentOrgan= null;
  
         /// <summary>The FRGR function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -206,6 +208,18 @@
                 for (int i = 0; i < LightProfile.Length; i++)
                     totalRadn += LightProfile[i].AmountOnDead;
                 return totalRadn;
+            }
+        }
+
+
+        /// <summary>
+        /// Water stress factor.
+        /// </summary>
+        public double Fw
+        {
+            get
+            {
+                return MathUtilities.Divide(WaterAllocation, PotentialEP, 1);
             }
         }
         #endregion
