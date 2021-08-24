@@ -12,9 +12,10 @@ namespace UserInterface.Views
     /// </summary>
     /// <remarks>
     /// The caller can provide column widths or the widget will auto-calculate them.
-    /// 
+    /// NB: All GTK use has been abstracted behind interfaces. This class does NOT
+    /// reference GTK.
     /// </remarks>
-    public class SheetEngine
+    public class Sheet
     {
         /// <summary>The width of the grid lines in pixels.</summary>
         private const double lineWidth = 0.2;
@@ -29,10 +30,10 @@ namespace UserInterface.Views
         private int numberHiddenRowsBackingField;
 
         /// <summary>Invoked when a key is pressed.</summary>
-        public event EventHandler<IEventKey> KeyPress;
+        public event EventHandler<SheetEventKey> KeyPress;
 
         /// <summary>Invoked when a mouse button is clicked.</summary>
-        public event EventHandler<IEventButton> MouseClick;
+        public event EventHandler<SheetEventButton> MouseClick;
 
         /// <summary>Invoked when the sheet has been initialised.</summary>
         public event EventHandler Initialised;
@@ -42,6 +43,9 @@ namespace UserInterface.Views
 
         /// <summary>Invoked when the sheet has been scrolled vertically.</summary>
         public event EventHandler ScrolledVertically;
+
+        /// <summary>Invoked when the sheet needs a redraw.</summary>
+        public event EventHandler RedrawNeeded;
 
         /// <summary>The provider of data for the sheet.</summary>
         public ISheetDataProvider DataProvider { get; set; }
@@ -93,6 +97,44 @@ namespace UserInterface.Views
 
         /// <summary>Maximum number of columns that can be hidden (scrolled).</summary>        
         public int MaximumNumberHiddenColumns { get { return CalculateNumberOfHiddenColumnsToMakeColumnVisible(DataProvider.ColumnCount - 1); } }
+
+        /// <summary>Resize the sheet.</summary>        
+        /// <param name="allocationWidth">The width of the sheet.</param>
+        /// <param name="allocationHeight">The height of the sheet.</param>
+        public void Resize(int allocationWidth, int allocationHeight)
+        {
+            if (allocationWidth != Width || allocationHeight != Height)
+            {
+                ColumnWidths = null;
+                MaximumNumberHiddenRows = 0;
+                RedrawNeeded?.Invoke(this, new EventArgs());
+            }
+        }
+
+
+        public void InvokeKeyPress(SheetEventKey key)
+        {
+            KeyPress.Invoke(this, key);
+        }
+
+        public void InvokeButtonPress(SheetEventButton button)
+        {
+            MouseClick.Invoke(this, button);
+        }
+
+        public void InvokeScroll(int delta)
+        {
+            if (delta < 0)
+                ScrollDown();
+            else
+                ScrollUp();
+            Refresh();
+        }
+
+        public void Refresh()
+        {
+            RedrawNeeded?.Invoke(this, new EventArgs());
+        }
 
         /// <summary>Maximum number of rows that can be hidden (scrolled).</summary>        
         public int MaximumNumberHiddenRows { get; private set; }
@@ -260,7 +302,7 @@ namespace UserInterface.Views
 
         /// <summary>Initialise the widget.</summary>
         /// <param name="cr">The drawing context.</param>
-        private void Initialise(IDrawContext cr)
+        public void Initialise(IDrawContext cr)
         {
             if (cr != null)
                 CalculateColumnWidths(cr);
@@ -275,7 +317,7 @@ namespace UserInterface.Views
         /// <summary>Invoked when the user presses a key.</summary>
         /// <param name="evnt">The event data.</param>
         /// <returns>True if event has handled.</returns>
-        public bool OnKeyPressEvent(IEventKey evnt)
+        public bool OnKeyPressEvent(SheetEventKey evnt)
         {
             try
             {
@@ -291,7 +333,7 @@ namespace UserInterface.Views
         /// <summary>Invoked when the user clicks a mouse button.</summary>
         /// <param name="evnt">The event data.</param>
         /// <returns></returns>
-        public bool OnButtonPressEvent(IEventButton evnt)
+        public bool OnButtonPressEvent(SheetEventButton evnt)
         {
             try
             {
@@ -406,7 +448,7 @@ namespace UserInterface.Views
                     if (text == null)
                         text = string.Empty;
 
-                    var rectangle = cr.GetPixelExtents(text);
+                    var rectangle = cr.GetPixelExtents(text, true, false);
 
                     columnWidth = Math.Max(columnWidth, rectangle.Width);
                 }
@@ -432,9 +474,9 @@ namespace UserInterface.Views
                     cr.Rectangle(cellBounds.ToClippedRectangle(Width-20, Height));
                     cr.Clip();
 
-                    cr.LineWidth = lineWidth;
+                    cr.SetLineWidth(lineWidth);
 
-                    cr.Rectangle(cellBounds.ToRectangle());
+                    cr.Rectangle(cellBounds);
                     if (!CellPainter.PaintCell(columnIndex, rowIndex))
                     {
                         //cr.SetSourceColor(CellPainter.GetForegroundColour(columnIndex, rowIndex));
@@ -443,42 +485,44 @@ namespace UserInterface.Views
                     else
                     {
                         // Draw the filled in cell.
-                        this.StyleContext.State = CellPainter.GetCellState(columnIndex, rowIndex);
-                        this.StyleContext.RenderBackground(cr, cellBounds.Left, cellBounds.Top, cellBounds.Width-5, cellBounds.Height-5);
-                        var c = this.StyleContext.GetColor(this.StyleContext.State);
-                        cr.SetSourceColor(new Cairo.Color(c.Red, c.Green, c.Blue, c.Alpha));
+#if NETCOREAPP
+                        cr.State = CellPainter.GetCellState(columnIndex, rowIndex);
+                        cr.DrawFilledRectangle(cellBounds.Left, cellBounds.Top, cellBounds.Width-5, cellBounds.Height-5);
+#else
+                        cr.SetColour(CellPainter.GetBackgroundColour(columnIndex, rowIndex));
+                        cr.DrawFilledRectangle();
+                        cr.SetColour(CellPainter.GetForegroundColour(columnIndex, rowIndex));
+
+#endif
 
                         // Draw cell outline.
                         if (ShowLines)
                         {
-                            cr.Rectangle(cellBounds.ToRectangle());
+                            cr.Rectangle(cellBounds);
                             cr.Stroke();
                         }
 
-                        //Set text font options for cell.
-                        var layout = cr.CreatePangoLayout(text);
-                        layout.FontDescription = new Pango.FontDescription();
-                        if (CellPainter.TextItalics(columnIndex, rowIndex))
-                            layout.FontDescription.Style = Pango.Style.Italic;
-                        if (CellPainter.TextBold(columnIndex, rowIndex))
-                            layout.FontDescription.Weight = Pango.Weight.Bold;
-                        layout.GetPixelExtents(out Pango.Rectangle inkRectangle, out Pango.Rectangle logicalRectangle);
+                        // Measure text for cell.
+                        var r = cr.GetPixelExtents(text, 
+                                                   CellPainter.TextBold(columnIndex, rowIndex), 
+                                                   CellPainter.TextItalics(columnIndex, rowIndex));
 
                         // Vertically center the text.
-                        double y = cellBounds.Top + (cellBounds.Height - logicalRectangle.Height) / 2;
+                        double y = cellBounds.Top + (cellBounds.Height - r.Height) / 2;
 
                         // Horizontal alignment is determined by the cell painter.
                         double x;
                         if (CellPainter.TextLeftJustify(columnIndex, rowIndex))
                             x = cellBounds.Left + ColumnPadding;
                         else
-                            x = cellBounds.Right - ColumnPadding - inkRectangle.Width;
+                            x = cellBounds.Right - ColumnPadding - r.Width;
 
                         cr.MoveTo(x, y);
-                        Pango.CairoHelper.ShowLayout(cr, layout);
+                        cr.DrawText(text, CellPainter.TextBold(columnIndex, rowIndex),
+                                          CellPainter.TextItalics(columnIndex, rowIndex));
                     }
                     cr.ResetClip();
-                    this.StyleContext.State = StateFlags.Normal;
+                    cr.State = States.Normal;
                 }
             }
             catch (Exception ex)
