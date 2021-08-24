@@ -144,6 +144,7 @@
         public BiomassPoolType potentialDMAllocation { get; set; }
 
         /// <summary>Constructor</summary>
+        
         public Organ()
         {
             Live = new Biomass();
@@ -236,6 +237,33 @@
                     return N / Wt;
                 else
                     return 0.0;
+            }
+        }
+
+        /// <summary>
+        /// Gets the nitrogen factor.
+        /// </summary>
+        public double Fn
+        {
+            get
+            {
+                if (Live != null)
+                    return MathUtilities.Divide(Live.N, Live.Wt * MaxNconc, 1);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Gets the metabolic N concentration factor.
+        /// </summary>
+        public double FNmetabolic
+        {
+            get
+            {
+                double factor = 0.0;
+                if (Live != null)
+                    factor = MathUtilities.Divide(Live.N - Live.StructuralN, Live.Wt * (CritNconc - MinNconc), 1.0);
+                return Math.Min(1.0, factor);
             }
         }
 
