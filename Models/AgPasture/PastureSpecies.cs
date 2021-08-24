@@ -383,13 +383,13 @@
                         zones.Add(UptakeDemands);
 
                         // Get the N amount available in the soil
-                        myRoot.EvaluateSoilNitrogenAvailable(zone);
+                        myRoot.EvaluateSoilNitrogenAvailability(zone);
 
                         UptakeDemands.NO3N = myRoot.mySoilNO3Available;
                         UptakeDemands.NH4N = myRoot.mySoilNH4Available;
                         UptakeDemands.Water = new double[zone.NO3N.Length];
 
-                        NSupply += (myRoot.mySoilNH4Available.Sum() + myRoot.mySoilNO3Available.Sum()) * zone.Zone.Area;
+                        NSupply += (myRoot.mySoilNH4Available.Sum() + myRoot.mySoilNO3Available.Sum()) * zone.Zone.Area; //NOTE: This is in kg, not kg/ha
                     }
                 }
 
@@ -405,7 +405,9 @@
                 // 3. Estimate fraction of N used up
                 double fractionUsed = 0.0;
                 if (NSupply > Epsilon)
+                {
                     fractionUsed = Math.Min(1.0, NDemand / NSupply);
+                }
 
                 mySoilNH4Uptake = MathUtilities.Multiply_Value(mySoilNH4Available, fractionUsed);
                 mySoilNO3Uptake = MathUtilities.Multiply_Value(mySoilNO3Available, fractionUsed);
