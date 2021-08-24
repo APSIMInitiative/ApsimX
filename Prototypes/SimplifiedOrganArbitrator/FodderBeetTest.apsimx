@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 368,
+  "ExplorerWidth": 281,
   "Version": 139,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -24,7 +24,7 @@
             "[Clock].Today",
             "[FodderBeet].AboveGround.N",
             "[FodderBeet].AboveGround.Wt",
-            "[FodderBeet].Arbitrator.DM.TotalFixationSupply",
+            "[FodderBeet].Arbitrator.TotalDMFixationSupply",
             "[FodderBeet].Leaf.NodeNumber",
             "[FodderBeet].Leaf.DeltaLAI",
             "[FodderBeet].Leaf.DMDemand",
@@ -152,14 +152,6 @@
                 {
                   "$type": "Models.PMF.Arbitrator.WaterUptakeMethod, Models",
                   "Name": "WaterUptakeMethod",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Arbitrator.NitrogenUptakeMethod, Models",
-                  "Name": "NitrogenUptakeMethod",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
