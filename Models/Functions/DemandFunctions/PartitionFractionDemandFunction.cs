@@ -19,14 +19,14 @@ namespace Models.Functions.DemandFunctions
 
         /// <summary>The arbitrator</summary>
         [Link]
-        IArbitrator arbitrator = null;
+        ITotalDMFixationSupply arbitrator = null;
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-            if (arbitrator.DM != null)
-                return arbitrator.DM.TotalFixationSupply * PartitionFraction.Value(arrayIndex);
+            if (arbitrator != null)
+                return arbitrator.TotalDMFixationSupply * PartitionFraction.Value(arrayIndex);
             else
                 return 0;
         }

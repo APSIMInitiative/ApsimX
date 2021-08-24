@@ -14,6 +14,15 @@
     }
 
     /// <summary>
+    /// Interface for Biomass supply from photosynthesis
+    /// </summary>
+    public interface ITotalDMFixationSupply
+    {
+        /// <summary> The amount of DM fixed by photosynthesis</summary>
+        double TotalDMFixationSupply { get; }
+    }
+
+    /// <summary>
     /// An interface that defines what needs to be implemented by an organ
     /// that communicates to the OrganArbitrator.
     /// </summary>

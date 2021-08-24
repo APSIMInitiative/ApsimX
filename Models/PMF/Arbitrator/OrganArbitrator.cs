@@ -38,7 +38,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
-    public class OrganArbitrator : Model, IUptake, IArbitrator, ICustomDocumentation
+    public class OrganArbitrator : Model, IUptake, IArbitrator, ITotalDMFixationSupply, ICustomDocumentation
     {
         ///1. Links
         ///------------------------------------------------------------------------------------------------
@@ -123,6 +123,10 @@ namespace Models.PMF
         [JsonIgnore]
         public double FN { get { return N == null ? 0 : MathUtilities.Divide(N.TotalPlantSupply, N.TotalPlantDemand, 0); } }
 
+
+        /// <summary>Total DM supply from photosynthesis needed for partitioning fraction function</summary>
+        [JsonIgnore]
+        public double TotalDMFixationSupply { get { return DM.TotalFixationSupply; } }
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
 
