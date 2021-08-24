@@ -602,7 +602,12 @@ namespace APSIM.Interop.Markdown.Renderers
         /// <summary>
         /// Append a horizontal rule after the last paragraph.
         /// </summary>
-        public void AppendHorizontalRule()
+        /// <remarks>
+        /// This is only virtual to facilitate unit tests.
+        /// If we ever extract an interface for pdf operations, we
+        /// could make this non-virtual once more.
+        /// </remarks>
+        public virtual void AppendHorizontalRule()
         {
             Style hrStyle = GetHorizontalRuleStyle();
             GetLastParagraph().Format = hrStyle.ParagraphFormat.Clone();
