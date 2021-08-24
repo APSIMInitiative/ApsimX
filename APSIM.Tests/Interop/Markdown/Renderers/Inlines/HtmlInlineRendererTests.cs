@@ -1,20 +1,22 @@
 using NUnit.Framework;
 using APSIM.Interop.Documentation;
 using APSIM.Interop.Markdown.Renderers;
+using APSIM.Interop.Markdown.Renderers.Blocks;
+using Markdig.Syntax;
 using Markdig.Syntax.Inlines;
+using APSIM.Interop.Documentation.Extensions;
 using APSIM.Interop.Markdown;
 using MigraDocCore.DocumentObjectModel;
 using APSIM.Interop.Markdown.Renderers.Inlines;
 using Moq;
-using Markdig.Helpers;
 
 namespace APSIM.Tests.Interop.Markdown.Renderers.Inlines
 {
     /// <summary>
-    /// Tests for <see cref="HtmlEntityInlineRenderer"/>.
+    /// Tests for <see cref="HtmlInlineRenderer"/>.
     /// </summary>
     [TestFixture]
-    public class HtmlEntityInlineRendererTests
+    public class HtmlInlineRendererTests
     {
         /// <summary>
         /// PDF Builder API instance.
@@ -27,19 +29,19 @@ namespace APSIM.Tests.Interop.Markdown.Renderers.Inlines
         private Document document;
 
         /// <summary>
-        /// The <see cref="HtmlEntityInlineRenderer"/> instance being tested.
+        /// The <see cref="HtmlInlineRenderer"/> instance being tested.
         /// </summary>
-        private HtmlEntityInlineRenderer renderer;
+        private HtmlInlineRenderer renderer;
 
         /// <summary>
-        /// Sample html entity inline which may be used by tests.
+        /// Sample html inline which may be used by tests.
         /// </summary>
-        private HtmlEntityInline inline;
+        private HtmlInline inline;
 
         /// <summary>
-        /// Text in the sample html entity inline.
+        /// Text in the sample html inline.
         /// </summary>
-        private string sampleText;
+        private string sampleHtml;
 
         /// <summary>
         /// Initialise the testing environment.
@@ -51,30 +53,13 @@ namespace APSIM.Tests.Interop.Markdown.Renderers.Inlines
             // Workaround for a quirk in the migradoc API.
             _ = document.AddSection().Elements;
             pdfBuilder = new PdfBuilder(document, PdfOptions.Default);
-            renderer = new HtmlEntityInlineRenderer();
-            sampleText = "sample html entity";
-            inline = new HtmlEntityInline();
-            inline.Transcoded = new StringSlice(sampleText);
+            renderer = new HtmlInlineRenderer();
+            inline = new HtmlInline();
+            inline.Tag = sampleHtml = "<td>";
         }
 
         /// <summary>
-        /// Ensure that the code text is inserted.
-        /// </summary>
-        [Test]
-        public void EnsureEntityTextIsInserted()
-        {
-            renderer.Write(pdfBuilder, inline);
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
-            Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
-            Assert.AreEqual(1, paragraph.Elements.Count);
-            FormattedText text = (FormattedText)paragraph.Elements[0];
-            Assert.AreEqual(1, text.Elements.Count);
-            Text rawText = (Text)text.Elements[0];
-            Assert.AreEqual(sampleText, rawText.Content);
-        }
-
-        /// <summary>
-        /// Ensure that the inserted entity has no style.
+        /// Ensure that the inserted html object has no style.
         /// </summary>
         [Test]
         public void EnsureNoStyle()

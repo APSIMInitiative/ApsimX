@@ -10,7 +10,7 @@ using MigraDocCore.DocumentObjectModel;
 using APSIM.Interop.Markdown.Renderers.Inlines;
 using Moq;
 
-namespace APSIM.Tests.Interop.Markdown.Renderers.Blocks
+namespace APSIM.Tests.Interop.Markdown.Renderers.Inlines
 {
     /// <summary>
     /// Tests for <see cref="EmphasisInlineRenderer"/>.
