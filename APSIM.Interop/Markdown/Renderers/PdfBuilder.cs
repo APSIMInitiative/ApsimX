@@ -431,7 +431,11 @@ namespace APSIM.Interop.Markdown.Renderers
         /// </summary>
         /// <param name="text">Text to be appended.</param>
         /// <param name="textStyle">Style to be applied to the text.</param>
-        public void AppendText(string text, TextStyle textStyle)
+        /// <remarks>
+        /// Virtual to facilitate unit tests, this could be removed if we
+        /// extract an interface from this class...
+        /// </remarks>
+        public virtual void AppendText(string text, TextStyle textStyle)
         {
             AppendText(text, textStyle, GetLastParagraph());
         }
