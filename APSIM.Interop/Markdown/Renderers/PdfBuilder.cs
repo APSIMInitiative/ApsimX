@@ -253,7 +253,11 @@ namespace APSIM.Interop.Markdown.Renderers
         /// <see cref="ClearLinkState"/>.
         /// </summary>
         /// <param name="linkUri">Link URI.</param>
-        public void SetLinkState(string linkUri)
+        /// <remarks>
+        /// Could remove virtual keyword if/when we extract an interface - it's
+        /// really only here for unit tests.
+        /// </remarks>
+        public virtual void SetLinkState(string linkUri)
         {
             if (linkState != null)
                 throw new NotImplementedException("Nested links are not supported.");
