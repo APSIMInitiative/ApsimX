@@ -5,6 +5,14 @@ using System.IO;
 using APSIM.Interop.Utility;
 using System;
 using APSIM.Services.Graphing;
+using APSIM.Interop.Graphing.Extensions;
+#if NETCOREAPP
+using Legend = OxyPlot.Legends.Legend;
+using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
+using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
+using OxyLegendPlacement = OxyPlot.Legends.LegendPlacement;
+using OxyPlot.SkiaSharp;
+#endif
 
 namespace APSIM.Interop.Graphing
 {
@@ -13,8 +21,6 @@ namespace APSIM.Interop.Graphing
     /// </summary>
     /// <remarks>
     /// This class is responsible for graph -> oxyplot and oxyplot -> image conversions.
-    /// todo: should the other methods be added to the interface? I'm going to leave
-    /// them as-is for now, but there's no real reason they couldn't be part of the interface.
     /// </remarks>
     public class GraphExporter : IGraphExporter
     {
@@ -52,25 +58,25 @@ namespace APSIM.Interop.Graphing
         {
             using (Stream stream = new MemoryStream())
             {
+#if NETCOREAPP
+                PngExporter.Export(plot, stream, (int)width, (int)height);
+                stream.Seek(0, SeekOrigin.Begin);
+                return Image.FromStream(stream);
+#else
+                // Using the built-in svg exporter for netfx builds.
+                // This doesn't look great.
+
                 // SvgExporter wants dimensions in points.
                 double widthPt = width / pointsToPixels;
                 double heightPt = height / pointsToPixels;
 
-                // Write the image to a memory stream in SVG format.
                 SvgExporter exporter = new SvgExporter();
                 exporter.Width = widthPt;
                 exporter.Height = heightPt;
-#if NETCOREAPP
-                // This is a workaround for a bug in oxyplot's svg exporter;
-                // Without this, the vertical alignment of axis tick labels
-                // is incorrect (they are rendered too high).
-                exporter.UseVerticalTextAlignmentWorkaround = true;
-#endif
                 exporter.Export(plot, stream);
                 stream.Seek(0, SeekOrigin.Begin);
-
-                // Setting height to 0 will cause the aspect ratio to be preserved.
-                return ImageUtilities.ReadSvg(stream, (int)width, (int)height);
+                return ImageUtilities.ReadSvg(stream, (int)width, (int)height);;
+#endif
             }
         }
 
@@ -98,13 +104,23 @@ namespace APSIM.Interop.Graphing
                 plot.Series.Add(series.ToOxyPlotSeries());
 
             // Legend
+#if NETFRAMEWORK
             plot.LegendOrientation = graph.Legend.Orientation.ToOxyPlotLegendOrientation();
             plot.LegendPosition = graph.Legend.Position.ToOxyPlotLegendPosition();
             plot.LegendPlacement = graph.Legend.InsideGraphArea ? LegendPlacement.Inside : LegendPlacement.Outside;
+#else
+            plot.Legends.Add(new Legend()
+            {
+                LegendOrientation = graph.Legend.Orientation.ToOxyPlotLegendOrientation(),
+                LegendPosition = graph.Legend.Position.ToOxyPlotLegendPosition(),
+                LegendPlacement = graph.Legend.InsideGraphArea ? OxyLegendPlacement.Inside : OxyLegendPlacement.Outside,
+                Font = font,
+            });
+#endif
 
             // Apply font
             plot.TitleFont = font;
-            plot.LegendFont = font;
+            plot.SetLegendFont(font);
             plot.PlotAreaBorderThickness = new OxyThickness(0);
             plot.Title = graph.Title;
 

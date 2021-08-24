@@ -145,7 +145,16 @@ namespace Models
                 }
 
                 if (showOneToOne)
-                    regressionLines.Add(Put1To1LineOnGraph(x, y));
+                {
+                    try
+                    {
+                        regressionLines.Add(Put1To1LineOnGraph(x, y));
+                    }
+                    catch (Exception err)
+                    {
+                        Console.Error.WriteLine(err);
+                    }
+                }
 
                 checkpointNumber++;
             }
