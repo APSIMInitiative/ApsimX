@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Models.Core;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,17 +16,17 @@ namespace Models.CLEM
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
         /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <returns>Html formatted description</returns>
         string ModelSummary(bool formatForParentControl);
 
         /// <summary>
-        /// 
+        /// Method to create the full descriptive summary for a model and all ancestors
         /// </summary>
-        /// <param name="model"></param>
+        /// <param name="model">The model providing the summary</param>
         /// <param name="formatForParentControl">Use full verbose description</param>
         /// <param name="htmlString"></param>
         /// <returns></returns>
-        string GetFullSummary(object model, bool formatForParentControl, string htmlString);
+        string GetFullSummary(IModel model, bool formatForParentControl, string htmlString);
 
         /// <summary>
         /// Styling to use for HTML summary

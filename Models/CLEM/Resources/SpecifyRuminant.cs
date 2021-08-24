@@ -30,13 +30,9 @@ namespace Models.CLEM.Resources
     public class SpecifyRuminant : CLEMModel, IValidatableObject
     {
         [Link]
-        ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
 
-        /// <summary>
-        /// Records if a warning about set weight occurred
-        /// </summary>
-        [JsonIgnore]
-        public bool WeightWarningOccurred = false;
+        private RuminantType ruminantType;
 
         /// <summary>
         /// The type of ruminant
@@ -66,12 +62,16 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public Ruminant ExampleIndividual { get; private set; }
 
-        private RuminantType ruminantType;
-
         /// <summary>
         /// The ruminant type for this specified ruminant
         /// </summary>
         public RuminantType BreedParams { get { return ruminantType;} }
+
+        /// <summary>
+        /// Records if a warning about set weight occurred
+        /// </summary>
+        [JsonIgnore]
+        public bool WeightWarningOccurred { get; private set; } = false;
 
         /// <summary>
         /// Constructor
@@ -88,7 +88,7 @@ namespace Models.CLEM.Resources
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
             Details = this.FindAllChildren<RuminantTypeCohort>().FirstOrDefault();
-            ruminantType = Resources.GetResourceItem(this.Parent as Model, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
+            ruminantType = resources.FindResourceType<RuminantHerd, RuminantType>(this.Parent as Model, RuminantTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // create example ruminant
             Details.Number = 1;
@@ -133,23 +133,19 @@ namespace Models.CLEM.Resources
             {
                 htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"setvalue\">{Proportion.ToString("p0")}</span> of the individuals will be ");
                 if (RuminantTypeName == null || RuminantTypeName == "")
-                {
                     htmlWriter.Write("<span class=\"errorlink\">TYPE NOT SET</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"resourcelink\">" + RuminantTypeName + "</span>");
-                }
+
                 cohortFound = FindAllChildren<RuminantTypeCohort>().Count() > 0;
                 if (cohortFound)
-                {
                     htmlWriter.Write($" with the following details:</div>");
-                }
                 else
                 {
                     htmlWriter.Write($"</div>");
                     htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"resourcelink\">RuminantCohort</span> describing the individuals was provided!</div>");
                 }
+
                 return htmlWriter.ToString();
             }
         }

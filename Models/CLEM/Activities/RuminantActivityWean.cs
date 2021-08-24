@@ -29,7 +29,9 @@ namespace Models.CLEM.Activities
     public class RuminantActivityWean: CLEMRuminantActivityBase
     {
         [Link]
-        Clock Clock = null;
+        private Clock clock = null;
+
+        private string grazeStore;
 
         /// <summary>
         /// Style of weaning rule
@@ -58,9 +60,7 @@ namespace Models.CLEM.Activities
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } })]
         [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string GrazeFoodStoreName { get; set; }
-        
-        private string grazeStore; 
-        
+      
         /// <summary>
         /// Constructor
         /// </summary>
@@ -88,9 +88,7 @@ namespace Models.CLEM.Activities
             {
                 var ah = this.FindInScope<ActivitiesHolder>();
                 if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
-                {
                     Summary.WriteWarning(this, String.Format("Individuals weaned by [a={0}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", this.Name));
-                }
             }
         }
 
@@ -138,10 +136,8 @@ namespace Models.CLEM.Activities
                         ind.Location = grazeStore;
                         weanedCount++;
                         if (ind.Mother != null)
-                        {
                             // report conception status changed when offspring weaned.
-                            ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, Clock.Today));
-                        }
+                            ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, clock.Today));
                     }
 
                     // stop if labour limited individuals reached and LabourShortfallAffectsActivity
@@ -153,14 +149,9 @@ namespace Models.CLEM.Activities
                 }
 
                 if(weanedCount > 0)
-                {
                     SetStatusSuccess();
-                }
                 else
-                {
                     this.Status = ActivityStatus.NotNeeded;
-                }
-
             }
         }
 
@@ -186,9 +177,7 @@ namespace Models.CLEM.Activities
                 case LabourUnitType.perUnit:
                     double numberUnits = head / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
 
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
@@ -196,48 +185,6 @@ namespace Models.CLEM.Activities
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
             return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
         }
 
         #region descriptive summary
@@ -252,9 +199,7 @@ namespace Models.CLEM.Activities
                 {
                     htmlWriter.Write("<span class=\"setvalue\">" + WeaningAge.ToString("#0.#") + "</span> months");
                     if (Style == WeaningStyle.AgeOrWeight)
-                    {
                         htmlWriter.Write(" or  ");
-                    }
                 }
                 if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.WeightOnly)
                 {
@@ -263,16 +208,11 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Weaned individuals will be placed in ");
                 if (GrazeFoodStoreName == null || GrazeFoodStoreName == "")
-                {
                     htmlWriter.Write("<span class=\"resourcelink\">Not specified - general yards</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreName + "</span>");
-                }
                 htmlWriter.Write("</div>");
                 // warn if natural weaning will take place
-
                 return htmlWriter.ToString(); 
             }
         } 

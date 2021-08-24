@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
     public class OtherAnimalsActivityFeed : CLEMActivityBase
     {
         [Link]
-        Clock Clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Name of Feed to use
@@ -66,7 +66,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // locate FeedType resource
-            FeedType = Resources.GetResourceItem(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
+            FeedType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
         }
 
         /// <summary>
@@ -79,7 +79,7 @@ namespace Models.CLEM.Activities
 
             // get feed required
             // zero based month index for array
-            int month = Clock.Today.Month - 1;
+            int month = clock.Today.Month - 1;
             double allIndividuals = 0;
             double amount = 0;
             foreach (OtherAnimalsFilterGroup filtergroup in this.FindAllChildren<OtherAnimalsFilterGroup>())
@@ -108,6 +108,7 @@ namespace Models.CLEM.Activities
                     {
                         AllowTransmutation = true,
                         Required = amount,
+                        Resource = FeedType,
                         ResourceType = typeof(AnimalFoodStore),
                         ResourceTypeName = FeedTypeName,
                         ActivityModel = this,
@@ -119,36 +120,6 @@ namespace Models.CLEM.Activities
                 }
             }
             return resourcesNeeded;
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
         }
 
         /// <inheritdoc/>
@@ -180,11 +151,6 @@ namespace Models.CLEM.Activities
             return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, "Other animals");
         }
 
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
     }
 
     /// <summary>

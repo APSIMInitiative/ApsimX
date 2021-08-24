@@ -81,23 +81,15 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (Metric is null || Metric == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">METRIC NOT SET</span>: ");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">" + Metric + "</span>: ");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(Metric, "Metric not set"));
                 if (TargetValue > 0)
                 {
                     htmlWriter.Write("<span class=\"setvalue\">");
                     htmlWriter.Write(TargetValue.ToString("#,##0.##"));
                 }
                 else
-                {
                     htmlWriter.Write("<span class=\"errorlink\">VALUE NOT SET");
-                }
+
                 htmlWriter.Write("</span> units per AE per day</div>");
 
                 if (OtherSourcesValue > 0)
