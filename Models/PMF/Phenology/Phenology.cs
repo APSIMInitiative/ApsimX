@@ -13,9 +13,8 @@ using APSIM.Services.Documentation;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// # [Name]
-    /// [Parent.Name]'s phenological development is simulated as the progression through a 
-    /// series of developmental phases, each bound by distinct growth <i>stages</i>. 
+    /// The phenological development is simulated as the progression through a 
+    /// series of developmental phases, each bound by distinct growth stage. 
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
@@ -482,22 +481,19 @@ namespace Models.PMF.Phen
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         public override IEnumerable<ITag> Document()
         {
-            List<ITag> tags = new List<ITag>();
-
             // Write description of this class from summary and remarks XML documentation.
-            tags.AddRange(GetModelDescription());
+            foreach (var tag in GetModelDescription())
+                yield return tag;
 
             // Write memos.
-            tags.AddRange(DocumentChildren<Memo>());
+            foreach (var tag in DocumentChildren<Memo>())
+                yield return tag;
 
             // Document thermal time function.
-            tags.Add(new Section("ThermalTime", thermalTime.Document()));
+            yield return new Section("ThermalTime", thermalTime.Document());
 
-            // Document phases.
-            List<ITag> phaseTags = new List<ITag>();
-
-            // First, write a table containing phase numers and start/end stages.
-            phaseTags.Add(new Paragraph("**List of stages and phases used in the simulation of crop phenological development**"));
+            // Write a table containing phase numers and start/end stages.
+            yield return new Paragraph("**List of stages and phases used in the simulation of crop phenological development**");
 
             DataTable phaseTable = new DataTable();
             phaseTable.Columns.Add("Phase Number", typeof(int));
@@ -516,15 +512,25 @@ namespace Models.PMF.Phen
                 phaseTable.Rows.Add(row);
                 n++;
             }
-            phaseTags.Add(new Table(phaseTable));
+            yield return new Table(phaseTable);
 
             // Document Phases
-            foreach (IPhase phase in FindAllChildren<IPhase>())
-                phaseTags.AddRange(phase.Document());
+            foreach (var phase in FindAllChildren<IPhase>())
+                yield return new Section(phase.Name, phase.Document());
 
-            tags.Add(new Section("Phases", phaseTags));
+            // Document Constants
+            var constantTags = new List<ITag>();
+            foreach (var constant in FindAllChildren<Constant>())
+                foreach (var tag in constant.Document())
+                    constantTags.Add(tag);
+            yield return new Section("Constants", constantTags);
 
-            return new ITag[] { new Section("Phenology", tags) };
+            // Document everything else.
+            foreach (var phase in Children.Where(child => !(child is IPhase) &&
+                                                          !(child is Memo) &&
+                                                          !(child is Constant) &&
+                                                          child != thermalTime))
+                yield return new Section(phase.Name, phase.Document());
         }
     }
 }

@@ -5,6 +5,8 @@ using Models.Core;
 using System.Xml;
 using APSIM.Shared.Utilities;
 using System.Data;
+using APSIM.Services.Documentation;
+using Newtonsoft.Json;
 
 namespace Models.Functions
 {
@@ -19,13 +21,16 @@ namespace Models.Functions
     public class XYPairs : Model, IFunction, IIndexedFunction
     {
         /// <summary>Gets or sets the x.</summary>
-        /// <value>The x.</value>
         [Description("X")]
         public double[] X { get; set; }
+
         /// <summary>Gets or sets the y.</summary>
-        /// <value>The y.</value>
         [Description("Y")]
         public double[] Y { get; set; }
+
+        /// <summary>The name of the x variable. Used in documentation.</summary>
+        [Description("Name of X variable (for documentation)")]
+        public string XVariableName { get; set; }
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>
@@ -44,24 +49,33 @@ namespace Models.Functions
             return MathUtilities.LinearInterpReal(dX, X, Y, out DidInterpolate);
         }
 
-        /// <summary>
-        /// Create a table which can be passed into autodocs.
-        /// </summary>
-        public APSIM.Services.Documentation.Table ToTable()
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
         {
             DataTable table = new DataTable(Name);
             // Using the string datatype gives us control over how the numbers
             // are rendered, and allows for empty cells.
-            table.Columns.Add("X", typeof(string));
-            table.Columns.Add("Y", typeof(string));
+            if (XVariableName == null)
+                XVariableName = "X";
+            table.Columns.Add(XVariableName, typeof(string));
+            table.Columns.Add(Parent.Name, typeof(string));
             for (int i = 0; i < Math.Max(X.Length, Y.Length); i++)
             {
                 DataRow row = table.NewRow();
-                row[0] = i < X.Length - 1 ? X[i].ToString("F1") : "";
-                row[0] = i < Y.Length - 1 ? Y[i].ToString("F1") : "";
+                row[0] = i <= X.Length - 1 ? X[i].ToString("F1") : "";
+                row[1] = i <= Y.Length - 1 ? Y[i].ToString("F1") : "";
                 table.Rows.Add(row);
             }
-            return new APSIM.Services.Documentation.Table(table);
+            yield return new APSIM.Services.Documentation.Table(table);
+
+            var series = new APSIM.Services.Graphing.Series[1];
+            // fixme: colour
+            series[0] = new APSIM.Services.Graphing.LineSeries(Parent.Name, ColourUtilities.ChooseColour(4), false, X, Y, new APSIM.Services.Graphing.Line(APSIM.Services.Graphing.LineType.Solid, APSIM.Services.Graphing.LineThickness.Normal), new APSIM.Services.Graphing.Marker(APSIM.Services.Graphing.MarkerType.None, APSIM.Services.Graphing.MarkerSize.Normal, 1));
+            var axes = new APSIM.Services.Graphing.Axis[2];
+            axes[0] = new APSIM.Services.Graphing.Axis(XVariableName, APSIM.Services.Graphing.AxisPosition.Bottom, false, false);
+            axes[1] = new APSIM.Services.Graphing.Axis(Parent.Name, APSIM.Services.Graphing.AxisPosition.Left, false, false);
+            var legend = new APSIM.Services.Graphing.LegendConfiguration(APSIM.Services.Graphing.LegendOrientation.Vertical, APSIM.Services.Graphing.LegendPosition.TopLeft, true);
+            yield return new APSIM.Services.Documentation.Graph(Parent.Name, series, axes, legend);
         }
     }
 }

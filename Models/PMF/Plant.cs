@@ -15,9 +15,12 @@
     using APSIM.Shared.Utilities;
     using System.Globalization;
 
-    ///<summary>
-    /// # [Name]
-    /// The generic plant model
+    /// <summary>
+    /// The model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This
+    /// new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a
+    /// model in much the same way that models can be coupled to construct a simulation.This means that dynamic composition
+    /// of lower level process and organ classes(e.g.photosynthesis, leaf) into larger constructions(e.g.maize, wheat,
+    /// sorghum) can be achieved by the model developer without additional coding.
     /// </summary>
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
@@ -459,14 +462,16 @@
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
-            yield return new Paragraph($"The {Name} model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections.");
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            yield return new Paragraph($"The model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections.");
 
             // Write Plant Model Table
             yield return new Paragraph("**List of Plant Model Components.**");
             DataTable tableData = new DataTable();
             tableData.Columns.Add("Component Name", typeof(string));
             tableData.Columns.Add("Component Type", typeof(string));
-
             foreach (IModel child in Children)
             {
                 if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(CultivarFolder) && child.GetType() != typeof(CompositeBiomass))
@@ -478,6 +483,10 @@
                 }
             }
             yield return new Table(tableData);
+
+            // Document children.
+            foreach (IModel child in Children)
+                yield return new Section(child.Name, child.Document());
         }
 
         /// <summary>Removes a given amount of biomass (and N) from the plant.</summary>

@@ -144,7 +144,11 @@
                             {
                                 IModel ancestor = GetParent(model, fieldType);
                                 if (ancestor == null)
-                                    throw new Exception($"Unable to resolve link {field.Name} in model {model.FullPath}: {model.Name} has no ancestors of type {fieldType.Name}");
+                                {
+                                    if (throwOnFail)
+                                        throw new Exception($"Unable to resolve link {field.Name} in model {model.FullPath}: {model.Name} has no ancestors of type {fieldType.Name}");
+                                    continue;
+                                }
                                 matches.Add(ancestor);
                             }
                             else

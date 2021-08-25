@@ -63,7 +63,7 @@ namespace Models.Functions
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
-            foreach (ITag tag in base.Document())
+            foreach (ITag tag in GetModelDescription())
                 yield return tag;
             yield return new Paragraph($"*Twilight = {Twilight} (degrees)*");
         }

@@ -5,6 +5,7 @@ using Models.Functions;
 using Newtonsoft.Json;
 using Models.PMF.Struct;
 using System.IO;
+using APSIM.Services.Documentation;
 
 namespace Models.PMF.Phen
 {
@@ -96,6 +97,17 @@ namespace Models.PMF.Phen
             NodeNoAtStart = 0;
             FractionCompleteYesterday = 0;
             First = true;
+        }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write description of this class.
+            yield return new Paragraph($"This phase goes from {Start.ToLower()} to {End.ToLower()} and extends from the end of the previous phase until the *CompletionNodeNumber* is achieved. The duration of this phase is determined by leaf appearance rate and the *CompletionNodeNumber* target");
+
+            // Write children
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
         }
 
         //7. Private methods

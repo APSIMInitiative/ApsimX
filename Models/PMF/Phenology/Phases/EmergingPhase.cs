@@ -11,14 +11,9 @@ using System.Text;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// # [Name] Phase
-    /// The [Name] phase goes from [Start] stage to [End] stage and simulates time to 
+    /// This phase goes from a start stage to an end stage and simulates time to 
     /// emergence as a function of sowing depth.  
-    /// The <i>ThermalTime Target</i> for this phase is given by
-    /// <br>Target = SowingDepth x ShootRate + ShootLag</br>
-    /// Where: ShootRate = + ShootRate + ShootLag \n 
-    /// and SowingDepth (mm) is sent from the manager with the sowing event;
-    /// Progress toward emergence is driven by Thermal time accumulation from Phenology.Thermaltime
+    /// Progress toward emergence is driven by a thermal time accumulation child function.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -151,28 +146,26 @@ namespace Models.PMF.Phen
             Target = ShootLag + data.Depth * ShootRate;
         }
 
-        /// <summary>
-        /// Document the model.
-        /// </summary>
+        /// <summary>Document the model.</summary>
         public override IEnumerable<ITag> Document()
         {
-            List<ITag> documentation = new List<ITag>();
-            documentation.AddRange(DocumentChildren<Memo>());
-
             // Write description of this class.
-            StringBuilder paragraph = new StringBuilder();
-            paragraph.AppendLine($"This phase goes from {Start} to {End} and simulates time to emergence as a function of sowing depth. The *ThermalTime Target* for ending this phase is given by:");
-            paragraph.AppendLine("    *Target = SowingDepth x ShootRate + ShootLag*");
-            paragraph.AppendLine("Where:");
-            paragraph.AppendLine($"    *ShootRate* = {ShootRate} (deg day/mm),");
-            paragraph.AppendLine($"    *ShootLag* = {ShootLag} (deg day), ");
-            paragraph.AppendLine($"and *SowingDepth* (mm) is sent from the manager with the sowing event.");
-            documentation.Add(new Paragraph(paragraph.ToString()));
+            yield return new Paragraph($"This phase goes from {Start.ToLower()} to {End.ToLower()} and simulates time to {End.ToLower()} as a function of sowing depth. The *ThermalTime Target* for ending this phase is given by:");
+            yield return new Paragraph($"*Target* = *SowingDepth* x *ShootRate* + *ShootLag*");
+            yield return new Paragraph($"Where:");
+            yield return new Paragraph($"*ShootRate* = {ShootRate} (deg day/mm),");
+            yield return new Paragraph($"*ShootLag* = {ShootLag} (deg day), ");
+            yield return new Paragraph($"*SowingDepth* (mm) is sent from the manager with the sowing event.");
+
+            // Write memos.
+            foreach (var tag in DocumentChildren<Memo>())
+                yield return tag;
+
             IFunction thermalTime = FindChild<IFunction>("ThermalTime");
-            documentation.Add(new Paragraph($"Progress toward emergence is driven by thermal time accumulation{(thermalTime == null ? "" : ", where thermal time is calculated as:")}."));
+            yield return new Paragraph($"Progress toward emergence is driven by thermal time accumulation{(thermalTime == null ? "" : ", where thermal time is calculated as:")}");
             if (thermalTime != null)
-                documentation.AddRange(thermalTime.Document());
-            yield return new Section($"{Name} Phase", documentation);
+                foreach (var tag in thermalTime.Document())
+                    yield return tag;
         }
     }
 }

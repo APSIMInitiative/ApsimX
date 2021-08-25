@@ -14,15 +14,6 @@
       "Name": "Wheat",
       "Children": [
         {
-          "$type": "Models.Memo, Models",
-          "Text": "\n# The APSIM Wheat Model\n\n_Brown, H.E., Huth, N.I. and Holzworth, D.P._\n\nThe APSIM wheat model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\n\nThe model consists of:\n\n* a phenology model to simulate development between developmental phases  \n* a structure model to simulate plant morphology  \n* a collection of organs to simulate the various plant parts  \n* an arbitrator to allocate resources (N, biomass) to the various plant organs  \n",
-          "Name": "TitlePage",
-          "Children": [],
-          "IncludeInDocumentation": true,
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
           "$type": "Models.PMF.OrganArbitrator, Models",
           "Name": "Arbitrator",
           "Children": [

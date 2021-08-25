@@ -49,7 +49,8 @@ namespace Models.Functions
             yield return new Paragraph($"*{Name} is calculated as a function of daily min and max temperatures, these are weighted toward max temperature according to the specified MaximumTemperatureWeighting factor. A value equal to 1.0 means it will use max temperature, a value of 0.5 means average temperature.*");
             yield return new Paragraph($"*aximumTemperatureWeighting = {MaximumTemperatureWeighting}*");
             // fixme - the graph and table should be next to each other.
-            yield return XYPairs.ToTable();
+            foreach (var tag in XYPairs.Document())
+                yield return tag;
             yield return CreateGraph();
             // yield return new GraphAndTable(XYPairs, string.Empty, "Average temperature (oC)", Name, indent));
         }

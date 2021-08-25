@@ -66,7 +66,12 @@ namespace Models.Functions
         public override IEnumerable<ITag> Document()
         {
             if (ValueToHold != null)
-                yield return new Paragraph($"{Name} is the same as {ValueToHold.Name} until it reaches {WhenToHold} stage when it fixes its value");
+            {
+                yield return new Paragraph($"*{Name}* = *{ValueToHold.Name}* until {WhenToHold} after which the value is fixed.");
+                foreach (var child in FindAllChildren<IModel>())
+                    foreach (var tag in child.Document())
+                        yield return tag;
+            }
         }
 
         /// <summary>Get value</summary>
