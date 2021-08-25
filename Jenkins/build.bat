@@ -39,6 +39,7 @@ call :getVersion
 
 rem Build
 dotnet build %flags% "%solution_file%"
+dotnet build %flags% "%apsimx%\Updater\Updater.csproj"
 endlocal
 exit /b %errorlevel%
 
@@ -79,3 +80,4 @@ echo [assembly: AssemblyTitle("APSIM %APSIM_VERSION%")] >> "%apsimx%\Models\Prop
 echo [assembly: AssemblyVersion("%APSIM_VERSION%")] >> "%apsimx%\Models\Properties\AssemblyVersion.cs"
 echo [assembly: AssemblyFileVersion("%APSIM_VERSION%")] >> "%apsimx%\Models\Properties\AssemblyVersion.cs"
 echo [assembly: AssemblyCopyright("Copyright © APSIM Initiative %YEAR%")] >> "%apsimx%\Models\Properties\AssemblyVersion.cs"
+copy /y "%apsimx%\Models\Properties\AssemblyVersion.cs" "%apsimx%\ApsimNG\Properties\AssemblyVersion.cs"

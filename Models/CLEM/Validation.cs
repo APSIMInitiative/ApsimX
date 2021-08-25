@@ -121,17 +121,27 @@ namespace Models.CLEM
         /// <returns></returns>
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            double maxvalue = Convert.ToDouble(value, CultureInfo.InvariantCulture);
             string[] memberNames = new string[] { validationContext.MemberName };
 
-            if ((maxvalue >= 0) && (maxvalue <= 1))
+            double[] listvalues;
+            if (value != null && value.GetType().IsArray)
             {
-                return ValidationResult.Success;
+                listvalues = value as double[];
             }
             else
             {
-                return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
+                listvalues = new double[] { Convert.ToDouble(value, CultureInfo.InvariantCulture) };
             }
+
+            // allow for arrays of values to be checked
+            foreach (double item in listvalues)
+            {
+                if (((item < 0) | (item > 1)))
+                {
+                    return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
+                }
+            }
+            return ValidationResult.Success;
         }
     }
 
@@ -387,7 +397,7 @@ namespace Models.CLEM
     }
 
     /// <summary>
-    /// Tests if date greater than specified property name
+    /// Tests if the number of items in an array match specified value
     /// </summary>
     [AttributeUsage(AttributeTargets.Property)]
     public class ArrayItemCountAttribute : ValidationAttribute

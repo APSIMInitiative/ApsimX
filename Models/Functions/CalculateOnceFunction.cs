@@ -8,7 +8,7 @@ namespace Models.Functions
     /// </summary>
     [Serializable]
     [Description("Returns a value that is calculated at SimulationCommencing and then held constant")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class CalculateOnceFunction : Model, IFunction
     {

@@ -20,7 +20,7 @@ namespace Models.Aqua
     /// Stores the different feeds that are in the pond.
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class FoodInPond : Model
         {

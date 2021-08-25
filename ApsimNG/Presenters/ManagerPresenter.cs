@@ -24,7 +24,7 @@
         /// <summary>
         /// The presenter used for properties
         /// </summary>
-        private IPresenter propertyPresenter;
+        private PropertyPresenter propertyPresenter;
 
         /// <summary>
         /// The manager object
@@ -75,10 +75,7 @@
                     explorerPresenter.ShowDescriptionInRightHandPanel(descriptionName.ToString());
             }
 
-            if (Configuration.Settings.UseNewPropertyPresenter)
-                propertyPresenter = new SimplePropertyPresenter();
-            else
-                propertyPresenter = new PropertyPresenter();
+            propertyPresenter = new PropertyPresenter();
             try
             {
                 propertyPresenter.Attach(scriptModel, managerView.PropertyEditor, presenter);
@@ -89,7 +86,11 @@
             }
             managerView.Editor.Mode = EditorType.ManagerScript;
             managerView.Editor.Text = manager.Code;
+#if NETFRAMEWORK
+            // In gtk3 builds, the gtksourceview completion infrastructure
+            // handles all of the completion functionality internally.
             managerView.Editor.ContextItemsNeeded += OnNeedVariableNames;
+#endif
             managerView.Editor.LeaveEditor += OnEditorLeave;
             managerView.Editor.AddContextSeparator();
             managerView.Editor.AddContextActionWithAccel("Test compile", OnDoCompile, "Ctrl+T");
@@ -104,8 +105,8 @@
         /// </summary>
         public void Detach()
         {
-            BuildScript();  // compiles and saves the script
             propertyPresenter.Detach();
+            BuildScript();  // compiles and saves the script
 
             explorerPresenter.CommandHistory.ModelChanged -= CommandHistory_ModelChanged;
             managerView.Editor.ContextItemsNeeded -= OnNeedVariableNames;
@@ -152,13 +153,7 @@
 
         private void RefreshProperties()
         {
-            if (propertyPresenter is SimplePropertyPresenter simplePresenter)
-                simplePresenter.RefreshView(scriptModel);
-            else if (propertyPresenter is PropertyPresenter presenter)
-            {
-                presenter.UpdateModel(scriptModel);
-                presenter.Refresh();
-            }
+            propertyPresenter.RefreshView(scriptModel);
         }
 
         /// <summary>

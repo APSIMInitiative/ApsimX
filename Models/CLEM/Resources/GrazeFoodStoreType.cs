@@ -17,7 +17,7 @@ namespace Models.CLEM.Resources
     /// This stores the parameters for a GrazeFoodType and holds values in the store
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
     [Description("This resource represents a graze food store of native pasture (e.g. a specific paddock).")]
@@ -27,7 +27,7 @@ namespace Models.CLEM.Resources
     public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
     {
         [Link]
-        ZoneCLEM ZoneCLEM = null;
+        private ZoneCLEM zoneCLEM = null;
 
         /// <summary>
         /// Unit type
@@ -188,6 +188,17 @@ namespace Models.CLEM.Resources
                     throw new ApsimXException(this, String.Format("Each [r=GrazeStoreType] can only be managed by a single activity./nTwo managing activities ([a={0}] and [a={1}]) are trying to manage [r={2}]", manager.Name, value.Name, this.Name));
                 }
                 manager = value;
+            }
+        }
+
+        /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
             }
         }
 
@@ -452,7 +463,7 @@ namespace Models.CLEM.Resources
                 Pools.RemoveAll(a => a.Amount < 0.01);
             }
 
-            if (ZoneCLEM.IsEcologicalIndicatorsCalculationMonth())
+            if (zoneCLEM.IsEcologicalIndicatorsCalculationMonth())
             {
                 OnEcologicalIndicatorsCalculated(new EcolIndicatorsEventArgs() { Indicators = CurrentEcologicalIndicators });
                 // reset so available is sum of years growth
@@ -555,7 +566,8 @@ namespace Models.CLEM.Resources
 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    Gain = pool.Amount,
+                    TransactionType = TransactionType.Gain,
+                    Amount = pool.Amount,
                     Activity = activity,
                     RelatesToResource = relatesToResource,
                     Category = category,
@@ -660,7 +672,8 @@ namespace Models.CLEM.Resources
                 ResourceTransaction details = new ResourceTransaction
                 {
                     ResourceType = this,
-                    Loss = request.Provided,
+                    TransactionType = TransactionType.Loss,
+                    Amount = request.Provided,
                     Activity = request.ActivityModel,
                     Category = request.Category,
                     RelatesToResource = request.RelatesToResource
@@ -698,7 +711,8 @@ namespace Models.CLEM.Resources
                 ResourceTransaction details = new ResourceTransaction
                 {
                     ResourceType = this,
-                    Gain = request.Provided * -1,
+                    TransactionType = TransactionType.Loss,
+                    Amount = request.Provided,
                     Activity = request.ActivityModel,
                     Category = request.Category,
                     RelatesToResource = request.RelatesToResource

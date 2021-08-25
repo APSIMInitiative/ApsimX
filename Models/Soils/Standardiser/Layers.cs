@@ -64,10 +64,16 @@
                 physical.SAT = MapConcentration(physical.SAT, physical.Thickness, toThickness, MathUtilities.LastValue(physical.SAT));
                 physical.KS = MapConcentration(physical.KS, physical.Thickness, toThickness, MathUtilities.LastValue(physical.KS));
                 if (physical != null)
-                    if (physical.ParticleSizeClay != null && physical.ParticleSizeClay.Length == physical.Thickness.Length)
+                {
+                    if (physical.ParticleSizeClay != null && physical.ParticleSizeClay.Length > 0 && physical.ParticleSizeClay.Length != toThickness.Length)
                         physical.ParticleSizeClay = MapConcentration(physical.ParticleSizeClay, physical.Thickness, toThickness, MathUtilities.LastValue(physical.ParticleSizeClay));
-                    else
-                        physical.ParticleSizeClay = null;
+                    if (physical.ParticleSizeSand != null && physical.ParticleSizeSand.Length > 0 && physical.ParticleSizeSand.Length != toThickness.Length)
+                        physical.ParticleSizeSand = MapConcentration(physical.ParticleSizeSand, physical.Thickness, toThickness, MathUtilities.LastValue(physical.ParticleSizeSand));
+                    if (physical.ParticleSizeSilt != null && physical.ParticleSizeSilt.Length > 0 && physical.ParticleSizeSilt.Length != toThickness.Length)
+                        physical.ParticleSizeSilt = MapConcentration(physical.ParticleSizeSilt, physical.Thickness, toThickness, MathUtilities.LastValue(physical.ParticleSizeSilt));
+                    if (physical.Rocks != null && physical.Rocks.Length > 0 && physical.Rocks.Length != toThickness.Length)
+                        physical.Rocks = MapConcentration(physical.Rocks, physical.Thickness, toThickness, MathUtilities.LastValue(physical.Rocks));
+                }
                 physical.Thickness = toThickness;
 
                 foreach (var crop in crops)
@@ -141,6 +147,8 @@
                 analysis.CL = MapConcentration(analysis.CL, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.CL));
                 analysis.EC = MapConcentration(analysis.EC, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.EC));
                 analysis.ESP = MapConcentration(analysis.ESP, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.ESP));
+                analysis.LabileP = MapConcentration(analysis.LabileP, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.LabileP));
+                analysis.UnavailableP = MapConcentration(analysis.UnavailableP, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.UnavailableP));
 
                 analysis.PH = MapConcentration(analysis.PH, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.PH));
                 analysis.Thickness = thickness;

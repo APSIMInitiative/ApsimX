@@ -2,20 +2,24 @@ namespace Models
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.Run;
     using Models.Storage;
     using System;
     using System.Collections;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Globalization;
     using System.Linq;
+    using System.Text;
 
     /// <summary>
     /// A regression model.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Series))]
+    [ValidParent(ParentType = typeof(Graph))]
     public class Regression : Model, ICachableGraphable
     {
         /// <summary>The stats from the regression</summary>
@@ -47,13 +51,23 @@ namespace Models
 
         /// <summary>Get a list of all actual series to put on the graph.</summary>
         /// <param name="storage">Storage service</param>
+        /// <param name="simDescriptions">A list of simulation descriptions that are in scope.</param>
         /// <param name="simulationsFilter">Unused simulation names filter.</param>
-        public IEnumerable<SeriesDefinition> GetSeriesDefinitions(IStorageReader storage, List<string> simulationsFilter = null)
+        public IEnumerable<SeriesDefinition> CreateSeriesDefinitions(IStorageReader storage,
+                                                                  List<SimulationDescription> simDescriptions,
+                                                                  List<string> simulationsFilter = null)
         {
             Series seriesAncestor = FindAncestor<Series>();
+            IEnumerable<SeriesDefinition> definitions;
             if (seriesAncestor == null)
-                throw new Exception("Regression model must be a descendant of a series");
-            IEnumerable<SeriesDefinition> definitions = seriesAncestor.GetSeriesDefinitions(storage, simulationsFilter);
+            {
+                Graph graph = FindAncestor<Graph>();
+                if (graph == null)
+                    throw new Exception("Regression model must be a descendant of a series");
+                definitions = graph.FindAllChildren<Series>().SelectMany(s => s.CreateSeriesDefinitions(storage, simDescriptions, simulationsFilter));
+            }
+            else
+                definitions = seriesAncestor.CreateSeriesDefinitions(storage, simDescriptions, simulationsFilter);
 
             return GetSeriesToPutOnGraph(storage, definitions, simulationsFilter);
         }
@@ -71,17 +85,26 @@ namespace Models
             List<SeriesDefinition> regressionLines = new List<SeriesDefinition>();
             foreach (var checkpointName in storage.CheckpointNames)
             {
+                if (checkpointName != "Current" && !storage.GetCheckpointShowOnGraphs(checkpointName)) // smh
+                    // If "Show on graphs" is disabled on this checkpoint, skip it.
+                    continue;
+
                 // Get all x/y data
                 List<double> x = new List<double>();
                 List<double> y = new List<double>();
                 foreach (SeriesDefinition definition in definitions)
                 {
                     if (definition.CheckpointName == checkpointName)
-                        if (definition.X is double[] && definition.Y is double[])
+                    {
+                        if (definition.X != null && definition.Y != null)
                         {
-                            x.AddRange(definition.X as IEnumerable<double>);
-                            y.AddRange(definition.Y as IEnumerable<double>);
+                            if (ReflectionUtilities.IsNumericType(definition.X.GetType().GetElementType()) && ReflectionUtilities.IsNumericType(definition.Y.GetType().GetElementType()))
+                            {
+                                x.AddRange(definition.X.Cast<object>().Select(xi => Convert.ToDouble(xi, CultureInfo.InvariantCulture)).ToArray());
+                                y.AddRange(definition.Y.Cast<object>().Select(yi => Convert.ToDouble(yi, CultureInfo.InvariantCulture)).ToArray());
+                            }
                         }
+                    }
                 }
 
                 if (ForEachSeries)
@@ -167,14 +190,11 @@ namespace Models
         /// <summary>Puts the 1:1 line on graph.</summary>
         /// <param name="x">The x data.</param>
         /// <param name="y">The y data.</param>
-        private static SeriesDefinition Put1To1LineOnGraph(IEnumerable x, IEnumerable y)
+        private static SeriesDefinition Put1To1LineOnGraph(IEnumerable<double> x, IEnumerable<double> y)
         {
-            double minimumX = MathUtilities.Min(x);
-            double maximumX = MathUtilities.Max(x);
-            double minimumY = MathUtilities.Min(y);
-            double maximumY = MathUtilities.Max(y);
-            double lowestAxisScale = Math.Min(minimumX, minimumY);
-            double largestAxisScale = Math.Max(maximumX, maximumY);
+            MathUtilities.GetBounds(x, y, out double minX, out double maxX, out double minY, out double maxY);
+            double lowestAxisScale = Math.Min(minX, minY);
+            double largestAxisScale = Math.Max(maxX, maxY);
 
             return new SeriesDefinition
                 ("1:1 line", Color.Empty,
@@ -192,17 +212,20 @@ namespace Models
                 {
                     // Add an equation annotation.
                     TextAnnotation equation = new TextAnnotation();
-                    equation.text = string.Format("y = {0:F2} x + {1:F2}, r2 = {2:F2}, n = {3:F0}\r\n" +
-                                                        "NSE = {4:F2}, ME = {5:F2}, MAE = {6:F2}\r\n" +
-                                                        "RSR = {7:F2}, RMSD = {8:F2}",
-                                                        new object[] {stats[i].Slope,   stats[i].Intercept,   stats[i].R2,
-                                                                  stats[i].n,   stats[i].NSE, stats[i].ME,
-                                                                  stats[i].MAE, stats[i].RSR, stats[i].RMSE});
+                    StringBuilder text = new StringBuilder();
+                    text.AppendLine($"y = {stats[i].Slope:F2}x + {stats[i].Intercept:F2}, r\u00B2 = {stats[i].R2:F2}, n = {stats[i].n:F0}");
+                    text.AppendLine($"NSE = {stats[i].NSE:F2}, ME = {stats[i].ME:F2}, MAE = {stats[i].MAE:F2}");
+                    text.AppendLine($"RSR = {stats[i].RSR:F2}, RMSD = {stats[i].RMSE:F2}");
+                    equation.Name = $"Regression{i}";
+                    equation.text = text.ToString();
                     equation.colour = equationColours[i];
                     equation.leftAlign = true;
                     equation.textRotation = 0;
-                    equation.x = double.MinValue;
-                    equation.y = double.MinValue;
+                    if (stats.Count > 1)
+                    {
+                        equation.x = double.MinValue;  // More than one stats equation. Use default positioning
+                        equation.y = double.MinValue;
+                    }
                     yield return equation;
                 }
             }

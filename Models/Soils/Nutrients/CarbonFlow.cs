@@ -1,14 +1,13 @@
-﻿
-namespace Models.Soils.Nutrients
+﻿namespace Models.Soils.Nutrients
 {
     using Core;
     using Models.Functions;
     using System;
     using APSIM.Shared.Utilities;
     using System.Collections.Generic;
-    using Interfaces;
     using System.Data;
     using System.Linq;
+    using Models.PMF;
 
     /// <summary>
     /// # [Name]
@@ -17,13 +16,13 @@ namespace Models.Soils.Nutrients
     [Serializable]
     [ValidParent(ParentType = typeof(NutrientPool))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     public class CarbonFlow : Model, ICustomDocumentation
     {
         private NutrientPool[] destinations;
         private double[] carbonFlowToDestination;
         private double[] nitrogenFlowToDestination;
-
+        private double[] phosphorusFlowToDestination;
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction Rate = null;
@@ -37,11 +36,18 @@ namespace Models.Soils.Nutrients
         [Link(ByName = true)]
         ISolute NH4 = null;
 
+        [Link(ByName = true)]
+        ISolute LabileP = null;
 
         /// <summary>
         /// Net N Mineralisation
         /// </summary>
         public double[] MineralisedN { get; set; }
+
+        /// <summary>
+        /// Net N Mineralisation
+        /// </summary>
+        public double[] MineralisedP { get; set; }
 
         /// <summary>
         /// CO2 lost to the atmosphere
@@ -75,10 +81,11 @@ namespace Models.Soils.Nutrients
                 destinations[i] = destination;
             }
             MineralisedN = new double[(Parent as NutrientPool).C.Length];
+            MineralisedP = new double[(Parent as NutrientPool).C.Length];
             Catm = new double[(Parent as NutrientPool).C.Length];
             carbonFlowToDestination = new double[destinations.Length];
             nitrogenFlowToDestination = new double[destinations.Length];
-
+            phosphorusFlowToDestination = new double[destinations.Length];
         }
 
         /// <summary>
@@ -93,6 +100,8 @@ namespace Models.Soils.Nutrients
 
             double[] no3 = NO3.kgha;
             double[] nh4 = NH4.kgha;
+            double[] labileP = LabileP.kgha;
+
             int numLayers = source.C.Length;
             int numDestinations = destinations.Length;
             for (int i = 0; i < numLayers; i++)
@@ -100,8 +109,11 @@ namespace Models.Soils.Nutrients
 
                 double carbonFlowFromSource = Rate.Value(i) * source.C[i];
                 double nitrogenFlowFromSource = MathUtilities.Divide(carbonFlowFromSource * source.N[i], source.C[i], 0);
+                double phosphorusFlowFromSource = MathUtilities.Divide(carbonFlowFromSource * source.P[i], source.C[i], 0);
 
                 double totalNitrogenFlowToDestinations = 0;
+                double totalPhosphorusFlowToDestinations = 0;
+
                 double co2Efficiency = CO2Efficiency.Value(i);
                 for (int j = 0; j < numDestinations; j++)
                 {
@@ -109,35 +121,56 @@ namespace Models.Soils.Nutrients
                     carbonFlowToDestination[j] = carbonFlowFromSource * co2Efficiency * destinationFraction[j];
                     nitrogenFlowToDestination[j] = MathUtilities.Divide(carbonFlowToDestination[j] * destination.N[i], destination.C[i], 0.0);
                     totalNitrogenFlowToDestinations += nitrogenFlowToDestination[j];
+                    phosphorusFlowToDestination[j] = MathUtilities.Divide(carbonFlowToDestination[j] * destination.P[i], destination.C[i], 0.0);
+                    totalPhosphorusFlowToDestinations += phosphorusFlowToDestination[j];
+
                 }
 
                 // some pools do not fully occupy a layer (e.g. residue decomposition) and so need to incorporate fraction of layer
                 double mineralNSupply = (no3[i] + nh4[i]) * source.LayerFraction[i];
                 double nSupply = nitrogenFlowFromSource + mineralNSupply;
+                double mineralPSupply = labileP[i] * source.LayerFraction[i];
+                double pSupply = phosphorusFlowFromSource + mineralPSupply;
+
+                double SupplyFactor = 1;
 
                 if (totalNitrogenFlowToDestinations > nSupply)
+                    SupplyFactor = MathUtilities.Bound(MathUtilities.Divide(mineralNSupply, totalNitrogenFlowToDestinations - nitrogenFlowFromSource, 1.0), 0.0, 1.0);
+                if (totalPhosphorusFlowToDestinations > pSupply)
                 {
-                    double NSupplyFactor = MathUtilities.Bound(MathUtilities.Divide(mineralNSupply, totalNitrogenFlowToDestinations - nitrogenFlowFromSource, 1.0), 0.0, 1.0);
-
+                    double pSupplyFactor = MathUtilities.Bound(MathUtilities.Divide(mineralPSupply, totalPhosphorusFlowToDestinations - phosphorusFlowFromSource, 1.0), 0.0, 1.0);
+                    // ALERT
+                    pSupplyFactor = 1; // remove P constraint until P model fully operational
+                    SupplyFactor = Math.Min(SupplyFactor, pSupplyFactor);
+                }
+                
+                if (SupplyFactor<1)
+                { 
                     for (int j = 0; j < numDestinations; j++)
                     {
-                        carbonFlowToDestination[j] *= NSupplyFactor;
-                        nitrogenFlowToDestination[j] *= NSupplyFactor;
+                        carbonFlowToDestination[j] *= SupplyFactor;
+                        nitrogenFlowToDestination[j] *= SupplyFactor;
+                        phosphorusFlowToDestination[j] *= SupplyFactor;
                     }
-                    totalNitrogenFlowToDestinations *= NSupplyFactor;
+                    totalNitrogenFlowToDestinations *= SupplyFactor;
+                    totalPhosphorusFlowToDestinations *= SupplyFactor;
 
-                    carbonFlowFromSource *= NSupplyFactor;
-                    nitrogenFlowFromSource *= NSupplyFactor;
+                    carbonFlowFromSource *= SupplyFactor;
+                    nitrogenFlowFromSource *= SupplyFactor;
+                    phosphorusFlowFromSource *= SupplyFactor;
 
                 }
 
                 source.C[i] -= carbonFlowFromSource;
                 source.N[i] -= nitrogenFlowFromSource;
+                source.P[i] -= phosphorusFlowFromSource;
+
                 Catm[i] = carbonFlowFromSource - carbonFlowToDestination.Sum();
                 for (int j = 0; j < numDestinations; j++)
                 {
                     destinations[j].C[i] += carbonFlowToDestination[j];
                     destinations[j].N[i] += nitrogenFlowToDestination[j];
+                    destinations[j].P[i] += phosphorusFlowToDestination[j];
                 }
 
                 if (totalNitrogenFlowToDestinations <= nitrogenFlowFromSource)
@@ -161,6 +194,25 @@ namespace Models.Soils.Nutrients
                     if (MathUtilities.IsGreaterThan(NDeficit, 0.0))
                         throw new Exception("Insufficient mineral N for immobilisation demand for C flow " + Name);
                 }
+
+                if (totalPhosphorusFlowToDestinations <= phosphorusFlowFromSource)
+                {
+                    MineralisedP[i] = phosphorusFlowFromSource - totalPhosphorusFlowToDestinations;
+                    labileP[i] += MineralisedP[i];
+                }
+                else
+                {
+                    double PDeficit = totalPhosphorusFlowToDestinations - phosphorusFlowFromSource;
+                    double PImmobilisation = Math.Min(labileP[i], PDeficit);
+                    labileP[i] -= PImmobilisation;
+                    PDeficit -= PImmobilisation;
+                    MineralisedP[i] = -PImmobilisation;
+
+                    // ALERT
+                    //if (MathUtilities.IsGreaterThan(PDeficit, 0.0))
+                    //    throw new Exception("Insufficient mineral P for immobilisation demand for C flow " + Name);
+                }
+
 
             }
         }

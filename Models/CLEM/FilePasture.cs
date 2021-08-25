@@ -23,9 +23,6 @@ namespace Models.CLEM
     [HelpUri(@"Content/Features/DataReaders/PastureDataReader.htm")]
     public class FilePasture : CLEMModel, IFilePasture
     {
-        /// <summary>
-        /// A link to the clock model.
-        /// </summary>
         [Link]
         private Clock clock = null;
 
@@ -239,7 +236,7 @@ namespace Models.CLEM
             // check filename exists
             if(!this.FileExists)
             {
-                throw new ApsimXException(this, "@error:The database[o="+FullFileName+"] could not be found for [x="+this.Name+"]");
+                throw new ApsimXException(this, "The database[o="+FullFileName+"] could not be found for [x="+this.Name+"]");
             }
 
             this.regionIndex = 0;

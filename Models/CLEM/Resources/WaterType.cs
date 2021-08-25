@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     /// Store for water type
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(WaterStore))]
     [Description("This resource represents a water store type (e.g. dam, bore, tank).")]
@@ -38,9 +38,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current amount of this resource
         /// </summary>
-        public double Amount { get { return amount; } }
-        private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
-        private double roundedAmount;
+        public double Amount { get; private set; }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -48,10 +46,20 @@ namespace Models.CLEM.Resources
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
-            this.amount = 0;
             if (StartingAmount > 0)
             {
                 Add(StartingAmount, this, "", "Starting value");
+            }
+        }
+
+        /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
             }
         }
 
@@ -78,7 +86,7 @@ namespace Models.CLEM.Resources
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>
-        /// Add money to account
+        /// Add water to water store
         /// </summary>
         /// <param name="resourceAmount">Object to add. This object can be double or contain additional information (e.g. Nitrogen) of food being added</param>
         /// <param name="activity">Name of activity adding resource</param>
@@ -93,11 +101,12 @@ namespace Models.CLEM.Resources
             double addAmount = (double)resourceAmount;
             if (addAmount > 0)
             {
-                amount += addAmount;
+                Amount += addAmount;
 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    Gain = addAmount,
+                    TransactionType = TransactionType.Gain,
+                    Amount = addAmount,
                     Activity = activity,
                     RelatesToResource = relatesToResource,
                     Category = category,
@@ -111,7 +120,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Remove from finance type store
+        /// Remove from water type store
         /// </summary>
         /// <param name="request">Resource request class with details.</param>
         public new void Remove(ResourceRequest request)
@@ -129,8 +138,8 @@ namespace Models.CLEM.Resources
 
             // avoid taking too much
             double amountRemoved = request.Required;
-            amountRemoved = Math.Min(this.Amount, amountRemoved);
-            this.amount -= amountRemoved;
+            amountRemoved = Math.Min(Amount, amountRemoved);
+            Amount -= amountRemoved;
 
             // send to market if needed
             if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
@@ -142,7 +151,8 @@ namespace Models.CLEM.Resources
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,
-                Loss = amountRemoved,
+                TransactionType = TransactionType.Loss,
+                Amount = amountRemoved,
                 Activity = request.ActivityModel,
                 Category = request.Category,
                 RelatesToResource = request.RelatesToResource
@@ -153,12 +163,12 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Set the amount in an account.
+        /// Set the amount in an a water type.
         /// </summary>
         /// <param name="newAmount"></param>
         public new void Set(double newAmount)
         {
-            amount = newAmount;
+            Amount = newAmount;
         }
 
         #endregion

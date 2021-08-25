@@ -29,7 +29,7 @@ namespace Models.PMF.Organs
     /// </summary>
     [Serializable]
     [Description("Leaf Class")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
     public class Leaf : Model, IOrgan, ICanopy, ILeaf, IHasWaterDemand, IArbitration, IOrganDamage
@@ -58,7 +58,7 @@ namespace Models.PMF.Organs
         public double GrowthRespiration { get; set; }
 
         /// <summary>Factors for assigning priority to DM demands</summary>
-        [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         private BiomassDemand dmDemandPriorityFactors = null;
 
@@ -90,9 +90,6 @@ namespace Models.PMF.Organs
 
         /// <summary>The dry matter demand</summary>
         public BiomassPoolType DMDemand { get; set; }
-
-        /// <summary>The dry matter demand</summary>
-        public BiomassPoolType DMDemandPriorityFactor { get; set; }
 
         /// <summary>Structural nitrogen demand</summary>
         public BiomassPoolType NDemand { get; set; }
@@ -423,10 +420,10 @@ namespace Models.PMF.Organs
             public double ExpansionStressValue { get; set; }
             /// <summary>The CellDivisionStressValue</summary>
             public double CellDivisionStressValue { get; set; }
-            /// <summary>The DroughtInducedLagAccelerationValue</summary>
-            public double DroughtInducedLagAccelerationValue { get; set; }
-            /// <summary>The DroughtInducedSenAccelerationValue</summary>
-            public double DroughtInducedSenAccelerationValue { get; set; }
+            /// <summary>The LagAccelerationValue</summary>
+            public double LagAccelerationValue { get; set; }
+            /// <summary>The SenescenceAccelerationValue</summary>
+            public double SenescenceAccelerationValue { get; set; }
             /// <summary>The ShadeInducedSenescenceRateValue</summary>
             public double ShadeInducedSenescenceRateValue { get; set; }
             /// <summary>The SenessingLeafRelativeSizeValue</summary>
@@ -442,12 +439,12 @@ namespace Models.PMF.Organs
             /// <summary>The shade induced senescence rate</summary>
             [Link(Type = LinkType.Child, ByName = true)]
             public IFunction ShadeInducedSenescenceRate = null;
-            /// <summary>The drought induced reduction of lag phase through acceleration of tt accumulation by the cohort during this phase</summary>
+            /// <summary>The stress induced reduction of lag phase through acceleration of tt accumulation by the cohort during this phase</summary>
             [Link(Type = LinkType.Child, ByName = true)]
-            public IFunction DroughtInducedLagAcceleration = null;
-            /// <summary>The drought induced reduction of senescence phase through acceleration of tt accumulation by the cohort during this phase</summary>
+            public IFunction LagAcceleration = null;
+            /// <summary>The stress induced reduction of senescence phase through acceleration of tt accumulation by the cohort during this phase</summary>
             [Link(Type = LinkType.Child, ByName = true)]
-            public IFunction DroughtInducedSenAcceleration = null;
+            public IFunction SenescenceAcceleration = null;
             /// <summary>The non structural fraction</summary>
             [Link(Type = LinkType.Child, ByName = true)]
             public IFunction StorageFraction = null;
@@ -778,9 +775,9 @@ namespace Models.PMF.Organs
                 {
                     double TotalRadn = 0;
                     for (int i = 0; i < LightProfile.Length; i++)
-                        if(Double.IsNaN(LightProfile[i].amount)) 
+                        if(Double.IsNaN(LightProfile[i].AmountOnGreen)) 
                             TotalRadn += 0;
-                    else TotalRadn += LightProfile[i].amount;
+                    else TotalRadn += LightProfile[i].AmountOnGreen;
                     return TotalRadn;                    
                 }
                 else
@@ -1240,6 +1237,15 @@ namespace Models.PMF.Organs
         /// <summary>1 based rank of the current leaf.</summary>
         private int CurrentRank { get; set; }
 
+        /// <summary>Called at start of simulation to initialise the model.</summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs args)
+        {
+            Reset();
+        }
+
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -1261,8 +1267,8 @@ namespace Models.PMF.Organs
             // Store values prior to looping through all leaves
             CohortParameters.ExpansionStressValue = CohortParameters.ExpansionStress.Value();
             CohortParameters.CellDivisionStressValue = CohortParameters.CellDivisionStress.Value();
-            CohortParameters.DroughtInducedLagAccelerationValue = CohortParameters.DroughtInducedLagAcceleration.Value();
-            CohortParameters.DroughtInducedSenAccelerationValue = CohortParameters.DroughtInducedSenAcceleration.Value();
+            CohortParameters.LagAccelerationValue = CohortParameters.LagAcceleration.Value();
+            CohortParameters.SenescenceAccelerationValue = CohortParameters.SenescenceAcceleration.Value();
             //CohortParameters.ShadeInducedSenescenceRateValue = CohortParameters.ShadeInducedSenescenceRate.Value();
             //CohortParameters.SenessingLeafRelativeSizeValue = CohortParameters.SenessingLeafRelativeSize.Value();
 
@@ -1293,6 +1299,7 @@ namespace Models.PMF.Organs
         public void Reset()
         {
             Leaves = new List<LeafCohort>();
+            CurrentRank = 0;
             needToRecalculateLiveDead = true;
             WaterAllocation = 0;
             CohortsAtInitialisation = 0;
@@ -1308,6 +1315,16 @@ namespace Models.PMF.Organs
             Structure.UpdateHeight();
             Width = WidthFunction.Value();
             Depth = DepthFunction.Value();
+            CurrentExpandingLeaf = 0;
+            StartFractionExpanded = 0;
+            FractionNextleafExpanded = 0;
+            DeadNodesYesterday = 0;
+            CohortParameters.ExpansionStressValue = 0;
+            CohortParameters.CellDivisionStressValue = 0;
+            CohortParameters.LagAccelerationValue = 0;
+            CohortParameters.SenescenceAccelerationValue = 0;
+            FRGR = 0;
+            FractionDied = 0;
         }
         /// <summary>Initialises the cohorts.</summary>
         [EventSubscribe("InitialiseLeafCohorts")]
@@ -1535,18 +1552,9 @@ namespace Models.PMF.Organs
             DMDemand.Metabolic = MetabolicDemand;
             DMDemand.Storage = StorageDemand;
 
-            if (dmDemandPriorityFactors != null)
-            {
-                DMDemandPriorityFactor.Structural = dmDemandPriorityFactors.Structural.Value();
-                DMDemandPriorityFactor.Metabolic = dmDemandPriorityFactors.Metabolic.Value();
-                DMDemandPriorityFactor.Storage = dmDemandPriorityFactors.Storage.Value();
-            }
-            else
-            {
-                DMDemandPriorityFactor.Structural = 1.0;
-                DMDemandPriorityFactor.Metabolic = 1.0;
-                DMDemandPriorityFactor.Storage = 1.0;
-            }
+            DMDemand.QStructuralPriority = dmDemandPriorityFactors.Structural.Value();
+            DMDemand.QMetabolicPriority = dmDemandPriorityFactors.Metabolic.Value();
+            DMDemand.QStoragePriority = dmDemandPriorityFactors.Storage.Value();
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
@@ -2015,7 +2023,6 @@ namespace Models.PMF.Organs
         {
             DMDemand = new BiomassPoolType();
             NDemand = new BiomassPoolType();
-            DMDemandPriorityFactor = new BiomassPoolType();
             DMSupply = new BiomassSupplyType();
             NSupply = new BiomassSupplyType();
             Allocated = new Biomass();

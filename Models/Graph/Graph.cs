@@ -8,6 +8,10 @@
     using System.Data;
     using System.Linq;
     using Newtonsoft.Json;
+    using Models.Core.Run;
+    using Models.CLEM;
+    using APSIM.Shared.Utilities;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// Represents a graph
@@ -100,6 +104,33 @@
         }
 
         /// <summary>
+        /// An enumeration for the position of the stats / equation annotation.
+        /// </summary>
+        public enum AnnotationPositionType
+        {
+
+            /// <summary>
+            /// Place the annotation box in the top-left corner.
+            /// </summary>
+            TopLeft = 0,
+
+            /// <summary>
+            ///     Place the annotation box in the top-right corner.
+            /// </summary>
+            TopRight = 1,
+
+            /// <summary>
+            /// Place the annotation box in the bottom-left corner.
+            /// </summary>
+            BottomLeft = 2,
+
+            /// <summary>
+            /// Place the annotation box in the bottom-right corner.
+            /// </summary>
+            BottomRight = 3,
+        }
+
+        /// <summary>
         /// An enumeration for the orientation of the legend items.
         /// </summary>
         public enum LegendOrientationType
@@ -142,6 +173,11 @@
         public LegendOrientationType LegendOrientation { get; set; }
 
         /// <summary>
+        /// Gets or sets the location of the annotations - name/position map.
+        /// </summary>
+        public AnnotationPositionType AnnotationPosition { get; set; }
+
+        /// <summary>
         /// Gets or sets a list of raw grpah series that should be disabled.
         /// </summary>
         public List<string> DisabledSeries { get; set; }
@@ -151,6 +187,12 @@
         /// </summary>
         public bool LegendOutsideGraph { get; set; }
 
+        /// <summary>
+        /// Descriptions of simulations that are in scope.
+        /// </summary>
+        [JsonIgnore]
+        public List<SimulationDescription> SimulationDescriptions { get; set; }
+
         /// <summary>Gets the definitions to graph.</summary>
         /// <returns>A list of series definitions.</returns>
         /// <param name="storage">Storage service</param>
@@ -159,9 +201,15 @@
         {
             EnsureAllAxesExist();
 
-            return FindAllChildren<IGraphable>()
-                        .Where(g => g.Enabled)
-                        .SelectMany(g => g.GetSeriesDefinitions(storage, simulationFilter));
+            var series = FindAllChildren<Series>().Where(g => g.Enabled);
+            var definitions = new List<SeriesDefinition>();
+            foreach (var s in series)
+            {
+                var seriesDefinitions = s.CreateSeriesDefinitions(storage, SimulationDescriptions, simulationFilter);
+                definitions.AddRange(seriesDefinitions);
+            }
+
+            return definitions;
         }
 
         /// <summary>Gets the annotations to graph.</summary>
@@ -236,5 +284,4 @@
                 Axis = allAxes;
         }
     }
-
 }

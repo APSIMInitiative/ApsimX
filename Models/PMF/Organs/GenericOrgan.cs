@@ -15,7 +15,7 @@
     /// This organ is simulated using a GenericOrgan type.  It is parameterised to calculate the growth, senescence, and detachment of any organ that does not have specific functions.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
     public class GenericOrgan : Model, IOrgan, IArbitration, ICustomDocumentation, IOrganDamage
@@ -68,17 +68,12 @@
         /// <summary>The DM demand function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemand dmDemands = null;
-
-        /// <summary>Factors for assigning priority to DM demands</summary>
-        [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
-        [Units("g/m2/d")]
-        private BiomassDemand dmDemandPriorityFactors = null;
+        private BiomassDemandAndPriority dmDemands = null;
 
         /// <summary>The N demand function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemand nDemands = null;
+        private BiomassDemandAndPriority nDemands = null;
 
         /// <summary>Wt in each pool when plant is initialised</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -86,7 +81,7 @@
         public BiomassDemand InitialWt = null;
 
         /// <summary>The initial N Concentration</summary>
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         private IFunction initialNConcFunction = null;
 
@@ -127,7 +122,7 @@
 
         /// <summary>The photosynthesis</summary>
         [Units("g/m2")]
-        [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         IFunction Photosynthesis = null;
 
         /// <summary>The RetranslocationMethod</summary>
@@ -145,9 +140,6 @@
 
         /// <summary>The dry matter demand</summary>
         public BiomassPoolType DMDemand { get;  set; }
-
-        /// <summary>The dry matter demand</summary>
-        public BiomassPoolType DMDemandPriorityFactor { get; set; }
 
         /// <summary>Structural nitrogen demand</summary>
         public BiomassPoolType NDemand { get;  set; }
@@ -281,7 +273,7 @@
         {
             DMSupply.Reallocation = AvailableDMReallocation();
             DMSupply.Retranslocation = AvailableDMRetranslocation();         
-            DMSupply.Fixation = (Photosynthesis == null) ? 0: Photosynthesis.Value();
+            DMSupply.Fixation = Photosynthesis.Value();
             DMSupply.Uptake = 0;
         }
 
@@ -312,25 +304,15 @@
                 DMDemand.Structural = (dmDemands.Structural.Value() / dMCE + remobilisationCost.Value());
                 DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dMCE) ;
                 DMDemand.Metabolic = Math.Max(0, dmDemands.Metabolic.Value() / dMCE) ;
+                DMDemand.QStructuralPriority = dmDemands.QStructuralPriority.Value();
+                DMDemand.QMetabolicPriority = dmDemands.QMetabolicPriority.Value();
+                DMDemand.QStoragePriority = dmDemands.QStoragePriority.Value();
             }
             else
             { // Conversion efficiency is zero!!!!
                 DMDemand.Structural = 0;
                 DMDemand.Storage = 0;
                 DMDemand.Metabolic = 0;
-            }
-
-            if (dmDemandPriorityFactors != null)
-            {
-                DMDemandPriorityFactor.Structural = dmDemandPriorityFactors.Structural.Value();
-                DMDemandPriorityFactor.Metabolic = dmDemandPriorityFactors.Metabolic.Value();
-                DMDemandPriorityFactor.Storage = dmDemandPriorityFactors.Storage.Value();
-            }
-            else // Priorities will be equal
-            {
-                DMDemandPriorityFactor.Structural = 1.0;
-                DMDemandPriorityFactor.Metabolic = 1.0;
-                DMDemandPriorityFactor.Storage = 1.0;
             }
         }
 
@@ -341,6 +323,9 @@
             NDemand.Structural = nDemands.Structural.Value();
             NDemand.Metabolic = nDemands.Metabolic.Value();
             NDemand.Storage = nDemands.Storage.Value();
+            NDemand.QStructuralPriority = nDemands.QStructuralPriority.Value();
+            NDemand.QStoragePriority = nDemands.QStoragePriority.Value();
+            NDemand.QMetabolicPriority = nDemands.QMetabolicPriority.Value();
         }
 
         /// <summary>Sets the dry matter potential allocation.</summary>
@@ -457,7 +442,6 @@
             Dead = new Biomass();
             StartLive = new Biomass();
             DMDemand = new BiomassPoolType();
-            DMDemandPriorityFactor = new BiomassPoolType();
             NDemand = new BiomassPoolType();
             DMSupply = new BiomassSupplyType();
             NSupply = new BiomassSupplyType();
@@ -491,15 +475,8 @@
                 Live.StructuralWt = InitialWt.Structural.Value();
                 Live.MetabolicWt = InitialWt.Metabolic.Value();
                 Live.StorageWt = InitialWt.Storage.Value();
-                if(initialNConcFunction != null)
-                {
-                    Live.StructuralN = Live.StructuralWt * initialNConcFunction.Value();
-                }
-                else
-                {
-                    Live.StructuralN = Live.StructuralWt * minimumNConc.Value();
-                    Live.StorageN = (Live.Wt * maximumNConc.Value()) - Live.StructuralN;
-                }
+                Live.StructuralN = Live.StructuralWt * initialNConcFunction.Value();
+                Live.StorageN = Live.StorageWt * initialNConcFunction.Value();
             }
         }
 

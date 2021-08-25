@@ -31,6 +31,9 @@
             scroller.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
 #if NETFRAMEWORK
             table = new Table(1, 1, false);
+#else
+            table.RowHomogeneous = true;
+            table.ColumnHomogeneous = true;
 #endif
             Viewport vport = new Viewport();
             vport.Add(table);
@@ -88,9 +91,13 @@
                         gview.ShowControls(false);
                         gview.Refresh();
                         gview.SingleClick += OnGraphClick;
-                        gview.MainWidget.SetSizeRequest(400, 400);
                         gview.ShowControls(false);
+                        gview.MainWidget.SetSizeRequest(400, 400);
+#if NETFRAMEWORK
                         table.Attach(gview.MainWidget, col, col + 1, row, row + 1);
+#else
+                        table.Attach(gview.MainWidget, col, row, 1, 1);
+#endif
                         gview.MainWidget.ShowAll();
                     }
 

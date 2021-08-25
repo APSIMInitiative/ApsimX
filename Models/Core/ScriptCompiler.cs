@@ -13,6 +13,8 @@
     using Microsoft.CodeAnalysis;
     using Microsoft.CodeAnalysis.CSharp;
     using Microsoft.CodeAnalysis.VisualBasic;
+    using Microsoft.CodeAnalysis.Emit;
+    using Microsoft.CodeAnalysis.Text;
 #endif
     /// <summary>Encapsulates the ability to compile a c# script into an assembly.</summary>
     [Serializable]
@@ -204,22 +206,41 @@
             if (code != null)
             {
                 // See if we have compiled the code already. If so then no need to compile again.
-                PreviousCompilation compilation = previousCompilations.Find(c => c.Code == code);
+                PreviousCompilation compilation = previousCompilations?.Find(c => c.Code == code);
 
                 bool newlyCompiled;
                 if (compilation == null || compilation.Code != code)
                 {
                     newlyCompiled = true;
+                    bool withDebug = System.Diagnostics.Debugger.IsAttached;
 
                     IEnumerable<MetadataReference> assemblies = GetReferenceAssemblies(referencedAssemblies, model.Name);
 
                     // We haven't compiled the code so do it now.
-                    Compilation compiled = CompileTextToAssembly(code, assemblies);
+                    string sourceName;
+                    Compilation compiled = CompileTextToAssembly(code, assemblies, out sourceName);
+
+                    List<EmbeddedText> embeddedTexts = null;
+                    if (withDebug)
+                    {
+                        System.Text.Encoding encoding = System.Text.Encoding.UTF8;
+
+                        byte[] buffer = encoding.GetBytes(code);
+                        SourceText sourceText = SourceText.From(buffer, buffer.Length, encoding, canBeEmbedded: true);
+                        embeddedTexts = new List<EmbeddedText>
+                        {
+                            EmbeddedText.FromSource(sourceName, sourceText),
+                        };
+                    }
 
                     MemoryStream ms = new MemoryStream();
                     MemoryStream pdbStream = new MemoryStream();
                     {
-                        var emitResult = compiled.Emit(ms, pdbStream);
+                        EmitResult emitResult = compiled.Emit(
+                            peStream: ms,
+                            pdbStream: withDebug ? pdbStream : null,
+                            embeddedTexts: embeddedTexts
+                            );
                         if (!emitResult.Success)
                         {
                             // Errors were found. Add then to the return error string.
@@ -240,6 +261,8 @@
                             if (compilation == null)
                             {
                                 compilation = new PreviousCompilation() { ModelFullPath = model.FullPath };
+                                if (previousCompilations == null)
+                                    previousCompilations = new List<PreviousCompilation>();
                                 previousCompilations.Add(compilation);
                             }
 
@@ -251,9 +274,10 @@
 
                             // Set the compilation properties.
                             ms.Seek(0, SeekOrigin.Begin);
+                            pdbStream.Seek(0, SeekOrigin.Begin);
                             compilation.Code = code;
                             compilation.Reference = compiled.ToMetadataReference();
-                            compilation.CompiledAssembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromStream(ms);
+                            compilation.CompiledAssembly = System.Runtime.Loader.AssemblyLoadContext.Default.LoadFromStream(ms, pdbStream);
                         }
                     }
                 }
@@ -290,6 +314,7 @@
             IEnumerable<MetadataReference> references = new MetadataReference[] 
             {
                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+               MetadataReference.CreateFromFile(Path.Join(runtimePath, "netstandard.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "mscorlib.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Collections.dll")),
@@ -300,13 +325,15 @@
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Xml.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Xml.ReaderWriter.dll")),
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Private.Xml.dll")),
-               MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Data.dll")),
                MetadataReference.CreateFromFile(typeof(MathUtilities).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(IModel).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(MathNet.Numerics.Fit).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(Newtonsoft.Json.JsonIgnoreAttribute).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(System.Drawing.Color).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(System.Data.DataTable).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(System.ComponentModel.TypeConverter).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(Console).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(System.IO.File).Assembly.Location),
             };
 
             if (previousCompilations != null)
@@ -324,26 +351,43 @@
         /// </summary>
         /// <param name="code">The code to compile.</param>
         /// <param name="referencedAssemblies">Any referenced assemblies.</param>
+        /// <param name="sourceName">Path to a file on disk containing the source.</param>
         /// <returns>Any compile errors or null if compile was successful.</returns>
-        private Compilation CompileTextToAssembly(string code, IEnumerable<MetadataReference> referencedAssemblies = null)
+        private Compilation CompileTextToAssembly(string code, IEnumerable<MetadataReference> referencedAssemblies, out string sourceName)
         {
-            SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(code);
-            var assemblyFileNameToCreate = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), tempFileNamePrefix + Guid.NewGuid().ToString()), ".dll");
+            string assemblyFileNameToCreate = Path.ChangeExtension(Path.Combine(Path.GetTempPath(), tempFileNamePrefix + Guid.NewGuid().ToString()), ".dll");
+
             bool VB = code.IndexOf("Imports System") != -1;
             Compilation compilation;
             if (VB)
             {
+                sourceName = Path.GetFileNameWithoutExtension(assemblyFileNameToCreate) + ".vb";
+                SyntaxTree syntaxTree = VisualBasicSyntaxTree.ParseText(
+                    code,
+                    new VisualBasicParseOptions(),
+                    path: sourceName);
+
+                VisualBasicSyntaxNode syntaxRootNode = syntaxTree.GetRoot() as VisualBasicSyntaxNode;
+                var encoded = VisualBasicSyntaxTree.Create(syntaxRootNode, null, sourceName, System.Text.Encoding.UTF8);
                 compilation = VisualBasicCompilation.Create(
                 Path.GetFileNameWithoutExtension(assemblyFileNameToCreate),
-                new[] { syntaxTree },
+                new[] { encoded },
                 referencedAssemblies,
                 new VisualBasicCompilationOptions(OutputKind.DynamicallyLinkedLibrary)); ;
             }
             else
             {
+                sourceName = Path.GetFileNameWithoutExtension(assemblyFileNameToCreate) + ".cs";
+                SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(
+                    code,
+                    new CSharpParseOptions(),
+                    path: sourceName);
+
+                CSharpSyntaxNode syntaxRootNode = syntaxTree.GetRoot() as CSharpSyntaxNode;
+                var encoded = CSharpSyntaxTree.Create(syntaxRootNode, null, sourceName, System.Text.Encoding.UTF8);
                 compilation = CSharpCompilation.Create(
                     Path.GetFileNameWithoutExtension(assemblyFileNameToCreate),
-                    new[] { syntaxTree },
+                    new[] { encoded },
                     referencedAssemblies,
                     new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
             }

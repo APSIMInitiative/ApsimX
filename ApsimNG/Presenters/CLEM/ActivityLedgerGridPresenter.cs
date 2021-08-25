@@ -2,17 +2,12 @@
 {
     using global::UserInterface.Interfaces;
     using Models;
-    using Models.CLEM;
     using Models.CLEM.Reporting;
     using Models.Core;
     using Models.Factorial;
     using Models.Storage;
     using System;
-    using System.Collections.Generic;
-    using System.Data;
     using System.IO;
-    using System.Linq;
-    using System.Text;
     using Views;
 
     /// <summary>A data store presenter connecting a data store model with a data store view</summary>
@@ -118,10 +113,10 @@
 
             // save the html version as soon as this report is selected
             // do not create the UI grid version until the user selectes the Display tab
-            if (CreateHtml)
-            {
-                (ModelReport as ReportActivitiesPerformed).CreateDataTable(dataStore, Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), Utility.Configuration.Settings.DarkTheme);
-            }
+            //if (CreateHtml)
+            //{
+            //    (ModelReport as ReportActivitiesPerformed).CreateDataTable(dataStore, Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), Utility.Configuration.Settings.DarkTheme);
+            //}
         }
 
         public void Refresh()

@@ -8,9 +8,18 @@ using System.IO;
 
 namespace Models.PMF.Phen
 {
-    /// <summary>Describe the phenological development through the emerging phase.</summary>
+    /// <summary>
+    /// # [Name] Phase
+    /// The [Name] phase goes from [Start] stage to [End] stage and simulates time to 
+    /// emergence as a function of sowing depth.  
+    /// The <i>ThermalTime Target</i> for this phase is given by
+    /// <br>Target = SowingDepth x ShootRate + ShootLag</br>
+    /// Where: ShootRate = + ShootRate + ShootLag \n 
+    /// and SowingDepth (mm) is sent from the manager with the sowing event;
+    /// Progress toward emergence is driven by Thermal time accumulation from Phenology.Thermaltime
+    /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
     public class EmergingPhase : Model, IPhase, IPhaseWithTarget, ICustomDocumentation
@@ -115,6 +124,7 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         public virtual void ResetPhase()
         {
+            TTForTimeStep = 0;
             ProgressThroughPhase = 0;
             Target = 0;
             EmergenceDate = null;
@@ -165,10 +175,6 @@ namespace Models.PMF.Phen
 
                 // write intro to children
                 tags.Add(new AutoDocumentation.Paragraph("Progress toward emergence is driven by Thermal time accumulation, where thermal time is calculated as:", indent));
-
-                // write children
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
         }
     }

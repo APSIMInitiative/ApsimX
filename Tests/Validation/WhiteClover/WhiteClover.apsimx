@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 283,
-  "Version": 100,
+  "Version": 129,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -20,7 +20,7 @@
       "Children": [
         {
           "$type": "Models.Manager, Models",
-          "Code": "// Defoliates on a regular cycle or one-off via a schedule\r\n// currently defoliates by the amount specified spread evenly over the specified period\r\n\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Zone zone;\r\n        [Link] Clock Clock;\r\n        [Link] Plant WhiteClover;\r\n        [Link] Fertiliser fertiliser;\r\n        [Link] ISummary summary = null;\r\n\r\n        [Description(\"Choose the crop to harvest:\")]\r\n        public IPlant Crop { get; set; }\r\n\r\n        [Description(\"Enter the date to start the rotation (dd/mm/yyyy):\")]\r\n        public DateTime cutPasture_StartDate { get; set; }\r\n\r\n        [Description(\"Enter the date to end the rotation (dd/mm/yyyy):\")]\r\n        public DateTime cutPasture_EndDate { get; set; }\r\n\r\n        [Description(\"Select type of defoliation:\")]\r\n        public defoliationTypes defoliateType { get; set; }\r\n\r\n        [Description(\"Enter the interval between defoliations (days):\")]\r\n        public int interval2Cut { get; set; }\r\n\r\n        [Description(\"Enter the number of days to defoliate over (days):\")]\r\n        public int durationOfCut { get; set; }\r\n\r\n        [Description(\"Choose what amount is being defined:\")]\r\n        public removeAmountTypes removeAmountType { get; set; }\r\n\r\n        [Description(\"Enter the amount to use (kgDM/ha):\")]\r\n        public double herbageAmount { get; set; }\r\n\r\n        [Description(\"Enter the fraction of DM that is removed from the field (0-1):\")]\r\n        public double fracDM2Remove { get; set; }\r\n\r\n        [Description(\"Enter the fraction of N that is removed from the field (0-1):\")]\r\n        public double fracN2Remove { get; set; }\r\n\r\n        [Description(\"Enter the depth down to which urine will applied (mm):\")]\r\n        public double urineDepth { get; set; }\r\n\r\n        [Description(\"Enter the proportion of N returned in dung (0-1):\")]\r\n        public double fracN2Dung { get; set; }\r\n\r\n        [Description(\"Enter the fraction of population decline due to defoliation (0-1):\")]\r\n        public double fracPopDecline { get; set; }\r\n\r\n        //fraction of each plant part returned as residue (0-1), wastage\r\n        private double leafResidueFrac = 0.01;\r\n        private double stolonResidueFrac = 0.01;\r\n        private double petioleResidueFrac = 0.01;\r\n        private double flowerResidueFrac = 0.01;\r\n        private double minLeafAmount = 5.0;\r\n\r\n        //maximum fraction of stolons to remove\r\n        private double stolonMaxRemovalFrac = 0.10;\r\n\r\n        //Outputs\r\n        //Pasture DM defoliated today (kg/ha)\r\n        [XmlIgnore] public double DefoliatedDM{ get; set; }\r\n        //N defoliate today\r\n        [XmlIgnore] public double DefoliatedN{ get; set; }\r\n        //N concentration in today's defoliated material\r\n        [XmlIgnore] public double DefoliatedNConc{ get; set; }\r\n        //Pasture DM harvested today (kg/ha)\r\n        [XmlIgnore] public double HarvestedDM{ get; set; }\r\n        //N harvested today\r\n        [XmlIgnore] public double HarvestedN{ get; set; }\r\n        //N concentration in today's harvested material\r\n        [XmlIgnore] public double HarvestedNConc{ get; set; }\r\n        //DM removed from the paddock\r\n        [XmlIgnore] public double RemovedDM{ get; set; }\r\n        //N removed from the paddock\r\n        [XmlIgnore] public double RemovedN{ get; set; }\r\n        //N concentration in today's removed material\r\n        [XmlIgnore] public double RemovedNConc{ get; set; }\r\n        //DM returned to the paddock\r\n        [XmlIgnore] public double ReturnedDM{ get; set; }\r\n        //N returned to the paddock\r\n        [XmlIgnore] public double ReturnedN{ get; set; }\r\n        //N concentration in today's returned material\r\n        [XmlIgnore] public double ReturnedNConc{ get; set; }\r\n        //N returned as dung (SurfaceOM)\r\n        [XmlIgnore] public double NReturnedInDung{ get; set; }\r\n        //N returned as urine (urea)\r\n        [XmlIgnore] public double NReturnedInUrine{ get; set; }\r\n        //Number of days after last harvest\r\n        [XmlIgnore] public int DaysAfterCut{ get; set; }\r\n        //Total standing DM (Leaf + Stem/Sheath) before cut\r\n        [XmlIgnore] public double PreHarvestDM{ get; set; }\r\n        //Total standing DM (Leaf + Stem/Sheath) after cut\r\n        [XmlIgnore] public double PostHarvestDM{ get; set; }\r\n\r\n        //Pasture DM harvested this rotation (kg/ha)\r\n        [XmlIgnore] public double RotationHarvestedDM{ get; set; }\r\n        //Pasture DM to be harvested this rotation (kg/ha)\r\n        [XmlIgnore] public double RotationHarvestingDM{ get; set; }\r\n\r\n        //Internal variables\r\n        private RemovalFractions removalFractions;\r\n        //The fraction of urine to be applied in each layer\r\n        private double[] FracLayer;\r\n        // total herbage to remove in g/m2 per day\r\n        private double herbageToRemove;\r\n        // counter\r\n        private int daysCutting = 0;\r\n        // type of defoliation (Cut or Graze)\r\n        private string defoliationType;\r\n        // type of DM amount (ResidualDM or DMToRemove)\r\n        private string amountType;\r\n        // auxiliary\r\n        private bool aCutHasHappened = false;\r\n        private bool isStillCutting = false;\r\n        private double cumAmountHarvested;\r\n\r\n        // event to add residue / dung to surface OM\r\n        public event BiomassRemovedDelegate BiomassRemoved;\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            removalFractions = new RemovalFractions();\r\n            DaysAfterCut = 0;\r\n            resetVariables();\r\n            if (defoliateType == defoliationTypes.Cut)\r\n                defoliationType = \"Cut\";\r\n            else\r\n                defoliationType = \"Graze\";\r\n\r\n            if (removeAmountType == removeAmountTypes.ResidualDM)\r\n                amountType = \"ResidualDM\";\r\n            else\r\n                amountType = \"DMToRemove\";\r\n\r\n            // make sure that rotation start when startDate<simulationStartDay\r\n            if ((Clock.Today > cutPasture_StartDate) && (Clock.Today < cutPasture_EndDate))\r\n                cutPasture_StartDate = Clock.Today;\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Clock.Today == cutPasture_StartDate)\r\n                DaysAfterCut = interval2Cut;\r\n\r\n            if ((Clock.Today >= cutPasture_StartDate) && (Clock.Today <= cutPasture_EndDate))\r\n            {\r\n                // Check whether we should start cutting\r\n                if ((WhiteClover.IsEmerged) && (DaysAfterCut > 0) && (DaysAfterCut == interval2Cut))\r\n                {\r\n                    Defoliate(defoliationType, herbageAmount * 0.1, amountType, durationOfCut);\r\n                }\r\n            }\r\n\r\n            // Check whether we need to continue cutting\r\n            //if ((daysCutting > 0) && (daysCutting <= durationOfCut))\r\n            if (isStillCutting)\r\n            {\r\n                // reset outputs\r\n                resetVariables();\r\n\r\n                removeDM(herbageToRemove, defoliationType);\r\n                returnExcreta();\r\n                cumAmountHarvested += HarvestedDM;\r\n                daysCutting += 1;\r\n            }\r\n\r\n            // reset outputs\r\n            if (daysCutting < 0)\r\n            {\r\n                resetVariables();\r\n                daysCutting = 0;\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if ((daysCutting > 0) && (daysCutting < durationOfCut))\r\n                isStillCutting = true;\r\n\r\n            if (daysCutting == durationOfCut)\r\n            {\r\n                PostHarvestDM = (double)zone.Get(\"WhiteClover.AboveGround.Wt\");\r\n                RotationHarvestedDM = cumAmountHarvested;\r\n                aCutHasHappened = true;\r\n                isStillCutting = false;\r\n                daysCutting = -1;\r\n                WhiteClover.Population = WhiteClover.Population * (1.0 - fracPopDecline);\r\n            }\r\n\r\n            if (aCutHasHappened && (daysCutting == 0))\r\n                DaysAfterCut += 1;\r\n        }\r\n\r\n        public enum removeAmountTypes\r\n        {\r\n            /// <summary>Setting DM amount to remove</summary>\r\n            DMToRemove,\r\n            /// <summary>Setting residual DM amount</summary>\r\n            ResidualDM\r\n        }\r\n\r\n        public enum defoliationTypes\r\n        {\r\n            /// <summary>Cut</summary>\r\n            Cut,\r\n            /// <summary>Graze</summary>\r\n            Graze\r\n        }\r\n\r\n        // resets the values of all outputs\r\n        private void resetVariables()\r\n        {\r\n            DefoliatedDM = 0.0;\r\n            DefoliatedN = 0.0;\r\n            DefoliatedNConc = 0.0;\r\n            HarvestedDM = 0.0;\r\n            HarvestedN = 0.0;\r\n            HarvestedNConc = 0.0;\r\n            RemovedDM = 0.0;\r\n            RemovedN = 0.0;\r\n            RemovedNConc = 0.0;\r\n            ReturnedDM = 0.0;\r\n            ReturnedN = 0.0;\r\n            ReturnedNConc = 0.0;\r\n            NReturnedInDung = 0.0;\r\n            NReturnedInUrine = 0.0;\r\n            RotationHarvestedDM = 0.0;\r\n            RotationHarvestingDM = 0.0;\r\n        }\r\n\r\n        // Perform the basic calculations for defoliation\r\n        public void Defoliate(string defoliationType, double amountDM, string amountType, int duration)\r\n        {\r\n            // get the existing plant amount\r\n            PreHarvestDM = (double)zone.Get(\"WhiteClover.AboveGround.Wt\");\r\n\r\n            // check duration\r\n            if (duration <= 0)\r\n                throw new Exception(\"Duration of graze/cut rotation is zero or negative\");\r\n            \r\n            // check amount to remove\r\n            if ((amountType == \"DMToRemove\") && (PreHarvestDM > 0.0))\r\n            {\r\n                summary.WriteMessage(this, \"   Defoliating \" + (10.0 * amountDM).ToString(\"#0.0\") + \"kg/ha over \" + duration + \" days\");\r\n                herbageToRemove = amountDM / duration;\r\n            }\r\n            else if ((amountType == \"ResidualDM\") && (PreHarvestDM > amountDM))\r\n            {\r\n                summary.WriteMessage(this, \"   Defoliating down to approximately \" + (10.0 * amountDM).ToString(\"#0.0\") + \"kg/ha over \" + duration + \" days\");\r\n                herbageToRemove = (PreHarvestDM - amountDM) / duration;\r\n            }\r\n            else\r\n            {\r\n                herbageToRemove = 0.0;\r\n                summary.WriteMessage(this, \"   Defoliation will not happend because there is not enough plant material\");\r\n                return;\r\n            }\r\n\r\n            RotationHarvestingDM = herbageToRemove * duration;\r\n            durationOfCut = duration;\r\n            // first defoliation\r\n            removeDM(herbageToRemove, defoliationType);\r\n            returnExcreta();\r\n            cumAmountHarvested = HarvestedDM;\r\n            daysCutting = 1;\r\n            DaysAfterCut = 0;\r\n        }\r\n\r\n        private void removeDM(double removeAmount, string removeType)\r\n        {\r\n            // get the existing biomass\r\n            double leafLiveWt = (double)zone.Get(\"WhiteClover.Leaf.Live.Wt\");\r\n            double stolonLiveWt = (double)zone.Get(\"WhiteClover.Stolon.Live.Wt\");\r\n            double petioleLiveWt = (double)zone.Get(\"WhiteClover.Petiole.Live.Wt\");\r\n            double flowerLiveWt = (double)zone.Get(\"WhiteClover.Inflorescence.Live.Wt\");\r\n            double leafDeadWt = (double)zone.Get(\"WhiteClover.Leaf.Dead.Wt\");\r\n            double stolonDeadWt = (double)zone.Get(\"WhiteClover.Stolon.Dead.Wt\");\r\n            double petioleDeadWt = (double)zone.Get(\"WhiteClover.Petiole.Dead.Wt\");\r\n            double flowerDeadWt = (double)zone.Get(\"WhiteClover.Inflorescence.Dead.Wt\");\r\n            double leafLiveN = (double)zone.Get(\"WhiteClover.Leaf.Live.N\");\r\n            double stolonLiveN = (double)zone.Get(\"WhiteClover.Stolon.Live.N\");\r\n            double petioleLiveN = (double)zone.Get(\"WhiteClover.Petiole.Live.N\");\r\n            double flowerLiveN = (double)zone.Get(\"WhiteClover.Inflorescence.Live.N\");\r\n            double leafDeadN = (double)zone.Get(\"WhiteClover.Leaf.Dead.N\");\r\n            double stolonDeadN = (double)zone.Get(\"WhiteClover.Stolon.Dead.N\");\r\n            double petioleDeadN = (double)zone.Get(\"WhiteClover.Petiole.Dead.N\");\r\n            double flowerDeadN = (double)zone.Get(\"WhiteClover.Inflorescence.Dead.N\");\r\n\r\n            double existingWt = leafLiveWt + leafDeadWt + (stolonLiveWt + stolonDeadWt)*stolonMaxRemovalFrac + petioleLiveWt + petioleDeadWt + flowerLiveWt + flowerDeadWt;\r\n            double existingN = leafLiveN + leafDeadN + (stolonLiveN + stolonDeadN)*stolonMaxRemovalFrac + petioleLiveN + petioleDeadN + flowerLiveN + flowerDeadN;\r\n\r\n            // Can we harvest anything?\r\n            double removingWt = Math.Min(existingWt, removeAmount);\r\n            if (removingWt > 0.0)\r\n            {\r\n                // get the fractions to remove for each organ (will override the default values)\r\n                // the default is [WhiteClover].Leaf.BiomassRemovalDefaults.Cut.FractionRemoved, or equivalent\r\n                // >> double leafFracToRemove = removeAmount * (leafLiveWt + leafDeadWt) / existingWt / existingWt;\r\n                double fracToRemove = removingWt / existingWt;\r\n                double stolonFracToRemove = ((stolonLiveWt + stolonDeadWt) > 0.0) ? fracToRemove : 0.0;\r\n                if(stolonFracToRemove>stolonMaxRemovalFrac)\r\n                {\r\n                    stolonFracToRemove = stolonMaxRemovalFrac;\r\n                    fracToRemove += 2.0*(stolonFracToRemove-stolonMaxRemovalFrac)/6.0;\r\n                }\r\n\r\n                double leafFracToRemove = 0.0;\r\n                if ((leafLiveWt + leafDeadWt) > 0.0)\r\n                {\r\n                    if (leafLiveWt < minLeafAmount)\r\n                    {\r\n                        // leafWt cannot go below a minimum\r\n                        leafFracToRemove = (removingWt + leafLiveWt - minLeafAmount) / existingWt;\r\n                        fracToRemove += Math.Max(0.0,fracToRemove-leafFracToRemove)/4.0;\r\n                    }\r\n                    else\r\n                        leafFracToRemove = fracToRemove;\r\n                }\r\n\r\n                double petioleFracToRemove = ((petioleLiveWt + petioleDeadWt) > 0.0) ? fracToRemove : 0.0;\r\n                double flowerFracToRemove = ((flowerLiveWt + flowerDeadWt) > 0.0) ? fracToRemove : 0.0;\r\n\r\n                // get the fractions to residue (i.e. wastage - will override the default values)\r\n                // the default is [WhiteClover].Leaf.BiomassRemovalDefaults.Cut.FractionToResidue, or equivalent\r\n                double leafFracToResidue = leafResidueFrac * leafFracToRemove;\r\n                double stolonFracToResidue = stolonResidueFrac * stolonFracToRemove;\r\n                double petioleFracToResidue = petioleResidueFrac * petioleFracToRemove;\r\n                double flowerFracToResidue = flowerResidueFrac * flowerFracToRemove;\r\n\r\n                // correct the values to defoliate (so our removing = remove + residue)\r\n                leafFracToRemove -= leafFracToResidue;\r\n                stolonFracToRemove -= stolonFracToResidue;\r\n                petioleFracToRemove -= petioleFracToResidue;\r\n                flowerFracToRemove -= flowerFracToResidue;\r\n\r\n                // set removal fractions (these overrides the default removals in the plant)\r\n                removalFractions.SetFractionToRemove(\"Leaf\", leafFracToRemove, \"Live\");\r\n                removalFractions.SetFractionToResidue(\"Leaf\", leafFracToResidue, \"Live\");\r\n                removalFractions.SetFractionToRemove(\"Leaf\", leafFracToRemove, \"Dead\");\r\n                removalFractions.SetFractionToResidue(\"Leaf\", leafFracToResidue, \"Dead\");\r\n                removalFractions.SetFractionToRemove(\"Stolon\", stolonFracToRemove, \"Live\");\r\n                removalFractions.SetFractionToResidue(\"Stolon\", stolonFracToResidue, \"Live\");\r\n                removalFractions.SetFractionToRemove(\"Stolon\", stolonFracToRemove, \"Dead\");\r\n                removalFractions.SetFractionToResidue(\"Stolon\", stolonFracToResidue, \"Dead\");\r\n                removalFractions.SetFractionToRemove(\"Petiole\", petioleFracToRemove, \"Live\");\r\n                removalFractions.SetFractionToResidue(\"Petiole\", petioleFracToResidue, \"Live\");\r\n                removalFractions.SetFractionToRemove(\"Petiole\", petioleFracToRemove, \"Dead\");\r\n                removalFractions.SetFractionToResidue(\"Petiole\", petioleFracToResidue, \"Dead\");\r\n                removalFractions.SetFractionToRemove(\"Inflorescence\", flowerFracToRemove, \"Live\");\r\n                removalFractions.SetFractionToResidue(\"Inflorescence\", flowerFracToResidue, \"Live\");\r\n                removalFractions.SetFractionToRemove(\"Inflorescence\", flowerFracToRemove, \"Dead\");\r\n                removalFractions.SetFractionToResidue(\"Inflorescence\", flowerFracToResidue, \"Dead\");\r\n\r\n                removalFractions.SetFractionToRemove(\"Root\", 0.0);\r\n                removalFractions.SetFractionToResidue(\"Root\", 0.0);\r\n                removalFractions.SetFractionToRemove(\"Taproot\", 0.0);\r\n                removalFractions.SetFractionToResidue(\"Taproot\", 0.0);\r\n                removalFractions.SetFractionToRemove(\"Nodule\", 0.0);\r\n                removalFractions.SetFractionToResidue(\"Nodule\", 0.0);\r\n\r\n                // Actually do the biomass removal\r\n                WhiteClover.RemoveBiomass(removeType, removalFractions);\r\n\r\n                // get the new existing plant amount\r\n                double postHarvestWt = (double)zone.Get(\"WhiteClover.AboveGround.Wt\");\r\n                double postHarvestN = (double)zone.Get(\"WhiteClover.AboveGround.N\");\r\n\r\n                // get total defoliation (total plant stuff lost)\r\n                DefoliatedDM = existingWt - postHarvestWt;\r\n                DefoliatedN = existingN - postHarvestN;\r\n                if (DefoliatedDM > 0.0)\r\n                    DefoliatedNConc = DefoliatedN/DefoliatedDM;\r\n\r\n                // get total harvested (plant stuff removed from plants)\r\n                HarvestedDM = (double)zone.Get(\"WhiteClover.Leaf.Removed.Wt\")\r\n                + (double)zone.Get(\"WhiteClover.Stolon.Removed.Wt\")\r\n                + (double)zone.Get(\"WhiteClover.Petiole.Removed.Wt\")\r\n                + (double)zone.Get(\"WhiteClover.Inflorescence.Removed.Wt\");\r\n                HarvestedN = (double)zone.Get(\"WhiteClover.Leaf.Removed.N\")\r\n                + (double)zone.Get(\"WhiteClover.Stolon.Removed.N\")\r\n                + (double)zone.Get(\"WhiteClover.Petiole.Removed.N\")\r\n                + (double)zone.Get(\"WhiteClover.Inflorescence.Removed.N\");\r\n                if (HarvestedDM > 0.0)\r\n                    HarvestedNConc = HarvestedN/HarvestedDM;\r\n\r\n                // get amounts actually removed from field and that to be returned (residue or dung/urine)\r\n                RemovedDM = HarvestedDM * fracDM2Remove;\r\n                RemovedN = HarvestedN * fracN2Remove;\r\n                if (RemovedDM > 0.0)\r\n                    RemovedNConc = RemovedN/RemovedDM;\r\n                ReturnedDM = HarvestedDM - RemovedDM;\r\n                ReturnedN = HarvestedN - RemovedN;\r\n                if (ReturnedDM > 0.0)\r\n                    ReturnedNConc = ReturnedN/ReturnedDM;\r\n                NReturnedInDung = ReturnedN * fracN2Dung;\r\n                NReturnedInUrine = ReturnedN - NReturnedInDung;\r\n            }\r\n            else\r\n            {\r\n            }\r\n        }\r\n\r\n        // Return dung and urine\r\n        private void returnExcreta()\r\n        {\r\n            if ((ReturnedDM > 0.0) || (NReturnedInDung > 0.0))\r\n            {\r\n                PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();\r\n                string[] type = new string[] { \"RuminantDung_PastureFed\" };\r\n                float[] dltdm = new float[] { (Single)ReturnedDM };\r\n                float[] dltn = new float[] { (Single)NReturnedInDung };\r\n                float[] dltp = new float[] { 0 };\r\n                float[] fraction = new float[] { 1 };     // fraction is always 1.0 here\r\n\r\n                BiomassDung.crop_type = \"RuminantDung_PastureFed\";\r\n                BiomassDung.dm_type = type;\r\n                BiomassDung.dlt_crop_dm = dltdm;\r\n                BiomassDung.dlt_dm_n = dltn;\r\n                BiomassDung.dlt_dm_p = dltp;\r\n                BiomassDung.fraction_to_residue = fraction;\r\n                BiomassRemoved.Invoke(BiomassDung);\r\n            }\r\n\r\n            if (NReturnedInUrine > 0.0)\r\n            {\r\n                fertiliser.Apply(NReturnedInUrine * 10, Fertiliser.Types.UreaN, urineDepth);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+          "Code": "// Defoliates on a regular cycle or one-off via a schedule\n// currently defoliates by the amount specified spread evenly over the specified period\n\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models.PMF;\nusing Models.Soils;\nusing Models;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] Zone zone;\n        [Link] Clock Clock;\n        [Link] Plant WhiteClover;\n        [Link] Fertiliser fertiliser;\n        [Link] ISummary summary = null;\n\n        [Description(\"Choose the crop to harvest:\")]\n        public IPlant Crop { get; set; }\n\n        [Description(\"Enter the date to start the rotation (dd/mm/yyyy):\")]\n        public DateTime cutPasture_StartDate { get; set; }\n\n        [Description(\"Enter the date to end the rotation (dd/mm/yyyy):\")]\n        public DateTime cutPasture_EndDate { get; set; }\n\n        [Description(\"Select type of defoliation:\")]\n        public defoliationTypes defoliateType { get; set; }\n\n        [Description(\"Enter the interval between defoliations (days):\")]\n        public int interval2Cut { get; set; }\n\n        [Description(\"Enter the number of days to defoliate over (days):\")]\n        public int durationOfCut { get; set; }\n\n        [Description(\"Choose what amount is being defined:\")]\n        public removeAmountTypes removeAmountType { get; set; }\n\n        [Description(\"Enter the amount to use (kgDM/ha):\")]\n        public double herbageAmount { get; set; }\n\n        [Description(\"Enter the fraction of DM that is removed from the field (0-1):\")]\n        public double fracDM2Remove { get; set; }\n\n        [Description(\"Enter the fraction of N that is removed from the field (0-1):\")]\n        public double fracN2Remove { get; set; }\n\n        [Description(\"Enter the depth down to which urine will applied (mm):\")]\n        public double urineDepth { get; set; }\n\n        [Description(\"Enter the proportion of N returned in dung (0-1):\")]\n        public double fracN2Dung { get; set; }\n\n        [Description(\"Enter the fraction of population decline due to defoliation (0-1):\")]\n        public double fracPopDecline { get; set; }\n\n        //fraction of each plant part returned as residue (0-1), wastage\n        private double leafResidueFrac = 0.01;\n        private double stolonResidueFrac = 0.01;\n        private double petioleResidueFrac = 0.01;\n        private double flowerResidueFrac = 0.01;\n        private double minLeafAmount = 5.0;\n\n        //maximum fraction of stolons to remove\n        private double stolonMaxRemovalFrac = 0.10;\n\n        //Outputs\n        //Pasture DM defoliated today (kg/ha)\n        [XmlIgnore] public double DefoliatedDM{ get; set; }\n        //N defoliate today\n        [XmlIgnore] public double DefoliatedN{ get; set; }\n        //N concentration in today's defoliated material\n        [XmlIgnore] public double DefoliatedNConc{ get; set; }\n        //Pasture DM harvested today (kg/ha)\n        [XmlIgnore] public double HarvestedDM{ get; set; }\n        //N harvested today\n        [XmlIgnore] public double HarvestedN{ get; set; }\n        //N concentration in today's harvested material\n        [XmlIgnore] public double HarvestedNConc{ get; set; }\n        //DM removed from the paddock\n        [XmlIgnore] public double RemovedDM{ get; set; }\n        //N removed from the paddock\n        [XmlIgnore] public double RemovedN{ get; set; }\n        //N concentration in today's removed material\n        [XmlIgnore] public double RemovedNConc{ get; set; }\n        //DM returned to the paddock\n        [XmlIgnore] public double ReturnedDM{ get; set; }\n        //N returned to the paddock\n        [XmlIgnore] public double ReturnedN{ get; set; }\n        //N concentration in today's returned material\n        [XmlIgnore] public double ReturnedNConc{ get; set; }\n        //N returned as dung (SurfaceOM)\n        [XmlIgnore] public double NReturnedInDung{ get; set; }\n        //N returned as urine (urea)\n        [XmlIgnore] public double NReturnedInUrine{ get; set; }\n        //Number of days after last harvest\n        [XmlIgnore] public int DaysAfterCut{ get; set; }\n        //Total standing DM (Leaf + Stem/Sheath) before cut\n        [XmlIgnore] public double PreHarvestDM{ get; set; }\n        //Total standing DM (Leaf + Stem/Sheath) after cut\n        [XmlIgnore] public double PostHarvestDM{ get; set; }\n\n        //Pasture DM harvested this rotation (kg/ha)\n        [XmlIgnore] public double RotationHarvestedDM{ get; set; }\n        //Pasture DM to be harvested this rotation (kg/ha)\n        [XmlIgnore] public double RotationHarvestingDM{ get; set; }\n\n        //Internal variables\n        private RemovalFractions removalFractions;\n        //The fraction of urine to be applied in each layer\n        private double[] FracLayer;\n        // total herbage to remove in g/m2 per day\n        private double herbageToRemove;\n        // counter\n        private int daysCutting = 0;\n        // type of defoliation (Cut or Graze)\n        private string defoliationType;\n        // type of DM amount (ResidualDM or DMToRemove)\n        private string amountType;\n        // auxiliary\n        private bool aCutHasHappened = false;\n        private bool isStillCutting = false;\n        private double cumAmountHarvested;\n\n        // event to add residue / dung to surface OM\n        public event BiomassRemovedDelegate BiomassRemoved;\n\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            removalFractions = new RemovalFractions();\n            DaysAfterCut = 0;\n            resetVariables();\n            if (defoliateType == defoliationTypes.Cut)\n                defoliationType = \"Cut\";\n            else\n                defoliationType = \"Graze\";\n\n            if (removeAmountType == removeAmountTypes.ResidualDM)\n                amountType = \"ResidualDM\";\n            else\n                amountType = \"DMToRemove\";\n\n            // make sure that rotation start when startDate<simulationStartDay\n            if ((Clock.Today > cutPasture_StartDate) && (Clock.Today < cutPasture_EndDate))\n                cutPasture_StartDate = Clock.Today;\n        }\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (Clock.Today == cutPasture_StartDate)\n                DaysAfterCut = interval2Cut;\n\n            if ((Clock.Today >= cutPasture_StartDate) && (Clock.Today <= cutPasture_EndDate))\n            {\n                // Check whether we should start cutting\n                if ((WhiteClover.IsEmerged) && (DaysAfterCut > 0) && (DaysAfterCut == interval2Cut))\n                {\n                    Defoliate(defoliationType, herbageAmount * 0.1, amountType, durationOfCut);\n                }\n            }\n\n            // Check whether we need to continue cutting\n            //if ((daysCutting > 0) && (daysCutting <= durationOfCut))\n            if (isStillCutting)\n            {\n                // reset outputs\n                resetVariables();\n\n                removeDM(herbageToRemove, defoliationType);\n                returnExcreta();\n                cumAmountHarvested += HarvestedDM;\n                daysCutting += 1;\n            }\n\n            // reset outputs\n            if (daysCutting < 0)\n            {\n                resetVariables();\n                daysCutting = 0;\n            }\n        }\n\n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            if ((daysCutting > 0) && (daysCutting < durationOfCut))\n                isStillCutting = true;\n\n            if (daysCutting == durationOfCut)\n            {\n                PostHarvestDM = (double)zone.Get(\"WhiteClover.AboveGround.Wt\");\n                RotationHarvestedDM = cumAmountHarvested;\n                aCutHasHappened = true;\n                isStillCutting = false;\n                daysCutting = -1;\n                WhiteClover.Population = WhiteClover.Population * (1.0 - fracPopDecline);\n            }\n\n            if (aCutHasHappened && (daysCutting == 0))\n                DaysAfterCut += 1;\n        }\n\n        public enum removeAmountTypes\n        {\n            /// <summary>Setting DM amount to remove</summary>\n            DMToRemove,\n            /// <summary>Setting residual DM amount</summary>\n            ResidualDM\n        }\n\n        public enum defoliationTypes\n        {\n            /// <summary>Cut</summary>\n            Cut,\n            /// <summary>Graze</summary>\n            Graze\n        }\n\n        // resets the values of all outputs\n        private void resetVariables()\n        {\n            DefoliatedDM = 0.0;\n            DefoliatedN = 0.0;\n            DefoliatedNConc = 0.0;\n            HarvestedDM = 0.0;\n            HarvestedN = 0.0;\n            HarvestedNConc = 0.0;\n            RemovedDM = 0.0;\n            RemovedN = 0.0;\n            RemovedNConc = 0.0;\n            ReturnedDM = 0.0;\n            ReturnedN = 0.0;\n            ReturnedNConc = 0.0;\n            NReturnedInDung = 0.0;\n            NReturnedInUrine = 0.0;\n            RotationHarvestedDM = 0.0;\n            RotationHarvestingDM = 0.0;\n        }\n\n        // Perform the basic calculations for defoliation\n        public void Defoliate(string defoliationType, double amountDM, string amountType, int duration)\n        {\n            // get the existing plant amount\n            PreHarvestDM = (double)zone.Get(\"WhiteClover.AboveGround.Wt\");\n\n            // check duration\n            if (duration <= 0)\n                throw new Exception(\"Duration of graze/cut rotation is zero or negative\");\n            \n            // check amount to remove\n            if ((amountType == \"DMToRemove\") && (PreHarvestDM > 0.0))\n            {\n                summary.WriteMessage(this, \"   Defoliating \" + (10.0 * amountDM).ToString(\"#0.0\") + \"kg/ha over \" + duration + \" days\");\n                herbageToRemove = amountDM / duration;\n            }\n            else if ((amountType == \"ResidualDM\") && (PreHarvestDM > amountDM))\n            {\n                summary.WriteMessage(this, \"   Defoliating down to approximately \" + (10.0 * amountDM).ToString(\"#0.0\") + \"kg/ha over \" + duration + \" days\");\n                herbageToRemove = (PreHarvestDM - amountDM) / duration;\n            }\n            else\n            {\n                herbageToRemove = 0.0;\n                summary.WriteMessage(this, \"   Defoliation will not happend because there is not enough plant material\");\n                return;\n            }\n\n            RotationHarvestingDM = herbageToRemove * duration;\n            durationOfCut = duration;\n            // first defoliation\n            removeDM(herbageToRemove, defoliationType);\n            returnExcreta();\n            cumAmountHarvested = HarvestedDM;\n            daysCutting = 1;\n            DaysAfterCut = 0;\n        }\n\n        private void removeDM(double removeAmount, string removeType)\n        {\n            // get the existing biomass\n            double leafLiveWt = (double)zone.Get(\"WhiteClover.Leaf.Live.Wt\");\n            double stolonLiveWt = (double)zone.Get(\"WhiteClover.Stolon.Live.Wt\");\n            double petioleLiveWt = (double)zone.Get(\"WhiteClover.Petiole.Live.Wt\");\n            double flowerLiveWt = (double)zone.Get(\"WhiteClover.Inflorescence.Live.Wt\");\n            double leafDeadWt = (double)zone.Get(\"WhiteClover.Leaf.Dead.Wt\");\n            double stolonDeadWt = (double)zone.Get(\"WhiteClover.Stolon.Dead.Wt\");\n            double petioleDeadWt = (double)zone.Get(\"WhiteClover.Petiole.Dead.Wt\");\n            double flowerDeadWt = (double)zone.Get(\"WhiteClover.Inflorescence.Dead.Wt\");\n            double leafLiveN = (double)zone.Get(\"WhiteClover.Leaf.Live.N\");\n            double stolonLiveN = (double)zone.Get(\"WhiteClover.Stolon.Live.N\");\n            double petioleLiveN = (double)zone.Get(\"WhiteClover.Petiole.Live.N\");\n            double flowerLiveN = (double)zone.Get(\"WhiteClover.Inflorescence.Live.N\");\n            double leafDeadN = (double)zone.Get(\"WhiteClover.Leaf.Dead.N\");\n            double stolonDeadN = (double)zone.Get(\"WhiteClover.Stolon.Dead.N\");\n            double petioleDeadN = (double)zone.Get(\"WhiteClover.Petiole.Dead.N\");\n            double flowerDeadN = (double)zone.Get(\"WhiteClover.Inflorescence.Dead.N\");\n\n            double existingWt = leafLiveWt + leafDeadWt + (stolonLiveWt + stolonDeadWt)*stolonMaxRemovalFrac + petioleLiveWt + petioleDeadWt + flowerLiveWt + flowerDeadWt;\n            double existingN = leafLiveN + leafDeadN + (stolonLiveN + stolonDeadN)*stolonMaxRemovalFrac + petioleLiveN + petioleDeadN + flowerLiveN + flowerDeadN;\n\n            // Can we harvest anything?\n            double removingWt = Math.Min(existingWt, removeAmount);\n            if (removingWt > 0.0)\n            {\n                // get the fractions to remove for each organ (will override the default values)\n                // the default is [WhiteClover].Leaf.BiomassRemovalDefaults.Cut.FractionRemoved, or equivalent\n                // >> double leafFracToRemove = removeAmount * (leafLiveWt + leafDeadWt) / existingWt / existingWt;\n                double fracToRemove = removingWt / existingWt;\n                double stolonFracToRemove = ((stolonLiveWt + stolonDeadWt) > 0.0) ? fracToRemove : 0.0;\n                if(stolonFracToRemove>stolonMaxRemovalFrac)\n                {\n                    stolonFracToRemove = stolonMaxRemovalFrac;\n                    fracToRemove += 2.0*(stolonFracToRemove-stolonMaxRemovalFrac)/6.0;\n                }\n\n                double leafFracToRemove = 0.0;\n                if ((leafLiveWt + leafDeadWt) > 0.0)\n                {\n                    if (leafLiveWt < minLeafAmount)\n                    {\n                        // leafWt cannot go below a minimum\n                        leafFracToRemove = (removingWt + leafLiveWt - minLeafAmount) / existingWt;\n                        fracToRemove += Math.Max(0.0,fracToRemove-leafFracToRemove)/4.0;\n                    }\n                    else\n                        leafFracToRemove = fracToRemove;\n                }\n\n                double petioleFracToRemove = ((petioleLiveWt + petioleDeadWt) > 0.0) ? fracToRemove : 0.0;\n                double flowerFracToRemove = ((flowerLiveWt + flowerDeadWt) > 0.0) ? fracToRemove : 0.0;\n\n                // get the fractions to residue (i.e. wastage - will override the default values)\n                // the default is [WhiteClover].Leaf.BiomassRemovalDefaults.Cut.FractionToResidue, or equivalent\n                double leafFracToResidue = leafResidueFrac * leafFracToRemove;\n                double stolonFracToResidue = stolonResidueFrac * stolonFracToRemove;\n                double petioleFracToResidue = petioleResidueFrac * petioleFracToRemove;\n                double flowerFracToResidue = flowerResidueFrac * flowerFracToRemove;\n\n                // correct the values to defoliate (so our removing = remove + residue)\n                leafFracToRemove -= leafFracToResidue;\n                stolonFracToRemove -= stolonFracToResidue;\n                petioleFracToRemove -= petioleFracToResidue;\n                flowerFracToRemove -= flowerFracToResidue;\n\n                // set removal fractions (these overrides the default removals in the plant)\n                removalFractions.SetFractionToRemove(\"Leaf\", leafFracToRemove, \"Live\");\n                removalFractions.SetFractionToResidue(\"Leaf\", leafFracToResidue, \"Live\");\n                removalFractions.SetFractionToRemove(\"Leaf\", leafFracToRemove, \"Dead\");\n                removalFractions.SetFractionToResidue(\"Leaf\", leafFracToResidue, \"Dead\");\n                removalFractions.SetFractionToRemove(\"Stolon\", stolonFracToRemove, \"Live\");\n                removalFractions.SetFractionToResidue(\"Stolon\", stolonFracToResidue, \"Live\");\n                removalFractions.SetFractionToRemove(\"Stolon\", stolonFracToRemove, \"Dead\");\n                removalFractions.SetFractionToResidue(\"Stolon\", stolonFracToResidue, \"Dead\");\n                removalFractions.SetFractionToRemove(\"Petiole\", petioleFracToRemove, \"Live\");\n                removalFractions.SetFractionToResidue(\"Petiole\", petioleFracToResidue, \"Live\");\n                removalFractions.SetFractionToRemove(\"Petiole\", petioleFracToRemove, \"Dead\");\n                removalFractions.SetFractionToResidue(\"Petiole\", petioleFracToResidue, \"Dead\");\n                removalFractions.SetFractionToRemove(\"Inflorescence\", flowerFracToRemove, \"Live\");\n                removalFractions.SetFractionToResidue(\"Inflorescence\", flowerFracToResidue, \"Live\");\n                removalFractions.SetFractionToRemove(\"Inflorescence\", flowerFracToRemove, \"Dead\");\n                removalFractions.SetFractionToResidue(\"Inflorescence\", flowerFracToResidue, \"Dead\");\n\n                removalFractions.SetFractionToRemove(\"Root\", 0.0);\n                removalFractions.SetFractionToResidue(\"Root\", 0.0);\n                removalFractions.SetFractionToRemove(\"Taproot\", 0.0);\n                removalFractions.SetFractionToResidue(\"Taproot\", 0.0);\n                removalFractions.SetFractionToRemove(\"Nodule\", 0.0);\n                removalFractions.SetFractionToResidue(\"Nodule\", 0.0);\n\n                // Actually do the biomass removal\n                WhiteClover.RemoveBiomass(removeType, removalFractions);\n\n                // get the new existing plant amount\n                double postHarvestWt = (double)zone.Get(\"WhiteClover.AboveGround.Wt\");\n                double postHarvestN = (double)zone.Get(\"WhiteClover.AboveGround.N\");\n\n                // get total defoliation (total plant stuff lost)\n                DefoliatedDM = existingWt - postHarvestWt;\n                DefoliatedN = existingN - postHarvestN;\n                if (DefoliatedDM > 0.0)\n                    DefoliatedNConc = DefoliatedN/DefoliatedDM;\n\n                // get total harvested (plant stuff removed from plants)\n                HarvestedDM = (double)zone.Get(\"WhiteClover.Leaf.Removed.Wt\")\n                + (double)zone.Get(\"WhiteClover.Stolon.Removed.Wt\")\n                + (double)zone.Get(\"WhiteClover.Petiole.Removed.Wt\")\n                + (double)zone.Get(\"WhiteClover.Inflorescence.Removed.Wt\");\n                HarvestedN = (double)zone.Get(\"WhiteClover.Leaf.Removed.N\")\n                + (double)zone.Get(\"WhiteClover.Stolon.Removed.N\")\n                + (double)zone.Get(\"WhiteClover.Petiole.Removed.N\")\n                + (double)zone.Get(\"WhiteClover.Inflorescence.Removed.N\");\n                if (HarvestedDM > 0.0)\n                    HarvestedNConc = HarvestedN/HarvestedDM;\n\n                // get amounts actually removed from field and that to be returned (residue or dung/urine)\n                RemovedDM = HarvestedDM * fracDM2Remove;\n                RemovedN = HarvestedN * fracN2Remove;\n                if (RemovedDM > 0.0)\n                    RemovedNConc = RemovedN/RemovedDM;\n                ReturnedDM = HarvestedDM - RemovedDM;\n                ReturnedN = HarvestedN - RemovedN;\n                if (ReturnedDM > 0.0)\n                    ReturnedNConc = ReturnedN/ReturnedDM;\n                NReturnedInDung = ReturnedN * fracN2Dung;\n                NReturnedInUrine = ReturnedN - NReturnedInDung;\n            }\n            else\n            {\n            }\n        }\n\n        // Return dung and urine\n        private void returnExcreta()\n        {\n            if ((ReturnedDM > 0.0) || (NReturnedInDung > 0.0))\n            {\n                PMF.BiomassRemovedType BiomassDung = new PMF.BiomassRemovedType();\n                string[] type = new string[] { \"RuminantDung_PastureFed\" };\n                float[] dltdm = new float[] { (Single)ReturnedDM };\n                float[] dltn = new float[] { (Single)NReturnedInDung };\n                float[] dltp = new float[] { 0 };\n                float[] fraction = new float[] { 1 };     // fraction is always 1.0 here\n\n                BiomassDung.crop_type = \"RuminantDung_PastureFed\";\n                BiomassDung.dm_type = type;\n                BiomassDung.dlt_crop_dm = dltdm;\n                BiomassDung.dlt_dm_n = dltn;\n                BiomassDung.dlt_dm_p = dltp;\n                BiomassDung.fraction_to_residue = fraction;\n                BiomassRemoved.Invoke(BiomassDung);\n            }\n\n            if (NReturnedInUrine > 0.0)\n            {\n                fertiliser.Apply(NReturnedInUrine * 10, Fertiliser.Types.UreaN, urineDepth);\n            }\n        }\n    }\n}\n",
           "Parameters": [
             {
               "Key": "Crop",
@@ -82,8 +82,185 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Weather Met;\r\n        [Link] private Fertiliser Fert;\r\n        [Link] private Irrigation Irrig;\r\n        [Link] private Plant WhiteClover;\r\n        [Link] private Zone zone;\r\n        [Link] private ISummary summary;\r\n        private DateTime YearStartDate;\r\n        private double yesterdayNconc;\r\n        [Link(ByName = true)]\r\n        private ISolute Urea;\r\n        [Link(ByName = true)]\r\n        private ISolute NO3;\r\n        [Link(ByName = true)]\r\n        private ISolute NH4;\r\n        [Link(ByName = true)]\r\n        private SoilNitrogen SoilNitrogen;\r\n        [Link] Soils.Soil Soil;\r\n        [Link] Models.Surface.SurfaceOrganicMatter SOM;\r\n                    \r\n        [XmlIgnore] public bool InitialDay { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumPlantN { get; set; }\r\n        [XmlIgnore] public double AccumMineralisation { get; set; }\r\n        [XmlIgnore] public double AccumDenit { get; set; }\r\n        [XmlIgnore] public double AccumFert { get; set; }\r\n        [XmlIgnore] public double AccumLeach { get; set; }\r\n        [XmlIgnore] public double AccumDetach { get; set; }\r\n        [XmlIgnore] public double DeltaSoilOMN { get; set; }\r\n        [XmlIgnore] public double DeltaSurfaceOMN { get; set; }\r\n        [XmlIgnore] public double DeltaSoilMineralN { get; set; }\r\n        [XmlIgnore] public double SoilNitrogenContent { get; set; }\r\n        \r\n        [XmlIgnore] public double AccumEO { get; set; }\r\n        [XmlIgnore] public double AccumEP { get; set; }\r\n        [XmlIgnore] public double AccumES { get; set; }\r\n        [XmlIgnore] public double AccumDrainage { get; set; }\r\n        [XmlIgnore] public double AccumRunoff { get; set; }\r\n        [XmlIgnore] public double AccumOutflowLat { get; set; }\r\n        [XmlIgnore] public double AccumIrrigation { get; set; }\r\n        [XmlIgnore] public double AccumRainfall { get; set; }\r\n        [XmlIgnore] public double SoilWaterDeficit { get; set; }\r\n    \r\n        [XmlIgnore] public double  InitialSoilOMN { get; set; }\r\n        [XmlIgnore] public double  InitialSurfaceOMN { get; set; }\r\n        [XmlIgnore] public double  InitialMineralN { get; set; }\r\n        \r\n        [XmlIgnore] public double SWC { get; set; }\r\n        [XmlIgnore] public double DUL { get; set; }\r\n        [XmlIgnore] public double OutFlowLat { get; set; }\r\n\r\n        [XmlIgnore] public double FomN { get; set; }\r\n        [XmlIgnore] public double BiomN { get; set; }\r\n        [XmlIgnore] public double HumN { get; set; }\r\n        [XmlIgnore] public double OrganicN { get; set; }\r\n        [XmlIgnore] public double NO3N { get; set; }\r\n        [XmlIgnore] public double NH4N { get; set; }\r\n        [XmlIgnore] public double UreaN { get; set; }\r\n        [XmlIgnore] public double MineralN { get; set; }\r\n        [XmlIgnore] public double DltNMinRes { get; set; }\r\n        [XmlIgnore] public double DltNMinTot { get; set; }\r\n        \r\n        [XmlIgnore] public double LeafFraction { get; set; }\r\n        [XmlIgnore] public double StolonFraction { get; set; }\r\n        [XmlIgnore] public double PetioleFraction { get; set; }\r\n        [XmlIgnore] public double InflorescenceFraction { get; set; }\r\n\r\n        [XmlIgnore] public double ShootRootRatio { get; set; }\r\n\r\n        [XmlIgnore] public double AccumHarvestedWt { get; set; }\r\n        [XmlIgnore] public double AccumHarvestedN { get; set; }\r\n        [XmlIgnore] public double HerbageNConc { get; set; }\r\n\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            InitialDay = true;\r\n        }\r\n        \r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            yesterdayNconc =  MathUtilities.Divide((double)zone.Get(\"WhiteClover.Leaf.N\")+(double)zone.Get(\"WhiteClover.Petiole.N\"), (double)zone.Get(\"WhiteClover.Leaf.Wt\")+(double)zone.Get(\"WhiteClover.Petiole.Wt\"), 0.0);\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //!!!!!! Nitrogen balance components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n            FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\r\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\r\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\r\n            OrganicN = FomN + HumN + BiomN;\r\n            NO3N = MathUtilities.Sum(NO3.kgha);\r\n            NH4N = MathUtilities.Sum(NH4.kgha);\r\n            UreaN = MathUtilities.Sum(Urea.kgha);\r\n            MineralN = NO3N + NH4N + UreaN; \r\n            DltNMinRes = MathUtilities.Sum(SoilNitrogen.dlt_n_min_res);\r\n            DltNMinTot = MathUtilities.Sum(SoilNitrogen.MineralisedN);\r\n            int layers = Soil.Thickness.Length;\r\n            if (InitialDay == true)\r\n            {\r\n                InitialSurfaceOMN = SOM.N;\r\n                InitialSoilOMN = OrganicN;\r\n                InitialMineralN = MineralN;\r\n                InitialDay = false;\r\n\r\n                // check whether we're in the north or south hemisphere\r\n                if (Met.Latitude >= 0.0)\r\n                    YearStartDate = DateTime.Parse(\"01/01/2000\");\r\n                else\r\n                    YearStartDate = DateTime.Parse(\"01/07/2000\");\r\n            }\r\n            DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;\r\n            AccumLeach = AccumLeach - Soil.SoilWater.LeachNH4 - Soil.SoilWater.LeachNO3 - Soil.SoilWater.LeachUrea; //Fails\r\n            AccumMineralisation += MathUtilities.Sum(SoilNitrogen.MineralisedN);\r\n            AccumDenit -= MathUtilities.Sum(SoilNitrogen.Denitrification);\r\n            AccumPlantN -= (double)zone.Get(\"WhiteClover.Root.NUptake\");\r\n            DeltaSoilOMN = OrganicN - InitialSoilOMN;\r\n            DeltaSoilMineralN = MineralN - InitialMineralN;\r\n            SoilNitrogenContent = MineralN;\r\n\r\n            //!!!!!! Water balance components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n\r\n            AccumRainfall += Met.Rain;\r\n            //AccumEP -= (double)zone.Get(\"[WhiteClover].Leaf.Transpiration\");\r\n            AccumEP -= (double)zone.Get(\"WhiteClover.Root.WaterUptake\");\r\n            SoilWaterDeficit = (SWC - DUL);\r\n            double OutFlowLat = MathUtilities.Sum(Soil.SoilWater.LateralOutflow);\r\n            AccumOutflowLat -= OutFlowLat;\r\n            \r\n            //!!!!!! Stem and leaf fraction !!!!!!\r\n            if ((double)zone.Get(\"WhiteClover.AboveGround.Wt\") > 0.0)\r\n            {\r\n                LeafFraction = (double)zone.Get(\"WhiteClover.Leaf.Wt\") / (double)zone.Get(\"WhiteClover.AboveGround.Wt\");\r\n                StolonFraction = (double)zone.Get(\"WhiteClover.Stolon.Wt\") / (double)zone.Get(\"WhiteClover.AboveGround.Wt\");\r\n                PetioleFraction = (double)zone.Get(\"WhiteClover.Petiole.Wt\") / (double)zone.Get(\"WhiteClover.AboveGround.Wt\");\r\n                InflorescenceFraction = (double)zone.Get(\"WhiteClover.Inflorescence.Wt\") / (double)zone.Get(\"WhiteClover.AboveGround.Wt\");\r\n            }\r\n            else\r\n            {\r\n                LeafFraction = 0.0;\r\n                StolonFraction = 0.0;\r\n                PetioleFraction = 0.0;\r\n            }\r\n            \r\n            //!!!!!! Plant DM components !!!!!!\r\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\r\n            ShootRootRatio = MathUtilities.Divide((double)zone.Get(\"WhiteClover.AboveGroundLive.Wt\"), (double)zone.Get(\"WhiteClover.BelowGroundLive.Wt\"), 0.0);\r\n            HerbageNConc = yesterdayNconc;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\r\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\r\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\r\n            AccumFert += Fert.NitrogenApplied;\r\n            AccumIrrigation += Irrig.IrrigationApplied;\r\n            \r\n            \r\n            AccumEO -= Soil.SoilWater.Eo;\r\n            AccumES -= Soil.SoilWater.Es; \r\n            AccumDrainage -= Soil.SoilWater.Drainage;\r\n            AccumRunoff -= Soil.SoilWater.Runoff;\r\n            SWC = MathUtilities.Sum(Soil.SoilWater.SWmm);\r\n            DUL = MathUtilities.Sum(Soil.DULmm);\r\n\r\n            //!!!!!! Plant Harvest !!!!!!\r\n            if (Clock.Today.DayOfYear == YearStartDate.DayOfYear)\r\n            {\r\n                AccumHarvestedWt = (double)zone.Get(\"[Defoliate].Script.DefoliatedDM\");\r\n                AccumHarvestedN = (double)zone.Get(\"[Defoliate].Script.DefoliatedN\");\r\n            }\r\n            else\r\n            {\r\n                AccumHarvestedWt += (double)zone.Get(\"[Defoliate].Script.DefoliatedDM\");\r\n                AccumHarvestedN += (double)zone.Get(\"[Defoliate].Script.DefoliatedN\");\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n",
-          "Parameters": null,
+          "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Interfaces;\nusing Models.Soils.Nutrients;\nusing Models.PMF.Organs;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] private Clock Clock;\n        [Link] private Weather Met;\n        [Link] private Fertiliser Fert;\n        [Link] private Irrigation Irrig;\n        [Link] private Plant WhiteClover;\n        [Link] private Zone zone;\n        [Link] private ISummary summary;\n        private DateTime YearStartDate;\n        private double yesterdayNconc;\n        [Link(ByName = true)]\n        private ISolute Urea;\n        [Link(ByName = true)]\n        private ISolute NO3;\n        [Link(ByName = true)]\n        private ISolute NH4;\n        [Link(ByName = true)]\n        private SoilNitrogen SoilNitrogen;\n        [Link] private Soils.Soil Soil;\n        [Link] private Models.Surface.SurfaceOrganicMatter SOM;\n        [Link(Type = LinkType.Path, Path = \"[WhiteClover].Root\")]\n        private Root root;\n        [Link]\n        private IPhysical soilPhysical;\n        [Link]\n        private ISoilWater waterBalance;\n                    \n        [XmlIgnore] public bool InitialDay { get; set; }\n        \n        [XmlIgnore] public double AccumPlantN { get; set; }\n        [XmlIgnore] public double AccumMineralisation { get; set; }\n        [XmlIgnore] public double AccumDenit { get; set; }\n        [XmlIgnore] public double AccumFert { get; set; }\n        [XmlIgnore] public double AccumLeach { get; set; }\n        [XmlIgnore] public double AccumDetach { get; set; }\n        [XmlIgnore] public double DeltaSoilOMN { get; set; }\n        [XmlIgnore] public double DeltaSurfaceOMN { get; set; }\n        [XmlIgnore] public double DeltaSoilMineralN { get; set; }\n        [XmlIgnore] public double SoilNitrogenContent { get; set; }\n        \n        [XmlIgnore] public double AccumEO { get; set; }\n        [XmlIgnore] public double AccumEP { get; set; }\n        [XmlIgnore] public double AccumES { get; set; }\n        [XmlIgnore] public double AccumDrainage { get; set; }\n        [XmlIgnore] public double AccumRunoff { get; set; }\n        [XmlIgnore] public double AccumOutflowLat { get; set; }\n        [XmlIgnore] public double AccumIrrigation { get; set; }\n        [XmlIgnore] public double AccumRainfall { get; set; }\n        [XmlIgnore] public double SoilWaterDeficit { get; set; }\n    \n        [XmlIgnore] public double  InitialSoilOMN { get; set; }\n        [XmlIgnore] public double  InitialSurfaceOMN { get; set; }\n        [XmlIgnore] public double  InitialMineralN { get; set; }\n        \n        [XmlIgnore] public double SWC { get; set; }\n        [XmlIgnore] public double DUL { get; set; }\n        [XmlIgnore] public double OutFlowLat { get; set; }\n\n        [XmlIgnore] public double FomN { get; set; }\n        [XmlIgnore] public double BiomN { get; set; }\n        [XmlIgnore] public double HumN { get; set; }\n        [XmlIgnore] public double OrganicN { get; set; }\n        [XmlIgnore] public double NO3N { get; set; }\n        [XmlIgnore] public double NH4N { get; set; }\n        [XmlIgnore] public double UreaN { get; set; }\n        [XmlIgnore] public double MineralN { get; set; }\n        [XmlIgnore] public double DltNMinRes { get; set; }\n        [XmlIgnore] public double DltNMinTot { get; set; }\n        \n        [XmlIgnore] public double LeafFraction { get; set; }\n        [XmlIgnore] public double StolonFraction { get; set; }\n        [XmlIgnore] public double PetioleFraction { get; set; }\n        [XmlIgnore] public double InflorescenceFraction { get; set; }\n\n        [XmlIgnore] public double ShootRootRatio { get; set; }\n\n        [XmlIgnore] public double AccumHarvestedWt { get; set; }\n        [XmlIgnore] public double AccumHarvestedN { get; set; }\n        [XmlIgnore] public double HerbageNConc { get; set; }\n\n\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            InitialDay = true;\n        }\n        \n        [EventSubscribe(\"StartOfDay\")]\n        private void OnStartOfDay(object sender, EventArgs e)\n        {\n            yesterdayNconc =  MathUtilities.Divide((double)zone.Get(\"WhiteClover.Leaf.N\")+(double)zone.Get(\"WhiteClover.Petiole.N\"), (double)zone.Get(\"WhiteClover.Leaf.Wt\")+(double)zone.Get(\"WhiteClover.Petiole.Wt\"), 0.0);\n        }\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            //!!!!!! Nitrogen balance components !!!!!!\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\n            FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\n            OrganicN = FomN + HumN + BiomN;\n            NO3N = MathUtilities.Sum(NO3.kgha);\n            NH4N = MathUtilities.Sum(NH4.kgha);\n            UreaN = MathUtilities.Sum(Urea.kgha);\n            MineralN = NO3N + NH4N + UreaN; \n            DltNMinRes = MathUtilities.Sum(SoilNitrogen.dlt_n_min_res);\n            DltNMinTot = MathUtilities.Sum(SoilNitrogen.MineralisedN);\n            int layers = soilPhysical.Thickness.Length;\n            if (InitialDay == true)\n            {\n                InitialSurfaceOMN = SOM.N;\n                InitialSoilOMN = OrganicN;\n                InitialMineralN = MineralN;\n                InitialDay = false;\n\n                // check whether we're in the north or south hemisphere\n                if (Met.Latitude >= 0.0)\n                    YearStartDate = new DateTime(2000, 1, 1);\n                else\n                    YearStartDate = new DateTime(2000, 7, 1);\n            }\n            DeltaSurfaceOMN = SOM.N - InitialSurfaceOMN;\n            AccumLeach = AccumLeach - waterBalance.LeachNH4 - waterBalance.LeachNO3 - waterBalance.LeachUrea; //Fails\n            AccumMineralisation += MathUtilities.Sum(SoilNitrogen.MineralisedN);\n            AccumDenit -= MathUtilities.Sum(SoilNitrogen.Denitrification);\n            AccumPlantN -= (double)zone.Get(\"WhiteClover.Root.NUptake\");\n            DeltaSoilOMN = OrganicN - InitialSoilOMN;\n            DeltaSoilMineralN = MineralN - InitialMineralN;\n            SoilNitrogenContent = MineralN;\n\n            //!!!!!! Water balance components !!!!!!\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\n\n            AccumRainfall += Met.Rain;\n            //AccumEP -= (double)zone.Get(\"[WhiteClover].Leaf.Transpiration\");\n            AccumEP -= (double)zone.Get(\"WhiteClover.Root.WaterUptake\");\n            SoilWaterDeficit = (SWC - DUL);\n            double OutFlowLat = MathUtilities.Sum(waterBalance.LateralOutflow);\n            AccumOutflowLat -= OutFlowLat;\n            \n            //!!!!!! Stem and leaf fraction !!!!!!\n            if ((double)zone.Get(\"WhiteClover.AboveGround.Wt\") > 0.0)\n            {\n                LeafFraction = (double)zone.Get(\"WhiteClover.Leaf.Wt\") / (double)zone.Get(\"WhiteClover.AboveGround.Wt\");\n                StolonFraction = (double)zone.Get(\"WhiteClover.Stolon.Wt\") / (double)zone.Get(\"WhiteClover.AboveGround.Wt\");\n                PetioleFraction = (double)zone.Get(\"WhiteClover.Petiole.Wt\") / (double)zone.Get(\"WhiteClover.AboveGround.Wt\");\n                InflorescenceFraction = (double)zone.Get(\"WhiteClover.Inflorescence.Wt\") / (double)zone.Get(\"WhiteClover.AboveGround.Wt\");\n            }\n            else\n            {\n                LeafFraction = 0.0;\n                StolonFraction = 0.0;\n                PetioleFraction = 0.0;\n            }\n            \n            //!!!!!! Plant DM components !!!!!!\n            //!!!!!!^^^^^^^^^^^^^^^^^^^^^^^^^^!!!!!!\n            ShootRootRatio = MathUtilities.Divide((double)zone.Get(\"WhiteClover.AboveGroundLive.Wt\"), (double)zone.Get(\"WhiteClover.BelowGroundLive.Wt\"), 0.0);\n            HerbageNConc = yesterdayNconc;\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            FomN = MathUtilities.Sum(SoilNitrogen.FOMN);\n            HumN = MathUtilities.Sum(SoilNitrogen.HumicN);\n            BiomN = MathUtilities.Sum(SoilNitrogen.MicrobialN);\n            AccumFert += Fert.NitrogenApplied;\n            AccumIrrigation += Irrig.IrrigationApplied;\n            \n            \n            AccumEO -= waterBalance.Eo;\n            AccumES -= waterBalance.Es; \n            AccumDrainage -= waterBalance.Drainage;\n            AccumRunoff -= waterBalance.Runoff;\n            SWC = MathUtilities.Sum(waterBalance.SWmm);\n            DUL = MathUtilities.Sum(soilPhysical.DULmm);\n\n            //!!!!!! Plant Harvest !!!!!!\n            if (Clock.Today.DayOfYear == YearStartDate.DayOfYear)\n            {\n                AccumHarvestedWt = (double)zone.Get(\"[Defoliate].Script.DefoliatedDM\");\n                AccumHarvestedN = (double)zone.Get(\"[Defoliate].Script.DefoliatedN\");\n            }\n            else\n            {\n                AccumHarvestedWt += (double)zone.Get(\"[Defoliate].Script.DefoliatedDM\");\n                AccumHarvestedN += (double)zone.Get(\"[Defoliate].Script.DefoliatedN\");\n            }\n        }\n    }\n}\n\n",
+          "Parameters": [
+            {
+              "Key": "InitialDay",
+              "Value": "False"
+            },
+            {
+              "Key": "AccumPlantN",
+              "Value": "0"
+            },
+            {
+              "Key": "AccumMineralisation",
+              "Value": "0"
+            },
+            {
+              "Key": "AccumDenit",
+              "Value": "0"
+            },
+            {
+              "Key": "AccumFert",
+              "Value": "0"
+            },
+            {
+              "Key": "AccumLeach",
+              "Value": "0"
+            },
+            {
+              "Key": "AccumDetach",
+              "Value": "0"
+            },
+            {
+              "Key": "DeltaSoilOMN",
+              "Value": "0"
+            },
+            {
+              "Key": "DeltaSurfaceOMN",
+              "Value": "0"
+            },
+            {
+              "Key": "DeltaSoilMineralN",
+              "Value": "0"
+            },
+            {
+              "Key": "SoilNitrogenContent",
+              "Value": "0"
+            },
+            {
+              "Key": "AccumEO",
+              "Value": "0"
+            },
+            {
+              "Key": "AccumEP",
+              "Value": "0"
+            },
+            {
+              "Key": "AccumES",
+              "Value": "0"
+            },
+            {
+              "Key": "AccumDrainage",
+              "Value": "0"
+            },
+            {
+              "Key": "AccumRunoff",
+              "Value": "0"
+            },
+            {
+              "Key": "AccumOutflowLat",
+              "Value": "0"
+            },
+            {
+              "Key": "AccumIrrigation",
+              "Value": "0"
+            },
+            {
+              "Key": "AccumRainfall",
+              "Value": "0"
+            },
+            {
+              "Key": "SoilWaterDeficit",
+              "Value": "0"
+            },
+            {
+              "Key": "InitialSoilOMN",
+              "Value": "0"
+            },
+            {
+              "Key": "InitialSurfaceOMN",
+              "Value": "0"
+            },
+            {
+              "Key": "InitialMineralN",
+              "Value": "0"
+            },
+            {
+              "Key": "SWC",
+              "Value": "0"
+            },
+            {
+              "Key": "DUL",
+              "Value": "0"
+            },
+            {
+              "Key": "OutFlowLat",
+              "Value": "0"
+            },
+            {
+              "Key": "FomN",
+              "Value": "0"
+            },
+            {
+              "Key": "BiomN",
+              "Value": "0"
+            },
+            {
+              "Key": "HumN",
+              "Value": "0"
+            },
+            {
+              "Key": "OrganicN",
+              "Value": "0"
+            },
+            {
+              "Key": "NO3N",
+              "Value": "0"
+            },
+            {
+              "Key": "NH4N",
+              "Value": "0"
+            },
+            {
+              "Key": "UreaN",
+              "Value": "0"
+            },
+            {
+              "Key": "MineralN",
+              "Value": "0"
+            },
+            {
+              "Key": "DltNMinRes",
+              "Value": "0"
+            },
+            {
+              "Key": "DltNMinTot",
+              "Value": "0"
+            },
+            {
+              "Key": "LeafFraction",
+              "Value": "0"
+            },
+            {
+              "Key": "StolonFraction",
+              "Value": "0"
+            },
+            {
+              "Key": "PetioleFraction",
+              "Value": "0"
+            },
+            {
+              "Key": "InflorescenceFraction",
+              "Value": "0"
+            },
+            {
+              "Key": "ShootRootRatio",
+              "Value": "0"
+            },
+            {
+              "Key": "AccumHarvestedWt",
+              "Value": "0"
+            },
+            {
+              "Key": "AccumHarvestedN",
+              "Value": "0"
+            },
+            {
+              "Key": "HerbageNConc",
+              "Value": "0"
+            }
+          ],
           "Name": "ExtraVariables",
           "IncludeInDocumentation": false,
           "Enabled": true,
@@ -97,7 +274,7 @@
             "",
             "[Weather].Radn as SolarRadiation",
             "[MicroClimate].NetRadiation",
-            "[WhiteClover].Leaf.RadIntTot as InterceptedRadiation",
+            "[WhiteClover].Leaf.RadiationIntercepted as InterceptedRadiation",
             "[Weather].MeanT",
             "",
             "[Weather].Rain as Rainfall",
@@ -112,11 +289,11 @@
             "[Soil].SoilWater.Runoff as Runoff",
             "sum([Soil].SoilWater.LateralOutflow) as LateralFlow",
             "sum([Soil].SoilWater.SWmm) as TotalSWC",
-            "sum([Soil].SATmm) as TotalSAT",
-            "sum([Soil].DULmm) as TotalDUL",
-            "sum([Soil].LL15mm) as TotalLL15",
+            "sum([Soil].Physical.SATmm) as TotalSAT",
+            "sum([Soil].Physical.DULmm) as TotalDUL",
+            "sum([Soil].Physical.LL15mm) as TotalLL15",
             "[Soil].SoilWater.SW[1] as SWCTopLayer",
-            "[Soil].DUL[1] as DULTopLayer",
+            "[Soil].Physical.DUL[1] as DULTopLayer",
             "",
             "[Fertiliser].NitrogenApplied as FertiliserN",
             "sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN",
@@ -161,7 +338,7 @@
             "[WhiteClover].Phenology.Photoperiod",
             "[WhiteClover].Phenology.PhotoperiodVariation",
             "",
-            "[WhiteClover].Phenology.CurrentPhaseName",
+            "[WhiteClover].Phenology.CurrentPhase.Name",
             "[WhiteClover].Phenology.Stage",
             "[WhiteClover].Population",
             "[WhiteClover].Root.LengthDensity",
@@ -202,9 +379,6 @@
             "[WhiteClover].Arbitrator.N.TotalUptakeSupply",
             "[WhiteClover].Arbitrator.N.TotalReallocation",
             "[WhiteClover].Arbitrator.N.TotalRetranslocation",
-            "[WhiteClover].Arbitrator.WSupply",
-            "[WhiteClover].Arbitrator.WDemand",
-            "[WhiteClover].Arbitrator.WAllocated",
             "[WhiteClover].Root.NSupply.Uptake",
             "[WhiteClover].Root.NUptake",
             "[WhiteClover].Root.NTakenUp",
@@ -534,6 +708,7 @@
           "FieldNameUsedForMatch": "Date",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
+          "AllColumns": false,
           "Name": "PredictedObserved",
           "Children": [
             {
@@ -547,12 +722,12 @@
                   "Intercept": 113.81363521323993,
                   "SEslope": 0.030179963614738157,
                   "SEintercept": 19.950001494062533,
-                  "R2": 0.54226273258384006,
-                  "RMSE": 256.09911601609048,
+                  "R2": 0.5422627325838401,
+                  "RMSE": 256.0991160160905,
                   "NSE": 0.42424191275233436,
-                  "ME": -2.6026922013599592,
-                  "MAE": 198.71766430496029,
-                  "RSR": 0.75814174586760252
+                  "ME": -2.602692201359959,
+                  "MAE": 198.7176643049603,
+                  "RSR": 0.7581417458676025
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
@@ -561,12 +736,12 @@
                   "Slope": 0.6803333332528575,
                   "Intercept": 4.0921450377445066,
                   "SEslope": 0.027478255742167,
-                  "SEintercept": 0.75311116757148566,
+                  "SEintercept": 0.7531111675714857,
                   "R2": 0.5527529025125153,
-                  "RMSE": 10.672907416271279,
+                  "RMSE": 10.67290741627128,
                   "NSE": 0.47283569237180456,
                   "ME": -3.3023907164597377,
-                  "MAE": 7.9133275609504139,
+                  "MAE": 7.913327560950414,
                   "RSR": 0.72533147233625
                 },
                 {
@@ -581,7 +756,7 @@
                   "RMSE": 101.13452710574109,
                   "NSE": -0.857685960241878,
                   "ME": 27.5069919392819,
-                  "MAE": 82.525040389015786,
+                  "MAE": 82.52504038901579,
                   "RSR": 1.3617980980918383
                 },
                 {
@@ -594,9 +769,9 @@
                   "SEintercept": 0.0011127729247868204,
                   "R2": 0.12669878181456717,
                   "RMSE": 0.006721310323902099,
-                  "NSE": -0.56664349098253264,
-                  "ME": -0.0041046667809714272,
-                  "MAE": 0.0055272468370664253,
+                  "NSE": -0.5666434909825326,
+                  "ME": -0.004104666780971427,
+                  "MAE": 0.005527246837066425,
                   "RSR": 1.2507077151450967
                 },
                 {
@@ -618,12 +793,12 @@
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "NTakenOff",
                   "n": 498,
-                  "Slope": -0.052051334234658027,
-                  "Intercept": 6.4213978494002841,
-                  "SEslope": 0.032487454390709242,
-                  "SEintercept": 0.21093014968943161,
-                  "R2": 0.0051488329797370058,
-                  "RMSE": 3.6177173001703258,
+                  "Slope": -0.05205133423465803,
+                  "Intercept": 6.421397849400284,
+                  "SEslope": 0.03248745439070924,
+                  "SEintercept": 0.2109301496894316,
+                  "R2": 0.005148832979737006,
+                  "RMSE": 3.617717300170326,
                   "NSE": -0.639537400966879,
                   "ME": 0.27143742026663237,
                   "MAE": 2.904440340784169,
@@ -633,13 +808,13 @@
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "RotationHarvestedWt",
                   "n": 588,
-                  "Slope": -0.073554558830811426,
+                  "Slope": -0.07355455883081143,
                   "Intercept": 178.64900756722605,
                   "SEslope": 0.030600128268878757,
-                  "SEintercept": 4.9029607885524218,
+                  "SEintercept": 4.902960788552422,
                   "R2": 0.00976368877742717,
                   "RMSE": 100.0552263856729,
-                  "NSE": -0.82555311281312549,
+                  "NSE": -0.8255531128131255,
                   "ME": 26.110598055311833,
                   "MAE": 81.52867281138289,
                   "RSR": 1.3499809001050636
@@ -648,15 +823,15 @@
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "WhiteClover.AboveGround.Wt",
                   "n": 162,
-                  "Slope": 0.42463423773681708,
+                  "Slope": 0.4246342377368171,
                   "Intercept": 109.60138443515007,
-                  "SEslope": 0.063423614647368648,
-                  "SEintercept": 8.8496507586092861,
+                  "SEslope": 0.06342361464736865,
+                  "SEintercept": 8.849650758609286,
                   "R2": 0.21884840171911335,
-                  "RMSE": 76.643820821585592,
-                  "NSE": -0.31772098462887688,
-                  "ME": 39.107002980183651,
-                  "MAE": 59.275708225371019,
+                  "RMSE": 76.64382082158559,
+                  "NSE": -0.3177209846288769,
+                  "ME": 39.10700298018365,
+                  "MAE": 59.27570822537102,
                   "RSR": 1.1443718383798367
                 }
               ],
@@ -690,6 +865,7 @@
           "FieldNameUsedForMatch": "Date",
           "FieldName2UsedForMatch": null,
           "FieldName3UsedForMatch": null,
+          "AllColumns": false,
           "Name": "PredictedObservedMeans",
           "Children": [
             {
@@ -699,14 +875,14 @@
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "CumulativeHarvestedWt",
                   "n": 162,
-                  "Slope": 0.84483681701828073,
+                  "Slope": 0.8448368170182807,
                   "Intercept": 84.54859661900548,
-                  "SEslope": 0.055811156532865377,
-                  "SEintercept": 35.956373257045669,
-                  "R2": 0.58883843332002139,
+                  "SEslope": 0.05581115653286538,
+                  "SEintercept": 35.95637325704567,
+                  "R2": 0.5888384333200214,
                   "RMSE": 232.8397785803491,
                   "NSE": 0.477503298756652,
-                  "ME": -2.0233779688683491,
+                  "ME": -2.023377968868349,
                   "MAE": 183.07040333943434,
                   "RSR": 0.7206048937969185
                 },
@@ -714,30 +890,30 @@
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "CumulativeNTakenOff",
                   "n": 132,
-                  "Slope": 0.72264594208637922,
+                  "Slope": 0.7226459420863792,
                   "Intercept": 2.9602452993013557,
-                  "SEslope": 0.050911109715042389,
+                  "SEslope": 0.05091110971504239,
                   "SEintercept": 1.3512029052099914,
-                  "R2": 0.60781622001239377,
-                  "RMSE": 9.6295750187943021,
+                  "R2": 0.6078162200123938,
+                  "RMSE": 9.629575018794302,
                   "NSE": 0.5317697294394681,
-                  "ME": -3.2808604589441881,
-                  "MAE": 7.3301485131611228,
-                  "RSR": 0.68167666201882982
+                  "ME": -3.280860458944188,
+                  "MAE": 7.330148513161123,
+                  "RSR": 0.6816766620188298
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "HarvestedWt",
                   "n": 162,
-                  "Slope": -0.051969383931595038,
+                  "Slope": -0.05196938393159504,
                   "Intercept": 175.12012172677578,
-                  "SEslope": 0.063611198488052148,
+                  "SEslope": 0.06361119848805215,
                   "SEintercept": 10.00178481373079,
                   "R2": 0.00415432090930512,
                   "RMSE": 94.5416040665502,
-                  "NSE": -0.90087603314128284,
+                  "NSE": -0.9008760331412828,
                   "ME": 26.274300379913434,
-                  "MAE": 76.753037542331654,
+                  "MAE": 76.75303754233165,
                   "RSR": 1.3744607053195708
                 },
                 {
@@ -746,12 +922,12 @@
                   "n": 186,
                   "Slope": 0.2905087871027584,
                   "Intercept": 0.027195223902044714,
-                  "SEslope": 0.052119201635046339,
+                  "SEslope": 0.05211920163504634,
                   "SEintercept": 0.0023225558831700996,
                   "R2": 0.1444594089542458,
                   "RMSE": 0.0063531425347020925,
-                  "NSE": -0.81128464043217452,
-                  "ME": -0.0042435015118906143,
+                  "NSE": -0.8112846404321745,
+                  "ME": -0.004243501511890614,
                   "MAE": 0.00532889689183689,
                   "RSR": 1.3422170282661015
                 },
@@ -775,29 +951,29 @@
                   "Name": "NTakenOff",
                   "n": 132,
                   "Slope": -0.01678727962839939,
-                  "Intercept": 6.1031576720442677,
+                  "Intercept": 6.103157672044268,
                   "SEslope": 0.06992251216907433,
                   "SEintercept": 0.44167898878408074,
-                  "R2": 0.00044319079595400712,
+                  "R2": 0.0004431907959540071,
                   "RMSE": 3.2892752086218815,
-                  "NSE": -0.67712200788123811,
+                  "NSE": -0.6771220078812381,
                   "ME": 0.22251580359819018,
-                  "MAE": 2.6453722962082389,
+                  "MAE": 2.645372296208239,
                   "RSR": 1.2901226833617654
                 },
                 {
                   "$type": "APSIM.Shared.Utilities.MathUtilities+RegrStats, APSIM.Shared",
                   "Name": "RotationHarvestedWt",
                   "n": 162,
-                  "Slope": -0.051452036477296459,
+                  "Slope": -0.05145203647729646,
                   "Intercept": 173.36926468035116,
-                  "SEslope": 0.062975259208091841,
-                  "SEintercept": 9.9018020301509715,
+                  "SEslope": 0.06297525920809184,
+                  "SEintercept": 9.901802030150971,
                   "R2": 0.004154675569573052,
-                  "RMSE": 93.739159473663918,
-                  "NSE": -0.86875560629062676,
+                  "RMSE": 93.73915947366392,
+                  "NSE": -0.8687556062906268,
                   "ME": 24.596395339077223,
-                  "MAE": 75.995710561970128,
+                  "MAE": 75.99571056197013,
                   "RSR": 1.3627986197001867
                 },
                 {
@@ -808,10 +984,10 @@
                   "Intercept": 100.22365860552812,
                   "SEslope": 0.11295212125187942,
                   "SEintercept": 15.552787201348556,
-                  "R2": 0.25482911095618921,
-                  "RMSE": 70.728113866996736,
+                  "R2": 0.2548291109561892,
+                  "RMSE": 70.72811386699674,
                   "NSE": -0.26704298247917957,
-                  "ME": 36.061038059342813,
+                  "ME": 36.06103805934281,
                   "MAE": 53.4427785396501,
                   "RSR": 1.1151588333257196
                 },
@@ -820,14 +996,14 @@
                   "Name": "WhiteClover.AboveGroundLive.NConc",
                   "n": 186,
                   "Slope": 0.18336639663354803,
-                  "Intercept": 0.028885820351399239,
+                  "Intercept": 0.02888582035139924,
                   "SEslope": 0.047369516526284426,
-                  "SEintercept": 0.0021108985909152121,
+                  "SEintercept": 0.002110898590915212,
                   "R2": 0.0753047547605844,
                   "RMSE": 0.00879542362810812,
                   "NSE": -2.4715468469411745,
                   "ME": -0.00730056103476305,
-                  "MAE": 0.0076042030278004212,
+                  "MAE": 0.007604203027800421,
                   "RSR": 1.8581933743777248
                 }
               ],
@@ -1483,6 +1659,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "FRNLLincoln",
                   "Children": [
                     {
@@ -1496,8 +1673,9 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
-                      "FileName": "Lincoln-Broadfields.met",
+                      "$type": "Models.Climate.Weather, Models",
+                      "ConstantsFile": null,
+                      "FileName": "%root%\\Tests\\Validation\\WhiteClover\\Lincoln-Broadfields.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
                       "Children": [],
@@ -2606,7 +2784,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"This script is set in 'Replacements':\")]\r\n        public string Message { get; set; }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models.PMF;\nusing Models.Soils;\nusing Models;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Description(\"This script is set in 'Replacements':\")]\n        public string Message { get; set; }\n    }\n}\n",
                               "Parameters": [
                                 {
                                   "Key": "Message",
@@ -2732,7 +2910,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "// This will be replaced by the \"ExtraVariables\" section in \"Replacements\"\r\n\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n    }\r\n}\r\n",
+                              "Code": "// This will be replaced by the \"ExtraVariables\" section in \"Replacements\"\n\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n    }\n}\n",
                               "Parameters": null,
                               "Name": "ExtraVariables",
                               "IncludeInDocumentation": true,
@@ -2771,8 +2949,8 @@
                         },
                         {
                           "$type": "Models.Fertiliser, Models",
+                          "ResourceName": "Fertiliser",
                           "Name": "Fertiliser",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -2808,6 +2986,7 @@
                           "Latitude": 0.0,
                           "Longitude": 0.0,
                           "LocationAccuracy": null,
+                          "YearOfSampling": null,
                           "DataSource": "Adapted based on data from the NZ National Soils Database plus published data (Carey et al, 2002; Schwaertzel et al, 2011; Woods et al, 2016)",
                           "Comments": "Different references name the soil at the site as either Templeton sandy loam or Paparua sandy loam (very similar soils)",
                           "Name": "Soil",
@@ -2836,20 +3015,20 @@
                               ],
                               "NO3N": [
                                 11.10185956147655,
-                                8.8747914734271873,
-                                4.0559509831354781,
-                                0.36671947427096357,
+                                8.874791473427187,
+                                4.055950983135478,
+                                0.3667194742709636,
                                 0.3667194742709608,
                                 0.15159344482840426,
-                                0.072921934919511183,
-                                0.066925445054209068
+                                0.07292193491951118,
+                                0.06692544505420907
                               ],
                               "NH4N": [
                                 1.3877324451845687,
                                 1.0031235177747662,
-                                0.42270867377952642,
+                                0.4227086737795264,
                                 0.07334389485419221,
-                                0.073343894854192432,
+                                0.07334389485419243,
                                 0.054769866343026476,
                                 0.017000511230675516,
                                 0.013385089010841966
@@ -2867,6 +3046,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2907,6 +3090,8 @@
                               ],
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
+                              "Texture": null,
                               "BD": [
                                 1.154,
                                 1.295,
@@ -2973,6 +3158,11 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "TextureMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -3035,7 +3225,6 @@
                               "CN2Bare": 70.0,
                               "CNRed": 20.0,
                               "CNCov": 0.8,
-                              "Slope": 0.0,
                               "DischargeWidth": 0.0,
                               "CatchmentArea": 0.0,
                               "Thickness": [
@@ -3099,6 +3288,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -3211,14 +3401,16 @@
                               ],
                               "FOM": [
                                 297.21500629289955,
-                                233.79760467706581,
+                                233.7976046770658,
                                 173.20152549651155,
                                 109.33929042279858,
-                                84.306233271135554,
-                                51.134315283829018,
+                                84.30623327113555,
+                                51.13431528382902,
                                 32.932361409934195,
                                 18.073663145825776
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -3227,7 +3419,7 @@
                             },
                             {
                               "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "CERESSoilTemperature",
+                              "Name": "Temperature",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -3240,39 +3432,6 @@
                               "DepthWetSoil": "NaN",
                               "RelativeTo": null,
                               "Name": "Initial water",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.Sample, Models",
-                              "Depth": [
-                                "0-15",
-                                "15-30",
-                                "30-75",
-                                "75-100",
-                                "100-150"
-                              ],
-                              "Thickness": [
-                                150.0,
-                                150.0,
-                                450.0,
-                                250.0,
-                                500.0
-                              ],
-                              "NO3N": null,
-                              "NH4N": null,
-                              "SW": null,
-                              "OC": null,
-                              "EC": null,
-                              "CL": null,
-                              "ESP": null,
-                              "PH": null,
-                              "SWUnits": 0,
-                              "OCUnits": 0,
-                              "PHUnits": 0,
-                              "Name": "Initial nitrogen",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -21903,6 +22062,7 @@
                 {
                   "$type": "Models.Core.Simulation, Models",
                   "IsRunning": false,
+                  "Descriptors": null,
                   "Name": "FRNLRuakura",
                   "Children": [
                     {
@@ -21916,8 +22076,9 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Weather, Models",
-                      "FileName": "Ruakura.met",
+                      "$type": "Models.Climate.Weather, Models",
+                      "ConstantsFile": null,
+                      "FileName": "%root%\\Tests\\Validation\\WhiteClover\\Ruakura.met",
                       "ExcelWorkSheetName": null,
                       "Name": "Weather",
                       "Children": [],
@@ -22006,7 +22167,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing Models;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"This script is set in 'Replacements':\")]\r\n        public string Message { get; set; }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models.PMF;\nusing Models.Soils;\nusing Models;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Description(\"This script is set in 'Replacements':\")]\n        public string Message { get; set; }\n    }\n}\n",
                               "Parameters": [
                                 {
                                   "Key": "Message",
@@ -22120,7 +22281,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "// This will be replaced by the \"ExtraVariables\" section in \"Replacements\"\r\n\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n    }\r\n}\r\n",
+                              "Code": "// This will be replaced by the \"ExtraVariables\" section in \"Replacements\"\n\nusing Models.Core;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n    }\n}\n",
                               "Parameters": null,
                               "Name": "ExtraVariables",
                               "IncludeInDocumentation": true,
@@ -22159,8 +22320,8 @@
                         },
                         {
                           "$type": "Models.Fertiliser, Models",
+                          "ResourceName": "Fertiliser",
                           "Name": "Fertiliser",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -22196,6 +22357,7 @@
                           "Latitude": 0.0,
                           "Longitude": 0.0,
                           "LocationAccuracy": null,
+                          "YearOfSampling": null,
                           "DataSource": "Based primarily on data from Close et al (2003), complemented with NZ NSD.",
                           "Comments": null,
                           "Name": "Soil",
@@ -22221,19 +22383,19 @@
                                 220.0
                               ],
                               "NO3N": [
-                                8.5227272727272734,
-                                4.1176470588235281,
+                                8.522727272727273,
+                                4.117647058823528,
                                 0.7974227297374874,
                                 0.797422729737491,
-                                0.79812625937263781,
-                                0.80276955496462865,
-                                0.80276955496462754
+                                0.7981262593726378,
+                                0.8027695549646287,
+                                0.8027695549646275
                               ],
                               "NH4N": [
                                 0.5,
                                 0.2,
-                                0.097239003540556937,
-                                0.097239003540556923,
+                                0.09723900354055694,
+                                0.09723900354055692,
                                 0.10037666677102544,
                                 0.12108524409211786,
                                 0.12108524409211777
@@ -22250,6 +22412,10 @@
                               "CL": null,
                               "EC": null,
                               "ESP": null,
+                              "ECMetadata": null,
+                              "CLMetadata": null,
+                              "ESPMetadata": null,
+                              "PHMetadata": null,
                               "Name": "Chemical",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -22287,6 +22453,8 @@
                               ],
                               "ParticleSizeSand": null,
                               "ParticleSizeSilt": null,
+                              "Rocks": null,
+                              "Texture": null,
                               "BD": [
                                 0.88,
                                 0.85,
@@ -22347,6 +22515,11 @@
                               "DULMetadata": null,
                               "SATMetadata": null,
                               "KSMetadata": null,
+                              "RocksMetadata": null,
+                              "TextureMetadata": null,
+                              "ParticleSizeSandMetadata": null,
+                              "ParticleSizeSiltMetadata": null,
+                              "ParticleSizeClayMetadata": null,
                               "Name": "Physical",
                               "Children": [
                                 {
@@ -22406,7 +22579,6 @@
                               "CN2Bare": 70.0,
                               "CNRed": 20.0,
                               "CNCov": 0.8,
-                              "Slope": 0.0,
                               "DischargeWidth": 0.0,
                               "CatchmentArea": 0.0,
                               "Thickness": [
@@ -22468,6 +22640,7 @@
                                 0.08,
                                 0.9
                               ],
+                              "NPartitionApproach": 0,
                               "Name": "SoilNitrogen",
                               "Children": [
                                 {
@@ -22575,12 +22748,14 @@
                               "FOM": [
                                 338.97369296836524,
                                 227.22086147542524,
-                                175.19900556827909,
+                                175.1990055682791,
                                 132.4125599277165,
                                 61.92490879263066,
                                 39.092182170295764,
                                 25.176789097287475
                               ],
+                              "CarbonMetadata": null,
+                              "FOMMetadata": null,
                               "Name": "Organic",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -22589,7 +22764,7 @@
                             },
                             {
                               "$type": "Models.Soils.CERESSoilTemperature, Models",
-                              "Name": "CERESSoilTemperature",
+                              "Name": "Temperature",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
@@ -22602,37 +22777,6 @@
                               "DepthWetSoil": "NaN",
                               "RelativeTo": null,
                               "Name": "Initial water",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.Sample, Models",
-                              "Depth": [
-                                "0-20",
-                                "20-40",
-                                "40-100",
-                                "100-150"
-                              ],
-                              "Thickness": [
-                                200.0,
-                                200.0,
-                                600.0,
-                                500.0
-                              ],
-                              "NO3N": null,
-                              "NH4N": null,
-                              "SW": null,
-                              "OC": null,
-                              "EC": null,
-                              "CL": null,
-                              "ESP": null,
-                              "PH": null,
-                              "SWUnits": 0,
-                              "OCUnits": 0,
-                              "PHUnits": 0,
-                              "Name": "Initial nitrogen",
                               "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,

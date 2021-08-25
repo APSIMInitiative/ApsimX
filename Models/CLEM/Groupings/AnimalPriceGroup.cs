@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Groupings
 {
@@ -16,14 +17,14 @@ namespace Models.CLEM.Groupings
     /// Contains a group of filters to identify individual ruminants in a set price group
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(AnimalPricing))]
     [Description("This ruminant price group sets the sale and purchase price for a set group of individuals.")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Purchase and sales identifier used")]
-    [HelpUri(@"Content/Features/Filters/AnimalPriceGroup.htm")]
-    public class AnimalPriceGroup: CLEMModel, IFilterGroup
+    [HelpUri(@"Content/Features/Filters/Groups/AnimalPriceGroup.htm")]
+    public class AnimalPriceGroup: CLEMModel, IFilterGroup, IResourcePricing, IReportPricingChange
     {
         /// <summary>
         /// Style of pricing animals
@@ -47,6 +48,38 @@ namespace Models.CLEM.Groupings
         public PurchaseOrSalePricingStyleType PurchaseOrSale { get; set; }
 
         /// <summary>
+        /// Calulate the value of an individual
+        /// </summary>
+        /// <param name="ind"></param>
+        /// <returns></returns>
+        public double CalculateValue(object ind)
+        {
+            if(ind is Ruminant)
+            {
+                double multiplier = 1;
+                switch (PricingStyle)
+                {
+                    case PricingStyleType.perHead:
+                        break;
+                    case PricingStyleType.perKg:
+                        multiplier = (ind as Ruminant).Weight;
+                        break;
+                    case PricingStyleType.perAE:
+                        multiplier = (ind as Ruminant).AdultEquivalent;
+                        break;
+                    default:
+                        break;
+                }
+
+                return Value * multiplier;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
         /// Combined ML ruleset for LINQ expression tree
         /// </summary>
         [JsonIgnore]
@@ -58,12 +91,62 @@ namespace Models.CLEM.Groupings
         [JsonIgnore]
         public double Proportion { get; set; }
 
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public ResourcePriceChangeDetails LastPriceChange { get; set; }
+
+        /// <inheritdoc/>
+        public IResourceType Resource { get { return FindAncestor<IResourceType>(); } }
+
         /// <summary>
         /// Constructor
         /// </summary>
         protected AnimalPriceGroup()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+        }
+
+        /// <inheritdoc/>
+        public event EventHandler PriceChangeOccurred;
+
+        /// <inheritdoc/>
+        public void SetPrice(double amount)
+        {
+            Value = amount;
+        }
+
+        /// <inheritdoc/>
+        public double CurrentPrice { get { return Value; } }
+
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public double PreviousPrice { get; set; }
+
+
+        /// <inheritdoc/>
+        public void SetPrice(double amount, IModel model)
+        {
+            PreviousPrice = CurrentPrice;
+            Value = amount;
+
+            if (LastPriceChange is null)
+            {
+                LastPriceChange = new ResourcePriceChangeDetails();
+            }
+            LastPriceChange.ChangedBy = model;
+            LastPriceChange.PriceChanged = this;
+
+            // price change event
+            OnPriceChanged(new PriceChangeEventArgs() { Details = LastPriceChange });
+        }
+
+        /// <summary>
+        /// Price changed event
+        /// </summary>
+        /// <param name="e"></param>
+        protected void OnPriceChanged(PriceChangeEventArgs e)
+        {
+            PriceChangeOccurred?.Invoke(this, e);
         }
 
         #region descriptive summary
@@ -200,7 +283,8 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
-        } 
+        }
+
         #endregion
     }
 }

@@ -27,6 +27,11 @@ namespace UserInterface.Views
     public class EditorView : ViewBase, IEditorView
     {
         /// <summary>
+        /// The find-and-replace form
+        /// </summary>
+        private FindAndReplaceForm findForm = new FindAndReplaceForm();
+
+        /// <summary>
         /// Scrolled window
         /// </summary>
         private ScrolledWindow scroller;
@@ -35,6 +40,16 @@ namespace UserInterface.Views
         /// The main text editor
         /// </summary>
         private SourceView textEditor;
+
+        /// <summary>
+        /// Settings for search and replace
+        /// </summary>
+        private SearchSettings searchSettings;
+
+        /// <summary>
+        /// Context for search and replace
+        /// </summary>
+        private SearchContext searchContext;
 
         /// <summary>
         /// Menu accelerator group
@@ -83,7 +98,12 @@ namespace UserInterface.Views
 
             set
             {
-                textEditor.Buffer.Text = value;
+                if (value != null)
+                {
+                    textEditor.Buffer.BeginNotUndoableAction();
+                    textEditor.Buffer.Text = value;
+                    textEditor.Buffer.EndNotUndoableAction();
+                }
                 //if (Mode == EditorType.ManagerScript)
                 //{
                 //    textEditor.Completion.AddProvider(new ScriptCompletionProvider(ShowError));
@@ -124,7 +144,8 @@ namespace UserInterface.Views
             }
             set
             {
-                Text = string.Join(Environment.NewLine, value);
+                if (value != null)
+                    Text = string.Join(Environment.NewLine, value);
             }
         }
 
@@ -142,7 +163,6 @@ namespace UserInterface.Views
                 // Initialise completion provider based on editor type.
                 if (value == EditorType.ManagerScript)
                     textEditor.Completion.AddProvider(new ScriptCompletionProvider(ShowError, textEditor));
-                // tbi: alternative syntax highlighting modes
             }
         }
 
@@ -158,7 +178,7 @@ namespace UserInterface.Views
         {
             get
             {
-                return textEditor.Buffer.GetIterAtOffset(textEditor.Buffer.CursorPosition).Line;
+                return textEditor.Buffer.GetIterAtOffset(textEditor.Buffer.CursorPosition).Line + 1;
             }
         }
 
@@ -284,6 +304,8 @@ namespace UserInterface.Views
         {
             scroller = new ScrolledWindow();
             textEditor = new SourceView();
+            searchSettings = new SearchSettings();
+            searchContext = new SearchContext(textEditor.Buffer, searchSettings);
             scroller.Add(textEditor);
             InitialiseWidget();
         }
@@ -336,11 +358,37 @@ namespace UserInterface.Views
             if (style != null)
                 textEditor.Buffer.StyleScheme = style;
 
-            // AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
-            // AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
+            AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
+            AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
             AddMenuItem("Change Style", OnChangeStyle);
 
+            textEditor.Realized += OnRealized;
             IntelliSenseChars = ".";
+        }
+
+        /// <summary>
+        /// Context menu items aren't actually added to the context menu until the
+        /// user requests the context menu (ie via right clicking). Keyboard shortcuts
+        /// (accelerators) won't work until this occurs. Therefore, we now manually
+        /// fire off a populate-popup signal to cause the context menu to be populated.
+        /// (This doesn't actually cause the context menu to be displayed.)
+        ///
+        /// We wait until the widget is realized so that the owner of the view has a
+        /// chance to add context menu items.
+        /// </summary>
+        /// <param name="sender">Sender object (the SourceView widget).</param>
+        /// <param name="args">Event data.</param>
+        private void OnRealized(object sender, EventArgs args)
+        {
+            try
+            {
+                textEditor.Realized -= OnRealized;
+                GLib.Signal.Emit(textEditor, "populate-popup", new Menu());
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>
@@ -444,73 +492,56 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Preprocesses key strokes so that the ContextList can be displayed when needed. 
+        /// Preprocesses key strokes so and emits the show-completion signal on
+        /// the gtksourceview widget when the user presses the '.' key.
         /// </summary>
+        /// <remarks>
+        /// Our custom GtkSourceCompletionProvider uses the user-requested activation
+        /// mode, which means that by default it only activates when the user presses
+        /// control + space. In order to trigger a completion request at other times
+        /// (such as when the user presses '.' in this case), we need to emit the
+        /// show-completion signal on the GtkSourceView widget.
+        /// </remarks>
         /// <param name="sender">Sending object</param>
-        /// <param name="e">Key arguments</param>
+        /// <param name="args">Event data.</param>
         [GLib.ConnectBefore] // Otherwise this is handled internally, and we won't see it
-        private void OnKeyPress(object sender, KeyPressEventArgs e)
+        private void OnKeyPress(object sender, KeyPressEventArgs args)
         {
             try
             {
-                e.RetVal = false;
-                char keyChar = (char)Gdk.Keyval.ToUnicode(e.Event.KeyValue);
-                Gdk.ModifierType ctlModifier = !APSIM.Shared.Utilities.ProcessUtilities.CurrentOS.IsMac ? Gdk.ModifierType.ControlMask
-                    //Mac window manager already uses control-scroll, so use command
-                    //Command might be either meta or mod1, depending on GTK version
-                    : (Gdk.ModifierType.MetaMask | Gdk.ModifierType.Mod1Mask);
-
-                bool controlSpace = IsControlSpace(e.Event);
-                bool controlShiftSpace = IsControlShiftSpace(e.Event);
-                string textBeforePeriod = GetWordBeforePosition(Offset);
-                double x; // unused, but needed as an out parameter.
-                if (e.Event.Key == Gdk.Key.F3)
+                if (args.Event.Key == Gdk.Key.F3)
                 {
-                    //if (string.IsNullOrEmpty(findForm.LookFor))
-                    //    findForm.ShowFor(textEditor, false);
-                    //else
-                    //    findForm.FindNext(true, (e.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", findForm.LookFor));
-                    e.RetVal = true;
+                    if (string.IsNullOrEmpty(findForm.LookFor))
+                        findForm.ShowFor(textEditor, searchContext, false);
+                    else
+                        findForm.FindNext(true, (args.Event.State & Gdk.ModifierType.ShiftMask) == 0, string.Format("Search text «{0}» not found.", findForm.LookFor));
+                    args.RetVal = true;
+                    return;
                 }
-                // If the text before the period is not a number and the user pressed either one of the intellisense characters or control-space:
-                else if (!double.TryParse(textBeforePeriod.Replace(".", ""), out x) && (IntelliSenseChars.Contains(keyChar.ToString()) || controlSpace || controlShiftSpace) )
+                char previousChar = 'x';
+                if (textEditor.Buffer.CursorPosition > 0)
                 {
-                    // If the user entered a period, we need to take that into account when generating intellisense options.
-                    // To do this, we insert a period manually and stop the Gtk signal from propagating further.
-                    e.RetVal = true;
-                    if (keyChar == '.')
-                    {
-                        textEditor.Buffer.InsertAtCursor(keyChar.ToString());
-
-                        // Process all events in the main loop, so that the period is inserted into the text editor.
-                        while (GLib.MainContext.Iteration()) ;
-                    }
-                    NeedContextItemsArgs args = new NeedContextItemsArgs
-                    {
-                        Coordinates = GetPositionOfCursor(),
-                        Code = Text,
-                        Offset = this.Offset,
-                        ControlSpace = controlSpace,
-                        ControlShiftSpace = controlShiftSpace,
-                        LineNo = CurrentLineNumber,
-                        ColNo = CurrentColumnNumber
-                    };
-
-                    ContextItemsNeeded?.Invoke(this, args);
+                    TextIter prevIter = textEditor.Buffer.GetIterAtOffset(textEditor.Buffer.CursorPosition - 1);
+                    previousChar = prevIter.Char.ToCharArray().FirstOrDefault();
                 }
-                else if ((e.Event.State & ctlModifier) != 0)
+                char keyChar = (char)Gdk.Keyval.ToUnicode(args.Event.KeyValue);
+                if (keyChar == '.' && !char.IsDigit(previousChar))
                 {
-                    switch (e.Event.Key)
+                    if (ContextItemsNeeded != null)
                     {
-                        // tbi
-                        //case Gdk.Key.Key_0: textEditor.Options.ZoomReset(); e.RetVal = true; break;
-                        //case Gdk.Key.KP_Add:
-                        //case Gdk.Key.plus: textEditor.Options.ZoomIn(); e.RetVal = true; break;
-                        //case Gdk.Key.KP_Subtract:
-                        //case Gdk.Key.minus: textEditor.Options.ZoomOut(); e.RetVal = true; break;
-                        default:
-                            break;
+                        ContextItemsNeeded.Invoke(this, new NeedContextItemsArgs()
+                        {
+                            Coordinates = GetPositionOfCursor(),
+                            Code = Text,
+                            Offset = this.Offset,
+                            ControlSpace = false,
+                            ControlShiftSpace = false,
+                            LineNo = CurrentLineNumber,
+                            ColNo = CurrentColumnNumber
+                        });
                     }
+                    else
+                        GLib.Signal.Emit(textEditor, "show-completion");
                 }
             }
             catch (Exception err)
@@ -520,56 +551,41 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// Checks whether a keypress is a control+space event.
-        /// </summary>
-        /// <param name="e">Event arguments.</param>
-        /// <returns>True iff the event represents a control+space click.</returns>
-        private bool IsControlSpace(Gdk.EventKey e)
-        {
-            return Gdk.Keyval.ToUnicode(e.KeyValue) == ' ' && (e.State & Gdk.ModifierType.ControlMask) == Gdk.ModifierType.ControlMask;
-        }
-
-        /// <summary>
-        /// Checks whether a keypress is a control-shift-space event.
-        /// </summary>
-        /// <param name="e">Event arguments.</param>
-        /// <returns>True iff the event represents a control + shift + space click.</returns>
-        private bool IsControlShiftSpace(Gdk.EventKey e)
-        {
-            return IsControlSpace(e) && (e.State & Gdk.ModifierType.ShiftMask) == Gdk.ModifierType.ShiftMask;
-        }
-
-        /// <summary>
-        /// Retrieve the word before the specified character position. 
-        /// </summary>
-        /// <param name="pos">Position in the editor</param>
-        /// <returns>The position of the word</returns>
-        private string GetWordBeforePosition(int pos)
-        {
-            if (pos == 0)
-                return string.Empty;
-
-            int posDelimiter = Text.LastIndexOfAny(" \r\n(+-/*".ToCharArray(), pos - 1);
-            return Text.Substring(posDelimiter + 1, pos - posDelimiter - 1).TrimEnd(".".ToCharArray());
-        }
-
-        /// <summary>
         /// Gets the location (in screen coordinates) of the cursor.
         /// </summary>
         /// <returns>Tuple, where item 1 is the x-coordinate and item 2 is the y-coordinate.</returns>
         public System.Drawing.Point GetPositionOfCursor()
         {
-            // tbi
-            return new System.Drawing.Point(0, 0);
-            //Point p = textEditor.LocationToPoint(textEditor.Caret.Location);
-            //p.Y += (int)textEditor.LineHeight;
-            //textEditor.Coord
-            //// Need to convert to screen coordinates....
-            //int x, y, frameX, frameY;
-            //MasterView.MainWindow.GetOrigin(out frameX, out frameY);
-            //textEditor.TranslateCoordinates(mainWidget.Toplevel, p.X, p.Y, out x, out y);
+            TextIter iter = textEditor.Buffer.GetIterAtOffset(Offset);
+            if (iter.Equals(TextIter.Zero))
+                return new System.Drawing.Point(0, 0);
+            // Get the location of the cursor. This rectangle's x and y properties will be
+            // the current line and column number.
+            Gdk.Rectangle location = textEditor.GetIterLocation(iter);
 
-            //return new System.Drawing.Point(x + frameX, y + frameY);
+            // Convert the buffer coordinates (line/col numbers) to actual cartesian
+            // coordinates (note that these are relative to the origin of the GtkSourceView
+            // widget's GdkWindow, not the GtkWindow itself).
+            textEditor.BufferToWindowCoords(TextWindowType.Text, location.X, location.Y, out int x, out int y);
+
+            // Now, convert these coordinates to be relative to the GtkWindow's origin.
+            textEditor.TranslateCoordinates(mainWidget.Toplevel, x, y, out int windowX, out int windowY);
+
+            // Don't forget to account for the offset of the window within the screen.
+            // (Remember that the screen is made up of multiple monitors, so this is
+            // what accounts for which particular monitor the on which the window is
+            // physically displayed.)
+            MasterView.MainWindow.GetOrigin(out int frameX, out int frameY);
+
+            // Also add on the line height of the current line. Arguably, this doesn't
+            // belong here - the method is called GetPositionOfCursor(), which doesn't
+            // really imply anything about accounting for the line height. However,
+            // all of the surrounding infrastructure really assumes that it *does* in
+            // fact account for line height, as the intellisense popup (the only thing
+            // which really uses these coods) will be displayed at this locataion.
+            textEditor.GetLineYrange(iter, out int _, out int lineHeight);
+
+            return new System.Drawing.Point(frameX + windowX, frameY + windowY + lineHeight);
         }
 
         /// <summary>
@@ -914,7 +930,7 @@ namespace UserInterface.Views
         {
             try
             {
-                //findForm.ShowFor(textEditor, false);
+                findForm.ShowFor(textEditor, searchContext, false);
             }
             catch (Exception err)
             {
@@ -931,7 +947,7 @@ namespace UserInterface.Views
         {
             try
             {
-                //findForm.ShowFor(textEditor, true);
+                findForm.ShowFor(textEditor, searchContext, true);
             }
             catch (Exception err)
             {

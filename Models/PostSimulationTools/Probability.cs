@@ -14,9 +14,11 @@
     /// # [Name]
     /// A post processing model that creates a probability table.
     /// </summary>
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
+    [ValidParent(typeof(ParallelPostSimulationTool))]
+    [ValidParent(typeof(SerialPostSimulationTool))]
     [Serializable]
     public class Probability : Model, IPostSimulationTool
     {

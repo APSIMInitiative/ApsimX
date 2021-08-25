@@ -16,7 +16,7 @@ namespace Models.CLEM
     /// <summary>This activity summarizes ruminant herds for reporting</summary>
     /// <summary>Remove if you do not need monthly herd summaries</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -27,8 +27,10 @@ namespace Models.CLEM
     public class SummariseRuminantHerd: CLEMModel
     {
         [Link]
-        private ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
         private int timestep = 0;
+        private RuminantHerd ruminantHerd;
+
         /// <summary>
         /// Report item was generated event handler
         /// </summary>
@@ -43,6 +45,7 @@ namespace Models.CLEM
         /// <summary>
         /// List of filters that define the herd
         /// </summary>
+        [JsonIgnore]
         private List<RuminantGroup> herdFilters { get; set; }
 
         /// <summary>
@@ -65,12 +68,14 @@ namespace Models.CLEM
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
+            ruminantHerd = resources.FindResourceGroup<RuminantHerd>();
+
             // determine any herd filtering
             herdFilters = new List<RuminantGroup>();
             IModel current = this;
             while (current.GetType() != typeof(ZoneCLEM))
             {
-                var filtergroup = current.Children.OfType<RuminantGroup>().Cast<RuminantGroup>();
+                var filtergroup = current.Children.OfType<RuminantGroup>();
                 if (filtergroup.Count() > 1)
                 {
                     Summary.WriteWarning(this, "Multiple ruminant filter groups have been supplied for [" + current.Name + "]" + Environment.NewLine + "Only the first filter group will be used.");
@@ -102,11 +107,9 @@ namespace Models.CLEM
         private void OnCLEMHerdSummary(object sender, EventArgs e)
         {
             timestep++;
-            List<Ruminant> herd = Resources.RuminantHerd().Herd;
+            IEnumerable<Ruminant> herd = ruminantHerd?.Herd;
             foreach (RuminantGroup filter in herdFilters)
-            {
-                herd = herd.Filter(filter).ToList();
-            }
+                herd = herd.FilterRuminants(filter);
 
             // group by breed
             foreach (var breedGroup in herd.GroupBy(a => a.Breed))
@@ -150,9 +153,7 @@ namespace Models.CLEM
 
                             // reset birth count
                             if (sexGroup.Key == Sex.Female)
-                            {
                                 ageGroup.Cast<RuminantFemale>().ToList().ForEach(a => a.NumberOfBirthsThisTimestep = 0);
-                            }
                         }
                     }
                 }

@@ -35,6 +35,15 @@
         [NonSerialized]
         private DataTable messages;
 
+        /// <summary>
+        /// The current messages during simulation before saving to db
+        /// </summary>
+        /// <returns>Messages</returns>
+        public DataTable Messages()
+        {
+            return messages;
+        }
+
         /// <summary>A link to a storage service</summary>
         [Link]
         private IDataStore storage = null;
@@ -82,6 +91,12 @@
         /// <summary>Capture and store summary text?</summary>
         public bool CaptureSummaryText { get; set; } = true;
 
+        [EventSubscribe("Commencing")]
+        private void OnCommencing(object sender, EventArgs args)
+        {
+            messages = null;
+        }
+
         /// <summary>Event handler to create initialise</summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
@@ -98,8 +113,10 @@
         [EventSubscribe("Completed")]
         private void OnCompleted(object sender, EventArgs e)
         {
+            // The messages table will be automatically cleaned prior to a simulation
+            // run, so we don't need to delete existing data in this call to WriteTable().
             if (messages != null)
-                storage?.Writer?.WriteTable(messages);
+                storage?.Writer?.WriteTable(messages, false);
         }
 
         /// <summary>Initialise the summary messages table.</summary>
@@ -248,7 +265,10 @@
                     }
                 }
             }
-            storage.Writer.WriteTable(initConditions);
+
+            // The initial conditions table will be automatically cleaned prior to a simulation
+            // run, so we don't need to delete existing data in this call to WriteTable().
+            storage.Writer.WriteTable(initConditions, false);
         }
         
         #region Static summary report generation
@@ -330,7 +350,7 @@
                 throw new NotImplementedException();
 
             // Get the initial conditions table.            
-            DataTable initialConditionsTable = storage.Reader.GetData(simulationName: simulationName, tableName:"_InitialConditions");
+            DataTable initialConditionsTable = storage.Reader.GetData(simulationNames: new string[] { simulationName }, tableName:"_InitialConditions");
             if (initialConditionsTable != null)
             {
                 // Convert the '_InitialConditions' table in the DataStore to a series of
@@ -396,7 +416,7 @@
         private static DataTable GetMessageTable(IDataStore storage, string simulationName)
         {
             DataTable messageTable = new DataTable();
-            DataTable messages = storage.Reader.GetData(simulationName: simulationName, tableName: "_Messages", orderBy: "T.[Date]");
+            DataTable messages = storage.Reader.GetData(simulationNames: new string[] { simulationName }, tableName: "_Messages", orderByFieldNames: new string[] { "Date" });
             if (messages != null && messages.Rows.Count > 0)
             {
                 messageTable.Columns.Add("Date", typeof(string));

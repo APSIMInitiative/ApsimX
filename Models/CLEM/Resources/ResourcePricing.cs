@@ -1,5 +1,7 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,7 +16,7 @@ namespace Models.CLEM.Resources
     /// Resource type pricing
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(AnimalFoodStoreType))]
     [ValidParent(ParentType = typeof(EquipmentType))]
@@ -30,7 +32,7 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 2, "Includes option to specify sale and purchase pricing")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/ResourcePricing.htm")]
-    public class ResourcePricing : CLEMModel
+    public class ResourcePricing : CLEMModel, IResourcePricing, IReportPricingChange
     {
         /// <summary>
         /// Number of resource units per packet
@@ -60,6 +62,10 @@ namespace Models.CLEM.Resources
         [System.ComponentModel.DefaultValueAttribute(PurchaseOrSalePricingStyleType.Both)]
         [Required]
         public PurchaseOrSalePricingStyleType PurchaseOrSale { get; set; }
+        
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public ResourcePriceChangeDetails LastPriceChange { get; set; }
 
         /// <summary>
         /// Constructor
@@ -67,6 +73,69 @@ namespace Models.CLEM.Resources
         public ResourcePricing()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
+        }
+
+        /// <summary>
+        /// Calulate the value of an amount of resource 
+        /// </summary>
+        /// <param name="amount">Amount of resource to value</param>
+        /// <param name="respectUseWholePacket">Determing if purchase in whole packets is to be obeyed in calculation</param>
+        public double CalculateValue(double amount, bool respectUseWholePacket = true)
+        {
+            if (PurchaseOrSale == PurchaseOrSalePricingStyleType.Sale)
+            {
+                throw new ApsimXException(this, "Cannot calculate the purchase price based on a sale pricing");
+            }
+            else
+            {
+                var packets = (amount / PacketSize);
+                if(respectUseWholePacket && UseWholePackets)
+                {
+                    packets = Math.Truncate(packets);
+                }
+                return packets * PricePerPacket;
+            }
+        }
+
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public IResourceType Resource { get { return FindAncestor<IResourceType>(); } }
+
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public double CurrentPrice { get { return PricePerPacket; } }
+
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public double PreviousPrice { get; set; }
+
+        /// <inheritdoc/>
+        public event EventHandler PriceChangeOccurred;
+
+        /// <inheritdoc/>
+        public void SetPrice(double amount, IModel model)
+        {
+            PreviousPrice = CurrentPrice;
+            PricePerPacket = amount;
+
+            if (LastPriceChange is null)
+            {
+                LastPriceChange = new ResourcePriceChangeDetails();
+            }
+            LastPriceChange.ChangedBy = model;
+            LastPriceChange.PriceChanged = this;
+
+            // price change event
+            OnPriceChanged(new PriceChangeEventArgs() {  Details = LastPriceChange });
+        }
+
+        /// <summary>
+        /// Price changed event
+        /// </summary>
+        /// <param name="e"></param>
+        protected void OnPriceChanged(PriceChangeEventArgs e)
+        {
+            PriceChangeOccurred?.Invoke(this, e);
         }
 
         #region descriptive summary

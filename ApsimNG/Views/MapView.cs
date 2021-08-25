@@ -1,38 +1,95 @@
 ﻿namespace UserInterface.Views
 {
-    using System;
-    using System.IO;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Drawing;
     using APSIM.Shared.Utilities;
-    using System.Globalization;
+    using Extensions;
+    using GeoAPI.Geometries;
+    using Gtk;
     using Interfaces;
     using Models;
-    using SharpMap.Styles;
-    using SharpMap.Layers;
-    using SharpMap.Data.Providers;
-    using System.Drawing.Imaging;
-    using GeoAPI.Geometries;
-    using GeoAPI;
     using NetTopologySuite;
     using NetTopologySuite.Geometries;
+    using SharpMap.Data.Providers;
+    using SharpMap.Layers;
+    using SharpMap.Styles;
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
-    using Gtk;
     using Utility;
-    using SharpMap.Data;
-    using SharpMap.Rendering;
-    using Extensions;
 
 #if NETCOREAPP
     using ExposeEventArgs = Gtk.DrawnArgs;
     using StateType = Gtk.StateFlags;
 #endif
 
+    /// <remarks>
+    /// This view is intended to diplay sites on a map. For the most part, in works, but it has a few flaws
+    /// and room for improvement. 
+    /// 
+    /// Probably the main flaw is that maps are often very slow to render, as the basemap needs
+    /// to be downloaded. SharpMap does allow map tiles to be loaded async, but when trying that approach I found
+    /// it difficult to know when to update the map, and when it had been fully loaded (which is required when 
+    /// generating auto-docs).
+    /// 
+    /// Another flaw (a problem with SharpMap) is that it doesn't know how to "wrap" the map at the antimeridion 
+    /// (International Date Line). This makes it impossible to produce a Pacific-centered map.
+    /// 
+    /// One enhancement that should be fairly easy to implement would be to allow the user to select the basemap.
+    /// Currently it's just using OpenStreetMaps, but Bing maps and several others are readily available. The user
+    /// could be presented with a drop-down list of alternative.
+    /// 
+    /// There is a little quirk I don't understand at all - the location marker simply disappears from the map
+    /// at high resolutions. For our purposes, this generally shouldn't be a problem, but it would be nice to 
+    /// know why it happens.
+    /// 
+    /// </remarks>
     public class MapView : ViewBase, IMapView
     {
-        private const double scrollIncrement = 60;
+        /// <summary>
+        /// Indicates the ratio between steps when zooming.
+        /// </summary>
+        private const double zoomStepFactor = 1.5;
+
+        /// <remarks>
+        /// The world of mapping and GIS is a rather specialised and complex sub-field. Our needs here
+        /// are fairly simple: we just want to be able to plot locations on a base map. But how are locations
+        /// specified? Where do we get the map? What projection do we use? These remarks are intended to 
+        /// (slightly) clarify what is going on.
+        /// 
+        /// We are using SharpMap to do the map rendering, and BruTile to fetch a suitable base map. The basemap 
+        /// tiles use a "projected" coordinate system, specifically EPSG 3857 (also known as Web Mercator); 
+        /// the units in this system are (perhaps surpisingly) metres. However, the point data we wish to plot
+        /// is expressed as latitude and longitude (using a "geographic" coordinate system, specifically EPSG 4326),
+        /// with units of decimal degrees. Note that both are based on WGS84, so they have the same underlying
+        /// model of the shape of the earth, but use vastly different units. The two transformation objects defined 
+        /// below handle coordinate transformation.
+        /// 
+        /// An earlier version of this unit made a call to SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems
+        /// to obtain the co-ordinate systems. That call then attempted to generate a 3 MByte file with almost 4000 different
+        /// systems in it; we only needed 2. We can generate those we need from their WKT descriptions. If additions reference
+        /// systems are needed, their WKT descriptions should be available for download from spatialreference.org.
+        /// </remarks>
+        ///  
+        /// <summary>
+        /// Performs coordinate transformation from latitude/longitude (WGS84) to metres (WebMercator).
+        /// </summary>
+        private GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation LatLonToMetres = new
+                            ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory().CreateFromCoordinateSystems(
+                                ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84,
+                                ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator);
+
+
+        /// <summary>
+        /// Performs coordinate transformation from  metres (WebMercator) to latitude/longitude (WGS84).
+        /// </summary>
+        private GeoAPI.CoordinateSystems.Transformations.ICoordinateTransformation MetresToLatLon = new
+                            ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory().CreateFromCoordinateSystems(
+                                ProjNet.CoordinateSystems.ProjectedCoordinateSystem.WebMercator,
+                                ProjNet.CoordinateSystems.GeographicCoordinateSystem.WGS84);
+
 
         private SharpMap.Map map;
         private Gtk.Image image;
@@ -48,6 +105,24 @@
         private Map.Coordinate mouseAtDragStart;
 
         /// <summary>
+        /// Static constructor to perform 1-time initialisation.
+        /// </summary>
+        static MapView()
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            GeoAPI.GeometryServiceProvider.Instance = new NtsGeometryServices();
+            var coordFactory = new ProjNet.CoordinateSystems.CoordinateSystemFactory(System.Text.Encoding.Unicode);
+            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(coordFactory,
+                new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory());
+            css.AddCoordinateSystem(3857, coordFactory.CreateFromWkt("PROJCS[\"WGS 84 / Pseudo-Mercator\", GEOGCS[\"WGS 84\", DATUM[\"WGS_1984\", SPHEROID[\"WGS 84\", 6378137, 298.257223563, AUTHORITY[\"EPSG\", \"7030\"]], AUTHORITY[\"EPSG\", \"6326\"]], PRIMEM[\"Greenwich\", 0, AUTHORITY[\"EPSG\", \"8901\"]], UNIT[\"degree\", 0.0174532925199433, AUTHORITY[\"EPSG\", \"9122\"]], AUTHORITY[\"EPSG\", \"4326\"]], UNIT[\"metre\", 1, AUTHORITY[\"EPSG\", \"9001\"]], PROJECTION[\"Mercator_1SP\"], PARAMETER[\"latitude_of_origin\", 0], PARAMETER[\"central_meridian\", 0], PARAMETER[\"scale_factor\", 1], PARAMETER[\"false_easting\", 0], PARAMETER[\"false_northing\", 0], AUTHORITY[\"EPSG\", \"3857\"]]"));
+            css.AddCoordinateSystem(4326, coordFactory.CreateFromWkt("GEOGCS[\"WGS 84\", DATUM[\"WGS_1984\", SPHEROID[\"WGS 84\", 6378137, 298.257223563, AUTHORITY[\"EPSG\", \"7030\"]], AUTHORITY[\"EPSG\", \"6326\"]], PRIMEM[\"Greenwich\", 0, AUTHORITY[\"EPSG\", \"8901\"]], UNIT[\"degree\", 0.0174532925199433, AUTHORITY[\"EPSG\", \"9122\"]], AUTHORITY[\"EPSG\", \"4326\"]]"));
+            SharpMap.Session.Instance
+            .SetGeometryServices(GeoAPI.GeometryServiceProvider.Instance)
+            .SetCoordinateSystemServices(css)
+            .SetCoordinateSystemRepository(css);
+        }
+
+        /// <summary>
         /// Zoom level of the map.
         /// </summary>
         public double Zoom
@@ -56,15 +131,18 @@
             {
                 if (map == null)
                     return 0;
-                return map.Zoom;
-            }
+                return Math.Round(Math.Log(map.MaximumZoom / map.Zoom, zoomStepFactor) + 1.0, 2);
+             }
             set
             {
                 // Refreshing the map is a bit slow, so only do it if
                 // the incoming value is different to the old value.
-                if (map != null && !MathUtilities.FloatsAreEqual(value, map.Zoom))
+                if (map != null && !MathUtilities.FloatsAreEqual(value, Zoom))
                 {
-                    map.Zoom = value;
+                    double setValue = value - 1.0;
+                    if (value >= 60.0) // Convert any "old" zoom levels into whole-world maps
+                        setValue = 0.0;
+                    map.Zoom = map.MaximumZoom / Math.Pow(zoomStepFactor, setValue);
                     RefreshMap();
                 }
             }
@@ -79,17 +157,19 @@
             {
                 if (map == null)
                     return null;
-                return new Map.Coordinate(map.Center.Y, map.Center.X);
+                Coordinate centerLatLon = MetresToLatLon.MathTransform.Transform(map.Center);
+                return new Map.Coordinate(Math.Round(centerLatLon.Y, 4), Math.Round(centerLatLon.X, 4));
             }
             set
             {
+                Coordinate centerMetric = LatLonToMetres.MathTransform.Transform(new Coordinate(value.Longitude, value.Latitude));
                 // Refreshing the map is a bit slow, so only do it if
                 // the incoming value is different to the old value.
                 if (map != null && 
-                    (!MathUtilities.FloatsAreEqual(value.Longitude, map.Center.X)
-                    || !MathUtilities.FloatsAreEqual(value.Latitude, map.Center.Y)) )
+                    (!MathUtilities.FloatsAreEqual(centerMetric.X, map.Center.X)
+                    || !MathUtilities.FloatsAreEqual(centerMetric.Y, map.Center.Y)) )
                 {
-                    map.Center = new Coordinate(value.Longitude, value.Latitude);
+                    map.Center = centerMetric;
                     RefreshMap();
                 }
             }
@@ -98,29 +178,13 @@
         /// <summary>
         /// GridView widget used to show properties. Could be refactored out.
         /// </summary>
-        public IGridView Grid { get; private set; }
+        public IPropertyView PropertiesView { get; private set; }
 
         /// <summary>
         /// Called when the view is changed by the user.
         /// </summary>
         public event EventHandler ViewChanged;
 
-        /// <summary>
-        /// Static constructor to perform 1-time initialisation.
-        /// </summary>
-        static MapView()
-        {
-            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
-            GeoAPI.GeometryServiceProvider.Instance = new NtsGeometryServices();
-            var css = new SharpMap.CoordinateSystems.CoordinateSystemServices(
-            new ProjNet.CoordinateSystems.CoordinateSystemFactory(System.Text.Encoding.Unicode),
-            new ProjNet.CoordinateSystems.Transformations.CoordinateTransformationFactory(),
-            SharpMap.Converters.WellKnownText.SpatialReference.GetAllReferenceSystems());
-            SharpMap.Session.Instance
-            .SetGeometryServices(GeoAPI.GeometryServiceProvider.Instance)
-            .SetCoordinateSystemServices(css)
-            .SetCoordinateSystemRepository(css);
-        }
 
         /// <summary>
         /// Constructor. Initialises the widget and will show a world
@@ -134,8 +198,8 @@
             container.Add(image);
 
             VPaned box = new VPaned();
-            Grid = new GridView(this);
-            box.Pack1(((ViewBase)Grid).MainWidget, true, false);
+            PropertiesView = new PropertyView(this);
+            box.Pack1(((ViewBase)PropertiesView).MainWidget, true, false);
             box.Pack2(container, true, true);
             
             container.AddEvents(
@@ -163,23 +227,34 @@
         private SharpMap.Map InitMap()
         {
             var result = new SharpMap.Map();
-            result.MaximumZoom = 720;
             result.BackColor = Color.LightBlue;
             result.Center = new Coordinate(0, 0);
-            result.Zoom = result.MaximumZoom;
-            
-            VectorLayer layWorld = new VectorLayer("Countries");
+            result.SRID = 3857;
+
+            BruTile.Cache.FileCache fileCache = new BruTile.Cache.FileCache(Path.Combine(Path.GetTempPath(), "OSM Map Tiles"), "png", new TimeSpan(100, 0, 0, 0));
+            TileLayer baseLayer = new TileLayer(BruTile.Predefined.KnownTileSources.Create(BruTile.Predefined.KnownTileSource.OpenStreetMap, persistentCache: fileCache, userAgent: "APSIM Next Generation"), "OpenStreetMap");
+            result.BackgroundLayer.Add(baseLayer);
+            result.MaximumZoom = baseLayer.Envelope.Width;
+
+            // This layer is used only as a sort of backup in case the BruTile download times out
+            // or is otherwise unavailable.
+            // It should normally be invisible, as it will be covered by the BruTile tile layer.
             string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
             string apsimx = Directory.GetParent(bin).FullName;
             string shapeFileName = Path.Combine(apsimx, "ApsimNG", "Resources", "world", "countries.shp");
-            layWorld.DataSource = new ShapeFile(shapeFileName, true);
-            layWorld.Style = new VectorStyle();
-            layWorld.Style.EnableOutline = true;
-            Color background = Colour.FromGtk(MainWidget.GetBackgroundColour(StateType.Normal));
-            Color foreground = Colour.FromGtk(MainWidget.GetForegroundColour(StateType.Normal));
-            layWorld.Style.Fill = new SolidBrush(background);
-            layWorld.Style.Outline.Color = foreground;
-            result.Layers.Add(layWorld);
+            if (File.Exists(shapeFileName))
+            {
+                VectorLayer layWorld = new VectorLayer("Countries");
+                layWorld.DataSource = new ShapeFile(shapeFileName, true);
+                layWorld.Style = new VectorStyle();
+                layWorld.Style.EnableOutline = true;
+                Color background = Colour.FromGtk(MainWidget.GetBackgroundColour(StateType.Normal));
+                Color foreground = Colour.FromGtk(MainWidget.GetForegroundColour(StateType.Normal));
+                layWorld.Style.Fill = new SolidBrush(background);
+                layWorld.Style.Outline.Color = foreground;
+                layWorld.CoordinateTransformation = LatLonToMetres;
+                result.BackgroundLayer.Insert(0, layWorld);
+            }
 
             return result;
         }
@@ -215,14 +290,18 @@
                 map.Dispose();
             map = InitMap();
 
-            GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 3857);
+            GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 4326);
             List<IGeometry> locations = coordinates.Select(c => gf.CreatePoint(new Coordinate(c.Longitude, c.Latitude))).ToList<IGeometry>();
             VectorLayer markerLayer = new VectorLayer("Markers");
             markerLayer.Style.Symbol = GetResourceImage("ApsimNG.Resources.Marker.png");
+            markerLayer.Style.SymbolOffset = new PointF(0, -16); // Offset so the point is marked by the tip of the symbol, not its center
             markerLayer.DataSource = new GeometryProvider(locations);
+            markerLayer.CoordinateTransformation = LatLonToMetres;
+
             map.Layers.Add(markerLayer);
-            map.Zoom = zoom;
-            map.Center = new Coordinate(center.Longitude, center.Latitude);
+            Zoom = zoom;
+            Coordinate location = LatLonToMetres.MathTransform.Transform(new Coordinate(center.Longitude, center.Latitude));
+            map.Center = location;
             if (image.Allocation.Width > 1 && image.Allocation.Height > 1)
                 RefreshMap();
         }
@@ -274,9 +353,9 @@
         /// <param name="lon">Longitude.</param>
         private void CartesianToGeoCoords(double x, double y, out double lat, out double lon)
         {
-            Envelope viewport = map.Envelope;
-            lat = y / map.Size.Height * (viewport.MinY - viewport.MaxY) + viewport.MaxY;
-            lon = x / map.Size.Width * (viewport.MaxX - viewport.MinX) + viewport.MinX;
+            Coordinate coord = map.ImageToWorld(new PointF((float)x, (float)y), true);
+            lat = coord.Y;
+            lon = coord.X;
         }
     
         /// <summary>
@@ -374,8 +453,8 @@
                 if (args.Event.Direction == Gdk.ScrollDirection.Up || args.Event.Direction == Gdk.ScrollDirection.Down)
                 {
                     // Adjust zoom level on map.
-                    double sign = args.Event.Direction == Gdk.ScrollDirection.Up ? -1 : 1;
-                    map.Zoom = MathUtilities.Bound(map.Zoom + scrollIncrement * sign, 1, map.MaximumZoom);
+                    double sign = args.Event.Direction == Gdk.ScrollDirection.Up ? 1 : -1;
+                    Zoom = MathUtilities.Bound(Zoom + sign, 1.0, 25.0);
 
                     // Adjust center of map, so that coordinates at mouse cursor are the same
                     // as previously.

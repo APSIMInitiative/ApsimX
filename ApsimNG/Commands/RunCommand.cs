@@ -48,6 +48,7 @@
         /// <summary>Perform the command</summary>
         public void Do()
         {
+            explorerPresenter.MainPresenter.ClearStatusPanel();
             IsRunning = true;
             jobRunner.Run();
 
@@ -59,6 +60,8 @@
                 timer.Elapsed += OnTimerTick;
                 timer.Start();
             }
+            // Manually fire of an OnTimerTick event.
+            OnTimerTick(this, null);
         }
 
         /// <summary>All jobs have completed</summary>
@@ -79,9 +82,8 @@
                 // We could display the error message, but we're about to display output to the user anyway.
             }
             if (errors.Count == 0)
-                explorerPresenter.MainPresenter.ShowMessage(string.Format("{0} complete [{1} sec]", jobName, e.ElapsedTime.TotalSeconds.ToString("#.00")), Simulation.MessageType.Information);
-            else
-                explorerPresenter.MainPresenter.ShowError(errors);
+                explorerPresenter.MainPresenter.ShowMessage(string.Format("{0} complete [{1} sec]", jobName, e.ElapsedTime.TotalSeconds.ToString("#.00")), Simulation.MessageType.Information, false);
+            // We don't need to display error messages now - they are displayed as they occur.
 
             if (!Configuration.Settings.Muted)
             {
@@ -97,7 +99,7 @@
                 else
                 {
                     if (File.Exists(Configuration.Settings.SimulationCompleteWavFileName))
-                        player.SoundLocation = Configuration.Settings.SimulationCompleteWithErrorWavFileName;
+                        player.SoundLocation = Configuration.Settings.SimulationCompleteWavFileName;
                     else
                         player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Sounds.Success.wav");
                 }
@@ -114,13 +116,9 @@
         private void OnStopSimulation(object sender, EventArgs e)
         {
             Stop();
-            string msg = jobName + " aborted";
-            if (errors.Count == 0)
-                explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.MessageType.Information);
-            else
-            {
-                explorerPresenter.MainPresenter.ShowError(errors);
-            }
+            // Any error messages will already be onscreen, as they are
+            // rendered as they occur.
+            explorerPresenter.MainPresenter.ShowMessage($"{jobName} aborted", Simulation.MessageType.Information, false);
         }
 
         /// <summary>
@@ -128,6 +126,7 @@
         /// </summary>
         private void Stop()
         {
+            explorerPresenter.MainPresenter.HideProgressBar();
             this.explorerPresenter.MainPresenter.RemoveStopHandler(OnStopSimulation);
             if (timer != null)
             {
@@ -154,8 +153,8 @@
             else //if (jobRunner?.TotalNumberOfSimulations > 0)
             {
                 double progress = jobRunner?.Progress ?? 0;
-                explorerPresenter.MainPresenter.ShowMessage($"{jobName} running ({jobRunner.Status})", Simulation.MessageType.Information);
-                explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(progress * 100, CultureInfo.InvariantCulture));
+                explorerPresenter.MainPresenter.ShowProgressMessage($"{jobName} running ({jobRunner.Status})");
+                explorerPresenter.MainPresenter.ShowProgress(progress);
             }
             //else if (jobRunner != null)
             //    explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(jobRunner.Progress * 100, CultureInfo.InvariantCulture));

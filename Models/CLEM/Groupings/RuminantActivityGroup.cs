@@ -7,14 +7,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Groupings
 {
     ///<summary>
-    /// Defines a group of individual ruminants for whcih all activities below the implimentation consider
+    /// Defines a group of individual ruminants for which all activities below the implementation consider
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
@@ -22,7 +23,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(CLEMRuminantActivityBase))]
     [Description("This ruminant group is applied to all activities at or below this point in the simulation tree")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Filters/RuminantActivityGroup.htm")]
+    [HelpUri(@"Content/Features/Filters/Groups/RuminantActivityGroup.htm")]
     public class RuminantActivityGroup : CLEMModel, IFilterGroup
     {
         /// <summary>
@@ -34,7 +35,9 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Proportion of group to use
         /// </summary>
-        [JsonIgnore]
+        [System.ComponentModel.DefaultValueAttribute(1)]
+        [Description("Proportion of group to use")]
+        [Required, GreaterThanValue(0), Proportion]
         public double Proportion { get; set; }
 
         #region descriptive summary

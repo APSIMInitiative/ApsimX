@@ -26,7 +26,7 @@
         private ExplorerPresenter explorerPresenter;
 
         /// <summary>List of all experiment simulations.</summary>
-        private List<SimulationDescription> simulationDescriptions;
+        private IEnumerable<SimulationDescription> simulationDescriptions;
 
         /// <summary>By default, only display this many simulations (for performance reasons).</summary>
         private const int DefaultMaxSims = 50;
@@ -57,6 +57,7 @@
 
             // Give the view the default maximum number of simulations to display.
             view.MaximumNumSimulations.Text = DefaultMaxSims.ToString();
+            view.NumberSimulationsLabel.Text = $"Number of simulations: {experiment.NumSimulations()}";
 
             // Get a list of all simulation descriptions (even disabled ones).
             GetAllSimulationDescriptionsFromExperiment();
@@ -81,12 +82,13 @@
         private void PopulateView()
         {
             // Create a table to give to the grid control.
-            var table = new DataTable();
-            if (simulationDescriptions.Count > 0)
+            DataTable table = new DataTable();
+            int n = Convert.ToInt32(view.MaximumNumSimulations.Text, CultureInfo.InvariantCulture);
+            if (simulationDescriptions.Any())
             {
                 // Using the first simulation description, create a column in the table
                 // for each descriptor.
-                foreach (var simulationDescription in simulationDescriptions)
+                foreach (var simulationDescription in simulationDescriptions.Take(n))
                     foreach (var descriptor in simulationDescription.Descriptors)
                     {
                         if (!hiddenColumns.Contains(descriptor.Name) &&
@@ -96,12 +98,11 @@
             }
 
             // Add all simulations to table up to the maximum number of sims to display.
-            var maximumNumberOfSimulations = Convert.ToInt32(view.MaximumNumSimulations.Text, CultureInfo.InvariantCulture);
-            var cellRenderDetails = new List<CellRendererDescription>();
-            for (int i = 0; i < Math.Min(simulationDescriptions.Count, maximumNumberOfSimulations); i++)
+            List<CellRendererDescription> cellRenderDetails = new List<CellRendererDescription>();
+            foreach (var (sim, i) in simulationDescriptions.Take(n).Select((x, i) => (x, i)))
             {
                 // If this is a disabled sim then store the index for later.
-                if (experiment.DisabledSimNames != null && experiment.DisabledSimNames.Contains(simulationDescriptions[i].Name))
+                if (experiment.DisabledSimNames != null && experiment.DisabledSimNames.Contains(sim.Name))
                     cellRenderDetails.Add(
                         new CellRendererDescription()
                         {
@@ -110,9 +111,9 @@
                             StrikeThrough = true
                         });
 
-                var row = table.NewRow();
+                DataRow row = table.NewRow();
 
-                foreach (var descriptor in simulationDescriptions[i].Descriptors)
+                foreach (var descriptor in sim.Descriptors)
                 {
                     if (!hiddenColumns.Contains(descriptor.Name))
                         row[descriptor.Name] = descriptor.Value;
@@ -124,9 +125,6 @@
 
             // Give the disabled simulations to the view as strikethroughs.
             view.List.CellRenderDetails = cellRenderDetails;
-
-            // Populate the number of simulations label.
-            view.NumberSimulationsLabel.Text = "Number of simulations: " + simulationDescriptions.Count;
         }
 
         /// <summary>Get a list of all simulation descriptions (even disabled ones).</summary>
@@ -134,7 +132,7 @@
         {
             List<string> savedDisabledSimulationNames = experiment.DisabledSimNames;
             experiment.DisabledSimNames = null;
-            simulationDescriptions = experiment.GenerateSimulationDescriptions();
+            simulationDescriptions = experiment.GetSimulationDescriptions();
             experiment.DisabledSimNames = savedDisabledSimulationNames;
         }
 

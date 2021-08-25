@@ -34,7 +34,7 @@ namespace UserInterface.Views
         /// <summary>
         /// The main widget which holds the property table.
         /// </summary>
-        private Frame box;
+        protected Frame box;
 
         /// <summary>
         /// Table which is used to layout property labels/inputs.
@@ -44,9 +44,9 @@ namespace UserInterface.Views
         /// <see cref="DisplayProperties(PropertyGroup)" /> is called.
         /// </remarks>
 #if NETFRAMEWORK
-        private Table propertyTable;
+        protected Table propertyTable;
 #else
-        private Grid propertyTable;
+        protected Grid propertyTable;
 #endif
 
         /// <summary>
@@ -77,14 +77,19 @@ namespace UserInterface.Views
 #else
             propertyTable = new Grid();
 #endif
-            box = new Frame("Properties");
+            box = new Frame();
+            box.ShadowType = ShadowType.None;
             box.Add(propertyTable);
+            ScrolledWindow scroller = new ScrolledWindow();
+            mainWidget = scroller;
 #if NETFRAMEWORK
-            mainWidget = box;
+            scroller.AddWithViewport(box);
 #else
             Box container = new Box(Orientation.Vertical, 0);
             container.PackStart(box, false, false, 0);
-            mainWidget = container;
+            scroller.Add(container);
+            scroller.PropagateNaturalHeight = true;
+            scroller.PropagateNaturalWidth = true;
 #endif
             mainWidget.Destroyed += OnWidgetDestroyed;
         }
@@ -93,7 +98,7 @@ namespace UserInterface.Views
         /// Display properties and their values to the user.
         /// </summary>
         /// <param name="properties">Properties to be displayed/edited.</param>
-        public void DisplayProperties(PropertyGroup properties)
+        public virtual void DisplayProperties(PropertyGroup properties)
         {
 #if NETFRAMEWORK
             uint row = 0;
@@ -129,9 +134,9 @@ namespace UserInterface.Views
                     }
                 }
             }
+
 #endif
             box.Remove(propertyTable);
-            box.Label = $"{properties.Name} Properties";
 
             propertyTable.Cleanup();
 
@@ -139,6 +144,8 @@ namespace UserInterface.Views
             // Columns should not be homogenous - otherwise we'll have the
             // property name column taking up half the screen.
             propertyTable = new Table((uint)properties.Count(), 3, false);
+            // column and row spacing 
+            propertyTable.RowSpacing = 3;
 #else
             propertyTable = new Grid();
             //propertyTable.RowHomogeneous = true;
@@ -152,8 +159,12 @@ namespace UserInterface.Views
 #else
             int nrow = 0;
 #endif
-            AddPropertiesToTable(ref propertyTable, properties, ref nrow);
-            mainWidget.ShowAll();
+            AddPropertiesToTable(ref propertyTable, properties, ref nrow, 0);
+
+            if (nrow > 0)
+                mainWidget.ShowAll();
+            else
+                mainWidget.Hide();
 
             // If a widget was previously focused, then try to give it focus again.
             if (widgetIsFocused)
@@ -176,10 +187,11 @@ namespace UserInterface.Views
         /// <param name="table">Table to be modified.</param>
         /// <param name="properties">Property group to be modified.</param>
         /// <param name="startRow">The row to which the first property will be added (used for recursive calls).</param>
+        /// <param name="columnOffset">The number of columns to offset for this propertygroup (0 = single. >0 multiply models reported as columns).</param>
 #if NETFRAMEWORK
-        private void AddPropertiesToTable(ref Table table, PropertyGroup properties, ref uint startRow)
+        protected void AddPropertiesToTable(ref Table table, PropertyGroup properties, ref uint startRow, uint columnOffset)
 #else
-        private void AddPropertiesToTable(ref Grid table, PropertyGroup properties, ref int startRow)
+        protected void AddPropertiesToTable(ref Grid table, PropertyGroup properties, ref int startRow, int columnOffset)
 #endif
         {
             // Using a regular for loop is not practical because we can
@@ -194,21 +206,25 @@ namespace UserInterface.Views
                         box.Realized += OnSeparatorLabelRealized;
                         box.Add(separatorLabel);
 #if NETFRAMEWORK
-                        propertyTable.Attach(box, 0, 3, startRow, ++startRow, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 5, 5);
+                        propertyTable.Attach(box, 0, 3, startRow, startRow + 1, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 5, 5);
 #else
                         propertyTable.Attach(box, 0, startRow, 2, 1);
-                        startRow++;
 #endif
+                        startRow++;
                     }
 
-                Label label = new Label(property.Name);
-                label.TooltipText = property.Tooltip;
-                label.Xalign = 0;
+                if (columnOffset == 0) // only perform on first or only entry
+                {
+                    Label label = new Label(property.Name);
+                    label.TooltipText = property.Tooltip;
+                    label.Xalign = 0;
 #if NETFRAMEWORK
-                propertyTable.Attach(label, 0, 1, startRow, startRow + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 0);
+                    propertyTable.Attach(label, 0, 1, startRow, startRow + 1, AttachOptions.Fill, AttachOptions.Fill, 5, 0);
 #else
-                propertyTable.Attach(label, 0, startRow, 1, 1);
+                    label.MarginEnd = 10;
+                    propertyTable.Attach(label, 0, startRow, 1, 1);
 #endif
+                }
 
                 if (!string.IsNullOrEmpty(property.Tooltip))
                 {
@@ -221,10 +237,11 @@ namespace UserInterface.Views
                 Widget inputWidget = GenerateInputWidget(property);
                 inputWidget.Name = property.ID.ToString();
                 inputWidget.TooltipText = property.Tooltip;
+
 #if NETFRAMEWORK
-                propertyTable.Attach(inputWidget, 2, 3, startRow, startRow + 1, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 0);
+                propertyTable.Attach(inputWidget, 2 + columnOffset, 3 + columnOffset, startRow, startRow + 1, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 0);
 #else
-                propertyTable.Attach(inputWidget, 2, startRow, 1, 1);
+                propertyTable.Attach(inputWidget, 2 + columnOffset, startRow, 1, 1);
                 inputWidget.Hexpand = true;
 #endif
 
@@ -234,7 +251,7 @@ namespace UserInterface.Views
             foreach (PropertyGroup subProperties in properties.SubModelProperties)
             {
                 propertyTable.Attach(new Label($"<b>{subProperties.Name} Properties</b>") { Xalign = 0, UseMarkup = true }, 0, 2, startRow, ++startRow, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 5);
-                AddPropertiesToTable(ref table, subProperties, ref startRow);
+                AddPropertiesToTable(ref table, subProperties, ref startRow, columnOffset);
             }
         }
 
@@ -581,18 +598,19 @@ namespace UserInterface.Views
         {
             try
             {
-                // When the user clicks on the button, we want to immediately show the tooltip.
-                // We can call Widget.TriggerTooltipQuery(), but the query to fail if the
-                // tooltip timeout hasn't elapsed yet. What we have here is a gnarly workaround
-                // for this problem. First, we get the current tooltip timeout duration. Then we
-                // change it to 0 (ms), then we trigger the tooltip timeout, then we reset the
-                // tooltip timeout to its original value so the user is none the wiser.
                 if (sender is Widget widget)
                 {
+#if NETFRAMEWORK
+                    // When the user clicks on the button, we want to immediately show the tooltip.
+                    // We can call Widget.TriggerTooltipQuery(), but the query to fail if the
+                    // tooltip timeout hasn't elapsed yet. What we have here is a gnarly workaround
+                    // for this problem. First, we get the current tooltip timeout duration. Then we
+                    // change it to 0 (ms), then we trigger the tooltip timeout, then we reset the
+                    // tooltip timeout to its original value so the user is none the wiser.
+
                     // Name of the tooltip timeout property.
                     string tooltipTimeout = "gtk-tooltip-timeout";
 
-#if NETFRAMEWORK
                     // To get the default tooltip timeout, we need to call the GetProperty() method,
                     // which for some reason is a protected method in the gtk#2 API.
                     BindingFlags flags = BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.FlattenHierarchy;
@@ -609,10 +627,7 @@ namespace UserInterface.Views
                     // Reset the tooltip timeout to the default value.
                     mainWidget.Settings.SetLongProperty(tooltipTimeout, timeout, "XProperty");
 #else
-                    int timeout = (int)mainWidget.GetProperty(tooltipTimeout).Val;
-                    mainWidget.SetProperty(tooltipTimeout, new GLib.Value(0));
                     widget.TriggerTooltipQuery();
-                    mainWidget.SetProperty(tooltipTimeout, new GLib.Value(timeout));
 #endif
                 }
             }
@@ -629,12 +644,25 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="e">Event arguments.</param>
-        private void OnWidgetDestroyed(object sender, EventArgs e)
+        protected void OnWidgetDestroyed(object sender, EventArgs e)
         {
             if (sender is Widget widget)
             {
                 widget.DetachAllHandlers();
             }
+        }
+
+        /// <summary>
+        /// Fire off a PropertyChanged event for any outstanding changes.
+        /// </summary>
+        public void SaveChanges()
+        {
+            // The only widget which can have outstanding changes is an entry,
+            // whose changes are applied when it loses focus. Therefore,
+            // grabbing focus on the main widget will cause any focused entries
+            // to lose focus and fire off a changed event.
+            mainWidget.CanFocus = true;
+            mainWidget.GrabFocus();
         }
     }
 }

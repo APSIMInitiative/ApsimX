@@ -14,10 +14,10 @@ using System.IO;
 namespace Models.CLEM.Groupings
 {
     ///<summary>
-    /// Contains a group of filters to identify individual ruminants
+    /// Contains a group of filters and sorters to identify individual ruminants
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ReportRuminantHerd))]
     [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
@@ -26,9 +26,10 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
     [ValidParent(ParentType = typeof(RuminantActivityMove))]
     [ValidParent(ParentType = typeof(RuminantActivityMarkForSale))]
-    [Description("This group selects specific individuals from the ruminant herd using any number of Ruminant Filters.")]
+    [ValidParent(ParentType = typeof(TransmuteRuminant))]
+    [Description("This group selects specific individuals from the ruminant herd using any number of filters and sorts.")]
     [Version(1, 0, 1, "Added ability to select random proportion of the group to use")]
-    [HelpUri(@"Content/Features/Filters/RuminantFilterGroup.htm")]
+    [HelpUri(@"Content/Features/Filters/Groups/RuminantGroup.htm")]
     public class RuminantGroup : CLEMModel, IFilterGroup
     {
         /// <summary>
@@ -36,6 +37,14 @@ namespace Models.CLEM.Groupings
         /// </summary>
         [JsonIgnore]
         public object CombinedRules { get; set; } = null;
+
+        /// <summary>
+        /// The reason for this filter group
+        /// </summary>
+        [System.ComponentModel.DefaultValueAttribute(0)]
+        [Description("Reason")]
+        [Required]
+        public RuminantStockGroupStyle Reason { get; set; }
 
         /// <summary>
         /// Proportion of group to use

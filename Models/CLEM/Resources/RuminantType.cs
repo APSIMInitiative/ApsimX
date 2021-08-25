@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using Models.CLEM.Reporting;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Resources
 {
@@ -15,8 +16,8 @@ namespace Models.CLEM.Resources
     /// This stores the parameters for a ruminant Type
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyTreeView")]
-    [PresenterName("UserInterface.Presenters.PropertyTreePresenter")]
+    [ViewName("UserInterface.Views.PropertyCategorisedView")]
+    [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantHerd))]
     [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd). It can be used to define different breeds in the sumulation or different herds (e.g. breeding and trade herd) within a breed that will be managed differently.")]
     [Version(1, 0, 4, "Added parameter for overfeeed potential intake multiplier")]
@@ -26,8 +27,11 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantType.htm")]
     public class RuminantType : CLEMResourceTypeBase, IValidatableObject, IResourceType
     {
-        [Link]
-        private ResourcesHolder Resources = null;
+        private RuminantHerd parentHerd = null;
+        private List<AnimalPriceGroup> priceGroups = new List<AnimalPriceGroup>();
+        private List<string> mandatoryAttributes = new List<string>();
+        private readonly List<string> warningsMultipleEntry = new List<string>();
+        private readonly List<string> warningsNotFound = new List<string>();
 
         /// <summary>
         /// Unit type
@@ -57,18 +61,20 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public AnimalPricing PriceList;
 
-        private List<AnimalPriceGroup> priceGroups = new List<AnimalPriceGroup>();
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseResource")]
         private void OnCLEMInitialiseResource(object sender, EventArgs e)
         {
+            parentHerd = this.Parent as RuminantHerd;
+
             // clone pricelist so model can modify if needed and not affect initial parameterisation
             if(this.FindAllChildren<AnimalPricing>().Count() > 0)
             {
-                PriceList = Apsim.Clone(this.FindAllChildren<AnimalPricing>().FirstOrDefault()) as AnimalPricing;
+                PriceList = this.FindAllChildren<AnimalPricing>().FirstOrDefault();
+                // Components are not permanently modifed during simulation so no need for clone: PriceList = Apsim.Clone(this.FindAllChildren<AnimalPricing>().FirstOrDefault()) as AnimalPricing;
+
                 priceGroups = PriceList.FindAllChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().ToList();
             }
 
@@ -77,19 +83,74 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        /// <summary>
         /// Determine if a price schedule has been provided for this breed
         /// </summary>
         /// <returns>boolean</returns>
         public bool PricingAvailable() {  return (PriceList != null); }
 
-        private readonly List<string> WarningsMultipleEntry = new List<string>();
-        private readonly List<string> WarningsNotFound = new List<string>();
+        /// <summary>
+        /// Property indicates whether to include attribute inheritance when mating
+        /// </summary>
+        public bool IncludedAttributeInheritanceWhenMating { get { return (mandatoryAttributes.Count() > 0); } }
+
+        /// <summary>
+        /// Add a attribute name to the list of mandatory attributes for the type
+        /// </summary>
+        /// <param name="name">name of attribute</param>
+        public void AddMandatoryAttribute(string name)
+        {
+            if(!mandatoryAttributes.Contains(name.ToLower()))
+            {
+                mandatoryAttributes.Add(name.ToLower());
+            }
+        }
+
+        /// <summary>
+        /// Determins whether a specified attribute is mandatory
+        /// </summary>
+        /// <param name="name">name of attribute</param>
+        public bool IsMandatoryAttribute(string name)
+        {
+            return mandatoryAttributes.Contains(name);
+        }
+
+        /// <summary>
+        /// Check whether an individual has all mandotory attributes
+        /// </summary>
+        /// <param name="ind">Individual ruminant to check</param>
+        /// <param name="model">Model adding individuals</param>
+        public void CheckMandatoryAttributes(Ruminant ind, IModel model)
+        {
+            foreach (var attribute in mandatoryAttributes)
+            {
+                if(!ind.Attributes.Exists(attribute))
+                {
+                    string warningString = $"No mandatory attribute [{attribute.ToUpper()}] present for individual added by [a={model.Name}]";
+                    if (!Warnings.Exists(warningString))
+                    {
+                        Warnings.Add(warningString);
+                        Summary.WriteWarning(this, warningString);
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// Get value of a specific individual
         /// </summary>
         /// <returns>value</returns>
-        public double ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle)
+        public AnimalPriceGroup ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle)
         {
             if (PricingAvailable())
             {
@@ -99,9 +160,10 @@ namespace Models.CLEM.Resources
 
                 foreach (AnimalPriceGroup item in priceGroups.Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
-                    if (animalList.Filter(item).Count() == 1)
+                    if (animalList.FilterRuminants(item).Count() == 1)
                     {
-                        return item.Value * ((item.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
+                        //priceOfIndividual = item.Value * ((item.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
+                        return item;
                     }
                 }
 
@@ -114,14 +176,14 @@ namespace Models.CLEM.Resources
                     Summary.WriteWarning(this, warningString);
                 }
             }
-            return 0;
+            return null;
         }
 
         /// <summary>
         /// Get value of a specific individual with special requirements check (e.g. breeding sire or draught purchase)
         /// </summary>
         /// <returns>value</returns>
-        public double ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle, RuminantFilterParameters property, string value)
+        public AnimalPriceGroup ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle, RuminantFilterParameters property, string value)
         {
             double price = 0;
             if (PricingAvailable())
@@ -134,7 +196,7 @@ namespace Models.CLEM.Resources
                 AnimalPriceGroup matchCriteria = null;
                 foreach (AnimalPriceGroup item in PriceList.FindAllChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
-                    if (animalList.Filter(item).Count() == 1 && matchIndividual == null)
+                    if (animalList.FilterRuminants(item).Count() == 1 && matchIndividual == null)
                     {
                         matchIndividual = item;
                     }
@@ -149,9 +211,9 @@ namespace Models.CLEM.Resources
                         else
                         {
                             // multiple price entries were found. using first. value = xxx.
-                            if (!WarningsMultipleEntry.Contains(criteria))
+                            if (!warningsMultipleEntry.Contains(criteria))
                             {
-                                WarningsMultipleEntry.Add(criteria);
+                                warningsMultipleEntry.Add(criteria);
                                 Summary.WriteWarning(this, "Multiple specific [" + purchaseStyle.ToString() + "] price entries were found for [r=" + ind.Breed + "] where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")+"\r\nOnly the first entry will be used. Price [" + matchCriteria.Value.ToString("#,##0.##") + "] [" + matchCriteria.PricingStyle.ToString() + "].");
                             }
                         }
@@ -173,18 +235,18 @@ namespace Models.CLEM.Resources
                     {
                         warningString += "\r\nNo alternate price for individuals could be found for the individuals. Add a new [r=AnimalPriceGroup] entry in the [r=AnimalPricing] for [" +ind.Breed+"]";
                     }
-                    if (!WarningsNotFound.Contains(criteria))
+                    if (!warningsNotFound.Contains(criteria))
                     {
-                        WarningsNotFound.Add(criteria);
+                        warningsNotFound.Add(criteria);
                         Summary.WriteWarning(this, warningString);
                     }
                 }
                 else
                 {
-                    price = matchCriteria.Value * ((matchCriteria.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
+                    return matchCriteria;
                 }
             }
-            return price;
+            return null;
         }
 
         #region validation
@@ -275,9 +337,9 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (Resources.RuminantHerd().Herd != null)
+                if (parentHerd != null)
                 {
-                    return Resources.RuminantHerd().Herd.Where(a => a.HerdName == this.Name).Count();
+                    return parentHerd.Herd.Where(a => a.HerdName == this.Name).Count();
                 }
                 return 0;
             }
@@ -290,9 +352,9 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (Resources.RuminantHerd().Herd != null)
+                if (parentHerd != null)
                 {
-                    return Resources.RuminantHerd().Herd.Where(a => a.HerdName == this.Name).Sum(a => a.AdultEquivalent);
+                    return parentHerd.Herd.Where(a => a.HerdName == this.Name).Sum(a => a.AdultEquivalent);
                 }
                 return 0;
             }
@@ -425,7 +487,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Natural weaning age
         /// </summary>
-        [Category("Advanced", "Growth")]
+        [Category("Basic", "Growth")]
         [Description("Natural weaning age (0 to use gestation length)")]
         [Required]
         public double NaturalWeaningAge { get; set; }
@@ -599,21 +661,21 @@ namespace Models.CLEM.Resources
         /// Lactating Potential intake modifier Coefficient A
         /// </summary>
         [Category("Advanced", "Lactation")]
-        [Description("Lactating Potential intake modifier Coefficient A")]
+        [Description("Lactating potential intake modifier coefficient A")]
         [Required, GreaterThanValue(0)]
         public double LactatingPotentialModifierConstantA { get; set; }
         /// <summary>
         /// Lactating Potential intake modifier Coefficient B
         /// </summary>
         [Category("Advanced", "Lactation")]
-        [Description("Lactating Potential intake modifier Coefficient B")]
+        [Description("Lactating potential intake modifier coefficient B")]
         [Required, GreaterThanValue(0)]
         public double LactatingPotentialModifierConstantB { get; set; }
         /// <summary>
         /// Lactating Potential intake modifier Coefficient C
         /// </summary>
         [Category("Advanced", "Lactation")]
-        [Description("Lactating Potential intake modifier Coefficient C")]
+        [Description("Lactating potential intake modifier coefficient C")]
         [Required, GreaterThanValue(0)]
         public double LactatingPotentialModifierConstantC { get; set; }
         /// <summary>

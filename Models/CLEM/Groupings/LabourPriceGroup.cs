@@ -15,12 +15,12 @@ namespace Models.CLEM.Groupings
     /// Contains a group of filters to identify individual labour in a set price group
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourPricing))]
     [Description("This labour price group sets the pay rate for a set group of individuals.")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Filters/LabourPriceGroup.htm")]
+    [HelpUri(@"Content/Features/Filters/Groups/LabourPriceGroup.htm")]
     public class LabourPriceGroup : CLEMModel, IFilterGroup
     {
         /// <summary>

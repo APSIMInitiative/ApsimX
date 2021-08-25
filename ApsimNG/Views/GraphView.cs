@@ -138,6 +138,18 @@
             if (!Utility.Configuration.Settings.DarkTheme)
                 BackColor = Utility.Colour.ToOxy(Color.White);
             mainWidget.Destroyed += _mainWidget_Destroyed;
+
+            
+
+#if NETCOREAPP
+            // Not sure why but Oxyplot fonts are not scaled correctly on .net core on high DPI screens.
+            // On my Surface Pro screen I'm using a 150% scaling which makes the fonts on graphs tiny.
+            // I notice that the GTK3 ScaleFactor has a value of 80% in this situation. If the screen
+            // scaling is 125% or 100% then ScaleFactor is 1.0. It doesn't seem consistent though.
+            // For now I'll just scale all fonts by 2.0. Works on my various screens. Will need some testing.
+            var font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
+            fontSize = font.SizeIsAbsolute ? font.Size : Convert.ToInt32(font.Size / Pango.Scale.PangoScale) * 2;
+#endif
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -206,6 +218,11 @@
         /// Invoked when the user clicks on the graph caption.
         /// </summary>
         public event EventHandler OnCaptionClick;
+
+        /// <summary>
+        /// Invoked when the user clicks on the annotation.
+        /// </summary>
+        public event EventHandler OnAnnotationClick;
 
         /// <summary>
         /// Invoked when the user hovers over a series point.
@@ -418,6 +435,8 @@
 
                 if (colour.ToArgb() == Color.Empty.ToArgb())
                     colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+                else if (colour.R == BackColor.R && colour.G == BackColor.G && colour.B == BackColor.B)
+                    colour = Utility.Colour.FromOxy(ForegroundColour);
                 series.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
 
                 series.ItemsSource = this.PopulateDataPointSeries(x, y, xAxisType, yAxisType);
@@ -795,6 +814,8 @@
                 // Colour
                 if (colour.ToArgb() == Color.Empty.ToArgb())
                     colour = Utility.Configuration.Settings.DarkTheme ? Color.White : Color.Black;
+                else if (colour.R == BackColor.R && colour.G == BackColor.G && colour.B == BackColor.B)
+                    colour = Utility.Colour.FromOxy(ForegroundColour);
 
                 OxyColor oxyColour = Utility.Colour.ToOxy(colour);
                 series.Fill = oxyColour;
@@ -863,6 +884,7 @@
         /// <param name="x">The x position in graph coordinates</param>
         /// <param name="y">The y position in graph coordinates</param>
         /// <param name="leftAlign">Left align the text?</param>
+        /// <param name="topAlign">Top align the text?</param>
         /// <param name="textRotation">Text rotation</param>
         /// <param name="xAxisType">The axis type the x value relates to</param>
         /// <param name="yAxisType">The axis type the y value are relates to</param>
@@ -873,6 +895,7 @@
             object x,
             object y,
             bool leftAlign,
+            bool topAlign,
             double textRotation,
             Models.Axis.AxisType xAxisType,
             Models.Axis.AxisType yAxisType,
@@ -883,9 +906,12 @@
             if (leftAlign)
                 annotation.TextHorizontalAlignment = OxyPlot.HorizontalAlignment.Left;
             else
-                annotation.TextHorizontalAlignment = OxyPlot.HorizontalAlignment.Center;
-            annotation.TextVerticalAlignment = VerticalAlignment.Top;
-            annotation.Stroke = OxyColors.White;
+                annotation.TextHorizontalAlignment = OxyPlot.HorizontalAlignment.Right;
+            if (topAlign)
+                annotation.TextVerticalAlignment = VerticalAlignment.Top;
+            else
+                annotation.TextVerticalAlignment = VerticalAlignment.Bottom;
+            annotation.Stroke = BackColor;
             annotation.Font = Font;
             annotation.TextRotation = textRotation;
 
@@ -907,6 +933,9 @@
             annotation.TextPosition = new DataPoint(xPosition, yPosition);
 
             if (colour == Color.Empty)
+                annotation.TextColor = ForegroundColour;
+            else if (colour.R == BackColor.R && colour.G == BackColor.G && colour.B == BackColor.B)
+                // We never want text to be the same as the background colour.
                 annotation.TextColor = ForegroundColour;
             else
                 annotation.TextColor = Utility.Colour.ToOxy(colour);
@@ -1567,7 +1596,7 @@
         /// </summary>
         /// <param name="axisType">The axis type to retrieve </param>
         /// <returns>The axis</returns>
-        private OxyPlot.Axes.Axis GetAxis(Models.Axis.AxisType axisType)
+        public OxyPlot.Axes.Axis GetAxis(Models.Axis.AxisType axisType)
         {
             int i = this.GetAxisIndex(axisType);
             if (i == -1)
@@ -1665,10 +1694,19 @@
                 }
                 else if (plotArea.Contains(location))
                 {
-                    if (this.OnPlotClick != null)
+                    bool userClickedOnAnnotation = false;
+                    foreach (var annotation in this.plot1.Model.Annotations)
                     {
-                        this.OnPlotClick.Invoke(sender, e);
+                        var result = annotation.HitTest(new HitTestArguments(new ScreenPoint(location.X, location.Y), 10.0));
+                        if (result != null)
+                        {
+                            userClickedOnAnnotation = true;
+                            OnAnnotationClick?.Invoke(this, new EventArgs());
+                        }
                     }
+
+                    if (!userClickedOnAnnotation && this.OnPlotClick != null)
+                        this.OnPlotClick.Invoke(sender, e);
                 }
                 else
                 {

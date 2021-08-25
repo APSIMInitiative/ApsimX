@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     /// This stores the initialisation parameters for land
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Land))]
     [Description("This resource represents a land type (e.g. Clay region.) This is not necessarily a paddock, but Bunded and interbund land areas must be separated into individual land types.")]
@@ -71,6 +71,17 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         public double UsableArea { get { return Math.Round(this.LandArea * ProportionOfTotalArea, 5); } }
+
+        /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
+            }
+        }
 
         /// <summary>
         /// List of currently allocated land
@@ -146,7 +157,7 @@ namespace Models.CLEM.Resources
             if (this.areaAvailable + addAmount > this.UsableArea)
             {
                 amountAdded = this.UsableArea - this.areaAvailable;
-                string message = "Tried to add more available land to [r=" + this.Name + "] than exists.";
+                string message = $"Tried to add more available land to [r={this.Name}] than exists.";
                 Summary.WriteWarning(this, message);
                 this.areaAvailable = this.UsableArea;
             }
@@ -156,7 +167,8 @@ namespace Models.CLEM.Resources
             }
             ResourceTransaction details = new ResourceTransaction
             {
-                Gain = amountAdded,
+                TransactionType = TransactionType.Gain,
+                Amount = amountAdded,
                 Activity = activity,
                 RelatesToResource = relatesToResource,
                 Category = category,
@@ -215,7 +227,8 @@ namespace Models.CLEM.Resources
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,
-                Loss = amountRemoved,
+                TransactionType = TransactionType.Loss,
+                Amount = amountRemoved,
                 Activity = request.ActivityModel,
                 Category = request.Category,
                 RelatesToResource = request.RelatesToResource

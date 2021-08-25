@@ -12,7 +12,7 @@ namespace Models.PMF
     /// Process Retranslocation of BiomassType using Storage First and then Metabolic
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IOrgan))]
     public class RetranslocateNonStructural : Model, IRetranslocateMethod, ICustomDocumentation
@@ -45,7 +45,7 @@ namespace Models.PMF
             var genOrgan = organ as GenericOrgan;
 
             // Retranslocation
-            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, genOrgan.StartLive.StorageN + genOrgan.StartLive.MetabolicN - genOrgan.NSupply.Retranslocation))
+            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, genOrgan.StartLive.StorageN + genOrgan.StartLive.MetabolicN - genOrgan.NSupply.Reallocation))
                 throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
 
             double storageRetranslocation = Math.Min(genOrgan.Live.StorageN, nitrogen.Retranslocation);

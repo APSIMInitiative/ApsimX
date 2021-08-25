@@ -1,4 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
+using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -14,19 +16,19 @@ namespace Models.CLEM.Groupings
     /// Individual filter term for ruminant group of filters to identify individual ruminants
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
     [ValidParent(ParentType = typeof(RuminantFeedGroup))]
     [ValidParent(ParentType = typeof(RuminantGroup))]
-    [ValidParent(ParentType = typeof(RuminantDestockGroup))]
     [ValidParent(ParentType = typeof(AnimalPriceGroup))]
+    [ValidParent(ParentType = typeof(RuminantActivityGroup))]
     [Description("This ruminant filter rule is used to define specific individuals from the current ruminant herd. Multiple filters are additive.")]
     [Version(1, 0, 3, "Now uses IsState() terminology for all state filter properties")]
     [Version(1, 0, 2, "Supports blank entry for Location to represent 'Not specified - general yards'")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/RuminantFilter.htm")]
-    public class RuminantFilter: CLEMModel, IValidatableObject
+    public class RuminantFilter: CLEMModel, IValidatableObject, IFilter
     {
         /// <summary>
         /// Name of parameter to filter by
@@ -81,6 +83,47 @@ namespace Models.CLEM.Groupings
             }
         }
         private string _value;
+
+        /// <summary>
+        /// The gender the filter applies to (Male, Female or Either)
+        /// </summary>
+        public string Gender
+        {
+            get
+            {
+                switch (parameter)
+                {
+                    case RuminantFilterParameters.Gender:
+                        if(Value.ToUpper() == "MALE" & Operator == FilterOperators.Equal)
+                        {
+                            return "Male";
+                        }
+                        if (Value.ToUpper() == "FEMALE" & Operator == FilterOperators.NotEqual)
+                        {
+                            return "Male";
+                        }
+                        return "Female";
+
+                    case RuminantFilterParameters.IsDraught:
+                    case RuminantFilterParameters.IsSire:
+                    case RuminantFilterParameters.IsCastrate:
+                        return "Male";
+
+                    case RuminantFilterParameters.IsBreeder:
+                    case RuminantFilterParameters.IsPregnant:
+                    case RuminantFilterParameters.IsLactating:
+                    case RuminantFilterParameters.IsPreBreeder:
+                    case RuminantFilterParameters.MonthsSinceLastBirth:
+                        return "Female";
+
+                    default:
+                        return "Either";
+                }
+            }
+        }
+
+        /// <inheritdoc/>
+        public string ParameterName => Parameter.ToString();
 
         /// <summary>
         /// Convert filter to string
@@ -152,11 +195,11 @@ namespace Models.CLEM.Groupings
             string html = "";
             if (!this.ValidParent())
             {
-                html = "<div class=\"errorlink\">Invalid Parent. Ruminant Group type required.</div>";
+                html = "<div class=\"errorlink\">Invalid Parent. RuminantGroup required.</div>";
             }
             if (this.Value == null)
             {
-                html += "<div class=\"errorlink\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">[FILTER NOT DEFINED]</div>";
+                html += "<div class=\"errorlink\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">FILTER NOT DEFINED</div>";
             }
             else
             {
@@ -248,11 +291,15 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Determines if within breeding ages
         /// </summary>
+        IsAbleToBreed = 25, //15
+        /// <summary>
+        /// Determines if within breeding ages
+        /// </summary>
         IsBreeder = 17,
         /// <summary>
         /// Identified as a replacement breeder growing up
         /// </summary>
-        ReplacementBreeder = 18,
+        ReplacementBreeder = 28, //18
         /// <summary>
         /// Is female a pre-breeder (weaned, less than set age, up to first birth)
         /// </summary>
@@ -276,7 +323,7 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Weight as proportion of High weight achieved
         /// </summary>
-        ProportionOfHighWeight = 6,
+        ProportionOfHighWeight = 26,  //6
         /// <summary>
         /// Weight as proportion of Standard Reference Weight
         /// </summary>

@@ -16,7 +16,7 @@ namespace Models.CLEM.Activities
     /// Defines the labour required for an activity
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
     [ValidParent(ParentType = typeof(CropActivityTask))]
@@ -25,7 +25,6 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(RuminantActivityFeed))]
     [ValidParent(ParentType = typeof(RuminantActivityHerdCost))]
     [ValidParent(ParentType = typeof(RuminantActivityMilking))]
-    [ValidParent(ParentType = typeof(RuminantActivitySellDryBreeders))]
     [ValidParent(ParentType = typeof(RuminantActivityWean))]
     [ValidParent(ParentType = typeof(ManureActivityCollectAll))]
     [ValidParent(ParentType = typeof(ManureActivityCollectPaddock))]
@@ -125,35 +124,27 @@ namespace Models.CLEM.Activities
             // ensure labour resource added
             Labour lab = Resources.GetResourceGroupByType(typeof(Labour)) as Labour;
             if (lab == null)
-            {
                 Summary.WriteWarning(this, "[a=" + this.Parent.Name + "][f=" + this.Name + "] No labour resorces in simulation. Labour requirement will be ignored.");
-            }
             else
-            {
                 if (lab.Children.Count <= 0)
-                {
                     Summary.WriteWarning(this, "[a=" + this.Parent.Name + "][f=" + this.Name + "] No labour resorce types are provided in the labour resource. Labour requirement will be ignored.");
-                }
-            }
 
             // check filter groups present
             if (this.Children.OfType<LabourFilterGroup>().Count() == 0)
-            {
                 Summary.WriteWarning(this, "No LabourFilterGroup is supplied with the LabourRequirement for [a=" + this.Parent.Name + "]. No labour will be used for this activity.");
-            }
 
             // check for individual nesting.
-            foreach (LabourFilterGroup fg in this.Children.OfType<LabourFilterGroup>())
+            foreach (LabourFilterGroup fg in this.FindAllChildren<LabourFilterGroup>())
             {
                 LabourFilterGroup currentfg = fg;
-                while (currentfg != null && currentfg.Children.OfType<LabourFilterGroup>().Count() >= 1)
+                while (currentfg != null && currentfg.FindAllChildren<LabourFilterGroup>().Any())
                 {
-                    if (currentfg.Children.OfType<LabourFilterGroup>().Count() > 1)
+                    if (currentfg.FindAllChildren<LabourFilterGroup>().Count() > 1)
                     {
                         string[] memberNames = new string[] { "Labour requirement" };
                         results.Add(new ValidationResult(String.Format("Invalid nested labour filter groups in [f={0}] for [a={1}]. Only one nested filter group is permitted each branch. Additional filtering will be ignored.", currentfg.Name, this.Name), memberNames));
                     }
-                    currentfg = currentfg.Children.OfType<LabourFilterGroup>().FirstOrDefault();
+                    currentfg = currentfg.FindAllChildren<LabourFilterGroup>().FirstOrDefault();
                 }
             }
 
@@ -163,11 +154,7 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -178,51 +165,36 @@ namespace Models.CLEM.Activities
                 if (UnitType != LabourUnitType.Fixed)
                 {
                     if (UnitSize == 1)
-                    {
                         htmlWriter.Write(" for each ");
-                    }
                     else
-                    {
                         htmlWriter.Write(" for every <span class=\"setvalue\">" + UnitSize.ToString("#,##0.##") + "</span>");
-                    }
+
                     htmlWriter.Write("<span class=\"setvalue\">" + UnitType2HTML() + "</span>");
                     if (WholeUnitBlocks)
-                    {
                         htmlWriter.Write(" and will be supplied in blocks");
-                    }
                 }
                 htmlWriter.Write("</div>");
 
                 if (MinimumPerPerson > 0)
-                {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">Labour will not be supplied if less than <span class=\"setvalue\">" + MinimumPerPerson.ToString() + "</span> day" + ((MinimumPerPerson == 1) ? "" : "s") + " is required</div>");
-                }
+
                 if (MaximumPerPerson > 0 && MaximumPerPerson < 30)
-                {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">No individual can provide more than <span class=\"setvalue\">" + MaximumPerPerson.ToString() + "</span> days</div>");
-                }
+
                 if (ApplyToAll)
-                {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">All people matching the below criteria (first level) will perform this task. (e.g. all children)</div>");
-                }
 
                 return htmlWriter.ToString(); 
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             return "\r\n</div>";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())

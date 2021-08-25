@@ -48,8 +48,6 @@ namespace UnitTests
 
         public int GetCheckpointID(string checkpointName) { return 1; }
 
-        public int GetSimulationID(string simulationName) { return 1; }
-
         public string Units(string tableName, string columnHeading)
         {
             int index = headings.IndexOf(columnHeading);
@@ -61,15 +59,15 @@ namespace UnitTests
 
         public DataTable GetDataUsingSql(string sql) { throw new System.NotImplementedException(); }
 
-        public DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0, string orderBy = null, bool distinct = false)
+        public DataTable GetData(string tableName, string checkpointName = null, IEnumerable<string> simulationNames = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0, IEnumerable<string> orderBy = null, bool distinct = false)
         {
             string rowFilter = null;
             if (checkpointName != null)
                 rowFilter += "CheckpointName = '" + checkpointName + "'";
-            if (simulationName != null)
+            if (simulationNames != null && simulationNames.Any())
             {
                 if (rowFilter != null) rowFilter += " AND ";
-                rowFilter += "SimulationName = '" + simulationName + "'";
+                rowFilter += $"SimulationName in ({simulationNames.Enclose("'","'").Join(",")})";
             }
             if (filter != null)
             {
@@ -170,6 +168,28 @@ namespace UnitTests
         {
             return true;
         }
-    }
 
+        public bool TryGetSimulationID(string simulationName, out int simulationID)
+        {
+            simulationID = 0;
+            return true;
+        }
+
+        public IEnumerable<int> ToSimulationIDs(IEnumerable<string> simulationNames)
+        {
+            var ids = new List<int>();
+
+            foreach (var name in simulationNames)
+            {
+                string id = name.Replace("Sim", "");
+                ids.Add(Convert.ToInt32(id));
+            }
+            return ids;
+        }
+		
+		public void ExecuteSql(string sql)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

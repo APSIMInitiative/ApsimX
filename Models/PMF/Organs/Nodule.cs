@@ -16,7 +16,7 @@ namespace Models.PMF.Organs
     ///  N fixation supply and related costs.  It also calculates the growth, senescence and detachment of nodules.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class Nodule : Model, IOrgan, IArbitration, ICustomDocumentation, IOrganDamage
     {
@@ -253,8 +253,6 @@ namespace Models.PMF.Organs
 
         /// <summary>The dry matter demand</summary>
         public BiomassPoolType DMDemand { get; set; }
-        /// <summary>The dry matter demand</summary>
-        public BiomassPoolType DMDemandPriorityFactor { get; set; }
 
         /// <summary>Structural nitrogen demand</summary>
         public BiomassPoolType NDemand { get; set; }
@@ -270,7 +268,7 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
-        public bool IsAboveGround { get { return true; } }
+        public bool IsAboveGround { get { return false; } }
 
         /// <summary>The live biomass</summary>
         [JsonIgnore]
@@ -458,10 +456,6 @@ namespace Models.PMF.Organs
             Dead = new Biomass();
             startLive = new Biomass();
             DMDemand = new BiomassPoolType();
-            DMDemandPriorityFactor = new BiomassPoolType();
-            DMDemandPriorityFactor.Structural = 1.0;
-            DMDemandPriorityFactor.Metabolic = 1.0;
-            DMDemandPriorityFactor.Storage = 1.0;
             NDemand = new BiomassPoolType();
             DMSupply = new BiomassSupplyType();
             NSupply = new BiomassSupplyType();

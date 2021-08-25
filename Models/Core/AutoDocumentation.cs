@@ -34,7 +34,7 @@
                 if (unitsAttribute != null)
                     return unitsAttribute.ToString();
             }
-            
+
             PropertyInfo property = model.GetType().GetProperty(fieldName, BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.IgnoreCase);
             if (property != null)
             {
@@ -83,7 +83,7 @@
         {
             if (model == null)
                 return;
-            if (force || (model.IncludeInDocumentation && model.Enabled) )
+            if (force || (model.IncludeInDocumentation && model.Enabled))
             {
                 if (model is ICustomDocumentation)
                     (model as ICustomDocumentation).Document(tags, headingLevel, indent);
@@ -201,7 +201,7 @@
             if (rawSummary != null)
             {
                 // Need to fix multiline comments - remove newlines and consecutive spaces.
-                return Regex.Replace(rawSummary, @"\n\s+", " ");
+                return Regex.Replace(rawSummary, @"\n\s+", "\n");
             }
             return null;
         }
@@ -258,7 +258,7 @@
             {
                 // Need to fix multiline remarks - trim newlines and consecutive spaces.
                 string remarks = summaryNode.InnerXml.Trim();
-                return Regex.Replace(remarks, @"\n\s+", " ");
+                return Regex.Replace(remarks, @"\n\s+", "\n");
             }
             return null;
         }
@@ -273,7 +273,7 @@
         /// <param name="indent">The current indent level</param>
         /// <param name="doNotTrim">If true, don't trim the lines</param>
         /// <param name="documentAllChildren">Ensure all children are documented?</param>
-        public static void ParseTextForTags(string stringToParse, IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren, bool doNotTrim=false)
+        public static void ParseTextForTags(string stringToParse, IModel model, List<ITag> tags, int headingLevel, int indent, bool documentAllChildren, bool doNotTrim = false)
         {
             if (string.IsNullOrEmpty(stringToParse) || model == null)
                 return;
@@ -313,78 +313,80 @@
                     }
                 }
 
-                // Remove expression macros and replace with values.
-                line = RemoveMacros(model, line);
-
-                string heading;
-                int thisHeadingLevel;
-                if (GetHeadingFromLine(line, out heading, out thisHeadingLevel))
-                {
-                    StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
-                    tags.Add(new Heading(heading, thisHeadingLevel));
-                }
-                else if (line.StartsWith("[Document "))
-                {
-                    StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
-
-                    // Find child
-                    string childName = line.Replace("[Document ", "").Replace("]", "");
-                    IModel child = model.FindByPath(childName)?.Value as IModel;
-                    if (child == null)
-                        paragraphSoFar += "<b>Unknown child name: " + childName + " </b>\r\n";
-                    else
-                    {
-                        DocumentModel(child, tags, targetHeadingLevel + 1, indent);
-                        childrenDocumented.Add(child);
-                    }
-                }
-                else if (line.StartsWith("[DocumentType "))
-                {
-                    StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
-
-                    // Find children
-                    string childTypeName = line.Replace("[DocumentType ", "").Replace("]", "");
-                    Type childType = ReflectionUtilities.GetTypeFromUnqualifiedName(childTypeName);
-                    foreach (IModel child in model.FindAllChildren().Where(c => childType.IsAssignableFrom(c.GetType())))
-                    {
-                        DocumentModel(child, tags, targetHeadingLevel + 1, indent);
-                        childrenDocumented.Add(child);
-                    }
-                }
-                else if (line == "[DocumentView]")
-                    tags.Add(new ModelView(model));
-                else if (line.StartsWith("[DocumentChart "))
-                {
-                    StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
-                    var words = line.Replace("[DocumentChart ", "").Split(',');
-                    if (words.Length == 4)
-                    {
-                        var xypairs = model.FindByPath(words[0])?.Value as XYPairs;
-                        if (xypairs != null)
-                        {
-                            childrenDocumented.Add(xypairs);
-                            var xName = words[2];
-                            var yName = words[3].Replace("]", "");
-                            tags.Add(new GraphAndTable(xypairs, words[1], xName, yName, indent));
-                        }
-                    }
-                }
-                else if (line.StartsWith("[DocumentMathFunction"))
+                if (line.StartsWith("[DocumentMathFunction"))
                 {
                     StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
                     var operatorChar = line["[DocumentMathFunction".Length + 1];
                     childrenDocumented.AddRange(DocumentMathFunction(model, operatorChar, tags, headingLevel, indent));
                 }
-                else if (line.StartsWith("[DontDocument"))
-                {
-                    string childName = line.Replace("[DontDocument ", "").Replace("]", "");
-                    IModel child = model.FindByPath(childName)?.Value as IModel;
-                    if (childName != null)
-                        childrenDocumented.Add(child);
-                }
                 else
-                    paragraphSoFar += line + "\r\n";
+                {
+                    // Remove expression macros and replace with values.
+                    line = RemoveMacros(model, line);
 
+                    string heading;
+                    int thisHeadingLevel;
+                    if (GetHeadingFromLine(line, out heading, out thisHeadingLevel))
+                    {
+                        StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
+                        tags.Add(new Heading(heading, thisHeadingLevel));
+                    }
+                    else if (line.StartsWith("[Document "))
+                    {
+                        StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
+
+                        // Find child
+                        string childName = line.Replace("[Document ", "").Replace("]", "");
+                        IModel child = model.FindByPath(childName)?.Value as IModel;
+                        if (child == null)
+                            paragraphSoFar += "<b>Unknown child name: " + childName + " </b>\r\n";
+                        else
+                        {
+                            DocumentModel(child, tags, targetHeadingLevel + 1, indent);
+                            childrenDocumented.Add(child);
+                        }
+                    }
+                    else if (line.StartsWith("[DocumentType "))
+                    {
+                        StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
+
+                        // Find children
+                        string childTypeName = line.Replace("[DocumentType ", "").Replace("]", "");
+                        Type childType = ReflectionUtilities.GetTypeFromUnqualifiedName(childTypeName);
+                        foreach (IModel child in model.FindAllChildren().Where(c => childType.IsAssignableFrom(c.GetType())))
+                        {
+                            DocumentModel(child, tags, targetHeadingLevel + 1, indent);
+                            childrenDocumented.Add(child);
+                        }
+                    }
+                    else if (line == "[DocumentView]")
+                        tags.Add(new ModelView(model));
+                    else if (line.StartsWith("[DocumentChart "))
+                    {
+                        StoreParagraphSoFarIntoTags(tags, indent, ref paragraphSoFar);
+                        var words = line.Replace("[DocumentChart ", "").Split(',');
+                        if (words.Length == 4)
+                        {
+                            var xypairs = model.FindByPath(words[0])?.Value as XYPairs;
+                            if (xypairs != null)
+                            {
+                                childrenDocumented.Add(xypairs);
+                                var xName = words[2];
+                                var yName = words[3].Replace("]", "");
+                                tags.Add(new GraphAndTable(xypairs, words[1], xName, yName, indent));
+                            }
+                        }
+                    }
+                    else if (line.StartsWith("[DontDocument"))
+                    {
+                        string childName = line.Replace("[DontDocument ", "").Replace("]", "");
+                        IModel child = model.FindByPath(childName)?.Value as IModel;
+                        if (childName != null)
+                            childrenDocumented.Add(child);
+                    }
+                    else
+                        paragraphSoFar += line + "\r\n";
+                }
                 line = reader.ReadLine();
             }
 
@@ -418,8 +420,8 @@
                         if (value != null)
                         {
                             if (value is Array)
-                                value = StringUtilities.Build(value as Array, Environment.NewLine);
-                            
+                                value = StringUtilities.Build(value as Array, $"{Environment.NewLine}{Environment.NewLine}");
+
                             line = line.Remove(posMacro, posEndMacro - posMacro + 1);
                             line = line.Insert(posMacro, value.ToString());
                         }
@@ -429,7 +431,9 @@
                     }
                 }
 
-                if (posMacro < line.Length)
+                if (line == "")
+                    posMacro = -1;
+                else if (posMacro < line.Length)
                     posMacro = line.IndexOf('[', posMacro + 1);
 
                 if (string.IsNullOrEmpty(line))
@@ -479,7 +483,7 @@
 
         private static void StoreParagraphSoFarIntoTags(List<ITag> tags, int indent, ref string paragraphSoFar)
         {
-            if (paragraphSoFar.Trim() != string.Empty) 
+            if (paragraphSoFar.Trim() != string.Empty)
                 tags.Add(new Paragraph(paragraphSoFar, indent));
             paragraphSoFar = string.Empty;
         }
@@ -536,7 +540,7 @@
             if (model == null)
                 return;
             foreach (IModel child in model.Children)
-                if (child.IncludeInDocumentation && 
+                if (child.IncludeInDocumentation &&
                     (childTypesToExclude == null || Array.IndexOf(childTypesToExclude, child.GetType()) == -1))
                     DocumentModel(child, tags, headingLevel + 1, indent);
         }
@@ -792,5 +796,21 @@
             }
         }
 
+        /// <summary> creates a list of child function names </summary>
+        public static string ChildFunctionList(IEnumerable<IFunction> ChildFunctions)
+        {
+            string listofKids = "";
+            int count = 0;
+            foreach (IModel F in ChildFunctions)
+            {
+                count += 1;
+                listofKids += ("*" + F.Name + "*");
+                if (count == ChildFunctions.Count() - 1)
+                    listofKids += " and ";
+                else if (count < ChildFunctions.Count() - 1)
+                    listofKids += ", ";
+            }
+            return listofKids;
+        }
     }
 }

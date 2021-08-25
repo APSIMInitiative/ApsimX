@@ -40,6 +40,6 @@ namespace UserInterface.Interfaces
         /// </summary>
         void HideZoomControls();
 
-        IGridView Grid { get; }
+        IPropertyView PropertiesView { get; }
     }
 }

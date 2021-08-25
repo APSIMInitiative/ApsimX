@@ -349,10 +349,10 @@ namespace Models
     ///
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Zone))]
-    public class Sugarcane : Model, IPlant, ICanopy, IUptake
+    public class Sugarcane : ModelCollectionFromResource, IPlant, ICanopy, IUptake
     {
 
         #region Canopy interface
@@ -2355,6 +2355,7 @@ namespace Models
             g_dlt_tt = 0.0;
 
             g_sw_demand = 0.0;
+            WaterDemand = 0;
             //      dm_graze = 0.0;
             //      n_graze = 0.0;
 

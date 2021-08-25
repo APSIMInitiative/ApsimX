@@ -29,7 +29,7 @@
     /// The effect of growth rate on transpiration is captured by the Fractional Growth Rate (FRGR) function, which is passed to the MicroClimate model.
     /// </remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
     public class SimpleLeaf : Model, ICanopy, IHasWaterDemand,  IOrgan, IArbitration, ICustomDocumentation, IOrganDamage
@@ -177,14 +177,14 @@
         /// </summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemand dmDemands = null;
+        private BiomassDemandAndPriority dmDemands = null;
 
         /// <summary>
         /// The N demand function.
         /// </summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemand nDemands = null;
+        private BiomassDemandAndPriority nDemands = null;
 
         /// <summary>
         /// The initial biomass dry matter weight.
@@ -345,9 +345,6 @@
         /// The dry matter supply.
         /// </summary>
         public BiomassSupplyType DMSupply { get; set; }
-
-        /// <summary>The dry matter demand</summary>
-        public BiomassPoolType DMDemandPriorityFactor { get; set; }
 
         /// <summary>
         /// The nitrogen supply.
@@ -670,10 +667,30 @@
 
                 double totalRadn = 0;
                 for (int i = 0; i < LightProfile.Length; i++)
-                    totalRadn += LightProfile[i].amount;
+                    totalRadn += LightProfile[i].AmountOnGreen;
                 return totalRadn;
             }
         }
+
+        /// <summary>
+        /// Radiation intercepted by the dead components of the canopy.
+        /// </summary>
+        [Units("MJ/m^2/day")]
+        public double RadiationInterceptedByDead
+        {
+            get
+            {
+                if (LightProfile == null)
+                    return 0;
+
+                double totalRadn = 0;
+                for (int i = 0; i < LightProfile.Length; i++)
+                    totalRadn += LightProfile[i].AmountOnDead;
+                return totalRadn;
+            }
+        }
+
+
 
         /// <summary>
         /// Daily maximum stomatal conductance.
@@ -708,6 +725,13 @@
             Height = 0;
             LAI = 0;
             leafInitialised = false;
+            GrowthRespiration = 0;
+            FRGR = 0;
+            LightProfile = null;
+            PotentialEP = 0;
+            LAIDead = 0;
+            WaterDemand = 0;
+            WaterAllocation = 0;
         }
 
         /// <summary>
@@ -806,6 +830,9 @@
                 DMDemand.Structural = (dmDemands.Structural.Value() / dmConversionEfficiency.Value() + remobilisationCost.Value());
                 DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dmConversionEfficiency.Value());
                 DMDemand.Metabolic = 0;
+                DMDemand.QStructuralPriority = dmDemands.QStructuralPriority.Value();
+                DMDemand.QStoragePriority = dmDemands.QStoragePriority.Value();
+                DMDemand.QMetabolicPriority = dmDemands.QMetabolicPriority.Value();
             }
             else
             {
@@ -825,6 +852,9 @@
             NDemand.Structural = nDemands.Structural.Value();
             NDemand.Metabolic = nDemands.Metabolic.Value();
             NDemand.Storage = nDemands.Storage.Value();
+            NDemand.QStructuralPriority = nDemands.QStructuralPriority.Value();
+            NDemand.QStoragePriority = nDemands.QStoragePriority.Value();
+            NDemand.QMetabolicPriority = nDemands.QMetabolicPriority.Value();
         }
 
         /// <summary>
@@ -835,14 +865,8 @@
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Live = new Biomass();
-            Dead = new Biomass();
             startLive = new Biomass();
             DMDemand = new BiomassPoolType();
-            DMDemandPriorityFactor = new BiomassPoolType();
-            DMDemandPriorityFactor.Structural = 1.0;
-            DMDemandPriorityFactor.Metabolic = 1.0;
-            DMDemandPriorityFactor.Storage = 1.0;
             NDemand = new BiomassPoolType();
             DMSupply = new BiomassSupplyType();
             NSupply = new BiomassSupplyType();
@@ -854,6 +878,7 @@
             Height = 0.0;
             LAI = 0.0;
             leafInitialised = false;
+            Clear();
         }
 
         /// <summary>
@@ -1061,7 +1086,7 @@
             Allocated.MetabolicN += nitrogen.Metabolic;
 
             // Retranslocation
-            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN + startLive.MetabolicN - NSupply.Retranslocation))
+            if (MathUtilities.IsGreaterThan(nitrogen.Retranslocation, startLive.StorageN + startLive.MetabolicN - nitrogen.Reallocation))
                 throw new Exception("N retranslocation exceeds storage + metabolic nitrogen in organ: " + Name);
             double storageNRetranslocation = Math.Min(nitrogen.Retranslocation, startLive.StorageN * (1 - senescenceRate.Value()) * nRetranslocationFactor.Value());
             Live.StorageN -= storageNRetranslocation;

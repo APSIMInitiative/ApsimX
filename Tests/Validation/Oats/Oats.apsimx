@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 126,
+  "Version": 128,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -106,7 +106,7 @@
         },
         {
           "$type": "Models.Manager, Models",
-          "Code": "using Models.PMF.Phen;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Soils.Nutrients;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Oats;\r\n        [Link(Type = LinkType.Path, Path = \"[Oats].Phenology\")]\r\n        private Phenology phenology;\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (phenology.CurrentPhase.Name == \"Maturing\")\r\n            {\r\n                Oats.Harvest();\r\n                Oats.EndCrop();\r\n            }\r\n        }\r\n    }\r\n}\r\n       \r\n",
+          "Code": "using Models.PMF.Phen;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Soils.Nutrients;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] private Plant Oats;\n        [Link(Type = LinkType.Path, Path = \"[Oats].Phenology\")]\n        private Phenology phenology;\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (phenology.CurrentPhase.Name == \"Maturing\")\n            {\n                Oats.Harvest();\n                Oats.EndCrop();\n            }\n        }\n    }\n}\n       \n",
           "Parameters": [],
           "Name": "Harvesting",
           "IncludeInDocumentation": false,
@@ -1010,7 +1010,17 @@
                                 }
                               ],
                               "Name": "Irrig",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "Added an Irrigation on 30 Oct after looking at data and seeing a Panicle.",
+                                  "Name": "Memo",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -1157,15 +1167,6 @@
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "Added an Irrigation on 30 Oct after looking at data and seeing a Panicle.",
-                              "Name": "Memo",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -2167,7 +2168,7 @@
                               "NO3N": [
                                 202.213,
                                 103.567,
-                                4.6703333333333283,
+                                4.670333333333328,
                                 2.6026666666666523,
                                 1.5620000000000194,
                                 1.5620000000000194
@@ -2447,8 +2448,8 @@
                               "FOM": [
                                 427.52753771689794,
                                 316.72018978386836,
-                                142.31155479059541,
-                                82.931809846844757,
+                                142.3115547905954,
+                                82.93180984684476,
                                 30.508907861793567
                               ],
                               "CarbonMetadata": null,
@@ -2586,8 +2587,8 @@
                         },
                         {
                           "$type": "Models.Fertiliser, Models",
+                          "ResourceName": "Fertiliser",
                           "Name": "Fertiliser",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -2624,7 +2625,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather Met;\r\n        [Link] Clock Clock;\r\n    \r\n        [Description(\"Start Date\")]\r\n        public DateTime StartDate { get; set; }\r\n        \r\n        [Description(\"End Date\")]\r\n        public DateTime EndDate { get; set; }\r\n \r\n    \r\n        [EventSubscribe(\"PreparingNewWeatherData\")]\r\n        private void OnPreparingNewWeatherData(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))\r\n                Met.Rain = 0;        \r\n        }\r\n    }\r\n}\r\n",
+                          "Code": "using Models.Climate;\nusing System;\nusing Models.Core;\nusing APSIM.Shared.Utilities;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Weather Met;\n        [Link] Clock Clock;\n    \n        [Description(\"Start Date\")]\n        public DateTime StartDate { get; set; }\n        \n        [Description(\"End Date\")]\n        public DateTime EndDate { get; set; }\n \n    \n        [EventSubscribe(\"PreparingNewWeatherData\")]\n        private void OnPreparingNewWeatherData(object sender, EventArgs e)\n        {\n            if ((Clock.Today.Date >= StartDate) && (Clock.Today.Date <= EndDate))\n                Met.Rain = 0;        \n        }\n    }\n}\n",
                           "Parameters": [
                             {
                               "Key": "StartDate",
@@ -2775,7 +2776,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Oats;\r\n        [Link] Zone zone;\r\n                    \r\n        [XmlIgnore] public bool InitialDay { get; set; }\r\n        \r\n        [XmlIgnore] public double LeafExpandedPosition { get; set; }\r\n        [XmlIgnore] public double LeafAppearedPosition { get; set; }\r\n        [XmlIgnore] public double ExpandedLeafNoYesterday { get; set; }\r\n        [XmlIgnore] public double AppearedLeafNoYesterday { get; set; }\r\n        [XmlIgnore] public double MostRecentlyExpandedLeafSize { get; set; }\r\n        [XmlIgnore] public double MostRecentlyAppearedLeafMaxSize { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            InitialDay = true;\r\n            LeafExpandedPosition = 0;\r\n            LeafAppearedPosition = 0;\r\n            ExpandedLeafNoYesterday = 0;\r\n            AppearedLeafNoYesterday = 0;\r\n            MostRecentlyExpandedLeafSize = 0;\r\n            MostRecentlyAppearedLeafMaxSize = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            ExpandedLeafNoYesterday = Convert.ToDouble(zone.Get(\"Oats.Leaf.ExpandedCohortNo\"));\r\n            AppearedLeafNoYesterday = Convert.ToDouble(zone.Get(\"Oats.Leaf.AppearedCohortNo\"));\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if (Convert.ToDouble(zone.Get(\"Oats.Leaf.ExpandedCohortNo\")) > ExpandedLeafNoYesterday)\r\n            {\r\n                LeafExpandedPosition = Convert.ToDouble(zone.Get(\"Oats.Leaf.ExpandedCohortNo\"));\r\n                MostRecentlyExpandedLeafSize = (double)zone.Get(\"Oats.Leaf.CohortSize[\" + (int)LeafExpandedPosition + \"]\");\r\n            }\r\n            \r\n            if (Convert.ToDouble(zone.Get(\"Oats.Leaf.AppearedCohortNo\")) > AppearedLeafNoYesterday)\r\n            {\r\n                LeafAppearedPosition = Convert.ToDouble(zone.Get(\"Oats.Leaf.AppearedCohortNo\"));\r\n                MostRecentlyAppearedLeafMaxSize = (double)zone.Get(\"Oats.Leaf.CohortParameters.MaxArea.Value()\");\r\n            }\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
+                              "Code": "using Models.Soils.Nutrients;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.Soils.Nutrients;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] Clock Clock;\n        [Link] Plant Oats;\n        [Link] Zone zone;\n                    \n        [XmlIgnore] public bool InitialDay { get; set; }\n        \n        [XmlIgnore] public double LeafExpandedPosition { get; set; }\n        [XmlIgnore] public double LeafAppearedPosition { get; set; }\n        [XmlIgnore] public double ExpandedLeafNoYesterday { get; set; }\n        [XmlIgnore] public double AppearedLeafNoYesterday { get; set; }\n        [XmlIgnore] public double MostRecentlyExpandedLeafSize { get; set; }\n        [XmlIgnore] public double MostRecentlyAppearedLeafMaxSize { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            InitialDay = true;\n            LeafExpandedPosition = 0;\n            LeafAppearedPosition = 0;\n            ExpandedLeafNoYesterday = 0;\n            AppearedLeafNoYesterday = 0;\n            MostRecentlyExpandedLeafSize = 0;\n            MostRecentlyAppearedLeafMaxSize = 0;\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            ExpandedLeafNoYesterday = Convert.ToDouble(zone.Get(\"Oats.Leaf.ExpandedCohortNo\"));\n            AppearedLeafNoYesterday = Convert.ToDouble(zone.Get(\"Oats.Leaf.AppearedCohortNo\"));\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            if (Convert.ToDouble(zone.Get(\"Oats.Leaf.ExpandedCohortNo\")) > ExpandedLeafNoYesterday)\n            {\n                LeafExpandedPosition = Convert.ToDouble(zone.Get(\"Oats.Leaf.ExpandedCohortNo\"));\n                MostRecentlyExpandedLeafSize = (double)zone.Get(\"Oats.Leaf.CohortSize[\" + (int)LeafExpandedPosition + \"]\");\n            }\n            \n            if (Convert.ToDouble(zone.Get(\"Oats.Leaf.AppearedCohortNo\")) > AppearedLeafNoYesterday)\n            {\n                LeafAppearedPosition = Convert.ToDouble(zone.Get(\"Oats.Leaf.AppearedCohortNo\"));\n                MostRecentlyAppearedLeafMaxSize = (double)zone.Get(\"Oats.Leaf.CohortParameters.MaxArea.Value()\");\n            }\n            \n        }\n    }\n}\n       \n",
                               "Parameters": null,
                               "Name": "LeafSize",
                               "IncludeInDocumentation": false,
@@ -6004,11 +6005,11 @@
                               ],
                               "FOM": [
                                 1243.9310541346904,
-                                833.83192147272689,
+                                833.8319214727269,
                                 457.61666105087295,
-                                251.14534845521521,
+                                251.1453484552152,
                                 137.83148958311097,
-                                75.643525303383925
+                                75.64352530338392
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -6111,8 +6112,8 @@
                         },
                         {
                           "$type": "Models.Fertiliser, Models",
+                          "ResourceName": "Fertiliser",
                           "Name": "Fertiliser",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -6158,7 +6159,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Description(\"Date to fertilise\")]\r\n        public string FertDate1 { get; set; }\r\n        [Description(\"Date to fertilise\")]\r\n        public string FertDate2 { get; set; }\r\n        [Description(\"Date to fertilise\")]\r\n        public string FertDate3 { get; set; }\r\n        [Description(\"Date to fertilise\")]\r\n        public string FertDate4 { get; set; }\r\n        \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount1 { get; set; }\r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount2 { get; set; }\r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount3 { get; set; }\r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount4 { get; set; }\r\n        \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double SDSwitch { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(FertDate1, Clock.Today, FertDate1))\r\n                Fertiliser.Apply(Amount: Amount1 * SDSwitch, Type: Fertiliser.Types.NO3N);\r\n            if (DateUtilities.WithinDates(FertDate2, Clock.Today, FertDate2))\r\n                Fertiliser.Apply(Amount: Amount2, Type: Fertiliser.Types.NO3N);\r\n            if (DateUtilities.WithinDates(FertDate3, Clock.Today, FertDate3))\r\n                Fertiliser.Apply(Amount: Amount3, Type: Fertiliser.Types.NO3N);\r\n            if (DateUtilities.WithinDates(FertDate4, Clock.Today, FertDate4))\r\n                Fertiliser.Apply(Amount: Amount4 * SDSwitch, Type: Fertiliser.Types.NO3N);\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\nusing Models.PMF;\nusing Models.Core;\nusing System;\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] Clock Clock;\n        [Link] Fertiliser Fertiliser;\n        \n        [Description(\"Date to fertilise\")]\n        public string FertDate1 { get; set; }\n        [Description(\"Date to fertilise\")]\n        public string FertDate2 { get; set; }\n        [Description(\"Date to fertilise\")]\n        public string FertDate3 { get; set; }\n        [Description(\"Date to fertilise\")]\n        public string FertDate4 { get; set; }\n        \n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\n        public double Amount1 { get; set; }\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\n        public double Amount2 { get; set; }\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\n        public double Amount3 { get; set; }\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\n        public double Amount4 { get; set; }\n        \n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\n        public double SDSwitch { get; set; }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (DateUtilities.WithinDates(FertDate1, Clock.Today, FertDate1))\n                Fertiliser.Apply(Amount: Amount1 * SDSwitch, Type: Fertiliser.Types.NO3N);\n            if (DateUtilities.WithinDates(FertDate2, Clock.Today, FertDate2))\n                Fertiliser.Apply(Amount: Amount2, Type: Fertiliser.Types.NO3N);\n            if (DateUtilities.WithinDates(FertDate3, Clock.Today, FertDate3))\n                Fertiliser.Apply(Amount: Amount3, Type: Fertiliser.Types.NO3N);\n            if (DateUtilities.WithinDates(FertDate4, Clock.Today, FertDate4))\n                Fertiliser.Apply(Amount: Amount4 * SDSwitch, Type: Fertiliser.Types.NO3N);\n        }\n    }\n}\n",
                               "Parameters": [
                                 {
                                   "Key": "FertDate1",
@@ -6254,7 +6255,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n\r\n    }\r\n}\r\n       \r\n",
+                              "Code": "using Models.Soils.Nutrients;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.Soils.Nutrients;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n\n    }\n}\n       \n",
                               "Parameters": null,
                               "Name": "Harvesting",
                               "IncludeInDocumentation": true,
@@ -7209,11 +7210,11 @@
                               ],
                               "FOM": [
                                 1243.9310541346904,
-                                833.83192147272689,
+                                833.8319214727269,
                                 457.61666105087295,
-                                251.14534845521521,
+                                251.1453484552152,
                                 137.83148958311097,
-                                75.643525303383925
+                                75.64352530338392
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -7316,8 +7317,8 @@
                         },
                         {
                           "$type": "Models.Fertiliser, Models",
+                          "ResourceName": "Fertiliser",
                           "Name": "Fertiliser",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -7363,7 +7364,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        \r\n        [Description(\"Date to fertilise\")]\r\n        public string FertDate1 { get; set; }\r\n        [Description(\"Date to fertilise\")]\r\n        public string FertDate2 { get; set; }\r\n        [Description(\"Date to fertilise\")]\r\n        public string FertDate3 { get; set; }\r\n        [Description(\"Date to fertilise\")]\r\n        public string FertDate4 { get; set; }\r\n        \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount1 { get; set; }\r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount2 { get; set; }\r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount3 { get; set; }\r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount4 { get; set; }\r\n        \r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double SDSwitch { get; set; }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.WithinDates(FertDate1, Clock.Today, FertDate1))\r\n                Fertiliser.Apply(Amount: Amount1 * SDSwitch, Type: Fertiliser.Types.NO3N);\r\n            if (DateUtilities.WithinDates(FertDate2, Clock.Today, FertDate2))\r\n                Fertiliser.Apply(Amount: Amount2, Type: Fertiliser.Types.NO3N);\r\n            if (DateUtilities.WithinDates(FertDate3, Clock.Today, FertDate3))\r\n                Fertiliser.Apply(Amount: Amount3, Type: Fertiliser.Types.NO3N);\r\n            if (DateUtilities.WithinDates(FertDate4, Clock.Today, FertDate4))\r\n                Fertiliser.Apply(Amount: Amount4 * SDSwitch, Type: Fertiliser.Types.NO3N);\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\nusing Models.PMF;\nusing Models.Core;\nusing System;\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] Clock Clock;\n        [Link] Fertiliser Fertiliser;\n        \n        [Description(\"Date to fertilise\")]\n        public string FertDate1 { get; set; }\n        [Description(\"Date to fertilise\")]\n        public string FertDate2 { get; set; }\n        [Description(\"Date to fertilise\")]\n        public string FertDate3 { get; set; }\n        [Description(\"Date to fertilise\")]\n        public string FertDate4 { get; set; }\n        \n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\n        public double Amount1 { get; set; }\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\n        public double Amount2 { get; set; }\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\n        public double Amount3 { get; set; }\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\n        public double Amount4 { get; set; }\n        \n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\n        public double SDSwitch { get; set; }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (DateUtilities.WithinDates(FertDate1, Clock.Today, FertDate1))\n                Fertiliser.Apply(Amount: Amount1 * SDSwitch, Type: Fertiliser.Types.NO3N);\n            if (DateUtilities.WithinDates(FertDate2, Clock.Today, FertDate2))\n                Fertiliser.Apply(Amount: Amount2, Type: Fertiliser.Types.NO3N);\n            if (DateUtilities.WithinDates(FertDate3, Clock.Today, FertDate3))\n                Fertiliser.Apply(Amount: Amount3, Type: Fertiliser.Types.NO3N);\n            if (DateUtilities.WithinDates(FertDate4, Clock.Today, FertDate4))\n                Fertiliser.Apply(Amount: Amount4 * SDSwitch, Type: Fertiliser.Types.NO3N);\n        }\n    }\n}\n",
                               "Parameters": [
                                 {
                                   "Key": "FertDate1",
@@ -7465,7 +7466,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n       \r\n",
+                              "Code": "using Models.Soils.Nutrients;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.Soils.Nutrients;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        \n    }\n}\n       \n",
                               "Parameters": null,
                               "Name": "Harvesting",
                               "IncludeInDocumentation": true,
@@ -8306,11 +8307,11 @@
                               ],
                               "FOM": [
                                 1243.9310541346904,
-                                833.83192147272689,
+                                833.8319214727269,
                                 457.61666105087295,
-                                251.14534845521521,
+                                251.1453484552152,
                                 137.83148958311097,
-                                75.643525303383925
+                                75.64352530338392
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -8413,8 +8414,8 @@
                         },
                         {
                           "$type": "Models.Fertiliser, Models",
+                          "ResourceName": "Fertiliser",
                           "Name": "Fertiliser",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -8446,7 +8447,7 @@
                         },
                         {
                           "$type": "Models.Manager, Models",
-                          "Code": "\r\nusing Models.PMF.Phen;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant Oats;\r\n        [Link] private Clock Clock;\r\n        [Link] private Simulation sim;\r\n        [Link] private Summary Summary;\r\n        [Link(Type = LinkType.Path, Path = \"[Oats].Phenology\")]\r\n        private Phenology phenology;\r\n        \r\n        [Description(\"Cultivar\")]\r\n        public string Cultivar { get; set; }\r\n        \r\n        [XmlIgnore] public bool Sown { get; set; }\r\n        [XmlIgnore] public bool Harvested { get; set; }\r\n        [XmlIgnore] public bool EndSet { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Sown = false;\r\n            Harvested = false;\r\n            EndSet = false;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Sown == false)\r\n            {\r\n                Oats.Sow(population: 200, cultivar: Cultivar, depth: 15, rowSpacing: 150, budNumber: 1);\r\n                Sown = true;\r\n            }\r\n            \r\n            if (phenology.CurrentPhase.Name == \"Maturing\")\r\n            {\r\n                Oats.Harvest();\r\n                Oats.EndCrop();\r\n                Harvested = true;\r\n                Summary.WriteMessage(this, \"Maturity reached so setting end date to stop simulation\");\r\n            }\r\n            \r\n            if ((Harvested == true) && (EndSet == false))\r\n            {\r\n                sim.Set(\"Clock.EndDate\", Clock.Today.AddDays(1));\r\n                EndSet = true;\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                          "Code": "\nusing Models.PMF.Phen;\nusing System;\nusing Models.Core;\nusing Models.PMF;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\n        \nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] private Plant Oats;\n        [Link] private Clock Clock;\n        [Link] private Simulation sim;\n        [Link] private Summary Summary;\n        [Link(Type = LinkType.Path, Path = \"[Oats].Phenology\")]\n        private Phenology phenology;\n        \n        [Description(\"Cultivar\")]\n        public string Cultivar { get; set; }\n        \n        [XmlIgnore] public bool Sown { get; set; }\n        [XmlIgnore] public bool Harvested { get; set; }\n        [XmlIgnore] public bool EndSet { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            Sown = false;\n            Harvested = false;\n            EndSet = false;\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            if (Sown == false)\n            {\n                Oats.Sow(population: 200, cultivar: Cultivar, depth: 15, rowSpacing: 150, budNumber: 1);\n                Sown = true;\n            }\n            \n            if (phenology.CurrentPhase.Name == \"Maturing\")\n            {\n                Oats.Harvest();\n                Oats.EndCrop();\n                Harvested = true;\n                Summary.WriteMessage(this, \"Maturity reached so setting end date to stop simulation\");\n            }\n            \n            if ((Harvested == true) && (EndSet == false))\n            {\n                sim.Set(\"Clock.EndDate\", Clock.Today.AddDays(1));\n                EndSet = true;\n            }\n        }\n    }\n}\n                \n",
                           "Parameters": [
                             {
                               "Key": "Cultivar",
@@ -8674,7 +8675,7 @@
                       "Children": [
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "Nit",
                           "Children": [
                             {
@@ -8723,7 +8724,7 @@
                         },
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "Irr",
                           "Children": [
                             {
@@ -9083,15 +9084,15 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.Climate;\r\nusing System;\r\nusing Models.Core;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\n\r\n// This script simulates a rainshelter, it controls the amount of rainfall (=0.0) and radiation (=95% of weather)\r\n// It does that for a period between two dates, as well as at sporadic dates\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Weather Met;\r\n        [Link] Clock Clock;\r\n    \r\n        [Description(\"Start date: \")]\r\n        public DateTime StartDate { get; set; }\r\n        [Description(\"End date: \")]\r\n        public DateTime EndDate { get; set; }\r\n         [Description(\"Other dates: \")]\r\n         public string OtherDateString  { get; set; }\r\n\r\n         private DateTime[] OtherDates;\r\n         private double todaysRain;\r\n\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            //gather the dates the variables will be controlled\r\n            string[] auxDates = OtherDateString.Split(new Char []{' ',','});\r\n            OtherDates = new DateTime[auxDates.Length];\r\n            for (int i = 0; i < auxDates.Length; i++)\r\n                OtherDates[i] = DateTime.Parse(auxDates[i]);\r\n        }\r\n\r\n        [EventSubscribe(\"PreparingNewWeatherData\")]\r\n        private void OnPreparingNewWeatherData(object sender, EventArgs e)\r\n        {\r\n            if ((Clock.Today.Date >= StartDate.Date) && (Clock.Today.Date <= EndDate.Date))\r\n            {\r\n                todaysRain = Met.Rain;\r\n                changeMetData();\r\n            }\r\n            else\r\n            {\r\n                for (int i = 0; i < OtherDates.Length; i++)\r\n                    if (Clock.Today.Date == OtherDates[0].Date)\r\n                        changeMetData();\r\n            }\r\n\r\n            // rain shelter partial day cover\r\n            if (Clock.Today.Date == DateTime.Parse(\"01/09/2017\").Date)\r\n                Met.Rain -= 2.0;\r\n            \r\n            // rain shelter cover removed for weekend\r\n            if ((Clock.Today.Date == DateTime.Parse(\"03/06/2017\").Date)||(Clock.Today.Date == DateTime.Parse(\"04/06/2017\").Date))\r\n            {\r\n                Met.Rain = todaysRain;\r\n                Met.Radn /= 0.95;\r\n            }\r\n        }\r\n\r\n        private void changeMetData()\r\n        {\r\n            Met.Rain *= 0.0;\r\n            Met.Radn *= 0.95;\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using Models.Climate;\nusing System;\nusing Models.Core;\nusing APSIM.Shared.Utilities;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing System.Globalization;\n\n// This script simulates a rainshelter, it controls the amount of rainfall (=0.0) and radiation (=95% of weather)\n// It does that for a period between two dates, as well as at sporadic dates\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Weather Met;\n        [Link] Clock Clock;\n    \n        [Description(\"Start date: \")]\n        public DateTime StartDate { get; set; }\n        [Description(\"End date: \")]\n        public DateTime EndDate { get; set; }\n         [Description(\"Other dates: \")]\n         public string OtherDateString  { get; set; }\n         \n         private const string dateFormat = \"dd/MM/yyyy\";\n\n         private DateTime[] OtherDates;\n         private double todaysRain;\n\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            //gather the dates the variables will be controlled\n            string[] auxDates = OtherDateString.Split(new Char []{' ',','});\n            OtherDates = new DateTime[auxDates.Length];\n            for (int i = 0; i < auxDates.Length; i++)\n                OtherDates[i] = DateTime.ParseExact(auxDates[i], dateFormat, CultureInfo.InvariantCulture);\n        }\n\n        [EventSubscribe(\"PreparingNewWeatherData\")]\n        private void OnPreparingNewWeatherData(object sender, EventArgs e)\n        {\n            if ((Clock.Today.Date >= StartDate.Date) && (Clock.Today.Date <= EndDate.Date))\n            {\n                todaysRain = Met.Rain;\n                changeMetData();\n            }\n            else\n            {\n                for (int i = 0; i < OtherDates.Length; i++)\n                    if (Clock.Today.Date == OtherDates[0].Date)\n                        changeMetData();\n            }\n\n            // rain shelter partial day cover\n            if (Clock.Today.Date == DateTime.ParseExact(\"01/09/2017\", dateFormat, CultureInfo.InvariantCulture).Date)\n                Met.Rain -= 2.0;\n            \n            // rain shelter cover removed for weekend\n            if ((Clock.Today.Date == DateTime.ParseExact(\"03/06/2017\", dateFormat, CultureInfo.InvariantCulture).Date)||(Clock.Today.Date == DateTime.ParseExact(\"04/06/2017\", dateFormat, CultureInfo.InvariantCulture).Date))\n            {\n                Met.Rain = todaysRain;\n                Met.Radn /= 0.95;\n            }\n        }\n\n        private void changeMetData()\n        {\n            Met.Rain *= 0.0;\n            Met.Radn *= 0.95;\n        }\n    }\n}\n",
                               "Parameters": [
                                 {
                                   "Key": "StartDate",
-                                  "Value": "2016-10-17"
+                                  "Value": "10/17/2016 00:00:00"
                                 },
                                 {
                                   "Key": "EndDate",
-                                  "Value": "2017-06-30"
+                                  "Value": "06/30/2017 00:00:00"
                                 },
                                 {
                                   "Key": "OtherDateString",
@@ -9105,7 +9106,7 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.Interfaces;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models;\r\nusing Models.PMF;\r\nusing Models.Soils;\r\nusing System.Text;\r\nusing System.Collections.Generic;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Soils.Nutrients;\r\n\r\n// This script performs management actions that are not common to all treatments\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] private Clock Clock;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private Fertiliser Fert;\r\n        [Link] private Soil ThisSoil;\r\n        [Link(ByName = true)] private ISolute no3;\r\n        [Link(ByName = true)] private ISolute nh4;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n\r\n        [Description(\"Allow irrigation to be applied?\")]\r\n        public bool IrrFactor { get; set; }\r\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double NitFactor { get; set; }\r\n\r\n\r\n        private void SetSoilLayers()\r\n        {\r\n        \r\n            int i = 0;\r\n\r\n            if (soilPhysical.Thickness.Length != 7)\r\n               throw new Exception(\"Soil layer exception\");\r\n\r\n            if ((IrrFactor == false) && (NitFactor == 300))\r\n            {\r\n                nh4.SetKgHa(SoluteSetterType.Fertiliser,new double[]{108,12,7,5,4,3,3});\r\n                no3.SetKgHa(SoluteSetterType.Fertiliser,new double[] {55,30,25,12,3,5,5});\r\n            }   \r\n            else if ((IrrFactor == false) && (NitFactor == 50))\r\n            {\r\n                nh4.SetKgHa(SoluteSetterType.Fertiliser,new double[]{14.2,3.6,3.2,1.0,2.8,3.7,3});\r\n                no3.SetKgHa(SoluteSetterType.Fertiliser,new double[] {34,16.8,15.8,7.7,1.8,2.3,5});\r\n            }   \r\n            else if ((IrrFactor == false) && (NitFactor == 0))\r\n            {\r\n                nh4.SetKgHa(SoluteSetterType.Fertiliser,new double[]{3.7,3.5,4.1,1.2,2.1,2.3,3});\r\n                no3.SetKgHa(SoluteSetterType.Fertiliser,new double[] {18,13.7,10.8,4.2,1.9,2.8,5});\r\n            }   \r\n            else if ((IrrFactor == true) && (NitFactor == 300))\r\n            {\r\n                nh4.SetKgHa(SoluteSetterType.Fertiliser,new double[]{1.8,1.8,3.0,2.3,2.4,1.8,3});\r\n                no3.SetKgHa(SoluteSetterType.Fertiliser,new double[] {12.6,6.4,5.3,2.8,2.2,2.2,5});\r\n            }   \r\n            else if ((IrrFactor == true) && (NitFactor == 50))\r\n            {\r\n                nh4.SetKgHa(SoluteSetterType.Fertiliser,new double[]{1.9,1.5,3.5,2.0,2.6,1.8,3});\r\n                no3.SetKgHa(SoluteSetterType.Fertiliser,new double[] {8.5,5.4,1.9,1.5,1.8,2.7,5});\r\n            }\r\n            else if ((IrrFactor == true) && (NitFactor == 0))\r\n            {\r\n                nh4.SetKgHa(SoluteSetterType.Fertiliser,new double[]{2.5,2.4,3.1,3.4,5.6,2.5,3});\r\n                no3.SetKgHa(SoluteSetterType.Fertiliser,new double[] {5.6,3.9,1.3,1.0,1.3,2.2,5});\r\n            }\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (Clock.Today.Date == DateTime.Parse(\"02-Jun-2017\"))\r\n               SetSoilLayers();\r\n\r\n        \r\n            // Oats - Irrigation on dryland plots only, after harvest\r\n            if (IrrFactor == false)\r\n            {\r\n                if ((Clock.Today.Date == DateTime.Parse(\"25-May-2017\")) || (Clock.Today.Date == DateTime.Parse(\"26-May-2017\")))\r\n                    Irrigation.Apply(50.0);\r\n\r\n                if (Clock.Today.Date == DateTime.Parse(\"29-May-2017\"))\r\n                if (NitFactor == 300)\r\n                    Irrigation.Apply(64.0);\r\n\r\n                if (Clock.Today.Date == DateTime.Parse(\"30-May-2017\"))\r\n                {\r\n                    if (NitFactor == 0)\r\n                        Irrigation.Apply(30.3);\r\n                    if (NitFactor == 50)\r\n                        Irrigation.Apply(51.0);\r\n                }\r\n            }\r\n\r\n            // Oats - Irrigation on all 300N plots plus dryland 50N plots\r\n            if (Clock.Today.Date == DateTime.Parse(\"13-Dec-2017\"))\r\n            {\r\n                if (NitFactor == 300)\r\n                    Irrigation.Apply(50.0);\r\n                if ((NitFactor == 50) && (IrrFactor == false))\r\n                    Irrigation.Apply(50.0);\r\n            }\r\n\r\n            // Oats - Fertiliser for irrigated plots only, on sowing\r\n            if (Clock.Today.Date == DateTime.Parse(\"05-Jul-2017\"))\r\n            if (IrrFactor == true)\r\n            {\r\n                if (NitFactor == 0)\r\n                    Fert.Apply(40, Models.Fertiliser.Types.UreaN, 10);\r\n                if (NitFactor == 50)\r\n                    Fert.Apply(85, Models.Fertiliser.Types.UreaN, 10);\r\n                if (NitFactor == 300)\r\n                    Fert.Apply(270, Models.Fertiliser.Types.UreaN, 10);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using Models.Interfaces;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models;\nusing Models.PMF;\nusing Models.Soils;\nusing System.Text;\nusing System.Collections.Generic;\nusing Models.Core;\nusing System;\nusing Models.Soils.Nutrients;\n\n// This script performs management actions that are not common to all treatments\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] private Clock Clock;\n        [Link] private Irrigation Irrigation;\n        [Link] private Fertiliser Fert;\n        [Link] private Soil ThisSoil;\n        [Link(ByName = true)] private ISolute no3;\n        [Link(ByName = true)] private ISolute nh4;\n        [Link]\n        private IPhysical soilPhysical;\n\n        [Description(\"Allow irrigation to be applied?\")]\n        public bool IrrFactor { get; set; }\n        [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\n        public double NitFactor { get; set; }\n\n\n        private void SetSoilLayers()\n        {\n        \n            int i = 0;\n\n            if (soilPhysical.Thickness.Length != 7)\n               throw new Exception(\"Soil layer exception\");\n\n            if ((IrrFactor == false) && (NitFactor == 300))\n            {\n                nh4.SetKgHa(SoluteSetterType.Fertiliser,new double[]{108,12,7,5,4,3,3});\n                no3.SetKgHa(SoluteSetterType.Fertiliser,new double[] {55,30,25,12,3,5,5});\n            }   \n            else if ((IrrFactor == false) && (NitFactor == 50))\n            {\n                nh4.SetKgHa(SoluteSetterType.Fertiliser,new double[]{14.2,3.6,3.2,1.0,2.8,3.7,3});\n                no3.SetKgHa(SoluteSetterType.Fertiliser,new double[] {34,16.8,15.8,7.7,1.8,2.3,5});\n            }   \n            else if ((IrrFactor == false) && (NitFactor == 0))\n            {\n                nh4.SetKgHa(SoluteSetterType.Fertiliser,new double[]{3.7,3.5,4.1,1.2,2.1,2.3,3});\n                no3.SetKgHa(SoluteSetterType.Fertiliser,new double[] {18,13.7,10.8,4.2,1.9,2.8,5});\n            }   \n            else if ((IrrFactor == true) && (NitFactor == 300))\n            {\n                nh4.SetKgHa(SoluteSetterType.Fertiliser,new double[]{1.8,1.8,3.0,2.3,2.4,1.8,3});\n                no3.SetKgHa(SoluteSetterType.Fertiliser,new double[] {12.6,6.4,5.3,2.8,2.2,2.2,5});\n            }   \n            else if ((IrrFactor == true) && (NitFactor == 50))\n            {\n                nh4.SetKgHa(SoluteSetterType.Fertiliser,new double[]{1.9,1.5,3.5,2.0,2.6,1.8,3});\n                no3.SetKgHa(SoluteSetterType.Fertiliser,new double[] {8.5,5.4,1.9,1.5,1.8,2.7,5});\n            }\n            else if ((IrrFactor == true) && (NitFactor == 0))\n            {\n                nh4.SetKgHa(SoluteSetterType.Fertiliser,new double[]{2.5,2.4,3.1,3.4,5.6,2.5,3});\n                no3.SetKgHa(SoluteSetterType.Fertiliser,new double[] {5.6,3.9,1.3,1.0,1.3,2.2,5});\n            }\n        }\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n\n            if (Clock.Today.Date == DateTime.Parse(\"02-Jun-2017\"))\n               SetSoilLayers();\n\n        \n            // Oats - Irrigation on dryland plots only, after harvest\n            if (IrrFactor == false)\n            {\n                if ((Clock.Today.Date == DateTime.Parse(\"25-May-2017\")) || (Clock.Today.Date == DateTime.Parse(\"26-May-2017\")))\n                    Irrigation.Apply(50.0);\n\n                if (Clock.Today.Date == DateTime.Parse(\"29-May-2017\"))\n                if (NitFactor == 300)\n                    Irrigation.Apply(64.0);\n\n                if (Clock.Today.Date == DateTime.Parse(\"30-May-2017\"))\n                {\n                    if (NitFactor == 0)\n                        Irrigation.Apply(30.3);\n                    if (NitFactor == 50)\n                        Irrigation.Apply(51.0);\n                }\n            }\n\n            // Oats - Irrigation on all 300N plots plus dryland 50N plots\n            if (Clock.Today.Date == DateTime.Parse(\"13-Dec-2017\"))\n            {\n                if (NitFactor == 300)\n                    Irrigation.Apply(50.0);\n                if ((NitFactor == 50) && (IrrFactor == false))\n                    Irrigation.Apply(50.0);\n            }\n\n            // Oats - Fertiliser for irrigated plots only, on sowing\n            if (Clock.Today.Date == DateTime.Parse(\"05-Jul-2017\"))\n            if (IrrFactor == true)\n            {\n                if (NitFactor == 0)\n                    Fert.Apply(40, Models.Fertiliser.Types.UreaN, 10);\n                if (NitFactor == 50)\n                    Fert.Apply(85, Models.Fertiliser.Types.UreaN, 10);\n                if (NitFactor == 300)\n                    Fert.Apply(270, Models.Fertiliser.Types.UreaN, 10);\n            }\n        }\n    }\n}\n",
                               "Parameters": [
                                 {
                                   "Key": "IrrFactor",
@@ -9123,8 +9124,37 @@
                             },
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Plant Oats;\r\n        [Link] Zone zone;\r\n                    \r\n        [XmlIgnore] public bool InitialDay { get; set; }\r\n        \r\n        [XmlIgnore] public double LeafExpandedPosition { get; set; }\r\n        [XmlIgnore] public double LeafAppearedPosition { get; set; }\r\n        [XmlIgnore] public double ExpandedLeafNoYesterday { get; set; }\r\n        [XmlIgnore] public double AppearedLeafNoYesterday { get; set; }\r\n        [XmlIgnore] public double MostRecentlyExpandedLeafSize { get; set; }\r\n        [XmlIgnore] public double MostRecentlyAppearedLeafMaxSize { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            InitialDay = true;\r\n            LeafExpandedPosition = 0;\r\n            LeafAppearedPosition = 0;\r\n            ExpandedLeafNoYesterday = 0;\r\n            AppearedLeafNoYesterday = 0;\r\n            MostRecentlyExpandedLeafSize = 0;\r\n            MostRecentlyAppearedLeafMaxSize = 0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            ExpandedLeafNoYesterday = Convert.ToDouble(zone.Get(\"Oats.Leaf.ExpandedCohortNo\"));\r\n            AppearedLeafNoYesterday = Convert.ToDouble(zone.Get(\"Oats.Leaf.AppearedCohortNo\"));\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagementCalculations\")]\r\n        private void OnDoManagementCalculations(object sender, EventArgs e)\r\n        {\r\n            if (Convert.ToDouble(zone.Get(\"Oats.Leaf.ExpandedCohortNo\")) > ExpandedLeafNoYesterday)\r\n            {\r\n                LeafExpandedPosition = Convert.ToDouble(zone.Get(\"Oats.Leaf.ExpandedCohortNo\"));\r\n                MostRecentlyExpandedLeafSize = (double)zone.Get(\"Oats.Leaf.CohortSize[\" + (int)LeafExpandedPosition + \"]\");\r\n            }\r\n            \r\n            if (Convert.ToDouble(zone.Get(\"Oats.Leaf.AppearedCohortNo\")) > AppearedLeafNoYesterday)\r\n            {\r\n                LeafAppearedPosition = Convert.ToDouble(zone.Get(\"Oats.Leaf.AppearedCohortNo\"));\r\n                MostRecentlyAppearedLeafMaxSize = (double)zone.Get(\"Oats.Leaf.CohortParameters.MaxArea.Value()\");\r\n            }\r\n            \r\n        }\r\n    }\r\n}\r\n       \r\n",
-                              "Parameters": null,
+                              "Code": "using Models.Soils.Nutrients;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.Soils.Nutrients;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] Clock Clock;\n        [Link] Plant Oats;\n        [Link] Zone zone;\n                    \n        [XmlIgnore] public bool InitialDay { get; set; }\n        \n        [XmlIgnore] public double LeafExpandedPosition { get; set; }\n        [XmlIgnore] public double LeafAppearedPosition { get; set; }\n        [XmlIgnore] public double ExpandedLeafNoYesterday { get; set; }\n        [XmlIgnore] public double AppearedLeafNoYesterday { get; set; }\n        [XmlIgnore] public double MostRecentlyExpandedLeafSize { get; set; }\n        [XmlIgnore] public double MostRecentlyAppearedLeafMaxSize { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            InitialDay = true;\n            LeafExpandedPosition = 0;\n            LeafAppearedPosition = 0;\n            ExpandedLeafNoYesterday = 0;\n            AppearedLeafNoYesterday = 0;\n            MostRecentlyExpandedLeafSize = 0;\n            MostRecentlyAppearedLeafMaxSize = 0;\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            ExpandedLeafNoYesterday = Convert.ToDouble(zone.Get(\"Oats.Leaf.ExpandedCohortNo\"));\n            AppearedLeafNoYesterday = Convert.ToDouble(zone.Get(\"Oats.Leaf.AppearedCohortNo\"));\n        }\n        \n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            if (Convert.ToDouble(zone.Get(\"Oats.Leaf.ExpandedCohortNo\")) > ExpandedLeafNoYesterday)\n            {\n                LeafExpandedPosition = Convert.ToDouble(zone.Get(\"Oats.Leaf.ExpandedCohortNo\"));\n                MostRecentlyExpandedLeafSize = (double)zone.Get(\"Oats.Leaf.CohortSize[\" + (int)LeafExpandedPosition + \"]\");\n            }\n            \n            if (Convert.ToDouble(zone.Get(\"Oats.Leaf.AppearedCohortNo\")) > AppearedLeafNoYesterday)\n            {\n                LeafAppearedPosition = Convert.ToDouble(zone.Get(\"Oats.Leaf.AppearedCohortNo\"));\n                MostRecentlyAppearedLeafMaxSize = (double)zone.Get(\"Oats.Leaf.CohortParameters.MaxArea.Value()\");\n            }\n            \n        }\n    }\n}\n       \n",
+                              "Parameters": [
+                                {
+                                  "Key": "InitialDay",
+                                  "Value": "False"
+                                },
+                                {
+                                  "Key": "LeafExpandedPosition",
+                                  "Value": "0"
+                                },
+                                {
+                                  "Key": "LeafAppearedPosition",
+                                  "Value": "0"
+                                },
+                                {
+                                  "Key": "ExpandedLeafNoYesterday",
+                                  "Value": "0"
+                                },
+                                {
+                                  "Key": "AppearedLeafNoYesterday",
+                                  "Value": "0"
+                                },
+                                {
+                                  "Key": "MostRecentlyExpandedLeafSize",
+                                  "Value": "0"
+                                },
+                                {
+                                  "Key": "MostRecentlyAppearedLeafMaxSize",
+                                  "Value": "0"
+                                }
+                              ],
                               "Name": "LeafSize",
                               "IncludeInDocumentation": false,
                               "Enabled": true,
@@ -9162,8 +9192,8 @@
                         },
                         {
                           "$type": "Models.Fertiliser, Models",
+                          "ResourceName": "Fertiliser",
                           "Name": "Fertiliser",
-                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -9238,22 +9268,22 @@
                                 300.0
                               ],
                               "NO3N": [
-                                9.5786260413100539,
-                                6.0362145066555453,
-                                1.0071942446043181,
+                                9.578626041310054,
+                                6.036214506655545,
+                                1.007194244604318,
                                 1.0713635987761518,
                                 1.1034482758620698,
                                 1.0638297872340445,
                                 1.0159931457946596,
-                                0.87248322147650836,
-                                0.67114093959731691
+                                0.8724832214765084,
+                                0.6711409395973169
                               ],
                               "NH4N": [
                                 1.0651793525809274,
                                 1.068478550492939,
                                 0.983213429256595,
-                                0.49632018523112492,
-                                0.25287356321839072,
+                                0.4963201852311249,
+                                0.2528735632183907,
                                 0.2127659574468089,
                                 0.22109572088152674,
                                 0.2460850111856821,
@@ -9542,14 +9572,14 @@
                               ],
                               "FOM": [
                                 271.50490768352796,
-                                211.44823471166109,
+                                211.4482347116611,
                                 151.50928073646068,
                                 117.99554648014092,
-                                84.547503561285836,
+                                84.54750356128584,
                                 65.8456619802618,
                                 47.18047847431572,
                                 31.103288362566367,
-                                18.865098009779651
+                                18.86509800977965
                               ],
                               "CarbonMetadata": null,
                               "FOMMetadata": null,
@@ -13609,9 +13639,9 @@
                                       "FOM": [
                                         173.5645161563782,
                                         135.17218109599685,
-                                        81.986072174950522,
+                                        81.98607217495052,
                                         49.727066443520314,
-                                        30.160990415562338,
+                                        30.16099041556234,
                                         18.293565414337436,
                                         11.0956082992543
                                       ],
@@ -13645,7 +13675,7 @@
                                       ],
                                       "NO3N": [
                                         22.6,
-                                        5.5000455862898887,
+                                        5.500045586289889,
                                         1.3000103377382584,
                                         0.0,
                                         0.0,
@@ -13773,8 +13803,8 @@
                                 },
                                 {
                                   "$type": "Models.Fertiliser, Models",
+                                  "ResourceName": "Fertiliser",
                                   "Name": "Fertiliser",
-                                  "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -13888,7 +13918,7 @@
                                     },
                                     {
                                       "$type": "Models.Manager, Models",
-                                      "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n    }\r\n}\r\n       \r\n",
+                                      "Code": "using Models.Soils.Nutrients;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.Soils.Nutrients;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n    }\n}\n       \n",
                                       "Parameters": null,
                                       "Name": "Harvesting",
                                       "IncludeInDocumentation": true,
@@ -16537,9 +16567,9 @@
                                       "FOM": [
                                         173.5645161563782,
                                         135.17218109599685,
-                                        81.986072174950522,
+                                        81.98607217495052,
                                         49.727066443520314,
-                                        30.160990415562338,
+                                        30.16099041556234,
                                         18.293565414337436,
                                         11.0956082992543
                                       ],
@@ -16573,7 +16603,7 @@
                                       ],
                                       "NO3N": [
                                         22.6,
-                                        5.5000455862898887,
+                                        5.500045586289889,
                                         1.3000103377382584,
                                         0.0,
                                         0.0,
@@ -16701,8 +16731,8 @@
                                 },
                                 {
                                   "$type": "Models.Fertiliser, Models",
+                                  "ResourceName": "Fertiliser",
                                   "Name": "Fertiliser",
-                                  "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -16816,7 +16846,7 @@
                                     },
                                     {
                                       "$type": "Models.Manager, Models",
-                                      "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n    }\r\n}\r\n       \r\n",
+                                      "Code": "using Models.Soils.Nutrients;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.Soils.Nutrients;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n    }\n}\n       \n",
                                       "Parameters": null,
                                       "Name": "Harvesting",
                                       "IncludeInDocumentation": true,
@@ -17539,7 +17569,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n                \r\n",
+                                  "Code": "\nusing System.Xml.Serialization;\nusing Models.PMF.Interfaces;\nusing Models.PMF;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        \n    }\n}\n                \n",
                                   "Parameters": null,
                                   "Name": "None",
                                   "IncludeInDocumentation": true,
@@ -17548,7 +17578,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Oats;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Cut Date\")]\r\n        public DateTime CutDate { get; set; }\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            if (Clock.Today.Date == CutDate)\r\n            {\r\n                //Remove.SetPhenologyStage = 3.5;\r\n                Remove.SetFractionToRemove(\"Panicle\", 1.0);\r\n                Remove.SetFractionToResidue(\"Panicle\", 0.0);\r\n                Remove.SetFractionToRemove(\"Leaf\", 0.8);\r\n                Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0.8);\r\n                Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                Remove.SetFractionToRemove(\"Grain\", 1.0);\r\n                Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                Oats.RemoveBiomass(\"Cut\", Remove);\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                                  "Code": "\nusing System.Xml.Serialization;\nusing Models.PMF.Interfaces;\nusing Models.PMF;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Plant Oats;\n        [Link] Clock Clock;\n\n        [Description(\"Cut Date\")]\n        public DateTime CutDate { get; set; }\n\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            Remove = new RemovalFractions();\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\n            if (Clock.Today.Date == CutDate)\n            {\n                //Remove.SetPhenologyStage = 3.5;\n                Remove.SetFractionToRemove(\"Panicle\", 1.0);\n                Remove.SetFractionToResidue(\"Panicle\", 0.0);\n                Remove.SetFractionToRemove(\"Leaf\", 0.8);\n                Remove.SetFractionToResidue(\"Leaf\", 0.0);\n                Remove.SetFractionToRemove(\"Stem\", 0.8);\n                Remove.SetFractionToResidue(\"Stem\", 0.0);\n                Remove.SetFractionToRemove(\"Grain\", 1.0);\n                Remove.SetFractionToResidue(\"Grain\", 0.0);\n                Remove.SetFractionToRemove(\"Root\", 0.0);\n                Remove.SetFractionToResidue(\"Root\", 0.0);\n                Oats.RemoveBiomass(\"Cut\", Remove);\n            }\n        }\n    }\n}\n                \n",
                                   "Parameters": [
                                     {
                                       "Key": "CutDate",
@@ -17562,7 +17592,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Oats;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Cut Date1\")]\r\n        public DateTime CutDate1 { get; set; }\r\n        [Description(\"Cut Date2\")]\r\n        public DateTime CutDate2 { get; set; }\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            if (Clock.Today.Date == CutDate1)\r\n            {\r\n                //Remove.SetPhenologyStage = 3.5;\r\n                Remove.SetFractionToRemove(\"Panicle\", 1.0);\r\n                Remove.SetFractionToResidue(\"Panicle\", 0.0);\r\n                Remove.SetFractionToRemove(\"Leaf\", 0.8);\r\n                Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0.8);\r\n                Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                Remove.SetFractionToRemove(\"Grain\", 1.0);\r\n                Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                Oats.RemoveBiomass(\"Cut\", Remove);\r\n            }\r\n            if (Clock.Today.Date == CutDate2)\r\n            {\r\n                //Remove.SetPhenologyStage = 3.5;\r\n                Remove.SetFractionToRemove(\"Panicle\", 1.0);\r\n                Remove.SetFractionToResidue(\"Panicle\", 0.0);\r\n                Remove.SetFractionToRemove(\"Leaf\", 0.8);\r\n                Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0.8);\r\n                Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                Remove.SetFractionToRemove(\"Grain\", 1.0);\r\n                Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                Oats.RemoveBiomass(\"Cut\", Remove);\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                                  "Code": "\nusing System.Xml.Serialization;\nusing Models.PMF.Interfaces;\nusing Models.PMF;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Plant Oats;\n        [Link] Clock Clock;\n\n        [Description(\"Cut Date1\")]\n        public DateTime CutDate1 { get; set; }\n        [Description(\"Cut Date2\")]\n        public DateTime CutDate2 { get; set; }\n\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            Remove = new RemovalFractions();\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\n            if (Clock.Today.Date == CutDate1)\n            {\n                //Remove.SetPhenologyStage = 3.5;\n                Remove.SetFractionToRemove(\"Panicle\", 1.0);\n                Remove.SetFractionToResidue(\"Panicle\", 0.0);\n                Remove.SetFractionToRemove(\"Leaf\", 0.8);\n                Remove.SetFractionToResidue(\"Leaf\", 0.0);\n                Remove.SetFractionToRemove(\"Stem\", 0.8);\n                Remove.SetFractionToResidue(\"Stem\", 0.0);\n                Remove.SetFractionToRemove(\"Grain\", 1.0);\n                Remove.SetFractionToResidue(\"Grain\", 0.0);\n                Remove.SetFractionToRemove(\"Root\", 0.0);\n                Remove.SetFractionToResidue(\"Root\", 0.0);\n                Oats.RemoveBiomass(\"Cut\", Remove);\n            }\n            if (Clock.Today.Date == CutDate2)\n            {\n                //Remove.SetPhenologyStage = 3.5;\n                Remove.SetFractionToRemove(\"Panicle\", 1.0);\n                Remove.SetFractionToResidue(\"Panicle\", 0.0);\n                Remove.SetFractionToRemove(\"Leaf\", 0.8);\n                Remove.SetFractionToResidue(\"Leaf\", 0.0);\n                Remove.SetFractionToRemove(\"Stem\", 0.8);\n                Remove.SetFractionToResidue(\"Stem\", 0.0);\n                Remove.SetFractionToRemove(\"Grain\", 1.0);\n                Remove.SetFractionToResidue(\"Grain\", 0.0);\n                Remove.SetFractionToRemove(\"Root\", 0.0);\n                Remove.SetFractionToResidue(\"Root\", 0.0);\n                Oats.RemoveBiomass(\"Cut\", Remove);\n            }\n        }\n    }\n}\n                \n",
                                   "Parameters": [
                                     {
                                       "Key": "CutDate1",
@@ -17934,11 +17964,11 @@
                                   ],
                                   "FOM": [
                                     69.4258064625513,
-                                    54.068872438398742,
-                                    32.794428869980209,
+                                    54.06887243839874,
+                                    32.79442886998021,
                                     19.890826577408127,
                                     12.064396166224935,
-                                    7.3174261657349753,
+                                    7.317426165734975,
                                     4.43824331970172
                                   ],
                                   "CarbonMetadata": null,
@@ -18099,8 +18129,8 @@
                             },
                             {
                               "$type": "Models.Fertiliser, Models",
+                              "ResourceName": "Fertiliser",
                               "Name": "Fertiliser",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -18137,7 +18167,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n                \r\n",
+                                  "Code": "\nusing System.Xml.Serialization;\nusing Models.PMF.Interfaces;\nusing Models.PMF;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        \n    }\n}\n                \n",
                                   "Parameters": null,
                                   "Name": "Cutting",
                                   "IncludeInDocumentation": true,
@@ -18189,7 +18219,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n    }\r\n}\r\n       \r\n",
+                                  "Code": "using Models.Soils.Nutrients;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.Soils.Nutrients;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n    }\n}\n       \n",
                                   "Parameters": null,
                                   "Name": "Harvesting",
                                   "IncludeInDocumentation": true,
@@ -18472,7 +18502,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n                \r\n",
+                                  "Code": "\nusing System.Xml.Serialization;\nusing Models.PMF.Interfaces;\nusing Models.PMF;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        \n    }\n}\n                \n",
                                   "Parameters": null,
                                   "Name": "None",
                                   "IncludeInDocumentation": true,
@@ -18481,7 +18511,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Oats;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Cut Date\")]\r\n        public DateTime CutDate { get; set; }\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            if (Clock.Today.Date == CutDate)\r\n            {\r\n                //Remove.SetPhenologyStage = 3.5;\r\n                Remove.SetFractionToRemove(\"Panicle\", 1.0);\r\n                Remove.SetFractionToResidue(\"Panicle\", 0.0);\r\n                Remove.SetFractionToRemove(\"Leaf\", 0.7);\r\n                Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0.7);\r\n                Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                Remove.SetFractionToRemove(\"Grain\", 1.0);\r\n                Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                Oats.RemoveBiomass(\"Cut\", Remove);\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                                  "Code": "\nusing System.Xml.Serialization;\nusing Models.PMF.Interfaces;\nusing Models.PMF;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Plant Oats;\n        [Link] Clock Clock;\n\n        [Description(\"Cut Date\")]\n        public DateTime CutDate { get; set; }\n\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            Remove = new RemovalFractions();\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\n            if (Clock.Today.Date == CutDate)\n            {\n                //Remove.SetPhenologyStage = 3.5;\n                Remove.SetFractionToRemove(\"Panicle\", 1.0);\n                Remove.SetFractionToResidue(\"Panicle\", 0.0);\n                Remove.SetFractionToRemove(\"Leaf\", 0.7);\n                Remove.SetFractionToResidue(\"Leaf\", 0.0);\n                Remove.SetFractionToRemove(\"Stem\", 0.7);\n                Remove.SetFractionToResidue(\"Stem\", 0.0);\n                Remove.SetFractionToRemove(\"Grain\", 1.0);\n                Remove.SetFractionToResidue(\"Grain\", 0.0);\n                Remove.SetFractionToRemove(\"Root\", 0.0);\n                Remove.SetFractionToResidue(\"Root\", 0.0);\n                Oats.RemoveBiomass(\"Cut\", Remove);\n            }\n        }\n    }\n}\n                \n",
                                   "Parameters": [
                                     {
                                       "Key": "CutDate",
@@ -18495,7 +18525,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Oats;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Cut Date1\")]\r\n        public DateTime CutDate1 { get; set; }\r\n        [Description(\"Cut Date2\")]\r\n        public DateTime CutDate2 { get; set; }\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            if (Clock.Today.Date == CutDate1)\r\n            {\r\n                //Remove.SetPhenologyStage = 3.5;\r\n                Remove.SetFractionToRemove(\"Panicle\", 1.0);\r\n                Remove.SetFractionToResidue(\"Panicle\", 0.0);\r\n                Remove.SetFractionToRemove(\"Leaf\", 0.7);\r\n                Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0.7);\r\n                Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                Remove.SetFractionToRemove(\"Grain\", 1.0);\r\n                Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                Oats.RemoveBiomass(\"Cut\", Remove);\r\n            }\r\n            if (Clock.Today.Date == CutDate2)\r\n            {\r\n                //Remove.SetPhenologyStage = 3.5;\r\n                Remove.SetFractionToRemove(\"Panicle\", 1.0);\r\n                Remove.SetFractionToResidue(\"Panicle\", 0.0);\r\n                Remove.SetFractionToRemove(\"Leaf\", 0.7);\r\n                Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n                Remove.SetFractionToRemove(\"Stem\", 0.7);\r\n                Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                Remove.SetFractionToRemove(\"Grain\", 1.0);\r\n                Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                Oats.RemoveBiomass(\"Cut\", Remove);\r\n            }\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                                  "Code": "\nusing System.Xml.Serialization;\nusing Models.PMF.Interfaces;\nusing Models.PMF;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Plant Oats;\n        [Link] Clock Clock;\n\n        [Description(\"Cut Date1\")]\n        public DateTime CutDate1 { get; set; }\n        [Description(\"Cut Date2\")]\n        public DateTime CutDate2 { get; set; }\n\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            Remove = new RemovalFractions();\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\n            if (Clock.Today.Date == CutDate1)\n            {\n                //Remove.SetPhenologyStage = 3.5;\n                Remove.SetFractionToRemove(\"Panicle\", 1.0);\n                Remove.SetFractionToResidue(\"Panicle\", 0.0);\n                Remove.SetFractionToRemove(\"Leaf\", 0.7);\n                Remove.SetFractionToResidue(\"Leaf\", 0.0);\n                Remove.SetFractionToRemove(\"Stem\", 0.7);\n                Remove.SetFractionToResidue(\"Stem\", 0.0);\n                Remove.SetFractionToRemove(\"Grain\", 1.0);\n                Remove.SetFractionToResidue(\"Grain\", 0.0);\n                Remove.SetFractionToRemove(\"Root\", 0.0);\n                Remove.SetFractionToResidue(\"Root\", 0.0);\n                Oats.RemoveBiomass(\"Cut\", Remove);\n            }\n            if (Clock.Today.Date == CutDate2)\n            {\n                //Remove.SetPhenologyStage = 3.5;\n                Remove.SetFractionToRemove(\"Panicle\", 1.0);\n                Remove.SetFractionToResidue(\"Panicle\", 0.0);\n                Remove.SetFractionToRemove(\"Leaf\", 0.7);\n                Remove.SetFractionToResidue(\"Leaf\", 0.0);\n                Remove.SetFractionToRemove(\"Stem\", 0.7);\n                Remove.SetFractionToResidue(\"Stem\", 0.0);\n                Remove.SetFractionToRemove(\"Grain\", 1.0);\n                Remove.SetFractionToResidue(\"Grain\", 0.0);\n                Remove.SetFractionToRemove(\"Root\", 0.0);\n                Remove.SetFractionToResidue(\"Root\", 0.0);\n                Oats.RemoveBiomass(\"Cut\", Remove);\n            }\n        }\n    }\n}\n                \n",
                                   "Parameters": [
                                     {
                                       "Key": "CutDate1",
@@ -18804,9 +18834,9 @@
                                   "FOM": [
                                     195.29876946176833,
                                     144.68088689399622,
-                                    79.402554247828846,
+                                    79.40255424782885,
                                     43.577045706795644,
-                                    23.915589750490678,
+                                    23.91558975049068,
                                     13.125153939120324
                                   ],
                                   "CarbonMetadata": null,
@@ -18959,8 +18989,8 @@
                             },
                             {
                               "$type": "Models.Fertiliser, Models",
+                              "ResourceName": "Fertiliser",
                               "Name": "Fertiliser",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -18997,7 +19027,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        \r\n    }\r\n}\r\n                \r\n",
+                                  "Code": "\nusing System.Xml.Serialization;\nusing Models.PMF.Interfaces;\nusing Models.PMF;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        \n    }\n}\n                \n",
                                   "Parameters": null,
                                   "Name": "Cutting",
                                   "IncludeInDocumentation": true,
@@ -19055,7 +19085,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n    }\r\n}\r\n       \r\n",
+                                  "Code": "using Models.Soils.Nutrients;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.Soils.Nutrients;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n    }\n}\n       \n",
                                   "Parameters": null,
                                   "Name": "Harvesting",
                                   "IncludeInDocumentation": true,
@@ -22997,9 +23027,9 @@
                                     351.4981570792782,
                                     251.85943515628685,
                                     166.03597275435834,
-                                    109.45765931452689,
-                                    66.389426314640659,
-                                    34.085467992689367,
+                                    109.4576593145269,
+                                    66.38942631464066,
+                                    34.08546799268937,
                                     20.673881388219733
                                   ],
                                   "CarbonMetadata": null,
@@ -23035,8 +23065,8 @@
                                     10.9999507912223,
                                     8.00003158016907,
                                     4.39999177138765,
-                                    1.9999972856817809,
-                                    0.99999924491517045,
+                                    1.999997285681781,
+                                    0.9999992449151704,
                                     1.0
                                   ],
                                   "NH4N": [
@@ -23044,8 +23074,8 @@
                                     1.99997531701694,
                                     1.00003712422142,
                                     0.999997695330429,
-                                    0.099990496663883349,
-                                    0.099990496663883169,
+                                    0.09999049666388335,
+                                    0.09999049666388317,
                                     0.1
                                   ],
                                   "PH": [
@@ -23160,8 +23190,8 @@
                             },
                             {
                               "$type": "Models.Fertiliser, Models",
+                              "ResourceName": "Fertiliser",
                               "Name": "Fertiliser",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -25015,11 +25045,11 @@
                                   ],
                                   "FOM": [
                                     69.4258064625513,
-                                    54.068872438398742,
-                                    32.794428869980209,
+                                    54.06887243839874,
+                                    32.79442886998021,
                                     19.890826577408127,
                                     12.064396166224935,
-                                    7.3174261657349753,
+                                    7.317426165734975,
                                     4.43824331970172
                                   ],
                                   "CarbonMetadata": null,
@@ -25180,8 +25210,8 @@
                             },
                             {
                               "$type": "Models.Fertiliser, Models",
+                              "ResourceName": "Fertiliser",
                               "Name": "Fertiliser",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -25282,7 +25312,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n    }\r\n}\r\n       \r\n",
+                                  "Code": "using Models.Soils.Nutrients;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.Soils.Nutrients;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n    }\n}\n       \n",
                                   "Parameters": null,
                                   "Name": "Harvesting",
                                   "IncludeInDocumentation": true,
@@ -25291,7 +25321,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Oats;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Cultivar\")]\r\n        public string Cultivar { get; set; }\r\n        [Description(\"Management\")]\r\n        public int Management { get; set; }\r\n\r\n        private string SowDate;\r\n        private string CutDate1;\r\n        private string CutDate2;\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n            if (Management == 1)\r\n            {\r\n            SowDate = \"9-feb\";\r\n            CutDate1 = \"\";\r\n            CutDate2 = \"\";\r\n            }\r\n            else if (Management == 2)\r\n            {\r\n            SowDate = \"8-mar\";\r\n            CutDate1 = \"\";\r\n            CutDate2 = \"\";\r\n            }\r\n            else if (Management == 3)\r\n            {\r\n            SowDate = \"5-apr\";\r\n            CutDate1 = \"\";\r\n            CutDate2 = \"\";\r\n            }\r\n            else if (Management == 4)\r\n            {\r\n            SowDate = \"9-feb\";\r\n            CutDate1 = \"12-apr\";\r\n            CutDate2 = \"10-may\";\r\n            }\r\n            else if (Management == 5)\r\n            {\r\n            SowDate = \"8-mar\";\r\n            CutDate1 = \"9-may\";\r\n            CutDate2 = \"6-jun\";\r\n            }\r\n            else if (Management == 6)\r\n            {\r\n            SowDate = \"5-apr\";\r\n            CutDate1 = \"6-jun\";\r\n            CutDate2 = \"4-jul\";\r\n            }\r\n\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate,Clock.Today,SowDate) )\r\n            {\r\n                Oats.Sow(population:95, cultivar: Cultivar, depth:40, rowSpacing:250);\r\n            }\r\n\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            if (CutDate1 !=\"\")\r\n                if (DateUtilities.WithinDates(CutDate1,Clock.Today,CutDate1))\r\n                {\r\n                    //Remove.SetPhenologyStage = 2.0;\r\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                    Oats.RemoveBiomass(\"Cut\", Remove);\r\n                }\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            if (CutDate2 !=\"\")\r\n                if (DateUtilities.WithinDates(CutDate2,Clock.Today,CutDate2))\r\n                {\r\n                    //Remove.SetPhenologyStage = 2.0;\r\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                    Oats.RemoveBiomass(\"Cut\", Remove);\r\n                }\r\n\r\n            \r\n        }\r\n    }\r\n}\r\n                \r\n",
+                                  "Code": "\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models.PMF.Interfaces;\nusing Models.PMF;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Plant Oats;\n        [Link] Clock Clock;\n\n        [Description(\"Cultivar\")]\n        public string Cultivar { get; set; }\n        [Description(\"Management\")]\n        public int Management { get; set; }\n\n        private string SowDate;\n        private string CutDate1;\n        private string CutDate2;\n\n\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            Remove = new RemovalFractions();\n            if (Management == 1)\n            {\n            SowDate = \"9-feb\";\n            CutDate1 = \"\";\n            CutDate2 = \"\";\n            }\n            else if (Management == 2)\n            {\n            SowDate = \"8-mar\";\n            CutDate1 = \"\";\n            CutDate2 = \"\";\n            }\n            else if (Management == 3)\n            {\n            SowDate = \"5-apr\";\n            CutDate1 = \"\";\n            CutDate2 = \"\";\n            }\n            else if (Management == 4)\n            {\n            SowDate = \"9-feb\";\n            CutDate1 = \"12-apr\";\n            CutDate2 = \"10-may\";\n            }\n            else if (Management == 5)\n            {\n            SowDate = \"8-mar\";\n            CutDate1 = \"9-may\";\n            CutDate2 = \"6-jun\";\n            }\n            else if (Management == 6)\n            {\n            SowDate = \"5-apr\";\n            CutDate1 = \"6-jun\";\n            CutDate2 = \"4-jul\";\n            }\n\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n\n            if (DateUtilities.WithinDates(SowDate,Clock.Today,SowDate) )\n            {\n                Oats.Sow(population:95, cultivar: Cultivar, depth:40, rowSpacing:250);\n            }\n\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\n            if (CutDate1 !=\"\")\n                if (DateUtilities.WithinDates(CutDate1,Clock.Today,CutDate1))\n                {\n                    //Remove.SetPhenologyStage = 2.0;\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\n                    Oats.RemoveBiomass(\"Cut\", Remove);\n                }\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\n            if (CutDate2 !=\"\")\n                if (DateUtilities.WithinDates(CutDate2,Clock.Today,CutDate2))\n                {\n                    //Remove.SetPhenologyStage = 2.0;\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\n                    Oats.RemoveBiomass(\"Cut\", Remove);\n                }\n\n            \n        }\n    }\n}\n                \n",
                                   "Parameters": [
                                     {
                                       "Key": "Cultivar",
@@ -25772,11 +25802,11 @@
                                   ],
                                   "FOM": [
                                     69.4258064625513,
-                                    54.068872438398742,
-                                    32.794428869980209,
+                                    54.06887243839874,
+                                    32.79442886998021,
                                     19.890826577408127,
                                     12.064396166224935,
-                                    7.3174261657349753,
+                                    7.317426165734975,
                                     4.43824331970172
                                   ],
                                   "CarbonMetadata": null,
@@ -25937,8 +25967,8 @@
                             },
                             {
                               "$type": "Models.Fertiliser, Models",
+                              "ResourceName": "Fertiliser",
                               "Name": "Fertiliser",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -26039,7 +26069,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n    }\r\n}\r\n       \r\n",
+                                  "Code": "using Models.Soils.Nutrients;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.Soils.Nutrients;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n    }\n}\n       \n",
                                   "Parameters": null,
                                   "Name": "Harvesting",
                                   "IncludeInDocumentation": true,
@@ -26048,7 +26078,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Oats;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Cultivar\")]\r\n        public string Cultivar { get; set; }\r\n        [Description(\"Management\")]\r\n        public int Management { get; set; }\r\n\r\n        private string SowDate;\r\n        private string CutDate1;\r\n        private string CutDate2;\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n            if (Management == 1)\r\n            {\r\n            SowDate = \"6-feb\";\r\n            CutDate1 = \"\";\r\n            CutDate2 = \"\";\r\n            }\r\n            else if (Management == 2)\r\n            {\r\n            SowDate = \"5-mar\";\r\n            CutDate1 = \"\";\r\n            CutDate2 = \"\";\r\n            }\r\n            else if (Management == 3)\r\n            {\r\n            SowDate = \"2-apr\";\r\n            CutDate1 = \"\";\r\n            CutDate2 = \"\";\r\n            }\r\n            else if (Management == 4)\r\n            {\r\n            SowDate = \"6-feb\";\r\n            CutDate1 = \"2-apr\";\r\n            CutDate2 = \"30-apr\";\r\n            }\r\n            else if (Management == 5)\r\n            {\r\n            SowDate = \"5-mar\";\r\n            CutDate1 = \"30-apr\";\r\n            CutDate2 = \"28-may\";\r\n            }\r\n            else if (Management == 6)\r\n            {\r\n            SowDate = \"2-apr\";\r\n            CutDate1 = \"28-may\";\r\n            CutDate2 = \"25-jun\";\r\n            }\r\n\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate,Clock.Today,SowDate) )\r\n            {\r\n                Oats.Sow(population:95, cultivar: Cultivar, depth:40, rowSpacing:250);\r\n            }\r\n\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            if (CutDate1 !=\"\")\r\n                if (DateUtilities.WithinDates(CutDate1,Clock.Today,CutDate1))\r\n                {\r\n                    //Remove.SetPhenologyStage = 2.0;\r\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                    Oats.RemoveBiomass(\"Cut\", Remove);\r\n                }\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            if (CutDate2 !=\"\")\r\n                if (DateUtilities.WithinDates(CutDate2,Clock.Today,CutDate2))\r\n                {\r\n                    //Remove.SetPhenologyStage = 2.0;\r\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                    Oats.RemoveBiomass(\"Cut\", Remove);\r\n                }\r\n\r\n            \r\n        }\r\n    }\r\n}\r\n                \r\n",
+                                  "Code": "\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models.PMF.Interfaces;\nusing Models.PMF;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Plant Oats;\n        [Link] Clock Clock;\n\n        [Description(\"Cultivar\")]\n        public string Cultivar { get; set; }\n        [Description(\"Management\")]\n        public int Management { get; set; }\n\n        private string SowDate;\n        private string CutDate1;\n        private string CutDate2;\n\n\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            Remove = new RemovalFractions();\n            if (Management == 1)\n            {\n            SowDate = \"6-feb\";\n            CutDate1 = \"\";\n            CutDate2 = \"\";\n            }\n            else if (Management == 2)\n            {\n            SowDate = \"5-mar\";\n            CutDate1 = \"\";\n            CutDate2 = \"\";\n            }\n            else if (Management == 3)\n            {\n            SowDate = \"2-apr\";\n            CutDate1 = \"\";\n            CutDate2 = \"\";\n            }\n            else if (Management == 4)\n            {\n            SowDate = \"6-feb\";\n            CutDate1 = \"2-apr\";\n            CutDate2 = \"30-apr\";\n            }\n            else if (Management == 5)\n            {\n            SowDate = \"5-mar\";\n            CutDate1 = \"30-apr\";\n            CutDate2 = \"28-may\";\n            }\n            else if (Management == 6)\n            {\n            SowDate = \"2-apr\";\n            CutDate1 = \"28-may\";\n            CutDate2 = \"25-jun\";\n            }\n\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n\n            if (DateUtilities.WithinDates(SowDate,Clock.Today,SowDate) )\n            {\n                Oats.Sow(population:95, cultivar: Cultivar, depth:40, rowSpacing:250);\n            }\n\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\n            if (CutDate1 !=\"\")\n                if (DateUtilities.WithinDates(CutDate1,Clock.Today,CutDate1))\n                {\n                    //Remove.SetPhenologyStage = 2.0;\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\n                    Oats.RemoveBiomass(\"Cut\", Remove);\n                }\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\n            if (CutDate2 !=\"\")\n                if (DateUtilities.WithinDates(CutDate2,Clock.Today,CutDate2))\n                {\n                    //Remove.SetPhenologyStage = 2.0;\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\n                    Oats.RemoveBiomass(\"Cut\", Remove);\n                }\n\n            \n        }\n    }\n}\n                \n",
                                   "Parameters": [
                                     {
                                       "Key": "Cultivar",
@@ -26529,11 +26559,11 @@
                                   ],
                                   "FOM": [
                                     69.4258064625513,
-                                    54.068872438398742,
-                                    32.794428869980209,
+                                    54.06887243839874,
+                                    32.79442886998021,
                                     19.890826577408127,
                                     12.064396166224935,
-                                    7.3174261657349753,
+                                    7.317426165734975,
                                     4.43824331970172
                                   ],
                                   "CarbonMetadata": null,
@@ -26694,8 +26724,8 @@
                             },
                             {
                               "$type": "Models.Fertiliser, Models",
+                              "ResourceName": "Fertiliser",
                               "Name": "Fertiliser",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -26856,7 +26886,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n    }\r\n}\r\n       \r\n",
+                                  "Code": "using Models.Soils.Nutrients;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.Soils.Nutrients;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n    }\n}\n       \n",
                                   "Parameters": null,
                                   "Name": "Harvesting",
                                   "IncludeInDocumentation": true,
@@ -26865,7 +26895,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Oats;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Cultivar\")]\r\n        public string Cultivar { get; set; }\r\n        [Description(\"Management\")]\r\n        public int Management { get; set; }\r\n\r\n        private string SowDate;\r\n        private string CutDate1;\r\n        private string CutDate2;\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n            if (Management == 1)\r\n            {\r\n            SowDate = \"3-mar\";\r\n            CutDate1 = \"\";\r\n            CutDate2 = \"\";\r\n            }\r\n            else if (Management == 2)\r\n            {\r\n            SowDate = \"1-apr\";\r\n            CutDate1 = \"\";\r\n            CutDate2 = \"\";\r\n            }\r\n            else if (Management == 3)\r\n            {\r\n            SowDate = \"3-feb\";\r\n            CutDate1 = \"1-jun\";\r\n            CutDate2 = \"\";\r\n            }\r\n            else if (Management == 4)\r\n            {\r\n            SowDate = \"3-feb\";\r\n            CutDate1 = \"24-mar\";\r\n            CutDate2 = \"28-apr\";\r\n            }\r\n            else if (Management == 5)\r\n            {\r\n            SowDate = \"3-mar\";\r\n            CutDate1 = \"28-apr\";\r\n            CutDate2 = \"26-may\";\r\n            }\r\n            else if (Management == 6)\r\n            {\r\n            SowDate = \"1-apr\";\r\n            CutDate1 = \"26-may\";\r\n            CutDate2 = \"23-jun\";\r\n            }\r\n\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate,Clock.Today,SowDate) )\r\n            {\r\n                Oats.Sow(population:95, cultivar: Cultivar, depth:40, rowSpacing:250);\r\n            }\r\n\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            if (CutDate1 !=\"\")\r\n                if (DateUtilities.WithinDates(CutDate1,Clock.Today,CutDate1))\r\n                {\r\n                    //Remove.SetPhenologyStage = 2.0;\r\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                    Oats.RemoveBiomass(\"Cut\", Remove);\r\n                }\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            if (CutDate2 !=\"\")\r\n                if (DateUtilities.WithinDates(CutDate2,Clock.Today,CutDate2))\r\n                {\r\n                    //Remove.SetPhenologyStage = 2.0;\r\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                    Oats.RemoveBiomass(\"Cut\", Remove);\r\n                }\r\n\r\n            \r\n        }\r\n    }\r\n}\r\n                \r\n",
+                                  "Code": "\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models.PMF.Interfaces;\nusing Models.PMF;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Plant Oats;\n        [Link] Clock Clock;\n\n        [Description(\"Cultivar\")]\n        public string Cultivar { get; set; }\n        [Description(\"Management\")]\n        public int Management { get; set; }\n\n        private string SowDate;\n        private string CutDate1;\n        private string CutDate2;\n\n\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            Remove = new RemovalFractions();\n            if (Management == 1)\n            {\n            SowDate = \"3-mar\";\n            CutDate1 = \"\";\n            CutDate2 = \"\";\n            }\n            else if (Management == 2)\n            {\n            SowDate = \"1-apr\";\n            CutDate1 = \"\";\n            CutDate2 = \"\";\n            }\n            else if (Management == 3)\n            {\n            SowDate = \"3-feb\";\n            CutDate1 = \"1-jun\";\n            CutDate2 = \"\";\n            }\n            else if (Management == 4)\n            {\n            SowDate = \"3-feb\";\n            CutDate1 = \"24-mar\";\n            CutDate2 = \"28-apr\";\n            }\n            else if (Management == 5)\n            {\n            SowDate = \"3-mar\";\n            CutDate1 = \"28-apr\";\n            CutDate2 = \"26-may\";\n            }\n            else if (Management == 6)\n            {\n            SowDate = \"1-apr\";\n            CutDate1 = \"26-may\";\n            CutDate2 = \"23-jun\";\n            }\n\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n\n            if (DateUtilities.WithinDates(SowDate,Clock.Today,SowDate) )\n            {\n                Oats.Sow(population:95, cultivar: Cultivar, depth:40, rowSpacing:250);\n            }\n\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\n            if (CutDate1 !=\"\")\n                if (DateUtilities.WithinDates(CutDate1,Clock.Today,CutDate1))\n                {\n                    //Remove.SetPhenologyStage = 2.0;\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\n                    Oats.RemoveBiomass(\"Cut\", Remove);\n                }\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\n            if (CutDate2 !=\"\")\n                if (DateUtilities.WithinDates(CutDate2,Clock.Today,CutDate2))\n                {\n                    //Remove.SetPhenologyStage = 2.0;\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\n                    Oats.RemoveBiomass(\"Cut\", Remove);\n                }\n\n            \n        }\n    }\n}\n                \n",
                                   "Parameters": [
                                     {
                                       "Key": "Cultivar",
@@ -27346,11 +27376,11 @@
                                   ],
                                   "FOM": [
                                     69.4258064625513,
-                                    54.068872438398742,
-                                    32.794428869980209,
+                                    54.06887243839874,
+                                    32.79442886998021,
                                     19.890826577408127,
                                     12.064396166224935,
-                                    7.3174261657349753,
+                                    7.317426165734975,
                                     4.43824331970172
                                   ],
                                   "CarbonMetadata": null,
@@ -27511,8 +27541,8 @@
                             },
                             {
                               "$type": "Models.Fertiliser, Models",
+                              "ResourceName": "Fertiliser",
                               "Name": "Fertiliser",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -27655,7 +27685,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n    }\r\n}\r\n       \r\n",
+                                  "Code": "using Models.Soils.Nutrients;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.Soils.Nutrients;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n    }\n}\n       \n",
                                   "Parameters": null,
                                   "Name": "Harvesting",
                                   "IncludeInDocumentation": true,
@@ -27664,7 +27694,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Oats;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Cultivar\")]\r\n        public string Cultivar { get; set; }\r\n        [Description(\"Management\")]\r\n        public int Management { get; set; }\r\n\r\n        private string SowDate;\r\n        private string CutDate1;\r\n        private string CutDate2;\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n            if (Management == 1)\r\n            {\r\n            SowDate = \"2-feb\";\r\n            CutDate1 = \"\";\r\n            CutDate2 = \"\";\r\n            }\r\n            else if (Management == 2)\r\n            {\r\n            SowDate = \"2-mar\";\r\n            CutDate1 = \"\";\r\n            CutDate2 = \"\";\r\n            }\r\n            else if (Management == 3)\r\n            {\r\n            SowDate = \"30-mar\";\r\n            CutDate1 = \"\";\r\n            CutDate2 = \"\";\r\n            }\r\n            else if (Management == 4)\r\n            {\r\n            SowDate = \"2-feb\";\r\n            CutDate1 = \"30-mar\";\r\n            CutDate2 = \"27-apr\";\r\n            }\r\n            else if (Management == 5)\r\n            {\r\n            SowDate = \"2-mar\";\r\n            CutDate1 = \"27-apr\";\r\n            CutDate2 = \"25-may\";\r\n            }\r\n            else if (Management == 6)\r\n            {\r\n            SowDate = \"30-mar\";\r\n            CutDate1 = \"25-may\";\r\n            CutDate2 = \"22-jun\";\r\n            }\r\n\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate,Clock.Today,SowDate) )\r\n            {\r\n                Oats.Sow(population:95, cultivar: Cultivar, depth:40, rowSpacing:250);\r\n            }\r\n\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            if (CutDate1 !=\"\")\r\n                if (DateUtilities.WithinDates(CutDate1,Clock.Today,CutDate1))\r\n                {\r\n                    //Remove.SetPhenologyStage = 2.0;\r\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                    Oats.RemoveBiomass(\"Cut\", Remove);\r\n                }\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            if (CutDate2 !=\"\")\r\n                if (DateUtilities.WithinDates(CutDate2,Clock.Today,CutDate2))\r\n                {\r\n                    //Remove.SetPhenologyStage = 2.0;\r\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                    Oats.RemoveBiomass(\"Cut\", Remove);\r\n                }\r\n\r\n            \r\n        }\r\n    }\r\n}\r\n                \r\n",
+                                  "Code": "\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models.PMF.Interfaces;\nusing Models.PMF;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Plant Oats;\n        [Link] Clock Clock;\n\n        [Description(\"Cultivar\")]\n        public string Cultivar { get; set; }\n        [Description(\"Management\")]\n        public int Management { get; set; }\n\n        private string SowDate;\n        private string CutDate1;\n        private string CutDate2;\n\n\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            Remove = new RemovalFractions();\n            if (Management == 1)\n            {\n            SowDate = \"2-feb\";\n            CutDate1 = \"\";\n            CutDate2 = \"\";\n            }\n            else if (Management == 2)\n            {\n            SowDate = \"2-mar\";\n            CutDate1 = \"\";\n            CutDate2 = \"\";\n            }\n            else if (Management == 3)\n            {\n            SowDate = \"30-mar\";\n            CutDate1 = \"\";\n            CutDate2 = \"\";\n            }\n            else if (Management == 4)\n            {\n            SowDate = \"2-feb\";\n            CutDate1 = \"30-mar\";\n            CutDate2 = \"27-apr\";\n            }\n            else if (Management == 5)\n            {\n            SowDate = \"2-mar\";\n            CutDate1 = \"27-apr\";\n            CutDate2 = \"25-may\";\n            }\n            else if (Management == 6)\n            {\n            SowDate = \"30-mar\";\n            CutDate1 = \"25-may\";\n            CutDate2 = \"22-jun\";\n            }\n\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n\n            if (DateUtilities.WithinDates(SowDate,Clock.Today,SowDate) )\n            {\n                Oats.Sow(population:95, cultivar: Cultivar, depth:40, rowSpacing:250);\n            }\n\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\n            if (CutDate1 !=\"\")\n                if (DateUtilities.WithinDates(CutDate1,Clock.Today,CutDate1))\n                {\n                    //Remove.SetPhenologyStage = 2.0;\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\n                    Oats.RemoveBiomass(\"Cut\", Remove);\n                }\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\n            if (CutDate2 !=\"\")\n                if (DateUtilities.WithinDates(CutDate2,Clock.Today,CutDate2))\n                {\n                    //Remove.SetPhenologyStage = 2.0;\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\n                    Oats.RemoveBiomass(\"Cut\", Remove);\n                }\n\n            \n        }\n    }\n}\n                \n",
                                   "Parameters": [
                                     {
                                       "Key": "Cultivar",
@@ -28145,11 +28175,11 @@
                                   ],
                                   "FOM": [
                                     69.4258064625513,
-                                    54.068872438398742,
-                                    32.794428869980209,
+                                    54.06887243839874,
+                                    32.79442886998021,
                                     19.890826577408127,
                                     12.064396166224935,
-                                    7.3174261657349753,
+                                    7.317426165734975,
                                     4.43824331970172
                                   ],
                                   "CarbonMetadata": null,
@@ -28310,8 +28340,8 @@
                             },
                             {
                               "$type": "Models.Fertiliser, Models",
+                              "ResourceName": "Fertiliser",
                               "Name": "Fertiliser",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -28454,7 +28484,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n    }\r\n}\r\n       \r\n",
+                                  "Code": "using Models.Soils.Nutrients;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.Soils.Nutrients;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n    }\n}\n       \n",
                                   "Parameters": [],
                                   "Name": "Harvesting",
                                   "IncludeInDocumentation": true,
@@ -28463,7 +28493,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Oats;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Cultivar\")]\r\n        public string Cultivar { get; set; }\r\n        [Description(\"Management\")]\r\n        public int Management { get; set; }\r\n\r\n        private string SowDate;\r\n        private string CutDate1;\r\n        private string CutDate2;\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n            if (Management == 1)\r\n            {\r\n            SowDate = \"1-feb\";\r\n            CutDate1 = \"\";\r\n            CutDate2 = \"\";\r\n            }\r\n            else if (Management == 2)\r\n            {\r\n            SowDate = \"29-feb\";\r\n            CutDate1 = \"\";\r\n            CutDate2 = \"\";\r\n            }\r\n            else if (Management == 3)\r\n            {\r\n            SowDate = \"29-mar\";\r\n            CutDate1 = \"\";\r\n            CutDate2 = \"\";\r\n            }\r\n            else if (Management == 4)\r\n            {\r\n            SowDate = \"1-feb\";\r\n            CutDate1 = \"29-mar\";\r\n            CutDate2 = \"26-apr\";\r\n            }\r\n            else if (Management == 5)\r\n            {\r\n            SowDate = \"29-feb\";\r\n            CutDate1 = \"26-apr\";\r\n            CutDate2 = \"24-may\";\r\n            }\r\n            else if (Management == 6)\r\n            {\r\n            SowDate = \"29-mar\";\r\n            CutDate1 = \"24-may\";\r\n            CutDate2 = \"21-jun\";\r\n            }\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate,Clock.Today,SowDate) )\r\n            {\r\n                Oats.Sow(population:95, cultivar: Cultivar, depth:40, rowSpacing:250);\r\n            }\r\n\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            if (CutDate1 !=\"\")\r\n                if (DateUtilities.WithinDates(CutDate1,Clock.Today,CutDate1))\r\n                {\r\n                    //Remove.SetPhenologyStage = 2.0;\r\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                    Oats.RemoveBiomass(\"Cut\", Remove);\r\n                }\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            if (CutDate2 !=\"\")\r\n                if (DateUtilities.WithinDates(CutDate2,Clock.Today,CutDate2))\r\n                {\r\n                    //Remove.SetPhenologyStage = 2.0;\r\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                    Oats.RemoveBiomass(\"Cut\", Remove);\r\n                }\r\n\r\n            \r\n        }\r\n    }\r\n}\r\n                \r\n",
+                                  "Code": "\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models.PMF.Interfaces;\nusing Models.PMF;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Plant Oats;\n        [Link] Clock Clock;\n\n        [Description(\"Cultivar\")]\n        public string Cultivar { get; set; }\n        [Description(\"Management\")]\n        public int Management { get; set; }\n\n        private string SowDate;\n        private string CutDate1;\n        private string CutDate2;\n\n\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            Remove = new RemovalFractions();\n            if (Management == 1)\n            {\n            SowDate = \"1-feb\";\n            CutDate1 = \"\";\n            CutDate2 = \"\";\n            }\n            else if (Management == 2)\n            {\n            SowDate = \"29-feb\";\n            CutDate1 = \"\";\n            CutDate2 = \"\";\n            }\n            else if (Management == 3)\n            {\n            SowDate = \"29-mar\";\n            CutDate1 = \"\";\n            CutDate2 = \"\";\n            }\n            else if (Management == 4)\n            {\n            SowDate = \"1-feb\";\n            CutDate1 = \"29-mar\";\n            CutDate2 = \"26-apr\";\n            }\n            else if (Management == 5)\n            {\n            SowDate = \"29-feb\";\n            CutDate1 = \"26-apr\";\n            CutDate2 = \"24-may\";\n            }\n            else if (Management == 6)\n            {\n            SowDate = \"29-mar\";\n            CutDate1 = \"24-may\";\n            CutDate2 = \"21-jun\";\n            }\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n\n            if (DateUtilities.WithinDates(SowDate,Clock.Today,SowDate) )\n            {\n                Oats.Sow(population:95, cultivar: Cultivar, depth:40, rowSpacing:250);\n            }\n\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\n            if (CutDate1 !=\"\")\n                if (DateUtilities.WithinDates(CutDate1,Clock.Today,CutDate1))\n                {\n                    //Remove.SetPhenologyStage = 2.0;\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\n                    Oats.RemoveBiomass(\"Cut\", Remove);\n                }\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\n            if (CutDate2 !=\"\")\n                if (DateUtilities.WithinDates(CutDate2,Clock.Today,CutDate2))\n                {\n                    //Remove.SetPhenologyStage = 2.0;\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\n                    Oats.RemoveBiomass(\"Cut\", Remove);\n                }\n\n            \n        }\n    }\n}\n                \n",
                                   "Parameters": [
                                     {
                                       "Key": "Cultivar",
@@ -28944,11 +28974,11 @@
                                   ],
                                   "FOM": [
                                     69.4258064625513,
-                                    54.068872438398742,
-                                    32.794428869980209,
+                                    54.06887243839874,
+                                    32.79442886998021,
                                     19.890826577408127,
                                     12.064396166224935,
-                                    7.3174261657349753,
+                                    7.317426165734975,
                                     4.43824331970172
                                   ],
                                   "CarbonMetadata": null,
@@ -29109,8 +29139,8 @@
                             },
                             {
                               "$type": "Models.Fertiliser, Models",
+                              "ResourceName": "Fertiliser",
                               "Name": "Fertiliser",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -29241,7 +29271,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "using Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System.Text;\r\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing Models.PMF;\r\nusing Models;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model\r\n    {\r\n    }\r\n}\r\n       \r\n",
+                                  "Code": "using Models.Soils.Nutrients;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.Soils.Nutrients;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n    }\n}\n       \n",
                                   "Parameters": null,
                                   "Name": "Harvesting",
                                   "IncludeInDocumentation": true,
@@ -29250,7 +29280,7 @@
                                 },
                                 {
                                   "$type": "Models.Manager, Models",
-                                  "Code": "\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.PMF.Interfaces;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Collections.Generic;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Plant Oats;\r\n        [Link] Clock Clock;\r\n\r\n        [Description(\"Cultivar\")]\r\n        public string Cultivar { get; set; }\r\n        [Description(\"Management\")]\r\n        public int Management { get; set; }\r\n\r\n        private string SowDate;\r\n        private string CutDate1;\r\n        private string CutDate2;\r\n\r\n\r\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Remove = new RemovalFractions();\r\n            if (Management == 1)\r\n            {\r\n            SowDate = \"7-feb\";\r\n            CutDate1 = \"\";\r\n            CutDate2 = \"\";\r\n            }\r\n            else if (Management == 2)\r\n            {\r\n            SowDate = \"7-mar\";\r\n            CutDate1 = \"\";\r\n            CutDate2 = \"\";\r\n            }\r\n            else if (Management == 3)\r\n            {\r\n            SowDate = \"4-apr\";\r\n            CutDate1 = \"\";\r\n            CutDate2 = \"\";\r\n            }\r\n            else if (Management == 4)\r\n            {\r\n            SowDate = \"7-feb\";\r\n            CutDate1 = \"4-apr\";\r\n            CutDate2 = \"2-may\";\r\n            }\r\n            else if (Management == 5)\r\n            {\r\n            SowDate = \"7-mar\";\r\n            CutDate1 = \"2-may\";\r\n            CutDate2 = \"30-may\";\r\n            }\r\n            else if (Management == 6)\r\n            {\r\n            SowDate = \"4-apr\";\r\n            CutDate1 = \"30-may\";\r\n            CutDate2 = \"27-jun\";\r\n            }\r\n\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n\r\n            if (DateUtilities.WithinDates(SowDate,Clock.Today,SowDate) )\r\n            {\r\n                Oats.Sow(population:95, cultivar: Cultivar, depth:40, rowSpacing:250);\r\n            }\r\n\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            if (CutDate1 !=\"\")\r\n                if (DateUtilities.WithinDates(CutDate1,Clock.Today,CutDate1))\r\n                {\r\n                    //Remove.SetPhenologyStage = 2.0;\r\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                    Oats.RemoveBiomass(\"Cut\", Remove);\r\n                }\r\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\r\n            if (CutDate2 !=\"\")\r\n                if (DateUtilities.WithinDates(CutDate2,Clock.Today,CutDate2))\r\n                {\r\n                    //Remove.SetPhenologyStage = 2.0;\r\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\r\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\r\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\r\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\r\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\r\n                    Oats.RemoveBiomass(\"Cut\", Remove);\r\n                }\r\n\r\n            \r\n        }\r\n    }\r\n}\r\n                \r\n",
+                                  "Code": "\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models.PMF.Interfaces;\nusing Models.PMF;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Plant Oats;\n        [Link] Clock Clock;\n\n        [Description(\"Cultivar\")]\n        public string Cultivar { get; set; }\n        [Description(\"Management\")]\n        public int Management { get; set; }\n\n        private string SowDate;\n        private string CutDate1;\n        private string CutDate2;\n\n\n        [XmlIgnore] private RemovalFractions Remove { get; set; }\n        \n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnSimulationCommencing(object sender, EventArgs e)\n        {\n            Remove = new RemovalFractions();\n            if (Management == 1)\n            {\n            SowDate = \"7-feb\";\n            CutDate1 = \"\";\n            CutDate2 = \"\";\n            }\n            else if (Management == 2)\n            {\n            SowDate = \"7-mar\";\n            CutDate1 = \"\";\n            CutDate2 = \"\";\n            }\n            else if (Management == 3)\n            {\n            SowDate = \"4-apr\";\n            CutDate1 = \"\";\n            CutDate2 = \"\";\n            }\n            else if (Management == 4)\n            {\n            SowDate = \"7-feb\";\n            CutDate1 = \"4-apr\";\n            CutDate2 = \"2-may\";\n            }\n            else if (Management == 5)\n            {\n            SowDate = \"7-mar\";\n            CutDate1 = \"2-may\";\n            CutDate2 = \"30-may\";\n            }\n            else if (Management == 6)\n            {\n            SowDate = \"4-apr\";\n            CutDate1 = \"30-may\";\n            CutDate2 = \"27-jun\";\n            }\n\n        }\n        \n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n\n            if (DateUtilities.WithinDates(SowDate,Clock.Today,SowDate) )\n            {\n                Oats.Sow(population:95, cultivar: Cultivar, depth:40, rowSpacing:250);\n            }\n\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\n            if (CutDate1 !=\"\")\n                if (DateUtilities.WithinDates(CutDate1,Clock.Today,CutDate1))\n                {\n                    //Remove.SetPhenologyStage = 2.0;\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\n                    Oats.RemoveBiomass(\"Cut\", Remove);\n                }\n            //Set up  array of remove fractions to send with Cut method.  Each member in the array corresponds to an organ in the same order they are set up in.\n            if (CutDate2 !=\"\")\n                if (DateUtilities.WithinDates(CutDate2,Clock.Today,CutDate2))\n                {\n                    //Remove.SetPhenologyStage = 2.0;\n                    Remove.SetFractionToRemove(\"Panicle\", 1.0);\n                    Remove.SetFractionToResidue(\"Panicle\", 0.0);\n                    Remove.SetFractionToRemove(\"Leaf\", 0.8);\n                    Remove.SetFractionToResidue(\"Leaf\", 0.0);\n                    Remove.SetFractionToRemove(\"Stem\", 0.8);\n                    Remove.SetFractionToResidue(\"Stem\", 0.0);\n                    Remove.SetFractionToRemove(\"Grain\", 1.0);\n                    Remove.SetFractionToResidue(\"Grain\", 0.0);\n                    Remove.SetFractionToRemove(\"Root\", 0.0);\n                    Remove.SetFractionToResidue(\"Root\", 0.0);\n                    Oats.RemoveBiomass(\"Cut\", Remove);\n                }\n\n            \n        }\n    }\n}\n                \n",
                                   "Parameters": [
                                     {
                                       "Key": "Cultivar",
@@ -32077,9 +32107,9 @@
                             351.4981570792782,
                             251.85943515628685,
                             166.03597275435834,
-                            109.45765931452689,
-                            66.389426314640659,
-                            34.085467992689367,
+                            109.4576593145269,
+                            66.38942631464066,
+                            34.08546799268937,
                             20.673881388219733
                           ],
                           "CarbonMetadata": null,
@@ -32115,8 +32145,8 @@
                             10.9999507912223,
                             8.00003158016907,
                             4.39999177138765,
-                            1.9999972856817809,
-                            0.99999924491517045,
+                            1.999997285681781,
+                            0.9999992449151704,
                             1.0
                           ],
                           "NH4N": [
@@ -32124,8 +32154,8 @@
                             1.99997531701694,
                             1.00003712422142,
                             0.999997695330429,
-                            0.099990496663883349,
-                            0.099990496663883169,
+                            0.09999049666388335,
+                            0.09999049666388317,
                             0.1
                           ],
                           "PH": [
@@ -32240,8 +32270,8 @@
                     },
                     {
                       "$type": "Models.Fertiliser, Models",
+                      "ResourceName": "Fertiliser",
                       "Name": "Fertiliser",
-                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false

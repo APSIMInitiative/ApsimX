@@ -76,7 +76,9 @@ namespace UserInterface.Extensions
 #if NETFRAMEWORK
             return widget.Style.Background(state);
 #else
+#pragma warning disable 0612 // fixme
             return widget.StyleContext.GetBackgroundColor(state).ToGdkColor();
+#pragma warning restore 0612
 #endif
         }
 
@@ -193,11 +195,6 @@ namespace UserInterface.Extensions
         /// <param name="xPadding"></param>
         /// <param name="yPadding"></param>
         public static void Attach(this Grid grid, Widget child, int left, int right, int top, int bottom, AttachOptions xOptions, AttachOptions yOptions, int xPadding, int yPadding)
-        {
-            grid.Attach(child, left, top, right - left, bottom - top);
-        }
-
-        public static void Attach(this Grid grid, Widget child, int left, int right, int top, int bottom)
         {
             grid.Attach(child, left, top, right - left, bottom - top);
         }

@@ -7,6 +7,7 @@ namespace UserInterface.Views
     using System;
     using System.Collections.Generic;
     using System.Drawing;
+    using System.Linq;
     using System.Runtime.InteropServices;
     using System.Runtime.Serialization;
     using System.Timers;
@@ -38,6 +39,19 @@ namespace UserInterface.Views
         private CellRendererText textRender;
         private const string modelMime = "application/x-model-component";
         private Timer timer = new Timer();
+
+        /// <summary>
+        /// Keep track of whether the accelerator group is attached to the toplevel window.
+        /// </summary>
+        /// <remarks>
+        /// Normally we just need to remove the accelerators when the treeview loses focus,
+        /// and re-add them when it regains focus. However, it's possible for the treeview
+        /// to gain focus multiple times without losing it in-between, which leads to
+        /// gtk warnings. Typically this occurs after using the search functionality.
+        /// The solution is to use this variable to keep track of whether the accelerators
+        /// are already attached to the window, so that we only add them when necessary.
+        /// </remarks>
+        private bool acceleratorsAreAttached;
 
         // If you add a new item to the tree model that is not at the end (e.g. add a bool as the third item), a lot of things will break.
         private TreeStore treemodel = new TreeStore(typeof(string), typeof(Gdk.Pixbuf), typeof(string), typeof(string), typeof(Color), typeof(bool));
@@ -141,14 +155,23 @@ namespace UserInterface.Views
                 else
                     return string.Empty;
             }
-
             set
             {
                 if (SelectedNode != value && value != string.Empty)
                 {
-                    TreePath pathToSelect = treemodel.GetPath(FindNode(value));
-                    if (pathToSelect != null)
-                        treeview1.SetCursor(pathToSelect, treeview1.GetColumn(0), false);
+                    if (FindNode(value, out TreeIter iter))
+                    {
+                        TreePath pathToSelect = treemodel.GetPath(iter);
+                        if (pathToSelect != null)
+                        {
+                            treeview1.ExpandToPath(pathToSelect);
+                            treeview1.SetCursor(pathToSelect, treeview1.GetColumn(0), false);
+                        }
+                        // Scroll to the newly-selected cell (if necessary; in theory, setting
+                        // use_align to false should cause the tree to perform the minimum amount
+                        // of scrolling necessary to bring the cell onscreen).
+                        treeview1.ScrollToCell(pathToSelect, null, false, 0, 0);
+                    }
                 }
             }
         }
@@ -175,27 +198,31 @@ namespace UserInterface.Views
         /// <param name="nodePath">The path of the node to move.</param>
         public void MoveUp(string nodePath)
         {
-            TreeIter node = FindNode(nodePath);
-            TreePath path = treemodel.GetPath(node);
-            TreeIter prevnode;
-            if (path.Prev() && treemodel.GetIter(out prevnode, path))
-                treemodel.MoveBefore(node, prevnode);
+            if (FindNode(nodePath, out TreeIter node))
+            {
+                TreePath path = treemodel.GetPath(node);
+                TreeIter prevnode;
+                if (path.Prev() && treemodel.GetIter(out prevnode, path))
+                    treemodel.MoveBefore(node, prevnode);
 
-            treeview1.ScrollToCell(path, null, false, 0, 0);
+                treeview1.ScrollToCell(path, null, false, 0, 0);
+            }
         }
 
         /// <summary>Moves the specified node down 1 position.</summary>
         /// <param name="nodePath">The path of the node to move.</param>
         public void MoveDown(string nodePath)
         {
-            TreeIter node = FindNode(nodePath);
-            TreePath path = treemodel.GetPath(node);
-            TreeIter nextnode;
-            path.Next();
-            if (treemodel.GetIter(out nextnode, path))
-                treemodel.MoveAfter(node, nextnode);
+            if (FindNode(nodePath, out TreeIter node))
+            {
+                TreePath path = treemodel.GetPath(node);
+                TreeIter nextnode;
+                path.Next();
+                if (treemodel.GetIter(out nextnode, path))
+                    treemodel.MoveAfter(node, nextnode);
 
-            treeview1.ScrollToCell(path, null, false, 0, 0);
+                treeview1.ScrollToCell(path, null, false, 0, 0);
+            }
         }
 
         /// <summary>Renames the specified node path.</summary>
@@ -203,9 +230,11 @@ namespace UserInterface.Views
         /// <param name="newName">The new name for the node.</param>
         public void Rename(string nodePath, string newName)
         {
-            TreeIter node = FindNode(nodePath);
-            treemodel.SetValue(node, 0, newName);
-            previouslySelectedNodePath = GetFullPath(treemodel.GetPath(node));
+            if (FindNode(nodePath, out TreeIter node))
+            {
+                treemodel.SetValue(node, 0, newName);
+                previouslySelectedNodePath = GetFullPath(treemodel.GetPath(node));
+            }
         }
 
         /// <summary>Puts the current node into edit mode so user can rename it.</summary>
@@ -248,7 +277,8 @@ namespace UserInterface.Views
         /// <param name="nodePath">The node path.</param>
         public void Delete(string nodePath)
         {
-            TreeIter node = FindNode(nodePath);
+            if (!FindNode(nodePath, out TreeIter node))
+                return;
 
             // We will typically be deleting the currently selected node. If this is the case,
             // Gtk will not automatically move the cursor for us.
@@ -260,14 +290,21 @@ namespace UserInterface.Views
             TreePath pathToSelect = treemodel.GetPath(node);
             if (pathToSelect.Compare(cursorPath) != 0)
                 pathToSelect = null;
-            else if (!treemodel.IterNext(ref nextSel)) // If there's a "next" sibling, the current TreePath will do
+            else if (treemodel.IterNext(ref nextSel)) // If there's a "next" sibling, the current TreePath will do
+                pathToSelect = treemodel.GetPath(nextSel);
+            else
             {                                     // Otherwise
                 if (!pathToSelect.Prev())         // If there's a "previous" sibling, use that
                     pathToSelect.Up();            // and if that didn't work, use the parent
             }
-            treemodel.Remove(ref node);
+
+            // Note: gtk_tree_store_remove() seems quite slow if the node being
+            // deleted is selected. Therefore, we select the next node *before*
+            // deleting the specified node.
             if (pathToSelect != null)
                 treeview1.SetCursor(pathToSelect, treeview1.GetColumn(0), false);
+
+            treemodel.Remove(ref node);
         }
 
         /// <summary>Adds a child node.</summary>
@@ -276,15 +313,16 @@ namespace UserInterface.Views
         /// <param name="position">The position.</param>
         public void AddChild(string parentNodePath, TreeViewNode nodeDescription, int position = -1)
         {
-            TreeIter node = FindNode(parentNodePath);
-
-            TreeIter iter;
-            if (position == -1)
-                iter = treemodel.AppendNode(node);
-            else
-                iter = treemodel.InsertNode(node, position);
-            RefreshNode(iter, nodeDescription);
-            treeview1.ExpandToPath(treemodel.GetPath(iter));
+            if (FindNode(parentNodePath, out TreeIter node))
+            {
+                TreeIter iter;
+                if (position == -1)
+                    iter = treemodel.AppendNode(node);
+                else
+                    iter = treemodel.InsertNode(node, position);
+                RefreshNode(iter, nodeDescription);
+                treeview1.ExpandToPath(treemodel.GetPath(iter));
+            }
         }
 
         /// <summary>
@@ -343,7 +381,7 @@ namespace UserInterface.Views
             treeview1.CursorChanged += OnAfterSelect;
 #endif
             TreeIter iter = treemodel.AppendNode();
-            RefreshNode(iter, nodeDescriptions);
+            RefreshNode(iter, nodeDescriptions, false);
             treeview1.ShowAll();
             treeview1.ExpandRow(new TreePath("0"), false);
             // Expand all rows which were previously expanded by the user.
@@ -360,12 +398,57 @@ namespace UserInterface.Views
         }
 
         /// <summary>
+        /// Add a node as a child of the model specified by path.
+        /// </summary>
+        /// <param name="path">Path of the node to which the model will be added.</param>
+        /// <param name="description">Model to be added.</param>
+        public void AddNode(string path, TreeViewNode description)
+        {
+            if (FindNode(path, out TreeIter parent))
+            {
+                TreeIter child = treemodel.AppendNode(parent);
+                RefreshNode(child, description);
+            }
+            else
+                throw new Exception($"Unable to add node at path '{path}' - path is invalid");
+        }
+
+        /// <summary>
+        /// Refresh the node at the given data.
+        /// </summary>
+        /// <param name="path">The node to refresh.</param>
+        /// <param name="description">Data to use to refresh the node.</param>
+        /// <remarks>
+        /// This will not remove any existing children - but it will append new ones.
+        /// If any children already exist, they must be removed before calling this function.
+        /// </remarks>
+        public void RefreshNode(string path, TreeViewNode description)
+        {
+            if (FindNode(path, out TreeIter iter))
+                RefreshNode(iter, description);
+            else
+                throw new Exception($"Unable to refresh node - invalid path '{path}'");
+        }
+
+        /// <summary>
         /// Configure the specified tree node using the fields in 'Description'.
         /// Recursively descends through all child nodes as well.
         /// </summary>
+        /// <remarks>
+        /// If any models have been deleted, calls to this function will not
+        /// cause those models to be removed from the tree. When child models are
+        /// updated, this function will attempt to update any existing tree nodes
+        /// representing the children - if none exist, they will be added.
+        /// </remarks>
         /// <param name="node">The node.</param>
         /// <param name="description">The description.</param>
-        private void RefreshNode(TreeIter node, TreeViewNode description)
+        /// <param name="checkForExisting">
+        /// If set to true, will attempt to update existing nodes instead of creating
+        /// new ones, where possible. This should only be set to false when populating
+        /// the tree control for the first time, and when set to false it will improve
+        /// performance considerably, especially for large tree structures.
+        /// </param>
+        private void RefreshNode(TreeIter node, TreeViewNode description, bool checkForExisting = true)
         {
             Gdk.Pixbuf pixbuf = null;
             if (MasterView != null && MasterView.HasResource(description.ResourceNameForImage))
@@ -373,11 +456,61 @@ namespace UserInterface.Views
             string tick = description.Checked ? "✓" : "";
             treemodel.SetValues(node, description.Name, pixbuf, description.ToolTip, tick, description.Colour, description.Strikethrough);
 
-            for (int i = 0; i < description.Children.Count; i++)
+            foreach (TreeViewNode child in description.Children)
             {
-                TreeIter iter = treemodel.AppendNode(node);
-                RefreshNode(iter, description.Children[i]);
+                string path = GetFullPath(treemodel.GetPath(node));
+                TreeIter iter;
+                if (checkForExisting)
+                {
+                    if (FindChild(node, child.Name, out TreeIter matchingChild))
+                        iter = matchingChild;
+                    else
+                        iter = treemodel.AppendNode(node);
+                }
+                else
+                    iter = treemodel.AppendNode(node);
+                RefreshNode(iter, child);
             }
+        }
+
+        /// <summary>
+        /// Find a child of a TreeIter with the specified name.
+        /// Returns true iff a matching child was found.
+        /// </summary>
+        /// <param name="node">Node under which to search for a child.</param>
+        /// <param name="name">Name of the child.</param>
+        /// <param name="child">The matching child, if any is found.</param>
+        private bool FindChild(TreeIter node, string name, out TreeIter child)
+        {
+            child = TreeIter.Zero;
+            foreach (TreeIter c in GetChildren(node))
+            {
+                if (GetName(c) == name)
+                {
+                    child = c;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private IEnumerable<TreeIter> GetChildren(TreeIter node)
+        {
+            if (treemodel.IterChildren(out TreeIter child, node))
+            {
+                yield return child;
+                while (treemodel.IterNext(ref child))
+                    yield return child;
+            }
+        }
+
+        /// <summary>
+        /// Return the name of the given node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        private string GetName(TreeIter node)
+        {
+            return (string)treemodel.GetValue(node, 0);
         }
 
         /// <summary>Return a string representation of the specified path.</summary>
@@ -405,9 +538,9 @@ namespace UserInterface.Views
         /// NodePath format: .Parent.Child.SubChild
         /// </summary>
         /// <param name="namePath">The name path.</param>
-        /// <returns></returns>
+        /// <param name="result">The matching node.</param>
         /// <exception cref="System.Exception">Invalid name path ' + namePath + '</exception>
-        private TreeIter FindNode(string namePath)
+        private bool FindNode(string namePath, out TreeIter result)
         {
             if (!namePath.StartsWith(".", StringComparison.CurrentCulture))
                 throw new Exception("Invalid name path '" + namePath + "'");
@@ -416,27 +549,31 @@ namespace UserInterface.Views
 
             string[] namePathBits = namePath.Split(".".ToCharArray(), StringSplitOptions.RemoveEmptyEntries);
 
-            TreeIter result = TreeIter.Zero;
+            result = TreeIter.Zero;
             TreeIter iter;
-            treemodel.GetIterFirst(out iter);
-
-            foreach (string pathBit in namePathBits)
+            if (!treemodel.GetIterFirst(out iter))
+                // The tree is empty.
+                return false;
+            for (int i = 0; i < namePathBits.Length; i++)
             {
+                string pathBit = namePathBits[i];
                 string nodeName = (string)treemodel.GetValue(iter, 0);
                 while (nodeName != pathBit && treemodel.IterNext(ref iter))
+                {
                     nodeName = (string)treemodel.GetValue(iter, 0);
+                }
                 if (nodeName == pathBit)
                 {
                     result = iter;
-                    TreePath path = treemodel.GetPath(iter);
-                    if (!treeview1.GetRowExpanded(path))
-                        treeview1.ExpandRow(path, false);
-                    treemodel.IterChildren(out iter, iter);
+                    if (!treemodel.IterChildren(out iter, iter) && i != namePathBits.Length - 1)
+                        // We've found an ancestor but it has no children.
+                        return false;
                 }
                 else
-                    return TreeIter.Zero;
+                    // Unable to locate an ancestor at this level.
+                    return false;
             }
-            return result;         
+            return true;
         }
 
         /// <summary>
@@ -885,8 +1022,11 @@ namespace UserInterface.Views
         {
             try
             {
-                if (ContextMenu != null)
+                if (ContextMenu != null && acceleratorsAreAttached)
+                {
                     (treeview1.Toplevel as Gtk.Window).RemoveAccelGroup(ContextMenu.Accelerators);
+                    acceleratorsAreAttached = false;
+                }
             }
             catch (Exception err)
             {
@@ -903,8 +1043,12 @@ namespace UserInterface.Views
         {
             try
             {
-                if (ContextMenu != null)
+                // window is already in the list of acceleratables. Need to remove accelerators before we add them!
+                if (ContextMenu != null && !acceleratorsAreAttached)
+                {
                     (treeview1.Toplevel as Gtk.Window).AddAccelGroup(ContextMenu.Accelerators);
+                    acceleratorsAreAttached = true;
+                }
             }
             catch (Exception err)
             {
@@ -919,8 +1063,8 @@ namespace UserInterface.Views
         /// <param name="recursive">Recursively expand children too?</param>
         public void ExpandChildren(string path, bool recursive = true)
         {
-            TreePath nodePath = treemodel.GetPath(FindNode(path));
-            treeview1.ExpandRow(nodePath, recursive);
+            if (FindNode(path, out TreeIter node))
+                treeview1.ExpandRow(treemodel.GetPath(node), recursive);
         }
 
         /// <summary>
@@ -929,8 +1073,8 @@ namespace UserInterface.Views
         /// <param name="path">Path to the node. e.g. ".Simulations.DataStore"</param>
         public void CollapseChildren(string path)
         {
-            TreePath nodePath = treemodel.GetPath(FindNode(path));
-            treeview1.CollapseRow(nodePath);
+            if (FindNode(path, out TreeIter node))
+                treeview1.CollapseRow(treemodel.GetPath(node));
         }
     }
 }

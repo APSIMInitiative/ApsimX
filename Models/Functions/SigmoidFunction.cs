@@ -8,19 +8,19 @@ using Newtonsoft.Json;
 namespace Models.Functions
 {
     /// <summary>
-    ///  a sigmoid function of the form y = Xmax * 1 / 1 + e^-(Xvalue - Xo) / b^.
+    ///  [Name] is calcualted using a sigmoid function of the form y = Xmax * 1 / 1 + e^-(Xvalue - Xo) / b^. 
     ///  Ymax is calculated as 
     ///  [Document Ymax]
     ///  Xo is calculated as 
     ///  [Document Xo]
     ///  b is calculated as 
     ///  [Document b]
-    ///  and Xvalue is 
+    ///  Xvalue is calculated as 
     ///  [Document XValue]
     /// </summary>
     [Serializable]
     [Description("Takes the value of the child as the x value and returns the y value from a sigmoid of the form y = Ymax * 1/1+exp(-(XValue-Xo)/b)")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SigmoidFunction : Model, IFunction, IIndexedFunction
     {

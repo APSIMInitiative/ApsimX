@@ -534,6 +534,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The name.
         /// </value>
+        [Units("-")]
         public string Name { get; set; }
 
         /// <summary>
@@ -542,6 +543,7 @@ namespace Models.GrazPlan
         /// <value>
         /// The description.
         /// </value>
+        [Units("kg")]
         public double Stored { get; set; }
     }
 
@@ -1131,6 +1133,7 @@ namespace Models.GrazPlan
         /// </value>
         /// <param name="idx">The index.</param>
         /// <returns>The SupplementItem</returns>
+        [JsonIgnore]
         public SupplementItem this[int idx]
         {
             get
@@ -1173,7 +1176,7 @@ namespace Models.GrazPlan
         {
             if (!paddocksGiven)
                 theModel.ClearPaddockList();
-            theModel.Clear();
+            theModel.TotalAmount = 0;
         }
 
         /// <summary>

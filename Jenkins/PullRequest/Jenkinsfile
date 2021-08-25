@@ -5,7 +5,7 @@ pipeline {
 			parallel {
 				stage('Prototypes') {
 					agent {
-						label "windows && midweight"
+						label "windows && midweight && physical"
 					}
 					environment {
 						GRAPEVINE_PASSWORD = credentials('grapevine-validation-password')
@@ -28,7 +28,7 @@ pipeline {
 				}
 				stage('Validation') {
 					agent {
-						label "windows && heavyweight"
+						label "windows && heavyweight && physical"
 					}
 					environment {
 						SOYBEAN_PASSWORD = credentials('soybean-validation-password')
@@ -55,7 +55,7 @@ pipeline {
 				}
 				stage('Run Examples') {
 					agent {
-						label "windows"
+						label "windows && physical"
 					}
 					steps {
 						bat '''
@@ -75,7 +75,7 @@ pipeline {
 				}
 				stage('UI') {
 					agent {
-						label "windows"
+						label "windows && physical"
 					}
 					steps {
 						bat '''
@@ -95,7 +95,7 @@ pipeline {
 				}
 				stage('Unit Tests') {
 					agent {
-						label "windows"
+						label "windows && physical"
 					}
 					steps {
 						bat '''

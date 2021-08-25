@@ -48,7 +48,7 @@ namespace Utility
         /// <returns>The same colour as a Cairo.Color.</returns>
         public static Cairo.Color ToCairo(Color colour)
         {
-            return new Cairo.Color(colour.A, colour.R, colour.G, colour.B);
+            return new Cairo.Color(colour.R / 255.0, colour.G / 255.0, colour.B / 255.0);
         }
 
         /// <summary>
@@ -68,6 +68,15 @@ namespace Utility
         public static OxyColor ToOxy(Color colour)
         {
             return OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+        }
+
+        /// <summary>
+        /// Convert from an OxyColor to a System.Drawing.Color.
+        /// </summary>
+        /// <param name="colour">The colour to be converted.</param>
+        internal static Color FromOxy(OxyColor colour)
+        {
+            return Color.FromArgb(colour.R, colour.G, colour.B);
         }
 
         internal static Cairo.Color ToCairo(Gdk.Color colour)

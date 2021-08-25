@@ -104,7 +104,7 @@
             drawable.ButtonReleaseEvent += OnMouseButtonRelease;
             drawable.MotionNotifyEvent += OnMouseMove;
 
-            ScrolledWindow scroller = new ScrolledWindow(new Adjustment(0, 0, 100, 1, 1, 1), new Adjustment(0, 0, 100, 1, 1, 1))
+            ScrolledWindow scroller = new ScrolledWindow()
             {
                 HscrollbarPolicy = PolicyType.Always,
                 VscrollbarPolicy = PolicyType.Always
@@ -119,6 +119,7 @@
 
             mainWidget = scroller;
             drawable.Realized += OnRealized;
+            drawable.SizeAllocated += OnRealized;
             if (owner == null)
             {
                 DGObject.DefaultOutlineColour = OxyPlot.OxyColors.Black;
@@ -128,6 +129,21 @@
                 // Needs to be reimplemented for gtk3.
                 DGObject.DefaultOutlineColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.GetForegroundColour(StateType.Normal));
                 DGObject.DefaultBackgroundColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.GetBackgroundColour(StateType.Normal));
+            }
+            mainWidget.Destroyed += OnDestroyed;
+        }
+
+        private void OnDestroyed(object sender, EventArgs e)
+        {
+            try
+            {
+                mainWidget.Destroyed -= OnDestroyed;
+                drawable.Realized -= OnRealized;
+                drawable.SizeAllocated -= OnRealized;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
             }
         }
 
@@ -173,7 +189,28 @@
             System.Drawing.Bitmap bitmap = new Bitmap(stream);
             return bitmap;
 #else
-            throw new NotImplementedException();
+            var window = new OffscreenWindow();
+            window.Add(MainWidget);
+
+            // Choose a good size for the image (which is square).
+            int maxX = (int)nodes.Max(n => n.Location.X);
+            int maxY = (int)nodes.Max(n => n.Location.Y);
+            int maxSize = nodes.Max(n => n.Width);
+            int size = Math.Max(maxX, maxY) + maxSize;
+
+            MainWidget.WidthRequest = size;
+            MainWidget.HeightRequest = size;
+            window.ShowAll();
+            while (GLib.MainContext.Iteration());
+
+            Gdk.Pixbuf screenshot = window.Pixbuf;
+            byte[] buffer = screenshot.SaveToBuffer("png");
+            window.Dispose();
+            using (MemoryStream stream = new MemoryStream(buffer))
+            {
+                System.Drawing.Bitmap bitmap = new Bitmap(stream);
+                return bitmap;
+            }
 #endif
         }
 

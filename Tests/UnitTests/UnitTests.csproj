@@ -1,14 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net472</TargetFramework>
+    <BaseOutputPath>../../bin</BaseOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
-    <IntermediateOutputPath>$(BaseIntermediateOutputPath)\$(Configuration)\$(TargetFramework.ToLowerInvariant())\</IntermediateOutputPath>
 	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <OutputPath>..\..\Bin\</OutputPath>
 	  <RunSettingsFilePath>$(MSBuildProjectDirectory)\.runsettings</RunSettingsFilePath>
-	<AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
-	<NoWarn>CS1591,CS1572,CS1573</NoWarn>
+    <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
+    <NoWarn>CS1591,CS1572,CS1573,CS0067</NoWarn>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <IsPublishable>false</IsPublishable>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,7 +31,7 @@
 	  <PackageReference Include="OxyPlot.GtkSharp" Version="2.0.0-unstable0956" />
 	  <PackageReference Include="NUnit" Version="3.12.0" />
 	  <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0"/>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
 	  <PackageReference Include="Mono.Cecil" Version="0.9.6.0" />
 	  <PackageReference Include="System.Resources.Extensions" Version="5.0.0-preview.1.20120.5" />
 	

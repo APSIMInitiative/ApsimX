@@ -9,6 +9,7 @@
     using NUnit.Framework;
     using System;
     using System.Collections.Generic;
+    using System.Data;
     using System.IO;
     using System.Linq;
     using UnitTests.Storage;
@@ -22,7 +23,6 @@
 
         private static RunTypeEnum[] runTypes = new RunTypeEnum[]
         {
-            RunTypeEnum.MultiProcess,
             RunTypeEnum.MultiThreaded,
             RunTypeEnum.SingleThreaded
         };
@@ -82,13 +82,16 @@
 
                 // Run simulations.
                 Runner runner = new Runner(simulation, runType: typeOfRun);
-                Assert.IsNull(runner.Run());
+                List<Exception> errors = runner.Run();
+                Assert.NotNull(errors);
+                Assert.AreEqual(0, errors.Count);
 
-                // Check that data was written to database.
-                Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Clock.Today] FROM Report ORDER BY [Clock.Today]"),
-                       "Clock.Today\r\n" +
-                       " 1980-01-01\r\n" +
-                       " 1980-01-02\r\n");
+
+                Assert.IsTrue(
+                    Utilities.CreateTable(new string[]                      {              "Clock.Today" },
+                                          new List<object[]> { new object[] { new DateTime(1980, 01, 01) },
+                                                               new object[] { new DateTime(1980, 01, 02) }})
+                   .IsSame(database.ExecuteQuery("SELECT [Clock.Today] FROM Report ORDER BY [Clock.Today]")));
 
                 database.CloseDatabase();
             }
@@ -156,15 +159,19 @@
                 Runner runner = new Runner(folder, runType: typeOfRun);
 
                 // Run simulations.
-                Assert.IsNull(runner.Run());
+                List<Exception> errors = runner.Run();
+                Assert.NotNull(errors);
+                Assert.AreEqual(0, errors.Count);
 
                 // Check that data was written to database.
-                Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Clock.Today] FROM Report ORDER BY [Clock.Today]"),
-                       "Clock.Today\r\n" +
-                       " 1980-01-01\r\n" +
-                       " 1980-01-02\r\n" +
-                       " 1980-01-03\r\n" +
-                       " 1980-01-04\r\n");
+
+                Assert.IsTrue(
+                    Utilities.CreateTable(new string[]                      {               "Clock.Today" },
+                                          new List<object[]> { new object[] { new DateTime(1980, 01, 01) },
+                                                               new object[] { new DateTime(1980, 01, 02) },
+                                                               new object[] { new DateTime(1980, 01, 03) },
+                                                               new object[] { new DateTime(1980, 01, 04) }})
+                   .IsSame(database.ExecuteQuery("SELECT [Clock.Today] FROM Report ORDER BY [Clock.Today]")));
 
                 database.CloseDatabase();
             }
@@ -232,13 +239,16 @@
                 Runner runner = new Runner(folder, runType: typeOfRun, simulationNamesToRun: new string[] { "Sim1" });
 
                 // Run simulations.
-                Assert.IsNull(runner.Run());
+                List<Exception> errors = runner.Run();
+                Assert.NotNull(errors);
+                Assert.AreEqual(0, errors.Count);
 
                 // Check that data was written to database.
-                Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Clock.Today] FROM Report ORDER BY [Clock.Today]"),
-                       "Clock.Today\r\n" +
-                       " 1980-01-01\r\n" +
-                       " 1980-01-02\r\n");
+                Assert.IsTrue(
+                    Utilities.CreateTable(new string[] { "Clock.Today" },
+                                          new List<object[]> { new object[] { new DateTime(1980, 01, 01) },
+                                                               new object[] { new DateTime(1980, 01, 02) }})
+                   .IsSame(database.ExecuteQuery("SELECT [Clock.Today] FROM Report ORDER BY [Clock.Today]")));
 
                 database.CloseDatabase();
             }
@@ -388,7 +398,9 @@
 
                 // Run simulations.
                 Runner runner = new Runner(simulations, runType: typeOfRun, runTests:true);
-                Assert.IsNull(runner.Run());
+                List<Exception> errors = runner.Run();
+                Assert.NotNull(errors);
+                Assert.AreEqual(0, errors.Count);
 
                 // Make sure an exception is returned.
                 Assert.IsNotNull(MockSummary.messages.Find(m => m.Contains("Passed Test")));
@@ -615,15 +627,69 @@
 
                 // Simulation shouldn't have run. Check the summary messages to make
                 // sure there is NOT a 'Simulation completed' message.
-                Assert.AreEqual(MockSummary.messages.Count, 0);
+                Assert.AreEqual(0, MockSummary.messages.Count);
 
-                Assert.AreEqual(runner.Progress, 0);
+                Assert.AreEqual(1, runner.Progress);
 
                 // Make sure the expected exception was sent through the all completed jobs event.
                 Assert.AreEqual(1, argsOfAllCompletedJobs.AllExceptionsThrown.Count);
                 Assert.IsTrue(argsOfAllCompletedJobs.AllExceptionsThrown[0].ToString().Contains("Intentional exception"));
 
                 database.CloseDatabase();
+            }
+        }
+
+        /// <summary>
+        /// In this test, we run only post-simualtion tools and ensure
+        /// that any old data is correctly cleaned.
+        /// </summary>
+        [Test]
+        public void EnsurePostSimulationToolsDoCleanup()
+        {
+            IEnumerable<RunTypeEnum> runTypes = new[] { RunTypeEnum.MultiThreaded, RunTypeEnum.SingleThreaded };
+            foreach (RunTypeEnum runType in runTypes)
+            {
+                // Open an in-memory database.
+                database = new SQLite();
+                database.OpenDatabase(":memory:", readOnly: false);
+
+                DataTable data = new DataTable("PostSimulationTool");
+                data.Columns.Add("x");
+                data.Rows.Add(data.NewRow());
+
+                var storage = new DataStore(database)
+                {
+                    Children = new List<IModel>()
+                    {
+                        new SimpleDataWriter(data)
+                    }
+                };
+
+                var sims = new Simulations()
+                {
+                    Children = new List<IModel>()
+                    {
+                        storage
+                    }
+                };
+
+                Runner runner = new Runner(sims, runType: runType, runSimulations: false);
+                List<Exception> errors = runner.Run();
+                Assert.AreEqual(0, errors.Count, errors.Count > 0 ? errors[0].ToString() : "");
+
+                storage.Reader.Refresh();
+                DataTable storedData = storage.Reader.GetData(data.TableName);
+                Assert.NotNull(storedData);
+                Assert.AreEqual(1, storedData.Rows.Count);
+
+                // Now run it again.
+                runner = new Runner(new[] { sims }, runType: runType, runSimulations: false);
+                errors = runner.Run();
+                Assert.AreEqual(0, errors.Count, errors.Count > 0 ? errors[0].ToString() : "");
+
+                storage.Reader.Refresh();
+                storedData = storage.Reader.GetData(data.TableName);
+                Assert.AreEqual(1, storedData.Rows.Count, "Post-simulation tool data was not cleaned when running only post-simulation tools");
             }
         }
 
@@ -672,18 +738,22 @@
             // Check simulation 1 database
             database = new SQLite();
             database.OpenDatabase(Path.Combine(path, "Sim1.db"), readOnly: true);
-            Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Message] FROM _Messages"),
-                   "                       Message\r\n" +
-                   "Simulation terminated normally\r\n");
+
+            Assert.IsTrue(
+                    Utilities.CreateTable(new string[]                      {                        "Message" },
+                                          new List<object[]> { new object[] { "Simulation terminated normally" }})
+                   .IsSame(database.ExecuteQuery("SELECT [Message] FROM _Messages")));
 
             database.CloseDatabase();
 
             // Check simulation 2 database
             database = new SQLite();
             database.OpenDatabase(Path.Combine(path, "Sim2.db"), readOnly: true);
-            Assert.AreEqual(Utilities.TableToStringUsingSQL(database, "SELECT [Message] FROM _Messages"),
-                   "                       Message\r\n" +
-                   "Simulation terminated normally\r\n");
+            Assert.IsTrue(
+                    Utilities.CreateTable(new string[]                      {                        "Message" },
+                                          new List<object[]> { new object[] { "Simulation terminated normally" }})
+                   .IsSame(database.ExecuteQuery("SELECT [Message] FROM _Messages")));
+
             database.CloseDatabase();
         }
     }

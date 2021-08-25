@@ -15,7 +15,7 @@ namespace Models.CLEM.Resources
     /// This stores the initialisation parameters for a Home Food Store type.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(HumanFoodStore))]
     [Description("This resource represents a human food store (e.g. milk, eggs, wheat).")]
@@ -94,6 +94,17 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
+            }
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -146,7 +157,8 @@ namespace Models.CLEM.Resources
 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    Gain = pool.Amount,
+                    TransactionType = TransactionType.Gain,
+                    Amount = pool.Amount,
                     Activity = activity,
                     RelatesToResource = relatesToResource,
                     Category = category,
@@ -205,7 +217,8 @@ namespace Models.CLEM.Resources
                 ResourceTransaction details = new ResourceTransaction
                 {
                     ResourceType = this,
-                    Loss = amountRemoved,
+                    TransactionType = TransactionType.Loss,
+                    Amount = amountRemoved,
                     Activity = request.ActivityModel,
                     Category = request.Category,
                     RelatesToResource = request.RelatesToResource
@@ -253,7 +266,8 @@ namespace Models.CLEM.Resources
                     ResourceTransaction details = new ResourceTransaction
                     {
                         ResourceType = this,
-                        Loss = spoiled,
+                        TransactionType = TransactionType.Loss,
+                        Amount = spoiled,
                         Activity = this,
                         Category = "Spoiled"
                     };
