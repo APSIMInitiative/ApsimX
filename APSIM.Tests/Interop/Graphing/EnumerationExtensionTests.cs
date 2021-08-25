@@ -89,9 +89,9 @@ namespace APSIM.Tests.Graphing.SeriesExporters
         /// </summary>
         /// <param name="input">Input legend orientation.</param>
         /// <param name="expectedOutput">Expected output.</param>
-        [TestCase(LegendOrientation.Horizontal, OxyPlot.LegendOrientation.Horizontal)]
-        [TestCase(LegendOrientation.Vertical, OxyPlot.LegendOrientation.Vertical)]
-        public void TestLegendOrientationConversion(LegendOrientation input, OxyPlot.LegendOrientation expectedOutput)
+        [TestCase(LegendOrientation.Horizontal, OxyPlot.Legends.LegendOrientation.Horizontal)]
+        [TestCase(LegendOrientation.Vertical, OxyPlot.Legends.LegendOrientation.Vertical)]
+        public void TestLegendOrientationConversion(LegendOrientation input, OxyPlot.Legends.LegendOrientation expectedOutput)
         {
             Assert.AreEqual(expectedOutput, input.ToOxyPlotLegendOrientation());
         }
@@ -102,19 +102,19 @@ namespace APSIM.Tests.Graphing.SeriesExporters
         /// </summary>
         /// <param name="input">Input legend position.</param>
         /// <param name="expectedOutput">Expected output.</param>
-        [TestCase(LegendPosition.TopLeft, OxyPlot.LegendPosition.TopLeft)]
-        [TestCase(LegendPosition.TopCenter, OxyPlot.LegendPosition.TopCenter)]
-        [TestCase(LegendPosition.TopRight, OxyPlot.LegendPosition.TopRight)]
-        [TestCase(LegendPosition.BottomLeft, OxyPlot.LegendPosition.BottomLeft)]
-        [TestCase(LegendPosition.BottomCenter, OxyPlot.LegendPosition.BottomCenter)]
-        [TestCase(LegendPosition.BottomRight, OxyPlot.LegendPosition.BottomRight)]
-        [TestCase(LegendPosition.LeftTop, OxyPlot.LegendPosition.LeftTop)]
-        [TestCase(LegendPosition.LeftMiddle, OxyPlot.LegendPosition.LeftMiddle)]
-        [TestCase(LegendPosition.LeftBottom, OxyPlot.LegendPosition.LeftBottom)]
-        [TestCase(LegendPosition.RightTop, OxyPlot.LegendPosition.RightTop)]
-        [TestCase(LegendPosition.RightMiddle, OxyPlot.LegendPosition.RightMiddle)]
-        [TestCase(LegendPosition.RightBottom, OxyPlot.LegendPosition.RightBottom)]
-        public void TestLegendPositionConversion(LegendPosition input, OxyPlot.LegendPosition expectedOutput)
+        [TestCase(LegendPosition.TopLeft, OxyPlot.Legends.LegendPosition.TopLeft)]
+        [TestCase(LegendPosition.TopCenter, OxyPlot.Legends.LegendPosition.TopCenter)]
+        [TestCase(LegendPosition.TopRight, OxyPlot.Legends.LegendPosition.TopRight)]
+        [TestCase(LegendPosition.BottomLeft, OxyPlot.Legends.LegendPosition.BottomLeft)]
+        [TestCase(LegendPosition.BottomCenter, OxyPlot.Legends.LegendPosition.BottomCenter)]
+        [TestCase(LegendPosition.BottomRight, OxyPlot.Legends.LegendPosition.BottomRight)]
+        [TestCase(LegendPosition.LeftTop, OxyPlot.Legends.LegendPosition.LeftTop)]
+        [TestCase(LegendPosition.LeftMiddle, OxyPlot.Legends.LegendPosition.LeftMiddle)]
+        [TestCase(LegendPosition.LeftBottom, OxyPlot.Legends.LegendPosition.LeftBottom)]
+        [TestCase(LegendPosition.RightTop, OxyPlot.Legends.LegendPosition.RightTop)]
+        [TestCase(LegendPosition.RightMiddle, OxyPlot.Legends.LegendPosition.RightMiddle)]
+        [TestCase(LegendPosition.RightBottom, OxyPlot.Legends.LegendPosition.RightBottom)]
+        public void TestLegendPositionConversion(LegendPosition input, OxyPlot.Legends.LegendPosition expectedOutput)
         {
             Assert.AreEqual(expectedOutput, input.ToOxyPlotLegendPosition());
         }

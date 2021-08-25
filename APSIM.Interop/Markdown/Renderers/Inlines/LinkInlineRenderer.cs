@@ -54,7 +54,7 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
         /// Get the image specified by the given url.
         /// </summary>
         /// <param name="uri">Image URI.</param>
-        private Image GetImage(string uri)
+        public virtual Image GetImage(string uri)
         {
             string path = PathUtilities.GetAbsolutePath(uri, imageRelativePath);
             if (File.Exists(path))

@@ -4,6 +4,13 @@ using OxyPlot;
 using MarkerType = APSIM.Services.Graphing.MarkerType;
 using LegendOrientation = APSIM.Services.Graphing.LegendOrientation;
 using LegendPosition = APSIM.Services.Graphing.LegendPosition;
+#if NETCOREAPP
+using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
+using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
+#else
+using OxyLegendOrientation = OxyPlot.LegendOrientation;
+using OxyLegendPosition = OxyPlot.LegendPosition;
+#endif
 
 namespace APSIM.Interop.Graphing
 {
@@ -112,14 +119,14 @@ namespace APSIM.Interop.Graphing
         /// Convert an apsim legend orientation to an oxyplot legend orientation.
         /// </summary>
         /// <param name="orientation">An apsim legend orientation.</param>
-        public static OxyPlot.LegendOrientation ToOxyPlotLegendOrientation(this LegendOrientation orientation)
+        public static OxyLegendOrientation ToOxyPlotLegendOrientation(this LegendOrientation orientation)
         {
             switch (orientation)
             {
                 case LegendOrientation.Horizontal:
-                    return OxyPlot.LegendOrientation.Horizontal;
+                    return OxyLegendOrientation.Horizontal;
                 case LegendOrientation.Vertical:
-                    return OxyPlot.LegendOrientation.Vertical;
+                    return OxyLegendOrientation.Vertical;
                 default:
                     throw new NotImplementedException($"Unknown legend orientation: {orientation}");
             }
@@ -129,34 +136,34 @@ namespace APSIM.Interop.Graphing
         /// Convert an apsim legend position to an oxyplot legend position.
         /// </summary>
         /// <param name="position">An apsim legend position.</param>
-        public static OxyPlot.LegendPosition ToOxyPlotLegendPosition(this LegendPosition position)
+        public static OxyLegendPosition ToOxyPlotLegendPosition(this LegendPosition position)
         {
             switch (position)
             {
                 case LegendPosition.TopLeft:
-                    return OxyPlot.LegendPosition.TopLeft;
+                    return OxyLegendPosition.TopLeft;
                 case LegendPosition.TopCenter:
-                    return OxyPlot.LegendPosition.TopCenter;
+                    return OxyLegendPosition.TopCenter;
                 case LegendPosition.TopRight:
-                    return OxyPlot.LegendPosition.TopRight;
+                    return OxyLegendPosition.TopRight;
                 case LegendPosition.LeftTop:
-                    return OxyPlot.LegendPosition.LeftTop;
+                    return OxyLegendPosition.LeftTop;
                 case LegendPosition.LeftMiddle:
-                    return OxyPlot.LegendPosition.LeftMiddle;
+                    return OxyLegendPosition.LeftMiddle;
                 case LegendPosition.LeftBottom:
-                    return OxyPlot.LegendPosition.LeftBottom;
+                    return OxyLegendPosition.LeftBottom;
                 case LegendPosition.RightTop:
-                    return OxyPlot.LegendPosition.RightTop;
+                    return OxyLegendPosition.RightTop;
                 case LegendPosition.RightMiddle:
-                    return OxyPlot.LegendPosition.RightMiddle;
+                    return OxyLegendPosition.RightMiddle;
                 case LegendPosition.RightBottom:
-                    return OxyPlot.LegendPosition.RightBottom;
+                    return OxyLegendPosition.RightBottom;
                 case LegendPosition.BottomLeft:
-                    return OxyPlot.LegendPosition.BottomLeft;
+                    return OxyLegendPosition.BottomLeft;
                 case LegendPosition.BottomCenter:
-                    return OxyPlot.LegendPosition.BottomCenter;
+                    return OxyLegendPosition.BottomCenter;
                 case LegendPosition.BottomRight:
-                    return OxyPlot.LegendPosition.BottomRight;
+                    return OxyLegendPosition.BottomRight;
                 default:
                     throw new NotImplementedException($"Unknown legend position: {position}");
             }

@@ -21,6 +21,15 @@
     using MathNet.Numerics.Statistics;
     using Extensions;
     using APSIM.Services.Graphing;
+    using APSIM.Interop.Graphing.Extensions;
+#if NETFRAMEWORK
+    using OxyLegendPosition = OxyPlot.LegendPosition;
+    using OxyLegendOrientation = OxyPlot.LegendOrientation;
+#else
+    using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
+    using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
+    using LegendPlacement = OxyPlot.Legends.LegendPlacement;
+#endif
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -45,7 +54,7 @@
                 if (plot1 != null && plot1.Model != null)
                 {
                     plot1.Model.DefaultFontSize = value;
-                    plot1.Model.LegendFontSize = value;
+                    plot1.Model.SetLegendFontSize(value);
 
                     foreach (OxyPlot.Annotations.Annotation annotation in this.plot1.Model.Annotations)
                         if (annotation is OxyPlot.Annotations.TextAnnotation textAnnotation)
@@ -126,10 +135,13 @@
             this.LeftRightPadding = 40;
             expander1.Visible = false;
             captionEventBox.Visible = true;
-
+#pragma warning disable CS0618
+            // todo : need to refacto this to use PlotController,
+            // as the "old" way of doing things is now considered obsolete.
             plot1.Model.MouseDown += OnChartClick;
             plot1.Model.MouseUp += OnChartMouseUp;
             plot1.Model.MouseMove += OnChartMouseMove;
+#pragma warning restore CS0618
             popup.AttachToWidget(plot1, null);
 
             captionLabel.Text = null;
@@ -157,9 +169,11 @@
         {
             try
             {
+#pragma warning disable CS0618
                 plot1.Model.MouseDown -= OnChartClick;
                 plot1.Model.MouseUp -= OnChartMouseUp;
                 plot1.Model.MouseMove -= OnChartMouseMove;
+#pragma warning restore CS0618
                 captionEventBox.ButtonPressEvent -= OnCaptionLabelDoubleClick;
                 // It's good practice to disconnect the event handlers, as it makes memory leaks
                 // less likely. However, we may not "own" the event handlers, so how do we 
@@ -322,11 +336,11 @@
         {
             get
             {
-                return plot1.Model.LegendPlacement == LegendPlacement.Inside;
+                return plot1.Model.GetLegendPlacement() == LegendPlacement.Inside;
             }
             set
             {
-                plot1.Model.LegendPlacement = value ? LegendPlacement.Inside : LegendPlacement.Outside;
+                plot1.Model.SetLegendPlacement(value ? LegendPlacement.Inside : LegendPlacement.Outside);
             }
         }
 
@@ -362,8 +376,8 @@
         {
             this.plot1.Model.DefaultFontSize = FontSize;
             this.plot1.Model.PlotAreaBorderThickness = new OxyThickness(0.0);
-            this.plot1.Model.LegendBorder = OxyColors.Transparent;
-            this.plot1.Model.LegendBackground = OxyColors.Transparent;
+            this.plot1.Model.SetLegendBorder(OxyColors.Transparent);
+            this.plot1.Model.SetLegendBackground(OxyColors.Transparent);
 
             if (this.LeftRightPadding != 0)
                 this.plot1.Model.Padding = new OxyThickness(10, 10, this.LeftRightPadding, 10);
@@ -371,7 +385,7 @@
             foreach (OxyPlot.Axes.Axis axis in this.plot1.Model.Axes)
                 this.FormatAxisTickLabels(axis);
          
-            this.plot1.Model.LegendFontSize = FontSize;
+            this.plot1.Model.SetLegendFontSize(FontSize);
 
             foreach (OxyPlot.Annotations.Annotation annotation in this.plot1.Model.Annotations)
             {
@@ -1100,17 +1114,17 @@
         /// <param name="orientation">Orientation of items in the legend.</param>
         public void FormatLegend(APSIM.Services.Graphing.LegendPosition legendPositionType, APSIM.Services.Graphing.LegendOrientation orientation)
         {
-            OxyPlot.LegendPosition oxyLegendPosition;
+            OxyLegendPosition oxyLegendPosition;
             if (Enum.TryParse(legendPositionType.ToString(), out oxyLegendPosition))
             {
-                this.plot1.Model.LegendFont = Font;
-                this.plot1.Model.LegendFontSize = FontSize;
-                this.plot1.Model.LegendPosition = oxyLegendPosition;
-                if (Enum.TryParse(orientation.ToString(), out OxyPlot.LegendOrientation legendOrientation))
-                    plot1.Model.LegendOrientation = legendOrientation;
+                this.plot1.Model.SetLegendFont(Font);
+                this.plot1.Model.SetLegendFontSize(FontSize);
+                this.plot1.Model.SetLegendPosition(oxyLegendPosition);
+                if (Enum.TryParse(orientation.ToString(), out OxyLegendOrientation legendOrientation))
+                    plot1.Model.SetLegendOrientation(legendOrientation);
             }
 
-            this.plot1.Model.LegendSymbolLength = 30;
+            this.plot1.Model.SetLegendSymbolLength(30);
 
             // If 2 series have the same title then remove their titles (this will
             // remove them from the legend) and create a new series solely for the
@@ -1674,80 +1688,93 @@
         {
             try
             {
+                OnPlotClick?.Invoke(this, EventArgs.Empty);
+                OnAxisClick?.Invoke(APSIM.Services.Graphing.AxisPosition.Bottom);
+                OnLegendClick?.Invoke(this, new LegendClickArgs());
+                OnTitleClick?.Invoke(this, EventArgs.Empty);
+                OnAnnotationClick?.Invoke(this, EventArgs.Empty);
                 Point location = new Point((int)e.Position.X, (int)e.Position.Y);
                 Cairo.Rectangle plotRect = this.plot1.Model.PlotArea.ToRect(false);
                 Rectangle plotArea = new Rectangle((int)plotRect.X, (int)plotRect.Y, (int)plotRect.Width, (int)plotRect.Height);
 
-                Cairo.Rectangle legendRect = this.plot1.Model.LegendArea.ToRect(true);
-                Rectangle legendArea = new Rectangle((int)legendRect.X, (int)legendRect.Y, (int)legendRect.Width, (int)legendRect.Height);
-                if (legendArea.Contains(location))
+                IEnumerable<Cairo.Rectangle> legends;
+#if NETFRAMEWORK
+                legends = new[] { plot1.Model.LegendArea.ToRect(true) };
+#else
+                legends = plot1.Model.Legends.Select(l => l.LegendArea.ToRect(true));
+#endif
+                foreach (Cairo.Rectangle legendRect in legends)
                 {
-                    int y = Convert.ToInt32(location.Y - this.plot1.Model.LegendArea.Top, CultureInfo.InvariantCulture);
-                    int itemHeight = Convert.ToInt32(this.plot1.Model.LegendArea.Height, CultureInfo.InvariantCulture) / this.plot1.Model.Series.Count;
-                    int seriesIndex = y / itemHeight;
-                    if (this.OnLegendClick != null)
+                    Rectangle legendArea = new Rectangle((int)legendRect.X, (int)legendRect.Y, (int)legendRect.Width, (int)legendRect.Height);
+                    if (legendArea.Contains(location))
                     {
-                        LegendClickArgs args = new LegendClickArgs();
-                        args.SeriesIndex = seriesIndex;
-                        args.ControlKeyPressed = e.IsControlDown;
-                        this.OnLegendClick.Invoke(sender, args);
-                    }
-                }
-                else if (plotArea.Contains(location))
-                {
-                    bool userClickedOnAnnotation = false;
-                    foreach (var annotation in this.plot1.Model.Annotations)
-                    {
-                        var result = annotation.HitTest(new HitTestArguments(new ScreenPoint(location.X, location.Y), 10.0));
-                        if (result != null)
+                        int y = Convert.ToInt32(location.Y - legendRect.Y, CultureInfo.InvariantCulture);
+                        int itemHeight = Convert.ToInt32(legendRect.Height, CultureInfo.InvariantCulture) / this.plot1.Model.Series.Count;
+                        int seriesIndex = y / itemHeight;
+                        if (this.OnLegendClick != null)
                         {
-                            userClickedOnAnnotation = true;
-                            OnAnnotationClick?.Invoke(this, new EventArgs());
+                            LegendClickArgs args = new LegendClickArgs();
+                            args.SeriesIndex = seriesIndex;
+                            args.ControlKeyPressed = e.IsControlDown;
+                            this.OnLegendClick.Invoke(sender, args);
                         }
                     }
-
-                    if (!userClickedOnAnnotation && this.OnPlotClick != null)
-                        this.OnPlotClick.Invoke(sender, e);
-                }
-                else
-                {
-                    Rectangle leftAxisArea = new Rectangle(0, plotArea.Y, plotArea.X, plotArea.Height);
-                    Rectangle titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y);
-                    Rectangle topAxisArea = new Rectangle(plotArea.X, 0, plotArea.Width, 0);
-
-                    if (this.GetAxis(APSIM.Services.Graphing.AxisPosition.Top) != null)
+                    else if (plotArea.Contains(location))
                     {
-                        titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y / 2);
-                        topAxisArea = new Rectangle(plotArea.X, plotArea.Y / 2, plotArea.Width, plotArea.Y / 2);
+                        bool userClickedOnAnnotation = false;
+                        foreach (var annotation in this.plot1.Model.Annotations)
+                        {
+                            var result = annotation.HitTest(new HitTestArguments(new ScreenPoint(location.X, location.Y), 10.0));
+                            if (result != null)
+                            {
+                                userClickedOnAnnotation = true;
+                                OnAnnotationClick?.Invoke(this, new EventArgs());
+                            }
+                        }
+
+                        if (!userClickedOnAnnotation && this.OnPlotClick != null)
+                            this.OnPlotClick.Invoke(sender, e);
                     }
-
-                    Rectangle rightAxisArea = new Rectangle(plotArea.Right, plotArea.Top, MainWidget.Allocation.Width - plotArea.Right, plotArea.Height);
-                    Rectangle bottomAxisArea = new Rectangle(plotArea.Left, plotArea.Bottom, plotArea.Width, MainWidget.Allocation.Height - plotArea.Bottom);
-                    if (titleArea.Contains(location))
+                    else
                     {
-                        if (this.OnTitleClick != null)
-                        {
-                            this.OnTitleClick(sender, e);
-                        }
-                    }
+                        Rectangle leftAxisArea = new Rectangle(0, plotArea.Y, plotArea.X, plotArea.Height);
+                        Rectangle titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y);
+                        Rectangle topAxisArea = new Rectangle(plotArea.X, 0, plotArea.Width, 0);
 
-                    if (this.OnAxisClick != null)
-                    {
-                        if (leftAxisArea.Contains(location) && GetAxis(APSIM.Services.Graphing.AxisPosition.Left) != null)
+                        if (this.GetAxis(APSIM.Services.Graphing.AxisPosition.Top) != null)
                         {
-                            this.OnAxisClick.Invoke(APSIM.Services.Graphing.AxisPosition.Left);
+                            titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y / 2);
+                            topAxisArea = new Rectangle(plotArea.X, plotArea.Y / 2, plotArea.Width, plotArea.Y / 2);
                         }
-                        else if (topAxisArea.Contains(location) && GetAxis(APSIM.Services.Graphing.AxisPosition.Top) != null)
+
+                        Rectangle rightAxisArea = new Rectangle(plotArea.Right, plotArea.Top, MainWidget.Allocation.Width - plotArea.Right, plotArea.Height);
+                        Rectangle bottomAxisArea = new Rectangle(plotArea.Left, plotArea.Bottom, plotArea.Width, MainWidget.Allocation.Height - plotArea.Bottom);
+                        if (titleArea.Contains(location))
                         {
-                            this.OnAxisClick.Invoke(APSIM.Services.Graphing.AxisPosition.Top);
+                            if (this.OnTitleClick != null)
+                            {
+                                this.OnTitleClick(sender, e);
+                            }
                         }
-                        else if (rightAxisArea.Contains(location) && GetAxis(APSIM.Services.Graphing.AxisPosition.Right) != null)
+
+                        if (this.OnAxisClick != null)
                         {
-                            this.OnAxisClick.Invoke(APSIM.Services.Graphing.AxisPosition.Right);
-                        }
-                        else if (bottomAxisArea.Contains(location) && GetAxis(APSIM.Services.Graphing.AxisPosition.Bottom) != null)
-                        {
-                            this.OnAxisClick.Invoke(APSIM.Services.Graphing.AxisPosition.Bottom);
+                            if (leftAxisArea.Contains(location) && GetAxis(APSIM.Services.Graphing.AxisPosition.Left) != null)
+                            {
+                                this.OnAxisClick.Invoke(APSIM.Services.Graphing.AxisPosition.Left);
+                            }
+                            else if (topAxisArea.Contains(location) && GetAxis(APSIM.Services.Graphing.AxisPosition.Top) != null)
+                            {
+                                this.OnAxisClick.Invoke(APSIM.Services.Graphing.AxisPosition.Top);
+                            }
+                            else if (rightAxisArea.Contains(location) && GetAxis(APSIM.Services.Graphing.AxisPosition.Right) != null)
+                            {
+                                this.OnAxisClick.Invoke(APSIM.Services.Graphing.AxisPosition.Right);
+                            }
+                            else if (bottomAxisArea.Contains(location) && GetAxis(APSIM.Services.Graphing.AxisPosition.Bottom) != null)
+                            {
+                                this.OnAxisClick.Invoke(APSIM.Services.Graphing.AxisPosition.Bottom);
+                            }
                         }
                     }
                 }

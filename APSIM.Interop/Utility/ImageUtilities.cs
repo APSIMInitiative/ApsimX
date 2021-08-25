@@ -35,9 +35,9 @@ namespace APSIM.Interop.Utility
         }
 
         /// <summary>
-        /// Read an svg image from a file.
+        /// Convert an svg image into a raster.
         /// </summary>
-        /// <param name="file">File name.</param>
+        /// <param name="stream">The input svg stream.</param>
         /// <param name="width">Desired image width.</param>
         /// <param name="height">Desired image height.</param>
         /// <remarks>

@@ -9,14 +9,15 @@ using APSIM.Interop.Markdown;
 using MigraDocCore.DocumentObjectModel;
 using APSIM.Interop.Markdown.Renderers.Inlines;
 using Moq;
+using System;
 
 namespace APSIM.Tests.Interop.Markdown.Renderers.Inlines
 {
     /// <summary>
-    /// Tests for <see cref="HtmlInlineRenderer"/>.
+    /// Tests for <see cref="LineBreakInlineRenderer"/>.
     /// </summary>
     [TestFixture]
-    public class HtmlInlineRendererTests
+    public class LineBreakInlineRendererTests
     {
         /// <summary>
         /// PDF Builder API instance.
@@ -29,19 +30,14 @@ namespace APSIM.Tests.Interop.Markdown.Renderers.Inlines
         private Document document;
 
         /// <summary>
-        /// The <see cref="HtmlInlineRenderer"/> instance being tested.
+        /// The <see cref="LineBreakInlineRenderer"/> instance being tested.
         /// </summary>
-        private HtmlInlineRenderer renderer;
+        private LineBreakInlineRenderer renderer;
 
         /// <summary>
-        /// Sample html inline which may be used by tests.
+        /// Sample line break inline which may be used by tests.
         /// </summary>
-        private HtmlInline inline;
-
-        /// <summary>
-        /// Text in the sample html inline.
-        /// </summary>
-        private string sampleHtml;
+        private LineBreakInline inline;
 
         /// <summary>
         /// Initialise the testing environment.
@@ -53,33 +49,41 @@ namespace APSIM.Tests.Interop.Markdown.Renderers.Inlines
             // Workaround for a quirk in the migradoc API.
             _ = document.AddSection().Elements;
             pdfBuilder = new PdfBuilder(document, PdfOptions.Default);
-            renderer = new HtmlInlineRenderer();
-            inline = new HtmlInline();
-            inline.Tag = sampleHtml = "<td>";
+            renderer = new LineBreakInlineRenderer();
+            inline = new LineBreakInline();
+            inline.IsHard = true;
         }
 
         /// <summary>
-        /// Ensure that the html inline's tag is written.
+        /// Ensure that a newline character is inserted if the linebreak
+        /// is a hard line break.
         /// </summary>
-        /// <remarks>
-        /// I'm not 100% sure what we want this renderer to do. For now, I'm
-        /// going to ensure that this is what it does. Feel free to change.
-        /// </remarks>
         [Test]
-        public void EnsureTagIsWritten()
+        public void EnsureLinefeedInserted()
         {
+            Mock<PdfBuilder> builder = new Mock<PdfBuilder>(document, PdfOptions.Default);
+            builder.Setup(b => b.AppendText(It.IsAny<string>(), It.IsAny<TextStyle>()))
+                   .Callback<string, TextStyle>((text, _) => Assert.AreEqual(Environment.NewLine, text));
+            inline.IsHard = true;
             renderer.Write(pdfBuilder, inline);
-            Assert.AreEqual(1, document.LastSection.Elements.Count);
-            Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
-            Assert.AreEqual(1, paragraph.Elements.Count);
-            FormattedText text = (FormattedText)paragraph.Elements[0];
-            Assert.AreEqual(1, text.Elements.Count);
-            Text rawText = (Text)text.Elements[0];
-            Assert.AreEqual(sampleHtml, rawText.Content);
         }
 
         /// <summary>
-        /// Ensure that the inserted html object has no style.
+        /// Ensure that no newline character is inserted if the linebreak
+        /// is a soft line break.
+        /// </summary>
+        [Test]
+        public void TestSoftLineBreak()
+        {
+            Mock<PdfBuilder> builder = new Mock<PdfBuilder>(document, PdfOptions.Default);
+            builder.Setup(b => b.AppendText(It.IsAny<string>(), It.IsAny<TextStyle>()))
+                   .Callback<string, TextStyle>((_, __) => Assert.Fail("AppendText() should never be called for a soft line break. I think."));
+            inline.IsHard = false;
+            renderer.Write(pdfBuilder, inline);
+        }
+
+        /// <summary>
+        /// Ensure that the inserted line break object has no style.
         /// </summary>
         [Test]
         public void EnsureNoStyle()
@@ -103,7 +107,8 @@ namespace APSIM.Tests.Interop.Markdown.Renderers.Inlines
         }
 
         /// <summary>
-        /// Ensure that subsequent additions are not included in the text element.
+        /// Ensure that subsequent additions are not included in the newline
+        /// text element.
         /// </summary>
         [Test]
         public void EnsureSubsequentAdditionsNotInSameElement()
@@ -116,8 +121,7 @@ namespace APSIM.Tests.Interop.Markdown.Renderers.Inlines
         }
 
         /// <summary>
-        /// Ensure that the entity text is written to an existing
-        /// paragraph (if there is one).
+        /// Ensure that the newline is written to an existing paragraph.
         /// </summary>
         [Test]
         public void EnsureContentGoesInExistingParagraph()
