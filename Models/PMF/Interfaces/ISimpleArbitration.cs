@@ -2,6 +2,8 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Functions;
+    using Models.PMF.Organs;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -28,19 +30,69 @@
     ///  - uptake
     ///  - fixation
     /// </remarks>
-    public interface ISimpleArbitration
+    public interface ISubscribeToBiomassArbitration
+    {
+
+        /// <summary>Gets the total biomass</summary>
+        Biomass Total { get; }
+
+        /// <summary>Gets the live biomass</summary>
+        Biomass Live { get; }
+
+        /// <summary>Gets the live biomass</summary>
+        Biomass Dead { get; }
+
+        /// <summary>Gets the live biomass at the start of the day</summary>
+        Biomass StartLive { get; }
+
+        /// <summary>The supplies, demands and allocations of Carbon</summary>
+        IAmTheOrgansCarbonArbitrationAgent Carbon { get; }
+        /// <summary> The supplies, demands and allocation of nutrients</summary>
+        List<IAmANutrientArbitrationAgent> Nutrients { get; }
+
+        /// <summary>Gets the senescence rate</summary>
+        double senescenceRate { get; }
+
+        /// <summary>Gets the DMConversion efficiency</summary>
+        double dmConversionEfficiency { get; }
+        /// <summary>Gets the biomass allocated (represented actual growth)</summary>
+        Biomass Allocated { get; }
+
+        /// <summary>Gets the biomass allocated (represented actual growth)</summary>
+        Biomass Senesced { get;  }
+
+        /// <summary>Gets or sets the minimum nconc.</summary>
+        double MinNconc { get; }
+
+    }
+
+    /// <summary>
+    /// An interface that defines what needs to be implemented by an organ
+    /// that communicates to the OrganArbitrator.
+    /// </summary>
+    /// <remarks>
+    ///  PFM considers four types of biomass supply, i.e.
+    ///  - fixation
+    ///  - reallocation
+    ///  - uptake
+    ///  - retranslocation
+    /// PFM considers eight types of biomass allocation, i.e.
+    ///  - structural
+    ///  - non-structural
+    ///  - metabolic
+    ///  - retranslocation
+    ///  - reallocation
+    ///  - respired
+    ///  - uptake
+    ///  - fixation
+    /// </remarks>
+    public interface IAmTheOrgansCarbonArbitrationAgent
     {
         /// <summary>Returns the organs dry matter demand</summary>
         BiomassPoolType DMDemand { get; }
 
         /// <summary>Returns the organs dry matter supply</summary>
         BiomassSupplyType DMSupply { get; }
-
-        /// <summary>Returns the organs N demand</summary>
-        BiomassPoolType NDemand { get; }
-
-        /// <summary>Returns the organs N supply</summary>
-        BiomassSupplyType NSupply { get; }
 
         /// <summary>Returns the DM that can be paritioned to the organ of N is not limited </summary>
         BiomassPoolType potentialDMAllocation { get; }
@@ -51,22 +103,44 @@
         /// <summary>Sets the dry matter allocation.</summary>
         void SetDryMatterAllocation(BiomassAllocationType dryMatter);
 
+        /// <summary>Clear the agent</summary>
+        void Clear();
+    }
+
+    /// <summary>
+    /// An interface that defines what needs to be implemented by an organ
+    /// that communicates to the OrganArbitrator.
+    /// </summary>
+    /// <remarks>
+    ///  PFM considers four types of biomass supply, i.e.
+    ///  - fixation
+    ///  - reallocation
+    ///  - uptake
+    ///  - retranslocation
+    /// PFM considers eight types of biomass allocation, i.e.
+    ///  - structural
+    ///  - non-structural
+    ///  - metabolic
+    ///  - retranslocation
+    ///  - reallocation
+    ///  - respired
+    ///  - uptake
+    ///  - fixation
+    /// </remarks>
+    public interface IAmANutrientArbitrationAgent
+    {
+        /// <summary>Returns the organs N demand</summary>
+        BiomassPoolType NDemand { get; }
+
+        /// <summary>Returns the organs N supply</summary>
+        BiomassSupplyType NSupply { get; }
+
         /// <summary>Sets the n allocation.</summary>
         void SetNitrogenAllocation(BiomassAllocationType nitrogen);
 
-        /// <summary>Gets or sets the minimum nconc.</summary>
-        double MinNconc { get; }
-
-        /// <summary>Gets or sets the n fixation cost.</summary>
-        double NFixationCost { get; }
-
-        /// <summary>Gets the total biomass</summary>
-        Biomass Total { get; }
-
-        /// <summary>Gets the live biomass</summary>
-        Biomass Live { get; }
+        /// <summary>Clear the agent</summary>
+        void Clear();
     }
-
 
     #region Arbitrator data types
     /// <summary>Contains the variables for allocation types</summary>
@@ -101,6 +175,7 @@
             Array.Clear(Allocated, 0, NumberOfOrgans);
         }
 
+
     }
 
     /// <summary>Contains the variables need for arbitration</summary>
@@ -108,7 +183,7 @@
     public class BiomassArbitrationStates
     {
         /// <summary>Names of all organs</summary>
-        private IArbitration[] organs;
+        private ISubscribeToBiomassArbitration[] organs;
         
         //Biomass Demand Variables
         /// <summary>Gets or sets the structural demand.</summary>
@@ -220,7 +295,7 @@
         /// <summary>Initializes a new instance of the <see cref="BiomassArbitrationType"/> class.</summary>
         /// <param name="type">Type of biomass arbitration</param>
         /// <param name="allOrgans">Names of organs</param>
-        public BiomassArbitrationStates(string type, List<IArbitration> allOrgans)
+        public BiomassArbitrationStates(string type, List<ISubscribeToBiomassArbitration> allOrgans)
         {
             BiomassType = type;
             organs = allOrgans.ToArray();

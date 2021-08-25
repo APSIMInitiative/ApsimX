@@ -26,6 +26,10 @@ namespace Models.Functions.DemandFunctions
 
         private IArbitration parentOrgan = null;
 
+        private ISubscribeToBiomassArbitration parentSimpleOrgan = null;
+
+        private string parentOrganType = "";
+
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -40,8 +44,17 @@ namespace Models.Functions.DemandFunctions
                 {
                     parentOrgan = ParentClass as IArbitration;
                     ParentOrganIdentified = true;
+                    parentOrganType = "IArbitration";
                     if (ParentClass is IPlant)
                         throw new Exception(Name + "cannot find parent organ to get Structural and Storage N status");
+                }
+                if (ParentClass is ISubscribeToBiomassArbitration)
+                {
+                    parentSimpleOrgan = ParentClass as ISubscribeToBiomassArbitration;
+                    ParentOrganIdentified = true;
+                    parentOrganType = "ISubscribeToBiomassArbitration";
+                    if (ParentClass is IPlant)
+                        throw new Exception(Name + "cannot find parent organ to get Structural and Storage DM status");
                 }
                 ParentClass = ParentClass.Parent;
             }
@@ -50,18 +63,29 @@ namespace Models.Functions.DemandFunctions
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
         {
-            double potentialAllocation = parentOrgan.potentialDMAllocation.Structural + parentOrgan.potentialDMAllocation.Metabolic;
-            double NDeficit = Math.Max(0.0, maxNConc.Value() * (parentOrgan.Live.Wt + potentialAllocation) - parentOrgan.Live.N);
-            NDeficit *= nitrogenDemandSwitch.Value();
-
-            return Math.Max(0, NDeficit - parentOrgan.NDemand.Structural - parentOrgan.NDemand.Metabolic);
+            if (parentOrganType == "IArbitration")
+            {
+                double potentialAllocation = parentOrgan.potentialDMAllocation.Structural + parentOrgan.potentialDMAllocation.Metabolic;
+                double NDeficit = Math.Max(0.0, maxNConc.Value() * (parentOrgan.Live.Wt + potentialAllocation) - parentOrgan.Live.N);
+                NDeficit *= nitrogenDemandSwitch.Value();
+                return Math.Max(0, NDeficit - parentOrgan.NDemand.Structural - parentOrgan.NDemand.Metabolic);
+            }
+            if (parentOrganType == "ISubscribeToBiomassArbitration")
+            {
+                double potentialAllocation = parentSimpleOrgan.Carbon.potentialDMAllocation.Structural + parentSimpleOrgan.Carbon.potentialDMAllocation.Metabolic;
+                double NDeficit = Math.Max(0.0, maxNConc.Value() * (parentSimpleOrgan.Live.Wt + potentialAllocation) - parentSimpleOrgan.Live.N);
+                NDeficit *= nitrogenDemandSwitch.Value();
+                return Math.Max(0, NDeficit - parentSimpleOrgan.Nutrients[0].NDemand.Structural - parentSimpleOrgan.Nutrients[0].NDemand.Metabolic);
+            }
+            else
+                throw new Exception("Could not locate parent organ");
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+            /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+            /// <param name="tags">The list of tags to add to.</param>
+            /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+            /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+            public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
