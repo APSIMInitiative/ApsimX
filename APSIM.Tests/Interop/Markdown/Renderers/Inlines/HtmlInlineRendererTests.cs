@@ -59,6 +59,26 @@ namespace APSIM.Tests.Interop.Markdown.Renderers.Inlines
         }
 
         /// <summary>
+        /// Ensure that the html inline's tag is written.
+        /// </summary>
+        /// <remarks>
+        /// I'm not 100% sure what we want this renderer to do. For now, I'm
+        /// going to ensure that this is what it does. Feel free to change.
+        /// </remarks>
+        [Test]
+        public void EnsureTagIsWritten()
+        {
+            renderer.Write(pdfBuilder, inline);
+            Assert.AreEqual(1, document.LastSection.Elements.Count);
+            Paragraph paragraph = (Paragraph)document.LastSection.Elements[0];
+            Assert.AreEqual(1, paragraph.Elements.Count);
+            FormattedText text = (FormattedText)paragraph.Elements[0];
+            Assert.AreEqual(1, text.Elements.Count);
+            Text rawText = (Text)text.Elements[0];
+            Assert.AreEqual(sampleHtml, rawText.Content);
+        }
+
+        /// <summary>
         /// Ensure that the inserted html object has no style.
         /// </summary>
         [Test]
