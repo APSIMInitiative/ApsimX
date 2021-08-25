@@ -64,6 +64,9 @@
         /// <summary>Gets or sets the minimum nconc.</summary>
         double MinNconc { get; }
 
+        /// <summary> get the organs uptake object if it has one </summary>
+        IWaterNitrogenUptake WaterNitrogenUptakeObject { get;  }
+
     }
 
     /// <summary>

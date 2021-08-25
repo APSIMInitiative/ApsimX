@@ -12,6 +12,7 @@ namespace Models.Functions.RootShape
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Root))]
+    [ValidParent(ParentType = typeof(RootFunction))]
     public class RootShapeCylinder : Model, IRootShape, ICustomDocumentation
     {
         /// <summary>Calculates the root area for a layer of soil</summary>

@@ -24,6 +24,15 @@
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double BiomassToleranceValue = 0.0000000001; 
 
+        /// <summary> The organs uptake object if it has one</summary>
+        public IWaterNitrogenUptake WaterNitrogenUptakeObject
+        {
+            get
+            {
+                return this.FindChild<IWaterNitrogenUptake>();
+            }
+        }
+
         /// <summary>The parent plant</summary>
         [Link]
         private Plant parentPlant = null;
@@ -92,6 +101,11 @@
         [Link(Type = LinkType.Child, ByName = true)]
         public IFunction CarbonConcentration = null;
 
+        /// <summary>remobilisation cost</summary>
+        [Units("g/g")]
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction RemobilisationCost = null;
+
         /// <summary>The live biomass state at start of the computation round</summary>
         public Biomass StartLive  { get; private set; }
 
@@ -133,7 +147,6 @@
         /// <summary>Gets the biomass removed from the system (harvested, grazed, etc.)</summary>
         [JsonIgnore]
         public Biomass Removed { get; private set; }
-
 
         /// <summary>Rate of senescence for the day</summary>
         [JsonIgnore]
