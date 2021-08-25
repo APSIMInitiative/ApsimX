@@ -7,8 +7,11 @@ namespace UserInterface.Views
     /// <summary>Implements single cell selection for the sheet widget.</summary>
     public class SingleCellSelect : ISheetSelection
     {
+        /// <summary>The sheet.</summary>
+        private Sheet sheet;
+
         /// <summary>The sheet widget.</summary>
-        private SheetWidget sheet;
+        private SheetWidget sheetWidget;
 
         /// <summary>The index of the current selected column.</summary>
         private int selectedColumnIndex;
@@ -17,10 +20,12 @@ namespace UserInterface.Views
         private int selectedRowIndex;
 
         /// <summary>Constructor.</summary>
-        /// <param name="sheetView">The sheet widget.</param>
-        public SingleCellSelect(SheetWidget sheetView)
+        /// <param name="sheet">The sheet.</param>
+        /// <param name="sheetWidget">The sheet widget.</param>
+        public SingleCellSelect(Sheet sheet, SheetWidget sheetWidget)
         {
-            sheet = sheetView;
+            this.sheet = sheet;
+            this.sheetWidget = sheetWidget;
             selectedColumnIndex = 0;
             selectedRowIndex = sheet.NumberFrozenRows;
             sheet.KeyPress += OnKeyPressEvent;
@@ -58,29 +63,29 @@ namespace UserInterface.Views
         /// <summary>Invoked when the user presses a key.</summary>
         /// <param name="sender">Sender of event.</param>
         /// <param name="evnt">The event data.</param>
-        private void OnKeyPressEvent(object sender, EventKey evnt)
+        private void OnKeyPressEvent(object sender, SheetEventKey evnt)
         {
             if (Editor == null || !Editor.IsEditing)
             {
-                if (evnt.Key == Gdk.Key.Right && evnt.State == ModifierType.ControlMask)
+                if (evnt.Key == Keys.Right && evnt.Control)
                     MoveToFarRight();
-                else if (evnt.Key == Gdk.Key.Left && evnt.State == ModifierType.ControlMask)
+                else if (evnt.Key == Keys.Left && evnt.Control)
                     MoveToFarLeft();
-                else if (evnt.Key == Gdk.Key.Down && evnt.State == ModifierType.ControlMask)
+                else if (evnt.Key == Keys.Down && evnt.Control)
                     MoveToBottom();
-                else if (evnt.Key == Gdk.Key.Up && evnt.State == ModifierType.ControlMask)
+                else if (evnt.Key == Keys.Up && evnt.Control)
                     MoveToTop();
-                else if (evnt.Key == Gdk.Key.Left)
+                else if (evnt.Key == Keys.Left)
                     MoveLeft();
-                else if (evnt.Key == Gdk.Key.Right)
+                else if (evnt.Key == Keys.Right)
                     MoveRight();
-                else if (evnt.Key == Gdk.Key.Down)
+                else if (evnt.Key == Keys.Down)
                     MoveDown();
-                else if (evnt.Key == Gdk.Key.Up)
+                else if (evnt.Key == Keys.Up)
                     MoveUp();
-                else if (evnt.Key == Gdk.Key.Page_Down)
+                else if (evnt.Key == Keys.PageDown)
                     PageDown();
-                else if (evnt.Key == Gdk.Key.Page_Up)
+                else if (evnt.Key == Keys.PageUp)
                     PageUp();
 
                 sheet.Refresh();
@@ -90,20 +95,17 @@ namespace UserInterface.Views
         /// <summary>Invoked when the user clicks a mouse button.</summary>
         /// <param name="sender">Sender of event.</param>
         /// <param name="evnt">The event data.</param>
-        private void OnMouseClickEvent(object sender, EventButton evnt)
+        private void OnMouseClickEvent(object sender, SheetEventButton evnt)
         {
-            if (evnt.Type == EventType.ButtonPress)
+            int colIndex;
+            int rowIndex;
+            if (sheet.CellHitTest(evnt.X, evnt.Y, out colIndex, out rowIndex) &&
+                rowIndex >= sheet.NumberFrozenRows)
             {
-                int colIndex;
-                int rowIndex;
-                if (sheet.CellHitTest((int)evnt.X, (int)evnt.Y, out colIndex, out rowIndex) &&
-                    rowIndex >= sheet.NumberFrozenRows)
-                {
-                    selectedColumnIndex = colIndex;
-                    selectedRowIndex = rowIndex;
-                    sheet.GrabFocus();
-                    sheet.Refresh();
-                }
+                selectedColumnIndex = colIndex;
+                selectedRowIndex = rowIndex;
+                sheetWidget.GrabFocus();
+                sheet.Refresh();
             }
         }
 
