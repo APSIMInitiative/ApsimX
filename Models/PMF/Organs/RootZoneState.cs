@@ -7,6 +7,7 @@ using Models.Soils.Standardiser;
 using Models.Soils.Nutrients;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
+using Models.PMF.Interfaces;
 
 namespace Models.PMF.Organs
 {
@@ -32,9 +33,6 @@ namespace Models.PMF.Organs
         /// <summary>The parent plant</summary>
         public Plant plant = null;
 
-        /// <summary>The root organ</summary>
-        public Root root = null;
-
         /// <summary>Is the Weirdo model present in the simulation?</summary>
         public bool IsWeirdoPresent { get; set; }
 
@@ -46,6 +44,12 @@ namespace Models.PMF.Organs
 
         /// <summary>The cost for remobilisation</summary>
         private IFunction remobilisationCost = null;
+
+        private IFunction RootDepthStressFactor = null;
+
+        private IFunction RootFrontCalcSwitch = null;
+
+        private IRootShape RootShape = null;
 
         /// <summary>Zone name</summary>
         public string Name = null;
@@ -143,7 +147,6 @@ namespace Models.PMF.Organs
 
         /// <summary>Constructor</summary>
         /// <param name="Plant">The parant plant</param>
-        /// <param name="Root">The parent root organ</param>
         /// <param name="soil">The soil in the zone.</param>
         /// <param name="depth">Root depth (mm)</param>
         /// <param name="initialDM">Initial dry matter</param>
@@ -152,16 +155,22 @@ namespace Models.PMF.Organs
         /// <param name="rfv">Root front velocity</param>
         /// <param name="mrd">Maximum root depth</param>
         /// <param name="remobCost">Remobilisation cost</param>
-        public ZoneState(Plant Plant, Root Root, Soil soil, double depth,
+        /// <param name="rdsf">Root depth stress factor</param>
+        /// <param name="rs">root switch</param>
+        /// <param name="shape">Remobilisation cost</param>
+        public ZoneState(Plant Plant, Soil soil, double depth,
                          BiomassDemand initialDM, double population, double maxNConc,
-                         IFunction rfv, IFunction mrd, IFunction remobCost)
+                         IFunction rfv, IFunction mrd, IFunction remobCost,
+                         IFunction rdsf, IFunction rs, IRootShape shape)
         {
             this.Soil = soil;
             this.plant = Plant;
-            this.root = Root;
             this.rootFrontVelocity = rfv;
             this.maximumRootDepth = mrd;
             this.remobilisationCost = remobCost;
+            this.RootDepthStressFactor = rdsf;
+            this.RootFrontCalcSwitch = rs;
+            this.RootShape = shape;
             Physical = soil.FindChild<IPhysical>();
             WaterBalance = soil.FindChild<ISoilWater>();
             IsWeirdoPresent = soil.FindChild("Weirdo") != null;
@@ -267,7 +276,7 @@ namespace Models.PMF.Organs
             // Do Root Front Advance
             int RootLayer = SoilUtilities.LayerIndexOfDepth(Physical.Thickness, Depth);
             var rootfrontvelocity = rootFrontVelocity.Value(RootLayer);
-            var rootDepthWaterStress = root.RootDepthStressFactor.Value(RootLayer);
+            var rootDepthWaterStress = RootDepthStressFactor.Value(RootLayer);
 
             double MaxDepth;
             double[] xf = null;
@@ -301,7 +310,7 @@ namespace Models.PMF.Organs
             Depth = Math.Min(Depth, MaxDepth);
 
             //RootFront - needed by sorghum
-            if (root.RootFrontCalcSwitch?.Value() == 1)
+            if (RootFrontCalcSwitch?.Value() == 1)
             {
                 var dltRootFront = rootfrontvelocity * rootDepthWaterStress * xf[RootLayer];
 
@@ -313,7 +322,7 @@ namespace Models.PMF.Organs
             {
                 RootFront = Depth;
             }
-            root.RootShape.CalcRootProportionInLayers(this);
+            RootShape.CalcRootProportionInLayers(this);
         }
         /// <summary>
         /// Calculate Root Activity Values for water and nitrogen
