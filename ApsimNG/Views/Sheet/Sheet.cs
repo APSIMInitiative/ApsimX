@@ -477,12 +477,7 @@ namespace UserInterface.Views
                     cr.SetLineWidth(lineWidth);
 
                     cr.Rectangle(cellBounds);
-                    if (!CellPainter.PaintCell(columnIndex, rowIndex))
-                    {
-                        //cr.SetSourceColor(CellPainter.GetForegroundColour(columnIndex, rowIndex));
-                        //cr.Stroke();
-                    }
-                    else
+                    if (CellPainter.PaintCell(columnIndex, rowIndex))
                     {
                         // Draw the filled in cell.
 #if NETCOREAPP
