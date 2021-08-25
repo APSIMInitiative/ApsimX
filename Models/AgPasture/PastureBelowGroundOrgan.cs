@@ -25,17 +25,17 @@
         /// <summary>Soil object where these roots are growing.</summary>
         private Soil soil = null;
 
-        /// <summary>The soil physical node</summary>
+        /// <summary>The soil physical data</summary>
         private IPhysical soilPhysical = null;
+
+        /// <summary>The soil-plant data</summary>
+        private SoilCrop soilCropData;
 
         /// <summary>The water balance model</summary>
         private ISoilWater waterBalance = null;
 
         /// <summary>Soil nutrient model where these roots are growing.</summary>
         private INutrient nutrient;
-
-        private double[] dulMM;
-        private double[] ll15MM;
 
         /// <summary>The NO3 solute.</summary>
         private ISolute no3 = null;
@@ -51,8 +51,6 @@
 
         /// <summary>Number of layers in the soil.</summary>
         private int nLayers;
-
-        private SoilCrop soilCropData;
 
         /// <summary>Constructor, initialise tissues for the roots.</summary>
         /// <param name="zone">The zone the roots belong in.</param>
@@ -89,8 +87,6 @@
             // link to soil and initialise related variables
             zoneName = soil.Parent.Name;
             nLayers = soilPhysical.Thickness.Length;
-            dulMM = soilPhysical.DULmm;
-            ll15MM = soilPhysical.LL15mm;
             mySoilNH4Available = new double[nLayers];
             mySoilNO3Available = new double[nLayers];
 
@@ -427,6 +423,8 @@
         {
             var thickness = soilPhysical.Thickness;
             var bd = soilPhysical.BD;
+            var dulMM = soilPhysical.DULmm;
+            var llMM = MathUtilities.Multiply(soilCropData.LL, soilPhysical.Thickness);
             var water = myZone.Water;
             var nh4 = myZone.NH4N;
             var no3 = myZone.NO3N;
@@ -435,7 +433,7 @@
             {
                 // general factors
                 double layerFraction = MathUtilities.Bound((Depth - depthAtTopOfLayer) / thickness[layer], 0.0, 1.0);
-                double rwc = MathUtilities.Bound((water[layer] - ll15MM[layer]) / (dulMM[layer] - ll15MM[layer]), 0.0, 1.0);
+                double rwc = MathUtilities.Bound((water[layer] - llMM[layer]) / (dulMM[layer] - llMM[layer]), 0.0, 1.0);
                 double moistureFactor = 1.0 - Math.Pow(1.0 - rwc, ExponentSoilMoisture);
 
                 // get NH4 available
