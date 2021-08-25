@@ -84,14 +84,10 @@ namespace Models.CLEM.Activities
             {
                 number = 0;
                 foreach (RuminantGroup item in filterGroups)
-                {
                     number += herd.FilterRuminants(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Count();
-                }
             }
             else
-            {
                 number = herd.Count();
-            }
 
             return number;
         }
@@ -109,9 +105,8 @@ namespace Models.CLEM.Activities
                 case LabourUnitType.perHead:
                     double numberUnits = numberToTag / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
+
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
@@ -151,9 +146,7 @@ namespace Models.CLEM.Activities
                 // recalculate numbers and ensure it is not less than number calculated
                 int updatedNumberToTag = NumberToTag(); 
                 if (updatedNumberToTag < numberToTag)
-                {
                     numberToTag = updatedNumberToTag;
-                }
 
                 IEnumerable<Ruminant> herd = CurrentHerd(false);
                 if (numberToTag > 0)
@@ -180,44 +173,10 @@ namespace Models.CLEM.Activities
                     }
                 }
                 else
-                {
                     this.Status = ActivityStatus.NotNeeded;
-                }
             }
             else
-            {
                 this.Status = ActivityStatus.Ignored;
-            }
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            // nothing to do. This is performed in the AnimalMark event.
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
         }
 
         #region descriptive summary

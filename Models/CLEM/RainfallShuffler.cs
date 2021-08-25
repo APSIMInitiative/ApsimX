@@ -26,11 +26,8 @@ namespace Models.CLEM
 
     public class RainfallShuffler: CLEMModel
     {
-        /// <summary>
-        /// A link to the clock model.
-        /// </summary>
         [Link]
-        private readonly Clock clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Month for the start of rainfall/growth season
@@ -56,7 +53,7 @@ namespace Models.CLEM
             base.ModelSummaryStyle = HTMLSummaryStyle.Default;
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler to allow us to initialise resources</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseResource")]

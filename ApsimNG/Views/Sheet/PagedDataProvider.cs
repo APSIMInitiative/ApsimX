@@ -159,6 +159,7 @@ namespace UserInterface.Views
         /// <remarks>This concept of a rolling cursor comes from: https://sqlite.org/forum/forumpost/2cfa137263</remarks>
         private void CreateTemporaryKeyset()
         {
+            Cleanup();
             string filter = GetFilter();
             string sql = "CREATE TEMPORARY TABLE keyset AS " +
                          $"SELECT rowid FROM {tableName} ";

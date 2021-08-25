@@ -75,7 +75,7 @@ namespace Models.CLEM.Activities
             // This method will only fire if the user has added this activity to the UI
             // Otherwise all details will be provided from GrazeAll code [CLEMInitialiseActivity]
 
-            GrazeFoodStoreModel = Resources.GetResourceItem(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+            GrazeFoodStoreModel = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             //Create list of children by breed
             foreach (RuminantType herdType in Resources.FindResourceGroup<RuminantHerd>().FindAllChildren<RuminantType>())
@@ -88,8 +88,8 @@ namespace Models.CLEM.Activities
                     Clock = this.Clock,
                     Name = "Graze_" + (GrazeFoodStoreModel as Model).Name + "_" + herdType.Name
                 };
-                if (ragpb.Resources == null)
-                    ragpb.Resources = this.Resources;
+
+                ragpb.SetLinkedModels(Resources);
 
                 if (ragpb.Clock == null)
                     ragpb.Clock = this.Clock;
@@ -196,7 +196,7 @@ namespace Models.CLEM.Activities
 
         private void BubbleHerd_ActivityPerformed(object sender, EventArgs e)
         {
-            ActivityPerformed?.Invoke(sender, e);
+            OnActivityPerformed(e);
         }
 
         /// <inheritdoc/>
@@ -207,36 +207,6 @@ namespace Models.CLEM.Activities
             return;
         }
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
         #region descriptive summary
 
         /// <inheritdoc/>
@@ -245,24 +215,12 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals in ");
-                if (GrazeFoodStoreTypeName == null || GrazeFoodStoreTypeName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[PASTURE NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreTypeName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(GrazeFoodStoreTypeName, "Pasture not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write(" will graze for ");
                 if (HoursGrazed <= 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
-                }
                 else
-                {
                     htmlWriter.Write(((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of "));
-                }
-
                 htmlWriter.Write("the maximum 8 hours each day</span>");
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 

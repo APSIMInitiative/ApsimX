@@ -100,9 +100,8 @@ namespace Models.CLEM.Resources
         {
             // Add any attributes defined at the cohort level
             if(initialAttributes is null)
-            {
                 initialAttributes = new List<ISetAttribute>();
-            }
+
             initialAttributes.AddRange(this.FindAllChildren<ISetAttribute>().ToList());
 
             return CreateIndividuals(Convert.ToInt32(this.Number, CultureInfo.InvariantCulture), initialAttributes, ruminantType);
@@ -123,9 +122,7 @@ namespace Models.CLEM.Resources
             {
                 RuminantType parent = ruminantType;
                 if (parent is null)
-                {
                     parent = FindAncestor<RuminantType>();
-                }
 
                 // get Ruminant Herd resource for unique ids
                 RuminantHerd ruminantHerd = parent.Parent as RuminantHerd; // Resources.FindResourceGroup<RuminantHerd>();
@@ -146,13 +143,9 @@ namespace Models.CLEM.Resources
 
                     object ruminantBase;
                     if (this.Gender == Sex.Male)
-                    {
                         ruminantBase = new RuminantMale(Age, Gender, weight, parent);
-                    }
                     else
-                    {
                         ruminantBase = new RuminantFemale(Age, Gender, weight, parent);
-                    }
 
                     Ruminant ruminant = ruminantBase as Ruminant;
                     ruminant.ID = ruminantHerd.NextUniqueID;
@@ -172,9 +165,7 @@ namespace Models.CLEM.Resources
                             ruminantMale.Attributes.Add("Sire");
                         }
                         else
-                        {
                             Summary.WriteWarning(this, "Breeding sire switch is not valid for individual females [r=" + parent.Name + "].[r=" + this.Parent.Name + "].[r=" + this.Name + "]");
-                        }
                     }
 
                     // if weight not provided use normalised weight
@@ -189,9 +180,7 @@ namespace Models.CLEM.Resources
 
                     // initialise attributes
                     foreach (ISetAttribute item in initialAttributes)
-                    {
                         ruminant.Attributes.Add(item.AttributeName, item.GetRandomSetAttribute());
-                    }
 
                     individuals.Add(ruminantBase as Ruminant);
                 }
@@ -224,34 +213,27 @@ namespace Models.CLEM.Resources
                         if (specParent != null)
                         {
                             var resHolder = this.FindAncestor<ZoneCLEM>().FindDescendant<ResourcesHolder>();
-                            rumType = resHolder.GetResourceItem(this, specParent.RuminantTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as RuminantType;
+                            rumType = resHolder.FindResourceType<RuminantHerd, RuminantType>(this, specParent.RuminantTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                             specifyRuminantParent = true;
                         }
                     }
 
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     if (!specifyRuminantParent & Number <= 0)
-                    {
                         htmlWriter.Write("<span class=\"errorlink\">" + Number.ToString() + "</span> x ");
-                    }
                     else if (!specifyRuminantParent & Number > 1)
-                    {
                         htmlWriter.Write("<span class=\"setvalue\">" + Number.ToString() + "</span> x ");
-                    }
                     else
-                    {
                         htmlWriter.Write("A ");
-                    }
+
                     htmlWriter.Write($"<span class=\"setvalue\">{Age}</span> month old ");
                     htmlWriter.Write("<span class=\"setvalue\">" + Gender.ToString() + "</span></div>");
+
                     if (Suckling)
-                    {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals are suckling" : "This individual is a suckling") + "</div>");
-                    }
+
                     if (Sire)
-                    {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals are breeding sires" : "This individual is a breeding sire") + "</div>");
-                    }
 
                     Ruminant newInd = null;
                     string normWtString = "Unavailable";
@@ -265,19 +247,14 @@ namespace Models.CLEM.Resources
                     if (WeightSD > 0)
                     {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">Individuals will be randomly assigned a weight based on a mean " + ((Weight == 0) ? "(using the normalised weight) " : "") + "of <span class=\"setvalue\">" + Weight.ToString("#,##0") + "</span> kg with a standard deviation of <span class=\"setvalue\">" + WeightSD.ToString() + "</span></div>");
-
                         if (newInd != null && Math.Abs(Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
-                        {
                             htmlWriter.Write("<div class=\"activityentry\">These individuals should weigh close to the normalised weight of <span class=\"errorlink\">" + normWtString + "</span> kg for their age</div>");
-                        }
                     }
                     else
                     {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">" + ((Number > 1) ? "These individuals " : "This individual ") + "weigh" + ((Number > 1) ? "" : "s") + ((Weight == 0) ? " the normalised weight of " : "") + " <span class=\"setvalue\">" + Weight.ToString("#,##0") + "</span> kg");
                         if (newInd != null && Math.Abs(Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
-                        {
                             htmlWriter.Write(", but should weigh close to the normalised weight of <span class=\"errorlink\">" + normWtString + "</span> kg for their age");
-                        }
                         htmlWriter.Write("</div>");
                     }
                     htmlWriter.Write("</div>");
@@ -342,9 +319,7 @@ namespace Models.CLEM.Resources
                             htmlWriter.Write(" and ");
                             htmlWriter.Write(Sire ? "<span class=\"setvalue\">Sires</span>" : "");
                             if (Suckling)
-                            {
                                 htmlWriter.Write($"<span class=\"{(Sire ? "errorlink":"setvalue")}\">Suckling</span>");
-                            }
                         }
                         htmlWriter.Write("\r\n</div>");
                     }
@@ -353,10 +328,7 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -364,54 +336,38 @@ namespace Models.CLEM.Resources
                 if (formatForParentControl)
                 {
                     RuminantType rumtype = FindAncestor<RuminantType>();
-                    Ruminant newInd = null;
-                    string normWtString = "Unavailable";
-                    double normalisedWt = 0;
-
                     if (rumtype != null)
                     {
-                        newInd = new Ruminant(this.Age, this.Gender, 0, FindAncestor<RuminantType>());
-                        normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
-                        normalisedWt = newInd.NormalisedAnimalWeight;
+                        Ruminant newInd = new Ruminant(this.Age, this.Gender, 0, FindAncestor<RuminantType>());
+                        string normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
                         if (Math.Abs(this.Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
                         {
                             normWtString = "<span class=\"errorlink\">" + normWtString + "</span>";
                             (this.Parent as RuminantInitialCohorts).WeightWarningOccurred = true;
                         }
-
                         htmlWriter.Write("\r\n<tr><td>" + this.Name + "</td><td><span class=\"setvalue\">" + this.Gender + "</span></td><td><span class=\"setvalue\">" + this.Age.ToString() + "</span></td><td><span class=\"setvalue\">" + this.Weight.ToString() + ((this.WeightSD > 0) ? " (" + this.WeightSD.ToString() + ")" : "") + "</spam></td><td>" + normWtString + "</td><td><span class=\"setvalue\">" + this.Number.ToString() + "</span></td><td" + ((this.Suckling) ? " class=\"fill\"" : "") + "></td><td" + ((this.Sire) ? " class=\"fill\"" : "") + "></td></tr>");
                     }
                 }
                 else
-                {
                     htmlWriter.Write("\r\n</div>");
-                }
+
                 return htmlWriter.ToString(); 
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             return "";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
             return !formatForParentControl ? base.ModelSummaryClosingTags(true) : "";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";

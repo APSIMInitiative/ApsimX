@@ -124,22 +124,14 @@ namespace Models.CLEM.Activities
             // ensure labour resource added
             Labour lab = Resources.GetResourceGroupByType(typeof(Labour)) as Labour;
             if (lab == null)
-            {
                 Summary.WriteWarning(this, "[a=" + this.Parent.Name + "][f=" + this.Name + "] No labour resorces in simulation. Labour requirement will be ignored.");
-            }
             else
-            {
                 if (lab.Children.Count <= 0)
-                {
                     Summary.WriteWarning(this, "[a=" + this.Parent.Name + "][f=" + this.Name + "] No labour resorce types are provided in the labour resource. Labour requirement will be ignored.");
-                }
-            }
 
             // check filter groups present
             if (this.Children.OfType<LabourFilterGroup>().Count() == 0)
-            {
                 Summary.WriteWarning(this, "No LabourFilterGroup is supplied with the LabourRequirement for [a=" + this.Parent.Name + "]. No labour will be used for this activity.");
-            }
 
             // check for individual nesting.
             foreach (LabourFilterGroup fg in this.FindAllChildren<LabourFilterGroup>())
@@ -173,33 +165,24 @@ namespace Models.CLEM.Activities
                 if (UnitType != LabourUnitType.Fixed)
                 {
                     if (UnitSize == 1)
-                    {
                         htmlWriter.Write(" for each ");
-                    }
                     else
-                    {
                         htmlWriter.Write(" for every <span class=\"setvalue\">" + UnitSize.ToString("#,##0.##") + "</span>");
-                    }
+
                     htmlWriter.Write("<span class=\"setvalue\">" + UnitType2HTML() + "</span>");
                     if (WholeUnitBlocks)
-                    {
                         htmlWriter.Write(" and will be supplied in blocks");
-                    }
                 }
                 htmlWriter.Write("</div>");
 
                 if (MinimumPerPerson > 0)
-                {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">Labour will not be supplied if less than <span class=\"setvalue\">" + MinimumPerPerson.ToString() + "</span> day" + ((MinimumPerPerson == 1) ? "" : "s") + " is required</div>");
-                }
+
                 if (MaximumPerPerson > 0 && MaximumPerPerson < 30)
-                {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">No individual can provide more than <span class=\"setvalue\">" + MaximumPerPerson.ToString() + "</span> days</div>");
-                }
+
                 if (ApplyToAll)
-                {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">All people matching the below criteria (first level) will perform this task. (e.g. all children)</div>");
-                }
 
                 return htmlWriter.ToString(); 
             }
