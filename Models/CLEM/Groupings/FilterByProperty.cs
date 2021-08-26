@@ -31,20 +31,24 @@ namespace Models.CLEM.Groupings
         private IEnumerable<string> GetParameters() => Parent.Parameters.OrderBy(k => k);
 
         /// <inheritdoc/>
-        public override Func<T, bool> CompileRule<T>()
+        public override Func<T, bool> Compile<T>()
         {
-            // Look for the property on type T
+            // Check that the filter applies to objects of type T
+            var info = Parent.GetProperty(Parameter);
+            if (info.DeclaringType != typeof(T))
+                return (T t) => false;
+
+            // Look for the property on T
             var genericType = Expression.Parameter(typeof(T));
             var key = Expression.Property(genericType, Parameter);
 
-            // Find the value we want to compare the property against
-            var type = Parent.GetProperty(Parameter).PropertyType;
-            object ce = type.IsEnum 
-                ? Enum.Parse(type, Value.ToString(), true)
-                : Convert.ChangeType(Value, type);
+            // Try convert the Value into the same data type as the property
+            var type = info.PropertyType;
+            var ce = type.IsEnum ? Enum.Parse(type, Value.ToString(), true) : Convert.ChangeType(Value, type);
             var value = Expression.Constant(ce);
 
-            // Convert the expression into a lambda
+            // Create a lambda that compares the filter value to the property on T
+            // using the provided operator
             var binary = Expression.MakeBinary(Operator, key, value);
             var lambda = Expression.Lambda<Func<T, bool>>(binary, genericType).Compile();
             return lambda;

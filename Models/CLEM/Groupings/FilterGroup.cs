@@ -1,5 +1,6 @@
 ﻿using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
+using Models.Core;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -54,16 +55,26 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public PropertyInfo GetProperty(string name) => properties[name];
 
+        /// <summary>
+        /// Return some proportion of a ruminant collection after filtering
+        /// </summary>
+        public IEnumerable<T> FilterProportion<T>(IEnumerable<T> source)
+        {
+            double proportion = Proportion <= 0 ? 1 : Proportion;
+            int number = Convert.ToInt32(Math.Ceiling(proportion * source.Count()));
+
+            return Filter(source).Take(number);
+        }
+
         /// <inheritdoc/>
         public virtual IEnumerable<T> Filter<T>(IEnumerable<T> source)
         {
             if (source is null)
                 throw new NullReferenceException("Cannot filter a null object");
 
-            var rules = FindAllChildren<Filter>().Select(filter => filter.CompileRule<T>());
+            var rules = FindAllChildren<Filter>().Select(filter => filter.Compile<T>());
 
             return rules.Any() ? source.Where(item => rules.All(rule => rule(item))) : source;
         }
     }
-
 }

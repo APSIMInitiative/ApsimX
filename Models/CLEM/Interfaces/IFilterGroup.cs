@@ -23,7 +23,7 @@ namespace Models.CLEM.Interfaces
         double Proportion { get; set; }
 
         /// <summary>
-        /// Retrieves infortmation on a property
+        /// Retrieves information on a property
         /// </summary>
         PropertyInfo GetProperty(string name);
 

@@ -22,7 +22,7 @@ namespace Models.CLEM.Groupings
     [Description("This ruminant filter group selects specific individuals for feeding")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantFeedGroup.htm")]
-    public class RuminantFeedGroup : RuminantFilterGroup
+    public class RuminantFeedGroup : FilterGroup<Ruminant>
     {
         /// <summary>
         /// Value to supply for each month

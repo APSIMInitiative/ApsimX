@@ -34,7 +34,7 @@ namespace Models.CLEM.Groupings
         public AttributeFilterStyle FilterStyle { get; set; }
 
         /// <inheritdoc/>
-        public override Func<T, bool> CompileRule<T>()
+        public override Func<T, bool> Compile<T>()
         {
             Func<T, bool> lambda = t =>
             {

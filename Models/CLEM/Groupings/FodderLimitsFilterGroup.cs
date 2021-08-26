@@ -2,10 +2,6 @@
 using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
 
 namespace Models.CLEM.Groupings
 {
@@ -17,7 +13,7 @@ namespace Models.CLEM.Groupings
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This grouping is not currently used.")]
     [Version(1, 0, 1, "")]
-    public class FodderLimitsFilterGroup : RuminantFilterGroup
+    public class FodderLimitsFilterGroup : FilterGroup<Ruminant>
     {
         /// <summary>
         /// Monthly values to supply selected individuals

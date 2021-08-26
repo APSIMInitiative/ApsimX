@@ -30,7 +30,7 @@ namespace Models.CLEM.Groupings
     [Description("This group selects specific individuals from the ruminant herd using any number of filters and sorts.")]
     [Version(1, 0, 1, "Added ability to select random proportion of the group to use")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantGroup.htm")]
-    public class RuminantGroup : RuminantFilterGroup
+    public class RuminantGroup : FilterGroup<Ruminant>
     {
         /// <summary>
         /// The reason for this filter group
