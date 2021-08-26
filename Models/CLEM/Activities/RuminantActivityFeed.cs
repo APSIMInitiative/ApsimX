@@ -130,8 +130,16 @@ namespace Models.CLEM.Activities
             feedToOverSatisfy = 0;
 
             // get list from filters
-            foreach (var child in Children.OfType<RuminantFeedGroup>())
+            foreach (var child in Children.OfType<FilterGroup<Ruminant>>())
             {
+                double value = 0;
+                if (child is RuminantFeedGroup rfg)
+                    value = rfg.Value;
+                else if (child is RuminantFeedGroupMonthly rfgm)
+                    value = rfgm.MonthlyValues[clock.Today.Month - 1];
+                else
+                    continue;
+
                 var selectedIndividuals = child.FilterProportion(herd);
 
                 switch (FeedStyle)
@@ -149,12 +157,7 @@ namespace Models.CLEM.Activities
                 feedToSatisfy += selectedIndividuals.Sum(a => a.PotentialIntake - a.Intake);
                 feedToOverSatisfy += selectedIndividuals.Sum(a => a.PotentialIntake * (usingPotentialintakeMultiplier ? a.BreedParams.OverfeedPotentialIntakeModifier : 1) - a.Intake);
 
-                double value = 0;
-                if (child is RuminantFeedGroup)
-                    value = (child as RuminantFeedGroup).Value;
-                else
-                    value = (child as RuminantFeedGroupMonthly).MonthlyValues[clock.Today.Month - 1];
-
+                
                 if (FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount)
                     feedEstimated += value * 30.4;
                 else if(FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
@@ -361,13 +364,15 @@ namespace Models.CLEM.Activities
                 }
 
                 // get list from filters
-                foreach (var child in Children.OfType<RuminantFeedGroup>())
+                foreach (var child in Children.OfType<FilterGroup<Ruminant>>())
                 {
                     double value = 0;
-                    if (child is RuminantFeedGroup)
-                        value = (child as RuminantFeedGroup).Value;
+                    if (child is RuminantFeedGroup rfg)
+                        value = rfg.Value;
+                    else if (child is RuminantFeedGroupMonthly rfgm)
+                        value = rfgm.MonthlyValues[clock.Today.Month - 1];
                     else
-                        value = (child as RuminantFeedGroupMonthly).MonthlyValues[clock.Today.Month - 1];
+                        continue;
 
                     foreach (Ruminant ind in child.FilterProportion(herd))
                     {
