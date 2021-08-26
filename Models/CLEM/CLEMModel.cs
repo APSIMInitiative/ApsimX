@@ -27,11 +27,11 @@ namespace Models.CLEM
         public ISummary Summary = null;
 
         private Guid id = Guid.NewGuid();
+        private IEnumerable<IActivityTimer> activityTimers = null;
 
         /// <summary>
         /// Identifies the last selected tab for display
         /// </summary>
-        [JsonIgnore]
         public string SelectedTab { get; set; }
 
         /// <summary>
@@ -100,8 +100,6 @@ namespace Models.CLEM
             }
         }
 
-        private IEnumerable<IActivityTimer> activityTimers = null;
-
         /// <summary>
         /// A list of activity timers for this activity
         /// </summary>
@@ -146,12 +144,12 @@ namespace Models.CLEM
                     foreach (object type in typesToFind)
                     {
                         if (type is string)
-                        {
                             results.Add(type as string);
-                        }
                         else if (type is Type)
                         {
-                            results.AddRange(resources.GetCLEMResourceNames(type as Type));
+                            var list = resources.FindResource(type as Type)?.FindAllChildren<IResourceType>().Select(a => (a as CLEMModel).NameWithParent);
+                            if (list != null)
+                                results.AddRange(resources.FindResource(type as Type).FindAllChildren<IResourceType>().Select(a => (a as CLEMModel).NameWithParent));
                         }
                     }
                 }
@@ -177,13 +175,61 @@ namespace Models.CLEM
         #region descriptive summary
 
         /// <summary>
+        /// Create a html snippet
+        /// </summary>
+        /// <param name="value">The value to report</param>
+        /// <param name="errorString">Error text when missing</param>
+        /// <param name="entryStyle">Style of snippet</param>
+        /// <returns>HTML span snippet</returns>
+        public static string DisplaySummaryValueSnippet(string value, string errorString, HTMLSummaryStyle entryStyle = HTMLSummaryStyle.Default)
+        {
+            string spanClass = "setvalue";
+            switch (entryStyle)
+            {
+                case HTMLSummaryStyle.Default:
+                    break;
+                case HTMLSummaryStyle.Resource:
+                    spanClass = "resourcelink";
+                    break;
+                case HTMLSummaryStyle.SubResource:
+                    break;
+                case HTMLSummaryStyle.SubResourceLevel2:
+                    break;
+                case HTMLSummaryStyle.Activity:
+                    spanClass = "activitylink";
+                    break;
+                case HTMLSummaryStyle.SubActivity:
+                    break;
+                case HTMLSummaryStyle.SubActivityLevel2:
+                    break;
+                case HTMLSummaryStyle.Helper:
+                    break;
+                case HTMLSummaryStyle.FileReader:
+                    spanClass = "filelink";
+                    break;
+                default:
+                    break;
+            }
+
+
+            if (value != null && value != "")
+            {
+                return $"<span class=\"{spanClass}\">{value}</span>";
+            }
+            else
+            {
+                return $"<span class=\"errorlink\">{errorString}</span>";
+            }
+        }
+
+        /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
         /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns></returns>
         public virtual string ModelSummary(bool formatForParentControl)
         {
-            return "<div class=\"resourcenote\">No description provided</div>";
+            return "";
         }
 
         /// <summary>
@@ -193,7 +239,7 @@ namespace Models.CLEM
         /// <param name="formatForParentControl">Use full verbose description</param>
         /// <param name="htmlString"></param>
         /// <returns></returns>
-        public virtual string GetFullSummary(object model, bool formatForParentControl, string htmlString)
+        public virtual string GetFullSummary(IModel model, bool formatForParentControl, string htmlString)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -208,12 +254,21 @@ namespace Models.CLEM
 
                     htmlWriter.Write(cm.ModelSummaryInnerOpeningTags(formatForParentControl));
 
-                    foreach (var item in (model as IModel).Children)
-                    {
-                        htmlWriter.Write(GetFullSummary(item, true, htmlString));
-                    }
+                    bool reportMemosInPlace = false;
+                    // think through the various model types that do not support memos being writen within children
+                    // for example all the filters in a filter group and timers and cohorts 
+                    // basically anyting that does special actions with all the children
+                    // if if the current model supports memos in place set reportMemosInPlace to true.
 
-                    htmlWriter.Write(AddMemosToSummary(model as IModel));
+                    foreach (var item in (model).Children)
+                    {
+                        if (reportMemosInPlace && item is Memo)
+                            htmlWriter.Write($"<div class='memo-container'><div class='memo-head'>Memo</div><div class='memo-text'>{(item as Memo).Text}</div></div>");
+                        else
+                            htmlWriter.Write(GetFullSummary(item, true, htmlString));
+                    }
+                    if(!reportMemosInPlace)
+                        htmlWriter.Write(AddMemosToSummary(model));
 
                     htmlWriter.Write(cm.ModelSummaryInnerClosingTags(formatForParentControl));
 
@@ -255,7 +310,7 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// Provides the closing html tags for object
+        /// Provides the opening html tags for object
         /// </summary>
         /// <returns></returns>
         public virtual string ModelSummaryOpeningTags(bool formatForParentControl)
@@ -699,8 +754,6 @@ namespace Models.CLEM
                 return htmlWriter.ToString();
             }
         }
-
-
 
         #endregion
     }

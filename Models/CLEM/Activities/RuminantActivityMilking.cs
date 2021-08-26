@@ -49,7 +49,7 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(true, true);
 
             // find milk store
-            milkStore = Resources.GetResourceItem(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            milkStore = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <summary>An event handler to call for all herd management activities</summary>
@@ -60,10 +60,8 @@ namespace Models.CLEM.Activities
         {
             // this method will ensure the milking status is defined for females after births when lactation is set and before milk production is determined
             foreach (RuminantFemale item in this.CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsLactating))
-            {
                 // set these females to state milking performed so they switch to the non-suckling milk production curves.
                 item.MilkingPerformed = true;
-            }
         }
 
         /// <summary>An event handler to call for all herd management activities</summary>
@@ -89,16 +87,7 @@ namespace Models.CLEM.Activities
                 }
             }
             else
-            {
                 this.Status = ActivityStatus.NotNeeded;
-            }
-
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
         }
 
         /// <inheritdoc/>
@@ -125,42 +114,6 @@ namespace Models.CLEM.Activities
             return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
         }
 
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
         #region descriptive summary
 
         /// <inheritdoc/>
@@ -169,15 +122,7 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Milk is placed in ");
-
-                if (ResourceTypeName == null || ResourceTypeName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + ResourceTypeName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeName, "Not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 
             }

@@ -26,6 +26,8 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMove.htm")]
     public class RuminantActivityMove: CLEMRuminantActivityBase, IValidatableObject
     {
+        private string pastureName = "";
+
         /// <summary>
         /// Managed pasture to move to
         /// </summary>
@@ -33,8 +35,6 @@ namespace Models.CLEM.Activities
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } })]
         [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string ManagedPastureName { get; set; }
-
-        private string pastureName = "";
 
         /// <summary>
         /// Determines whether this must be performed to setup herds at the start of the simulation
@@ -81,14 +81,10 @@ namespace Models.CLEM.Activities
             // "Not specified" is general yards.
             pastureName = "";
             if (!ManagedPastureName.StartsWith("Not specified"))
-            {
                 pastureName = ManagedPastureName.Split('.')[1];
-            }
 
             if (PerformAtStartOfSimulation)
-            {
                 Move();
-            }
         }
 
         private void Move()
@@ -128,12 +124,6 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded = 0;
@@ -151,18 +141,14 @@ namespace Models.CLEM.Activities
                     case LabourUnitType.perHead:
                         numberUnits = head / requirement.UnitSize;
                         if (requirement.WholeUnitBlocks)
-                        {
                             numberUnits = Math.Ceiling(numberUnits);
-                        }
 
                         daysNeeded = numberUnits * requirement.LabourPerUnit;
                         break;
                     case LabourUnitType.perAE:
                         numberUnits = adultEquivalents / requirement.UnitSize;
                         if (requirement.WholeUnitBlocks)
-                        {
                             numberUnits = Math.Ceiling(numberUnits);
-                        }
 
                         daysNeeded = numberUnits * requirement.LabourPerUnit;
                         break;
@@ -174,50 +160,16 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
         public override void DoActivity()
         {
             // check if labour provided or PartialResources allowed
             if (this.TimingOK)
             {
                 if ((this.Status == ActivityStatus.Success || this.Status == ActivityStatus.NotNeeded) || (this.Status == ActivityStatus.Partial && this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
-                {
                     Move();
-                }
             }
             else
-            {
                 Status = ActivityStatus.Ignored;
-            }
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
         }
 
         #region descriptive summary
@@ -229,22 +181,16 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Move the following groups to ");
                 if (ManagedPastureName == null || ManagedPastureName == "")
-                {
                     htmlWriter.Write("<span class=\"errorlink\">General yards</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"resourcelink\">" + ManagedPastureName + "</span>");
-                }
+
                 if (MoveSucklings)
-                {
                     htmlWriter.Write(" moving sucklings with mother");
-                }
+
                 htmlWriter.Write("</div>");
                 if (PerformAtStartOfSimulation)
-                {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">These individuals will be located on the specified pasture at startup</div>");
-                }
                 return htmlWriter.ToString(); 
             }
         } 

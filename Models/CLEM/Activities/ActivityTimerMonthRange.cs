@@ -26,9 +26,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class ActivityTimerMonthRange: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
-        [JsonIgnore]
         [Link]
-        Clock Clock = null;
+        private Clock clock = null;
 
         private int startMonth;
         private int endMonth;
@@ -67,7 +66,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                return IsMonthInRange(Clock.Today);
+                return IsMonthInRange(clock.Today);
             }
         }
 
@@ -93,16 +92,12 @@ namespace Models.CLEM.Activities
             if (startMonth <= endMonth)
             {
                 if ((date.Month >= startMonth) & (date.Month <= endMonth))
-                {
                     due = true;
-                }
             }
             else
             {
                 if ((date.Month <= endMonth) | (date.Month >= startMonth))
-                {
                     due = true;
-                }
             }
             return due;
         }
@@ -123,9 +118,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"filter\">");
                 htmlWriter.Write("Perform between ");
                 if (StartMonth == 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                }
                 else
                 {
                     htmlWriter.Write("<span class=\"setvalueextra\">");
@@ -133,9 +126,7 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write(" and <span class=\"setvalueextra\">");
                 if (EndMonth == 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                }
                 else
                 {
                     htmlWriter.Write("<span class=\"setvalueextra\">");
@@ -143,9 +134,7 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write("</div>");
                 if (!this.Enabled)
-                {
                     htmlWriter.Write(" - DISABLED!");
-                }
                 return htmlWriter.ToString(); 
             }
         }
@@ -163,9 +152,7 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("<div class=\"filtername\">");
                 if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                {
                     htmlWriter.Write(this.Name);
-                }
                 htmlWriter.Write($"</div>");
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
                 return htmlWriter.ToString(); 

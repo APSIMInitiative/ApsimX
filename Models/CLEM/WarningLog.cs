@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Models.Core;
 using Newtonsoft.Json;
 
 namespace Models.CLEM
@@ -51,7 +52,22 @@ namespace Models.CLEM
         private List<string> warningList { get; set; }
 
         /// <summary>
-        /// Add new warning to the ists
+        /// Add new warning to the List if it hasn't been reported
+        /// </summary>
+        /// <param name="message">The warning message to report</param>
+        /// <param name="summary">The summary model to write to</param>
+        /// <param name="sender">The activity sending the warning</param>
+        public void CheckAndWrite(string message, ISummary summary, IModel sender)
+        {
+            if (!Exists(message) & summary != null)
+            {
+                summary.WriteWarning(sender, message);
+                Add(message);
+            }
+        }
+
+        /// <summary>
+        /// Add new warning to the List if it hasn't been reported
         /// </summary>
         /// <param name="name">Name of warning</param>
         public void Add(string name)

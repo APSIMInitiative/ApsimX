@@ -18,7 +18,7 @@ namespace Models.CLEM.Groupings
     public class OtherAnimalsFilterGroup : FilterGroup<OtherAnimalsTypeCohort>
     {
         [Link]
-        private ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
 
         /// <summary>
         /// Daily amount to supply selected individuals each month
@@ -47,13 +47,13 @@ namespace Models.CLEM.Groupings
         /// </summary>
         public OtherAnimalsType SelectedOtherAnimalsType;
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler to allow us to perform checks when simulation commences</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            SelectedOtherAnimalsType = Resources.FindResourceGroup<OtherAnimals>().FindChild(AnimalType) as OtherAnimalsType;
+            SelectedOtherAnimalsType = resources.FindResourceGroup<OtherAnimals>().FindChild(AnimalType) as OtherAnimalsType;
             if (SelectedOtherAnimalsType == null)
             {
                 throw new Exception("Unknown other animal type: " + AnimalType + " in OtherAnimalsActivityFeed : " + this.Name);

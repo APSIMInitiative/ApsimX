@@ -15,21 +15,25 @@ using Models.CLEM.Groupings;
 
 namespace Models.CLEM.Resources
 {
-
     ///<summary>
-    /// Parent model of Ruminant Types.
+    /// Parent model of the herd of Ruminant Types.
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    //[ViewName("UserInterface.Views.PropertyCategorisedView")]
-    //[PresenterName("UserInterface.Presenters.PropertyCategorisedMultiModelPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
     [Description("This resource group holds all rumiant types (herds or breeds) for the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantHerd.htm")]
     public class RuminantHerd: ResourceBaseWithTransactions
     {
+        private int id = 1;
+
+        /// <summary>
+        /// Access to the herd grouped by transaction style for reporting in FinalizeTimeStep before EndTimeStep
+        /// </summary>
+        private IEnumerable<RuminantReportTypeDetails> groupedHerdForReporting;
+
         /// <summary>
         /// Transaction grouping style
         /// </summary>
@@ -60,6 +64,17 @@ namespace Models.CLEM.Resources
         /// </summary>
         [JsonIgnore]
         public RuminantReportItemEventArgs ReportIndividual { get; set; }
+
+        /// <summary>
+        /// Statistical summar of a list of numbers (e.g. attribute values)
+        /// </summary>
+        [JsonIgnore]
+        public ListStatistics LastListStatistics { get; set; }
+
+        /// <summary>
+        /// Get the next unique individual id number
+        /// </summary>
+        public int NextUniqueID { get { return id++; } }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -144,9 +159,7 @@ namespace Models.CLEM.Resources
 
                                     // add this offspring to birth count
                                     if (suckling.Age == 0)
-                                    {
                                         breedFemales[0].NumberOfBirthsThisTimestep++;
-                                    }
 
                                     // suckling mother set
                                     suckling.Mother = breedFemales[0];
@@ -165,9 +178,7 @@ namespace Models.CLEM.Resources
                                         breedFemales.RemoveAt(0);
                                     }
                                     else
-                                    {
                                         numberThisPregnancy--;
-                                    }
                                 }
                                 else
                                 {
@@ -215,7 +226,7 @@ namespace Models.CLEM.Resources
             groupedHerdForReporting = SummarizeIndividualsByGroups(Herd, PurchaseOrSalePricingStyleType.Purchase);
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler to allow us to peform atsks at the end of the simulation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("EndOfSimulation")]
@@ -241,9 +252,8 @@ namespace Models.CLEM.Resources
         public void AddRuminant(Ruminant ind, IModel model)
         {
             if (ind.ID == 0)
-            {
                 ind.ID = this.NextUniqueID;
-            }
+
             Herd.Add(ind);
             LastIndividualChanged = ind;
 
@@ -277,20 +287,13 @@ namespace Models.CLEM.Resources
         {
             // Remove mother ID from any suckling offspring
             if (ind.Sex == Sex.Female)
-            {
                 foreach (var offspring in (ind as RuminantFemale).SucklingOffspringList)
-                {
                     offspring.Mother = null;
-                }
-            }
+
             // if sold and unweaned set mothers weaning count + 1 as effectively weaned in process and not death
             if (!ind.Weaned & !ind.SaleFlag.ToString().Contains("Died"))
-            {
                 if(ind.Mother != null)
-                {
                     ind.Mother.NumberOfWeaned++;
-                }
-            }
 
             Herd.Remove(ind);
             LastIndividualChanged = ind;
@@ -326,27 +329,18 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Statstical summar of a list of numbers (e.g. attribute values)
-        /// </summary>
-        [JsonIgnore]
-        public ListStatistics LastListStatistics { get; set; }
-
-        /// <summary>
         /// Return the mean and standard deviation of an attribute value
         /// </summary>
         public int SummariseAttribute(string tag, bool ignoreNotFound)
         {
             LastListStatistics = new ListStatistics();
             if (Herd is null)
-            {
                 return 0;
-            }
 
             var values = Herd.Where( a => (ignoreNotFound & a.Attributes.GetValue(tag) == null) ? false : true).Select(a => Convert.ToDouble(a.Attributes.GetValue(tag)?.storedValue));
             if (values.Count() == 0)
-            {
                 return 0;
-            }
+
             double sd = 0;
             double mean = values.Average();
             double sum = values.Sum(d => Math.Pow(d - mean, 2));
@@ -362,18 +356,22 @@ namespace Models.CLEM.Resources
         /// Overrides the base class method to allow for clean up
         /// </summary>
         [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
+        private new void OnSimulationCompleted(object sender, EventArgs e)
         {
             if (Herd != null)
-            {
                 Herd.Clear();
-            }
+
             Herd = null;
             if (PurchaseIndividuals != null)
-            {
                 PurchaseIndividuals.Clear();
-            }
+
             PurchaseIndividuals = null;
+        }
+
+        ///<inheritdoc/>
+        [EventSubscribe("Commencing")]
+        private new void OnSimulationCommencing(object sender, EventArgs e)
+        {
         }
 
         /// <summary>
@@ -384,24 +382,12 @@ namespace Models.CLEM.Resources
         public void RemoveRuminant(List<Ruminant> list, IModel model)
         {
             foreach (var ind in list)
-            {
                 // report removal
                 RemoveRuminant(ind, model);
-            }
         }
 
-        /// <summary>
-        /// Gte the next unique individual id number
-        /// </summary>
-        public int NextUniqueID { get { return id++; } }
-        private int id = 1;
 
         #region group tracking
-
-        /// <summary>
-        /// Access to the herd grouped by transaction style for reporting in FinalizeTimeStep before EndTimeStep
-        /// </summary>
-        private IEnumerable<RuminantReportTypeDetails> groupedHerdForReporting;
 
         /// <summary>
         /// Overrides the base class method to allow for changes before end of month reporting
@@ -429,9 +415,7 @@ namespace Models.CLEM.Resources
                 {
                     var catGroup = rumGroup.RuminantTypeGroup.FirstOrDefault(a => a.GroupName == groupName);
                     if (catGroup != null)
-                    {
                         return catGroup;
-                    }
                 }
             }
             return new RuminantReportGroupDetails() { Count = 0, TotalAdultEquivalent = 0, TotalWeight = 0, TotalPrice = 0, GroupName = groupName };
@@ -452,9 +436,7 @@ namespace Models.CLEM.Resources
                 case RuminantTransactionsGroupingStyle.ByPriceGroup:
                     var animalPricing = ruminantType.FindAllChildren<AnimalPricing>().FirstOrDefault();
                     if (animalPricing != null)
-                    {
                         catNames.AddRange(animalPricing.FindAllChildren<AnimalPriceGroup>().Select(a => a.Name));
-                    }
                     break;
                 case RuminantTransactionsGroupingStyle.ByClass:
                     catNames.AddRange(Enum.GetNames(typeof(RuminantClass)));
@@ -510,31 +492,6 @@ namespace Models.CLEM.Resources
         }
 
         #endregion 
-
-        #region Transactions
-
-        // Must be included away from base class so that APSIM Event.Subscriber can find them 
-
-        /// <summary>
-        /// Override base event
-        /// </summary>
-        protected new void OnTransactionOccurred(EventArgs e)
-        {
-            TransactionOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Override base event
-        /// </summary>
-        public new event EventHandler TransactionOccurred;
-
-        private void Resource_TransactionOccurred(object sender, EventArgs e)
-        {
-            LastTransaction = (e as TransactionEventArgs).Transaction;
-            OnTransactionOccurred(e);
-        }
-
-        #endregion
 
         #region weaning event
 

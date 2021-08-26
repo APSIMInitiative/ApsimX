@@ -20,8 +20,6 @@ namespace Models.CLEM.Reporting
     {
         [Link]
         private IDataStore dataStore = null;
-        [Link]
-        private Summary summary = null;
 
         /// <summary>
         /// The line by line SQL query, separated for display purposes
@@ -42,7 +40,7 @@ namespace Models.CLEM.Reporting
             var storage = FindInScope<IDataStore>();
             if (storage != null)
             {
-                if(SaveView(storage))
+                if (SaveView(storage, out _))
                 {
                     return storage.Reader.GetDataUsingSql(SQL);
                 }
@@ -56,14 +54,19 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("Completed")]
         private void OnCompleted(object sender, EventArgs e)
         {
-            if(!SaveView(dataStore))
+            string errorMsg;
+            if(!SaveView(dataStore, out errorMsg))
             {
-                summary.WriteWarning(this, $"Invalid SQL: Unable to create query report [{this.Name}] using SQL provided \r\nIf your SQL contains links to other ReportQueries you may need to run this Report after the others have been created.");
+                throw new ApsimXException(this, $"Invalid SQL: Unable to create query report [{this.Name}] using SQL provided\r\nError: {errorMsg}\r\nIf your SQL contains links to other ReportQueries you may need to run this Report after the others have been created by disabling it in the first run and then enabling again.");
+  
+                // TODO: this next line replaces the one above when the summary model can be written to in Completed to report all such errors and not simply stop with this error 
+                //summary.WriteWarning(this, $"Invalid SQL: Unable to create query report [{this.Name}] using SQL provided\r\nIf your SQL contains links to other ReportQueries you may need to run this Report after the others have been created.");
             }
         }
 
-        private bool SaveView(IDataStore store)
+        private bool SaveView(IDataStore store, out string errorMsg)
         {
+            errorMsg = "";
             try
             {
                 if (SQL != null && SQL != "")
@@ -75,7 +78,7 @@ namespace Models.CLEM.Reporting
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.ToString());
+                errorMsg = ex.Message;
             }
             return false;
         }

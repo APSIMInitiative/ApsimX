@@ -25,6 +25,12 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class ResourceActivityBuy : CLEMActivityBase
     {
+        private double units;
+        private ResourcePricing price;
+        private FinanceType bankAccount;
+        private IResourceType resourceToBuy;
+        private double unitsCanAfford;
+
         /// <summary>
         /// Bank account to use
         /// </summary>
@@ -47,12 +53,6 @@ namespace Models.CLEM.Activities
         [Description("Number of packets")]
         [Required, GreaterThanEqualValue(0)]
         public double Units { get; set; }
-        private double units;
-
-        private ResourcePricing price;
-        private FinanceType bankAccount;
-        private IResourceType resourceToBuy;
-        private double unitsCanAfford;
 
         /// <summary>
         /// Constructor
@@ -69,23 +69,18 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // get bank account object to use
-            bankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.ReportWarning, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
+            bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.ReportWarning, OnMissingResourceActionTypes.ReportErrorAndStop);
             // get resource type to buy
-            resourceToBuy = Resources.GetResourceItem(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
+            resourceToBuy = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // get pricing
             if((resourceToBuy as CLEMResourceTypeBase).MarketStoreExists)
-            {
                 if ((resourceToBuy as CLEMResourceTypeBase).EquivalentMarketStore.PricingExists(PurchaseOrSalePricingStyleType.Sale))
-                {
                     price = (resourceToBuy as CLEMResourceTypeBase).EquivalentMarketStore.Price(PurchaseOrSalePricingStyleType.Sale);
-                }
-            }
+
             // no market price found... look in local resources and allow 0 price if not found
             if(price is null)
-            {
                 price = resourceToBuy.Price(PurchaseOrSalePricingStyleType.Purchase);
-            }
         }
 
         /// <inheritdoc/>
@@ -96,9 +91,7 @@ namespace Models.CLEM.Activities
             // calculate units
             units = Units;
             if (price!=null && price.UseWholePackets)
-            {
                 units = Math.Truncate(Units);
-            }
 
             unitsCanAfford = units;
             if (units > 0 & (resourceToBuy as CLEMResourceTypeBase).MarketStoreExists)
@@ -109,9 +102,7 @@ namespace Models.CLEM.Activities
                 {
                     unitsCanAfford = bankAccount.FundsAvailable / price.PricePerPacket;
                     if(price.UseWholePackets)
-                    {
                         unitsCanAfford = Math.Truncate(unitsCanAfford);
-                    }
                 }
 
                 CLEMResourceTypeBase mkt = (resourceToBuy as CLEMResourceTypeBase).EquivalentMarketStore;
@@ -159,16 +150,13 @@ namespace Models.CLEM.Activities
             if (labprop < 1)
             {
                 if(unitsCanAfford < units)
-                {
                     priceprop = unitsCanAfford / units;
-                }
+
                 if(labprop < priceprop)
                 {
                     unitsCanAfford = units * labprop;
                     if(price.UseWholePackets)
-                    {
                         unitsCanAfford = Math.Truncate(unitsCanAfford);
-                    }
                 }
             }
 
@@ -177,9 +165,7 @@ namespace Models.CLEM.Activities
                 // find resource entry in market if present and reduce
                 ResourceRequest rr = ResourceRequestList.Where(a => a.Resource == (resourceToBuy as CLEMResourceTypeBase).EquivalentMarketStore).FirstOrDefault();
                 if(rr.Required != unitsCanAfford * price.PacketSize * this.FarmMultiplier)
-                {
                     rr.Required = unitsCanAfford * price.PacketSize * this.FarmMultiplier;
-                }
             }
             return;
         }
@@ -198,9 +184,7 @@ namespace Models.CLEM.Activities
                 provided = rr.Provided / this.FarmMultiplier;
             }
             else
-            {
                 provided = unitsCanAfford * price.PacketSize;
-            }
 
             if (provided > 0)
             {
@@ -216,6 +200,7 @@ namespace Models.CLEM.Activities
                     AllowTransmutation = false,
                     MarketTransactionMultiplier = this.FarmMultiplier,
                     Required = provided / price.PacketSize * price.PricePerPacket,
+                    Resource = bankAccount,
                     ResourceType = typeof(Finance),
                     ResourceTypeName = bankAccount.Name,
                     Category = TransactionCategory,
@@ -227,30 +212,6 @@ namespace Models.CLEM.Activities
 
         }
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
         #region descriptive summary
 
         /// <inheritdoc/>
@@ -260,32 +221,14 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Buy ");
                 if (Units <= 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">[VALUE NOT SET]</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"setvalue\">" + Units.ToString("0.###") + "</span>");
-                }
                 htmlWriter.Write(" packages of ");
-                if (ResourceTypeName == null || ResourceTypeName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[RESOURCE NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + ResourceTypeName + "</span>");
-                }
-                if (AccountName == null || AccountName == "")
-                {
-                    htmlWriter.Write(" using <span class=\"errorlink\">[ACCOUNT NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write(" using <span class=\"resourcelink\">" + AccountName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource));
+                htmlWriter.Write(" using ");
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
-
                 return htmlWriter.ToString(); 
             }
         } 

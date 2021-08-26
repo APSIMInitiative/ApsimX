@@ -23,6 +23,11 @@ namespace Models.CLEM.Resources
         public ResourceTransaction LastTransaction { get; set; }
 
         /// <summary>
+        /// Provide full name of resource StoreName.TypeName
+        /// </summary>
+        public string FullName => $"{CLEMParentName}.{Name}";
+
+        /// <summary>
         /// Resource transaction occured Event handler
         /// </summary>
         public event EventHandler TransactionOccurred;
@@ -45,19 +50,36 @@ namespace Models.CLEM.Resources
             throw new NotImplementedException();
         }
 
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        protected void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            foreach (IResourceWithTransactionType childModel in this.FindAllChildren<IResourceWithTransactionType>())
+                childModel.TransactionOccurred += Resource_TransactionOccurred;
+        }
+
+        /// <summary>
+        /// Overrides the base class method to allow for clean up
+        /// </summary>
+        [EventSubscribe("Completed")]
+        protected void OnSimulationCompleted(object sender, EventArgs e)
+        {
+            foreach (IResourceWithTransactionType childModel in this.FindAllChildren<IResourceWithTransactionType>())
+                childModel.TransactionOccurred -= Resource_TransactionOccurred;
+        }
+
         /// <summary>
         /// 
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void Resource_TransactionOccurred(object sender, EventArgs e)
+        protected void Resource_TransactionOccurred(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            LastTransaction = (e as TransactionEventArgs).Transaction;
+            OnTransactionOccurred(e);
         }
 
-        /// <summary>
-        /// Provie full name of resource StoreName.TypeName
-        /// </summary>
-        public string FullName => $"{CLEMParentName}.{Name}";
     }
 }

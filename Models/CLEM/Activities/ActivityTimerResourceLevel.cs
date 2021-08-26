@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
     public class ActivityTimerResourceLevel: CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
     {
         [Link]
-        ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
 
         /// <summary>
         /// Name of resource to check
@@ -98,7 +98,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            ResourceTypeModel = Resources.GetResourceItem(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
+            ResourceTypeModel = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <inheritdoc/>
@@ -171,14 +171,7 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("\r\n<div class=\"filter\">");
                 htmlWriter.Write("Perform when ");
-                if (ResourceTypeName is null || ResourceTypeName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">RESOURCE NOT SET</span> ");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + ResourceTypeName + "</span> ");
-                }
+                htmlWriter.Write(DisplaySummaryValueSnippet(ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource));
                 string str = "";
                 switch (Operator)
                 {
@@ -205,9 +198,7 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write(str);
                 if (Amount == 0)
-                {
                     htmlWriter.Write(" <span class=\"errorlink\">NOT SET</span>");
-                }
                 else
                 {
                     htmlWriter.Write(" <span class=\"setvalueextra\">");
@@ -216,9 +207,7 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write("</div>");
                 if (!this.Enabled)
-                {
                     htmlWriter.Write(" - DISABLED!");
-                }
                 return htmlWriter.ToString(); 
             }
         }
@@ -236,9 +225,7 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("<div class=\"filtername\">");
                 if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                {
                     htmlWriter.Write(this.Name);
-                }
                 htmlWriter.Write($"</div>");
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
                 return htmlWriter.ToString(); 

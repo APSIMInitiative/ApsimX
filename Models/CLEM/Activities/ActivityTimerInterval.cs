@@ -27,9 +27,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class ActivityTimerInterval: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
-        [JsonIgnore]
         [Link]
-        Clock Clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Notify CLEM that timer was ok
@@ -71,7 +70,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                return (this.NextDueDate.Year == Clock.Today.Year && this.NextDueDate.Month == Clock.Today.Month);
+                return (this.NextDueDate.Year == clock.Today.Year && this.NextDueDate.Month == clock.Today.Month);
             }
         }
 
@@ -79,7 +78,7 @@ namespace Models.CLEM.Activities
         public bool Check(DateTime dateToCheck)
         {
             // compare with next due date
-            if (this.NextDueDate.Year == Clock.Today.Year && this.NextDueDate.Month == Clock.Today.Month)
+            if (this.NextDueDate.Year == clock.Today.Year && this.NextDueDate.Month == clock.Today.Month)
             {
                 return true;
             }
@@ -92,9 +91,7 @@ namespace Models.CLEM.Activities
                 while(dd2c<=dd)
                 {
                     if (dd2c == dd)
-                    {
                         return true;
-                    }
 
                     dd = dd.AddMonths(Interval*-1);
                 }
@@ -105,9 +102,7 @@ namespace Models.CLEM.Activities
                 while (dd2c >= dd)
                 {
                     if (dd2c == dd)
-                    {
                         return true;
-                    }
 
                     dd = dd.AddMonths(Interval);
                 }
@@ -115,16 +110,14 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler to move timer setting to next timing.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("EndOfMonth")]
         private void OnEndOfMonth(object sender, EventArgs e)
         {
             if (this.ActivityDue)
-            {
                 NextDueDate = NextDueDate.AddMonths(Interval);
-            }
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -136,17 +129,13 @@ namespace Models.CLEM.Activities
             int monthDue = (int)MonthDue;
             if (monthDue != 0)
             {
-                if (monthDue >= Clock.StartDate.Month)
-                {
-                    NextDueDate = new DateTime(Clock.StartDate.Year, monthDue, Clock.StartDate.Day);
-                }
+                if (monthDue >= clock.StartDate.Month)
+                    NextDueDate = new DateTime(clock.StartDate.Year, monthDue, clock.StartDate.Day);
                 else
                 {
-                    NextDueDate = new DateTime(Clock.StartDate.Year, monthDue, Clock.StartDate.Day);
-                    while (Clock.StartDate > NextDueDate)
-                    {
+                    NextDueDate = new DateTime(clock.StartDate.Year, monthDue, clock.StartDate.Day);
+                    while (clock.StartDate > NextDueDate)
                         NextDueDate = NextDueDate.AddMonths(Interval);
-                    }
                 }
             }
         }
@@ -189,9 +178,7 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write("</span></div>");
                 if (!this.Enabled)
-                {
                     htmlWriter.Write(" - DISABLED!");
-                }
                 return htmlWriter.ToString(); 
             }
         }
@@ -209,9 +196,8 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("<div class=\"filtername\">");
                 if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                {
                     htmlWriter.Write(this.Name);
-                }
+
                 htmlWriter.Write($"</div>");
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
                 return htmlWriter.ToString(); 

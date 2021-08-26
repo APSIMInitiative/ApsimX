@@ -84,6 +84,35 @@ namespace Models.Core.ApsimFile
         }
 
         /// <summary>
+        /// Returns the name space of an apsim model node.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        public static string NameSpace(JToken node)
+        {
+            // If the node is not a JObject, it is not an apsim model.
+            if (!(node is JObject))
+                return null;
+
+            JProperty typeProperty = (node as JObject).Property("$type");
+
+            if (typeProperty == null)
+                return null;
+
+            string typeName = (string)typeProperty.Value;
+
+            string[] allBits = typeName.Split(',');
+            string lessAssembly = allBits[0];
+            string[] pathBits = lessAssembly.Split('.');
+            string nameSpace = "";
+            for (int i = 0; i < pathBits.Length-1; i++)
+            {
+                nameSpace += pathBits[i] + '.';
+            }
+            return nameSpace.Remove(nameSpace.Length - 1, 1);
+            // Should return the name space of the type.  Eg for a class of type GenericOrgan should return "Models.PMF.Organs"
+        }
+
+        /// <summary>
         /// Returns the child models of a given node.
         /// Will never return null.
         /// </summary>
@@ -115,6 +144,17 @@ namespace Models.Core.ApsimFile
         public static List<JObject> ChildrenOfType(JObject node, string typeName)
         {
             return ChildrenRecursively(node).Where(child => Type(child) == typeName).ToList();
+        }
+
+        /// <summary>
+        /// Returns the child models in a given name space .
+        /// Will never return null.
+        /// </summary>
+        /// <param name="node">The node.</param>
+        /// <param name="nameSpaceName">The name space containing of children to return.</param>
+        public static List<JObject> ChildrenInNameSpace(JObject node, string nameSpaceName)
+        {
+            return ChildrenRecursively(node).Where(child => NameSpace(child) == nameSpaceName).ToList();
         }
 
         /// <summary>

@@ -441,7 +441,7 @@ namespace Models.CLEM.Reporting
         }
 
         ///<inheritdoc/>
-        public string GetFullSummary(object model, bool formatForParentControl, string htmlString)
+        public string GetFullSummary(IModel model, bool formatForParentControl, string htmlString)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

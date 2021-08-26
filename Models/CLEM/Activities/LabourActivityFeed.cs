@@ -46,7 +46,6 @@ namespace Models.CLEM.Activities
         [Required]
         public LabourFeedActivityTypes FeedStyle { get; set; }
 
-
         /// <summary>
         /// Feed type
         /// </summary>
@@ -69,7 +68,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             // locate FeedType resource
-            FeedType = Resources.GetResourceItem(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as HumanFoodStoreType;
+            FeedType = Resources.FindResourceType<HumanFoodStore, HumanFoodStoreType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             // locate labour resource
             labour = Resources.FindResourceGroup<Labour>();
         }
@@ -111,6 +110,7 @@ namespace Models.CLEM.Activities
                     {
                         AllowTransmutation = true,
                         Required = feedRequired,
+                        Resource = FeedType,
                         ResourceType = typeof(HumanFoodStore),
                         ResourceTypeName = feedItemName,
                         ActivityModel = this,
@@ -119,9 +119,7 @@ namespace Models.CLEM.Activities
                 };
             }
             else
-            {
                 return null;
-            }
         }
 
         /// <inheritdoc/>
@@ -147,18 +145,14 @@ namespace Models.CLEM.Activities
                 case LabourUnitType.perHead:
                     numberUnits = head / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
 
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perAE:
                     numberUnits = adultEquivalents / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
 
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
@@ -168,9 +162,7 @@ namespace Models.CLEM.Activities
                 case LabourUnitType.perUnit:
                     numberUnits = feedRequired / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
 
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
@@ -188,9 +180,7 @@ namespace Models.CLEM.Activities
             foreach (ResourceRequest item in ResourceRequestList)
             {
                 if (item.ResourceType != typeof(LabourType))
-                {
                     item.Required *= labourLimit;
-                }
             }
             return;
         }
@@ -206,9 +196,7 @@ namespace Models.CLEM.Activities
 
                 ResourceRequest feedRequest = ResourceRequestList.Where(a => a.ResourceType == typeof(HumanFoodStore)).FirstOrDefault();
                 if (feedRequest != null)
-                {
                     feedLimit = Math.Min(1.0, feedRequest.Provided / feedRequest.Required);
-                }
 
                 if (feedRequest == null || (feedRequest.Required == 0 | feedRequest.Available == 0))
                 {
@@ -255,30 +243,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
         #region descriptive summary
 
         /// <inheritdoc/>
@@ -287,16 +251,8 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Feed people ");
-                if (FeedTypeName == null || FeedTypeName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[Feed TYPE NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + FeedTypeName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(FeedTypeName, "Feed type not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
-
                 return htmlWriter.ToString(); 
             }
         } 

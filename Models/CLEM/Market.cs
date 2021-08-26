@@ -9,6 +9,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM
 {
@@ -27,7 +28,9 @@ namespace Models.CLEM
     public class Market: Zone, IValidatableObject, ICLEMUI
     {
         [Link]
-        Summary Summary = null;
+        private Summary summary = null;
+
+        private ResourcesHolder resources;
 
         /// <summary>Area of the zone.</summary>
         /// <value>The area.</value>
@@ -55,16 +58,13 @@ namespace Models.CLEM
         [JsonIgnore]
         public string SelectedTab { get; set; }
 
-        private ResourcesHolder resources;
         /// <summary>
         /// ResourceHolder for the market
         /// </summary>
         public ResourcesHolder Resources { get
             {
                 if(resources == null)
-                {
                     resources = this.FindAllChildren<ResourcesHolder>().FirstOrDefault();
-                }
                 return resources; 
             }
         }
@@ -78,14 +78,12 @@ namespace Models.CLEM
             get
             {
                 if (bankAccount == null)
-                {
                     bankAccount = Resources.FindResourceGroup<Finance>()?.FindAllChildren<FinanceType>().FirstOrDefault() as FinanceType;
-                }
                 return bankAccount;
             }
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler to allow us to perform validation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMValidate")]
@@ -97,19 +95,17 @@ namespace Models.CLEM
             // some values assigned in commencing will not be checked before processing, but will be caught here
             // each ZoneCLEM and Market will call this validation for all children
             // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
-            if (!ZoneCLEM.Validate(this, "", this, Summary))
+            if (!ZoneCLEM.Validate(this, "", this, summary))
             {
                 string error = "@i:Invalid parameters in model";
 
                 // get all validations 
-                if (Summary.Messages() != null)
+                if (summary.Messages() != null)
                 {
-                    foreach (DataRow item in Summary.Messages().Rows)
+                    foreach (DataRow item in summary.Messages().Rows)
                     {
                         if (item[3].ToString().StartsWith("Invalid"))
-                        {
                             error += "\r\n" + item[3].ToString();
-                        }
                     }
                 }
                 throw new ApsimXException(this, error.Replace("&shy;", "."));
@@ -165,16 +161,14 @@ namespace Models.CLEM
         /// <returns></returns>
         public string GetFullSummary(object model, bool useFullDescription, string htmlString)
         {
-            string html = "";
-            html += "\r\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">";
-
-            foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>().Cast<CLEMModel>())
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += cm.GetFullSummary(cm, true, "");
+                htmlWriter.Write($"\r\n<div class=\"holdermain\" style=\"opacity: {((!this.Enabled) ? "0.4" : "1")}\">");
+                foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
+                    htmlWriter.Write(cm.GetFullSummary(cm, true, ""));
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString();
             }
-
-            html += "</div>";
-            return html;
         } 
         #endregion
 

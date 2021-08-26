@@ -18,8 +18,7 @@ namespace Models.CLEM.Resources
     public class CLEMResourceTypeBase : CLEMModel
     {
         [Link]
-        [NonSerialized]
-        Clock Clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// A link to the equivalent market store for trading.
@@ -105,9 +104,9 @@ namespace Models.CLEM.Resources
                         }
                     }
                     string warn = $"No pricing is available for [r={market}{this.Parent.Name}.{this.Name}]";
-                    if (Clock != null && FindAllChildren<ResourcePricing>().Any())
+                    if (clock != null && FindAllChildren<ResourcePricing>().Any())
                     {
-                        warn += " in month [" + Clock.Today.ToString("MM yyyy") + "]";
+                        warn += " in month [" + clock.Today.ToString("MM yyyy") + "]";
                     }
                     warn += "\r\nAdd [r=ResourcePricing] component to [r=" + market + this.Parent.Name + "." + this.Name + "] to include financial transactions for purchases and sales.";
 

@@ -66,12 +66,6 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             IEnumerable<Ruminant> herd = CurrentHerd(false);
@@ -82,19 +76,13 @@ namespace Models.CLEM.Activities
                 foreach (RuminantGroup item in filterGroups)
                 {
                     if (ApplicationStyle == TagApplicationStyle.Add)
-                    {
                         numberToTag += item.FilterProportion(herd).Where(a => !a.Attributes.Exists(TagLabel)).Count();
-                    }
                     else
-                    {
                         numberToTag += item.FilterProportion(herd).Where(a => a.Attributes.Exists(TagLabel)).Count();
-                    }
                 }
             }
             else
-            {
                 numberToTag = herd.Count();
-            }
 
             double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
             double daysNeeded = 0;
@@ -108,9 +96,8 @@ namespace Models.CLEM.Activities
                 case LabourUnitType.perHead:
                     numberUnits = numberToTag / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
+
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
@@ -151,9 +138,7 @@ namespace Models.CLEM.Activities
                         foreach (Ruminant ind in item.FilterProportion(herd).Where(a => (ApplicationStyle == TagApplicationStyle.Add)? !a.Attributes.Exists(TagLabel): a.Attributes.Exists(TagLabel)).Take(numberToTag))
                         {
                             if(this.Status != ActivityStatus.Partial)
-                            {
                                 this.Status = ActivityStatus.Success;
-                            }
 
                             switch (ApplicationStyle)
                             {
@@ -172,9 +157,7 @@ namespace Models.CLEM.Activities
                         foreach (Ruminant ind in herd.Where(a => (ApplicationStyle == TagApplicationStyle.Add) ? !a.Attributes.Exists(TagLabel) : a.Attributes.Exists(TagLabel)).Take(numberToTag))
                         {
                             if (this.Status != ActivityStatus.Partial)
-                            {
                                 this.Status = ActivityStatus.Success;
-                            }
 
                             switch (ApplicationStyle)
                             {
@@ -190,38 +173,10 @@ namespace Models.CLEM.Activities
                     }
                 }
                 else
-                {
                     this.Status = ActivityStatus.NotNeeded;
-                }
             }
             else
-            {
                 this.Status = ActivityStatus.Ignored;
-            }
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
         }
 
         #region descriptive summary
@@ -229,15 +184,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string tagstring = "";
-            if (TagLabel != null && TagLabel != "")
-            {
-                tagstring = "<span class=\"setvalue\">" + TagLabel + "</span> ";
-            }
-            else
-            {
-                tagstring = "<span class=\"errorlink\">[NOT SET]</span> ";
-            }
+            string tagstring = CLEMModel.DisplaySummaryValueSnippet(TagLabel, "Not set");
             return $"\r\n<div class=\"activityentry\">{ApplicationStyle} the tag {tagstring} {((ApplicationStyle == TagApplicationStyle.Add)?"to":"from")} all individuals in the following groups</div>";
         }
         #endregion

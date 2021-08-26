@@ -26,10 +26,14 @@ namespace Models.CLEM.Activities
     public class CropActivityManageProduct: CLEMActivityBase, IValidatableObject
     {
         [Link]
-        Clock Clock = null;
-
+        private Clock clock = null;
         [Link]
-        Simulation Simulation = null;
+        private Simulation simulation = null;
+
+        private ActivityCutAndCarryLimiter limiter;
+        private string addReason = "Harvest";
+        private bool performedHarvest = false;
+        private string previousTag = "";
 
         /// <summary>
         /// Name of the model for the crop input file
@@ -160,10 +164,6 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public bool InsideMultiHarvestSequence { get; set; }
 
-        private ActivityCutAndCarryLimiter limiter;
-        private string addReason = "Harvest";
-        private bool performedHarvest = false;
-        private string previousTag = "";
 
         /// <summary>
         /// Constructor
@@ -185,13 +185,11 @@ namespace Models.CLEM.Activities
             // activity is performed in CLEMDoCutAndCarry not CLEMGetResources
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
-            fileCrop = Simulation.FindAllDescendants().Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop;
+            fileCrop = simulation.FindAllDescendants().Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop;
             if (fileCrop == null)
-            {
                 throw new ApsimXException(this, String.Format("Unable to locate crop data reader [x={0}] requested by [a={1}]", this.ModelNameFileCrop??"Unknown", this.Name));
-            }
 
-            LinkedResourceItem = Resources.GetResourceItem(this, StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
+            LinkedResourceItem = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             if((LinkedResourceItem as Model).Parent.GetType() == typeof(GrazeFoodStore))
             {
                 (LinkedResourceItem as GrazeFoodStoreType).Manager = (Parent as IPastureManager);
@@ -204,11 +202,9 @@ namespace Models.CLEM.Activities
             // Retrieve harvest data from the forage file for the entire run. 
             // only get entries where a harvest happened (Amtkg > 0)
             HarvestData = fileCrop.GetCropDataForEntireRun(parentManagementActivity.LinkedLandItem.SoilType, CropName,
-                                                               Clock.StartDate, Clock.EndDate).Where(a => a.AmtKg > 0).OrderBy(a => a.Year * 100 + a.Month).ToList<CropDataType>();
+                                                               clock.StartDate, clock.EndDate).Where(a => a.AmtKg > 0).OrderBy(a => a.Year * 100 + a.Month).ToList<CropDataType>();
             if ((HarvestData == null) || (HarvestData.Count == 0))
-            {
-                Summary.WriteWarning(this, $"Unable to locate any harvest data in [x={fileCrop.Name}] using [x={fileCrop.FileName}] for soil type [{parentManagementActivity.LinkedLandItem.SoilType}] and crop name [{CropName}] between the dates [{Clock.StartDate.ToShortDateString()}] and [{Clock.EndDate.ToShortDateString()}]");
-            }
+                Summary.WriteWarning(this, $"Unable to locate any harvest data in [x={fileCrop.Name}] using [x={fileCrop.FileName}] for soil type [{parentManagementActivity.LinkedLandItem.SoilType}] and crop name [{CropName}] between the dates [{clock.StartDate.ToShortDateString()}] and [{clock.EndDate.ToShortDateString()}]");
 
             IsTreeCrop = (TreesPerHa == 0) ? false : true;  //using this boolean just makes things more readable.
 
@@ -232,12 +228,11 @@ namespace Models.CLEM.Activities
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
             // if harvest tags provided for this crop then they will be used to define previous, next etc
-
             // while date month > harvest record look for previous and delete past events
 
             if (HarvestData.Count() > 0)
             {
-                int clockYrMth = CalculateYearMonth(Clock.Today);
+                int clockYrMth = CalculateYearMonth(clock.Today);
                 int position; // passed -1, current 0, future 1
                 do
                 {
@@ -293,7 +288,6 @@ namespace Models.CLEM.Activities
                         case 0:
                             performedHarvest = true;
                             if (HarvestTagsUsed)
-                            {
                                 switch (HarvestData.FirstOrDefault().HarvestType)
                                 {
                                     case "first":
@@ -308,7 +302,6 @@ namespace Models.CLEM.Activities
                                         PreviousHarvest = null;
                                         break;
                                 }
-                            }
                             else
                             {
                                 NextHarvest = HarvestData.FirstOrDefault();
@@ -317,7 +310,6 @@ namespace Models.CLEM.Activities
                             break;
                         case 1:
                             if (HarvestTagsUsed)
-                            {
                                 switch (HarvestData.FirstOrDefault().HarvestType)
                                 {
                                     case "first":
@@ -328,12 +320,8 @@ namespace Models.CLEM.Activities
                                         NextHarvest = HarvestData.FirstOrDefault();
                                         break;
                                 }
-
-                            }
                             else
-                            {
                                 NextHarvest = HarvestData.FirstOrDefault();
-                            }
                             break;
                         default:
                             break;
@@ -361,13 +349,11 @@ namespace Models.CLEM.Activities
         private void OnCLEMEndOfTimeStep(object sender, EventArgs e)
         {
             // rotate harvest if needed
-            if ((this.ActivityEnabled & Status != ActivityStatus.Ignored) && HarvestData.Count() > 0 && Clock.Today.Year * 100 + Clock.Today.Month == HarvestData.First().Year * 100 + HarvestData.First().Month)
+            if ((this.ActivityEnabled & Status != ActivityStatus.Ignored) && HarvestData.Count() > 0 && clock.Today.Year * 100 + clock.Today.Month == HarvestData.First().Year * 100 + HarvestData.First().Month)
             {
                 // don't rotate if no harvest tags or harvest type is not equal to "last"
                 if (!HarvestTagsUsed || NextHarvest.HarvestType == "last")
-                {
                     parentManagementActivity.RotateCrop();
-                }
             }
         }
 
@@ -396,9 +382,7 @@ namespace Models.CLEM.Activities
             // get resources needed such as labour before DoActivity
             // when not going to a GrazeFoodStore that uses CLEMUpdatePasture
             if (parentManagementActivity.ActivityEnabled && LinkedResourceItem.GetType() != typeof(GrazeFoodStoreType))
-            {
                 GetResourcesRequiredForActivity();
-            }
         }
 
         /// <summary>
@@ -411,19 +395,9 @@ namespace Models.CLEM.Activities
             // search children
             ActivityCutAndCarryLimiter limiterFound = model.FindAllChildren<ActivityCutAndCarryLimiter>().Cast<ActivityCutAndCarryLimiter>().FirstOrDefault();
             if (limiterFound == null)
-            {
                 if(model.Parent.GetType().IsSubclassOf(typeof(CLEMActivityBase)) || model.Parent.GetType() == typeof(ActivitiesHolder))
-                {
                     limiterFound = LocateCutAndCarryLimiter(model.Parent);
-                }
-            }
             return limiterFound;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
         }
 
         /// <inheritdoc/>
@@ -432,8 +406,8 @@ namespace Models.CLEM.Activities
             double daysNeeded = 0;
             if (this.TimingOK)
             {
-                int year = Clock.Today.Year;
-                int month = Clock.Today.Month;
+                int year = clock.Today.Year;
+                int month = clock.Today.Month;
                 double amount = 0;
                 if (NextHarvest != null)
                 {
@@ -443,17 +417,13 @@ namespace Models.CLEM.Activities
                         if (this.TimingOK)
                         {
                             if (IsTreeCrop)
-                            {
                                 amount = NextHarvest.AmtKg * TreesPerHa * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
-                            }
                             else
-                            {
                                 amount = NextHarvest.AmtKg * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
-                            }
 
                             if (limiter != null)
                             {
-                                double canBeCarried = limiter.GetAmountAvailable(Clock.Today.Month);
+                                double canBeCarried = limiter.GetAmountAvailable(clock.Today.Month);
                                 amount = Math.Max(amount, canBeCarried);
                             }
                         }
@@ -472,26 +442,22 @@ namespace Models.CLEM.Activities
                     case LabourUnitType.perUnit:
                         numberUnits = amount / requirement.UnitSize;
                         if (requirement.WholeUnitBlocks)
-                        {
                             numberUnits = Math.Ceiling(numberUnits);
-                        }
 
                         daysNeeded = numberUnits * requirement.LabourPerUnit;
                         break;
                     case LabourUnitType.perUnitOfLand:
                         numberUnits = parentManagementActivity.Area / requirement.UnitSize;
                         if (requirement.WholeUnitBlocks)
-                        {
                             numberUnits = Math.Ceiling(numberUnits);
-                        }
+
                         daysNeeded = numberUnits * requirement.LabourPerUnit;
                         break;
                     case LabourUnitType.perHa:
                         numberUnits = parentManagementActivity.Area * UnitsToHaConverter / requirement.UnitSize;
                         if (requirement.WholeUnitBlocks)
-                        {
                             numberUnits = Math.Ceiling(numberUnits);
-                        }
+
                         daysNeeded = numberUnits * requirement.LabourPerUnit;
                         break;
                     default:
@@ -499,9 +465,7 @@ namespace Models.CLEM.Activities
                 }
 
                 if (amount <= 0)
-                {
                     daysNeeded = 0;
-                }
             }
             return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, (LinkedResourceItem as CLEMModel).NameWithParent);
         }
@@ -509,8 +473,8 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void DoActivity()
         {
-            int year = Clock.Today.Year;
-            int month = Clock.Today.Month;
+            int year = clock.Today.Year;
+            int month = clock.Today.Month;
             AmountHarvested = 0;
             AmountAvailableForHarvest = 0;
 
@@ -520,19 +484,15 @@ namespace Models.CLEM.Activities
                 if ((year == NextHarvest.HarvestDate.Year) && (month == NextHarvest.HarvestDate.Month))
                 {
                     if (IsTreeCrop)
-                    {
                         AmountHarvested = NextHarvest.AmtKg * TreesPerHa * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
-                    }
                     else
-                    {
                         AmountHarvested = NextHarvest.AmtKg * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
-                    }
 
                     AmountAvailableForHarvest = AmountHarvested;
                     // reduce amount by limiter if present.
                     if (limiter != null)
                     {
-                        double canBeCarried = limiter.GetAmountAvailable(Clock.Today.Month);
+                        double canBeCarried = limiter.GetAmountAvailable(clock.Today.Month);
                         AmountHarvested = Math.Max(AmountHarvested, canBeCarried);
 
                         // now modify by labour limits as this is the amount labour was calculated for.
@@ -540,9 +500,7 @@ namespace Models.CLEM.Activities
                         AmountHarvested *= labourLimit;
 
                         if(labourLimit < 1)
-                        {
                             this.Status = ActivityStatus.Partial;
-                        }
 
                         // TODO: now limit further by fees not paid
                         double financeLimit = this.LimitProportion(typeof(Finance));
@@ -557,15 +515,11 @@ namespace Models.CLEM.Activities
                         if (double.IsNaN(NextHarvest.Npct))
                         {
                             if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
-                            {
                                 // grazed pasture with no N read assumes the green biomass N content
                                 percentN = (LinkedResourceItem as GrazeFoodStoreType).GreenNitrogen;
-                            }
                         }
                         else
-                        {
                             percentN =  NextHarvest.Npct;
-                        }
 
                         if (percentN == 0)
                         {
@@ -581,9 +535,7 @@ namespace Models.CLEM.Activities
                                 PercentN = percentN
                             };
                             if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
-                            {
                                 packet.DMD = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.PercentN);
-                            }
                             LinkedResourceItem.Add(packet, this,"", addReason);
                         }
                         SetStatusSuccess();
@@ -591,50 +543,14 @@ namespace Models.CLEM.Activities
                     else
                     {
                         if (Status == ActivityStatus.Success)
-                        {
                             Status = ActivityStatus.NotNeeded;
-                        }
                     }
                 }
                 else
-                {
                     this.Status = ActivityStatus.NotNeeded;
-                }
             }
             else
-            {
                 this.Status = ActivityStatus.NotNeeded;
-            }
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
         }
 
         #region validation
@@ -671,44 +587,31 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 if (TreesPerHa > 0)
-                {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">This is a tree crop with a density of " + TreesPerHa.ToString() + " per hectare</div>");
-                }
+
                 if (ProportionKept == 0)
-                {
                     htmlWriter.Write("\r\n<div class=\"activityentry\"><span class=\"errorlink\">" + ProportionKept.ToString("0.#%") + "</span> of this product is placed in ");
-                }
                 else
-                {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">" + ((ProportionKept == 1) ? "This " : "<span class=\"setvalue\">" + (ProportionKept).ToString("0.#%") + "</span> of this ") + "product is placed in ");
-                }
+
                 if (StoreItemName == null || StoreItemName == "")
-                {
                     htmlWriter.Write("<span class=\"errorlink\">[STORE NOT SET]</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"resourcelink\">" + StoreItemName + "</span>");
-                }
+
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Data is retrieved from ");
                 if (ModelNameFileCrop == null || ModelNameFileCrop == "")
-                {
                     htmlWriter.Write("<span class=\"errorlink\">[CROP FILE NOT SET]</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"filelink\">" + ModelNameFileCrop + "</span>");
-                }
+
                 htmlWriter.Write(" using crop named ");
                 if (CropName == null || CropName == "")
-                {
                     htmlWriter.Write("<span class=\"errorlink\">[CROP NAME NOT SET]</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"filelink\">" + CropName + "</span>");
-                }
+
                 htmlWriter.Write("\r\n</div>");
                 return htmlWriter.ToString(); 
             }
@@ -728,10 +631,8 @@ namespace Models.CLEM.Activities
             if (this.Parent.GetType() == typeof(CropActivityManageProduct))
             {
                 if (this.Parent.FindAllChildren<CropActivityManageProduct>().FirstOrDefault().Name == this.Name)
-                {
                     // close off the parent item so it displays
                     html += "\r\n</div>";
-                }
             }
 
             bool mixed = this.FindAllChildren<CropActivityManageProduct>().Count() >= 1;

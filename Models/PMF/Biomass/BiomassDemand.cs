@@ -7,7 +7,7 @@ using System;
 namespace Models.PMF
 {
     /// <summary>
-    /// This class holds the functions for calculating the demands for each biomass fraction
+    /// This class holds the functions for calculating the absolute demands for each biomass fraction. 
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IOrgan))]

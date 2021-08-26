@@ -24,9 +24,6 @@ namespace Models.CLEM
     [HelpUri(@"Content/Features/DataReaders/PastureDataReader.htm")]
     public class FilePasture : CLEMModel, IFilePasture
     {
-        /// <summary>
-        /// A link to the clock model.
-        /// </summary>
         [Link]
         private Clock clock = null;
 
