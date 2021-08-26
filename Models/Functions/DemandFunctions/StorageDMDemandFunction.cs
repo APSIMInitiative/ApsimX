@@ -3,14 +3,12 @@ using System.Collections.Generic;
 using Models.Core;
 using Models.PMF.Interfaces;
 using APSIM.Shared.Utilities;
+using APSIM.Services.Documentation;
 
 namespace Models.Functions.DemandFunctions
 {
-    /// <summary>
-    /// The partitioning of daily growth to storage biomass is based on a storage fraction.
-    /// </summary>
+    /// <summary>The partitioning of daily growth to storage biomass is based on a storage fraction.</summary>
     [Serializable]
-    [Description("This function calculates...")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class StorageDMDemandFunction : Model, IFunction
@@ -50,6 +48,17 @@ namespace Models.Functions.DemandFunctions
             double MaximumDM = MathUtilities.Divide(structuralWt,1-storageFraction.Value(), 0);
             double AlreadyAllocated = structuralWt + parentOrgan.Live.StorageWt;
             return MaximumDM - AlreadyAllocated;
+        }
+
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
         }
     }
 }

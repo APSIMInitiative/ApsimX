@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using APSIM.Services.Documentation;
 using Models.Core;
 using Models.Interfaces;
 
@@ -21,7 +23,6 @@ namespace Models.Functions.SupplyFunctions
     /// 
     /// </summary>
     [Serializable]
-    [Description("This model calculates CO2 Impact on RUE using the approach of <br>Reyenga, Howden, Meinke, Mckeon (1999) <br>Modelling global change impact on wheat cropping in south-east Queensland, Australia. <br>Enivironmental Modelling && Software 14:297-306")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IFunction))]
@@ -80,6 +81,17 @@ namespace Models.Functions.SupplyFunctions
             }
             else
                 throw new Exception("Unknown photosynthetic pathway in RUECO2Function");
+        }
+
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
         }
     }
 }

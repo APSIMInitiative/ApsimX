@@ -225,7 +225,7 @@
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
-            foreach (ITag tag in base.Document())
+            foreach (var tag in GetModelDescription())
                 yield return tag;
 
             DataTable data = new DataTable();

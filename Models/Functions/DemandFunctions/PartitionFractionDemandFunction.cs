@@ -1,17 +1,13 @@
-﻿using Models.Core;
-using Models.PMF;
+﻿using APSIM.Services.Documentation;
+using Models.Core;
 using Models.PMF.Interfaces;
 using System;
-using APSIM.Services.Documentation;
 using System.Collections.Generic;
 
 namespace Models.Functions.DemandFunctions
 {
-    /// <summary>
-    /// Returns the product of its PartitionFraction and the total DM supplied to the arbitrator by all organs.
-    /// </summary>
+    /// <summary>Returns the product of its PartitionFraction and the total DM supplied to the arbitrator by all organs.</summary>
     [Serializable]
-    [Description("Demand is calculated as a fraction of the total plant supply term.")]
     public class PartitionFractionDemandFunction : Model, IFunction
     {
         /// <summary>The partition fraction</summary>
@@ -23,7 +19,6 @@ namespace Models.Functions.DemandFunctions
         IArbitrator arbitrator = null;
 
         /// <summary>Gets the value.</summary>
-        /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
             if (arbitrator.DM != null)
@@ -32,13 +27,15 @@ namespace Models.Functions.DemandFunctions
                 return 0;
         }
 
-        /// <summary>
-        /// Document the model.
-        /// </summary>
+        /// <summary>Document the model.</summary>
         public override IEnumerable<ITag> Document()
         {
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
             yield return new Paragraph($"*{Name} = PartitionFraction x [Arbitrator].DM.TotalFixationSupply*");
-            yield return new Paragraph("Where:");
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
         }
     }
 }

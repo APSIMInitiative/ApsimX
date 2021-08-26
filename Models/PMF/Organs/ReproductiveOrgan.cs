@@ -6,11 +6,13 @@ using Models.PMF.Interfaces;
 using Newtonsoft.Json;
 using Models.PMF.Library;
 using Models.Interfaces;
+using System.Collections.Generic;
+using APSIM.Services.Documentation;
+using System.Linq;
 
 namespace Models.PMF.Organs
 {
     /// <summary>
-    /// # [Name] 
     /// This organ uses a generic model for plant reproductive components.  Yield is calculated from its components in terms of organ number and size (for example, grain number and grain size).  
     /// </summary>
     [Serializable]
@@ -397,6 +399,25 @@ namespace Models.PMF.Organs
         public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
         {
             biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, Live, Dead, Removed, Detached);
+        }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            // Document Constants
+            var constantTags = new List<ITag>();
+            foreach (var constant in FindAllChildren<Constant>())
+                foreach (var tag in constant.Document())
+                    constantTags.Add(tag);
+            yield return new Section("Constants", constantTags);
+
+            // Document everything else.
+            foreach (var child in Children.Where(child => !(child is Constant)))
+                yield return new Section(child.Name, child.Document());
+
         }
 
         /// <summary>Clears this instance.</summary>

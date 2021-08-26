@@ -6,11 +6,8 @@ using Models.PMF.Interfaces;
 
 namespace Models.Functions.DemandFunctions
 {
-    /// <summary>
-    /// The partitioning of daily N supply to storage N attempts to bring the organ's N content to the maximum concentration.
-    /// </summary>
+    /// <summary>The partitioning of daily N supply to storage N attempts to bring the organ's N content to the maximum concentration.</summary>
     [Serializable]
-    [Description("This function calculates...")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class StorageNDemandFunction : Model, IFunction
@@ -63,12 +60,16 @@ namespace Models.Functions.DemandFunctions
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
-            foreach (ITag tag in base.Document())
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
                 yield return tag;
 
             string organName = FindAncestor<IOrgan>().Name;
             yield return new Paragraph($"*{Name} = [{organName}].maximumNconc × ([{organName}].Live.Wt + potentialAllocationWt) - [{organName}].Live.N*");
             yield return new Paragraph($"The demand for storage N is further reduced by a factor specified by the [{organName}].NitrogenDemandSwitch.");
+
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
         }
     }
 }

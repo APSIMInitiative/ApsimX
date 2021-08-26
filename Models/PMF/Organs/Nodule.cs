@@ -572,7 +572,7 @@ namespace Models.PMF.Organs
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
-            foreach (ITag tag in base.Document())
+            foreach (ITag tag in GetModelDescription())
                 yield return tag;
 
             // Document DM demands.
