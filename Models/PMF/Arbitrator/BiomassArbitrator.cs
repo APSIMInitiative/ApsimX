@@ -51,14 +51,20 @@ namespace Models.PMF
         [Link(Type = LinkType.Ancestor)]
         protected IZone zone = null;
 
+        
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
 
         /// <summary>The kgha2gsm</summary>
         protected const double kgha2gsm = 0.1;
 
-        /// <summary>The list of organs</summary>
-        public List<ISubscribeToBiomassArbitration> Organs = new List<ISubscribeToBiomassArbitration>();
+
+        ///3. The Constructor
+        /// -------------------------------------------------------------------------------------------------
+        BiomassArbitrator()
+        {
+
+        }
 
         ///4. Public Events And Enums
         /// -------------------------------------------------------------------------------------------------
@@ -72,9 +78,12 @@ namespace Models.PMF
         /// <summary>Occurs when a plant is about to be sown.</summary>
         public event EventHandler SetNDemand;
 
-        
+
         ///5. Public Properties
         /// --------------------------------------------------------------------------------------------------
+
+        /// <summary>The list of organs</summary>
+        public List<ISubscribeToBiomassArbitration> Organs = new List<ISubscribeToBiomassArbitration>();
 
         /// <summary>The variables for DM</summary>
         [JsonIgnore]
@@ -103,6 +112,9 @@ namespace Models.PMF
         [JsonIgnore]
         public double FN { get { return N == null ? 0 : MathUtilities.Divide(N.TotalPlantSupply, N.TotalPlantDemand, 0); } }
 
+        /// <summary>Total DM supply from photosynthesis needed for partitioning fraction function</summary>
+        public double TotalDMFixationSupply { get { return DM.Fixation == null ? 0 : DM.Fixation.TotalSupply; } }
+
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
 
@@ -123,19 +135,6 @@ namespace Models.PMF
             N = new BiomassArbitrationStates("N", Organs);
         }
         
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantSowing")]
-        virtual protected void OnPlantSowing(object sender, SowingParameters data)
-        {
-
-
-        }
-
-        /// <summary>Total DM supply from photosynthesis needed for partitioning fraction function</summary>
-        public double TotalDMFixationSupply { get { return DM.Fixation == null ? 0 : DM.Fixation.TotalSupply; } }
-
 
         /// First get all demands and supplies, send potential DM allocations and do N reallocation so N uptake demand can be calculated
 

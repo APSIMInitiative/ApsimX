@@ -20,6 +20,9 @@
     [ValidParent(ParentType = typeof(IOrgan))]
     public class NutrientArbitrationAgent : Model, IAmANutrientArbitrationAgent, ICustomDocumentation
     {
+        ///1. Links
+        ///------------------------------------------------------------------------------------------------
+        
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double BiomassToleranceValue = 0.0000000001; 
 
@@ -42,23 +45,37 @@
         [Units("g/m2/d")]
         private BiomassDemandAndPriority nDemands = null;
 
-        /// <summary>The nitrogen supply</summary>
-        public BiomassSupplyType NSupply { get;  set; }
+        ///2. Private And Protected Fields
+        /// -------------------------------------------------------------------------------------------------
 
-        /// <summary>Structural nitrogen demand</summary>
-        public BiomassPoolType NDemand { get;  set; }
-
-        /// <summary>The dry matter potentially being allocated</summary>
-        public BiomassPoolType potentialDMAllocation { get; set; }
-
+        ///3. The Constructor
+        /// -------------------------------------------------------------------------------------------------
         /// <summary>Constructor</summary>
-        
+
         public NutrientArbitrationAgent()
         {
             NDemand = new BiomassPoolType();
             NSupply = new BiomassSupplyType();
             potentialDMAllocation = new BiomassPoolType();
         }
+
+        ///4. Public Events And Enums
+        /// -------------------------------------------------------------------------------------------------
+
+        ///5. Public Properties
+        /// --------------------------------------------------------------------------------------------------
+        /// <summary>The nitrogen supply</summary>
+        public BiomassSupplyType NSupply { get; set; }
+
+        /// <summary>Structural nitrogen demand</summary>
+        public BiomassPoolType NDemand { get; set; }
+
+        /// <summary>The dry matter potentially being allocated</summary>
+        public BiomassPoolType potentialDMAllocation { get; set; }
+
+        ///6. Public methods
+        /// --------------------------------------------------------------------------------------------------
+
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
         [EventSubscribe("SetNSupply")]

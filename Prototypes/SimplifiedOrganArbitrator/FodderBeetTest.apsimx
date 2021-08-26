@@ -652,7 +652,6 @@
               "$type": "Models.PMF.Organs.Organ, Models",
               "Nutrients": null,
               "Carbon": null,
-              "StartLive": null,
               "IsAboveGround": true,
               "Name": "StorageRoot",
               "Children": [
@@ -1399,7 +1398,6 @@
               "$type": "Models.PMF.Organs.Organ, Models",
               "Nutrients": null,
               "Carbon": null,
-              "StartLive": null,
               "IsAboveGround": true,
               "Name": "Leaf",
               "Children": [
@@ -3014,7 +3012,6 @@
               "$type": "Models.PMF.Organs.Organ, Models",
               "Nutrients": null,
               "Carbon": null,
-              "StartLive": null,
               "IsAboveGround": true,
               "Name": "Petiole",
               "Children": [
@@ -3637,7 +3634,6 @@
               "$type": "Models.PMF.Organs.Organ, Models",
               "Nutrients": null,
               "Carbon": null,
-              "StartLive": null,
               "IsAboveGround": true,
               "Name": "Root",
               "Children": [

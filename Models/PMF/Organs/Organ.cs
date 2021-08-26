@@ -21,36 +21,12 @@
 
     public class Organ : Model, IOrgan, ISubscribeToBiomassArbitration, ICustomDocumentation, IOrganDamage
     {
-        /// <summary>Tolerance for biomass comparisons</summary>
-        protected double BiomassToleranceValue = 0.0000000001; 
-
-        /// <summary> The organs uptake object if it has one</summary>
-        public IWaterNitrogenUptake WaterNitrogenUptakeObject
-        {
-            get
-            {
-                return this.FindChild<IWaterNitrogenUptake>();
-            }
-        }
-
-        /// <summary> The canopy object </summary>
-        public IHasWaterDemand CanopyObjects
-        {
-            get
-            {
-                return this.FindChild<IHasWaterDemand>();
-            }
-        }
-
+        ///1. Links
+        ///--------------------------------------------------------------------------------------------------
+        
         /// <summary>The parent plant</summary>
         [Link]
         private Plant parentPlant = null;
-
-        /// <summary>The list of nurtients to arbitration</summary>
-        public List<IAmANutrientArbitrationAgent> Nutrients { get; private set; }
-
-        /// <summary> The Carbon arbitraion</summary>
-        public IAmTheOrgansCarbonArbitrationAgent Carbon { get; private set; }
 
         /// <summary>The surface organic matter model</summary>
         [Link]
@@ -115,8 +91,14 @@
         [Link(Type = LinkType.Child, ByName = true)]
         public IFunction RemobilisationCost = null;
 
-        /// <summary>The live biomass state at start of the computation round</summary>
-        public Biomass StartLive  { get; private set; }
+        ///2. Private And Protected Fields
+        /// -------------------------------------------------------------------------------------------------
+
+        /// <summary>Tolerance for biomass comparisons</summary>
+        protected double BiomassToleranceValue = 0.0000000001;
+
+        ///3. The Constructor
+        /// -------------------------------------------------------------------------------------------------
 
         /// <summary>Organ constructor</summary>
         public Organ()
@@ -125,9 +107,41 @@
             Dead = new Biomass();
         }
 
+        ///4. Public Events And Enums
+        /// -------------------------------------------------------------------------------------------------
+        /// <summary> The organs uptake object if it has one</summary>
+        public IWaterNitrogenUptake WaterNitrogenUptakeObject
+        {
+            get
+            {
+                return this.FindChild<IWaterNitrogenUptake>();
+            }
+        }
+
+        /// <summary> The canopy object </summary>
+        public IHasWaterDemand CanopyObjects
+        {
+            get
+            {
+                return this.FindChild<IHasWaterDemand>();
+            }
+        }
+        
+        ///5. Public Properties
+        /// --------------------------------------------------------------------------------------------------
+        /// <summary>The list of nurtients to arbitration</summary>
+        public List<IAmANutrientArbitrationAgent> Nutrients { get; private set; }
+
+        /// <summary> The Carbon arbitraion</summary>
+        public IAmTheOrgansCarbonArbitrationAgent Carbon { get; private set; }
+
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         [Description("Is organ above ground?")]
         public bool IsAboveGround { get; set; } = true;
+
+        /// <summary>The live biomass state at start of the computation round</summary>
+        [JsonIgnore]
+        public Biomass StartLive { get; private set; }
 
         /// <summary>The live biomass</summary>
         [JsonIgnore]
@@ -245,6 +259,10 @@
                 return Math.Min(1.0, factor);
             }
         }
+
+
+        ///6. Public methods
+        /// --------------------------------------------------------------------------------------------------
 
         /// <summary>Removes biomass from organs when harvest, graze or cut events are called.</summary>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>

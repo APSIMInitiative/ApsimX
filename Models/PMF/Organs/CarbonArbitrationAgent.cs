@@ -20,9 +20,10 @@
     [ValidParent(ParentType = typeof(IOrgan))]
     public class CarbonArbitrationAgent : Model, IAmTheOrgansCarbonArbitrationAgent, ICustomDocumentation
     {
-        /// <summary>Tolerance for biomass comparisons</summary>
-        protected double BiomassToleranceValue = 0.0000000001; 
 
+        ///1. Links
+        ///------------------------------------------------------------------------------------------------
+        
         /// <summary>The parent plant</summary>
         [Link(Type = LinkType.Ancestor)]
         private ISubscribeToBiomassArbitration organ = null;
@@ -47,6 +48,13 @@
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction Photosynthesis = null;
 
+        
+        ///2. Private And Protected Fields
+        /// -------------------------------------------------------------------------------------------------
+
+        /// <summary>Tolerance for biomass comparisons</summary>
+        protected double BiomassToleranceValue = 0.0000000001;
+
         /// <summary>The dry matter supply</summary>
         [JsonIgnore]
         public BiomassSupplyType DMSupply { get; set; }
@@ -60,7 +68,9 @@
         public BiomassPoolType potentialDMAllocation { get; set; }
 
         /// <summary>Constructor</summary>
-        
+
+        ///3. The Constructor
+        /// -------------------------------------------------------------------------------------------------
         public CarbonArbitrationAgent()
         {
             DMDemand = new BiomassPoolType();
@@ -69,10 +79,24 @@
 
         }
 
+        ///4. Public Events And Enums
+        /// -------------------------------------------------------------------------------------------------
+
+        ///5. Public Properties
+        /// --------------------------------------------------------------------------------------------------
+
+        /// <summary>Gets the biomass retranslocation.</summary>
+        [JsonIgnore]
+        [Units("g/m^2")]
+        public double RetranslocationWt { get; private set; }
+
 
         /// <summary>Gets the potential DM allocation for this computation round.</summary>
         public BiomassPoolType DMPotentialAllocation { get { return potentialDMAllocation; } }
 
+
+        ///6. Public methods
+        /// -----------------------------------------------------------------------------------------------------------
 
         /// <summary>Computes the amount of DM available for retranslocation.</summary>
         public double AvailableDMRetranslocation()
@@ -135,10 +159,6 @@
             potentialDMAllocation.Storage = dryMatter.Storage;
         }
 
-        /// <summary>Gets the biomass retranslocation.</summary>
-        [JsonIgnore]
-        [Units("g/m^2")]
-        public double RetranslocationWt { get; private set;}
 
         /// <summary>Sets the dry matter allocation.</summary>
         /// <param name="dryMatter">The actual amount of drymatter allocation</param>

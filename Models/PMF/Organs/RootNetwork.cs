@@ -24,14 +24,10 @@
     [ValidParent(ParentType = typeof(IOrgan))]
     public class RootNetwork : Model, IWaterNitrogenUptake
     {
-        /// <summary>Constructor</summary>
-        public RootNetwork()
-        {
-            Zones = new List<ZoneState>();
-            ZoneNamesToGrowRootsIn = new List<string>();
-            ZoneRootDepths = new List<double>();
-            ZoneInitialDM = new List<BiomassDemand>();
-        }
+
+        ///1. Links
+        ///--------------------------------------------------------------------------------------------------
+
         /// <summary>The plant</summary>
         [Link]
         protected Plant parentPlant = null;
@@ -67,6 +63,78 @@
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
         public IFunction RootFrontCalcSwitch = null;
 
+        /// <summary>The root front velocity</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("mm/d")]
+        private IFunction rootFrontVelocity = null;
+
+        /// <summary>Link to the KNO3 link</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("0-1")]
+        public IFunction RootDepthStressFactor = null;
+
+        /// <summary>The maximum daily N uptake</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("kg N/ha/d")]
+        private IFunction maxDailyNUptake = null;
+
+        /// <summary>The kl modifier</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("0-1")]
+        private IFunction klModifier = null;
+
+        /// <summary>The Maximum Root Depth</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("mm")]
+        private IFunction maximumRootDepth = null;
+
+        ///2. Private And Protected Fields
+        /// -------------------------------------------------------------------------------------------------
+
+        private SoilCrop soilCrop;
+
+
+        /// <summary>The kgha2gsm</summary>
+        protected const double kgha2gsm = 0.1;
+
+        /// <summary>Returns true if the KL modifier due to root damage is active or not.</summary>
+        private bool IsKLModiferDueToDamageActive { get; set; } = false;
+
+        /// <summary>Gets the KL modifier due to root damage (0-1).</summary>
+        private double KLModiferDueToDamage(int layerIndex)
+        {
+            var threshold = 0.01;
+            if (!IsKLModiferDueToDamageActive)
+                return 1;
+            else if (LengthDensity[layerIndex] < 0)
+                return 0;
+            else if (LengthDensity[layerIndex] >= threshold)
+                return 1;
+            else
+                return (1 / threshold) * LengthDensity[layerIndex];
+        }
+
+
+        ///3. The Constructor
+        /// -------------------------------------------------------------------------------------------------
+        /// <summary>Constructor</summary>
+        public RootNetwork()
+        {
+            Zones = new List<ZoneState>();
+            ZoneNamesToGrowRootsIn = new List<string>();
+            ZoneRootDepths = new List<double>();
+            ZoneInitialDM = new List<BiomassDemand>();
+        }
+
+        ///4. Public Events And Enums
+        /// -------------------------------------------------------------------------------------------------
+
+        ///5. Public Properties
+        /// --------------------------------------------------------------------------------------------------
+        /// <summary>Gets or sets the root length modifier due to root damage (0-1).</summary>
+        [JsonIgnore]
+        public double RootLengthDensityModifierDueToDamage { get; set; } = 1.0;
+
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         public bool IsAboveGround { get { return false; } }
 
@@ -97,57 +165,6 @@
         /// <summary>The zone where the plant is growing</summary>
         [JsonIgnore]
         public ZoneState PlantZone { get; set; }
-
-
-        private SoilCrop soilCrop;
-
-
-        /// <summary>Returns true if the KL modifier due to root damage is active or not.</summary>
-        private bool IsKLModiferDueToDamageActive { get; set; } = false;
-
-        /// <summary>Gets or sets the root length modifier due to root damage (0-1).</summary>
-        [JsonIgnore]
-        public double RootLengthDensityModifierDueToDamage { get; set; } = 1.0;
-
-        /// <summary>Gets the KL modifier due to root damage (0-1).</summary>
-        private double KLModiferDueToDamage(int layerIndex)
-        {
-            var threshold = 0.01;
-            if (!IsKLModiferDueToDamageActive)
-                return 1;
-            else if (LengthDensity[layerIndex] < 0)
-                return 0;
-            else if (LengthDensity[layerIndex] >= threshold)
-                return 1;
-            else
-                return (1 / threshold) * LengthDensity[layerIndex];
-        }
-
-        /// <summary>The root front velocity</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("mm/d")]
-        private IFunction rootFrontVelocity = null;
-
-        /// <summary>Link to the KNO3 link</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("0-1")]
-        public IFunction RootDepthStressFactor = null;
-
-        /// <summary>The maximum daily N uptake</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("kg N/ha/d")]
-        private IFunction maxDailyNUptake = null;
-
-        /// <summary>The kl modifier</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("0-1")]
-        private IFunction klModifier = null;
-
-        /// <summary>The Maximum Root Depth</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("mm")]
-        private IFunction maximumRootDepth = null;
-
 
         /// <summary>Gets the root length density.</summary>
         [Units("mm/mm3")]
@@ -308,6 +325,125 @@
             }
         }
 
+        /// <summary>Gets or sets the water supply.</summary>
+        /// <param name="zone">The zone.</param>
+        public double[] CalculateWaterSupply(ZoneWaterAndN zone)
+        {
+            ZoneState myZone = Zones.Find(z => z.Name == zone.Zone.Name);
+            if (myZone == null)
+                return null;
+
+            var currentLayer = SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth);
+
+            var soilCrop = myZone.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+            if (soilCrop == null)
+                throw new Exception($"Cannot find a soil crop parameterisation called {parentPlant.Name + "Soil"}");
+
+            if (RootFrontCalcSwitch?.Value() >= 1.0)
+            {
+                double[] kl = soilCrop.KL;
+                double[] ll = soilCrop.LL;
+
+                double[] supply = new double[myZone.Physical.Thickness.Length];
+
+                LayerMidPointDepth = myZone.Physical.DepthMidPoints;
+                for (int layer = 0; layer <= currentLayer; layer++)
+                {
+                    double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
+
+                    supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
+                        available * myZone.RootProportions[layer]);
+                }
+
+                return supply;
+            }
+            else
+            {
+                double[] kl = soilCrop.KL;
+                double[] ll = soilCrop.LL;
+
+                double[] supply = new double[myZone.Physical.Thickness.Length];
+                LayerMidPointDepth = myZone.Physical.DepthMidPoints;
+                for (int layer = 0; layer < myZone.Physical.Thickness.Length; layer++)
+                {
+                    if (layer <= SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth))
+                    {
+                        double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
+
+                        supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
+                        available * myZone.RootProportions[layer]);
+                    }
+                }
+                return supply;
+            }
+        }
+
+        /// <summary>Computes root total water supply.</summary>
+        public double TotalExtractableWater()
+        {
+
+            double[] LL = soilCrop.LL;
+            double[] KL = soilCrop.KL;
+            double[] SWmm = PlantZone.WaterBalance.SWmm;
+            double[] DZ = PlantZone.Physical.Thickness;
+
+            double supply = 0;
+            for (int layer = 0; layer < LL.Length; layer++)
+            {
+                if (layer <= SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth))
+                {
+                    double available = Math.Max(SWmm[layer] - LL[layer] * DZ[layer] * PlantZone.LLModifier[layer], 0);
+
+                    supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
+                            available * PlantZone.RootProportions[layer]);
+                }
+            }
+            return supply;
+        }
+
+
+        /// <summary>Plant Avaliable water supply used by sorghum.</summary>
+        /// <summary>It adds an extra layer proportion calc to extractableWater calc.</summary>
+        public double PlantAvailableWaterSupply()
+        {
+            double[] LL = soilCrop.LL;
+            double[] KL = soilCrop.KL;
+            double[] SWmm = PlantZone.WaterBalance.SWmm;
+            double[] DZ = PlantZone.Physical.Thickness;
+            double[] available = new double[PlantZone.Physical.Thickness.Length];
+            double[] supply = new double[PlantZone.Physical.Thickness.Length];
+
+            var currentLayer = SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth);
+            var layertop = MathUtilities.Sum(PlantZone.Physical.Thickness, 0, Math.Max(0, currentLayer - 1));
+            var layerBottom = MathUtilities.Sum(PlantZone.Physical.Thickness, 0, currentLayer);
+            var layerProportion = Math.Min(MathUtilities.Divide(Depth - layertop, layerBottom - layertop, 0.0), 1.0);
+
+            for (int layer = 0; layer < LL.Length; layer++)
+            {
+                if (layer <= currentLayer)
+                {
+                    available[layer] = Math.Max(0.0, SWmm[layer] - LL[layer] * DZ[layer] * PlantZone.LLModifier[layer]);
+                }
+            }
+            available[currentLayer] *= layerProportion;
+
+            double supplyTotal = 0;
+            for (int layer = 0; layer < LL.Length; layer++)
+            {
+                if (layer <= currentLayer)
+                {
+                    supply[layer] = Math.Max(0.0, available[layer] * KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
+                        PlantZone.RootProportions[layer]);
+
+                    supplyTotal += supply[layer];
+                }
+            }
+            return supplyTotal;
+        }
+        
+        ///6. Public methods
+        /// --------------------------------------------------------------------------------------------------
+
         /// <summary>Does the water uptake.</summary>
         /// <param name="Amount">The amount.</param>
         /// <param name="zoneName">Zone name to do water uptake in</param>
@@ -320,8 +456,6 @@
             zone.WaterUptake = MathUtilities.Multiply_Value(Amount, -1.0);
             zone.WaterBalance.RemoveWater(Amount);
         }
-
-
 
         /// <summary>Does the Nitrogen uptake.</summary>
         /// <param name="zonesFromSoilArbitrator">List of zones from soil arbitrator</param>
@@ -420,59 +554,6 @@
             }
         }
 
-        /// <summary>Gets or sets the water supply.</summary>
-        /// <param name="zone">The zone.</param>
-        public double[] CalculateWaterSupply(ZoneWaterAndN zone)
-        {
-            ZoneState myZone = Zones.Find(z => z.Name == zone.Zone.Name);
-            if (myZone == null)
-                return null;
-
-            var currentLayer = SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth);
-
-            var soilCrop = myZone.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
-            if (soilCrop == null)
-                throw new Exception($"Cannot find a soil crop parameterisation called {parentPlant.Name + "Soil"}");
-
-            if (RootFrontCalcSwitch?.Value() >= 1.0)
-            {
-                double[] kl = soilCrop.KL;
-                double[] ll = soilCrop.LL;
-
-                double[] supply = new double[myZone.Physical.Thickness.Length];
-
-                LayerMidPointDepth = myZone.Physical.DepthMidPoints;
-                for (int layer = 0; layer <= currentLayer; layer++)
-                {
-                    double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
-
-                    supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                        available * myZone.RootProportions[layer]);
-                }
-
-                return supply;
-            }
-            else
-            {
-                double[] kl = soilCrop.KL;
-                double[] ll = soilCrop.LL;
-
-                double[] supply = new double[myZone.Physical.Thickness.Length];
-                LayerMidPointDepth = myZone.Physical.DepthMidPoints;
-                for (int layer = 0; layer < myZone.Physical.Thickness.Length; layer++)
-                {
-                    if (layer <= SoilUtilities.LayerIndexOfDepth(myZone.Physical.Thickness, myZone.Depth))
-                    {
-                        double available = zone.Water[layer] - ll[layer] * myZone.Physical.Thickness[layer] * myZone.LLModifier[layer];
-
-                        supply[layer] = Math.Max(0.0, kl[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                        available * myZone.RootProportions[layer]);
-                    }
-                }
-                return supply;
-            }
-        }
-
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -521,70 +602,6 @@
             }
         }
 
-        /// <summary>Computes root total water supply.</summary>
-        public double TotalExtractableWater()
-        {
-
-            double[] LL = soilCrop.LL;
-            double[] KL = soilCrop.KL;
-            double[] SWmm = PlantZone.WaterBalance.SWmm;
-            double[] DZ = PlantZone.Physical.Thickness;
-
-            double supply = 0;
-            for (int layer = 0; layer < LL.Length; layer++)
-            {
-                if (layer <= SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth))
-                {
-                    double available = Math.Max(SWmm[layer] - LL[layer] * DZ[layer] * PlantZone.LLModifier[layer], 0);
-
-                    supply += Math.Max(0.0, KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                            available * PlantZone.RootProportions[layer]);
-                }
-            }
-            return supply;
-        }
-
-        /// <summary>Plant Avaliable water supply used by sorghum.</summary>
-        /// <summary>It adds an extra layer proportion calc to extractableWater calc.</summary>
-        public double PlantAvailableWaterSupply()
-        {
-            double[] LL = soilCrop.LL;
-            double[] KL = soilCrop.KL;
-            double[] SWmm = PlantZone.WaterBalance.SWmm;
-            double[] DZ = PlantZone.Physical.Thickness;
-            double[] available = new double[PlantZone.Physical.Thickness.Length];
-            double[] supply = new double[PlantZone.Physical.Thickness.Length];
-
-            var currentLayer = SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth);
-            var layertop = MathUtilities.Sum(PlantZone.Physical.Thickness, 0, Math.Max(0, currentLayer - 1));
-            var layerBottom = MathUtilities.Sum(PlantZone.Physical.Thickness, 0, currentLayer);
-            var layerProportion = Math.Min(MathUtilities.Divide(Depth - layertop, layerBottom - layertop, 0.0), 1.0);
-
-            for (int layer = 0; layer < LL.Length; layer++)
-            {
-                if (layer <= currentLayer)
-                {
-                    available[layer] = Math.Max(0.0, SWmm[layer] - LL[layer] * DZ[layer] * PlantZone.LLModifier[layer]);
-                }
-            }
-            available[currentLayer] *= layerProportion;
-
-            double supplyTotal = 0;
-            for (int layer = 0; layer < LL.Length; layer++)
-            {
-                if (layer <= currentLayer)
-                {
-                    supply[layer] = Math.Max(0.0, available[layer] * KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                        PlantZone.RootProportions[layer]);
-
-                    supplyTotal += supply[layer];
-                }
-            }
-            return supplyTotal;
-        }
-
-
-
         /// <summary>Initialise all zones.</summary>
         private void InitialiseZones()
         {
@@ -618,8 +635,6 @@
             Zones.Clear();
         }
 
-        /// <summary>The kgha2gsm</summary>
-        protected const double kgha2gsm = 0.1;
     }
 
 

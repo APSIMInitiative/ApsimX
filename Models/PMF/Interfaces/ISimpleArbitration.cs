@@ -70,25 +70,8 @@
     }
 
     /// <summary>
-    /// An interface that defines what needs to be implemented by an organ
-    /// that communicates to the OrganArbitrator.
+    /// Defines what is needed for carbon arbitration
     /// </summary>
-    /// <remarks>
-    ///  PFM considers four types of biomass supply, i.e.
-    ///  - fixation
-    ///  - reallocation
-    ///  - uptake
-    ///  - retranslocation
-    /// PFM considers eight types of biomass allocation, i.e.
-    ///  - structural
-    ///  - non-structural
-    ///  - metabolic
-    ///  - retranslocation
-    ///  - reallocation
-    ///  - respired
-    ///  - uptake
-    ///  - fixation
-    /// </remarks>
     public interface IAmTheOrgansCarbonArbitrationAgent
     {
         /// <summary>Returns the organs dry matter demand</summary>
@@ -111,25 +94,9 @@
     }
 
     /// <summary>
-    /// An interface that defines what needs to be implemented by an organ
-    /// that communicates to the OrganArbitrator.
+    /// Defines what is needed for nutrient allocation
     /// </summary>
-    /// <remarks>
-    ///  PFM considers four types of biomass supply, i.e.
-    ///  - fixation
-    ///  - reallocation
-    ///  - uptake
-    ///  - retranslocation
-    /// PFM considers eight types of biomass allocation, i.e.
-    ///  - structural
-    ///  - non-structural
-    ///  - metabolic
-    ///  - retranslocation
-    ///  - reallocation
-    ///  - respired
-    ///  - uptake
-    ///  - fixation
-    /// </remarks>
+
     public interface IAmANutrientArbitrationAgent
     {
         /// <summary>Returns the organs N demand</summary>
