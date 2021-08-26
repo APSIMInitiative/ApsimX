@@ -22,10 +22,10 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IOrgan))]
-    public class RootFunction : Model, IWaterNitrogenUptake
+    public class RootNetwork : Model, IWaterNitrogenUptake
     {
         /// <summary>Constructor</summary>
-        public RootFunction()
+        public RootNetwork()
         {
             Zones = new List<ZoneState>();
             ZoneNamesToGrowRootsIn = new List<string>();
@@ -494,6 +494,10 @@
                 throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
         }
 
+        /// <summary>Does the nutrient allocations.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
             if (parentPlant.IsAlive)

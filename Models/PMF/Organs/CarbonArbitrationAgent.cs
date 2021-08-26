@@ -48,12 +48,15 @@
         IFunction Photosynthesis = null;
 
         /// <summary>The dry matter supply</summary>
+        [JsonIgnore]
         public BiomassSupplyType DMSupply { get; set; }
 
         /// <summary>The dry matter demand</summary>
+        [JsonIgnore] 
         public BiomassPoolType DMDemand { get;  set; }
 
         /// <summary>The dry matter potentially being allocated</summary>
+        [JsonIgnore]
         public BiomassPoolType potentialDMAllocation { get; set; }
 
         /// <summary>Constructor</summary>
@@ -63,6 +66,7 @@
             DMDemand = new BiomassPoolType();
             DMSupply = new BiomassSupplyType();
             potentialDMAllocation = new BiomassPoolType();
+
         }
 
 

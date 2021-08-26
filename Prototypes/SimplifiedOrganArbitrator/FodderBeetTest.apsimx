@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 311,
+  "ExplorerWidth": 281,
   "Version": 139,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -22,100 +22,87 @@
           "$type": "Models.Report, Models",
           "VariableNames": [
             "[Clock].Today",
+            "[Fertiliser].NitrogenApplied",
             "[FodderBeet].AboveGround.N",
             "[FodderBeet].AboveGround.Wt",
             "[FodderBeet].Arbitrator.TotalDMFixationSupply",
-            "[FodderBeet].Leaf.NodeNumber",
-            "[FodderBeet].Leaf.DeltaLAI",
-            "[FodderBeet].Leaf.Carbon.DMDemand",
-            "//[FodderBeet].Leaf.AppearedCohortNo",
-            "//[FodderBeet].Leaf.CohortParameters.MaxArea",
             "[FodderBeet].Leaf.Canopy.CoverDead",
             "[FodderBeet].Leaf.Canopy.CoverGreen",
             "[FodderBeet].Leaf.Canopy.CoverTotal",
+            "[FodderBeet].Leaf.Canopy.Fw",
+            "[FodderBeet].Leaf.Canopy.Height",
+            "[FodderBeet].Leaf.Canopy.LAI",
+            "[FodderBeet].Leaf.Canopy.Transpiration",
+            "[FodderBeet].Leaf.Carbon.DMDemand",
+            "[FodderBeet].Leaf.Carbon.Photosynthesis.RadnInt",
+            "[FodderBeet].Leaf.CriticalNConc",
             "[FodderBeet].Leaf.Dead.MetabolicN",
-            "[FodderBeet].Leaf.Dead.StorageN",
-            "[FodderBeet].Leaf.Dead.StructuralN",
             "[FodderBeet].Leaf.Dead.N",
             "[FodderBeet].Leaf.Dead.NConc",
+            "[FodderBeet].Leaf.Dead.StorageN",
+            "[FodderBeet].Leaf.Dead.StructuralN",
             "[FodderBeet].Leaf.Dead.Wt",
-            "[FodderBeet].TotalDead.Wt",
-            "//[FodderBeet].Leaf.DeadCohortNo",
-            "//[FodderBeet].Leaf.ExpandedCohortNo",
-            "[FodderBeet].Leaf.Canopy.Fw",
+            "[FodderBeet].Leaf.DeltaLAI",
             "[FodderBeet].Leaf.Fn",
             "[FodderBeet].Leaf.FNmetabolic",
-            "[FodderBeet].Leaf.Canopy.Height",
-            "//[FodderBeet].Leaf.InitialisedCohortNo",
-            "[FodderBeet].Leaf.Canopy.LAI",
             "[FodderBeet].Leaf.Live.N",
             "[FodderBeet].Leaf.Live.NConc",
             "[FodderBeet].Leaf.Live.Wt",
-            "[FodderBeet].Leaf.Carbon.Photosynthesis.RadnInt",
             "[FodderBeet].Leaf.MaximumNConc",
             "[FodderBeet].Leaf.MinimumNConc",
-            "[FodderBeet].Leaf.CriticalNConc",
-            "//[FodderBeet].Leaf.Photosynthesis.RUEact",
-            "//[FodderBeet].Leaf.PlantAppearedGreenLeafNo",
-            "//[FodderBeet].Leaf.PlantsenescedLeafNo",
-            "//[FodderBeet].Leaf.SenescingCohortNo",
+            "[FodderBeet].Leaf.NodeNumber",
             "[FodderBeet].Leaf.SpecificArea",
-            "[FodderBeet].Leaf.Canopy.Transpiration",
+            "[FodderBeet].Petiole.CriticalNConc",
+            "[FodderBeet].Petiole.Dead.NConc",
+            "[FodderBeet].Petiole.Live.N",
             "[FodderBeet].Petiole.Live.NConc",
             "[FodderBeet].Petiole.Live.Wt",
-            "[FodderBeet].Petiole.Live.N",
-            "[FodderBeet].Petiole.Dead.NConc",
-            "[FodderBeet].Petiole.NConc",
             "[FodderBeet].Petiole.MaximumNConc",
             "[FodderBeet].Petiole.MinimumNConc",
-            "[FodderBeet].Petiole.CriticalNConc",
+            "[FodderBeet].Petiole.NConc",
             "[FodderBeet].Phenology.AccumulatedThermalTime",
             "[FodderBeet].Phenology.CurrentPhase.Name",
             "[FodderBeet].Phenology.CurrentStageName",
             "[FodderBeet].Phenology.Photoperiod",
             "[FodderBeet].Phenology.Stage",
             "[FodderBeet].Phenology.ThermalTime",
-            "//[FodderBeet].Root.Depth",
+            "[FodderBeet].Root.CriticalNConc",
             "[FodderBeet].Root.Live.N",
             "[FodderBeet].Root.Live.NConc",
-            "[FodderBeet].Root.N",
-            "[FodderBeet].Root.Nconc",
-            "[FodderBeet].Root.RootFunction.WaterUptake",
             "[FodderBeet].Root.Live.Wt",
             "[FodderBeet].Root.MaximumNConc",
             "[FodderBeet].Root.MinimumNConc",
-            "[FodderBeet].Root.CriticalNConc",
+            "[FodderBeet].Root.N",
+            "[FodderBeet].Root.Nconc",
+            "[FodderBeet].Root.Network.Depth",
+            "[FodderBeet].Root.Network.WaterUptake",
+            "[FodderBeet].SCS",
             "[FodderBeet].SowingData.Cultivar",
+            "[FodderBeet].StorageRoot.CriticalNConc",
+            "[FodderBeet].StorageRoot.Live.N",
             "[FodderBeet].StorageRoot.Live.NConc",
             "[FodderBeet].StorageRoot.Live.Wt",
-            "[FodderBeet].StorageRoot.Live.N",
-            "[FodderBeet].StorageRoot.NConc",
-            "[FodderBeet].StorageRoot.Wt",
             "[FodderBeet].StorageRoot.MaximumNConc",
             "[FodderBeet].StorageRoot.MinimumNConc",
-            "[FodderBeet].StorageRoot.CriticalNConc",
-            "//[FodderBeet].Structure.Height",
-            "//[FodderBeet].Structure.LeafTipsAppeared",
-            "//[FodderBeet].Structure.MainStemPopn",
-            "//[FodderBeet].Structure.TotalStemPopn",
+            "[FodderBeet].StorageRoot.NConc",
+            "[FodderBeet].StorageRoot.Wt",
             "[FodderBeet].Total.N",
             "[FodderBeet].Total.NConc",
             "[FodderBeet].Total.Wt",
             "[FodderBeet].TotalDead.N",
             "[FodderBeet].TotalDead.NConc",
-            "[FodderBeet].SCS",
+            "[FodderBeet].TotalDead.Wt",
+            "[Irrigation].IrrigationApplied",
             "[Phenology].Photoperiod",
+            "[Soil].SoilWater.LeachNO3",
             "[Soil].SoilWater.SW",
             "[Soil].SoilWater.SWmm",
             "[SurfaceOrganicMatter].Wt",
             "[Weather].MeanT",
-            "sum([Soil].SoilNitrogen.NO3.kgha) as TotalSoilNitrogen",
-            "sum([Soil].SoilWater.SWmm) as ProfileWater",
-            "sum([Soil].SoilNitrogen.mineral_n) as ProfileN",
-            "[Soil].SoilWater.LeachNO3",
             "[Weather].Rain",
-            "[Irrigation].IrrigationApplied",
-            "[Fertiliser].NitrogenApplied"
+            "sum([Soil].SoilNitrogen.mineral_n) as ProfileN",
+            "sum([Soil].SoilNitrogen.NO3.kgha) as TotalSoilNitrogen",
+            "sum([Soil].SoilWater.SWmm) as ProfileWater"
           ],
           "EventNames": [
             "[Clock].DoReport"
@@ -138,6 +125,7 @@
           "Children": [
             {
               "$type": "Models.PMF.BiomassArbitrator, Models",
+              "Organs": [],
               "Name": "Arbitrator",
               "Children": [
                 {
@@ -150,6 +138,14 @@
                   "ReadOnly": false
                 }
               ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.RootUptakesArbitrator, Models",
+              "Name": "RootUptakesArbitrator",
+              "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
@@ -662,41 +658,6 @@
               "Children": [
                 {
                   "$type": "Models.PMF.Organs.CarbonArbitrationAgent, Models",
-                  "DMSupply": {
-                    "$type": "Models.PMF.Interfaces.BiomassSupplyType, Models",
-                    "Fixation": 0.0,
-                    "Reallocation": 0.0,
-                    "Uptake": 0.0,
-                    "Retranslocation": 0.0
-                  },
-                  "DMDemand": {
-                    "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "QStructuralPriority": 0.0,
-                    "QStoragePriority": 0.0,
-                    "QMetabolicPriority": 0.0,
-                    "Name": "BiomassPoolType",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "potentialDMAllocation": {
-                    "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "QStructuralPriority": 0.0,
-                    "QStoragePriority": 0.0,
-                    "QMetabolicPriority": 0.0,
-                    "Name": "BiomassPoolType",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
                   "Name": "Carbon",
                   "Children": [
                     {
@@ -1444,41 +1405,6 @@
               "Children": [
                 {
                   "$type": "Models.PMF.Organs.CarbonArbitrationAgent, Models",
-                  "DMSupply": {
-                    "$type": "Models.PMF.Interfaces.BiomassSupplyType, Models",
-                    "Fixation": 0.0,
-                    "Reallocation": 0.0,
-                    "Uptake": 0.0,
-                    "Retranslocation": 0.0
-                  },
-                  "DMDemand": {
-                    "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "QStructuralPriority": 0.0,
-                    "QStoragePriority": 0.0,
-                    "QMetabolicPriority": 0.0,
-                    "Name": "BiomassPoolType",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "potentialDMAllocation": {
-                    "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "QStructuralPriority": 0.0,
-                    "QStoragePriority": 0.0,
-                    "QMetabolicPriority": 0.0,
-                    "Name": "BiomassPoolType",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
                   "Name": "Carbon",
                   "Children": [
                     {
@@ -3133,41 +3059,6 @@
                 },
                 {
                   "$type": "Models.PMF.Organs.CarbonArbitrationAgent, Models",
-                  "DMSupply": {
-                    "$type": "Models.PMF.Interfaces.BiomassSupplyType, Models",
-                    "Fixation": 0.0,
-                    "Reallocation": 0.0,
-                    "Uptake": 0.0,
-                    "Retranslocation": 0.0
-                  },
-                  "DMDemand": {
-                    "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "QStructuralPriority": 0.0,
-                    "QStoragePriority": 0.0,
-                    "QMetabolicPriority": 0.0,
-                    "Name": "BiomassPoolType",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "potentialDMAllocation": {
-                    "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "QStructuralPriority": 0.0,
-                    "QStoragePriority": 0.0,
-                    "QMetabolicPriority": 0.0,
-                    "Name": "BiomassPoolType",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
                   "Name": "Carbon",
                   "Children": [
                     {
@@ -3756,7 +3647,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
+                      "FixedValue": 5.0,
                       "Units": "g/m^2",
                       "Name": "Structural",
                       "Children": [],
@@ -3791,41 +3682,6 @@
                 },
                 {
                   "$type": "Models.PMF.Organs.CarbonArbitrationAgent, Models",
-                  "DMSupply": {
-                    "$type": "Models.PMF.Interfaces.BiomassSupplyType, Models",
-                    "Fixation": 0.0,
-                    "Reallocation": 0.0,
-                    "Uptake": 0.0,
-                    "Retranslocation": 0.0
-                  },
-                  "DMDemand": {
-                    "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "QStructuralPriority": 0.0,
-                    "QStoragePriority": 0.0,
-                    "QMetabolicPriority": 0.0,
-                    "Name": "BiomassPoolType",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "potentialDMAllocation": {
-                    "$type": "Models.PMF.Interfaces.BiomassPoolType, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "QStructuralPriority": 0.0,
-                    "QStoragePriority": 0.0,
-                    "QMetabolicPriority": 0.0,
-                    "Name": "BiomassPoolType",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
                   "Name": "Carbon",
                   "Children": [
                     {
@@ -4157,6 +4013,226 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.PMF.Organs.RootNetwork, Models",
+                  "Name": "Network",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.RootShape.RootShapeCylinder, Models",
+                      "Name": "RootShape",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "KLModifier",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            1.0
+                          ],
+                          "Y": [
+                            1.0,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Root].Network.LengthDensity",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "SoilWaterEffect",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1400.0,
+                      "Units": null,
+                      "Name": "MaximumRootDepth",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.PhaseLookup, Models",
+                      "Name": "RootFrontVelocity",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "Germination",
+                          "End": "StartBolting",
+                          "Name": "PhaseLookupValue",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 10.0,
+                              "Units": null,
+                              "Name": "Constant",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.02,
+                      "Units": "g/plant",
+                      "Name": "KNO3",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.01,
+                      "Units": "g/plant",
+                      "Name": "KNH4",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "NUptakeSWFactor",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.1,
+                            1.0
+                          ],
+                          "Y": [
+                            0.0,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Root].Network.RWC",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 40.0,
+                      "Units": "m/g",
+                      "Name": "SpecificRootLength",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "MaxDailyNUptake",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            100.0,
+                            150.0
+                          ],
+                          "Y": [
+                            0.1,
+                            1.0,
+                            6.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Early growth N uptake is assumed to be 0.1 kg N/ha/day, and this increases with root growth reaching a maximumof 5.8 kg N/ha/day. The maximum N uptake per day is assumed from sugar beet data (Armstrong et al., 1986).",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Root].Network.Depth",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "RootDepthStressFactor",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
                   "Name": "MaximumNConc",
                   "Children": [
@@ -4391,226 +4467,6 @@
                   "$type": "Models.PMF.RetranslocateNonStructural, Models",
                   "Name": "RetranslocateNitrogen",
                   "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Organs.RootFunction, Models",
-                  "Name": "RootFunction",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.RootShape.RootShapeCylinder, Models",
-                      "Name": "RootShape",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "KLModifier",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            1.0
-                          ],
-                          "Y": [
-                            1.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].RootFunction.LengthDensity",
-                          "Name": "XValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "SoilWaterEffect",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1400.0,
-                      "Units": null,
-                      "Name": "MaximumRootDepth",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.PhaseLookup, Models",
-                      "Name": "RootFrontVelocity",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Germination",
-                          "End": "StartBolting",
-                          "Name": "PhaseLookupValue",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 10.0,
-                              "Units": null,
-                              "Name": "Constant",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.02,
-                      "Units": "g/plant",
-                      "Name": "KNO3",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.01,
-                      "Units": "g/plant",
-                      "Name": "KNH4",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "NUptakeSWFactor",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.1,
-                            1.0
-                          ],
-                          "Y": [
-                            0.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].RootFunction.RWC",
-                          "Name": "XValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 40.0,
-                      "Units": "m/g",
-                      "Name": "SpecificRootLength",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "MaxDailyNUptake",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            100.0,
-                            150.0
-                          ],
-                          "Y": [
-                            0.1,
-                            1.0,
-                            6.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Early growth N uptake is assumed to be 0.1 kg N/ha/day, and this increases with root growth reaching a maximumof 5.8 kg N/ha/day. The maximum N uptake per day is assumed from sugar beet data (Armstrong et al., 1986).",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].RootFunction.Depth",
-                          "Name": "XValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "RootDepthStressFactor",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -7156,44 +7012,6 @@
                       "VariableNames": [
                         "[Clock].Today",
                         "[Weather].MeanT",
-                        "[Weather].Radn",
-                        "[Weather].Rain",
-                        "[Irrigation].IrrigationApplied",
-                        "[FodderBeet].Leaf.Canopy.Fw",
-                        "//[MicroClimate].PrecipitationInterception as Interception",
-                        "[Soil].SoilWater.Es as Evaporation",
-                        "[Soil].SoilWater.Drainage as Drainage",
-                        "[Soil].SoilWater.Runoff as Runoff",
-                        "sum([Soil].SoilWater.SWmm) as TotalSoilWater",
-                        "",
-                        "sum([Soil].SoilNitrogen.MineralisedN) as MineralisedN",
-                        "[Fertiliser].NitrogenApplied as FertiliserN",
-                        "sum([Soil].SoilNitrogen.Denitrification) as DenitrifiedN",
-                        "([Soil].SoilWater.LeachUrea+[Soil].SoilWater.LeachNH4+[Soil].SoilWater.LeachNO3) as NLeached",
-                        "[SurfaceOrganicMatter].N as TotalSurfOMN",
-                        "sum([Soil].SoilNitrogen.FOMN) as TotalFOMN",
-                        "sum([Soil].SoilNitrogen.MicrobialN) as TotalMicrobialN",
-                        "sum([Soil].SoilNitrogen.HumicN) as TotalHumicN",
-                        "(sum([Soil].SoilNitrogen.NH4.kgha) + sum([Soil].SoilNitrogen.NO3.kgha)) as TotalSoilN",
-                        "sum([Soil].SoilNitrogen.Urea.kgha) as TotalUrea",
-                        "sum([Soil].SoilNitrogen.NH4.kgha) as TotalNH4",
-                        "sum([Soil].SoilNitrogen.NO3.kgha) as TotalNO3"
-                      ],
-                      "EventNames": [
-                        "[Clock].DoReport"
-                      ],
-                      "GroupByVariableName": null,
-                      "Name": "EnviroReport",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Report, Models",
-                      "VariableNames": [
-                        "[Clock].Today",
-                        "[Weather].MeanT",
                         "[Soil].SoilWater.SW",
                         "[Soil].SoilWater.SWmm",
                         "sum([Soil].SoilWater.SWmm) as ProfileWater",
@@ -7352,7 +7170,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.Leaf.LAI",
+                      "YFieldName": "FodderBeet.Leaf.Canopy.LAI",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -7643,7 +7461,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.Leaf.CoverGreen",
+                      "YFieldName": "FodderBeet.Leaf.Canopy.CoverGreen",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -11900,6 +11718,74 @@
                     }
                   ],
                   "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 3,
+                  "LegendOrientation": 1,
+                  "AnnotationPosition": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "RootDepth",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -16777216,
+                      "FactorToVaryColours": "Nit",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": "Irr",
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Clock.Today",
+                      "YFieldName": "FodderBeet.Root.RootFunction.Depth",
+                      "X2FieldName": "",
+                      "Y2FieldName": "",
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": true,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Pred",
+                      "Children": [],
+                      "IncludeInDocumentation": false,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }

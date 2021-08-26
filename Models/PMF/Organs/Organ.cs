@@ -33,6 +33,15 @@
             }
         }
 
+        /// <summary> The canopy object </summary>
+        public IHasWaterDemand CanopyObjects
+        {
+            get
+            {
+                return this.FindChild<IHasWaterDemand>();
+            }
+        }
+
         /// <summary>The parent plant</summary>
         [Link]
         private Plant parentPlant = null;
@@ -255,12 +264,10 @@
             Senesced = new Biomass();
             Detached = new Biomass();
             Removed = new Biomass();
-            
-            List<IAmANutrientArbitrationAgent> nutrientsToArbitrate = new List<IAmANutrientArbitrationAgent>();
-            foreach (IAmANutrientArbitrationAgent nutrient in this.FindAllChildren<IAmANutrientArbitrationAgent>())
-                nutrientsToArbitrate.Add(nutrient);
-            Nutrients = nutrientsToArbitrate;
-            Carbon = new CarbonArbitrationAgent();
+
+            Carbon.Clear();
+            foreach (IAmANutrientArbitrationAgent n in Nutrients)
+                n.Clear();
         }
 
         /// <summary>Clears the transferring biomass amounts.</summary>
@@ -278,6 +285,12 @@
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
+            List<IAmANutrientArbitrationAgent> nutrientsToArbitrate = new List<IAmANutrientArbitrationAgent>();
+            foreach (IAmANutrientArbitrationAgent nutrient in this.FindAllChildren<IAmANutrientArbitrationAgent>())
+                nutrientsToArbitrate.Add(nutrient);
+            Nutrients = nutrientsToArbitrate;
+            Carbon = this.FindChild<IAmTheOrgansCarbonArbitrationAgent>();
+
             Clear();
         }
 
@@ -306,6 +319,7 @@
                 Live.StorageWt = InitialWt.Storage.Value();
                 Live.StructuralN = Live.StructuralWt * initialNConcFunction.Value();
                 Live.StorageN = Live.StorageWt * initialNConcFunction.Value();
+
             }
         }
 
