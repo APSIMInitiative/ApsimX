@@ -19,7 +19,7 @@
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
 
-    public class Organ : Model, IOrgan, ISubscribeToBiomassArbitration, ICustomDocumentation, IOrganDamage
+    public class Organ : Model, IAmOrganHearMeRoar, ICustomDocumentation, IOrganDamage
     {
         ///1. Links
         ///--------------------------------------------------------------------------------------------------
@@ -105,11 +105,17 @@
         {
             Live = new Biomass();
             Dead = new Biomass();
+            Carbon = new Element();
+            Nitrogen = new Element();
         }
 
         ///4. Public Events And Enums
         /// -------------------------------------------------------------------------------------------------
         /// <summary> The organs uptake object if it has one</summary>
+        ///         
+        ///5. Public Properties
+        /// --------------------------------------------------------------------------------------------------
+        
         public IWaterNitrogenUptake WaterNitrogenUptakeObject
         {
             get
@@ -126,14 +132,12 @@
                 return this.FindChild<IHasWaterDemand>();
             }
         }
-        
-        ///5. Public Properties
-        /// --------------------------------------------------------------------------------------------------
-        /// <summary>The list of nurtients to arbitration</summary>
-        public List<IAmANutrientArbitrationAgent> Nutrients { get; private set; }
 
-        /// <summary> The Carbon arbitraion</summary>
-        public IAmTheOrgansCarbonArbitrationAgent Carbon { get; private set; }
+        /// <summary>The list of nurtients to arbitration</summary>
+        public Element Carbon { get; set; }
+
+        /// <summary>The list of nurtients to arbitration</summary>
+        public Element Nitrogen { get; set; }
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         [Description("Is organ above ground?")]
@@ -284,8 +288,7 @@
             Removed = new Biomass();
 
             Carbon.Clear();
-            foreach (IAmANutrientArbitrationAgent n in Nutrients)
-                n.Clear();
+            Nitrogen.Clear();
         }
 
         /// <summary>Clears the transferring biomass amounts.</summary>
@@ -303,12 +306,6 @@
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            List<IAmANutrientArbitrationAgent> nutrientsToArbitrate = new List<IAmANutrientArbitrationAgent>();
-            foreach (IAmANutrientArbitrationAgent nutrient in this.FindAllChildren<IAmANutrientArbitrationAgent>())
-                nutrientsToArbitrate.Add(nutrient);
-            Nutrients = nutrientsToArbitrate;
-            Carbon = this.FindChild<IAmTheOrgansCarbonArbitrationAgent>();
-
             Clear();
         }
 

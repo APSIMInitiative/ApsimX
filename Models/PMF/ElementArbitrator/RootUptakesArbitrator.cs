@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Models.PMF.Organs;
 
 namespace Models.PMF
 {
@@ -194,8 +195,8 @@ namespace Models.PMF
             {
                 double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
-                for (int i = 0; i < biomassArbitrator.Organs.Count(); i++)
-                    biomassArbitrator.N.Uptake.Supply[i] = 0;
+                foreach (Organ o in biomassArbitrator.Organs)
+                    o.Nitrogen.Deltas.Supplies.Uptake = 0;
 
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
@@ -207,24 +208,24 @@ namespace Models.PMF
                     UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
 
                     //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
-                    for (int i = 0; i < biomassArbitrator.Organs.Count(); i++)
+                    foreach (Organ o in biomassArbitrator.Organs)
                     {
-                        if (biomassArbitrator.Organs[i].WaterNitrogenUptakeObject != null)
+                        if (o.WaterNitrogenUptakeObject != null)
                         {
                             double[] organNO3Supply = new double[zone.NO3N.Length];
                             double[] organNH4Supply = new double[zone.NH4N.Length];
-                            biomassArbitrator.Organs[i].WaterNitrogenUptakeObject.CalculateNitrogenSupply(zone, ref organNO3Supply, ref organNH4Supply);
+                            o.WaterNitrogenUptakeObject.CalculateNitrogenSupply(zone, ref organNO3Supply, ref organNH4Supply);
                             UptakeDemands.NO3N = MathUtilities.Add(UptakeDemands.NO3N, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
                             UptakeDemands.NH4N = MathUtilities.Add(UptakeDemands.NH4N, organNH4Supply);
                             double organSupply = organNH4Supply.Sum() + organNO3Supply.Sum();
-                            biomassArbitrator.N.Uptake.Supply[i] += organSupply * kgha2gsm * zone.Zone.Area / this.zone.Area;
+                            o.Nitrogen.Deltas.Supplies.Uptake += organSupply * kgha2gsm * zone.Zone.Area / this.zone.Area;
                             NSupply += organSupply * zone.Zone.Area;
                         }
                     }
                     zones.Add(UptakeDemands);
                 }
 
-                double NDemand = (biomassArbitrator.N.TotalPlantDemand - biomassArbitrator.N.ReAllocation.TotalAllocated) / kgha2gsm * zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
+                double NDemand = (biomassArbitrator.Nitrogen.TotalPlantDemand - biomassArbitrator.Nitrogen.TotalPlantDemandsAllocated) / kgha2gsm * zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
                 if (NDemand < 0) NDemand = 0;  //NSupply should be zero if Reallocation can meet all demand (including small rounding errors which can make this -ve)
 
                 if (NSupply > NDemand)
@@ -256,18 +257,15 @@ namespace Models.PMF
 
                 //Reset actual uptakes to each organ based on uptake allocated by soil arbitrator and the organs proportion of potential uptake
                 //NUptakeSupply units should be g/m^2
-                for (int i = 0; i < biomassArbitrator.Organs.Count(); i++)
-                    biomassArbitrator.N.Uptake.Supply[i] = NSupply / zone.Area * MathUtilities.Divide(biomassArbitrator.N.Uptake.Supply[i], 
-                                                                                                      biomassArbitrator.N.Uptake.TotalSupply, 0) * kgha2gsm;
-                //Allocate N that the SoilArbitrator has allocated the plant to each organ
-                biomassArbitrator.DoAllocation(biomassArbitrator.N.Uptake, biomassArbitrator.N);
-                int count = 0;
-                foreach (IWaterNitrogenUptake u in plant.FindAllChildren<IWaterNitrogenUptake>())
+                biomassArbitrator.AllocateNUptake(NSupply * kgha2gsm);
+
+                IWaterNitrogenUptake u = plant.FindChild<IWaterNitrogenUptake>();
                 {
-                    if (count > 0)
-                        throw new Exception("Two organs have IWaterNitrogenUptake");
+                   // Note: This does the actual nitrogen extraction from the soil.
+                   // If there are multiple organs with IWaterNitorgenUptake it will send all the N uptake through the first 
+                   // This seems wrong at first uptakes and allocations from each organ have been accounted for, this is just
+                   // setting the delta in the soil
                     u.DoNitrogenUptake(zones);
-                    count += 1;
                 }
             }
         }
