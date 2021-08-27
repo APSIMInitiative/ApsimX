@@ -805,15 +805,6 @@
               "Name": "Cone",
               "Children": [
                 {
-                  "$type": "Models.Memo, Models",
-                  "Text": "For many of the parameters in this organ, see comments for similar parameters in the Leaf organ.  \r\n\r\n",
-                  "Name": "Memo",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
                   "Units": "/d",
@@ -1033,15 +1024,6 @@
                   "Name": "DMDemands",
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "DM or N demands here are set in a similar way to those described above for the Leaf organ.  \r\n\r\n",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Structural",
                       "Children": [
@@ -1195,15 +1177,6 @@
                   "$type": "Models.PMF.BiomassDemandAndPriority, Models",
                   "Name": "NDemands",
                   "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "DM or N demands here are set in a similar way to those described above for the Leaf organ.  \r\n\r\n",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Structural",
@@ -2900,15 +2873,6 @@
               "Name": "Branch",
               "Children": [
                 {
-                  "$type": "Models.Memo, Models",
-                  "Text": "For many of the parameters in this organ, see comments for similar parameters in the Leaf organ.  \r\n\r\n",
-                  "Name": "Memo",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
                   "Units": "/d",
@@ -3119,15 +3083,6 @@
                   "$type": "Models.PMF.BiomassDemandAndPriority, Models",
                   "Name": "DMDemands",
                   "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "DM or N demands here are set in a similar way to those described above for the Leaf organ.  \r\n\r\n",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Structural",
@@ -3508,15 +3463,6 @@
               "Name": "Stem",
               "Children": [
                 {
-                  "$type": "Models.Memo, Models",
-                  "Text": "For many of the parameters in this organ, see comments for similar parameters in the Leaf organ.  \r\n\r\n",
-                  "Name": "Memo",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.PMF.BiomassDemand, Models",
                   "Name": "InitialWt",
                   "Children": [
@@ -3840,15 +3786,6 @@
                   "Name": "DMDemands",
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "DM or N demands here are set in a similar way to those described above for the Leaf organ.  \r\n\r\n",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Structural",
                       "Children": [
@@ -4007,15 +3944,6 @@
                   "Name": "NDemands",
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "DM or N demands here are set in a similar way to those described above for the Leaf organ.  \r\n\r\n",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Structural",
                       "Children": [
@@ -4151,7 +4079,7 @@
                 },
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Stem metrics useful for plantation forestry derive here from stem weight using an allometric relationship with stem diameter at breast height (DBH over bark). Basal area (BA, sum of areas of stems in m2 per ha) and stem height (Ht) depends on DBH, and volume (Vol over bark) is provide (g per ha) as a function of both Ht and BA. However, underbark metrics are also required, which necessitated the division of stem weight and volume into wood and bark components using, the voluime component of which depends on bark thickness. All these functions are empirical and calibrated to provide adequate model skill. Finally, wood and bark densities are calculated. Tree stems are not exactly conical, and bark thickness and wood and bark densities vary radially and with height up the stem, with age, and between trees due to inter-tree competition and growth rate.  \n     \r\n\r\n",
+                  "Text": "Stem metrics useful for plantation forestry are derive here from stem weight using an allometric relationship with stem diameter at breast height (DBH over bark). Basal area (BA, sum of areas of stems in m2 per ha) and stem height (Ht) depends on DBH, and volume (Vol over bark) is provide (g per ha) as a function of both Ht and BA. However, underbark metrics were also required, which necessitated the division of stem weight and volume into wood and bark components using, the volume component, which depends on bark thickness. All these functions are empirical and calibrated to provide adequate model skill. Finally, wood and bark densities are calculated. Tree stems are not exactly conical, and bark thickness and wood and bark densities vary radially and with height up the stem, with age, and between trees due to inter-tree competition and growth rate. All parameters, and even functions, can be redefined within genotype (cultivar) settings. \n     \r\n\r\n",
                   "Name": "Memo1",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4195,17 +4123,7 @@
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Expression": "-3.24438+(0.824527*[Pinus].IndividualTreeStemWt^0.302565)",
                       "Name": "DBHEquation",
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Stem volume is calculated as concical volume with the base of the cone the same diameter as at breast height (1.3 m height). Units are m3 stem/ha.\r\n\r\n",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -4338,17 +4256,7 @@
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Expression": "[Pinus].Stem.DBH-[Pinus].Stem.BarkThickness*2",
                       "Name": "DBHEquation",
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Stem volume is calculated as concical volume with the base of the cone the same diameter as at breast height (1.3 m height). Units are m3 stem/ha.\r\n\r\n",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -4441,17 +4349,7 @@
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Expression": "[Pinus].Stem.Ht*[Pinus].Stem.BA*(0.942*(([Pinus].Stem.Ht-1.4)^-1.161)+0.317)",
                       "Name": "VolumeEquation",
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Stem volume is calculated as concical volume with the base of the cone the same diameter as at breast height (1.3 m height). Units are m3 stem/ha.\r\n\r\n",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -4677,17 +4575,7 @@
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Expression": "[Pinus].Stem.BarkWt*10/[Pinus].Stem.VolBark",
                       "Name": "WoodDensity",
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Stem volume is calculated as concical volume with the base of the cone the same diameter as at breast height (1.3 m height). Units are m3 stem/ha.\r\n\r\n",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -4734,17 +4622,7 @@
                       "$type": "Models.Functions.ExpressionFunction, Models",
                       "Expression": "[Pinus].Stem.WoodWt*10/[Pinus].Stem.Volub",
                       "Name": "WoodDensity",
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Stem volume is calculated as concical volume with the base of the cone the same diameter as at breast height (1.3 m height). Units are m3 stem/ha.\r\n\r\n",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -4770,15 +4648,6 @@
               "IsAboveGround": true,
               "Name": "CoarseRoot",
               "Children": [
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "For many of the parameters in this organ, see comments for similar parameters in the Leaf organ.  \r\n\r\n",
-                  "Name": "Memo",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
@@ -4991,15 +4860,6 @@
                   "Name": "DMDemands",
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "DM or N demands here are set in a similar way to those described above for the Leaf organ.  \r\n\r\n",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Structural",
                       "Children": [
@@ -5151,15 +5011,6 @@
                   "$type": "Models.PMF.BiomassDemandAndPriority, Models",
                   "Name": "NDemands",
                   "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "DM or N demands here are set in a similar way to those described above for the Leaf organ.  \r\n\r\n",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Structural",
@@ -5376,15 +5227,6 @@
               "MaintenanceRespiration": 0.0,
               "Name": "FineRoot",
               "Children": [
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "For many of the parameters in this organ, see comments for similar parameters in the Leaf organ.  \r\n\r\n",
-                  "Name": "Memo",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.Functions.RootShape.RootShapeCylinder, Models",
                   "Name": "RootShape",
@@ -5680,15 +5522,6 @@
                   "Name": "DMDemands",
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "DM or N demands here are set in a similar way to those described above for the Leaf organ.  \r\n\r\n",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Structural",
                       "Children": [
@@ -5812,15 +5645,6 @@
                   "$type": "Models.PMF.BiomassDemandAndPriority, Models",
                   "Name": "NDemands",
                   "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "DM or N demands here are set in a similar way to those described above for the Leaf organ.  \r\n\r\n",
-                      "Name": "Memo",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
                     {
                       "$type": "Models.Functions.MultiplyFunction, Models",
                       "Name": "Structural",
@@ -6108,7 +5932,17 @@
                     "[Stem].BarkThickness.BarkThickness.XYPairs.Y=0,\t.6,\t0.8,\t1,\t1.3,\t1.6,\t1.9,\t2.05,\t2.1"
                   ],
                   "Name": "caribaea",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This cultivar was initially developed for the IMPAC site.  \r\n\r\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6178,7 +6012,17 @@
                     "[Stem].BarkThickness.BarkThickness.XYPairs.Y=0,\t.6,\t0.8,\t1,\t1.3,\t1.4,\t1.5,\t1.6,\t1.7"
                   ],
                   "Name": "elliottii",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This cultivar was initially developed for the IMPAC site.  \r\n\r\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6242,7 +6086,17 @@
                     "[Stem].BarkThickness.BarkThickness.XYPairs.Y=.1,\t.3,\t0.5,\t6,\t.7,\t.8,\t1,\t1.1,\t1.1"
                   ],
                   "Name": "PEE",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This cultivar was initially developed for the a south-east Queensland site.  \r\n\r\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6297,11 +6151,21 @@
                     "",
                     "[Leaf].SpecificLeafAreaFunction.SLAPotential.Expression=0.0063-[Pinus].Leaf.Wt*0.000004",
                     "",
-                    "[Stem].DBH.DBHEquation.Expression=-2.3+(0.82*[Pinus].IndividualTreeStemWt^0.28)",
+                    "[Stem].DBH.DBHEquation.Expression=-1.8+(0.815*[Pinus].IndividualTreeStemWt^0.29)",
                     "[Stem].Ht.HeightFunction.Expression=0.304375+(0.9*[Pinus].Stem.DBH^0.9)+(0*([Pinus].Population*10000)^0.218209)"
                   ],
                   "Name": "elliottiiIMPAC",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This cultivar was initially developed for the IMPAC site.  \r\n\r\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6365,7 +6229,17 @@
                     "[Stem].BarkThickness.BarkThickness.XYPairs.Y=.1,\t.3,\t0.5,\t.6,\t.7,\t1.1,\t1.46,\t1.5,\t1.5"
                   ],
                   "Name": "elliottiiQLD",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This cultivar was initially developed for the a south-east Queensland site.  \r\n\r\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6438,7 +6312,17 @@
                     "[Stem].BarkThickness.BarkThickness.XYPairs.Y=0,\t.6,\t0.8,\t1,\t1.3,\t1.4,\t1.6,\t1.9,\t1.9"
                   ],
                   "Name": "elliottiiXcaribaeaF1",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This cultivar was initially developed for the a south-east Queensland site.  \r\n\r\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6511,7 +6395,17 @@
                     "[Stem].BarkThickness.BarkThickness.XYPairs.Y=0,\t.6,\t0.8,\t1,\t1.3,\t1.4,\t1.6,\t1.8,\t1.8"
                   ],
                   "Name": "elliottiiXcaribaeaF2",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This cultivar was initially developed for the a south-east Queensland site.  \r\n\r\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6579,7 +6473,17 @@
                     "[Stem].DBH.DBHEquation.Expression=-1.5+(0.76*[Pinus].IndividualTreeStemWt^0.3)"
                   ],
                   "Name": "BFG",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This cultivar was initially developed for the BFG site.  \r\n\r\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6641,7 +6545,17 @@
                     "[Stem].Volub.Expression=[Pinus].Stem.Vol-[Pinus].Stem.VolBark*0.3"
                   ],
                   "Name": "GF7",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This cultivar was initially developed for the Puruki site.  \r\n\r\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6700,7 +6614,17 @@
                     "[Stem].DBH.DBHEquation.Expression=-1.5+(0.76*[Pinus].IndividualTreeStemWt^0.298)"
                   ],
                   "Name": "TowerHill",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This cultivar was initially developed for the TowerHill site.  \r\n\r\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6767,7 +6691,17 @@
                     "[Stem].Ht.HeightFunction.Expression=0.304375+(0.245023*[Pinus].Stem.DBH^1.2668)+(0.211611*([Pinus].Population*10000)^0.218209)"
                   ],
                   "Name": "taeda",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This cultivar was initially developed for the SETRES sites.  \r\n\r\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -6825,7 +6759,17 @@
                     "[Stem].Ht.HeightFunction.Expression=0.304375+(0.8*[Pinus].Stem.DBH^1.1)+(0*([Pinus].Population*10000)^0.218209)"
                   ],
                   "Name": "taedaIMPAC",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "This cultivar was initially developed for the IMPAC site.  \r\n\r\n",
+                      "Name": "Memo",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
