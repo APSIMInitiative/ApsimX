@@ -271,8 +271,8 @@
         [EventSubscribe("SetDMSupply")]
         protected virtual void SetDMSupply(object sender, EventArgs e)
         {
-            DMSupply.Reallocation = AvailableDMReallocation();
-            DMSupply.Retranslocation = AvailableDMRetranslocation();         
+            DMSupply.ReAllocation = AvailableDMReallocation();
+            DMSupply.ReTranslocation = AvailableDMRetranslocation();         
             DMSupply.Fixation = Photosynthesis.Value();
             DMSupply.Uptake = 0;
         }
@@ -281,12 +281,12 @@
         [EventSubscribe("SetNSupply")]
         protected virtual void SetNSupply(object sender, EventArgs e)
         {
-            NSupply.Reallocation = Math.Max(0, (StartLive.StorageN + StartLive.MetabolicN) * SenescenceRate.Value() * nReallocationFactor.Value());
-            if (NSupply.Reallocation < -BiomassToleranceValue)
+            NSupply.ReAllocation = Math.Max(0, (StartLive.StorageN + StartLive.MetabolicN) * SenescenceRate.Value() * nReallocationFactor.Value());
+            if (NSupply.ReAllocation < -BiomassToleranceValue)
                 throw new Exception("Negative N reallocation value computed for " + Name);
 
-            NSupply.Retranslocation = RetranslocateNitrogen.Calculate(this);
-            if (NSupply.Retranslocation < -BiomassToleranceValue)
+            NSupply.ReTranslocation = RetranslocateNitrogen.Calculate(this);
+            if (NSupply.ReTranslocation < -BiomassToleranceValue)
                 throw new Exception("Negative N retranslocation value computed for " + Name);
 
 

@@ -1506,8 +1506,8 @@ namespace Models.PMF.Organs
             }
 
             DMSupply.Fixation = Photosynthesis.Value();
-            DMSupply.Retranslocation = Retranslocation;
-            DMSupply.Reallocation = Reallocation;
+            DMSupply.ReTranslocation = Retranslocation;
+            DMSupply.ReAllocation = Reallocation;
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
@@ -1521,8 +1521,8 @@ namespace Models.PMF.Organs
                 RetransSupply += Math.Max(0, L.LeafStartNRetranslocationSupply);
                 ReallocationSupply += L.LeafStartNReallocationSupply;
             }
-            NSupply.Retranslocation = RetransSupply;
-            NSupply.Reallocation = ReallocationSupply;
+            NSupply.ReTranslocation = RetransSupply;
+            NSupply.ReAllocation = ReallocationSupply;
         }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
@@ -1730,7 +1730,7 @@ namespace Models.PMF.Organs
             // retranslocation
             double[] DMRetranslocationCohort = new double[Leaves.Count + 2];
 
-            if (value.Retranslocation - DMSupply.Retranslocation > 0.0000000001)
+            if (value.Retranslocation - DMSupply.ReTranslocation > 0.0000000001)
                 throw new Exception(Name + " cannot supply that amount for DM retranslocation");
             if (value.Retranslocation > 0)
             {
@@ -1749,7 +1749,7 @@ namespace Models.PMF.Organs
 
             // Reallocation
             double[] DMReAllocationCohort = new double[Leaves.Count + 2];
-            if (value.Reallocation - DMSupply.Reallocation > 0.000000001)
+            if (value.Reallocation - DMSupply.ReAllocation > 0.000000001)
                 throw new Exception(Name + " cannot supply that amount for DM Reallocation");
             if (value.Reallocation < -0.000000001)
                 throw new Exception(Name + " recieved -ve DM reallocation");
@@ -1869,7 +1869,7 @@ namespace Models.PMF.Organs
             }
 
             // Retranslocation
-            if (nitrogen.Retranslocation - NSupply.Retranslocation > 0.000000001)
+            if (nitrogen.Retranslocation - NSupply.ReTranslocation > 0.000000001)
                 throw new Exception(Name + " cannot supply that amount for N retranslocation");
             if (nitrogen.Retranslocation < -0.000000001)
                 throw new Exception(Name + " recieved -ve N retranslocation");
@@ -1889,7 +1889,7 @@ namespace Models.PMF.Organs
             }
 
             // Reallocation
-            if (nitrogen.Reallocation - NSupply.Reallocation > 0.000000001)
+            if (nitrogen.Reallocation - NSupply.ReAllocation > 0.000000001)
                 throw new Exception(Name + " cannot supply that amount for N Reallocation");
             if (nitrogen.Reallocation < -0.000000001)
                 throw new Exception(Name + " recieved -ve N reallocation");

@@ -370,8 +370,8 @@ namespace Models.PMF.Organs
         private void SetDMSupply(object sender, EventArgs e)
         {
             DMSupply.Fixation = Photosynthesis.Value();
-            DMSupply.Retranslocation = StartLive.StorageWt * DMRetranslocationFactor.Value();
-            DMSupply.Reallocation = 0.0;
+            DMSupply.ReTranslocation = StartLive.StorageWt * DMRetranslocationFactor.Value();
+            DMSupply.ReAllocation = 0.0;
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
@@ -382,8 +382,8 @@ namespace Models.PMF.Organs
             Biomass Senescing = new Biomass();
             GetSenescingLeafBiomass(out Senescing);
 
-            NSupply.Reallocation = Senescing.StorageN * NReallocationFactor.Value();
-            NSupply.Retranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value();
+            NSupply.ReAllocation = Senescing.StorageN * NReallocationFactor.Value();
+            NSupply.ReTranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value();
             NSupply.Uptake = 0.0;        
         }
         
@@ -760,8 +760,8 @@ namespace Models.PMF.Organs
                     L.Age+=LDR;
 
                 StartLive = ReflectionUtilities.Clone(Live) as Biomass;
-                StartNReallocationSupply = NSupply.Reallocation;
-                StartNRetranslocationSupply = NSupply.Retranslocation;
+                StartNReallocationSupply = NSupply.ReAllocation;
+                StartNRetranslocationSupply = NSupply.ReTranslocation;
             }
         }
 

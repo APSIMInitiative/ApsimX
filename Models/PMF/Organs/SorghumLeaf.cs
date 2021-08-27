@@ -1256,8 +1256,8 @@ namespace Models.PMF.Organs
         private void setDMSupply(object sender, EventArgs e)
         {
             //Reallocation usually comes form Storage - which sorghum doesn't utilise
-            DMSupply.Reallocation = 0.0; //availableDMReallocation();
-            DMSupply.Retranslocation = AvailableDMRetranslocation();
+            DMSupply.ReAllocation = 0.0; //availableDMReallocation();
+            DMSupply.ReTranslocation = AvailableDMRetranslocation();
             DMSupply.Uptake = 0;
             DMSupply.Fixation = dMSupplyFixation.Value();
         }
@@ -1274,10 +1274,10 @@ namespace Models.PMF.Organs
 
             var dilutionN = dltTT.Value() * ( NDilutionSlope * slnToday + NDilutionIntercept) * laiToday;
 
-            NSupply.Retranslocation = Math.Max(0, Math.Min(StartLive.N, availableLaiN + dilutionN));
+            NSupply.ReTranslocation = Math.Max(0, Math.Min(StartLive.N, availableLaiN + dilutionN));
 
             //NSupply.Retranslocation = Math.Max(0, (StartLive.StorageN + StartLive.MetabolicN) * (1 - SenescenceRate.Value()) * NRetranslocationFactor.Value());
-            if (NSupply.Retranslocation < -biomassToleranceValue)
+            if (NSupply.ReTranslocation < -biomassToleranceValue)
                 throw new Exception("Negative N retranslocation value computed for " + Name);
 
             NSupply.Fixation = 0;
