@@ -23,7 +23,7 @@
     {
         ///1. Links
         ///--------------------------------------------------------------------------------------------------
-        
+
         /// <summary>The parent plant</summary>
         [Link]
         private Plant parentPlant = null;
@@ -50,11 +50,6 @@
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/plant")]
         public BiomassDemand InitialWt = null;
-
-        /// <summary>The initial N Concentration</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/g")]
-        private IFunction initialNConcFunction = null;
 
         /// <summary>The proportion of biomass respired each day</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -106,7 +101,7 @@
         ///         
         ///5. Public Properties
         /// --------------------------------------------------------------------------------------------------
-        
+
         public IWaterNitrogenUptake WaterNitrogenUptakeObject
         {
             get
@@ -144,7 +139,7 @@
         /// <summary>Gets the total biomass</summary>
         [JsonIgnore]
         public Biomass Total { get { return Live + Dead; } }
-        
+
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
         [JsonIgnore]
         public Biomass Allocated { get; private set; }
@@ -318,9 +313,9 @@
                 Live.StructuralWt = InitialWt.Structural.Value();
                 Live.MetabolicWt = InitialWt.Metabolic.Value();
                 Live.StorageWt = InitialWt.Storage.Value();
-                Live.StructuralN = Live.StructuralWt * initialNConcFunction.Value();
-                Live.StorageN = Live.StorageWt * initialNConcFunction.Value();
-
+                Live.StructuralN = Live.Wt * Nitrogen.Thresholds.Minimum;
+                Live.MetabolicN = Live.Wt * (Nitrogen.Thresholds.Critical - Nitrogen.Thresholds.Minimum);
+                Live.StorageN = Live.Wt * (Nitrogen.Thresholds.Maximum - Nitrogen.Thresholds.Critical);
             }
         }
 
@@ -533,4 +528,5 @@
             }
         }
     }
+
 }

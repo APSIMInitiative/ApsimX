@@ -259,7 +259,7 @@ namespace Models.PMF
                 //NUptakeSupply units should be g/m^2
                 biomassArbitrator.AllocateNUptake(NSupply * kgha2gsm);
 
-                IWaterNitrogenUptake u = plant.FindChild<IWaterNitrogenUptake>();
+                IWaterNitrogenUptake u = plant.FindDescendant<IWaterNitrogenUptake>();
                 {
                    // Note: This does the actual nitrogen extraction from the soil.
                    // If there are multiple organs with IWaterNitorgenUptake it will send all the N uptake through the first 
