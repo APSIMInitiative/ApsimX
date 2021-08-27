@@ -22,7 +22,7 @@ namespace Models.Functions.DemandFunctions
 
         private IArbitration parentOrgan = null;
 
-        private ISubscribeToBiomassArbitration parentSimpleOrgan = null;
+        private IAmOrganHearMeRoar parentSimpleOrgan = null;
 
         private string parentOrganType = "";
  
@@ -44,9 +44,9 @@ namespace Models.Functions.DemandFunctions
                     if (ParentClass is IPlant)
                         throw new Exception(Name + "cannot find parent organ to get Structural and Storage DM status");
                 }
-                if (ParentClass is ISubscribeToBiomassArbitration)
+                if (ParentClass is IAmOrganHearMeRoar)
                 {
-                    parentSimpleOrgan = ParentClass as ISubscribeToBiomassArbitration;
+                    parentSimpleOrgan = ParentClass as IAmOrganHearMeRoar;
                     ParentOrganIdentified = true;
                     parentOrganType = "ISubscribeToBiomassArbitration";
                     if (ParentClass is IPlant)
@@ -68,7 +68,7 @@ namespace Models.Functions.DemandFunctions
             }
             if (parentOrganType == "ISubscribeToBiomassArbitration")
             {
-                double structuralWt = parentSimpleOrgan.Live.StructuralWt + parentSimpleOrgan.Carbon.DMDemand.Structural;
+                double structuralWt = parentSimpleOrgan.Live.StructuralWt + parentSimpleOrgan.Carbon.Deltas.Demands.Structural;
                 double MaximumDM = MathUtilities.Divide(structuralWt, 1 - storageFraction.Value(), 0);
                 double AlreadyAllocated = structuralWt + parentSimpleOrgan.Live.StorageWt;
                 return MaximumDM - AlreadyAllocated;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Models.Functions;
 using Models.PMF.Interfaces;
 using System;
+using Models.PMF.Organs;
 
 namespace Models.PMF
 {
@@ -11,8 +12,7 @@ namespace Models.PMF
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IOrgan))]
-    [ValidParent(ParentType = typeof(IAmTheOrgansCarbonArbitrationAgent))]
-    [ValidParent(ParentType = typeof(IAmANutrientArbitrationAgent))]
+    [ValidParent(ParentType = typeof(Element))]
     public class BiomassDemand : Model, ICustomDocumentation
     {
         /// <summary>The demand for the structural fraction.</summary>
@@ -59,9 +59,7 @@ namespace Models.PMF
     /// This class holds the functions for calculating the absolute demands and priorities for each biomass fraction. 
     /// </summary>
     [Serializable]
-    [ValidParent(ParentType = typeof(IOrgan))]
-    [ValidParent(ParentType = typeof(IAmANutrientArbitrationAgent))]
-    [ValidParent(ParentType = typeof(IAmTheOrgansCarbonArbitrationAgent))]
+    [ValidParent(ParentType = typeof(Element))]
     public class BiomassDemandAndPriority : Model, ICustomDocumentation
     {
         /// <summary>The demand for the structural fraction.</summary>
@@ -123,9 +121,7 @@ namespace Models.PMF
     /// This class holds the functions for calculating the absolute demands for each biomass fraction. 
     /// </summary>
     [Serializable]
-    [ValidParent(ParentType = typeof(IOrgan))]
-    [ValidParent(ParentType = typeof(IAmTheOrgansCarbonArbitrationAgent))]
-    [ValidParent(ParentType = typeof(IAmANutrientArbitrationAgent))]
+    [ValidParent(ParentType = typeof(Element))]
     public class BiomassSupply : Model, ICustomDocumentation
     {
         /// <summary>The supply from reallocaiton from senesed material</summary>
@@ -171,6 +167,28 @@ namespace Models.PMF
                     AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
             }
         }
+    }
+
+
+    /// <summary>Thresholds for nutrient concentrations</summary>
+    [Serializable]
+    [ValidParent(ParentType = typeof(Element))]
+    public class NutrientConcentrationThresholdFunctions : Model
+    {
+        /// <summary>Maximum Nutrient Concentration</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/g")]
+        public IFunction Maximum = null;
+        /// <summary>Critical Nutrient Concentration</summary>
+        /// <summary>Maximum Nutrient Concentration</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/g")]
+        public IFunction Critical = null;
+        /// <summary>Minimum Nutrient Concentration</summary>
+        /// <summary>Maximum Nutrient Concentration</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/g")]
+        public IFunction Minimum = null;
     }
 
 }

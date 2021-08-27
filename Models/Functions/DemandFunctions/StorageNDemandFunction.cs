@@ -26,7 +26,7 @@ namespace Models.Functions.DemandFunctions
 
         private IArbitration parentOrgan = null;
 
-        private ISubscribeToBiomassArbitration parentSimpleOrgan = null;
+        private IAmOrganHearMeRoar parentSimpleOrgan = null;
 
         private string parentOrganType = "";
 
@@ -48,9 +48,9 @@ namespace Models.Functions.DemandFunctions
                     if (ParentClass is IPlant)
                         throw new Exception(Name + "cannot find parent organ to get Structural and Storage N status");
                 }
-                if (ParentClass is ISubscribeToBiomassArbitration)
+                if (ParentClass is IAmOrganHearMeRoar)
                 {
-                    parentSimpleOrgan = ParentClass as ISubscribeToBiomassArbitration;
+                    parentSimpleOrgan = ParentClass as IAmOrganHearMeRoar;
                     ParentOrganIdentified = true;
                     parentOrganType = "ISubscribeToBiomassArbitration";
                     if (ParentClass is IPlant)
@@ -72,10 +72,10 @@ namespace Models.Functions.DemandFunctions
             }
             if (parentOrganType == "ISubscribeToBiomassArbitration")
             {
-                double potentialAllocation = parentSimpleOrgan.Carbon.potentialDMAllocation.Structural + parentSimpleOrgan.Carbon.potentialDMAllocation.Metabolic;
+                double potentialAllocation = parentSimpleOrgan.Carbon.Deltas.DemandsAllocated.Structural + parentSimpleOrgan.Carbon.Deltas.DemandsAllocated.Metabolic;
                 double NDeficit = Math.Max(0.0, maxNConc.Value() * (parentSimpleOrgan.Live.Wt + potentialAllocation) - parentSimpleOrgan.Live.N);
                 NDeficit *= nitrogenDemandSwitch.Value();
-                return Math.Max(0, NDeficit - parentSimpleOrgan.Nutrients[0].NDemand.Structural - parentSimpleOrgan.Nutrients[0].NDemand.Metabolic);
+                return Math.Max(0, NDeficit - parentSimpleOrgan.Nitrogen.Deltas.Demands.Structural - parentSimpleOrgan.Nitrogen.Deltas.Demands.Metabolic);
             }
             else
                 throw new Exception("Could not locate parent organ");
