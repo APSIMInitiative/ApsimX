@@ -583,8 +583,8 @@
         private void SetDMSupply(object sender, EventArgs e)
         {
             DMSupply.Fixation = 0.0;
-            DMSupply.Retranslocation = dmRetranslocationSupply;
-            DMSupply.Reallocation = dmMReallocationSupply;
+            DMSupply.ReTranslocation = dmRetranslocationSupply;
+            DMSupply.ReAllocation = dmMReallocationSupply;
         }
 
         /// <summary>Calculate and return the nitrogen supply (g/m2)</summary>
@@ -593,8 +593,8 @@
         {
             NSupply.Fixation = 0.0;
             NSupply.Uptake = 0.0;
-            NSupply.Retranslocation = nRetranslocationSupply;
-            NSupply.Reallocation = nReallocationSupply;
+            NSupply.ReTranslocation = nRetranslocationSupply;
+            NSupply.ReAllocation = nReallocationSupply;
         }
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
