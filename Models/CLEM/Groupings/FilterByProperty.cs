@@ -35,11 +35,11 @@ namespace Models.CLEM.Groupings
         {
             // Check that the filter applies to objects of type T
             var info = Parent.GetProperty(Parameter);
-            if (info.DeclaringType != typeof(T))
+            if (!info.DeclaringType.IsAssignableFrom(typeof(T)))
                 return (T t) => false;
 
             // Look for the property on T
-            var genericType = Expression.Parameter(typeof(T));
+            var genericType = Expression.Parameter(info.DeclaringType);
             var key = Expression.Property(genericType, Parameter);
 
             // Try convert the Value into the same data type as the property
