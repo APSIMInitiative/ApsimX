@@ -19,7 +19,7 @@
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
 
-    public class Organ : Model, IAmOrganHearMeRoar, ICustomDocumentation, IOrganDamage
+    public class Organ : Model, IAmOrganHearMeRoar, ICustomDocumentation, IOrganDamage, IOrgan
     {
         ///1. Links
         ///--------------------------------------------------------------------------------------------------
@@ -56,21 +56,6 @@
         [Units("g/g")]
         private IFunction initialNConcFunction = null;
 
-        /// <summary>The maximum N concentration</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/g")]
-        private IFunction maximumNConc = null;
-
-        /// <summary>The minimum N concentration</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/g")]
-        private IFunction minimumNConc = null;
-
-        /// <summary>The critical N concentration</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/g")]
-        private IFunction criticalNConc = null;
-
         /// <summary>The proportion of biomass respired each day</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
@@ -91,6 +76,14 @@
         [Link(Type = LinkType.Child, ByName = true)]
         public IFunction RemobilisationCost = null;
 
+        /// <summary>The list of nurtients to arbitration</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public Element Carbon { get; set; }
+
+        /// <summary>The list of nurtients to arbitration</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public Element Nitrogen { get; set; }
+
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
 
@@ -105,8 +98,6 @@
         {
             Live = new Biomass();
             Dead = new Biomass();
-            Carbon = new Element();
-            Nitrogen = new Element();
         }
 
         ///4. Public Events And Enums
@@ -133,11 +124,6 @@
             }
         }
 
-        /// <summary>The list of nurtients to arbitration</summary>
-        public Element Carbon { get; set; }
-
-        /// <summary>The list of nurtients to arbitration</summary>
-        public Element Nitrogen { get; set; }
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         [Description("Is organ above ground?")]
@@ -201,17 +187,17 @@
         /// <summary>Gets the maximum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double MaxNconc { get { return maximumNConc.Value(); } }
+        public double MaxNconc { get { return Nitrogen.Thresholds != null ? Nitrogen.Thresholds.Maximum : 0; } }
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double MinNconc { get { return minimumNConc.Value(); } }
+        public double MinNconc { get { return Nitrogen.Thresholds != null ? Nitrogen.Thresholds.Minimum : 0; } }
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double CritNconc { get { return criticalNConc.Value(); } }
+        public double CritNconc { get { return Nitrogen.Thresholds != null ? Nitrogen.Thresholds.Critical : 0; } }
 
         /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
         [JsonIgnore]

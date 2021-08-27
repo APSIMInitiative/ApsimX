@@ -30,16 +30,16 @@
         private Organ organ = null;
 
          /// <summary>The DM demand function</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link(Type = LinkType.Child)]
         [Units("g/m2/d")]
         private BiomassDemandAndPriority demands = null;
 
         /// <summary>The photosynthesis</summary>
         [Units("g/m2")]
-        [Link(Type = LinkType.Child, ByName = true)]
+        [Link(Type = LinkType.Child)]
         private BiomassSupply supplies = null;
 
-        [Link(Type = LinkType.Child)]
+        [Link(IsOptional = true, Type = LinkType.Child)]
         private NutrientConcentrationThresholdFunctions thresholds = null;
 
         ///2. Private And Protected Fields
@@ -115,10 +115,13 @@
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         public void SetSuppliesAndDemands()
         {
-            Thresholds.Maximum = thresholds.Maximum.Value();
-            Thresholds.Critical = thresholds.Critical.Value();
-            Thresholds.Minimum = thresholds.Minimum.Value();
-            Deltas.MinimumConcentration = Thresholds.Minimum;
+            if (thresholds != null)
+            {
+                Thresholds.Maximum = thresholds.Maximum.Value();
+                Thresholds.Critical = thresholds.Critical.Value();
+                Thresholds.Minimum = thresholds.Minimum.Value();
+                Deltas.MinimumConcentration = Thresholds.Minimum;
+            }
 
             Deltas.Supplies.ReAllocation = ThrowIfNegative(supplies.ReAllocation);
             Deltas.Supplies.ReTranslocation = ThrowIfNegative(supplies.ReTranslocation);
@@ -172,9 +175,10 @@
             [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-           // Deltas = new OrganResourceStates();
-           // Live = new ResourcePools();
-           //  Dead = new ResourcePools();
+            // Deltas = new OrganResourceStates();
+            // Live = new ResourcePools();
+            //  Dead = new ResourcePools();
+            Thresholds = new NutrientConcentrationThresholds();
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

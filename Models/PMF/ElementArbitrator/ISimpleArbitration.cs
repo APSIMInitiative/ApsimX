@@ -127,6 +127,7 @@
     /// <summary>
     /// The daily state of flows throughout the plant
     /// </summary>
+    [Serializable]
     public class PlantResourceStates
     {
         /// <summary>The organs on the plant /// </summary>

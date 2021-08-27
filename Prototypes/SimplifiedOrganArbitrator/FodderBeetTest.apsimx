@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 502,
+  "ExplorerWidth": 281,
   "Version": 139,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -33,9 +33,9 @@
             "[FodderBeet].Leaf.Canopy.Height",
             "[FodderBeet].Leaf.Canopy.LAI",
             "[FodderBeet].Leaf.Canopy.Transpiration",
-            "[FodderBeet].Leaf.Carbon.DMDemand",
+            "[FodderBeet].Leaf.Carbon.Deltas.Demands.Total",
             "[FodderBeet].Leaf.Photosynthesis.RadnInt",
-            "[FodderBeet].Leaf.CriticalNConc",
+            "[FodderBeet].Leaf.Nitrogen.NConc.Critical",
             "[FodderBeet].Leaf.Dead.MetabolicN",
             "[FodderBeet].Leaf.Dead.N",
             "[FodderBeet].Leaf.Dead.NConc",
@@ -48,17 +48,17 @@
             "[FodderBeet].Leaf.Live.N",
             "[FodderBeet].Leaf.Live.NConc",
             "[FodderBeet].Leaf.Live.Wt",
-            "[FodderBeet].Leaf.MaximumNConc",
-            "[FodderBeet].Leaf.MinimumNConc",
+            "[FodderBeet].Leaf.Nitrogen.NConc.Maximum",
+            "[FodderBeet].Leaf.Nitrogen.NConc.Minimum",
             "[FodderBeet].Leaf.NodeNumber",
             "[FodderBeet].Leaf.SpecificArea",
-            "[FodderBeet].Petiole.CriticalNConc",
+            "[FodderBeet].Petiole.Nitrogen.NConc.Critical",
             "[FodderBeet].Petiole.Dead.NConc",
             "[FodderBeet].Petiole.Live.N",
             "[FodderBeet].Petiole.Live.NConc",
             "[FodderBeet].Petiole.Live.Wt",
-            "[FodderBeet].Petiole.MaximumNConc",
-            "[FodderBeet].Petiole.MinimumNConc",
+            "[FodderBeet].Petiole.Nitrogen.NConc.Critical",
+            "[FodderBeet].Petiole.Nitrogen.NConc.Minimum",
             "[FodderBeet].Petiole.NConc",
             "[FodderBeet].Phenology.AccumulatedThermalTime",
             "[FodderBeet].Phenology.CurrentPhase.Name",
@@ -66,24 +66,24 @@
             "[FodderBeet].Phenology.Photoperiod",
             "[FodderBeet].Phenology.Stage",
             "[FodderBeet].Phenology.ThermalTime",
-            "[FodderBeet].Root.CriticalNConc",
+            "[FodderBeet].Root.Nitrogen.NConc.Critical",
             "[FodderBeet].Root.Live.N",
             "[FodderBeet].Root.Live.NConc",
             "[FodderBeet].Root.Live.Wt",
-            "[FodderBeet].Root.MaximumNConc",
-            "[FodderBeet].Root.MinimumNConc",
+            "[FodderBeet].Root.Nitrogen.NConc.Maximum",
+            "[FodderBeet].Root.Nitrogen.NConc.Minimum",
             "[FodderBeet].Root.N",
             "[FodderBeet].Root.Nconc",
             "[FodderBeet].Root.Network.Depth",
             "[FodderBeet].Root.Network.WaterUptake",
             "[FodderBeet].SCS",
             "[FodderBeet].SowingData.Cultivar",
-            "[FodderBeet].StorageRoot.CriticalNConc",
+            "[FodderBeet].StorageRoot.Nitrogen.NConc.Critical",
             "[FodderBeet].StorageRoot.Live.N",
             "[FodderBeet].StorageRoot.Live.NConc",
             "[FodderBeet].StorageRoot.Live.Wt",
-            "[FodderBeet].StorageRoot.MaximumNConc",
-            "[FodderBeet].StorageRoot.MinimumNConc",
+            "[FodderBeet].StorageRoot.Nitrogen.NConc.Maximum",
+            "[FodderBeet].StorageRoot.Nitrogen.NConc.Minimum",
             "[FodderBeet].StorageRoot.NConc",
             "[FodderBeet].StorageRoot.Wt",
             "[FodderBeet].Total.N",
@@ -649,102 +649,6 @@
             },
             {
               "$type": "Models.PMF.Organs.Organ, Models",
-              "Carbon": null,
-              "Nitrogen": {
-                "$type": "Models.PMF.Organs.Element, Models",
-                "Nutrient": 0,
-                "Deltas": {
-                  "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
-                  "Supplies": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                    "Fixation": 0.0,
-                    "ReAllocation": 0.0,
-                    "Uptake": 0.0,
-                    "ReTranslocation": 0.0
-                  },
-                  "SuppliesAllocated": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                    "Fixation": 0.0,
-                    "ReAllocation": 0.0,
-                    "Uptake": 0.0,
-                    "ReTranslocation": 0.0
-                  },
-                  "Demands": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "PriorityScaledDemand": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "DemandsAllocated": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "MinimumConcentration": 0.0,
-                  "MaxCDelta": 0.0
-                },
-                "Live": {
-                  "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Name": "ResourcePools",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                "Dead": {
-                  "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Name": "ResourcePools",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                "StartLive": {
-                  "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Name": "ResourcePools",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                "Thresholds": null,
-                "Name": "Element",
-                "Children": [],
-                "IncludeInDocumentation": true,
-                "Enabled": true,
-                "ReadOnly": false
-              },
               "IsAboveGround": true,
               "Name": "StorageRoot",
               "Children": [
@@ -1245,7 +1149,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[StorageRoot].NConc.Minimum",
+                              "VariableName": "[StorageRoot].Nitrogen.NConc.Minimum",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1276,7 +1180,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].NConc.Critical",
+                                  "VariableName": "[StorageRoot].Nitrogen.NConc.Critical",
                                   "Name": "CriticalNConc",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -1285,7 +1189,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].NConc.Minimum",
+                                  "VariableName": "[StorageRoot].Nitrogen.NConc.Minimum",
                                   "Name": "MinNconc",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -1317,7 +1221,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[StorageRoot].NConc.Maximum",
+                              "VariableName": "[StorageRoot].Nitrogen.NConc.Maximum",
                               "Name": "MaxNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1933,102 +1837,6 @@
             },
             {
               "$type": "Models.PMF.Organs.Organ, Models",
-              "Carbon": null,
-              "Nitrogen": {
-                "$type": "Models.PMF.Organs.Element, Models",
-                "Nutrient": 0,
-                "Deltas": {
-                  "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
-                  "Supplies": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                    "Fixation": 0.0,
-                    "ReAllocation": 0.0,
-                    "Uptake": 0.0,
-                    "ReTranslocation": 0.0
-                  },
-                  "SuppliesAllocated": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                    "Fixation": 0.0,
-                    "ReAllocation": 0.0,
-                    "Uptake": 0.0,
-                    "ReTranslocation": 0.0
-                  },
-                  "Demands": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "PriorityScaledDemand": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "DemandsAllocated": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "MinimumConcentration": 0.0,
-                  "MaxCDelta": 0.0
-                },
-                "Live": {
-                  "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Name": "ResourcePools",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                "Dead": {
-                  "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Name": "ResourcePools",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                "StartLive": {
-                  "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Name": "ResourcePools",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                "Thresholds": null,
-                "Name": "Element",
-                "Children": [],
-                "IncludeInDocumentation": true,
-                "Enabled": true,
-                "ReadOnly": false
-              },
               "IsAboveGround": true,
               "Name": "Leaf",
               "Children": [
@@ -2687,7 +2495,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].NConc.Minimum",
+                              "VariableName": "[Leaf].Nitrogen.NConc.Minimum",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2718,7 +2526,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].NConc.Critical",
+                                  "VariableName": "[Leaf].Nitrogen.NConc.Critical",
                                   "Name": "CritNconc",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -2727,7 +2535,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].NConc.Minimum",
+                                  "VariableName": "[Leaf].Nitrogen.NConc.Minimum",
                                   "Name": "MinNconc",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -2769,7 +2577,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].NConc.Maximum",
+                              "VariableName": "[Leaf].Nitrogen.NConc.Maximum",
                               "Name": "MaxNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -4092,102 +3900,6 @@
             },
             {
               "$type": "Models.PMF.Organs.Organ, Models",
-              "Carbon": null,
-              "Nitrogen": {
-                "$type": "Models.PMF.Organs.Element, Models",
-                "Nutrient": 0,
-                "Deltas": {
-                  "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
-                  "Supplies": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                    "Fixation": 0.0,
-                    "ReAllocation": 0.0,
-                    "Uptake": 0.0,
-                    "ReTranslocation": 0.0
-                  },
-                  "SuppliesAllocated": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                    "Fixation": 0.0,
-                    "ReAllocation": 0.0,
-                    "Uptake": 0.0,
-                    "ReTranslocation": 0.0
-                  },
-                  "Demands": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "PriorityScaledDemand": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "DemandsAllocated": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "MinimumConcentration": 0.0,
-                  "MaxCDelta": 0.0
-                },
-                "Live": {
-                  "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Name": "ResourcePools",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                "Dead": {
-                  "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Name": "ResourcePools",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                "StartLive": {
-                  "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Name": "ResourcePools",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                "Thresholds": null,
-                "Name": "Element",
-                "Children": [],
-                "IncludeInDocumentation": true,
-                "Enabled": true,
-                "ReadOnly": false
-              },
               "IsAboveGround": true,
               "Name": "Petiole",
               "Children": [
@@ -4718,7 +4430,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Petiole].NConc.Minimum",
+                              "VariableName": "[Petiole].Nitrogen.NConc.Minimum",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -4727,7 +4439,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Petiol].Carbon.Deltas.DemandsAllocated.Total",
+                              "VariableName": "[Petiole].Carbon.Deltas.DemandsAllocated.Total",
                               "Name": "PotentialDMAllocation",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -4755,7 +4467,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Petiole].NConc.Maximum",
+                              "VariableName": "[Petiole].Nitrogen.NConc.Maximum",
                               "Name": "MaxNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -5280,102 +4992,6 @@
             },
             {
               "$type": "Models.PMF.Organs.Organ, Models",
-              "Carbon": null,
-              "Nitrogen": {
-                "$type": "Models.PMF.Organs.Element, Models",
-                "Nutrient": 0,
-                "Deltas": {
-                  "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
-                  "Supplies": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                    "Fixation": 0.0,
-                    "ReAllocation": 0.0,
-                    "Uptake": 0.0,
-                    "ReTranslocation": 0.0
-                  },
-                  "SuppliesAllocated": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                    "Fixation": 0.0,
-                    "ReAllocation": 0.0,
-                    "Uptake": 0.0,
-                    "ReTranslocation": 0.0
-                  },
-                  "Demands": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "PriorityScaledDemand": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "DemandsAllocated": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "MinimumConcentration": 0.0,
-                  "MaxCDelta": 0.0
-                },
-                "Live": {
-                  "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Name": "ResourcePools",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                "Dead": {
-                  "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Name": "ResourcePools",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                "StartLive": {
-                  "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Name": "ResourcePools",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                "Thresholds": null,
-                "Name": "Element",
-                "Children": [],
-                "IncludeInDocumentation": true,
-                "Enabled": true,
-                "ReadOnly": false
-              },
               "IsAboveGround": true,
               "Name": "Root",
               "Children": [
@@ -5906,7 +5522,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Nitrogen].Nconc.Minimum",
+                              "VariableName": "[Root].Nitrogen.Nconc.Minimum",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -5943,7 +5559,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Nitrogen]NConc.Maximum",
+                              "VariableName": "[Root].Nitrogen.NConc.Maximum",
                               "Name": "MaxNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
