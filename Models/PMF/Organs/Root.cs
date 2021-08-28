@@ -102,7 +102,7 @@
         /// <summary>The DM demand function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemandAndPriority dmDemands = null;
+        private NutrientDemandFunctions dmDemands = null;
 
         /// <summary>Link to the KNO3 link</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -120,7 +120,7 @@
 
         /// <summary>Initial wt</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        public ResourceDemandFunctions InitialWt = null;
+        public NutrientPoolFunctions InitialWt = null;
 
         /// <summary>Gets or sets the specific root length</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -129,7 +129,7 @@
 
         /// <summary>The N demand function</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        private BiomassDemandAndPriority nDemands = null;
+        private NutrientDemandFunctions nDemands = null;
 
         /// <summary>The nitrogen root calc switch</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
@@ -253,7 +253,7 @@
             Zones = new List<ZoneState>();
             ZoneNamesToGrowRootsIn = new List<string>();
             ZoneRootDepths = new List<double>();
-            ZoneInitialDM = new List<ResourceDemandFunctions>();
+            ZoneInitialDM = new List<NutrientPoolFunctions>();
         }
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
@@ -269,7 +269,7 @@
 
         /// <summary>The live weights for each addition zone.</summary>
         [JsonIgnore]
-        public List<ResourceDemandFunctions> ZoneInitialDM { get; set; }
+        public List<NutrientPoolFunctions> ZoneInitialDM { get; set; }
 
         /// <summary>A list of all zones to grow roots in</summary>
         [JsonIgnore]

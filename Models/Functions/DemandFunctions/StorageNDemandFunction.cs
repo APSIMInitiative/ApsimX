@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Models.Core;
+using Models.PMF;
 using Models.PMF.Interfaces;
 
 namespace Models.Functions.DemandFunctions
@@ -72,10 +73,10 @@ namespace Models.Functions.DemandFunctions
             }
             if (parentOrganType == "ISubscribeToBiomassArbitration")
             {
-                double potentialAllocation = parentSimpleOrgan.Carbon.Deltas.DemandsAllocated.Structural + parentSimpleOrgan.Carbon.Deltas.DemandsAllocated.Metabolic;
+                double potentialAllocation = parentSimpleOrgan.Carbon.DemandsAllocated.Structural + parentSimpleOrgan.Carbon.DemandsAllocated.Metabolic;
                 double NDeficit = Math.Max(0.0, maxNConc.Value() * (parentSimpleOrgan.Live.Wt + potentialAllocation) - parentSimpleOrgan.Live.Nitrogen.Total);
                 NDeficit *= nitrogenDemandSwitch.Value();
-                return Math.Max(0, NDeficit - parentSimpleOrgan.Nitrogen.Deltas.Demands.Structural - parentSimpleOrgan.Nitrogen.Deltas.Demands.Metabolic);
+                return Math.Max(0, NDeficit - parentSimpleOrgan.Nitrogen.Demands.Structural - parentSimpleOrgan.Nitrogen.Demands.Metabolic);
             }
             else
                 throw new Exception("Could not locate parent organ");

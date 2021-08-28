@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Models.Core;
 using Models.PMF.Interfaces;
 using APSIM.Shared.Utilities;
+using Models.PMF;
 
 namespace Models.Functions.DemandFunctions
 {
@@ -68,7 +69,7 @@ namespace Models.Functions.DemandFunctions
             }
             if (parentOrganType == "ISubscribeToBiomassArbitration")
             {
-                double structuralWt = parentSimpleOrgan.Live.Weight.Structural + parentSimpleOrgan.Carbon.Deltas.Demands.Structural;
+                double structuralWt = parentSimpleOrgan.Live.Weight.Structural + parentSimpleOrgan.Carbon.Demands.Structural;
                 double MaximumDM = MathUtilities.Divide(structuralWt, 1 - storageFraction.Value(), 0);
                 double AlreadyAllocated = structuralWt + parentSimpleOrgan.Live.Weight.Storage;
                 return MaximumDM - AlreadyAllocated;

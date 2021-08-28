@@ -123,7 +123,7 @@
             Zones = new List<ZoneState>();
             ZoneNamesToGrowRootsIn = new List<string>();
             ZoneRootDepths = new List<double>();
-            ZoneInitialDM = new List<ResourceDemandFunctions>();
+            ZoneInitialDM = new List<NutrientPoolFunctions>();
         }
 
         ///4. Public Events And Enums
@@ -148,7 +148,7 @@
 
         /// <summary>The live weights for each addition zone.</summary>
         [JsonIgnore]
-        public List<ResourceDemandFunctions> ZoneInitialDM { get; set; }
+        public List<NutrientPoolFunctions> ZoneInitialDM { get; set; }
 
         /// <summary>Live Biomass in each soil layer</summary>
         [JsonIgnore]
@@ -276,7 +276,7 @@
 
                 double MeanWTF = 0;
 
-                double liveWt = parentOrgan.Live.Weight;
+                double liveWt = parentOrgan.Live.Wt;
                 if (liveWt > 0)
                     foreach (ZoneState Z in Zones)
                     {

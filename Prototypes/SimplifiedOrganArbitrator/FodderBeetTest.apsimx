@@ -653,7 +653,7 @@
               "Name": "StorageRoot",
               "Children": [
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.ResourcePoolFunctions, Models",
                   "Name": "InitialWt",
                   "Children": [
                     {
@@ -692,7 +692,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.Element, Models",
+                  "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
                   "Nutrient": 0,
                   "Deltas": {
                     "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
@@ -906,7 +906,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.BiomassSupply, Models",
+                      "$type": "Models.PMF.OrganNutrientSupplies, Models",
                       "Name": "DMSupplies",
                       "Children": [
                         {
@@ -1088,7 +1088,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.Element, Models",
+                  "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
                   "Nutrient": 0,
                   "Deltas": {
                     "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
@@ -1329,7 +1329,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.BiomassSupply, Models",
+                      "$type": "Models.PMF.OrganNutrientSupplies, Models",
                       "Name": "NSupplies",
                       "Children": [
                         {
@@ -1506,7 +1506,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.NutrientConcentrationThresholdFunctions, Models",
+                      "$type": "Models.PMF.NutrientConcentrationFunctions, Models",
                       "Name": "NConc",
                       "Children": [
                         {
@@ -1832,7 +1832,7 @@
               "Name": "Leaf",
               "Children": [
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.ResourcePoolFunctions, Models",
                   "Name": "InitialWt",
                   "Children": [
                     {
@@ -2030,7 +2030,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.Element, Models",
+                  "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
                   "Nutrient": 0,
                   "Deltas": {
                     "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
@@ -2244,7 +2244,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.BiomassSupply, Models",
+                      "$type": "Models.PMF.OrganNutrientSupplies, Models",
                       "Name": "DMSupplies",
                       "Children": [
                         {
@@ -2425,7 +2425,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.Element, Models",
+                  "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
                   "Nutrient": 0,
                   "Deltas": {
                     "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
@@ -2655,7 +2655,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.BiomassSupply, Models",
+                      "$type": "Models.PMF.OrganNutrientSupplies, Models",
                       "Name": "NSupplies",
                       "Children": [
                         {
@@ -2832,7 +2832,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.NutrientConcentrationThresholdFunctions, Models",
+                      "$type": "Models.PMF.NutrientConcentrationFunctions, Models",
                       "Name": "NConc",
                       "Children": [
                         {
@@ -3886,7 +3886,7 @@
               "Name": "Petiole",
               "Children": [
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.ResourcePoolFunctions, Models",
                   "Name": "InitialWt",
                   "Children": [
                     {
@@ -3925,7 +3925,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.Element, Models",
+                  "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
                   "Nutrient": 0,
                   "Deltas": {
                     "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
@@ -4121,7 +4121,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.BiomassSupply, Models",
+                      "$type": "Models.PMF.OrganNutrientSupplies, Models",
                       "Name": "DMSupplies",
                       "Children": [
                         {
@@ -4303,7 +4303,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.Element, Models",
+                  "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
                   "Nutrient": 0,
                   "Deltas": {
                     "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
@@ -4529,7 +4529,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.BiomassSupply, Models",
+                      "$type": "Models.PMF.OrganNutrientSupplies, Models",
                       "Name": "NSupplies",
                       "Children": [
                         {
@@ -4706,7 +4706,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.NutrientConcentrationThresholdFunctions, Models",
+                      "$type": "Models.PMF.NutrientConcentrationFunctions, Models",
                       "Name": "NConc",
                       "Children": [
                         {
@@ -4969,7 +4969,7 @@
               "Name": "Root",
               "Children": [
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.ResourcePoolFunctions, Models",
                   "Name": "InitialWt",
                   "Children": [
                     {
@@ -5008,7 +5008,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.Element, Models",
+                  "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
                   "Nutrient": 0,
                   "Deltas": {
                     "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
@@ -5204,7 +5204,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.BiomassSupply, Models",
+                      "$type": "Models.PMF.OrganNutrientSupplies, Models",
                       "Name": "DMSupplies",
                       "Children": [
                         {
@@ -5386,7 +5386,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.Element, Models",
+                  "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
                   "Nutrient": 0,
                   "Deltas": {
                     "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
@@ -5592,7 +5592,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.BiomassSupply, Models",
+                      "$type": "Models.PMF.OrganNutrientSupplies, Models",
                       "Name": "Supplies",
                       "Children": [
                         {
@@ -5769,7 +5769,7 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.NutrientConcentrationThresholdFunctions, Models",
+                      "$type": "Models.PMF.NutrientConcentrationFunctions, Models",
                       "Name": "NConc",
                       "Children": [
                         {
@@ -6922,7 +6922,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.ResourcePoolFunctions, Models",
                   "Name": "InitialWt",
                   "Children": [
                     {

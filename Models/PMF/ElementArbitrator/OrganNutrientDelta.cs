@@ -1,16 +1,12 @@
 ﻿namespace Models.PMF.Organs
 {
-    using APSIM.Shared.Utilities;
     using Core;
-    using Models.Interfaces;
     using Functions;
     using Interfaces;
-    using Library;
     using System;
     using System.Collections.Generic;
-    using Newtonsoft.Json;
     using PMF;
-    using static Models.PMF.Interfaces.PlantResourceDeltas;
+
 
     /// <summary>
     /// This is the basic organ class that contains biomass structures and transfers
@@ -19,12 +15,12 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IOrgan))]
-    public class Element : Model, ICustomDocumentation
+    public class OrganNutrientDelta : Model, ICustomDocumentation
     {
 
         ///1. Links
         ///------------------------------------------------------------------------------------------------
-        
+
         /// <summary>The parent plant</summary>
         [Link(Type = LinkType.Ancestor)]
         private Organ organ = null;
@@ -32,15 +28,15 @@
          /// <summary>The DM demand function</summary>
         [Link(Type = LinkType.Child)]
         [Units("g/m2/d")]
-        private BiomassDemandAndPriority demands = null;
+        private NutrientDemandFunctions demands = null;
 
         /// <summary>The photosynthesis</summary>
         [Units("g/m2")]
         [Link(Type = LinkType.Child)]
-        private ResourceSupplyFunctions supplies = null;
+        private NutrientSupplyFunctions supplies = null;
 
         [Link(IsOptional = true, Type = LinkType.Child)]
-        private NutrientConcentrationThresholdFunctions thresholds = null;
+        private NutrientConcentrationFunctions thresholds = null;
 
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
@@ -70,11 +66,13 @@
         /// -------------------------------------------------------------------------------------------------
 
         /// <summary>Constructor</summary>
-        public Element() 
+        public OrganNutrientDelta() 
         {
-            Deltas = new OrganResourceDeltas();
-            State = new ResourcePools();
-            StartState = new ResourcePools();
+            Supplies = new OrganNutrientSupplies();
+            SuppliesAllocated = new OrganNutrientSupplies();
+            Demands = new NutrientPoolStates();
+            PriorityScaledDemand = new NutrientPoolStates();
+            DemandsAllocated = new NutrientPoolStates();
         }
 
         ///4. Public Events And Enums
@@ -83,18 +81,44 @@
         ///5. Public Properties
         /// --------------------------------------------------------------------------------------------------
         /// <summary>The dry matter potentially being allocated</summary>
-        public OrganResourceDeltas Deltas { get; set; }
-
-        /// <summary> The live components of the resource</summary>
-        public ResourcePools State { get; set; }
-
-        /// <summary> The dead components of the resource</summary>
-        public ResourcePools StartState { get; set; }
-
+ 
         /// <summary>The max, crit and min nutirent concentrations</summary>
-        public NutrientConcentrationThresholds Thresholds { get; set; }
+        public NutrientConcentrations Thresholds { get; set; }
 
-        
+        /// <summary> Resource supplied to arbitration by the organ</summary>
+        public OrganNutrientSupplies Supplies { get; set; }
+
+        /// <summary> Resource supplied to arbitration by the organ that was allocated</summary>
+        public OrganNutrientSupplies SuppliesAllocated { get; set; }
+
+        /// <summary> Resource demanded by the organ through arbitration</summary>
+        public NutrientPoolStates Demands { get; set; }
+
+        /// <summary> demands scaled for priority</summary>
+        public NutrientPoolStates PriorityScaledDemand { get; set; }
+
+        /// <summary> Resource demands met as a result of arbitration</summary>
+        public NutrientPoolStates DemandsAllocated { get; set; }
+
+        /// <summary> demands as yet un met by arbitration</summary>
+        public NutrientPoolStates OutstandingDemands
+        {
+            get
+            {
+                NutrientPoolStates outstanding = new NutrientPoolStates();
+                outstanding.Structural = Demands.Structural - DemandsAllocated.Structural;
+                outstanding.Metabolic = Demands.Metabolic - DemandsAllocated.Structural;
+                outstanding.Storage = Demands.Storage - DemandsAllocated.Storage;
+                return outstanding;
+            }
+        }
+
+        /// <summary> The minimum Nutrient Concnetration of biomass</summary>
+        public double MinimumConcentration { get; set; }
+
+        /// <summary> The maximum possible biomass with Nutrient Allocation</summary>
+        public double MaxCDelta { get; set; }
+
 
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
@@ -107,7 +131,16 @@
                     return function.Value();
         }
 
- 
+        private NutrientPoolStates ThrowIfNegative(NutrientPoolFunctions functions)
+        {
+            NutrientPoolStates returns = new NutrientPoolStates();
+            returns.Structural = ThrowIfNegative(functions.Structural);
+            returns.Metabolic = ThrowIfNegative(functions.Metabolic);
+            returns.Storage = ThrowIfNegative(functions.Storage);
+            return returns;
+        }
+
+
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         public void SetSuppliesAndDemands()
         {
@@ -116,42 +149,41 @@
                 Thresholds.Maximum = thresholds.Maximum.Value();
                 Thresholds.Critical = thresholds.Critical.Value();
                 Thresholds.Minimum = thresholds.Minimum.Value();
-                Deltas.MinimumConcentration = Thresholds.Minimum;
+                MinimumConcentration = Thresholds.Minimum;
             }
 
-            Deltas.Supplies.ReAllocation = ThrowIfNegative(supplies.ReAllocation);
-            Deltas.Supplies.ReTranslocation = ThrowIfNegative(supplies.ReTranslocation);
-            Deltas.Supplies.Fixation = ThrowIfNegative(supplies.Fixation);
-            Deltas.Supplies.Uptake = ThrowIfNegative(supplies.Uptake);
+            Supplies.ReAllocation = ThrowIfNegative(supplies.ReAllocation);
+            Supplies.ReTranslocation = ThrowIfNegative(supplies.ReTranslocation);
+            Supplies.Fixation = ThrowIfNegative(supplies.Fixation);
+            Supplies.Uptake = ThrowIfNegative(supplies.Uptake);
 
             double dMCE = organ.dmConversionEfficiency;
             if (dMCE > 0.0)
             {
-                Deltas.Demands.Structural = (ThrowIfNegative(demands.Structural) / dMCE);
-                Deltas.Demands.Metabolic = (ThrowIfNegative(demands.Metabolic) / dMCE);
-                Deltas.Demands.Storage = (ThrowIfNegative(demands.Storage) / dMCE);
-                Deltas.PriorityScaledDemand.Structural = demands.Structural.Value() * demands.QStructuralPriority.Value();
-                Deltas.PriorityScaledDemand.Metabolic = demands.Metabolic.Value() * demands.QMetabolicPriority.Value();
-                Deltas.PriorityScaledDemand.Storage = demands.Storage.Value() * demands.QStoragePriority.Value();
+                Demands.Structural = (ThrowIfNegative(demands.Structural) / dMCE);
+                Demands.Metabolic = (ThrowIfNegative(demands.Metabolic) / dMCE);
+                Demands.Storage = (ThrowIfNegative(demands.Storage) / dMCE);
+                PriorityScaledDemand.Structural = demands.Structural.Value() * demands.QStructuralPriority.Value();
+                PriorityScaledDemand.Metabolic = demands.Metabolic.Value() * demands.QMetabolicPriority.Value();
+                PriorityScaledDemand.Storage = demands.Storage.Value() * demands.QStoragePriority.Value();
             }
             else
             { // Conversion efficiency is zero!!!!
-                Deltas.Demands.Structural = 0;
-                Deltas.Demands.Storage = 0;
-                Deltas.Demands.Metabolic = 0;
+                Demands.Structural = 0;
+                Demands.Storage = 0;
+                Demands.Metabolic = 0;
             }
         }
 
-        /// <summary>Set resource values once arbitration finished</summary>
-        public void SetBiomassDeltas()
-        {
-            State.AddDelta(Deltas.DemandsAllocated);
-        }
-        
+       
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
-            Deltas.Clear();
+            Supplies.Clear();
+            SuppliesAllocated.Clear();
+            Demands.Clear();
+            PriorityScaledDemand.Clear();
+            DemandsAllocated.Clear();
         }
 
         /// <summary>Called when [do daily initialisation].</summary>
@@ -160,8 +192,7 @@
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            Deltas.Clear();
-            StartState.SetTo(State);
+            Clear();
             SetSuppliesAndDemands();
         }
 
@@ -174,7 +205,7 @@
             // Deltas = new OrganResourceStates();
             // Live = new ResourcePools();
             //  Dead = new ResourcePools();
-            Thresholds = new NutrientConcentrationThresholds();
+            Thresholds = new NutrientConcentrations();
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

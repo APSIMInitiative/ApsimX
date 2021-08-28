@@ -1,7 +1,6 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
-using Models.PMF.Arbitrator;
 using Models.PMF.Interfaces;
 using Models.Soils.Arbitrator;
 using System;
@@ -196,7 +195,7 @@ namespace Models.PMF
                 double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
                 foreach (Organ o in biomassArbitrator.Organs)
-                    o.Nitrogen.Deltas.Supplies.Uptake = 0;
+                    o.Nitrogen.Supplies.Uptake = 0;
 
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
                 foreach (ZoneWaterAndN zone in soilstate.Zones)
@@ -218,7 +217,7 @@ namespace Models.PMF
                             UptakeDemands.NO3N = MathUtilities.Add(UptakeDemands.NO3N, organNO3Supply); //Add uptake supply from each organ to the plants total to tell the Soil arbitrator
                             UptakeDemands.NH4N = MathUtilities.Add(UptakeDemands.NH4N, organNH4Supply);
                             double organSupply = organNH4Supply.Sum() + organNO3Supply.Sum();
-                            o.Nitrogen.Deltas.Supplies.Uptake += organSupply * kgha2gsm * zone.Zone.Area / this.zone.Area;
+                            o.Nitrogen.Supplies.Uptake += organSupply * kgha2gsm * zone.Zone.Area / this.zone.Area;
                             NSupply += organSupply * zone.Zone.Area;
                         }
                     }

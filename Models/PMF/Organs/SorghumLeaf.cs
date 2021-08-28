@@ -152,12 +152,12 @@ namespace Models.PMF.Organs
         /// <summary>The DM demand function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private ResourceDemandFunctions dmDemands = null;
+        private NutrientPoolFunctions dmDemands = null;
 
         /// <summary>The N demand function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private ResourceDemandFunctions nDemands = null;
+        private NutrientPoolFunctions nDemands = null;
 
         private double potentialEP = 0;
         private bool leafInitialised = false;

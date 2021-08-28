@@ -60,7 +60,7 @@ namespace Models.PMF.Organs
         /// <summary>Factors for assigning priority to DM demands</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private ResourceDemandFunctions dmDemandPriorityFactors = null;
+        private NutrientPoolFunctions dmDemandPriorityFactors = null;
 
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
         [JsonIgnore]

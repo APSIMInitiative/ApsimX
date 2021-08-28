@@ -49,7 +49,7 @@
         /// <summary>Wt in each pool when plant is initialised</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/plant")]
-        public ResourceDemandFunctions InitialWt = null;
+        public NutrientPoolFunctions InitialWt = null;
 
         /// <summary>The proportion of biomass respired each day</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -73,11 +73,11 @@
 
         /// <summary>The list of nurtients to arbitration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        public Element Carbon { get; set; }
+        public OrganNutrientDelta Carbon { get; set; }
 
         /// <summary>The list of nurtients to arbitration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        public Element Nitrogen { get; set; }
+        public OrganNutrientDelta Nitrogen { get; set; }
 
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
@@ -91,8 +91,8 @@
         /// <summary>Organ constructor</summary>
         public Organ()
         {
-            Live = new OrganResourceStates();
-            Dead = new OrganResourceStates();
+            Live = new OrganNutrientStates();
+            Dead = new OrganNutrientStates();
         }
 
         ///4. Public Events And Enums
@@ -126,39 +126,43 @@
 
         /// <summary>The live biomass state at start of the computation round</summary>
         [JsonIgnore]
-        public OrganResourceStates StartLive { get; private set; }
+        public OrganNutrientStates StartLive { get; private set; }
 
         /// <summary>The live biomass</summary>
         [JsonIgnore]
-        public OrganResourceStates Live { get; private set; }
+        public OrganNutrientStates Live { get; private set; }
 
         /// <summary>The dead biomass</summary>
         [JsonIgnore]
-        public OrganResourceStates Dead { get; private set; }
+        public OrganNutrientStates Dead { get; private set; }
 
         /// <summary>Gets the total biomass</summary>
         [JsonIgnore]
-        public OrganResourceStates Total { get { return Live + Dead; } }
+        public OrganNutrientStates Total { get { return Live + Dead; } }
 
         /// <summary>Gets the biomass reallocated from senescing material</summary>
         [JsonIgnore]
-        public Biomass ReAllocated { get; private set; }
+        public OrganNutrientStates ReAllocated { get; private set; }
+
+        /// <summary>Gets the biomass reallocated from senescing material</summary>
+        [JsonIgnore]
+        public OrganNutrientStates ReTranslocated { get; private set; }
 
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
         [JsonIgnore]
-        public Biomass Allocated { get; private set; }
+        public OrganNutrientStates Allocated { get; private set; }
 
         /// <summary>Gets the biomass senesced (transferred from live to dead material)</summary>
         [JsonIgnore]
-        public Biomass Senesced { get; private set; }
+        public OrganNutrientStates Senesced { get; private set; }
 
         /// <summary>Gets the biomass detached (sent to soil/surface organic matter)</summary>
         [JsonIgnore]
-        public Biomass Detached { get; private set; }
+        public OrganNutrientStates Detached { get; private set; }
 
         /// <summary>Gets the biomass removed from the system (harvested, grazed, etc.)</summary>
         [JsonIgnore]
-        public Biomass Removed { get; private set; }
+        public OrganNutrientStates Removed { get; private set; }
 
         /// <summary>Rate of senescence for the day</summary>
         [JsonIgnore]
@@ -264,13 +268,15 @@
         /// <summary>Clears this instance.</summary>
         protected virtual void Clear()
         {
-            Live = new OrganResourceStates();
-            Dead = new OrganResourceStates();
-            StartLive = new OrganResourceStates();
-            Allocated = new Biomass();
-            Senesced = new Biomass();
-            Detached = new Biomass();
-            Removed = new Biomass();
+            Live = new OrganNutrientStates();
+            Dead = new OrganNutrientStates();
+            StartLive = new OrganNutrientStates();
+            ReAllocated = new OrganNutrientStates();
+            ReTranslocated = new OrganNutrientStates();
+            Allocated = new OrganNutrientStates();
+            Senesced = new OrganNutrientStates();
+            Detached = new OrganNutrientStates();
+            Removed = new OrganNutrientStates();
 
             Carbon.Clear();
             Nitrogen.Clear();
@@ -279,6 +285,8 @@
         /// <summary>Clears the transferring biomass amounts.</summary>
         private void ClearBiomassFlows()
         {
+            ReAllocated.Clear();
+            ReTranslocated.Clear();
             Allocated.Clear();
             Senesced.Clear();
             Detached.Clear();
@@ -336,6 +344,7 @@
             dmConversionEfficiency = DMConversionEfficiency.Value();
         }
 
+        
         /// <summary>Does the nutrient allocations.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -344,24 +353,46 @@
         {
             if (parentPlant.IsAlive)
             {
+
+                //do reallocation
+                ReAllocated.Carbon = Carbon.SuppliesAllocated.ReAllocation;
+                ReAllocated.Nitrogen = Nitrogen.SuppliesAllocated.ReAllocation;
+                Live.SubtractDelta(ReAllocated);
+
+                //do retranslocation
+                ReTranslocated.Carbon = Nitrogen.SuppliesAllocated.ReTranslocation;
+                ReTranslocated.Nitrogen = Nitrogen.Supplies.ReTranslocation;
+                Live.SubtractDelta(ReTranslocated);
+                
+                //do allocation
+                Allocated.Carbon = Carbon.DemandsAllocated;
+                Allocated.Nitrogen = Nitrogen.DemandsAllocated;
+                Live.AddDelta(Allocated);
+
+                //do senescene
+                Senesced.Carbon = StartLive.Carbon * senescenceRate - Carbon.SuppliesAllocated.ReAllocation;
+                Senesced.Nitrogen = StartLive.Carbon * senescenceRate - Nitrogen.SuppliesAllocated.ReAllocation;
+                Live.SubtractDelta(Senesced);
+                Dead.AddDelta(Senesced);
+                
                 // Do detachment
                 double detachedFrac = detachmentRateFunction.Value();
-                if (Dead.Weight * (1.0 - detachedFrac) < BiomassToleranceValue)
+                if (Dead.Weight.Total * (1.0 - detachedFrac) < BiomassToleranceValue)
                     detachedFrac = 1.0;  // remaining amount too small, detach all
-                Biomass detaching = Dead * detachedFrac;
-                Dead.Multiply(1.0 - detachedFrac);
-                if (detaching.Wt > 0.0)
+                Detached = Dead * detachedFrac;
+                Dead.SubtractDelta(Detached);
+
+                if (Detached.Wt > 0.0)
                 {
-                    Detached.Add(detaching);
-                    surfaceOrganicMatter.Add(detaching.Wt * 10, detaching.N * 10, 0, parentPlant.PlantType, Name);
+                    surfaceOrganicMatter.Add(Detached.Wt * 10, Detached.N * 10, 0, parentPlant.PlantType, Name);
                 }
 
                 // Do maintenance respiration
                 if (maintenanceRespirationFunction.Value() > 0)
                 {
-                    MaintenanceRespiration = (Live.MetabolicWt + Live.StorageWt) * maintenanceRespirationFunction.Value();
-                    Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
-                    Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
+                    //MaintenanceRespiration = (Live.MetabolicWt + Live.StorageWt) * maintenanceRespirationFunction.Value();
+                   // Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
+                   // Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
                 }
             }
         }
@@ -374,8 +405,8 @@
         {
             if (Wt > 0.0)
             {
-                Detached.Add(Live);
-                Detached.Add(Dead);
+                Detached.AddDelta(Live);
+                Detached.AddDelta(Dead);
                 surfaceOrganicMatter.Add(Wt * 10, N * 10, 0, parentPlant.PlantType, Name);
             }
 
