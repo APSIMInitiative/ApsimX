@@ -159,7 +159,7 @@ namespace Models.PMF.Organs
         /// <param name="rs">root switch</param>
         /// <param name="shape">Remobilisation cost</param>
         public ZoneState(Plant Plant, Soil soil, double depth,
-                         BiomassDemand initialDM, double population, double maxNConc,
+                         ResourceDemandFunctions initialDM, double population, double maxNConc,
                          IFunction rfv, IFunction mrd, IFunction remobCost,
                          IFunction rdsf, IFunction rs, IRootShape shape)
         {
@@ -190,7 +190,7 @@ namespace Models.PMF.Organs
         /// <param name="initialDM">Initial dry matter</param>
         /// <param name="population">plant population</param>
         /// <param name="maxNConc">maximum n concentration</param>
-        public void Initialise(double depth, BiomassDemand initialDM, double population, double maxNConc)
+        public void Initialise(double depth, ResourceDemandFunctions initialDM, double population, double maxNConc)
         {
             Depth = depth;
             RootFront = depth;

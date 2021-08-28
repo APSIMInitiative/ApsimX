@@ -120,7 +120,7 @@
 
         /// <summary>Initial wt</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        public BiomassDemand InitialWt = null;
+        public ResourceDemandFunctions InitialWt = null;
 
         /// <summary>Gets or sets the specific root length</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -253,7 +253,7 @@
             Zones = new List<ZoneState>();
             ZoneNamesToGrowRootsIn = new List<string>();
             ZoneRootDepths = new List<double>();
-            ZoneInitialDM = new List<BiomassDemand>();
+            ZoneInitialDM = new List<ResourceDemandFunctions>();
         }
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
@@ -269,7 +269,7 @@
 
         /// <summary>The live weights for each addition zone.</summary>
         [JsonIgnore]
-        public List<BiomassDemand> ZoneInitialDM { get; set; }
+        public List<ResourceDemandFunctions> ZoneInitialDM { get; set; }
 
         /// <summary>A list of all zones to grow roots in</summary>
         [JsonIgnore]

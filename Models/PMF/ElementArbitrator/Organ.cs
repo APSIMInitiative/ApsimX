@@ -19,7 +19,7 @@
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
 
-    public class Organ : Model, IAmOrganHearMeRoar, ICustomDocumentation, IOrganDamage, IOrgan
+    public class Organ : Model, IAmOrganHearMeRoar, ICustomDocumentation, IOrgan
     {
         ///1. Links
         ///--------------------------------------------------------------------------------------------------
@@ -49,7 +49,7 @@
         /// <summary>Wt in each pool when plant is initialised</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/plant")]
-        public BiomassDemand InitialWt = null;
+        public ResourceDemandFunctions InitialWt = null;
 
         /// <summary>The proportion of biomass respired each day</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -91,8 +91,8 @@
         /// <summary>Organ constructor</summary>
         public Organ()
         {
-            Live = new Biomass();
-            Dead = new Biomass();
+            Live = new OrganResourceStates();
+            Dead = new OrganResourceStates();
         }
 
         ///4. Public Events And Enums
@@ -126,19 +126,23 @@
 
         /// <summary>The live biomass state at start of the computation round</summary>
         [JsonIgnore]
-        public Biomass StartLive { get; private set; }
+        public OrganResourceStates StartLive { get; private set; }
 
         /// <summary>The live biomass</summary>
         [JsonIgnore]
-        public Biomass Live { get; private set; }
+        public OrganResourceStates Live { get; private set; }
 
         /// <summary>The dead biomass</summary>
         [JsonIgnore]
-        public Biomass Dead { get; private set; }
+        public OrganResourceStates Dead { get; private set; }
 
         /// <summary>Gets the total biomass</summary>
         [JsonIgnore]
-        public Biomass Total { get { return Live + Dead; } }
+        public OrganResourceStates Total { get { return Live + Dead; } }
+
+        /// <summary>Gets the biomass reallocated from senescing material</summary>
+        [JsonIgnore]
+        public Biomass ReAllocated { get; private set; }
 
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
         [JsonIgnore]
@@ -202,7 +206,7 @@
         /// <summary>Gets the total (live + dead) N amount (g/m2)</summary>
         [JsonIgnore]
         [Units("g/m^2")]
-        public double N { get { return Live.N + Dead.N; } }
+        public double N { get { return Live.Nitrogen.Total + Dead.Nitrogen.Total; } }
 
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [JsonIgnore]
@@ -226,7 +230,7 @@
             get
             {
                 if (Live != null)
-                    return MathUtilities.Divide(Live.N, Live.Wt * MaxNconc, 1);
+                    return MathUtilities.Divide(N, Wt * MinNconc, 1);
                 return 0;
             }
         }
@@ -240,7 +244,7 @@
             {
                 double factor = 0.0;
                 if (Live != null)
-                    factor = MathUtilities.Divide(Live.N - Live.StructuralN, Live.Wt * (CritNconc - MinNconc), 1.0);
+                    factor = MathUtilities.Divide(N - Live.Nitrogen.Structural, Wt * (CritNconc - MinNconc), 1.0);
                 return Math.Min(1.0, factor);
             }
         }
@@ -254,15 +258,15 @@
         /// <param name="amountToRemove">The fractions of biomass to remove</param>
         public virtual void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType amountToRemove)
         {
-            biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, Live, Dead, Removed, Detached);
+            //biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, Live, Dead, Removed, Detached);
         }
 
         /// <summary>Clears this instance.</summary>
         protected virtual void Clear()
         {
-            Live = new Biomass();
-            Dead = new Biomass();
-            StartLive = new Biomass();
+            Live = new OrganResourceStates();
+            Dead = new OrganResourceStates();
+            StartLive = new OrganResourceStates();
             Allocated = new Biomass();
             Senesced = new Biomass();
             Detached = new Biomass();
@@ -310,12 +314,12 @@
             {
                 Clear();
                 ClearBiomassFlows();
-                Live.StructuralWt = InitialWt.Structural.Value();
-                Live.MetabolicWt = InitialWt.Metabolic.Value();
-                Live.StorageWt = InitialWt.Storage.Value();
-                Live.StructuralN = Live.Wt * Nitrogen.Thresholds.Minimum;
-                Live.MetabolicN = Live.Wt * (Nitrogen.Thresholds.Critical - Nitrogen.Thresholds.Minimum);
-                Live.StorageN = Live.Wt * (Nitrogen.Thresholds.Maximum - Nitrogen.Thresholds.Critical);
+                Live.Weight.Structural = InitialWt.Structural.Value();
+                Live.Weight.Metabolic = InitialWt.Metabolic.Value();
+                Live.Weight.Storage = InitialWt.Storage.Value();
+                Live.Nitrogen.Structural = Live.Weight.Total * Nitrogen.Thresholds.Minimum;
+                Live.Nitrogen.Metabolic = Live.Weight.Total * (Nitrogen.Thresholds.Critical - Nitrogen.Thresholds.Minimum);
+                Live.Nitrogen.Storage = Live.Weight.Total * (Nitrogen.Thresholds.Maximum - Nitrogen.Thresholds.Critical);
             }
         }
 
@@ -342,7 +346,7 @@
             {
                 // Do detachment
                 double detachedFrac = detachmentRateFunction.Value();
-                if (Dead.Wt * (1.0 - detachedFrac) < BiomassToleranceValue)
+                if (Dead.Weight * (1.0 - detachedFrac) < BiomassToleranceValue)
                     detachedFrac = 1.0;  // remaining amount too small, detach all
                 Biomass detaching = Dead * detachedFrac;
                 Dead.Multiply(1.0 - detachedFrac);

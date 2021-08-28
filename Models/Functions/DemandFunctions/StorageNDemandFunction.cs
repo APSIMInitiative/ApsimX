@@ -73,7 +73,7 @@ namespace Models.Functions.DemandFunctions
             if (parentOrganType == "ISubscribeToBiomassArbitration")
             {
                 double potentialAllocation = parentSimpleOrgan.Carbon.Deltas.DemandsAllocated.Structural + parentSimpleOrgan.Carbon.Deltas.DemandsAllocated.Metabolic;
-                double NDeficit = Math.Max(0.0, maxNConc.Value() * (parentSimpleOrgan.Live.Wt + potentialAllocation) - parentSimpleOrgan.Live.N);
+                double NDeficit = Math.Max(0.0, maxNConc.Value() * (parentSimpleOrgan.Live.Wt + potentialAllocation) - parentSimpleOrgan.Live.Nitrogen.Total);
                 NDeficit *= nitrogenDemandSwitch.Value();
                 return Math.Max(0, NDeficit - parentSimpleOrgan.Nitrogen.Deltas.Demands.Structural - parentSimpleOrgan.Nitrogen.Deltas.Demands.Metabolic);
             }

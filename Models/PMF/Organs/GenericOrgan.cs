@@ -78,7 +78,7 @@
         /// <summary>Wt in each pool when plant is initialised</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/plant")]
-        public BiomassDemand InitialWt = null;
+        public ResourceDemandFunctions InitialWt = null;
 
         /// <summary>The initial N Concentration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
