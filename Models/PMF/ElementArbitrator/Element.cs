@@ -10,7 +10,7 @@
     using System.Collections.Generic;
     using Newtonsoft.Json;
     using PMF;
-    using static Models.PMF.Interfaces.PlantResourceStates;
+    using static Models.PMF.Interfaces.PlantResourceDeltas;
 
     /// <summary>
     /// This is the basic organ class that contains biomass structures and transfers
@@ -37,7 +37,7 @@
         /// <summary>The photosynthesis</summary>
         [Units("g/m2")]
         [Link(Type = LinkType.Child)]
-        private BiomassSupply supplies = null;
+        private ResourceSupplyFunctions supplies = null;
 
         [Link(IsOptional = true, Type = LinkType.Child)]
         private NutrientConcentrationThresholdFunctions thresholds = null;
@@ -72,10 +72,9 @@
         /// <summary>Constructor</summary>
         public Element() 
         {
-            Deltas = new OrganResourceStates();
-            Live = new ResourcePools();
-            Dead = new ResourcePools();
-            StartLive = new ResourcePools();
+            Deltas = new OrganResourceDeltas();
+            State = new ResourcePools();
+            StartState = new ResourcePools();
         }
 
         ///4. Public Events And Enums
@@ -84,16 +83,13 @@
         ///5. Public Properties
         /// --------------------------------------------------------------------------------------------------
         /// <summary>The dry matter potentially being allocated</summary>
-        public OrganResourceStates Deltas { get; set; }
+        public OrganResourceDeltas Deltas { get; set; }
 
         /// <summary> The live components of the resource</summary>
-        public ResourcePools Live { get; set; }
+        public ResourcePools State { get; set; }
 
         /// <summary> The dead components of the resource</summary>
-        public ResourcePools Dead { get; set; }
-
-        /// <summary> The dead components of the resource</summary>
-        public ResourcePools StartLive { get; set; }
+        public ResourcePools StartState { get; set; }
 
         /// <summary>The max, crit and min nutirent concentrations</summary>
         public NutrientConcentrationThresholds Thresholds { get; set; }
@@ -149,7 +145,7 @@
         /// <summary>Set resource values once arbitration finished</summary>
         public void SetBiomassDeltas()
         {
-            Live.AddDelta(Deltas.DemandsAllocated);
+            State.AddDelta(Deltas.DemandsAllocated);
         }
         
         /// <summary>Clears this instance.</summary>
@@ -165,7 +161,7 @@
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
             Deltas.Clear();
-            StartLive.SetTo(Live);
+            StartState.SetTo(State);
             SetSuppliesAndDemands();
         }
 

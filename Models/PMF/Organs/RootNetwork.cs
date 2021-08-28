@@ -123,7 +123,7 @@
             Zones = new List<ZoneState>();
             ZoneNamesToGrowRootsIn = new List<string>();
             ZoneRootDepths = new List<double>();
-            ZoneInitialDM = new List<BiomassDemand>();
+            ZoneInitialDM = new List<ResourceDemandFunctions>();
         }
 
         ///4. Public Events And Enums
@@ -148,7 +148,7 @@
 
         /// <summary>The live weights for each addition zone.</summary>
         [JsonIgnore]
-        public List<BiomassDemand> ZoneInitialDM { get; set; }
+        public List<ResourceDemandFunctions> ZoneInitialDM { get; set; }
 
         /// <summary>Live Biomass in each soil layer</summary>
         [JsonIgnore]
@@ -276,7 +276,7 @@
 
                 double MeanWTF = 0;
 
-                double liveWt = parentOrgan.Live.Wt;
+                double liveWt = parentOrgan.Live.Weight;
                 if (liveWt > 0)
                     foreach (ZoneState Z in Zones)
                     {
@@ -307,7 +307,7 @@
 
                 double MeanWTF = 0;
 
-                double liveWt = parentOrgan.Live.Wt;
+                double liveWt = parentOrgan.Live.Weight.Total;
                 if (liveWt > 0)
                     foreach (ZoneState Z in Zones)
                     {
@@ -597,6 +597,13 @@
             if (data.Plant == parentPlant)
             {
                 //sorghum calcs
+
+/* Unmerged change from project 'Models (netcoreapp3.1)'
+Before:
+                BiomassDemand InitialWt = new BiomassDemand();
+After:
+                ResourceDemandFunctions InitialWt = new BiomassDemand();
+*/
                 PlantZone.Initialise(parentPlant.SowingData.Depth, parentOrgan.InitialWt, parentPlant.Population, parentOrgan.MaxNconc);
                 InitialiseZones();
             }

@@ -7,7 +7,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using static Models.PMF.Interfaces.PlantResourceStates;
+    using static Models.PMF.Interfaces.PlantResourceDeltas;
+    using static Models.PMF.Interfaces.ResourcePools;
 
 
 
@@ -23,13 +24,13 @@
         Element Nitrogen { get; }
 
         /// <summary>Gets the total biomass</summary>
-        Biomass Total { get; }
+        OrganResourceStates Total { get; }
 
         /// <summary>Gets the live biomass</summary>
-        Biomass Live { get; }
+        OrganResourceStates Live { get; }
 
         /// <summary>Gets the live biomass</summary>
-        Biomass Dead { get; }
+        OrganResourceStates Dead { get; }
 
         /// <summary>Gets the senescence rate</summary>
         double senescenceRate { get; }
@@ -45,9 +46,6 @@
         /// <summary> get the organs uptake object if it has one </summary>
         IWaterNitrogenUptake WaterNitrogenUptakeObject { get; }
     }
-
-    #region Arbitrator data types
-
 
     /// <summary>Thresholds for nutrient concentrations</summary>
     [Serializable]
@@ -65,7 +63,89 @@
     /// Daily state of flows into and out of each organ
     /// </summary>
     [Serializable]
-    public class OrganResourceStates
+    public class OrganResourceStates : Model
+    {
+        /// <summary> The weight of the organ</summary>
+        public ResourcePools Weight { get { return Carbon / CarbonConcentration; } }
+
+        /// <summary> The weight of the organ</summary>
+        public double Wt { get { return Weight.Total; } }
+
+        /// <summary> The weight of the organ</summary>
+        public double NConc { get { return Nitrogen.Total / Weight.Total; } }
+
+        /// <summary> The weight of the organ</summary>
+        public double PConc { get { return Phosphorus.Total / Weight.Total; } }
+
+        /// <summary> The weight of the organ</summary>
+        public double KConc { get { return Potassium.Total / Weight.Total; } }
+
+
+        /// <summary> The concentraion of carbon in total dry weight</summary>
+        public double CarbonConcentration { get; set; }
+
+        /// <summary> The organs Carbon components </summary>
+        public ResourcePools Carbon { get; set; }
+
+        /// <summary> The organs Carbon components </summary>
+        public ResourcePools Nitrogen { get; set; }
+
+        /// <summary> The organs phosphorus </summary>
+        public ResourcePools Phosphorus { get; set; }
+
+        /// <summary> The organs Potasium components </summary>
+        public ResourcePools Potassium { get; set; }
+
+        /// <summary> The organs Carbon components </summary>
+        public OrganResourceStates()
+        {
+            Carbon = new ResourcePools();
+            Nitrogen = new ResourcePools();
+            Phosphorus = new ResourcePools();
+            Potassium = new ResourcePools();
+        }
+
+        /// <summary> Clear the components </summary>
+        public void Clear()
+        {
+            Carbon.Clear();
+            Nitrogen.Clear();
+            Phosphorus.Clear();
+            Potassium.Clear();
+        }
+
+
+        /// <summary>Implements the operator +.</summary>
+        /// <param name="a">a.</param>
+        /// <param name="b">The b.</param>
+        /// <returns>The result of the operator.</returns>
+        public static OrganResourceStates operator +(OrganResourceStates a, OrganResourceStates b)
+        {
+            return new OrganResourceStates
+            {
+                Carbon = a.Carbon + b.Carbon,
+                Nitrogen = a.Nitrogen + b.Nitrogen,
+                Phosphorus = a.Phosphorus + b.Phosphorus,
+                Potassium = a.Potassium + b.Potassium
+            };
+        }
+
+        /// <summary>Add Delta</summary>
+        public void SetTo(OrganResourceStates newValue)
+        {
+            Carbon = newValue.Carbon;
+            Nitrogen = newValue.Nitrogen;
+            Phosphorus = newValue.Phosphorus;
+            Potassium = newValue.Potassium;
+        }
+
+    }
+
+    /// <summary>
+    /// Daily state of flows into and out of each organ
+    /// </summary>
+    [Serializable]
+    public class OrganResourceDeltas : Model
     {
         /// <summary> Resource supplied to arbitration by the organ</summary>
         public ResourceSupplies Supplies { get; set; }
@@ -102,7 +182,7 @@
         public double MaxCDelta { get; set; }
 
         /// <summary> The Constructor</summary>
-        public OrganResourceStates()
+        public OrganResourceDeltas()
         {
             Supplies = new ResourceSupplies();
             SuppliesAllocated = new ResourceSupplies();
@@ -128,10 +208,10 @@
     /// The daily state of flows throughout the plant
     /// </summary>
     [Serializable]
-    public class PlantResourceStates
+    public class PlantResourceDeltas : Model
     {
         /// <summary>The organs on the plant /// </summary>
-        public List<OrganResourceStates> organs { get; }
+        public List<OrganResourceDeltas> organs { get; }
 
         /// <summary>The total supply of resoure that may be allocated /// </summary>
         public double TotalPlantSupply { get { return organs.Sum(o => o.Supplies.Total); } }
@@ -165,10 +245,10 @@
         public double BalanceError { get; set; }
 
         /// <summary>The constructor</summary>
-        public PlantResourceStates(List<OrganResourceStates> orgs)
+        public PlantResourceDeltas(List<OrganResourceDeltas> orgs)
         {
-            organs = new List<OrganResourceStates>();
-            foreach (OrganResourceStates org in orgs)
+            organs = new List<OrganResourceDeltas>();
+            foreach (OrganResourceDeltas org in orgs)
                 organs.Add(org);
             Start = new double();
             End = new double();
@@ -179,210 +259,257 @@
         public void Clear()
         {
         }
+    }
 
-        /// <summary>
-        /// The class that holds states of Structural, Metabolic and Storage components of a resource
-        /// </summary>
-        [Serializable]
-        [ViewName("UserInterface.Views.PropertyView")]
-        [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-        [ValidParent(ParentType = typeof(Organ))]
-        [ValidParent(ParentType = typeof(Element))]
-        public class ResourcePools : Model
+    /// <summary>
+    /// The class that holds states of Structural, Metabolic and Storage components of a resource
+    /// </summary>
+    [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Organ))]
+    [ValidParent(ParentType = typeof(Element))]
+    public class ResourcePools : Model
+    {
+        /// <summary>Gets or sets the structural.</summary>
+        [Units("g/m2")]
+        public double Structural { get; set; }
+        /// <summary>Gets or sets the storage.</summary>
+        [Units("g/m2")]
+        public double Storage { get; set; }
+        /// <summary>Gets or sets the metabolic.</summary>
+        [Units("g/m2")]
+        public double Metabolic { get; set; }
+        /// <summary>Gets the total amount of biomass.</summary>
+        [Units("g/m2")]
+        public double Total
+        { get { return Structural + Metabolic + Storage; } }
+
+        /// <summary>the constructor.</summary>
+        public ResourcePools()
         {
-            /// <summary>Gets or sets the structural.</summary>
-            [Units("g/m2")]
-            public double Structural { get; set; }
-            /// <summary>Gets or sets the storage.</summary>
-            [Units("g/m2")]
-            public double Storage { get; set; }
-            /// <summary>Gets or sets the metabolic.</summary>
-            [Units("g/m2")]
-            public double Metabolic { get; set; }
-            /// <summary>Gets the total amount of biomass.</summary>
-            [Units("g/m2")]
-            public double Total
-            { get { return Structural + Metabolic + Storage; } }
-
-            /// <summary>the constructor.</summary>
-            public ResourcePools()
-            {
-                Structural = new double();
-                Metabolic = new double();
-                Storage = new double();
-            }
-
-            /// <summary>Clear</summary>
-            public void Clear()
-            {
-                Structural = 0;
-                Storage = 0;
-                Metabolic = 0;
-            }
-
-            /// <summary>Add Delta</summary>
-            public void AddDelta(ResourcePools delta)
-            {
-                Structural += delta.Structural;
-                Metabolic += delta.Metabolic;
-                Storage += delta.Storage;
-            }
-
-            /// <summary>Add Delta</summary>
-            public void SetTo(ResourcePools newValue)
-            {
-                Structural = newValue.Structural;
-                Metabolic = newValue.Metabolic;
-                Storage = newValue.Storage;
-            }
-
-            /// <summary>Add Delta</summary>
-            public void MultiplyBy(ResourcePools multiplier)
-            {
-                Structural *= multiplier.Structural;
-                Metabolic *= multiplier.Metabolic;
-                Storage *= multiplier.Storage;
-            }
+            Structural = new double();
+            Metabolic = new double();
+            Storage = new double();
         }
 
-        /// <summary>
-        /// This class holds the functions for calculating the absolute demands and priorities for each resource component. 
-        /// </summary>
-        [Serializable]
-        [ValidParent(ParentType = typeof(Element))]
-        public class ResourceDemandFunctions : Model, ICustomDocumentation
+        /// <summary>Clear</summary>
+        public void Clear()
         {
-            /// <summary>The demand for the structural fraction.</summary>
-            [Link(Type = LinkType.Child, ByName = true)]
-            [Units("g/m2")]
-            public IFunction Structural = null;
-
-            /// <summary>The demand for the metabolic fraction.</summary>
-            [Link(Type = LinkType.Child, ByName = true)]
-            [Units("g/m2")]
-            public IFunction Metabolic = null;
-
-            /// <summary>The demand for the storage fraction.</summary>
-            [Link(Type = LinkType.Child, ByName = true)]
-            [Units("g/m2")]
-            public IFunction Storage = null;
-
-            /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-            /// <param name="tags">The list of tags to add to.</param>
-            /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-            /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-            public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-            {
-                if (IncludeInDocumentation)
-                {
-                    // add a heading
-                    tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                    // get description of this class.
-                    tags.Add(new AutoDocumentation.Paragraph("This is the collection of functions for calculating the demands for each of the biomass pools (Structural, Metabolic, and Storage).", indent));
-
-                    // write memos.
-                    foreach (IModel memo in this.FindAllChildren<Memo>())
-                        AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                    // write children.
-                    foreach (IModel child in this.FindAllChildren<IFunction>())
-                        AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-                }
-            }
+            Structural = 0;
+            Storage = 0;
+            Metabolic = 0;
         }
 
-        /// <summary>
-        /// The class that holds the states for resource supplies from ReAllocation, Uptake, Fixation and ReTranslocation
-        /// </summary>
-        [Serializable]
-        public class ResourceSupplies
+        /// <summary>Add Delta</summary>
+        public void AddDelta(ResourcePools delta)
         {
-            /// <summary>Gets or sets the fixation.</summary>
-            public double Fixation { get; set; }
-            /// <summary>Gets or sets the reallocation.</summary>
-            public double ReAllocation { get; set; }
-            /// <summary>Gets or sets the uptake.</summary>
-            public double Uptake { get; set; }
-            /// <summary>Gets or sets the retranslocation.</summary>
-            public double ReTranslocation { get; set; }
-
-            /// <summary>Gets the total supply.</summary>
-            public double Total
-            { get { return Fixation + ReAllocation + ReTranslocation + Uptake; } }
-
-            /// <summary>The constructor.</summary>
-            public ResourceSupplies()
-            {
-                Fixation = new double();
-                ReAllocation = new double();
-                Uptake = new double();
-                ReTranslocation = new double();
-            }
-
-            internal void Clear()
-            {
-                Fixation = 0;
-                ReAllocation = 0;
-                Uptake = 0;
-                ReTranslocation = 0;
-            }
+            Structural += delta.Structural;
+            Metabolic += delta.Metabolic;
+            Storage += delta.Storage;
         }
 
-        /// <summary>
-        /// This class holds the functions for calculating the absolute supplies for each resource component. 
-        /// </summary>
-        [Serializable]
-        [ValidParent(ParentType = typeof(Element))]
-        public class ResourceSupplyFunctions : Model, ICustomDocumentation
+        /// <summary>Add Delta</summary>
+        public void SetTo(ResourcePools newValue)
         {
-            /// <summary>The supply from reallocaiton from senesed material</summary>
-            [Link(Type = LinkType.Child, ByName = true)]
-            [Units("g/m2")]
-            public IFunction ReAllocation = null;
-
-            /// <summary>The supply from uptake</summary>
-            [Link(Type = LinkType.Child, ByName = true)]
-            [Units("g/m2")]
-            public IFunction Uptake = null;
-
-            /// <summary>The supply from fixation.</summary>
-            [Link(Type = LinkType.Child, ByName = true)]
-            [Units("g/m2")]
-            public IFunction Fixation = null;
-
-            /// <summary>The supply from retranslocation of storage</summary>
-            [Link(Type = LinkType.Child, ByName = true)]
-            [Units("g/m2")]
-            public IFunction ReTranslocation = null;
-
-            /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-            /// <param name="tags">The list of tags to add to.</param>
-            /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-            /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-            public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-            {
-                if (IncludeInDocumentation)
-                {
-                    // add a heading
-                    tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                    // get description of this class.
-                    tags.Add(new AutoDocumentation.Paragraph("This is the collection of functions for calculating the demands for each of the biomass pools (Structural, Metabolic, and Storage).", indent));
-
-                    // write memos.
-                    foreach (IModel memo in this.FindAllChildren<Memo>())
-                        AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                    // write children.
-                    foreach (IModel child in this.FindAllChildren<IFunction>())
-                        AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-                }
-            }
+            Structural = newValue.Structural;
+            Metabolic = newValue.Metabolic;
+            Storage = newValue.Storage;
         }
 
+        /// <summary>Add Delta</summary>
+        public void MultiplyBy(ResourcePools multiplier)
+        {
+            Structural *= multiplier.Structural;
+            Metabolic *= multiplier.Metabolic;
+            Storage *= multiplier.Storage;
+        }
+
+        /// <summary>Add Delta</summary>
+        public static ResourcePools operator /(ResourcePools a, double b)
+        {
+            return new ResourcePools
+            {
+                Structural = a.Structural / b,
+                Metabolic = a.Metabolic / b,
+                Storage = a.Storage / b,
+            };
+        }
+
+        /// <summary>Implements the operator +.</summary>
+        /// <param name="a">a.</param>
+        /// <param name="b">The b.</param>
+        /// <returns>The result of the operator.</returns>
+        public static ResourcePools operator +(ResourcePools a, ResourcePools b)
+        {
+            return new ResourcePools
+            {
+                Structural = a.Structural + b.Structural,
+                Storage = a.Storage + b.Storage,
+                Metabolic = a.Metabolic + b.Metabolic,
+            };
+        }
 
     }
-    #endregion
 
+    /// <summary>
+    /// This class holds the functions for calculating the absolute demands and priorities for each resource component. 
+    /// </summary>
+    [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Element))]
+    public class ResourceDemandFunctions : Model, ICustomDocumentation
+    {
+        /// <summary>The demand for the structural fraction.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/m2")]
+        public IFunction Structural = null;
+
+        /// <summary>The demand for the metabolic fraction.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/m2")]
+        public IFunction Metabolic = null;
+
+        /// <summary>The demand for the storage fraction.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/m2")]
+        public IFunction Storage = null;
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (IncludeInDocumentation)
+            {
+                // add a heading
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+                // get description of this class.
+                tags.Add(new AutoDocumentation.Paragraph("This is the collection of functions for calculating the demands for each of the biomass pools (Structural, Metabolic, and Storage).", indent));
+
+                // write memos.
+                foreach (IModel memo in this.FindAllChildren<Memo>())
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+
+                // write children.
+                foreach (IModel child in this.FindAllChildren<IFunction>())
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+            }
+        }
+    }
+
+    /// <summary>
+    /// The class that holds the states for resource supplies from ReAllocation, Uptake, Fixation and ReTranslocation
+    /// </summary>
+    [Serializable]
+    public class ResourceSupplies
+    {
+        /// <summary>Gets or sets the fixation.</summary>
+        public double Fixation { get; set; }
+        /// <summary>Gets or sets the reallocation.</summary>
+        public double ReAllocation { get; set; }
+        /// <summary>Gets or sets the uptake.</summary>
+        public double Uptake { get; set; }
+        /// <summary>Gets or sets the retranslocation.</summary>
+        public double ReTranslocation { get; set; }
+
+        /// <summary>Gets the total supply.</summary>
+        public double Total
+        { get { return Fixation + ReAllocation + ReTranslocation + Uptake; } }
+
+        /// <summary>The constructor.</summary>
+        public ResourceSupplies()
+        {
+            Fixation = new double();
+            ReAllocation = new double();
+            Uptake = new double();
+            ReTranslocation = new double();
+        }
+
+        internal void Clear()
+        {
+            Fixation = 0;
+            ReAllocation = 0;
+            Uptake = 0;
+            ReTranslocation = 0;
+        }
+    }
+
+    /// <summary>
+    /// This class holds the functions for calculating the absolute supplies for each resource component. 
+    /// </summary>
+    [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Element))]
+    public class ResourceSupplyFunctions : Model, ICustomDocumentation
+    {
+        /// <summary>The supply from reallocaiton from senesed material</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/m2")]
+        public IFunction ReAllocation = null;
+
+        /// <summary>The supply from uptake</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/m2")]
+        public IFunction Uptake = null;
+
+        /// <summary>The supply from fixation.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/m2")]
+        public IFunction Fixation = null;
+
+        /// <summary>The supply from retranslocation of storage</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/m2")]
+        public IFunction ReTranslocation = null;
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        {
+            if (IncludeInDocumentation)
+            {
+                // add a heading
+                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+
+                // get description of this class.
+                tags.Add(new AutoDocumentation.Paragraph("This is the collection of functions for calculating the demands for each of the biomass pools (Structural, Metabolic, and Storage).", indent));
+
+                // write memos.
+                foreach (IModel memo in this.FindAllChildren<Memo>())
+                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+
+                // write children.
+                foreach (IModel child in this.FindAllChildren<IFunction>())
+                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+            }
+        }
+    }
+
+    /// <summary>Thresholds for nutrient concentrations</summary>
+    [Serializable]
+    [ValidParent(ParentType = typeof(Element))]
+    public class NutrientConcentrationThresholdFunctions : Model
+    {
+        /// <summary>Maximum Nutrient Concentration</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/g")]
+        public IFunction Maximum = null;
+        /// <summary>Critical Nutrient Concentration</summary>
+        /// <summary>Maximum Nutrient Concentration</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/g")]
+        public IFunction Critical = null;
+        /// <summary>Minimum Nutrient Concentration</summary>
+        /// <summary>Maximum Nutrient Concentration</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/g")]
+        public IFunction Minimum = null;
+    }
 }
