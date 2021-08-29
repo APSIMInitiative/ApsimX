@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
     [Description("An individual labour availability item with monthly days available")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourAvailabilityItemMonthly.htm")]
-    public class LabourAvailabilityItemMonthly : FilterGroup<Labour>, ILabourSpecificationItem
+    public class LabourAvailabilityItemMonthly : FilterGroup<LabourType>, ILabourSpecificationItem
     {
         /// <summary>
         /// Monthly values. 

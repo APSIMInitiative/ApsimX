@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     [Description("An individual labour availability with the same days available every month")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourAvailabilityItem.htm")]
-    public class LabourAvailabilityItem : FilterGroup<Labour>, ILabourSpecificationItem
+    public class LabourAvailabilityItem : FilterGroup<LabourType>, ILabourSpecificationItem
     {
         /// <summary>
         /// Single values 
