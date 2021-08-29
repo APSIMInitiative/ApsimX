@@ -46,7 +46,7 @@
         IWaterNitrogenUptake WaterNitrogenUptakeObject { get; }
     }
 
-    
+
     /// <summary>
     /// The class that holds states of Structural, Metabolic and Storage components of a resource
     /// </summary>
@@ -77,6 +77,7 @@
             Structural = new double();
             Metabolic = new double();
             Storage = new double();
+            Clear();
         }
 
         /// <summary>Clear</summary>
@@ -195,13 +196,13 @@
         public double K { get { return Phosphorus.Total; } }
 
         /// <summary> The N concentration of the organ</summary>
-        public double NConc { get { return N / Wt; } }
+        public double NConc { get { return Wt > 0 ? N / Wt : 0; } }
 
         /// <summary> The P concentration of the organ</summary>
-        public double PConc { get { return P / Wt; } }
+        public double PConc { get { return Wt > 0 ? P / Wt : 0; } }
 
         /// <summary> The K concentration of the organ</summary>
-        public double KConc { get { return K / Wt; } }
+        public double KConc { get { return Wt > 0 ? K / Wt : 0; } }
 
 
         /// <summary> The concentraion of carbon in total dry weight</summary>
@@ -220,12 +221,13 @@
         public NutrientPoolStates Potassium { get; set; }
 
         /// <summary> The organs Carbon components </summary>
-        public OrganNutrientStates()
+        public OrganNutrientStates(double Cconc)
         {
             Carbon = new NutrientPoolStates();
             Nitrogen = new NutrientPoolStates();
             Phosphorus = new NutrientPoolStates();
             Potassium = new NutrientPoolStates();
+            CarbonConcentration = Cconc;
         }
 
         /// <summary> Clear the components </summary>
@@ -285,7 +287,7 @@
         /// <summary>return pools divied by value</summary>
         public static OrganNutrientStates operator /(OrganNutrientStates a, double b)
         {
-            return new OrganNutrientStates
+            return new OrganNutrientStates(1)
             {
                 Carbon = a.Carbon / b,
                 Nitrogen = a.Nitrogen / b,
@@ -297,7 +299,7 @@
         /// <summary>return pools multiplied by value</summary>
         public static OrganNutrientStates operator *(OrganNutrientStates a, double b)
         {
-            return new OrganNutrientStates
+            return new OrganNutrientStates(1)
             {
                 Carbon = a.Carbon * b,
                 Nitrogen = a.Nitrogen * b,
@@ -309,7 +311,7 @@
         /// <summary>return sum or two pools</summary>
         public static OrganNutrientStates operator +(OrganNutrientStates a, OrganNutrientStates b)
         {
-            return new OrganNutrientStates
+            return new OrganNutrientStates(1)
             {
                 Carbon = a.Carbon + b.Carbon,
                 Nitrogen = a.Nitrogen + b.Carbon,
@@ -321,7 +323,7 @@
         /// <summary>return sum or two pools</summary>
         public static OrganNutrientStates operator -(OrganNutrientStates a, OrganNutrientStates b)
         {
-            return new OrganNutrientStates
+            return new OrganNutrientStates(1)
             {
                 Carbon = a.Carbon - b.Carbon,
                 Nitrogen = a.Nitrogen - b.Carbon,

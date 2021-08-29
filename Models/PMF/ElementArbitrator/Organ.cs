@@ -10,7 +10,6 @@
     using System.Collections.Generic;
     using Newtonsoft.Json;
     using PMF;
-
     /// <summary>
     /// This is the basic organ class that contains biomass structures and transfers
     /// </summary>
@@ -26,7 +25,7 @@
 
         /// <summary>The parent plant</summary>
         [Link]
-        private Plant parentPlant = null;
+        public Plant parentPlant = null;
 
         /// <summary>The surface organic matter model</summary>
         [Link]
@@ -61,11 +60,6 @@
         [Units("/d")]
         public IFunction DMConversionEfficiency = null;
 
-        /// <summary>Carbon concentration</summary>
-        [Units("g/g")]
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction CarbonConcentration = null;
-
         /// <summary>remobilisation cost</summary>
         [Units("g/g")]
         [Link(Type = LinkType.Child, ByName = true)]
@@ -91,8 +85,9 @@
         /// <summary>Organ constructor</summary>
         public Organ()
         {
-            Live = new OrganNutrientStates();
-            Dead = new OrganNutrientStates();
+            Carbon = new OrganNutrientDelta();
+            Nitrogen = new OrganNutrientDelta();
+            Clear();
         }
 
         ///4. Public Events And Enums
@@ -119,6 +114,10 @@
             }
         }
 
+        /// <summary>The Carbon concentration of the organ</summary>
+        [Description("Carbon concentration")]
+        [Units("g/g")]
+        public double Cconc { get; set; } = 0.4;
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         [Description("Is organ above ground?")]
@@ -190,17 +189,17 @@
         /// <summary>Gets the maximum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double MaxNconc { get { return Nitrogen.Thresholds != null ? Nitrogen.Thresholds.Maximum : 0; } }
+        public double MaxNconc { get { return Nitrogen.Concentrations != null ? Nitrogen.Concentrations.Maximum : 0; } }
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double MinNconc { get { return Nitrogen.Thresholds != null ? Nitrogen.Thresholds.Minimum : 0; } }
+        public double MinNconc { get { return Nitrogen.Concentrations != null ? Nitrogen.Concentrations.Minimum : 0; } }
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double CritNconc { get { return Nitrogen.Thresholds != null ? Nitrogen.Thresholds.Critical : 0; } }
+        public double CritNconc { get { return Nitrogen.Concentrations != null ? Nitrogen.Concentrations.Critical : 0; } }
 
         /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
         [JsonIgnore]
@@ -268,15 +267,15 @@
         /// <summary>Clears this instance.</summary>
         protected virtual void Clear()
         {
-            Live = new OrganNutrientStates();
-            Dead = new OrganNutrientStates();
-            StartLive = new OrganNutrientStates();
-            ReAllocated = new OrganNutrientStates();
-            ReTranslocated = new OrganNutrientStates();
-            Allocated = new OrganNutrientStates();
-            Senesced = new OrganNutrientStates();
-            Detached = new OrganNutrientStates();
-            Removed = new OrganNutrientStates();
+            Live = new OrganNutrientStates(Cconc);
+            Dead = new OrganNutrientStates(Cconc);
+            StartLive = new OrganNutrientStates(Cconc);
+            ReAllocated = new OrganNutrientStates(Cconc);
+            ReTranslocated = new OrganNutrientStates(Cconc);
+            Allocated = new OrganNutrientStates(Cconc);
+            Senesced = new OrganNutrientStates(Cconc);
+            Detached = new OrganNutrientStates(Cconc);
+            Removed = new OrganNutrientStates(Cconc);
 
             Carbon.Clear();
             Nitrogen.Clear();
@@ -325,9 +324,9 @@
                 Live.Weight.Structural = InitialWt.Structural.Value();
                 Live.Weight.Metabolic = InitialWt.Metabolic.Value();
                 Live.Weight.Storage = InitialWt.Storage.Value();
-                Live.Nitrogen.Structural = Live.Weight.Total * Nitrogen.Thresholds.Minimum;
-                Live.Nitrogen.Metabolic = Live.Weight.Total * (Nitrogen.Thresholds.Critical - Nitrogen.Thresholds.Minimum);
-                Live.Nitrogen.Storage = Live.Weight.Total * (Nitrogen.Thresholds.Maximum - Nitrogen.Thresholds.Critical);
+                Live.Nitrogen.Structural = Live.Weight.Total * Nitrogen.Concentrations.Minimum;
+                Live.Nitrogen.Metabolic = Live.Weight.Total * (Nitrogen.Concentrations.Critical - Nitrogen.Concentrations.Minimum);
+                Live.Nitrogen.Storage = Live.Weight.Total * (Nitrogen.Concentrations.Maximum - Nitrogen.Concentrations.Critical);
             }
         }
 
@@ -337,8 +336,8 @@
         [EventSubscribe("DoPotentialPlantGrowth")]
         protected virtual void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            // save current state
-            if (parentPlant.IsEmerged)
+             // save current state
+            if (parentPlant.IsAlive)
                 StartLive.SetTo(Live);
             senescenceRate = SenescenceRate.Value();
             dmConversionEfficiency = DMConversionEfficiency.Value();

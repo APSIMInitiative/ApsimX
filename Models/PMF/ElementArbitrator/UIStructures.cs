@@ -2,17 +2,20 @@
 {
     using Models.Core;
     using Models.Functions;
+    using Models.PMF.Interfaces;
     using Models.PMF.Organs;
     using System;
     using System.Collections.Generic;
     
     /// <summary>
-    /// This class holds the functions for calculating the absolute demands and priorities for each resource component. 
+    /// This class holds the functions for calculating values for each Nutrient component. 
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(OrganNutrientDelta))]
+    [ValidParent(ParentType = typeof(NutrientSupplyFunctions))]
+    [ValidParent(ParentType = typeof(IOrgan))]
     public class NutrientPoolFunctions : Model, ICustomDocumentation
     {
         /// <summary>The demand for the structural fraction.</summary>
@@ -56,7 +59,7 @@
     }
 
     /// <summary>
-    /// This class holds the functions for calculating the absolute supplies for each resource component. 
+    /// This class holds the functions for calculating the Nutrient supplies from the organ. 
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -113,6 +116,8 @@
     /// This class holds the functions for calculating the absolute demands and priorities for each biomass fraction. 
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(OrganNutrientDelta))]
     public class NutrientDemandFunctions : Model, ICustomDocumentation
     {
@@ -171,7 +176,9 @@
         }
     }
 
-    /// <summary>Thresholds for nutrient concentrations</summary>
+    /// <summary>
+    /// This class holds the functions for calculating the Nutrient concentration thresholds
+    /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]

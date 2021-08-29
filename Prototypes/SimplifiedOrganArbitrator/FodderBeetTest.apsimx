@@ -23,8 +23,8 @@
           "VariableNames": [
             "[Clock].Today",
             "[Fertiliser].NitrogenApplied",
-            "[FodderBeet].AboveGround.N",
-            "[FodderBeet].AboveGround.Wt",
+            "//[FodderBeet].AboveGround.N",
+            "//[FodderBeet].AboveGround.Wt",
             "[FodderBeet].Arbitrator.TotalDMFixationSupply",
             "[FodderBeet].Leaf.Canopy.CoverDead",
             "[FodderBeet].Leaf.Canopy.CoverGreen",
@@ -33,14 +33,14 @@
             "[FodderBeet].Leaf.Canopy.Height",
             "[FodderBeet].Leaf.Canopy.LAI",
             "[FodderBeet].Leaf.Canopy.Transpiration",
-            "[FodderBeet].Leaf.Carbon.Deltas.Demands.Total",
+            "[FodderBeet].Leaf.Carbon.Demands.Total",
             "[FodderBeet].Leaf.Photosynthesis.RadnInt",
-            "[FodderBeet].Leaf.Nitrogen.NConc.Critical",
-            "[FodderBeet].Leaf.Dead.MetabolicN",
+            "[FodderBeet].Leaf.Nitrogen.Concentrations.Critical",
             "[FodderBeet].Leaf.Dead.N",
             "[FodderBeet].Leaf.Dead.NConc",
-            "[FodderBeet].Leaf.Dead.StorageN",
-            "[FodderBeet].Leaf.Dead.StructuralN",
+            "[FodderBeet].Leaf.Dead.Nitrogen.Metabolic",
+            "[FodderBeet].Leaf.Dead.Nitrogen.Storage",
+            "[FodderBeet].Leaf.Dead.Nitrogen.Structural",
             "[FodderBeet].Leaf.Dead.Wt",
             "[FodderBeet].Leaf.DeltaLAI",
             "[FodderBeet].Leaf.Fn",
@@ -48,17 +48,17 @@
             "[FodderBeet].Leaf.Live.N",
             "[FodderBeet].Leaf.Live.NConc",
             "[FodderBeet].Leaf.Live.Wt",
-            "[FodderBeet].Leaf.Nitrogen.NConc.Maximum",
-            "[FodderBeet].Leaf.Nitrogen.NConc.Minimum",
+            "[FodderBeet].Leaf.Nitrogen.Concentrations.Maximum",
+            "[FodderBeet].Leaf.Nitrogen.Concentrations.Minimum",
             "[FodderBeet].Leaf.NodeNumber",
             "[FodderBeet].Leaf.SpecificArea",
-            "[FodderBeet].Petiole.Nitrogen.NConc.Critical",
+            "[FodderBeet].Petiole.Nitrogen.Concentrations.Critical",
             "[FodderBeet].Petiole.Dead.NConc",
             "[FodderBeet].Petiole.Live.N",
             "[FodderBeet].Petiole.Live.NConc",
             "[FodderBeet].Petiole.Live.Wt",
-            "[FodderBeet].Petiole.Nitrogen.NConc.Critical",
-            "[FodderBeet].Petiole.Nitrogen.NConc.Minimum",
+            "[FodderBeet].Petiole.Nitrogen.Concentrations.Critical",
+            "[FodderBeet].Petiole.Nitrogen.Concentrations.Minimum",
             "[FodderBeet].Petiole.NConc",
             "[FodderBeet].Phenology.AccumulatedThermalTime",
             "[FodderBeet].Phenology.CurrentPhase.Name",
@@ -66,32 +66,32 @@
             "[FodderBeet].Phenology.Photoperiod",
             "[FodderBeet].Phenology.Stage",
             "[FodderBeet].Phenology.ThermalTime",
-            "[FodderBeet].Root.Nitrogen.NConc.Critical",
+            "[FodderBeet].Root.Nitrogen.Concentrations.Critical",
             "[FodderBeet].Root.Live.N",
             "[FodderBeet].Root.Live.NConc",
             "[FodderBeet].Root.Live.Wt",
-            "[FodderBeet].Root.Nitrogen.NConc.Maximum",
-            "[FodderBeet].Root.Nitrogen.NConc.Minimum",
+            "[FodderBeet].Root.Nitrogen.Concentrations.Maximum",
+            "[FodderBeet].Root.Nitrogen.Concentrations.Minimum",
             "[FodderBeet].Root.N",
             "[FodderBeet].Root.Nconc",
             "[FodderBeet].Root.Network.Depth",
             "[FodderBeet].Root.Network.WaterUptake",
             "[FodderBeet].SCS",
             "[FodderBeet].SowingData.Cultivar",
-            "[FodderBeet].StorageRoot.Nitrogen.NConc.Critical",
+            "[FodderBeet].StorageRoot.Nitrogen.Concentrations.Critical",
             "[FodderBeet].StorageRoot.Live.N",
             "[FodderBeet].StorageRoot.Live.NConc",
             "[FodderBeet].StorageRoot.Live.Wt",
-            "[FodderBeet].StorageRoot.Nitrogen.NConc.Maximum",
-            "[FodderBeet].StorageRoot.Nitrogen.NConc.Minimum",
+            "[FodderBeet].StorageRoot.Nitrogen.Concentrations.Maximum",
+            "[FodderBeet].StorageRoot.Nitrogen.Concentrations.Minimum",
             "[FodderBeet].StorageRoot.NConc",
             "[FodderBeet].StorageRoot.Wt",
-            "[FodderBeet].Total.N",
-            "[FodderBeet].Total.NConc",
-            "[FodderBeet].Total.Wt",
-            "[FodderBeet].TotalDead.N",
-            "[FodderBeet].TotalDead.NConc",
-            "[FodderBeet].TotalDead.Wt",
+            "//[FodderBeet].Total.N",
+            "//[FodderBeet].Total.NConc",
+            "//[FodderBeet].Total.Wt",
+            "//[FodderBeet].TotalDead.N",
+            "//[FodderBeet].TotalDead.NConc",
+            "//[FodderBeet].TotalDead.Wt",
             "[Irrigation].IrrigationApplied",
             "[Phenology].Photoperiod",
             "[Soil].SoilWater.LeachNO3",
@@ -649,11 +649,12 @@
             },
             {
               "$type": "Models.PMF.Organs.Organ, Models",
+              "Cconc": 0.4,
               "IsAboveGround": true,
               "Name": "StorageRoot",
               "Children": [
                 {
-                  "$type": "Models.PMF.ResourcePoolFunctions, Models",
+                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
                   "Name": "InitialWt",
                   "Children": [
                     {
@@ -693,98 +694,44 @@
                 },
                 {
                   "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
-                  "Nutrient": 0,
-                  "Deltas": {
-                    "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
-                    "Supplies": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                      "Fixation": 0.0,
-                      "ReAllocation": 0.0,
-                      "Uptake": 0.0,
-                      "ReTranslocation": 0.0
-                    },
-                    "SuppliesAllocated": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                      "Fixation": 0.0,
-                      "ReAllocation": 0.0,
-                      "Uptake": 0.0,
-                      "ReTranslocation": 0.0
-                    },
-                    "Demands": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
+                  "Supplies": {
+                    "$type": "Models.PMF.OrganNutrientSupplies, Models",
+                    "Fixation": 0.0,
+                    "ReAllocation": {
+                      "$type": "Models.PMF.NutrientPoolStates, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
-                      "Name": "ResourcePools",
+                      "Name": "NutrientPoolStates",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    "PriorityScaledDemand": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
+                    "Uptake": 0.0,
+                    "ReTranslocation": {
+                      "$type": "Models.PMF.NutrientPoolStates, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
-                      "Name": "ResourcePools",
+                      "Name": "NutrientPoolStates",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    "DemandsAllocated": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                      "Structural": 0.0,
-                      "Storage": 0.0,
-                      "Metabolic": 0.0,
-                      "Name": "ResourcePools",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    "MinimumConcentration": 0.0,
-                    "MaxCDelta": 0.0
-                  },
-                  "Live": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
+                    "Name": "OrganNutrientSupplies",
                     "Children": [],
                     "IncludeInDocumentation": true,
                     "Enabled": true,
                     "ReadOnly": false
                   },
-                  "Dead": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "StartLive": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "Thresholds": null,
+                  "MaxCDelta": 0.0,
                   "Name": "Carbon",
                   "Children": [
                     {
-                      "$type": "Models.PMF.BiomassDemandAndPriority, Models",
-                      "Name": "DMDemands",
+                      "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                      "Name": "DemandFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.MultiplyFunction, Models",
@@ -906,8 +853,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.OrganNutrientSupplies, Models",
-                      "Name": "DMSupplies",
+                      "$type": "Models.PMF.NutrientSupplyFunctions, Models",
+                      "Name": "SupplyFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
@@ -930,12 +877,22 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
                           "Name": "ReAllocation",
                           "Children": [
                             {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Structural",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Storage",
+                              "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -949,8 +906,8 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].StartLive.StorageWt",
-                                  "Name": "StorateWt",
+                                  "VariableName": "[StorageRoot].StartLive.Weight.Metabolic",
+                                  "Name": "MetabolicWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -972,7 +929,7 @@
                             },
                             {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Metabolic",
+                              "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -986,8 +943,8 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].StartLive.MetabolicWt",
-                                  "Name": "MetabolicWt",
+                                  "VariableName": "[StorageRoot].StartLive.Weight.Storage",
+                                  "Name": "StorateWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -1013,33 +970,15 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
                           "Name": "ReTranslocation",
                           "Children": [
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Storage",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].StartLive.StorageWt",
-                                  "Name": "StorateWt",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Structural",
+                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -1060,8 +999,36 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].StartLive.MetabolicWt",
+                                  "VariableName": "[StorageRoot].StartLive.Weight.Metabolic",
                                   "Name": "MetabolicWt",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Storage",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.0,
+                                  "Units": null,
+                                  "Name": "ReTranslocationFactor",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[StorageRoot].StartLive.Weight.Storage",
+                                  "Name": "StorateWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -1089,98 +1056,44 @@
                 },
                 {
                   "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
-                  "Nutrient": 0,
-                  "Deltas": {
-                    "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
-                    "Supplies": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                      "Fixation": 0.0,
-                      "ReAllocation": 0.0,
-                      "Uptake": 0.0,
-                      "ReTranslocation": 0.0
-                    },
-                    "SuppliesAllocated": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                      "Fixation": 0.0,
-                      "ReAllocation": 0.0,
-                      "Uptake": 0.0,
-                      "ReTranslocation": 0.0
-                    },
-                    "Demands": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
+                  "Supplies": {
+                    "$type": "Models.PMF.OrganNutrientSupplies, Models",
+                    "Fixation": 0.0,
+                    "ReAllocation": {
+                      "$type": "Models.PMF.NutrientPoolStates, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
-                      "Name": "ResourcePools",
+                      "Name": "NutrientPoolStates",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    "PriorityScaledDemand": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
+                    "Uptake": 0.0,
+                    "ReTranslocation": {
+                      "$type": "Models.PMF.NutrientPoolStates, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
-                      "Name": "ResourcePools",
+                      "Name": "NutrientPoolStates",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    "DemandsAllocated": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                      "Structural": 0.0,
-                      "Storage": 0.0,
-                      "Metabolic": 0.0,
-                      "Name": "ResourcePools",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    "MinimumConcentration": 0.0,
-                    "MaxCDelta": 0.0
-                  },
-                  "Live": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
+                    "Name": "OrganNutrientSupplies",
                     "Children": [],
                     "IncludeInDocumentation": true,
                     "Enabled": true,
                     "ReadOnly": false
                   },
-                  "Dead": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "StartLive": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "Thresholds": null,
+                  "MaxCDelta": 0.0,
                   "Name": "Nitrogen",
                   "Children": [
                     {
-                      "$type": "Models.PMF.BiomassDemandAndPriority, Models",
-                      "Name": "NDemands",
+                      "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                      "Name": "DemandFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.MultiplyFunction, Models",
@@ -1188,7 +1101,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[StorageRoot].Nitrogen.NConc.Minimum",
+                              "VariableName": "[StorageRoot].Nitrogen.Concentrations.Minimum",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1197,7 +1110,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[StorageRoot].Carbon.Deltas.DemandsAllocated.Total",
+                              "VariableName": "[StorageRoot].Carbon.DemandsAllocated.Total",
                               "Name": "PotentialDMAllocation",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1219,7 +1132,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].Nitrogen.NConc.Critical",
+                                  "VariableName": "[StorageRoot].Nitrogen.Concentrations.Critical",
                                   "Name": "CriticalNConc",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -1228,7 +1141,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].Nitrogen.NConc.Minimum",
+                                  "VariableName": "[StorageRoot].Nitrogen.Concentrations.Minimum",
                                   "Name": "MinNconc",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -1242,7 +1155,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[StorageRoot].Carbon.Deltas.DemandsAllocated.Total",
+                              "VariableName": "[StorageRoot].Carbon.DemandsAllocated.Total",
                               "Name": "PotentialDMAllocation",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1260,7 +1173,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[StorageRoot].Nitrogen.NConc.Maximum",
+                              "VariableName": "[StorageRoot].Nitrogen.Concentrations.Maximum",
                               "Name": "MaxNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -1329,8 +1242,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.OrganNutrientSupplies, Models",
-                      "Name": "NSupplies",
+                      "$type": "Models.PMF.NutrientSupplyFunctions, Models",
+                      "Name": "SupplyFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
@@ -1353,12 +1266,22 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
                           "Name": "ReAllocation",
                           "Children": [
                             {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Structural",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Storage",
+                              "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -1372,8 +1295,8 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].StartLive.StorageWt",
-                                  "Name": "StorateWt",
+                                  "VariableName": "[StorageRoot].StartLive.Weight.Metabolic",
+                                  "Name": "MetabolicWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -1395,7 +1318,7 @@
                             },
                             {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Metabolic",
+                              "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -1409,8 +1332,8 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].StartLive.MetabolicWt",
-                                  "Name": "MetabolicWt",
+                                  "VariableName": "[StorageRoot].StartLive.Weight.Storage",
+                                  "Name": "StorateWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -1436,33 +1359,15 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
                           "Name": "ReTranslocation",
                           "Children": [
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Storage",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].StartLive.StorageWt",
-                                  "Name": "StorateWt",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Structural",
+                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -1483,8 +1388,36 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].StartLive.MetabolicWt",
+                                  "VariableName": "[StorageRoot].StartLive.Weight.Metabolic",
                                   "Name": "MetabolicWt",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Storage",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.0,
+                                  "Units": null,
+                                  "Name": "ReTranslocationFactor",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[StorageRoot].StartLive.Weight.Storage",
+                                  "Name": "StorateWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -1507,7 +1440,7 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientConcentrationFunctions, Models",
-                      "Name": "NConc",
+                      "Name": "ConcFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
@@ -1582,6 +1515,115 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
+                  "Name": "TotalDMDemand",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.PhaseLookup, Models",
+                      "Name": "PartitionFraction",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "Emergence",
+                          "End": "InitialReproductive",
+                          "Name": "NonReproductive",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                              "Name": "PartitionFraction",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.XYPairs, Models",
+                                  "X": [
+                                    1.0,
+                                    6.0,
+                                    17.0,
+                                    20.0,
+                                    25.0
+                                  ],
+                                  "Y": [
+                                    0.0,
+                                    0.0,
+                                    0.6,
+                                    0.7,
+                                    0.8
+                                  ],
+                                  "Name": "XYPairs",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "Allocation determined by node number - partitioning coefficients have been determined using the 2014 sowing date October data ([Khaembah_etal_2017]).",
+                                  "Name": "Memo",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].NodeNumber",
+                                  "Name": "XValue",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.PhaseLookupValue, Models",
+                          "Start": "InitialReproductive",
+                          "End": "EndBolting",
+                          "Name": "Reproductive",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": "g/m^2",
+                              "Name": "InitialWtFunction",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.4,
+                  "Units": null,
+                  "Name": "CarbonConcentration",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -1711,115 +1753,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.4,
-                  "Units": null,
-                  "Name": "CarbonConcentration",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
-                  "Name": "TotalDMDemand",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.PhaseLookup, Models",
-                      "Name": "PartitionFraction",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "Emergence",
-                          "End": "InitialReproductive",
-                          "Name": "NonReproductive",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                              "Name": "PartitionFraction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.XYPairs, Models",
-                                  "X": [
-                                    1.0,
-                                    6.0,
-                                    17.0,
-                                    20.0,
-                                    25.0
-                                  ],
-                                  "Y": [
-                                    0.0,
-                                    0.0,
-                                    0.6,
-                                    0.7,
-                                    0.8
-                                  ],
-                                  "Name": "XYPairs",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Memo, Models",
-                                  "Text": "Allocation determined by node number - partitioning coefficients have been determined using the 2014 sowing date October data ([Khaembah_etal_2017]).",
-                                  "Name": "Memo",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].NodeNumber",
-                                  "Name": "XValue",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.PhaseLookupValue, Models",
-                          "Start": "InitialReproductive",
-                          "End": "EndBolting",
-                          "Name": "Reproductive",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0,
-                              "Units": "g/m^2",
-                              "Name": "InitialWtFunction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -1828,11 +1761,12 @@
             },
             {
               "$type": "Models.PMF.Organs.Organ, Models",
+              "Cconc": 0.4,
               "IsAboveGround": true,
               "Name": "Leaf",
               "Children": [
                 {
-                  "$type": "Models.PMF.ResourcePoolFunctions, Models",
+                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
                   "Name": "InitialWt",
                   "Children": [
                     {
@@ -2031,98 +1965,44 @@
                 },
                 {
                   "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
-                  "Nutrient": 0,
-                  "Deltas": {
-                    "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
-                    "Supplies": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                      "Fixation": 0.0,
-                      "ReAllocation": 0.0,
-                      "Uptake": 0.0,
-                      "ReTranslocation": 0.0
-                    },
-                    "SuppliesAllocated": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                      "Fixation": 0.0,
-                      "ReAllocation": 0.0,
-                      "Uptake": 0.0,
-                      "ReTranslocation": 0.0
-                    },
-                    "Demands": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
+                  "Supplies": {
+                    "$type": "Models.PMF.OrganNutrientSupplies, Models",
+                    "Fixation": 0.0,
+                    "ReAllocation": {
+                      "$type": "Models.PMF.NutrientPoolStates, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
-                      "Name": "ResourcePools",
+                      "Name": "NutrientPoolStates",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    "PriorityScaledDemand": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
+                    "Uptake": 0.0,
+                    "ReTranslocation": {
+                      "$type": "Models.PMF.NutrientPoolStates, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
-                      "Name": "ResourcePools",
+                      "Name": "NutrientPoolStates",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    "DemandsAllocated": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                      "Structural": 0.0,
-                      "Storage": 0.0,
-                      "Metabolic": 0.0,
-                      "Name": "ResourcePools",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    "MinimumConcentration": 0.0,
-                    "MaxCDelta": 0.0
-                  },
-                  "Live": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
+                    "Name": "OrganNutrientSupplies",
                     "Children": [],
                     "IncludeInDocumentation": true,
                     "Enabled": true,
                     "ReadOnly": false
                   },
-                  "Dead": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "StartLive": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "Thresholds": null,
+                  "MaxCDelta": 0.0,
                   "Name": "Carbon",
                   "Children": [
                     {
-                      "$type": "Models.PMF.BiomassDemandAndPriority, Models",
-                      "Name": "DMDemands",
+                      "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                      "Name": "DemandFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.MultiplyFunction, Models",
@@ -2244,8 +2124,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.OrganNutrientSupplies, Models",
-                      "Name": "DMSupplies",
+                      "$type": "Models.PMF.NutrientSupplyFunctions, Models",
+                      "Name": "SupplyFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
@@ -2267,12 +2147,22 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
                           "Name": "ReAllocation",
                           "Children": [
                             {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Structural",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Storage",
+                              "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -2286,8 +2176,8 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].StartLive.StorageWt",
-                                  "Name": "StorateWt",
+                                  "VariableName": "[Leaf].StartLive.Weight.Metabolic",
+                                  "Name": "MetabolicWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -2309,7 +2199,7 @@
                             },
                             {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Metabolic",
+                              "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -2323,8 +2213,8 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].StartLive.MetabolicWt",
-                                  "Name": "MetabolicWt",
+                                  "VariableName": "[Leaf].StartLive.Weight.Storage",
+                                  "Name": "StorateWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -2350,33 +2240,15 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
                           "Name": "ReTranslocation",
                           "Children": [
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Storage",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].StartLive.StorageWt",
-                                  "Name": "StorateWt",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Structural",
+                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -2397,8 +2269,36 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].StartLive.MetabolicWt",
+                                  "VariableName": "[Leaf].StartLive.Weight.Metabolic",
                                   "Name": "MetabolicWt",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Storage",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": null,
+                                  "Name": "ReTranslocationFactor",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].StartLive.Weight.Storage",
+                                  "Name": "StorateWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -2426,98 +2326,44 @@
                 },
                 {
                   "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
-                  "Nutrient": 0,
-                  "Deltas": {
-                    "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
-                    "Supplies": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                      "Fixation": 0.0,
-                      "ReAllocation": 0.0,
-                      "Uptake": 0.0,
-                      "ReTranslocation": 0.0
-                    },
-                    "SuppliesAllocated": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                      "Fixation": 0.0,
-                      "ReAllocation": 0.0,
-                      "Uptake": 0.0,
-                      "ReTranslocation": 0.0
-                    },
-                    "Demands": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
+                  "Supplies": {
+                    "$type": "Models.PMF.OrganNutrientSupplies, Models",
+                    "Fixation": 0.0,
+                    "ReAllocation": {
+                      "$type": "Models.PMF.NutrientPoolStates, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
-                      "Name": "ResourcePools",
+                      "Name": "NutrientPoolStates",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    "PriorityScaledDemand": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
+                    "Uptake": 0.0,
+                    "ReTranslocation": {
+                      "$type": "Models.PMF.NutrientPoolStates, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
-                      "Name": "ResourcePools",
+                      "Name": "NutrientPoolStates",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    "DemandsAllocated": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                      "Structural": 0.0,
-                      "Storage": 0.0,
-                      "Metabolic": 0.0,
-                      "Name": "ResourcePools",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    "MinimumConcentration": 0.0,
-                    "MaxCDelta": 0.0
-                  },
-                  "Live": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
+                    "Name": "OrganNutrientSupplies",
                     "Children": [],
                     "IncludeInDocumentation": true,
                     "Enabled": true,
                     "ReadOnly": false
                   },
-                  "Dead": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "StartLive": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "Thresholds": null,
+                  "MaxCDelta": 0.0,
                   "Name": "Nitrogen",
                   "Children": [
                     {
-                      "$type": "Models.PMF.BiomassDemandAndPriority, Models",
-                      "Name": "NDemands",
+                      "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                      "Name": "DemandFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.MultiplyFunction, Models",
@@ -2525,7 +2371,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].Nitrogen.NConc.Minimum",
+                              "VariableName": "[Leaf].Nitrogen.Concentrations.Minimum",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2534,7 +2380,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].Carbon.Deltas.DemandsAllocated.Total",
+                              "VariableName": "[Leaf].Carbon.DemandsAllocated.Total",
                               "Name": "PotentialDMAllocation",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2556,7 +2402,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].Nitrogen.NConc.Critical",
+                                  "VariableName": "[Leaf].Nitrogen.Concentrations.Critical",
                                   "Name": "CritNconc",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -2565,7 +2411,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].Nitrogen.NConc.Minimum",
+                                  "VariableName": "[Leaf].Nitrogen.Concentrations.Minimum",
                                   "Name": "MinNconc",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -2579,7 +2425,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].Carbon.Deltas.DemandsAllocated.Total",
+                              "VariableName": "[Leaf].Carbon.DemandsAllocated.Total",
                               "Name": "PotentialDMAllocation",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2607,7 +2453,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].Nitrogen.NConc.Maximum",
+                              "VariableName": "[Leaf].Nitrogen.Concentrations.Maximum",
                               "Name": "MaxNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -2655,8 +2501,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.OrganNutrientSupplies, Models",
-                      "Name": "NSupplies",
+                      "$type": "Models.PMF.NutrientSupplyFunctions, Models",
+                      "Name": "SupplyFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
@@ -2679,12 +2525,22 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
                           "Name": "ReAllocation",
                           "Children": [
                             {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Structural",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Storage",
+                              "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -2698,8 +2554,8 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].StartLive.StorageWt",
-                                  "Name": "StorateWt",
+                                  "VariableName": "[Leaf].StartLive.Weight.Metabolic",
+                                  "Name": "MetabolicWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -2721,7 +2577,7 @@
                             },
                             {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Metabolic",
+                              "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -2735,8 +2591,8 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].StartLive.MetabolicWt",
-                                  "Name": "MetabolicWt",
+                                  "VariableName": "[Leaf].StartLive.Weight.Storage",
+                                  "Name": "StorateWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -2762,33 +2618,15 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
                           "Name": "ReTranslocation",
                           "Children": [
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Storage",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].StartLive.StorageWt",
-                                  "Name": "StorateWt",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Structural",
+                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -2809,8 +2647,36 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].StartLive.MetabolicWt",
+                                  "VariableName": "[Leaf].StartLive.Weight.Metabolic",
                                   "Name": "MetabolicWt",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Storage",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": null,
+                                  "Name": "ReTranslocationFactor",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Leaf].StartLive.Weight.Storage",
+                                  "Name": "StorateWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -2833,7 +2699,7 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientConcentrationFunctions, Models",
-                      "Name": "NConc",
+                      "Name": "ConcFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
@@ -3078,7 +2944,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Live.StructuralWt + [Leaf].Live.MetabolicWt",
+                          "VariableName": "[Leaf].Live.Weight.Structural + [Leaf].Live.Weight.Metabolic",
                           "Name": "LeafLiveWt",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3882,11 +3748,12 @@
             },
             {
               "$type": "Models.PMF.Organs.Organ, Models",
+              "Cconc": 0.4,
               "IsAboveGround": true,
               "Name": "Petiole",
               "Children": [
                 {
-                  "$type": "Models.PMF.ResourcePoolFunctions, Models",
+                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
                   "Name": "InitialWt",
                   "Children": [
                     {
@@ -3926,98 +3793,44 @@
                 },
                 {
                   "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
-                  "Nutrient": 0,
-                  "Deltas": {
-                    "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
-                    "Supplies": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                      "Fixation": 0.0,
-                      "ReAllocation": 0.0,
-                      "Uptake": 0.0,
-                      "ReTranslocation": 0.0
-                    },
-                    "SuppliesAllocated": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                      "Fixation": 0.0,
-                      "ReAllocation": 0.0,
-                      "Uptake": 0.0,
-                      "ReTranslocation": 0.0
-                    },
-                    "Demands": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
+                  "Supplies": {
+                    "$type": "Models.PMF.OrganNutrientSupplies, Models",
+                    "Fixation": 0.0,
+                    "ReAllocation": {
+                      "$type": "Models.PMF.NutrientPoolStates, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
-                      "Name": "ResourcePools",
+                      "Name": "NutrientPoolStates",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    "PriorityScaledDemand": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
+                    "Uptake": 0.0,
+                    "ReTranslocation": {
+                      "$type": "Models.PMF.NutrientPoolStates, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
-                      "Name": "ResourcePools",
+                      "Name": "NutrientPoolStates",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    "DemandsAllocated": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                      "Structural": 0.0,
-                      "Storage": 0.0,
-                      "Metabolic": 0.0,
-                      "Name": "ResourcePools",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    "MinimumConcentration": 0.0,
-                    "MaxCDelta": 0.0
-                  },
-                  "Live": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
+                    "Name": "OrganNutrientSupplies",
                     "Children": [],
                     "IncludeInDocumentation": true,
                     "Enabled": true,
                     "ReadOnly": false
                   },
-                  "Dead": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "StartLive": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "Thresholds": null,
+                  "MaxCDelta": 0.0,
                   "Name": "Carbon",
                   "Children": [
                     {
-                      "$type": "Models.PMF.BiomassDemandAndPriority, Models",
-                      "Name": "DMDemands",
+                      "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                      "Name": "DemandFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.MultiplyFunction, Models",
@@ -4121,8 +3934,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.OrganNutrientSupplies, Models",
-                      "Name": "DMSupplies",
+                      "$type": "Models.PMF.NutrientSupplyFunctions, Models",
+                      "Name": "SupplyFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
@@ -4145,12 +3958,22 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
                           "Name": "ReAllocation",
                           "Children": [
                             {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Structural",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Storage",
+                              "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -4164,8 +3987,8 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].StartLive.StorageWt",
-                                  "Name": "StorateWt",
+                                  "VariableName": "[Petiole].StartLive.Weight.Metabolic",
+                                  "Name": "MetabolicWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -4187,7 +4010,7 @@
                             },
                             {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Metabolic",
+                              "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -4201,8 +4024,8 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].StartLive.MetabolicWt",
-                                  "Name": "MetabolicWt",
+                                  "VariableName": "[Petiole].StartLive.Weight.Storage",
+                                  "Name": "StorateWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -4228,33 +4051,15 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
                           "Name": "ReTranslocation",
                           "Children": [
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Storage",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].StartLive.StorageWt",
-                                  "Name": "StorateWt",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Structural",
+                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -4275,8 +4080,36 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].StartLive.MetabolicWt",
+                                  "VariableName": "[Petiole].StartLive.Weight.Metabolic",
                                   "Name": "MetabolicWt",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Storage",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.0,
+                                  "Units": null,
+                                  "Name": "ReTranslocationFactor",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Petiole].StartLive.Weight.Storage",
+                                  "Name": "StorateWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -4304,98 +4137,44 @@
                 },
                 {
                   "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
-                  "Nutrient": 0,
-                  "Deltas": {
-                    "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
-                    "Supplies": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                      "Fixation": 0.0,
-                      "ReAllocation": 0.0,
-                      "Uptake": 0.0,
-                      "ReTranslocation": 0.0
-                    },
-                    "SuppliesAllocated": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                      "Fixation": 0.0,
-                      "ReAllocation": 0.0,
-                      "Uptake": 0.0,
-                      "ReTranslocation": 0.0
-                    },
-                    "Demands": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
+                  "Supplies": {
+                    "$type": "Models.PMF.OrganNutrientSupplies, Models",
+                    "Fixation": 0.0,
+                    "ReAllocation": {
+                      "$type": "Models.PMF.NutrientPoolStates, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
-                      "Name": "ResourcePools",
+                      "Name": "NutrientPoolStates",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    "PriorityScaledDemand": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
+                    "Uptake": 0.0,
+                    "ReTranslocation": {
+                      "$type": "Models.PMF.NutrientPoolStates, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
-                      "Name": "ResourcePools",
+                      "Name": "NutrientPoolStates",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    "DemandsAllocated": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                      "Structural": 0.0,
-                      "Storage": 0.0,
-                      "Metabolic": 0.0,
-                      "Name": "ResourcePools",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    "MinimumConcentration": 0.0,
-                    "MaxCDelta": 0.0
-                  },
-                  "Live": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
+                    "Name": "OrganNutrientSupplies",
                     "Children": [],
                     "IncludeInDocumentation": true,
                     "Enabled": true,
                     "ReadOnly": false
                   },
-                  "Dead": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "StartLive": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "Thresholds": null,
+                  "MaxCDelta": 0.0,
                   "Name": "Nitrogen",
                   "Children": [
                     {
-                      "$type": "Models.PMF.BiomassDemandAndPriority, Models",
-                      "Name": "NDemands",
+                      "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                      "Name": "DemandFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.MultiplyFunction, Models",
@@ -4403,7 +4182,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Petiole].Nitrogen.NConc.Minimum",
+                              "VariableName": "[Petiole].Nitrogen.Concentrations.Minimum",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -4412,7 +4191,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Petiole].Carbon.Deltas.DemandsAllocated.Total",
+                              "VariableName": "[Petiole].Carbon.DemandsAllocated.Total",
                               "Name": "PotentialDMAllocation",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -4440,7 +4219,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Petiole].Nitrogen.NConc.Maximum",
+                              "VariableName": "[Petiole].Nitrogen.Concentrations.Maximum",
                               "Name": "MaxNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -4509,28 +4288,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "NRetranslocationFactor",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "NReallocationFactor",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.OrganNutrientSupplies, Models",
-                      "Name": "NSupplies",
+                      "$type": "Models.PMF.NutrientSupplyFunctions, Models",
+                      "Name": "SupplyFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
@@ -4553,12 +4312,22 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
                           "Name": "ReAllocation",
                           "Children": [
                             {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Structural",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Storage",
+                              "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -4572,8 +4341,8 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].StartLive.StorageWt",
-                                  "Name": "StorateWt",
+                                  "VariableName": "[Petiole].StartLive.Weight.Metabolic",
+                                  "Name": "MetabolicWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -4595,7 +4364,7 @@
                             },
                             {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Metabolic",
+                              "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -4609,8 +4378,8 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].StartLive.MetabolicWt",
-                                  "Name": "MetabolicWt",
+                                  "VariableName": "[Petiole].StartLive.Weight.Storage",
+                                  "Name": "StorateWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -4636,33 +4405,15 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
                           "Name": "ReTranslocation",
                           "Children": [
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Storage",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].StartLive.StorageWt",
-                                  "Name": "StorateWt",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Structural",
+                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -4683,8 +4434,36 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].StartLive.MetabolicWt",
+                                  "VariableName": "[Petiole].StartLive.Weight.Metabolic",
                                   "Name": "MetabolicWt",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Storage",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.0,
+                                  "Units": null,
+                                  "Name": "ReTranslocationFactor",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Petiole].StartLive.Weight.Storage",
+                                  "Name": "StorateWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -4707,7 +4486,7 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientConcentrationFunctions, Models",
-                      "Name": "NConc",
+                      "Name": "ConcFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
@@ -4965,11 +4744,12 @@
             },
             {
               "$type": "Models.PMF.Organs.Organ, Models",
+              "Cconc": 0.4,
               "IsAboveGround": true,
               "Name": "Root",
               "Children": [
                 {
-                  "$type": "Models.PMF.ResourcePoolFunctions, Models",
+                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
                   "Name": "InitialWt",
                   "Children": [
                     {
@@ -5009,98 +4789,44 @@
                 },
                 {
                   "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
-                  "Nutrient": 0,
-                  "Deltas": {
-                    "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
-                    "Supplies": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                      "Fixation": 0.0,
-                      "ReAllocation": 0.0,
-                      "Uptake": 0.0,
-                      "ReTranslocation": 0.0
-                    },
-                    "SuppliesAllocated": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                      "Fixation": 0.0,
-                      "ReAllocation": 0.0,
-                      "Uptake": 0.0,
-                      "ReTranslocation": 0.0
-                    },
-                    "Demands": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
+                  "Supplies": {
+                    "$type": "Models.PMF.OrganNutrientSupplies, Models",
+                    "Fixation": 0.0,
+                    "ReAllocation": {
+                      "$type": "Models.PMF.NutrientPoolStates, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
-                      "Name": "ResourcePools",
+                      "Name": "NutrientPoolStates",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    "PriorityScaledDemand": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
+                    "Uptake": 0.0,
+                    "ReTranslocation": {
+                      "$type": "Models.PMF.NutrientPoolStates, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
-                      "Name": "ResourcePools",
+                      "Name": "NutrientPoolStates",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    "DemandsAllocated": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                      "Structural": 0.0,
-                      "Storage": 0.0,
-                      "Metabolic": 0.0,
-                      "Name": "ResourcePools",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    "MinimumConcentration": 0.0,
-                    "MaxCDelta": 0.0
-                  },
-                  "Live": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
+                    "Name": "OrganNutrientSupplies",
                     "Children": [],
                     "IncludeInDocumentation": true,
                     "Enabled": true,
                     "ReadOnly": false
                   },
-                  "Dead": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "StartLive": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "Thresholds": null,
+                  "MaxCDelta": 0.0,
                   "Name": "Carbon",
                   "Children": [
                     {
-                      "$type": "Models.PMF.BiomassDemandAndPriority, Models",
-                      "Name": "DMDemands",
+                      "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                      "Name": "DemandFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.MultiplyFunction, Models",
@@ -5204,8 +4930,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.OrganNutrientSupplies, Models",
-                      "Name": "DMSupplies",
+                      "$type": "Models.PMF.NutrientSupplyFunctions, Models",
+                      "Name": "SupplyFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
@@ -5228,12 +4954,22 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
                           "Name": "ReAllocation",
                           "Children": [
                             {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Structural",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Storage",
+                              "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -5247,8 +4983,8 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].StartLive.StorageWt",
-                                  "Name": "StorateWt",
+                                  "VariableName": "[Root].StartLive.Weight.Metabolic",
+                                  "Name": "MetabolicWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -5270,7 +5006,7 @@
                             },
                             {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Metabolic",
+                              "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -5284,8 +5020,8 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].StartLive.MetabolicWt",
-                                  "Name": "MetabolicWt",
+                                  "VariableName": "[Root].StartLive.Weight.Storage",
+                                  "Name": "StorateWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -5311,33 +5047,15 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
                           "Name": "ReTranslocation",
                           "Children": [
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Storage",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].StartLive.StorageWt",
-                                  "Name": "StorateWt",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Structural",
+                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -5358,8 +5076,36 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].StartLive.MetabolicWt",
+                                  "VariableName": "[Root].StartLive.Weight.Metabolic",
                                   "Name": "MetabolicWt",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Storage",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": null,
+                                  "Name": "ReTranslocationFactor",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Root].StartLive.Weight.Storage",
+                                  "Name": "StorateWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -5387,98 +5133,44 @@
                 },
                 {
                   "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
-                  "Nutrient": 0,
-                  "Deltas": {
-                    "$type": "Models.PMF.Interfaces.OrganResourceStates, Models",
-                    "Supplies": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                      "Fixation": 0.0,
-                      "ReAllocation": 0.0,
-                      "Uptake": 0.0,
-                      "ReTranslocation": 0.0
-                    },
-                    "SuppliesAllocated": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourceSupplies, Models",
-                      "Fixation": 0.0,
-                      "ReAllocation": 0.0,
-                      "Uptake": 0.0,
-                      "ReTranslocation": 0.0
-                    },
-                    "Demands": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
+                  "Supplies": {
+                    "$type": "Models.PMF.OrganNutrientSupplies, Models",
+                    "Fixation": 0.0,
+                    "ReAllocation": {
+                      "$type": "Models.PMF.NutrientPoolStates, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
-                      "Name": "ResourcePools",
+                      "Name": "NutrientPoolStates",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    "PriorityScaledDemand": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
+                    "Uptake": 0.0,
+                    "ReTranslocation": {
+                      "$type": "Models.PMF.NutrientPoolStates, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
-                      "Name": "ResourcePools",
+                      "Name": "NutrientPoolStates",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
-                    "DemandsAllocated": {
-                      "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                      "Structural": 0.0,
-                      "Storage": 0.0,
-                      "Metabolic": 0.0,
-                      "Name": "ResourcePools",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    "MinimumConcentration": 0.0,
-                    "MaxCDelta": 0.0
-                  },
-                  "Live": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
+                    "Name": "OrganNutrientSupplies",
                     "Children": [],
                     "IncludeInDocumentation": true,
                     "Enabled": true,
                     "ReadOnly": false
                   },
-                  "Dead": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "StartLive": {
-                    "$type": "Models.PMF.Interfaces.PlantResourceStates+ResourcePools, Models",
-                    "Structural": 0.0,
-                    "Storage": 0.0,
-                    "Metabolic": 0.0,
-                    "Name": "ResourcePools",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "Thresholds": null,
+                  "MaxCDelta": 0.0,
                   "Name": "Nitrogen",
                   "Children": [
                     {
-                      "$type": "Models.PMF.BiomassDemandAndPriority, Models",
-                      "Name": "Demands",
+                      "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                      "Name": "DemandFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.MultiplyFunction, Models",
@@ -5486,7 +5178,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].Nitrogen.Nconc.Minimum",
+                              "VariableName": "[Root].Nitrogen.Concentrations.Minimum",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -5495,7 +5187,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].Carbon.Deltas.DemandsAllocated.Total",
+                              "VariableName": "[Root].Carbon.DemandsAllocated.Total",
                               "Name": "PotentialDMAllocation",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -5523,7 +5215,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].Nitrogen.NConc.Maximum",
+                              "VariableName": "[Root].Nitrogen.Concentrations.Maximum",
                               "Name": "MaxNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -5592,8 +5284,8 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.PMF.OrganNutrientSupplies, Models",
-                      "Name": "Supplies",
+                      "$type": "Models.PMF.NutrientSupplyFunctions, Models",
+                      "Name": "SupplyFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
@@ -5616,12 +5308,22 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
                           "Name": "ReAllocation",
                           "Children": [
                             {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Structural",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Storage",
+                              "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -5635,8 +5337,8 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].StartLive.StorageWt",
-                                  "Name": "StorateWt",
+                                  "VariableName": "[Root].StartLive.Weight.Metabolic",
+                                  "Name": "MetabolicWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -5658,7 +5360,7 @@
                             },
                             {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Metabolic",
+                              "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -5672,8 +5374,8 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].StartLive.MetabolicWt",
-                                  "Name": "MetabolicWt",
+                                  "VariableName": "[Root].StartLive.Weight.Storage",
+                                  "Name": "StorateWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -5699,33 +5401,15 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.AddFunction, Models",
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
                           "Name": "ReTranslocation",
                           "Children": [
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Storage",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].StartLive.StorageWt",
-                                  "Name": "StorateWt",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Structural",
+                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -5746,8 +5430,36 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].StartLive.MetabolicWt",
+                                  "VariableName": "[Root].StartLive.Weight.Metabolic",
                                   "Name": "MetabolicWt",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Storage",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": null,
+                                  "Name": "ReTranslocationFactor",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Root].StartLive.Weight.Storage",
+                                  "Name": "StorateWt",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -5770,7 +5482,7 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientConcentrationFunctions, Models",
-                      "Name": "NConc",
+                      "Name": "ConcFunctions",
                       "Children": [
                         {
                           "$type": "Models.Functions.LinearInterpolationFunction, Models",
@@ -6616,7 +6328,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+                  "$type": "Models.PMF.NutrientDemandFunctions, Models",
                   "Name": "DMDemands",
                   "Children": [
                     {
@@ -6775,7 +6487,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
+                  "$type": "Models.PMF.NutrientDemandFunctions, Models",
                   "Name": "NDemands",
                   "Children": [
                     {
@@ -6784,7 +6496,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].minimumNconc",
+                          "VariableName": "[Root].Nitrogen.Concentrations.Minimum",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6815,7 +6527,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].criticalNConc",
+                              "VariableName": "[Root].Nitrogen.Concentrations.Critical",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -6824,7 +6536,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].minimumNconc",
+                              "VariableName": "[Root].Nitrogen.Concentrations.Minimum",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -6865,7 +6577,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].maximumNconc",
+                          "VariableName": "[Root].Nitrogen.Concentrations.Maximum",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6914,7 +6626,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Root].MinimumNConc",
+                  "VariableName": "[Root].Nitrogen.Concentrations.Minimum",
                   "Name": "CriticalNConc",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -6922,7 +6634,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.ResourcePoolFunctions, Models",
+                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
                   "Name": "InitialWt",
                   "Children": [
                     {
@@ -7055,7 +6767,7 @@
               "Name": "AboveGround",
               "Children": [],
               "IncludeInDocumentation": true,
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -7068,7 +6780,7 @@
               "Name": "BelowGround",
               "Children": [],
               "IncludeInDocumentation": true,
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -7087,7 +6799,7 @@
               "Name": "Total",
               "Children": [],
               "IncludeInDocumentation": true,
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -7102,7 +6814,7 @@
               "Name": "TotalLive",
               "Children": [],
               "IncludeInDocumentation": true,
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -7117,7 +6829,7 @@
               "Name": "TotalDead",
               "Children": [],
               "IncludeInDocumentation": true,
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -7160,7 +6872,7 @@
               "Children": [
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[StorageRoot].Live.MetabolicWt",
+                  "VariableName": "[StorageRoot].Live.Weight.Storage",
                   "Name": "Storage",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -7169,7 +6881,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[StorageRoot].Live.StorageWt",
+                  "VariableName": "[StorageRoot].Live.Weight.Metabolic",
                   "Name": "Metabolic",
                   "Children": [],
                   "IncludeInDocumentation": true,
