@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 285,
-  "Version": 137,
+  "Version": 139,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -245,13 +245,13 @@
                           "Children": [
                             {
                               "$type": "Models.CLEM.Resources.RuminantInitialCohorts, Models",
-                              "WeightWarningOccurred": false,
+                              "WeightWarningOccurred": true,
                               "SelectedTab": null,
                               "Name": "Initial cohorts",
                               "Children": [
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 1,
+                                  "Sex": 1,
                                   "Age": 8,
                                   "Number": 2.0,
                                   "Weight": 180.0,
@@ -267,7 +267,7 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 0,
+                                  "Sex": 0,
                                   "Age": 8,
                                   "Number": 2.0,
                                   "Weight": 180.0,
@@ -283,7 +283,7 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 1,
+                                  "Sex": 1,
                                   "Age": 37,
                                   "Number": 4.0,
                                   "Weight": 400.0,
@@ -299,7 +299,7 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 0,
+                                  "Sex": 1,
                                   "Age": 30,
                                   "Number": 1.0,
                                   "Weight": 520.0,
@@ -315,7 +315,7 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 0,
+                                  "Sex": 1,
                                   "Age": 42,
                                   "Number": 1.0,
                                   "Weight": 610.0,
@@ -348,9 +348,9 @@
                                   "Name": "Weaners_LT_12m",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 3,
-                                      "Operator": 2,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Age",
+                                      "Operator": 20,
                                       "Value": "12",
                                       "SelectedTab": null,
                                       "Name": "LT_12m",
@@ -373,9 +373,9 @@
                                   "Name": "Female1_3_Buy",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 2,
-                                      "Operator": 0,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Sex",
+                                      "Operator": 13,
                                       "Value": "Female",
                                       "SelectedTab": null,
                                       "Name": "Female",
@@ -385,9 +385,9 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 3,
-                                      "Operator": 2,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Age",
+                                      "Operator": 20,
                                       "Value": "36",
                                       "SelectedTab": null,
                                       "Name": "less36months",
@@ -410,9 +410,9 @@
                                   "Name": "Female1_3_Sell",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 2,
-                                      "Operator": 0,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Sex",
+                                      "Operator": 13,
                                       "Value": "Female",
                                       "SelectedTab": null,
                                       "Name": "Female",
@@ -422,9 +422,9 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 3,
-                                      "Operator": 2,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Age",
+                                      "Operator": 20,
                                       "Value": "36",
                                       "SelectedTab": null,
                                       "Name": "less36months",
@@ -447,9 +447,9 @@
                                   "Name": "Female 3plus",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 2,
-                                      "Operator": 0,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Sex",
+                                      "Operator": 13,
                                       "Value": "Female",
                                       "SelectedTab": null,
                                       "Name": "Female",
@@ -459,9 +459,9 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 3,
-                                      "Operator": 5,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Age",
+                                      "Operator": 16,
                                       "Value": "36",
                                       "SelectedTab": null,
                                       "Name": "36months",
@@ -484,9 +484,9 @@
                                   "Name": "Male1_3",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 2,
-                                      "Operator": 0,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Sex",
+                                      "Operator": 13,
                                       "Value": "Male",
                                       "SelectedTab": null,
                                       "Name": "Male",
@@ -496,9 +496,9 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 3,
-                                      "Operator": 2,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Age",
+                                      "Operator": 20,
                                       "Value": "36",
                                       "SelectedTab": null,
                                       "Name": "less36months",
@@ -521,9 +521,9 @@
                                   "Name": "Male 3plus",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 2,
-                                      "Operator": 0,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Sex",
+                                      "Operator": 13,
                                       "Value": "Male",
                                       "SelectedTab": null,
                                       "Name": "Male",
@@ -533,9 +533,9 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 3,
-                                      "Operator": 5,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Age",
+                                      "Operator": 21,
                                       "Value": "36",
                                       "SelectedTab": null,
                                       "Name": "36months",
@@ -558,21 +558,9 @@
                                   "Name": "Breeding Sires",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 2,
-                                      "Operator": 0,
-                                      "Value": "Male",
-                                      "SelectedTab": null,
-                                      "Name": "Male",
-                                      "Children": [],
-                                      "IncludeInDocumentation": false,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 15,
-                                      "Operator": 0,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "RuminantMale.IsSire",
+                                      "Operator": 13,
                                       "Value": "True",
                                       "SelectedTab": null,
                                       "Name": "isSire",
@@ -771,7 +759,6 @@
                             {
                               "$type": "Models.CLEM.Groupings.RuminantGroup, Models",
                               "Reason": 0,
-                              "Proportion": 1.0,
                               "SelectedTab": null,
                               "Name": "All",
                               "Children": [],
@@ -939,7 +926,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 1,
+                                  "Sex": 1,
                                   "Age": 24,
                                   "Number": 0.0,
                                   "Weight": 0.0,
@@ -967,7 +954,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 0,
+                                  "Sex": 0,
                                   "Age": 36,
                                   "Number": 0.0,
                                   "Weight": 0.0,
@@ -1396,7 +1383,7 @@
                           "LineThickness": 0,
                           "TableName": "ReportResourceBalances",
                           "XFieldName": "Date",
-                          "YFieldName": "NativePasture",
+                          "YFieldName": "NativePasture_Amount",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -1425,7 +1412,7 @@
                           "LineThickness": 0,
                           "TableName": "ReportResourceBalances",
                           "XFieldName": "Date",
-                          "YFieldName": "Hay",
+                          "YFieldName": "Hay_Amount",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,

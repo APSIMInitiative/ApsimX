@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 285,
-  "Version": 137,
+  "Version": 139,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -179,7 +179,7 @@
                         {
                           "$type": "Models.CLEM.Resources.LabourType, Models",
                           "InitialAge": 42.0,
-                          "Gender": 0,
+                          "Sex": 0,
                           "Individuals": 1,
                           "Hired": false,
                           "SelectedTab": null,
@@ -192,7 +192,7 @@
                         {
                           "$type": "Models.CLEM.Resources.LabourType, Models",
                           "InitialAge": 35.0,
-                          "Gender": 1,
+                          "Sex": 1,
                           "Individuals": 1,
                           "Hired": false,
                           "SelectedTab": null,
@@ -212,7 +212,20 @@
                               "Value": 28.0,
                               "SelectedTab": null,
                               "Name": "Male",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                  "PropertyOfIndividual": "Sex",
+                                  "Operator": 13,
+                                  "Value": "Male",
+                                  "SelectedTab": null,
+                                  "Name": "MaleFilter",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
@@ -222,7 +235,20 @@
                               "Value": 28.0,
                               "SelectedTab": null,
                               "Name": "Female",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                  "PropertyOfIndividual": "Sex",
+                                  "Operator": 13,
+                                  "Value": "Female",
+                                  "SelectedTab": null,
+                                  "Name": "FemaleFilter",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -352,91 +378,6 @@
                           "Name": "Grow maize crop",
                           "Children": [
                             {
-                              "$type": "Models.CLEM.Activities.CropActivityTask, Models",
-                              "TransactionCategory": "Crop.[Task]",
-                              "OnPartialResourcesAvailableAction": 2,
-                              "SelectedTab": null,
-                              "Name": "Harvest",
-                              "Children": [
-                                {
-                                  "$type": "Models.CLEM.Activities.ActivityTimerCropHarvest, Models",
-                                  "OffsetMonthHarvestStart": -1,
-                                  "OffsetMonthHarvestStop": 2,
-                                  "SelectedTab": null,
-                                  "Name": "ActivityTimerCropHarvest",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": false,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.CLEM.Activities.LabourRequirement, Models",
-                                  "LabourPerUnit": 5.0,
-                                  "UnitSize": 1.0,
-                                  "WholeUnitBlocks": false,
-                                  "UnitType": 1,
-                                  "MinimumPerPerson": 1.0,
-                                  "MaximumPerPerson": 100.0,
-                                  "LabourShortfallAffectsActivity": true,
-                                  "ApplyToAll": false,
-                                  "SelectedTab": null,
-                                  "Name": "HarvestMaize",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
-                                      "SelectedTab": null,
-                                      "Name": "Male",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.CLEM.Groupings.LabourFilter, Models",
-                                          "Parameter": 1,
-                                          "Operator": 0,
-                                          "Value": "Male",
-                                          "SelectedTab": null,
-                                          "Name": "LabourFilter",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": false,
-                                          "ReadOnly": false
-                                        },
-                                        {
-                                          "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
-                                          "SelectedTab": null,
-                                          "Name": "Male",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.CLEM.Groupings.LabourFilter, Models",
-                                              "Parameter": 1,
-                                              "Operator": 0,
-                                              "Value": "Female",
-                                              "SelectedTab": null,
-                                              "Name": "LabourFilter",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": false,
-                                              "ReadOnly": false
-                                            }
-                                          ],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": false,
-                                          "ReadOnly": false
-                                        }
-                                      ],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": false,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": false,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": false,
-                              "ReadOnly": false
-                            },
-                            {
                               "$type": "Models.CLEM.Activities.LabourRequirement, Models",
                               "LabourPerUnit": 5.0,
                               "UnitSize": 1.0,
@@ -455,35 +396,13 @@
                                   "Name": "Male",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.LabourFilter, Models",
-                                      "Parameter": 1,
-                                      "Operator": 0,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Sex",
+                                      "Operator": 13,
                                       "Value": "Male",
                                       "SelectedTab": null,
                                       "Name": "LabourFilter",
                                       "Children": [],
-                                      "IncludeInDocumentation": true,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
-                                      "SelectedTab": null,
-                                      "Name": "Male",
-                                      "Children": [
-                                        {
-                                          "$type": "Models.CLEM.Groupings.LabourFilter, Models",
-                                          "Parameter": 1,
-                                          "Operator": 0,
-                                          "Value": "Female",
-                                          "SelectedTab": null,
-                                          "Name": "LabourFilter",
-                                          "Children": [],
-                                          "IncludeInDocumentation": true,
-                                          "Enabled": true,
-                                          "ReadOnly": false
-                                        }
-                                      ],
                                       "IncludeInDocumentation": true,
                                       "Enabled": true,
                                       "ReadOnly": false
@@ -564,9 +483,9 @@
                                   "Name": "Female",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.LabourFilter, Models",
-                                      "Parameter": 1,
-                                      "Operator": 0,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Sex",
+                                      "Operator": 13,
                                       "Value": "Female",
                                       "SelectedTab": null,
                                       "Name": "LabourFilter",
@@ -581,9 +500,9 @@
                                       "Name": "Male",
                                       "Children": [
                                         {
-                                          "$type": "Models.CLEM.Groupings.LabourFilter, Models",
-                                          "Parameter": 1,
-                                          "Operator": 0,
+                                          "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                          "PropertyOfIndividual": "Sex",
+                                          "Operator": 13,
                                           "Value": "Male",
                                           "SelectedTab": null,
                                           "Name": "LabourFilter",
@@ -638,9 +557,9 @@
                                       "Name": "Female",
                                       "Children": [
                                         {
-                                          "$type": "Models.CLEM.Groupings.LabourFilter, Models",
-                                          "Parameter": 1,
-                                          "Operator": 0,
+                                          "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                          "PropertyOfIndividual": "Sex",
+                                          "Operator": 13,
                                           "Value": "Female",
                                           "SelectedTab": null,
                                           "Name": "LabourFilter",
@@ -734,9 +653,9 @@
                                   "Name": "Female",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.LabourFilter, Models",
-                                      "Parameter": 1,
-                                      "Operator": 0,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Sex",
+                                      "Operator": 13,
                                       "Value": "Female",
                                       "SelectedTab": null,
                                       "Name": "LabourFilter",
@@ -751,9 +670,9 @@
                                       "Name": "Male",
                                       "Children": [
                                         {
-                                          "$type": "Models.CLEM.Groupings.LabourFilter, Models",
-                                          "Parameter": 1,
-                                          "Operator": 0,
+                                          "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                          "PropertyOfIndividual": "Sex",
+                                          "Operator": 13,
                                           "Value": "Male",
                                           "SelectedTab": null,
                                           "Name": "LabourFilter",
@@ -1669,7 +1588,7 @@
                         {
                           "$type": "Models.CLEM.Resources.LabourType, Models",
                           "InitialAge": 30.0,
-                          "Gender": 0,
+                          "Sex": 0,
                           "Individuals": 5,
                           "Hired": false,
                           "SelectedTab": null,
@@ -1689,20 +1608,7 @@
                               "Value": 8.0,
                               "SelectedTab": null,
                               "Name": "MaleAvailability",
-                              "Children": [
-                                {
-                                  "$type": "Models.CLEM.Groupings.LabourFilter, Models",
-                                  "Parameter": 1,
-                                  "Operator": 0,
-                                  "Value": "Male",
-                                  "SelectedTab": null,
-                                  "Name": "LabourFilter1",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
+                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -1851,20 +1757,7 @@
                                           "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                           "SelectedTab": null,
                                           "Name": "LabourFilterGroup",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.CLEM.Groupings.LabourFilter, Models",
-                                              "Parameter": 1,
-                                              "Operator": 0,
-                                              "Value": "Male",
-                                              "SelectedTab": null,
-                                              "Name": "LabourFilter",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
+                                          "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
                                           "ReadOnly": false
@@ -1914,20 +1807,7 @@
                                           "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                           "SelectedTab": null,
                                           "Name": "LabourFilterGroup",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.CLEM.Groupings.LabourFilter, Models",
-                                              "Parameter": 1,
-                                              "Operator": 0,
-                                              "Value": "Male",
-                                              "SelectedTab": null,
-                                              "Name": "LabourFilter",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
+                                          "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
                                           "ReadOnly": false
@@ -1977,20 +1857,7 @@
                                           "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                           "SelectedTab": null,
                                           "Name": "LabourFilterGroup",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.CLEM.Groupings.LabourFilter, Models",
-                                              "Parameter": 1,
-                                              "Operator": 0,
-                                              "Value": "Male",
-                                              "SelectedTab": null,
-                                              "Name": "LabourFilter",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
+                                          "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
                                           "ReadOnly": false
@@ -2036,20 +1903,7 @@
                                               "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                               "SelectedTab": null,
                                               "Name": "LabourFilterGroup",
-                                              "Children": [
-                                                {
-                                                  "$type": "Models.CLEM.Groupings.LabourFilter, Models",
-                                                  "Parameter": 1,
-                                                  "Operator": 0,
-                                                  "Value": "Male",
-                                                  "SelectedTab": null,
-                                                  "Name": "LabourFilter",
-                                                  "Children": [],
-                                                  "IncludeInDocumentation": true,
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                }
-                                              ],
+                                              "Children": [],
                                               "IncludeInDocumentation": true,
                                               "Enabled": true,
                                               "ReadOnly": false
@@ -2118,20 +1972,7 @@
                                               "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                               "SelectedTab": null,
                                               "Name": "LabourFilterGroup",
-                                              "Children": [
-                                                {
-                                                  "$type": "Models.CLEM.Groupings.LabourFilter, Models",
-                                                  "Parameter": 1,
-                                                  "Operator": 0,
-                                                  "Value": "Male",
-                                                  "SelectedTab": null,
-                                                  "Name": "LabourFilter",
-                                                  "Children": [],
-                                                  "IncludeInDocumentation": true,
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                }
-                                              ],
+                                              "Children": [],
                                               "IncludeInDocumentation": true,
                                               "Enabled": true,
                                               "ReadOnly": false
@@ -2214,20 +2055,7 @@
                                           "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                           "SelectedTab": null,
                                           "Name": "LabourFilterGroup",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.CLEM.Groupings.LabourFilter, Models",
-                                              "Parameter": 1,
-                                              "Operator": 0,
-                                              "Value": "Male",
-                                              "SelectedTab": null,
-                                              "Name": "LabourFilter",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
+                                          "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
                                           "ReadOnly": false
@@ -2277,20 +2105,7 @@
                                           "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                           "SelectedTab": null,
                                           "Name": "LabourFilterGroup",
-                                          "Children": [
-                                            {
-                                              "$type": "Models.CLEM.Groupings.LabourFilter, Models",
-                                              "Parameter": 1,
-                                              "Operator": 0,
-                                              "Value": "Male",
-                                              "SelectedTab": null,
-                                              "Name": "LabourFilter",
-                                              "Children": [],
-                                              "IncludeInDocumentation": true,
-                                              "Enabled": true,
-                                              "ReadOnly": false
-                                            }
-                                          ],
+                                          "Children": [],
                                           "IncludeInDocumentation": true,
                                           "Enabled": true,
                                           "ReadOnly": false
@@ -2336,20 +2151,7 @@
                                               "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                               "SelectedTab": null,
                                               "Name": "LabourFilterGroup",
-                                              "Children": [
-                                                {
-                                                  "$type": "Models.CLEM.Groupings.LabourFilter, Models",
-                                                  "Parameter": 1,
-                                                  "Operator": 0,
-                                                  "Value": "Male",
-                                                  "SelectedTab": null,
-                                                  "Name": "LabourFilter",
-                                                  "Children": [],
-                                                  "IncludeInDocumentation": true,
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                }
-                                              ],
+                                              "Children": [],
                                               "IncludeInDocumentation": true,
                                               "Enabled": true,
                                               "ReadOnly": false
@@ -2418,20 +2220,7 @@
                                               "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                               "SelectedTab": null,
                                               "Name": "LabourFilterGroup",
-                                              "Children": [
-                                                {
-                                                  "$type": "Models.CLEM.Groupings.LabourFilter, Models",
-                                                  "Parameter": 1,
-                                                  "Operator": 0,
-                                                  "Value": "Male",
-                                                  "SelectedTab": null,
-                                                  "Name": "LabourFilter",
-                                                  "Children": [],
-                                                  "IncludeInDocumentation": true,
-                                                  "Enabled": true,
-                                                  "ReadOnly": false
-                                                }
-                                              ],
+                                              "Children": [],
                                               "IncludeInDocumentation": true,
                                               "Enabled": true,
                                               "ReadOnly": false
