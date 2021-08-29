@@ -133,17 +133,19 @@ namespace Models.CLEM.Reporting
 
             // Check sensibility
             if (report is null || Row is null || Column is null || Value is null || Aggregator is null)
-            {
                 return null;
-            }
 
             var columns = FindPivotColumns(report);
 
             // Create the pivot table and populate it
             var pivot = new DataTable(Parent.Name + "_" + Name);
-            pivot.Columns.Add(Row);
-            pivot.Columns.AddRange(columns.ToArray());
-            AddPivotRows(report, pivot);
+
+            if (columns.Any())
+            {
+                pivot.Columns.Add(Row);
+                pivot.Columns.AddRange(columns.ToArray());
+                AddPivotRows(report, pivot);
+            }
 
             var dataTable = pivot.DefaultView.ToTable();
             dataTable.TableName = this.Name;
@@ -199,18 +201,20 @@ namespace Models.CLEM.Reporting
                 .Select(r => r[Column])
                 .Distinct();
 
-            // Rescale the time over the columns if required
-            var type = source.Columns[Column].DataType;
-
-            // Group the data based on the time filter
-            if (type == typeof(DateTime))
+            if (cols.Any())
             {
-                return cols.Cast<DateTime>()
-                    .GroupBy(d => FormatDate(d))
-                    .Select(g => g.Key)
-                    .Select(s => new DataColumn(s));
-            }
+                // Rescale the time over the columns if required
+                var type = source.Columns[Column].DataType;
 
+                // Group the data based on the time filter
+                if (type == typeof(DateTime))
+                {
+                    return cols.Cast<DateTime>()
+                        .GroupBy(d => FormatDate(d))
+                        .Select(g => g.Key)
+                        .Select(s => new DataColumn(s));
+                }
+            }
             return cols.Select(s => new DataColumn(s.ToString()));
         }
 

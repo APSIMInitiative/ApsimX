@@ -206,7 +206,7 @@ namespace Models.CLEM.Resources
                     }
 
                     // check that pricing item meets the specified criteria.
-                    if (item.FindAllChildren<FilterByProperty>().Where(a => (a.Parameter == property.ToUpper() && a.Value.ToString().ToUpper() == value.ToUpper())).Count() > 0)
+                    if (item.FindAllChildren<FilterByProperty>().Where(a => (a.PropertyOfIndividual == property.ToUpper() && a.Value.ToString().ToUpper() == value.ToUpper())).Count() > 0)
                     {
                         if (matchCriteria == null)
                         {

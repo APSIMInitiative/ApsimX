@@ -33,6 +33,7 @@ namespace Models.CLEM.Reporting
         private ResourcesHolder resources = null;
         [Link]
         private Summary summary = null;
+        private IEnumerable<IActivityTimer> timers;
 
         /// <summary>
         /// Gets or sets report groups for outputting
@@ -88,8 +89,6 @@ namespace Models.CLEM.Reporting
         /// <inheritdoc/>
         public string SelectedTab { get; set; }
 
-        private IEnumerable<IActivityTimer> timers;
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -111,9 +110,7 @@ namespace Models.CLEM.Reporting
 
             List<string> variableNames = new List<string>();
             if (ResourceGroupsToReport.Where(a => a.Contains("[Clock].Today")).Any() is false)
-            {
                 variableNames.Add("[Clock].Today as Date");
-            }
 
             if (ResourceGroupsToReport != null)
             {
@@ -124,33 +121,25 @@ namespace Models.CLEM.Reporting
                     if (!isDuplicate && this.ResourceGroupsToReport[i] != string.Empty)
                     {
                         if (this.ResourceGroupsToReport[i].StartsWith("["))
-                        {
                             variableNames.Add(this.ResourceGroupsToReport[i]);
-                        }
                         else
                         {
                             // check it is a ResourceGroup
                             CLEMModel model = resources.GetResourceGroupByName(this.ResourceGroupsToReport[i]) as CLEMModel;
                             if (model == null)
-                            {
                                 summary.WriteWarning(this, $"Invalid resource group [r={this.ResourceGroupsToReport[i]}] in ReportResourceBalances [{this.Name}]{Environment.NewLine}Entry has been ignored");
-                            }
                             else
                             {
                                 if (model.GetType().Name == "Labour")
                                 {
                                     string amountStr = "Amount";
                                     if (ReportLabourIndividuals)
-                                    {
                                         amountStr = "Individuals";
-                                    }
 
                                     for (int j = 0; j < (model as Labour).Items.Count; j++)
                                     {
                                         if (ReportAmount)
-                                        {
                                             variableNames.Add("[Resources]." + this.ResourceGroupsToReport[i] + ".Items[" + (j + 1).ToString() + $"].{amountStr} as " + (model as Labour).Items[j].Name); 
-                                        }
 
                                         //TODO: what economic metric is needed for labour
                                         //TODO: add ability to report labour value if required
@@ -158,8 +147,7 @@ namespace Models.CLEM.Reporting
                                 }
                                 else
                                 {
-                                    // get all children
-                                    foreach (CLEMModel item in model.Children.Where(a => a.GetType().IsSubclassOf(typeof(CLEMModel)))) // this.FindAllChildren<CLEMModel>()) //
+                                    foreach (CLEMModel item in model.FindAllChildren<CLEMModel>())
                                     {
                                         string amountStr = "Amount";
                                         switch (item.GetType().Name)
@@ -169,46 +157,32 @@ namespace Models.CLEM.Reporting
                                                 break;
                                             case "LandType":
                                                 if (ReportLandEntire)
-                                                {
                                                     amountStr = "LandArea";
-                                                }
                                                 break;
                                             default:
                                                 break;
                                         }
-                                        if (item.GetType().Name == "RuminantType")
+                                        if (item is RuminantType)
                                         {
                                             // add each variable needed
                                             foreach (var category in (model as RuminantHerd).GetReportingGroups(item as RuminantType))
                                             {
                                                 if (ReportAmount)
-                                                {
                                                     variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").Count as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.Count");
-                                                }
                                                 if (ReportAnimalEquivalents)
-                                                {
-                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup({(item as IModel).Name},{category}).TotalAE as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.AE");
-                                                }
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").TotalAdultEquivalent as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.TotalAdultEquivalent");
                                                 if (ReportAnimalWeight)
-                                                {
-                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup({(item as IModel).Name},{category}).TotalWeight as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.Weight");
-                                                }
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").TotalWeight as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.TotalWeight");
                                                 if (ReportValue)
-                                                {
-                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup({(item as IModel).Name},{category}).TotalValue as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.Value");
-                                                }
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").TotalValue as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.TotalPrice");
                                             }
                                         }
                                         else
                                         {
                                             if (ReportAmount)
-                                            {
                                                 variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.{ item.Name}.{ amountStr } as { item.Name.Replace(" ", "_") }_Amount");
-                                            }
                                             if (ReportValue & item.GetType().Name != "FinanceType")
-                                            {
                                                 variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.{ item.Name}.CalculateValue({ $"[Resources].{this.ResourceGroupsToReport[i]}.{ item.Name}.{ amountStr }" }, False) as { item.Name.Replace(" ", "_") }_Value");
-                                            }
                                         }
                                     }
                                 }
@@ -220,9 +194,8 @@ namespace Models.CLEM.Reporting
             VariableNames = variableNames.ToArray();
             // Subscribe to events.
             if (EventNames == null || !EventNames.Where(a => a.Trim() != "").Any())
-            {
                 EventNames = new string[] { "[Clock].CLEMFinalizeTimeStep" };
-            }
+
             SubscribeToEvents();
         }
 
@@ -231,10 +204,7 @@ namespace Models.CLEM.Reporting
         {
             //  support timers
             if (timers is null || !timers.Any() || timers.Sum(a => (a.ActivityDue ? 1 : 0)) > 0)
-            {
                 DoOutput();
-            }
         }
-
     }
 }

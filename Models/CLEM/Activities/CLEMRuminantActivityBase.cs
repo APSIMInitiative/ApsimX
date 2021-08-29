@@ -149,14 +149,14 @@ namespace Models.CLEM.Activities
                     foreach (var filtergroup in this.HerdFilters)
                         foreach (var filter in filtergroup.Children.OfType<FilterByProperty>())
                         {
-                            if (filter.Parameter == "Breed")
+                            if (filter.PropertyOfIndividual == "Breed")
                             {
                                 if (PredictedHerdBreed != "N/A" && PredictedHerdBreed != filter.Value.ToString() && !allowMultipleBreeds)
                                     // multiple breeds in filter.
                                     throw new ApsimXException(this, "Multiple breeds are used to filter the herd for Activity [a=" + this.Name + "]" + Environment.NewLine + "Ensure the herd comprises of a single breed for this activity.");
                                 PredictedHerdBreed = filter.Value.ToString();
                             }
-                            if (filter.Parameter == "HerdName")
+                            if (filter.PropertyOfIndividual == "HerdName")
                             {
                                 if (PredictedHerdName != "N/A" && !allowMultipleHerds)
                                     // multiple breeds in filter.

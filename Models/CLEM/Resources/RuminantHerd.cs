@@ -12,6 +12,7 @@ using System.Globalization;
 using Models.CLEM.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
+using System.Diagnostics;
 
 namespace Models.CLEM.Resources
 {
@@ -57,7 +58,7 @@ namespace Models.CLEM.Resources
         /// The last individual to be added or removed (for reporting)
         /// </summary>
         [JsonIgnore]
-        public object LastIndividualChanged { get; set; }
+        public Ruminant LastIndividualChanged { get; set; }
 
         /// <summary>
         /// The details of an individual for reporting
