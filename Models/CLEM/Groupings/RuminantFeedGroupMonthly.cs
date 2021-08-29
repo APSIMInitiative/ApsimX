@@ -20,7 +20,7 @@ namespace Models.CLEM.Groupings
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityFeed))]
-    [Description("This ruminant filter group selects specific individuals for feeding based on monthly set amounts")]
+    [Description("Selects specific individual ruminants with feeding based on monthly set amounts")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantFeedGroupMonthly.htm")]
     public class RuminantFeedGroupMonthly : FilterGroup<Ruminant>, IValidatableObject

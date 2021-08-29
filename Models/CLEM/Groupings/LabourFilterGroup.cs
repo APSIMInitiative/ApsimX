@@ -20,10 +20,10 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(LabourRequirementNoUnitSize))]
     [ValidParent(ParentType = typeof(LabourFilterGroup))]
     [ValidParent(ParentType = typeof(TransmuteLabour))]
-    [Description("Contains a group of filters to identify individuals able to undertake labour. Multiple filter groups will select groups of individuals required. Nested filter groups will determine others in order who can perform the task if insufficient labour.")]
+    [Description("Defines specific individuals from the labour pool to undertake labour. Multiple filter groups will select groups of individuals required. Nested filter groups will determine others in order who can perform the task if insufficient labour.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/LabourFilterGroup.htm")]
-    public class LabourFilterGroup : FilterGroup<Labour>
+    public class LabourFilterGroup : FilterGroup<LabourType>
     {
         #region descriptive summary
 

@@ -10,13 +10,9 @@ using Display = Models.Core.DisplayAttribute;
 namespace Models.CLEM.Groupings
 {
     ///<summary>
-    /// Individual filter term for ruminant group of filters to identify individual ruminants
+    /// abstarct base filter not used on its own
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(IFilterGroup))]
-    [Version(1, 0, 0, "")]
     public abstract class Filter : CLEMModel
     {
         /// <inheritdoc/>
@@ -28,14 +24,15 @@ namespace Models.CLEM.Groupings
         }
 
         /// <summary>
-        /// Name of parameter to filter by
+        /// Filter operator
         /// </summary>
-        [Description("Operator to use for filtering")]
+        [Description("Operator to use")]
         [Required]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetOperators))]
         public ExpressionType Operator { get; set; }
+        
         /// <summary>
-        /// 
+        /// Method to return avaialble operators
         /// </summary>
         /// <returns></returns>
         protected object[] GetOperators() => new object[]
@@ -45,20 +42,69 @@ namespace Models.CLEM.Groupings
             ExpressionType.LessThan,
             ExpressionType.LessThanOrEqual,
             ExpressionType.GreaterThan,
-            ExpressionType.GreaterThanOrEqual
+            ExpressionType.GreaterThanOrEqual,
+            ExpressionType.IsTrue,
+            ExpressionType.IsFalse
         };
+
+        /// <summary>
+        /// Convert the operator to a symbol
+        /// </summary>
+        /// <returns>Operator as symbol</returns>
+        protected string OperatorToSymbol()
+        {
+            switch (Operator)
+            {
+                case ExpressionType.Equal:
+                    return "=";
+                case ExpressionType.GreaterThan:
+                    return ">";
+                case ExpressionType.GreaterThanOrEqual:
+                    return ">=";
+                case ExpressionType.LessThan:
+                    return "<";
+                case ExpressionType.LessThanOrEqual:
+                    return "<=";
+                case ExpressionType.NotEqual:
+                    return "!=";
+                case ExpressionType.IsTrue:
+                    return "is";
+                case ExpressionType.IsFalse:
+                    return "not";
+                default:
+                    return "invalid operator";
+            }
+        }
+
+        /// <summary>
+        /// Is operator a true false test
+        /// </summary>
+        /// <returns>Operator as symbol</returns>
+        protected bool IsOperatorTrueFalseTest()
+        {
+            switch (Operator)
+            {
+                case ExpressionType.Equal:
+                case ExpressionType.NotEqual:
+                    return (Value.ToString().ToLower() == "true" | Value.ToString().ToLower() == "false");
+                case ExpressionType.IsTrue:
+                case ExpressionType.IsFalse:
+                    return true;
+                default:
+                    return false;
+            }
+        }
 
         /// <summary>
         /// Value to check for filter
         /// </summary>
-        [Description("Value to filter by")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Value to filter by required")]
+        [Description("Value to compare")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Value to compare is required")]
         public object Value { get; set; }
 
         /// <summary>
         /// Takes the conditions set by the user and converts them to a logical test as a lambda expression
         /// </summary>
-        //[EventSubscribe("StartOfSimulation")]
         public abstract Func<T, bool> Compile<T>();
     }
 }

@@ -39,8 +39,42 @@ namespace Models.CLEM
             foreach (var type in types)
             {
                 var props = type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance);
+                //foreach (var prop in props)
+                //    properties.Add(prop.DeclaringType.Name + "." + prop.Name, prop);
                 foreach (var prop in props)
-                    properties.Add(prop.DeclaringType.Name + "." + prop.Name, prop);
+                {
+                    string key = prop.DeclaringType.Name;
+                    if (key.StartsWith(typeof(TFilter).Name))
+                        key = key.Substring(typeof(TFilter).Name.Length);
+                    properties.Add($"{key}.{prop.Name}", prop);
+                }
+
+            }
+        }
+
+        ///<inheritdoc/>
+        [EventSubscribe("Commencing")]
+        protected void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            properties = typeof(TFilter)
+                .GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
+                .ToDictionary(prop => prop.Name, prop => prop);
+
+            var types = Assembly.GetExecutingAssembly()
+                .GetTypes()
+                .Where(t => t.Namespace != null && t.Namespace.Contains(nameof(Models.CLEM)))
+                .Where(t => t.IsSubclassOf(typeof(TFilter)));
+
+            foreach (var type in types)
+            {
+                var props = type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance);
+                foreach (var prop in props)
+                {
+                    string key = prop.DeclaringType.Name;
+                    if (key.StartsWith(typeof(TFilter).Name))
+                        key = key.Substring(typeof(TFilter).Name.Length);
+                    properties.Add($"{key}.{prop.Name}", prop);
+                }
             }
         }
 

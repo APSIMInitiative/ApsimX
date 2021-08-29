@@ -13,12 +13,12 @@ namespace Models.CLEM.Groupings
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [Description("This other animal filter group selects specific individuals from the other animals using any number of Other Animal Filters.")]
+    [Description("Selects specific individuals from the other animals")]
     [Version(1, 0, 1, "")]
     public class OtherAnimalsFilterGroup : FilterGroup<OtherAnimalsTypeCohort>
     {
-        [Link]
-        private ResourcesHolder resources = null;
+        //[Link]
+        //private ResourcesHolder resources = null;
 
         /// <summary>
         /// Daily amount to supply selected individuals each month
@@ -47,18 +47,18 @@ namespace Models.CLEM.Groupings
         /// </summary>
         public OtherAnimalsType SelectedOtherAnimalsType;
 
-        /// <summary>An event handler to allow us to perform checks when simulation commences</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            SelectedOtherAnimalsType = resources.FindResourceGroup<OtherAnimals>().FindChild(AnimalType) as OtherAnimalsType;
-            if (SelectedOtherAnimalsType == null)
-            {
-                throw new Exception("Unknown other animal type: " + AnimalType + " in OtherAnimalsActivityFeed : " + this.Name);
-            }
-        }
+        ///// <summary>An event handler to allow us to perform checks when simulation commences</summary>
+        ///// <param name="sender">The sender.</param>
+        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        //[EventSubscribe("Commencing")]
+        //private void OnSimulationCommencing(object sender, EventArgs e)
+        //{
+        //    SelectedOtherAnimalsType = resources.FindResourceGroup<OtherAnimals>().FindChild(AnimalType) as OtherAnimalsType;
+        //    if (SelectedOtherAnimalsType == null)
+        //    {
+        //        throw new Exception("Unknown other animal type: " + AnimalType + " in OtherAnimalsActivityFeed : " + this.Name);
+        //    }
+        //}
 
     }
 }

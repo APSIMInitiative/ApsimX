@@ -19,10 +19,10 @@ namespace Models.CLEM.Groupings
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourActivityFeed))]
-    [Description("This labour filter group selects specific individuals from the labour pool using any number of Labour Filters. This filter group includes feeding rules. No filters will apply rules to all individuals. Multiple feeding groups will select groups of individuals required.")]
+    [Description("Defines specific individuals from the labour pool including feeding rules. No filters will apply rules to all individuals. Multiple feeding groups will select groups of individuals required.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/LabourFeedGroup.htm")]
-    public class LabourFeedGroup : FilterGroup<Labour>
+    public class LabourFeedGroup : FilterGroup<LabourType>
     {
         /// <summary>
         /// Value to supply for each month

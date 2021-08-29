@@ -27,7 +27,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityMove))]
     [ValidParent(ParentType = typeof(RuminantActivityMarkForSale))]
     [ValidParent(ParentType = typeof(TransmuteRuminant))]
-    [Description("This group selects specific individuals from the ruminant herd using any number of filters and sorts.")]
+    [Description("Selects specific individuals ruminants from the herd using filters and sorts.")]
     [Version(1, 0, 1, "Added ability to select random proportion of the group to use")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantGroup.htm")]
     public class RuminantGroup : FilterGroup<Ruminant>

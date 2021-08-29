@@ -18,10 +18,10 @@ namespace Models.CLEM.Groupings
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourPricing))]
-    [Description("This labour price group sets the pay rate for a set group of individuals.")]
+    [Description("This labour price group sets the pay rate for the selected group of individuals.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/LabourPriceGroup.htm")]
-    public class LabourPriceGroup : FilterGroup<Labour>
+    public class LabourPriceGroup : FilterGroup<LabourType>
     {
         /// <summary>
         /// Pay rate
