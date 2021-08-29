@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
     [Description("This activity timer is used to determine whether a resource level meets a set criteria.")]
     [HelpUri(@"Content/Features/Timers/ResourceLevel.htm")]
     [Version(1, 0, 1, "")]
-    public class ActivityTimerResourceLevel: CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
+    public class ActivityTimerResourceLevel: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
         private ResourcesHolder resources = null;
@@ -79,17 +79,6 @@ namespace Models.CLEM.Activities
         public ActivityTimerResourceLevel()
         {
             this.SetDefaults();
-        }
-
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            return results;
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

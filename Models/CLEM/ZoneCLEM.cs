@@ -352,7 +352,7 @@ namespace Models.CLEM
         #region Descriptive summary
 
         ///<inheritdoc/>
-        public string GetFullSummary(IModel model, bool useFullDescription, string htmlString)
+        public string GetFullSummary(IModel model, bool useFullDescription, string htmlString, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -361,7 +361,7 @@ namespace Models.CLEM
                 // get clock
                 IModel parentSim = FindAncestor<Simulation>();
 
-                htmlWriter.Write(CLEMModel.AddMemosToSummary(parentSim));
+                htmlWriter.Write(CLEMModel.AddMemosToSummary(parentSim, markdown2Html));
 
                 // create the summary box with properties of this component
                 if (this is ICLEMDescriptiveSummary)
@@ -370,7 +370,7 @@ namespace Models.CLEM
                     htmlWriter.Write(this.ModelSummaryOpeningTags(formatForParentControl));
                     htmlWriter.Write(this.ModelSummaryInnerOpeningTagsBeforeSummary());
                     htmlWriter.Write(this.ModelSummary(formatForParentControl));
-                    htmlWriter.Write(CLEMModel.AddMemosToSummary(this));
+//                    htmlWriter.Write(CLEMModel.AddMemosToSummary(this));
                     htmlWriter.Write(this.ModelSummaryInnerOpeningTags(formatForParentControl));
                     htmlWriter.Write(this.ModelSummaryInnerClosingTags(formatForParentControl));
                     htmlWriter.Write(this.ModelSummaryClosingTags(formatForParentControl));
@@ -392,7 +392,7 @@ namespace Models.CLEM
                         htmlWriter.Write("Each run of this simulation will be identical using the seed <span class=\"setvalue\">" + rnd.Seed.ToString() + "</span>");
                     htmlWriter.Write("\r\n</div>");
 
-                    htmlWriter.Write(CLEMModel.AddMemosToSummary(rnd));
+                    htmlWriter.Write(CLEMModel.AddMemosToSummary(rnd, markdown2Html));
 
                     htmlWriter.Write("\r\n</div>");
                 }
@@ -417,7 +417,7 @@ namespace Models.CLEM
                         htmlWriter.Write("<span class=\"setvalue\">" + clk.EndDate.ToShortDateString() + "</span>");
                     htmlWriter.Write("\r\n</div>");
 
-                    htmlWriter.Write(CLEMModel.AddMemosToSummary(clk));
+                    htmlWriter.Write(CLEMModel.AddMemosToSummary(clk, markdown2Html));
 
                     htmlWriter.Write("\r\n</div>");
                     htmlWriter.Write("\r\n</div>");

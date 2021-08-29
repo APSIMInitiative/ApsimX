@@ -152,20 +152,14 @@ namespace Models.CLEM
         #endregion
 
         #region descriptive summary
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="useFullDescription">Use full verbose description</param>
-        /// <param name="htmlString"></param>
-        /// <returns></returns>
-        public string GetFullSummary(object model, bool useFullDescription, string htmlString)
+        /// <inheritdoc/>
+        public string GetFullSummary(object model, bool useFullDescription, string htmlString, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write($"\r\n<div class=\"holdermain\" style=\"opacity: {((!this.Enabled) ? "0.4" : "1")}\">");
                 foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
-                    htmlWriter.Write(cm.GetFullSummary(cm, true, ""));
+                    htmlWriter.Write(cm.GetFullSummary(cm, true, "", markdown2Html));
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString();
             }

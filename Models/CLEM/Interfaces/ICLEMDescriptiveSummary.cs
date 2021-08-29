@@ -20,9 +20,10 @@ namespace Models.CLEM.Interfaces
         /// </summary>
         /// <param name="model">The model providing the summary</param>
         /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <param name="htmlString"></param>
-        /// <returns></returns>
-        string GetFullSummary(IModel model, bool formatForParentControl, string htmlString);
+        /// <param name="htmlString">Initial string to append to</param>
+        /// <param name="markdown2Html">Method to convert markdown memos to html</param>
+        /// <returns>Summary description HTML text</returns>
+        string GetFullSummary(IModel model, bool formatForParentControl, string htmlString, Func<string, string> markdown2Html = null);
 
         /// <summary>
         /// Styling to use for HTML summary
