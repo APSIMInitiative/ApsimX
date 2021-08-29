@@ -206,7 +206,7 @@ namespace UserInterface.Presenters
                         Parent = labour,
                         Name = lt.Name,
                         AgeInMonths = lt.InitialAge * 12,
-                        Gender = lt.Gender
+                        Sex = lt.Sex
                     }
                     );
                 }
@@ -380,7 +380,7 @@ namespace UserInterface.Presenters
                         Parent = labour,
                         Name = lt.Name,
                         AgeInMonths = lt.InitialAge * 12,
-                        Gender = lt.Gender
+                        Sex = lt.Sex
                     }
                     );
                 }

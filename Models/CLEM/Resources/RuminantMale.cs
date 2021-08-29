@@ -10,8 +10,11 @@ namespace Models.CLEM.Resources
     /// </summary>
     public class RuminantMale: Ruminant
     {
-        /// <inheritdoc/>
-        public override Sex Sex => Sex.Male;
+        ///// <inheritdoc/>
+        //public override Sex Sex
+        //{
+        //    get { return Sex.Male; }
+        //}
 
         /// <summary>
         /// Indicates if individual is breeding sire

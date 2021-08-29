@@ -92,7 +92,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Sex of individual
         /// </summary>
-        public abstract Sex Sex { get; }
+        public Sex Sex { get { return ((this is RuminantMale) ? Sex.Male : Sex.Female); } }
 
         /// <summary>
         /// Marked as a replacement breeder

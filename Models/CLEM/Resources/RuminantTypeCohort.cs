@@ -32,9 +32,9 @@ namespace Models.CLEM.Resources
     public class RuminantTypeCohort : CLEMModel
     {
         /// <summary>
-        /// Gender
+        /// Sex
         /// </summary>
-        [Description("Gender")]
+        [Description("Sex")]
         [Required]
         public Sex Sex { get; set; }
 

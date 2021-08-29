@@ -145,7 +145,7 @@ namespace Models.CLEM.Resources
         {
             OtherAnimalsTypeCohort cohortToAdd = addIndividuals as OtherAnimalsTypeCohort;
 
-            OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToAdd.Age && a.Gender == cohortToAdd.Gender).FirstOrDefault();
+            OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToAdd.Age && a.Sex == cohortToAdd.Sex).FirstOrDefault();
 
             if (cohortexists == null)
             {
@@ -186,7 +186,7 @@ namespace Models.CLEM.Resources
         public void Remove(object removeIndividuals, CLEMModel activity, string reason)
         {
             OtherAnimalsTypeCohort cohortToRemove = removeIndividuals as OtherAnimalsTypeCohort;
-            OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToRemove.Age && a.Gender == cohortToRemove.Gender).First();
+            OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToRemove.Age && a.Sex == cohortToRemove.Sex).First();
 
             if (cohortexists == null)
             {

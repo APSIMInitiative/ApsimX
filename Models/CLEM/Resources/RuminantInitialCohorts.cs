@@ -74,7 +74,7 @@ namespace Models.CLEM.Resources
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             WeightWarningOccurred = false;
-            return "<table><tr><th>Name</th><th>Gender</th><th>Age</th><th>Weight</th><th>Norm.Wt.</th><th>Number</th><th>Suckling</th><th>Sire</th></tr>";
+            return "<table><tr><th>Name</th><th>Sex</th><th>Age</th><th>Weight</th><th>Norm.Wt.</th><th>Number</th><th>Suckling</th><th>Sire</th></tr>";
         }
 
         #endregion

@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     [Description("This resource represents a labour type (e.g. Joe, 36 years old, male).")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourType.htm")]
-    public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
+    public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFilterable
     {
         private double ageInMonths = 0;
 
@@ -48,9 +48,9 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Male or Female
         /// </summary>
-        [Description("Gender")]
+        [Description("Sex")]
         [Required]
-        public Sex Gender { get; set; }
+        public Sex Sex { get; set; }
 
         /// <summary>
         /// Age in years.
@@ -443,8 +443,8 @@ namespace Models.CLEM.Resources
                         {
                             htmlWriter.Write("<span class=\"setvalue\">" + this.Individuals.ToString() + "</span> x ");
                         }
-                        htmlWriter.Write("<span class=\"setvalue\">" + string.Format("{0}", this.InitialAge) + "</span> year old ");
-                        htmlWriter.Write("<span class=\"setvalue\">" + string.Format("{0}", this.Gender.ToString().ToLower()) + "</span>");
+                        htmlWriter.Write($"<span class=\"setvalue\">{this.InitialAge}</span> year old ");
+                        htmlWriter.Write($"<span class=\"setvalue\">{this.Sex}</span>");
                         if (Hired)
                         {
                             htmlWriter.Write(" as hired labour");

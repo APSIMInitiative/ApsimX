@@ -23,11 +23,11 @@ namespace Models.CLEM.Resources
     public class OtherAnimalsTypeCohort : CLEMModel, IFilterable
     {
         /// <summary>
-        /// Gender
+        /// Sex
         /// </summary>
-        [Description("Gender")]
+        [Description("Sex")]
         [Required]
-        public Sex Gender { get; set; }
+        public Sex Sex { get; set; }
 
         /// <summary>
         /// Age (Months)
@@ -63,15 +63,5 @@ namespace Models.CLEM.Resources
         /// Flag to identify individual ready for sale
         /// </summary>
         public HerdChangeReason SaleFlag { get; set; }
-
-        /// <summary>
-        /// Gender as string for reports
-        /// </summary>
-        public string GenderAsString { get { return Gender.ToString().Substring(0, 1); } }
-
-        /// <summary>
-        /// SaleFlag as string for reports
-        /// </summary>
-        public string SaleFlagAsString { get { return SaleFlag.ToString(); } }
     }
 }

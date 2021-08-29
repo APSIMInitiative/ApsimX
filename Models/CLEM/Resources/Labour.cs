@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     [Description("This resource group holds all labour types (people) for the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/Labour.htm")]
-    public class Labour: ResourceBaseWithTransactions, IValidatableObject, IFilterable
+    public class Labour: ResourceBaseWithTransactions, IValidatableObject
     {
         [Link]
         private Clock clock = null;
@@ -157,7 +157,7 @@ namespace Models.CLEM.Resources
                 {
                     LabourType labour = new LabourType()
                     {
-                        Gender = labourChildModel.Gender,
+                        Sex = labourChildModel.Sex,
                         Individuals = labourChildModel.Individuals,
                         Parent = this,
                         InitialAge = labourChildModel.InitialAge,
@@ -177,7 +177,7 @@ namespace Models.CLEM.Resources
                         // get the availability from provided list
                         LabourType labour = new LabourType()
                         {
-                            Gender = labourChildModel.Gender,
+                            Sex = labourChildModel.Sex,
                             Individuals = 1,
                             Parent = this,
                             InitialAge = labourChildModel.InitialAge,
@@ -268,7 +268,7 @@ namespace Models.CLEM.Resources
                 if (labour.LabourAvailability == null)
                 {
                     string msg = $"Unable to find labour availability suitable for labour type" +
-                        $" [f=Name:{labour.Name}] [f=Gender:{labour.Gender}] [f=Age:{labour.Age}]" +
+                        $" [f=Name:{labour.Name}] [f=Gender:{labour.Sex}] [f=Age:{labour.Age}]" +
                         $"\r\nAdd additional labour availability item to " +
                         $"[r={availabilityList.Name}] under [r={Name}]";
 
@@ -341,7 +341,7 @@ namespace Models.CLEM.Resources
                         return item.Value;
                 }
                 // no price match found.
-                string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {ind.Age}] [f=gender: {ind.Gender.ToString()}]";
+                string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {ind.Age}] [f=gender: {ind.Sex.ToString()}]";
                 if (!warningsNotFound.Contains(warningString))
                 {
                     warningsNotFound.Add(warningString);
@@ -373,7 +373,7 @@ namespace Models.CLEM.Resources
 
                     // check that pricing item meets the specified criteria.
                     var items = item.FindAllChildren<FilterByProperty>()
-                        .Where(f => item.GetProperty(f.Parameter) == property)
+                        .Where(f => item.GetProperty(f.PropertyOfIndividual) == property)
                         .Where(f => f.Value.ToString().ToUpper() == value.ToUpper());
 
                     if (items.Any())
@@ -455,10 +455,10 @@ namespace Models.CLEM.Resources
                 foreach (LabourType labourType in this.FindAllChildren<LabourType>())
                 {
                     htmlWriter.Write("<tr>");
-                    htmlWriter.Write("<td>" + labourType.Name + "</td>");
-                    htmlWriter.Write("<td><span class=\"setvalue\">" + labourType.Gender.ToString() + "</span></td>");
-                    htmlWriter.Write("<td><span class=\"setvalue\">" + labourType.InitialAge.ToString() + "</span></td>");
-                    htmlWriter.Write("<td><span class=\"setvalue\">" + labourType.Individuals.ToString() + "</span></td>");
+                    htmlWriter.Write($"<td>{labourType.Name}</td>");
+                    htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.Sex}</span></td>");
+                    htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.InitialAge}</span></td>");
+                    htmlWriter.Write($"<td><span class=\"setvalue\">{labourType.Individuals}</span></td>");
                     htmlWriter.Write("<td" + ((labourType.Hired) ? " class=\"fill\"" : "") + "></td>");
                     htmlWriter.Write("</tr>");
                 }
