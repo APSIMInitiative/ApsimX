@@ -752,7 +752,7 @@ namespace APSIM.Shared.Utilities
             if (tables == null)
                 return null;
 
-            DataTable result = new DataTable();
+            DataTable result = new DataTable(tables.FirstOrDefault()?.TableName);
             foreach (DataTable table in tables)
                 result.Merge(table);
             return result;
