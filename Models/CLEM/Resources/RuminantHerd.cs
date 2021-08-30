@@ -338,7 +338,7 @@ namespace Models.CLEM.Resources
             if (Herd is null)
                 return 0;
 
-            var values = Herd.Where( a => (ignoreNotFound & a.Attributes.GetValue(tag) == null) ? false : true).Select(a => Convert.ToDouble(a.Attributes.GetValue(tag)?.storedValue));
+            var values = Herd.Where( a => (ignoreNotFound & a.Attributes.GetValue(tag) == null) ? false : true).Select(a => Convert.ToDouble(a.Attributes.GetValue(tag)?.StoredValue));
             if (values.Count() == 0)
                 return 0;
 

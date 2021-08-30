@@ -103,7 +103,7 @@ namespace Models.CLEM.Resources
             return new IndividualAttribute()
             {
                 InheritanceStyle = InheritanceStyle,
-                storedValue = value
+                StoredValue = value
             };
         }
 

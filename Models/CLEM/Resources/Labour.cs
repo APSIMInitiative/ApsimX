@@ -152,7 +152,7 @@ namespace Models.CLEM.Resources
             Items = new List<LabourType>();
             foreach (LabourType labourChildModel in this.FindAllChildren<LabourType>())
             {
-                IndividualAttribute att = new IndividualAttribute() { storedValue = labourChildModel.Name };
+                IndividualAttribute att = new IndividualAttribute() { StoredValue = labourChildModel.Name };
                 if (UseCohorts)
                 {
                     LabourType labour = new LabourType()
