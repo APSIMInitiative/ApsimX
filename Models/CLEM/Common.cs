@@ -449,7 +449,11 @@ namespace Models.CLEM
         /// <summary>
         /// FileReader model
         /// </summary>
-        FileReader
+        FileReader,
+        /// <summary>
+        /// Filter model
+        /// </summary>
+        Filter
     }
 
     /// <summary>

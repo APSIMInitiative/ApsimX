@@ -185,6 +185,7 @@ namespace Models.CLEM
         public static string DisplaySummaryValueSnippet(string value, string errorString, HTMLSummaryStyle entryStyle = HTMLSummaryStyle.Default, bool htmlTags = true)
         {
             string spanClass = "setvalue";
+            string errorClass = "errorlink";
             switch (entryStyle)
             {
                 case HTMLSummaryStyle.Default:
@@ -208,6 +209,10 @@ namespace Models.CLEM
                 case HTMLSummaryStyle.FileReader:
                     spanClass = "filelink";
                     break;
+                case HTMLSummaryStyle.Filter:
+                    spanClass = "filterset";
+                    errorClass = "filtererror";
+                    break;
                 default:
                     break;
             }
@@ -216,7 +221,7 @@ namespace Models.CLEM
                 if (value != null && value != "")
                     return $"<span class=\"{spanClass}\">{value}</span>";
                 else
-                    return $"<span class=\"errorlink\">{errorString}</span>";
+                    return $"<span class=\"{errorClass}\">{errorString}</span>";
             else
                 if (value != null && value != "")
                 return value.ToString();
@@ -550,11 +555,11 @@ namespace Models.CLEM
                 ".memo-text {margin:auto;margin-left:15px;padding:5px;color:Black;}" +
                 ".filterlink {font-weight:bold; color:#cc33cc; background-color:[FiltContBack] !important; border-color:#cc33cc; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
                 ".filtername {margin:10px 0px 5px 0px; font-size:0.9em; color:#cc33cc;font-weight:bold;}" +
-                ".filterborder {display: block; width: 100% - 40px; border-color:#cc33cc; background-color:[FiltContBack] !important; border-width:1px; border-style:solid; padding:0px 5px 5px 5px; margin:0px 0px 5px 0px; border-radius:5px; }" +
-                ".filterset {float: left; font-size:0.85em; font-weight:bold; color:#cc33cc; background-color:[FiltContBack] !important; border-width:0px; border-style:none; padding: 0px 3px; margin: 2px 0px 0px 5px; border-radius:3px; }" +
+                ".filterborder {display: block; width: 100% - 40px; border-color:#cc33cc; background-color:[FiltContBack] !important; border-width:1px; border-style:solid; padding:0px 5px 5px 5px; margin:10px 0px 5px 0px; border-radius:5px; }" +
+                ".filterset {font-size:0.85em; font-weight:bold; color:#cc33cc; background-color:[FiltContBack] !important; border-width:0px; border-style:none; padding: 1px 3px; margin: 2px 5px 0px 0px; border-radius:3px; }" +
                 ".filteractivityborder {background-color:[FiltContActivityBack] !important; color:#fff; }" +
-                ".filter {float: left; border-color:#cc33cc; background-color:#cc33cc !important; color:white; border-width:1px; border-style:solid; padding: 1px 5px 1px 5px; font-weight:bold; margin: 5px 5px 0px 5px; border-radius:3px;}" +
-                ".filtererror {float: left; border-color:red; background-color:red !important; color:white; border-width:1px; border-style:solid; padding: 0px 5px 0px 5px; font-weight:bold; margin: 0px 5px 0px 5px;  border-radius:3px;}" +
+                ".filter {float: left; border-color:#cc33cc; background-color:#cc33cc !important; color:white; border-width:1px; border-style:solid; padding: 1px 5px 1px 5px; margin: 5px 5px 0px 5px; border-radius:3px;}" +
+                ".filtererror {font-size:0.85em; font-weight:bold; border-color:red; background-color:[FiltContBack] !important; color:red; border-width:1px; border-style:solid; padding: 1px 3px; font-weight:bold; margin: 0px 5px 0px 0px; border-radius:3px;}" +
                 ".filebanner {background-color:green !important; border-radius:5px 5px 0px 0px; color:mintcream; padding:5px; font-weight:bold }" +
                 ".filecontent {background-color:[ContFileBack] !important; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:green; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
                 ".defaultbanner {background-color:[ContDefaultBanner] !important; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
