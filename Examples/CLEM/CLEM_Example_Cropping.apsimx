@@ -179,7 +179,7 @@
                         {
                           "$type": "Models.CLEM.Resources.LabourType, Models",
                           "InitialAge": 42.0,
-                          "Sex": 0,
+                          "Sex": 1,
                           "Individuals": 1,
                           "Hired": false,
                           "SelectedTab": null,
@@ -192,7 +192,7 @@
                         {
                           "$type": "Models.CLEM.Resources.LabourType, Models",
                           "InitialAge": 35.0,
-                          "Sex": 1,
+                          "Sex": 0,
                           "Individuals": 1,
                           "Hired": false,
                           "SelectedTab": null,
@@ -1588,7 +1588,7 @@
                         {
                           "$type": "Models.CLEM.Resources.LabourType, Models",
                           "InitialAge": 30.0,
-                          "Sex": 0,
+                          "Sex": 1,
                           "Individuals": 5,
                           "Hired": false,
                           "SelectedTab": null,

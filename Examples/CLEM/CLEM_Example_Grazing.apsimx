@@ -232,7 +232,6 @@
                           "InterParturitionIntervalCoefficient": -0.7994,
                           "GestationLength": 9.0,
                           "MinimumAge1stMating": 24.0,
-                          "MaximumAgeMating": 120.0,
                           "MinimumSize1stMating": 0.5,
                           "MinimumDaysBirthToConception": 61.0,
                           "MultipleBirthRate": null,
@@ -251,7 +250,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Sex": 1,
+                                  "Sex": 0,
                                   "Age": 8,
                                   "Number": 2.0,
                                   "Weight": 180.0,
@@ -267,7 +266,7 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Sex": 0,
+                                  "Sex": 1,
                                   "Age": 8,
                                   "Number": 2.0,
                                   "Weight": 180.0,
@@ -283,7 +282,7 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Sex": 1,
+                                  "Sex": 0,
                                   "Age": 37,
                                   "Number": 4.0,
                                   "Weight": 400.0,
@@ -299,7 +298,7 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Sex": 1,
+                                  "Sex": 0,
                                   "Age": 30,
                                   "Number": 1.0,
                                   "Weight": 520.0,
@@ -315,7 +314,7 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Sex": 1,
+                                  "Sex": 0,
                                   "Age": 42,
                                   "Number": 1.0,
                                   "Weight": 610.0,
@@ -336,7 +335,7 @@
                             },
                             {
                               "$type": "Models.CLEM.Resources.AnimalPricing, Models",
-                              "SelectedTab": null,
+                              "SelectedTab": "Summary",
                               "Name": "Prices",
                               "Children": [
                                 {
@@ -559,7 +558,7 @@
                                   "Children": [
                                     {
                                       "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
-                                      "PropertyOfIndividual": "RuminantMale.IsSire",
+                                      "PropertyOfIndividual": "Male.IsSire",
                                       "Operator": 13,
                                       "Value": "True",
                                       "SelectedTab": null,
@@ -820,6 +819,7 @@
                           "Children": [
                             {
                               "$type": "Models.CLEM.Activities.RuminantActivityControlledMating, Models",
+                              "MaximumAgeMating": 120.0,
                               "TransactionCategory": "Livestock.Manage",
                               "OnPartialResourcesAvailableAction": 0,
                               "SelectedTab": null,
@@ -926,7 +926,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Sex": 1,
+                                  "Sex": 0,
                                   "Age": 24,
                                   "Number": 0.0,
                                   "Weight": 0.0,
@@ -954,7 +954,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Sex": 0,
+                                  "Sex": 1,
                                   "Age": 36,
                                   "Number": 0.0,
                                   "Weight": 0.0,
