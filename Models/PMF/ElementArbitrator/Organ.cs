@@ -357,22 +357,24 @@
                 ReAllocated.Carbon = Carbon.SuppliesAllocated.ReAllocation;
                 ReAllocated.Nitrogen = Nitrogen.SuppliesAllocated.ReAllocation;
                 Live.SubtractDelta(ReAllocated);
-
+                
                 //do retranslocation
                 ReTranslocated.Carbon = Carbon.SuppliesAllocated.ReTranslocation;
-                ReTranslocated.Nitrogen = Nitrogen.Supplies.ReTranslocation;
+                ReTranslocated.Nitrogen = Nitrogen.SuppliesAllocated.ReTranslocation;
                 Live.SubtractDelta(ReTranslocated);
-                
+
+                //do senescene
+                Senesced.Carbon = Live.Carbon * senescenceRate;
+                Senesced.Nitrogen = Live.Nitrogen * senescenceRate;
+                Live.SubtractDelta(Senesced);
+                Dead.AddDelta(Senesced);
+
                 //do allocation
                 Allocated.Carbon = Carbon.DemandsAllocated;
                 Allocated.Nitrogen = Nitrogen.DemandsAllocated;
                 Live.AddDelta(Allocated);
 
-                //do senescene
-                Senesced.Carbon = StartLive.Carbon * senescenceRate - Carbon.SuppliesAllocated.ReAllocation;
-                Senesced.Nitrogen = StartLive.Carbon * senescenceRate - Nitrogen.SuppliesAllocated.ReAllocation;
-                Live.SubtractDelta(Senesced);
-                Dead.AddDelta(Senesced);
+                
                 
                 // Do detachment
                 double detachedFrac = detachmentRateFunction.Value();

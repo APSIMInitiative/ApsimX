@@ -88,12 +88,31 @@
             Metabolic = 0;
         }
 
+        /// <summary>Pools can not be negative.  Test for negatives each time an opperator is applied</summary>
+        private void testPools(NutrientPoolStates p)
+        {
+            if (p.Structural < 0)
+                    throw new Exception(this.FullPath + ".Structural was set to negative value");
+            if (p.Metabolic < 0)
+                throw new Exception(this.FullPath + ".Metabolic was set to negative value");
+            if (p.Storage < 0)
+                throw new Exception(this.FullPath + ".Storage was set to negative value");
+            if (Double.IsNaN(p.Structural))
+                throw new Exception(this.FullPath + ".Structural was set to nan");
+            if (Double.IsNaN(p.Metabolic))
+                throw new Exception(this.FullPath + ".Metabolic was set to nan");
+            if (Double.IsNaN(p.Storage))
+                throw new Exception(this.FullPath + ".Storage was set to nan");
+        }
+        
         /// <summary>Add Delta</summary>
         public void AddDelta(NutrientPoolStates delta)
         {
             Structural += delta.Structural;
             Metabolic += delta.Metabolic;
             Storage += delta.Storage;
+
+            testPools(this); 
         }
 
         /// <summary>subtract Delta</summary>
@@ -102,6 +121,8 @@
             Structural -= delta.Structural;
             Metabolic -= delta.Metabolic;
             Storage -= delta.Storage;
+
+            testPools(this);
         }
 
         /// <summary>Set to new value</summary>
@@ -110,6 +131,8 @@
             Structural = newValue.Structural;
             Metabolic = newValue.Metabolic;
             Storage = newValue.Storage;
+
+            testPools(this);
         }
 
         /// <summary>multiply by value</summary>
@@ -118,6 +141,8 @@
             Structural *= multiplier;
             Metabolic *= multiplier;
             Storage *= multiplier;
+
+            testPools(this);
         }
 
         /// <summary>divide by value</summary>
@@ -126,6 +151,8 @@
             Structural /= divisor;
             Metabolic /= divisor;
             Storage /= divisor;
+
+            testPools(this);
         }
 
         /// <summary>return pools divied by value</summary>
