@@ -27,7 +27,6 @@ namespace Models.CLEM
     {
         [Link]
         private ResourcesHolder resources = null;
-
         private ResourcePricing transmutePricing;
         private ResourcePricing shortfallPricing;
         private double shortfallPacketSize = 1;
@@ -160,7 +159,7 @@ namespace Models.CLEM
         ///<inheritdoc/>
         public double ShortfallPackets(double amount)
         {
-            double unitsNeeded = amount / shortfallPacketSize;
+            double unitsNeeded = amount / (shortfallPacketSize==0?1: shortfallPacketSize);
             if (shortfallWholePackets)
                 unitsNeeded = Math.Ceiling(unitsNeeded);
 
