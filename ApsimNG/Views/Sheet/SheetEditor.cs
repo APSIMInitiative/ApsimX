@@ -5,8 +5,11 @@ namespace UserInterface.Views
 {
     class SheetEditor : ISheetEditor
     {
+        /// <summary>The sheet.</summary>
+        private readonly Sheet sheet;
+
         /// <summary>The sheet widget.</summary>
-        private readonly SheetWidget sheet;
+        private readonly SheetWidget sheetWidget;
 
         /// <summary>The gtk entry box used when editing a sheet cell.</summary>
         private Entry entry;
@@ -15,10 +18,12 @@ namespace UserInterface.Views
         private Fixed fix = new Fixed();
 
         /// <summary>Constructor.</summary>
-        /// <param name="sheetView">The sheet widget.</param>
-        public SheetEditor(SheetWidget sheetView)
+        /// <param name="sheet">The sheet.</param>
+        /// <param name="sheetWidget">The sheet widget.</param>
+        public SheetEditor(Sheet sheet, SheetWidget sheetWidget)
         {
-            sheet = sheetView;
+            this.sheet = sheet;
+            this.sheetWidget = sheetWidget;
             sheet.KeyPress += OnKeyPressEvent;
         }
 
@@ -36,9 +41,9 @@ namespace UserInterface.Views
         /// <summary>Invoked when the user presses a key.</summary>
         /// <param name="sender">The sender of the event.</param>
         /// <param name="evnt">The event data.</param>
-        private void OnKeyPressEvent(object sender, EventKey evnt)
+        private void OnKeyPressEvent(object sender, SheetEventKey evnt)
         {
-            if (!IsEditing && evnt.Key == Gdk.Key.Return)
+            if (!IsEditing && evnt.Key == Keys.Return)
                 ShowEntryBox();
         }
         
@@ -56,18 +61,18 @@ namespace UserInterface.Views
             if (!sheet.CellPainter.TextLeftJustify(selectedColumnIndex, selectedRowIndex))
                 entry.Alignment = 1; // right
 
-            if (sheet.Children.Length == 1)
+            if (sheetWidget.Children.Length == 1)
             {
-                fix = (Fixed)sheet.Child;
+                fix = (Fixed)sheetWidget.Child;
             }
             else
             {
                 fix = new Fixed();
-                sheet.Add(fix);
+                sheetWidget.Add(fix);
             }
             fix.Put(entry, (int)cellBounds.Left + 1, (int)cellBounds.Top + 1);
-            
-            sheet.ShowAll();
+
+            sheetWidget.ShowAll();
             sheet.Refresh();
 
             entry.GrabFocus();
@@ -85,7 +90,7 @@ namespace UserInterface.Views
                 fix.Remove(entry);
                 entry = null;
                 sheet.Refresh();
-                sheet.GrabFocus();
+                sheetWidget.GrabFocus();
             }
             else if (args.Event.Key == Gdk.Key.Return)
             {
@@ -97,7 +102,7 @@ namespace UserInterface.Views
                 entry = null;
 
                 sheet.Refresh();
-                sheet.GrabFocus();
+                sheetWidget.GrabFocus();
             }
         }
     }

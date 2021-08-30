@@ -1,14 +1,6 @@
 ﻿namespace UnitTests.Sheet
 {
-    using APSIM.Shared.Utilities;
-    using Cairo;
-    using Models;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
     using NUnit.Framework;
-    using System;
     using System.Collections.Generic;
     using UserInterface.Views;
 
@@ -25,7 +17,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new SheetWidget();
+            var sheet = new Sheet();
             sheet.DataProvider = new DataTableProvider(data, units);
             sheet.NumberFrozenRows = 1;
             sheet.NumberFrozenColumns = 0;
@@ -35,21 +27,21 @@
 
             // assumes cellpadding of 2 x 10, rowHeight = 35
             // Row 0
-            Assert.AreEqual(new Rectangle(0, 0, 30, 35), sheet.CalculateBounds(0, 0).ToRectangle()); 
-            Assert.AreEqual(new Rectangle(30, 0, 40, 35), sheet.CalculateBounds(1, 0).ToRectangle());
-            Assert.AreEqual(new Rectangle(70, 0, 50, 35), sheet.CalculateBounds(2, 0).ToRectangle());
+            Assert.AreEqual(new CellBounds(0, 0, 30, 35), sheet.CalculateBounds(0, 0)); 
+            Assert.AreEqual(new CellBounds(30, 0, 40, 35), sheet.CalculateBounds(1, 0));
+            Assert.AreEqual(new CellBounds(70, 0, 50, 35), sheet.CalculateBounds(2, 0));
             Assert.IsNull(sheet.CalculateBounds(3, 0));
 
             // Row 1
-            Assert.AreEqual(new Rectangle(0, 35, 30, 35), sheet.CalculateBounds(0, 1).ToRectangle());
-            Assert.AreEqual(new Rectangle(30, 35, 40, 35), sheet.CalculateBounds(1, 1).ToRectangle());
-            Assert.AreEqual(new Rectangle(70, 35, 50, 35), sheet.CalculateBounds(2, 1).ToRectangle());
+            Assert.AreEqual(new CellBounds(0, 35, 30, 35), sheet.CalculateBounds(0, 1));
+            Assert.AreEqual(new CellBounds(30, 35, 40, 35), sheet.CalculateBounds(1, 1));
+            Assert.AreEqual(new CellBounds(70, 35, 50, 35), sheet.CalculateBounds(2, 1));
             Assert.IsNull(sheet.CalculateBounds(3, 1));
 
             // Row 2
-            Assert.AreEqual(new Rectangle(0, 70, 30, 35), sheet.CalculateBounds(0, 2).ToRectangle());
-            Assert.AreEqual(new Rectangle(30, 70, 40, 35), sheet.CalculateBounds(1, 2).ToRectangle());
-            Assert.AreEqual(new Rectangle(70, 70, 50, 35), sheet.CalculateBounds(2, 2).ToRectangle());
+            Assert.AreEqual(new CellBounds(0, 70, 30, 35), sheet.CalculateBounds(0, 2));
+            Assert.AreEqual(new CellBounds(30, 70, 40, 35), sheet.CalculateBounds(1, 2));
+            Assert.AreEqual(new CellBounds(70, 70, 50, 35), sheet.CalculateBounds(2, 2));
             Assert.IsNull(sheet.CalculateBounds(3, 2));
 
             // Row 3
@@ -69,7 +61,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new SheetWidget();
+            var sheet = new Sheet();
             sheet.DataProvider = new DataTableProvider(data, units);
             sheet.NumberFrozenRows = 1;
             sheet.NumberFrozenColumns = 0;
@@ -82,21 +74,21 @@
             // assumes cellpadding of 2 x 10, rowHeight = 35
             // Row 0
             Assert.IsNull(sheet.CalculateBounds(0, 0)); // hidden
-            Assert.AreEqual(new Rectangle(0, 0, 20, 35), sheet.CalculateBounds(1, 0).ToRectangle());
-            Assert.AreEqual(new Rectangle(20, 0, 20, 35), sheet.CalculateBounds(2, 0).ToRectangle());
-            Assert.AreEqual(new Rectangle(40, 0, 20, 35), sheet.CalculateBounds(3, 0).ToRectangle());
+            Assert.AreEqual(new CellBounds(0, 0, 20, 35), sheet.CalculateBounds(1, 0));
+            Assert.AreEqual(new CellBounds(20, 0, 20, 35), sheet.CalculateBounds(2, 0));
+            Assert.AreEqual(new CellBounds(40, 0, 20, 35), sheet.CalculateBounds(3, 0));
 
             // Row 1
             Assert.IsNull(sheet.CalculateBounds(0, 1)); // hidden
-            Assert.AreEqual(new Rectangle(0, 35, 20, 35), sheet.CalculateBounds(1, 1).ToRectangle());
-            Assert.AreEqual(new Rectangle(20, 35, 20, 35), sheet.CalculateBounds(2, 1).ToRectangle());
-            Assert.AreEqual(new Rectangle(40, 35, 20, 35), sheet.CalculateBounds(3, 1).ToRectangle());
+            Assert.AreEqual(new CellBounds(0, 35, 20, 35), sheet.CalculateBounds(1, 1));
+            Assert.AreEqual(new CellBounds(20, 35, 20, 35), sheet.CalculateBounds(2, 1));
+            Assert.AreEqual(new CellBounds(40, 35, 20, 35), sheet.CalculateBounds(3, 1));
 
             // Row 2
             Assert.IsNull(sheet.CalculateBounds(0, 2));  // hidden
-            Assert.AreEqual(new Rectangle(0, 70, 20, 35), sheet.CalculateBounds(1, 2).ToRectangle());
-            Assert.AreEqual(new Rectangle(20, 70, 20, 35), sheet.CalculateBounds(2, 2).ToRectangle());
-            Assert.AreEqual(new Rectangle(40, 70, 20, 35), sheet.CalculateBounds(3, 2).ToRectangle());
+            Assert.AreEqual(new CellBounds(0, 70, 20, 35), sheet.CalculateBounds(1, 2));
+            Assert.AreEqual(new CellBounds(20, 70, 20, 35), sheet.CalculateBounds(2, 2));
+            Assert.AreEqual(new CellBounds(40, 70, 20, 35), sheet.CalculateBounds(3, 2));
 
             // Row 3
             Assert.IsNull(sheet.CalculateBounds(0, 3));
@@ -114,7 +106,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new SheetWidget();
+            var sheet = new Sheet();
             sheet.DataProvider = new DataTableProvider(data, units);
             sheet.NumberFrozenRows = 1;
             sheet.NumberFrozenColumns = 0;
@@ -126,22 +118,22 @@
 
             // assumes cellpadding of 2 x 10, rowHeight = 35
             // Row 0
-            Assert.AreEqual(new Rectangle(0, 0, 10, 35), sheet.CalculateBounds(0, 0).ToRectangle());
-            Assert.AreEqual(new Rectangle(10, 0, 20, 35), sheet.CalculateBounds(1, 0).ToRectangle());
-            Assert.AreEqual(new Rectangle(30, 0, 20, 35), sheet.CalculateBounds(2, 0).ToRectangle());
-            Assert.AreEqual(new Rectangle(50, 0, 20, 35), sheet.CalculateBounds(3, 0).ToRectangle());
+            Assert.AreEqual(new CellBounds(0, 0, 10, 35), sheet.CalculateBounds(0, 0));
+            Assert.AreEqual(new CellBounds(10, 0, 20, 35), sheet.CalculateBounds(1, 0));
+            Assert.AreEqual(new CellBounds(30, 0, 20, 35), sheet.CalculateBounds(2, 0));
+            Assert.AreEqual(new CellBounds(50, 0, 20, 35), sheet.CalculateBounds(3, 0));
 
             // Row 1
-            Assert.AreEqual(new Rectangle(0, 35, 10, 35), sheet.CalculateBounds(0, 1).ToRectangle());
-            Assert.AreEqual(new Rectangle(10, 35, 20, 35), sheet.CalculateBounds(1, 1).ToRectangle());
-            Assert.AreEqual(new Rectangle(30, 35, 20, 35), sheet.CalculateBounds(2, 1).ToRectangle());
-            Assert.AreEqual(new Rectangle(50, 35, 20, 35), sheet.CalculateBounds(3, 1).ToRectangle());
+            Assert.AreEqual(new CellBounds(0, 35, 10, 35), sheet.CalculateBounds(0, 1));
+            Assert.AreEqual(new CellBounds(10, 35, 20, 35), sheet.CalculateBounds(1, 1));
+            Assert.AreEqual(new CellBounds(30, 35, 20, 35), sheet.CalculateBounds(2, 1));
+            Assert.AreEqual(new CellBounds(50, 35, 20, 35), sheet.CalculateBounds(3, 1));
 
             // Row 2
-            Assert.AreEqual(new Rectangle(0, 70, 10, 35), sheet.CalculateBounds(0, 2).ToRectangle());
-            Assert.AreEqual(new Rectangle(10, 70, 20, 35), sheet.CalculateBounds(1, 2).ToRectangle());
-            Assert.AreEqual(new Rectangle(30, 70, 20, 35), sheet.CalculateBounds(2, 2).ToRectangle());
-            Assert.AreEqual(new Rectangle(50, 70, 20, 35), sheet.CalculateBounds(3, 2).ToRectangle());
+            Assert.AreEqual(new CellBounds(0, 70, 10, 35), sheet.CalculateBounds(0, 2));
+            Assert.AreEqual(new CellBounds(10, 70, 20, 35), sheet.CalculateBounds(1, 2));
+            Assert.AreEqual(new CellBounds(30, 70, 20, 35), sheet.CalculateBounds(2, 2));
+            Assert.AreEqual(new CellBounds(50, 70, 20, 35), sheet.CalculateBounds(3, 2));
 
             // Row 3
             Assert.IsNull(sheet.CalculateBounds(0, 3));
@@ -162,7 +154,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new SheetWidget();
+            var sheet = new Sheet();
             sheet.DataProvider = new DataTableProvider(data, units);
             sheet.NumberFrozenRows = 1;
             sheet.NumberFrozenColumns = 1;
@@ -174,22 +166,22 @@
 
             // assumes cellpadding of 2 x 10, rowHeight = 35
             // Row 0
-            Assert.AreEqual(new Rectangle(0, 0, 10, 35), sheet.CalculateBounds(0, 0).ToRectangle());
+            Assert.AreEqual(new CellBounds(0, 0, 10, 35), sheet.CalculateBounds(0, 0));
             Assert.IsNull(sheet.CalculateBounds(1, 0));  // hidden column
             Assert.IsNull(sheet.CalculateBounds(2, 0));  // hidden column
-            Assert.AreEqual(new Rectangle(10, 0, 40, 35), sheet.CalculateBounds(3, 0).ToRectangle());
+            Assert.AreEqual(new CellBounds(10, 0, 40, 35), sheet.CalculateBounds(3, 0));
 
             // Row 1
-            Assert.AreEqual(new Rectangle(0, 35, 10, 35), sheet.CalculateBounds(0, 1).ToRectangle());
+            Assert.AreEqual(new CellBounds(0, 35, 10, 35), sheet.CalculateBounds(0, 1));
             Assert.IsNull(sheet.CalculateBounds(1, 1));  // hidden column
             Assert.IsNull(sheet.CalculateBounds(2, 1));  // hidden column
-            Assert.AreEqual(new Rectangle(10, 35, 40, 35), sheet.CalculateBounds(3, 1).ToRectangle());
+            Assert.AreEqual(new CellBounds(10, 35, 40, 35), sheet.CalculateBounds(3, 1));
 
             // Row 2
-            Assert.AreEqual(new Rectangle(0, 70, 10, 35), sheet.CalculateBounds(0, 2).ToRectangle());
+            Assert.AreEqual(new CellBounds(0, 70, 10, 35), sheet.CalculateBounds(0, 2));
             Assert.IsNull(sheet.CalculateBounds(1, 2));  // hidden column
             Assert.IsNull(sheet.CalculateBounds(2, 2));  // hidden column
-            Assert.AreEqual(new Rectangle(10, 70, 40, 35), sheet.CalculateBounds(3, 2).ToRectangle());
+            Assert.AreEqual(new CellBounds(10, 70, 40, 35), sheet.CalculateBounds(3, 2));
 
             // Row 3
             Assert.IsNull(sheet.CalculateBounds(0, 3));
@@ -208,7 +200,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new SheetWidget();
+            var sheet = new Sheet();
             sheet.DataProvider = new DataTableProvider(data, units);
             sheet.NumberFrozenRows = 1;
             sheet.NumberFrozenColumns = 1;
@@ -221,22 +213,22 @@
             sheet.ScrollLeft();
 
             // assumes cellpadding of 2 x 10, rowHeight = 35
-            Assert.AreEqual(new Rectangle(0, 0, 10, 35), sheet.CalculateBounds(0, 0).ToRectangle());
-            Assert.AreEqual(new Rectangle(10, 0, 20, 35), sheet.CalculateBounds(1, 0).ToRectangle());
-            Assert.AreEqual(new Rectangle(30, 0, 30, 35), sheet.CalculateBounds(2, 0).ToRectangle());
-            Assert.AreEqual(new Rectangle(60, 0, 40, 35), sheet.CalculateBounds(3, 0).ToRectangle());
+            Assert.AreEqual(new CellBounds(0, 0, 10, 35), sheet.CalculateBounds(0, 0));
+            Assert.AreEqual(new CellBounds(10, 0, 20, 35), sheet.CalculateBounds(1, 0));
+            Assert.AreEqual(new CellBounds(30, 0, 30, 35), sheet.CalculateBounds(2, 0));
+            Assert.AreEqual(new CellBounds(60, 0, 40, 35), sheet.CalculateBounds(3, 0));
 
             // Row 1
-            Assert.AreEqual(new Rectangle(0, 35, 10, 35), sheet.CalculateBounds(0, 1).ToRectangle());
-            Assert.AreEqual(new Rectangle(10, 35, 20, 35), sheet.CalculateBounds(1, 1).ToRectangle());
-            Assert.AreEqual(new Rectangle(30, 35, 30, 35), sheet.CalculateBounds(2, 1).ToRectangle());
-            Assert.AreEqual(new Rectangle(60, 35, 40, 35), sheet.CalculateBounds(3, 1).ToRectangle());
+            Assert.AreEqual(new CellBounds(0, 35, 10, 35), sheet.CalculateBounds(0, 1));
+            Assert.AreEqual(new CellBounds(10, 35, 20, 35), sheet.CalculateBounds(1, 1));
+            Assert.AreEqual(new CellBounds(30, 35, 30, 35), sheet.CalculateBounds(2, 1));
+            Assert.AreEqual(new CellBounds(60, 35, 40, 35), sheet.CalculateBounds(3, 1));
 
             // Row 2
-            Assert.AreEqual(new Rectangle(0, 70, 10, 35), sheet.CalculateBounds(0, 2).ToRectangle());
-            Assert.AreEqual(new Rectangle(10, 70, 20, 35), sheet.CalculateBounds(1, 2).ToRectangle());
-            Assert.AreEqual(new Rectangle(30, 70, 30, 35), sheet.CalculateBounds(2, 2).ToRectangle());
-            Assert.AreEqual(new Rectangle(60, 70, 40, 35), sheet.CalculateBounds(3, 2).ToRectangle());
+            Assert.AreEqual(new CellBounds(0, 70, 10, 35), sheet.CalculateBounds(0, 2));
+            Assert.AreEqual(new CellBounds(10, 70, 20, 35), sheet.CalculateBounds(1, 2));
+            Assert.AreEqual(new CellBounds(30, 70, 30, 35), sheet.CalculateBounds(2, 2));
+            Assert.AreEqual(new CellBounds(60, 70, 40, 35), sheet.CalculateBounds(3, 2));
 
             // Row 3
             Assert.IsNull(sheet.CalculateBounds(0, 3));
@@ -255,7 +247,7 @@
                                                            new object[] {   "a3", "b3",  "c3", "d3" },
                                                            new object[] {   "a4", "b4",  "c4", "d4" }});
             var units = new string[] { null, "g/m2", null, null };
-            var sheet = new SheetWidget();
+            var sheet = new Sheet();
             sheet.DataProvider = new DataTableProvider(data, units);
             sheet.NumberFrozenRows = 1;
             sheet.NumberFrozenColumns = 1;
@@ -266,9 +258,9 @@
             sheet.ScrollDown();
 
             // assumes cellpadding of 2 x 10, rowHeight = 35
-            Assert.AreEqual(new Rectangle(0, 0, 30, 35), sheet.CalculateBounds(0, 0).ToRectangle());
-            Assert.AreEqual(new Rectangle(30, 0, 40, 35), sheet.CalculateBounds(1, 0).ToRectangle());
-            Assert.AreEqual(new Rectangle(70, 0, 50, 35), sheet.CalculateBounds(2, 0).ToRectangle());
+            Assert.AreEqual(new CellBounds(0, 0, 30, 35), sheet.CalculateBounds(0, 0));
+            Assert.AreEqual(new CellBounds(30, 0, 40, 35), sheet.CalculateBounds(1, 0));
+            Assert.AreEqual(new CellBounds(70, 0, 50, 35), sheet.CalculateBounds(2, 0));
             Assert.IsNull(sheet.CalculateBounds(3, 0));
 
             // Row 1 - hidden
@@ -278,16 +270,16 @@
             Assert.IsNull(sheet.CalculateBounds(3, 1));
 
             // Row 2
-            Assert.AreEqual(new Rectangle(0, 35, 30, 35), sheet.CalculateBounds(0, 2).ToRectangle());
-            Assert.AreEqual(new Rectangle(30, 35, 40, 35), sheet.CalculateBounds(1, 2).ToRectangle());
-            Assert.AreEqual(new Rectangle(70, 35, 50, 35), sheet.CalculateBounds(2, 2).ToRectangle());
+            Assert.AreEqual(new CellBounds(0, 35, 30, 35), sheet.CalculateBounds(0, 2));
+            Assert.AreEqual(new CellBounds(30, 35, 40, 35), sheet.CalculateBounds(1, 2));
+            Assert.AreEqual(new CellBounds(70, 35, 50, 35), sheet.CalculateBounds(2, 2));
             Assert.IsNull(sheet.CalculateBounds(3, 2));
 
 
             // Row 3
-            Assert.AreEqual(new Rectangle(0, 70, 30, 35), sheet.CalculateBounds(0, 3).ToRectangle());
-            Assert.AreEqual(new Rectangle(30, 70, 40, 35), sheet.CalculateBounds(1, 3).ToRectangle());
-            Assert.AreEqual(new Rectangle(70, 70, 50, 35), sheet.CalculateBounds(2, 3).ToRectangle());
+            Assert.AreEqual(new CellBounds(0, 70, 30, 35), sheet.CalculateBounds(0, 3));
+            Assert.AreEqual(new CellBounds(30, 70, 40, 35), sheet.CalculateBounds(1, 3));
+            Assert.AreEqual(new CellBounds(70, 70, 50, 35), sheet.CalculateBounds(2, 3));
             Assert.IsNull(sheet.CalculateBounds(3, 3));
         }
     }

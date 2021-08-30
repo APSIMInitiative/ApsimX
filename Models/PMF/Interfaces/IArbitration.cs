@@ -38,9 +38,6 @@
         /// <summary>Returns the organs dry matter demand</summary>
         BiomassPoolType DMDemand { get; }
 
-        /// <summary>Returns the organs dry matter demand</summary>
-        BiomassPoolType DMDemandPriorityFactor { get; }
-
         /// <summary>Returns the organs dry matter supply</summary>
         BiomassSupplyType DMSupply { get; }
 
@@ -90,7 +87,7 @@
         /// <value>The structural.</value>
         [Description("Initial Structural biomass")]
         public double Structural { get; set; }
-        /// <summary>Gets or sets the non structural.</summary>
+        /// <summary>Gets or sets the storage.</summary>
         /// <value>The non structural.</value>
         [Description("Initial Storage biomass")]
         public double Storage { get; set; }
@@ -98,8 +95,20 @@
         /// <value>The metabolic.</value>
         [Description("Initial Metabolic biomass")]
         public double Metabolic { get; set; }
-
-        /// <summary>Gets the total amount.</summary>
+        /// <summary>Gets or sets the structural Priority.</summary>
+        /// <value>The structural Priority.</value>
+        [Description("Initial Structural biomass Priority")]
+        public double QStructuralPriority { get; set; }
+        /// <summary>Gets or sets Storage Priority.</summary>
+        /// <value>The Storage Priority.</value>
+        [Description("Initial Storage biomass priority")]
+        public double QStoragePriority { get; set; }
+        /// <summary>Gets or sets the metabolic biomass priority.</summary>
+        /// <value>The metabolic.</value>
+        [Description("Initial Metabolic biomass priority")]
+        public double QMetabolicPriority { get; set; }
+        
+        /// <summary>Gets the total amount of biomass.</summary>
         public double Total
         { get { return Structural + Metabolic + Storage; } }
 
@@ -108,6 +117,9 @@
             Structural = 0;
             Storage = 0; 
             Metabolic = 0;
+            QStructuralPriority = 1;
+            QStoragePriority = 1;
+            QMetabolicPriority = 1;
         }
     }
     /// <summary>
