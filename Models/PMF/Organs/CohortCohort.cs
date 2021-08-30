@@ -72,7 +72,9 @@ namespace Models.PMF.Organs
         /// </summary>
         public Biomass GetLive()
         {
-            return live;
+            // Return a copy of the live biomass, so that the caller
+            // can't modify it.
+            return new Biomass(live);
         }
 
         /// <summary>
@@ -81,7 +83,9 @@ namespace Models.PMF.Organs
         /// <returns></returns>
         public Biomass GetDead()
         {
-            return dead;
+            // Return a copy of the dead biomass, so that the caller
+            // can't modify it.
+            return new Biomass(dead);
         }
 
         // Update methods
