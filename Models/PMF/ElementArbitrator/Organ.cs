@@ -73,11 +73,14 @@
         [Link(Type = LinkType.Child, ByName = true)]
         public OrganNutrientDelta Nitrogen { get; set; }
 
+        
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
 
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double BiomassToleranceValue = 0.0000000001;
+
+        private List<OrganNutrientDelta> nutrientsToArbitrate { get; set; }
 
         ///3. The Constructor
         /// -------------------------------------------------------------------------------------------------
@@ -87,6 +90,9 @@
         {
             Carbon = new OrganNutrientDelta();
             Nitrogen = new OrganNutrientDelta();
+            nutrientsToArbitrate = new List<OrganNutrientDelta>();
+            nutrientsToArbitrate.Add(Carbon);
+            nutrientsToArbitrate.Add(Nitrogen);
             Clear();
         }
 
@@ -321,6 +327,8 @@
             {
                 Clear();
                 ClearBiomassFlows();
+                foreach (OrganNutrientDelta nut in nutrientsToArbitrate)
+                    nut.SetSuppliesAndDemands();  // This is necessary to have values assigned to the Nitrogen.Concentration members
                 Live.Carbon.Structural = InitialWt.Structural.Value()*Cconc;
                 Live.Carbon.Metabolic = InitialWt.Metabolic.Value()*Cconc;
                 Live.Carbon.Storage = InitialWt.Storage.Value()*Cconc;
@@ -352,7 +360,6 @@
         {
             if (parentPlant.IsAlive)
             {
-
                 //do reallocation
                 ReAllocated.Carbon = Carbon.SuppliesAllocated.ReAllocation;
                 ReAllocated.Nitrogen = Nitrogen.SuppliesAllocated.ReAllocation;

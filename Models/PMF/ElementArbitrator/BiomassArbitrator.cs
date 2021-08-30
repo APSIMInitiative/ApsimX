@@ -246,7 +246,7 @@ namespace Models.PMF
 
         private double calcAllocated(double totalAllocated, double organSupply, double totalSupply)
         {
-            if (totalAllocated - totalSupply > 0.000000001)
+            if (totalAllocated - totalSupply > 0.0000000000001)
                 throw new Exception("Allocation greater than supply");
             double relativeShare = organSupply / totalSupply;
             double retVal = totalAllocated * relativeShare;
@@ -260,29 +260,29 @@ namespace Models.PMF
         /// <param name="PRS">The bat.</param>
         public double DoAllocation(double TotalSupply, PlantNutrientDeltas PRS)
         {
-            double TotalAllocated = 0;
+            double totalAllocated = 0;
             if (TotalSupply > 0.00000000001)
             {
-                double NotAllocated = TotalSupply;
+                double notAllocated = TotalSupply;
                 
                 ////First time round allocate with priority factors applied so higher priority sinks get more allocation
                 foreach (OrganNutrientDelta o in PRS.ArbitratingOrgans)
                 {
                     if (o.OutstandingDemands.Total > 0.0)
                     {
+                        double totalPriorityDemand = PRS.TotalPlantPriorityScalledDemand;
                         NutrientPoolStates allocation = new NutrientPoolStates()
                         {
-                            Structural = Math.Min(o.OutstandingDemands.Structural, TotalSupply * MathUtilities.Divide(o.PriorityScaledDemand.Structural, PRS.TotalPlantPriorityScalledDemand, 0)),
-                            Metabolic = Math.Min(o.OutstandingDemands.Metabolic, TotalSupply * MathUtilities.Divide(o.PriorityScaledDemand.Metabolic, PRS.TotalPlantPriorityScalledDemand, 0)),
-                            Storage = Math.Min(o.OutstandingDemands.Storage, TotalSupply * MathUtilities.Divide(o.PriorityScaledDemand.Storage, PRS.TotalPlantPriorityScalledDemand, 0)),
+                            Structural = Math.Min(o.OutstandingDemands.Structural, TotalSupply * MathUtilities.Divide(o.PriorityScaledDemand.Structural, totalPriorityDemand, 0)),
+                            Metabolic = Math.Min(o.OutstandingDemands.Metabolic, TotalSupply * MathUtilities.Divide(o.PriorityScaledDemand.Metabolic, totalPriorityDemand, 0)),
+                            Storage = Math.Min(o.OutstandingDemands.Storage, TotalSupply * MathUtilities.Divide(o.PriorityScaledDemand.Storage, totalPriorityDemand, 0)),
                         };
 
                         o.DemandsAllocated.AddDelta(allocation);
-                        NotAllocated -= (allocation.Total);
-                        TotalAllocated += (allocation.Total);
+                        notAllocated -= (allocation.Total);
+                        totalAllocated += (allocation.Total);
                     }
                 }
-                double FirstPassNotallocated = NotAllocated;
                 double RemainingDemand = PRS.TotalPlantDemand - PRS.TotalPlantDemandsAllocated;
                 // Second time round if there is still biomass to allocate do it based on relative demands so lower priority organs have the change to be allocated full demand
                 foreach (OrganNutrientDelta o in PRS.ArbitratingOrgans)
@@ -291,18 +291,17 @@ namespace Models.PMF
                     {
                         NutrientPoolStates allocation = new NutrientPoolStates()
                         {
-                            Structural = Math.Min(o.OutstandingDemands.Structural, FirstPassNotallocated * MathUtilities.Divide(o.OutstandingDemands.Structural, RemainingDemand, 0)),
-                            Metabolic = Math.Min(o.OutstandingDemands.Metabolic, FirstPassNotallocated * MathUtilities.Divide(o.OutstandingDemands.Metabolic, RemainingDemand, 0)),
-                            Storage = Math.Min(o.OutstandingDemands.Storage, FirstPassNotallocated * MathUtilities.Divide(o.OutstandingDemands.Storage, RemainingDemand, 0)),
+                            Structural = Math.Min(o.OutstandingDemands.Structural, notAllocated * MathUtilities.Divide(o.OutstandingDemands.Structural, RemainingDemand, 0)),
+                            Metabolic = Math.Min(o.OutstandingDemands.Metabolic, notAllocated * MathUtilities.Divide(o.OutstandingDemands.Metabolic, RemainingDemand, 0)),
+                            Storage = Math.Min(o.OutstandingDemands.Storage, notAllocated * MathUtilities.Divide(o.OutstandingDemands.Storage, RemainingDemand, 0)),
                         };
 
                         o.DemandsAllocated.AddDelta(allocation);
-                        NotAllocated -= (allocation.Total);
-                        TotalAllocated += (allocation.Total);
+                        totalAllocated += (allocation.Total);
                     }
                 }
             }
-            return TotalAllocated;
+            return totalAllocated;
         }
 
         /// <summary>Called when crop is ending</summary>

@@ -52,6 +52,9 @@
         /// <summary>Constructor</summary>
         public OrganNutrientDelta() 
         {
+            demandFunctions = new NutrientDemandFunctions();
+            supplyFunctions = new NutrientSupplyFunctions();
+            thresholds = new NutrientConcentrationFunctions();
             Supplies = new OrganNutrientSupplies();
             SuppliesAllocated = new OrganNutrientSupplies();
             Demands = new NutrientPoolStates();

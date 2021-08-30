@@ -33,6 +33,10 @@
         [Units("g/m2")]
         public IFunction Storage = null;
 
+        /// <summary> The constructor</summary>
+        public NutrientPoolFunctions()
+        {
+        }
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
@@ -86,6 +90,9 @@
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2")]
         public NutrientPoolFunctions ReTranslocation = null;
+
+        /// <summary> The constructor</summary>
+        public NutrientSupplyFunctions(){}
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
@@ -151,6 +158,9 @@
         [Units("g/m2")]
         public IFunction QStoragePriority = null;
 
+        /// <summary> The constructor</summary>
+        public NutrientDemandFunctions(){ }
+
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
@@ -199,5 +209,8 @@
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         public IFunction Minimum = null;
+
+        /// <summary> The constructor</summary>
+        public NutrientConcentrationFunctions(){ }
     }
 }
