@@ -45,7 +45,10 @@ namespace APSIM.Server
         protected override void Run(IRunnable job)
         {
             if (job is SimulationDescription sim)
+            {
+                sim.Storage.Writer.Clean(new[] { sim.SimulationToRun.Name }, false);
                 sim.Run(cancelToken, Replacements);
+            }
             else
             {
                 base.Prepare(job);
