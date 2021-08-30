@@ -33,7 +33,7 @@ namespace Models.CLEM.Resources
                 case RuminantTransactionsGroupingStyle.ByPriceGroup:
                     return BreedParams.ValueofIndividual(this, pricingStyle).Name;
                 case RuminantTransactionsGroupingStyle.ByClass:
-                    return this.Category;
+                    return this.Class;
                 case RuminantTransactionsGroupingStyle.BySexAndClass:
                     return this.FullCategory;
                 default:
@@ -257,7 +257,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Determine the category of this individual
         /// </summary>
-        public string Category
+        public string Class
         {
             get
             {
@@ -315,7 +315,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return $"{Category}{Sex}";
+                return $"{Class}{Sex}";
             }
         }
 
