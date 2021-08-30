@@ -153,17 +153,17 @@ namespace Models.CLEM.Resources
         {
             double multiplier = 0;
             double addAmount;
-            switch (resourceAmount.GetType().Name)
+            switch (resourceAmount)
             {
-                case "Double":
-                    addAmount = (double)resourceAmount;
-                    break;
-                case "ResourceRequest":
+                case ResourceRequest _:
                     addAmount = (resourceAmount as ResourceRequest).Required;
                     multiplier = (resourceAmount as ResourceRequest).MarketTransactionMultiplier;
                     break;
+                case double _:
+                    addAmount = (double)resourceAmount;
+                    break;
                 default:
-                    throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
+                    throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]");
             }
 
             if (addAmount > 0)

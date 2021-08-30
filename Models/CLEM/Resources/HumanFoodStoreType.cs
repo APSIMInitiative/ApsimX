@@ -129,17 +129,16 @@ namespace Models.CLEM.Resources
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             HumanFoodStorePool pool;
-            switch (resourceAmount.GetType().Name)
+            switch (resourceAmount)
             {
-                case "HumanFoodStorePool":
+                case HumanFoodStorePool _:
                     pool = resourceAmount as HumanFoodStorePool;
                     break;
-                case "Double":
+                case double _:
                     pool = new HumanFoodStorePool((double)resourceAmount, 0);
                     break;
                 default:
-                    // expecting a HumanFoodStorePool or Double
-                    throw new Exception(String.Format("ResourceAmount object of type {0} is not supported in Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
+                    throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]");
             }
 
             if (pool.Amount > 0)

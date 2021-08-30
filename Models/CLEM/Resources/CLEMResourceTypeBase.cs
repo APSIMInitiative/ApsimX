@@ -244,18 +244,18 @@ namespace Models.CLEM.Resources
         protected void FindEquivalentMarketStore()
         {
             // determine what resource types allow market transactions
-            switch (this.GetType().Name)
+            switch (this)
             {
-                case "FinanceType":
-                case "HumanFoodStoreType":
-                //case "WaterType":
-                //case "AnimalFoodType":
-                //case "EquipmentType":
-                //case "GreenhousGasesType":
-                case "ProductStoreType":
+                case FinanceType _:
+                case HumanFoodStoreType _:
+                //case WaterType _:
+                //case AnimalFoodType _:
+                //case EquipmentType _:
+                //case GreenhousGasesType _:
+                case ProductStoreType _:
                     break;
                 default:
-                    throw new NotImplementedException($"\r\n[r={this.Parent.GetType().Name}] resource does not currently support transactions to and from a [m=Market]\r\nThis problem has arisen because a resource transaction in the code is flagged to exchange resources with the [m=Market]\r\nPlease contact developers for assistance.");
+                    throw new NotImplementedException($"[r={this.Parent.GetType().Name}] resource does not currently support transactions to and from a [m=Market]\r\nThis problem has arisen because a resource transaction in the code is flagged to exchange resources with the [m=Market]\r\nPlease contact developers for assistance.");
             }
 
             // if not already checked

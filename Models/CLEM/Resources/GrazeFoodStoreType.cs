@@ -517,9 +517,9 @@ namespace Models.CLEM.Resources
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             GrazeFoodStorePool pool;
-            switch (resourceAmount.GetType().Name)
+            switch (resourceAmount)
             {
-                case "GrazeFoodStorePool":
+                case GrazeFoodStorePool _:
                     pool = resourceAmount as GrazeFoodStorePool;
                     // adjust N content only if new growth (age = 0) based on yield limits and month range defined in GrazeFoodStoreFertilityLimiter if present
                     if (pool.Age == 0 && !(grazeFoodStoreFertilityLimiter is null))
@@ -528,23 +528,23 @@ namespace Models.CLEM.Resources
                         pool.Nitrogen = Math.Max(MinimumNitrogen, pool.Nitrogen * reduction);
                     }
                     break;
-                case "FoodResourcePacket":
+                case FoodResourcePacket _:
                     pool = new GrazeFoodStorePool();
                     FoodResourcePacket packet = resourceAmount as FoodResourcePacket;
                     pool.Set(packet.Amount);
                     pool.Nitrogen = packet.PercentN;
                     pool.DMD = packet.DMD;
                     break;
-                case "Double":
+                case double _:
                     pool = new GrazeFoodStorePool();
                     pool.Set((double)resourceAmount);
                     pool.Nitrogen = this.Nitrogen;
                     pool.DMD = this.EstimateDMD(this.Nitrogen);
                     break;
                 default:
-                    // expecting a GrazeFoodStoreResource (PastureManage) or FoodResourcePacket (CropManage) or Double from G-Range
-                    throw new Exception(String.Format("ResourceAmount object of type {0} is not supported in Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
+                    throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]");
             }
+
             if (pool.Amount > 0)
             {
                 // allow decaying or no pools currently available

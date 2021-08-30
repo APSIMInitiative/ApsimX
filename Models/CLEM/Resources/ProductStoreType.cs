@@ -96,17 +96,16 @@ namespace Models.CLEM.Resources
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             double addAmount;
-            if (resourceAmount.GetType().Name == "FoodResourcePacket")
+            switch (resourceAmount)
             {
-                addAmount = (resourceAmount as FoodResourcePacket).Amount;
-            }
-            else if (resourceAmount.GetType().ToString() == "System.Double")
-            {
-                addAmount = (double)resourceAmount;
-            }
-            else
-            {
-                throw new Exception(String.Format("ResourceAmount object of type [{0}] is not supported in [r={1}]", resourceAmount.GetType().ToString(), this.Name));
+                case FoodResourcePacket _:
+                    addAmount = (resourceAmount as FoodResourcePacket).Amount;
+                    break;
+                case double _:
+                    addAmount = (double)resourceAmount;
+                    break;
+                default:
+                    throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]");
             }
 
             if (addAmount > 0)
