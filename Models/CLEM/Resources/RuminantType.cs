@@ -841,14 +841,6 @@ namespace Models.CLEM.Resources
         [Required, GreaterThanValue(0)]
         public double MinimumAge1stMating { get; set; }
         /// <summary>
-        /// Maximum age for mating (months)
-        /// </summary>
-        [Category("Basic", "Breeding")]
-        [Description("Maximum female age for mating")]
-        [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(120)]
-        public double MaximumAgeMating { get; set; }
-        /// <summary>
         /// Minimum size for 1st mating, proportion of SRW
         /// </summary>
         [Category("Basic", "Breeding")]
