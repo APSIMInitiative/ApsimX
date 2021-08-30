@@ -681,13 +681,13 @@ namespace Models.CLEM.Resources
     public enum Sex
     {
         /// <summary>
-        /// Male
-        /// </summary>
-        Male,
-        /// <summary>
         /// Female
         /// </summary>
-        Female
+        Female,
+        /// <summary>
+        /// Male
+        /// </summary>
+        Male
     };
 
 }
