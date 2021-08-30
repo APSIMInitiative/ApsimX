@@ -343,13 +343,12 @@ namespace Models.PMF.Organs
         private void SetNSupply(object sender, EventArgs e)
         {
             double LabileN = Math.Max(0, StartLive.StorageN - StartLive.StorageWt * MinimumNConc.Value());
-            Biomass Senescing = cohort.GetSenescingLeafBiomass(LeafResidenceTime.Value());
+            double senescingStorageN = cohort.SelectWhere(leaf => leaf.Age >= LeafResidenceTime.Value(), l => l.Live.StorageN);
 
-            NSupply.Reallocation = Senescing.StorageN * NReallocationFactor.Value();
+            NSupply.Reallocation = senescingStorageN * NReallocationFactor.Value();
             NSupply.Retranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value();
             NSupply.Uptake = 0.0;        
         }
-        
 
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         [EventSubscribe("SetDMDemand")]
@@ -613,11 +612,15 @@ namespace Models.PMF.Organs
         {
             if (Plant.IsAlive)
             {
-                cohort.SenesceLeaves(LeafResidenceTime.Value());
-                double LKF = Math.Max(0.0, Math.Min(LeafKillFraction.Value(), MathUtilities.Divide(1 - MinimumLAI.Value(), LAI, 0.0)));
-                if (LKF>0)
-                   cohort.KillLeavesUniformly(LKF);
-                Detached = cohort.DetachLeaves(LeafResidenceTime.Value(), LeafDetachmentTime.Value());
+                // Senesce any leaves older than residencce time.
+                cohort.SenesceWhere(l => l.Age >= LeafResidenceTime.Value());
+                double lkf = Math.Max(0.0, Math.Min(LeafKillFraction.Value(), MathUtilities.Divide(1 - MinimumLAI.Value(), LAI, 0.0)));
+                if (lkf > 0)
+                   cohort.KillLeavesUniformly(lkf);
+
+                // Detach any leaves older than residence time + detachment time.
+                double detachmentAge = LeafResidenceTime.Value() + LeafDetachmentTime.Value();
+                Detached = cohort.DetachWhere(l => l.Age >= detachmentAge);
                 
                 if (Detached.Wt > 0.0)
                     SurfaceOrganicMatter.Add(Detached.Wt * 10, Detached.N * 10, 0, Plant.PlantType, Name);
@@ -627,7 +630,7 @@ namespace Models.PMF.Organs
                 if (MaintenanceRespirationFunction != null && (Live.MetabolicWt + Live.StorageWt) > 0)
                 {
                     MaintenanceRespiration += Live.MetabolicWt * MaintenanceRespirationFunction.Value();
-                    cohort.RespireLeafFraction(MaintenanceRespirationFunction.Value());
+                    cohort.ReduceNonStructuralWt(1 - MaintenanceRespirationFunction.Value());
                     MaintenanceRespiration += Live.StorageWt * MaintenanceRespirationFunction.Value();
                 }
 
