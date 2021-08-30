@@ -32,6 +32,14 @@ namespace Models.CLEM.Groupings
         public string PropertyOfIndividual { get; set; }
         private IEnumerable<string> GetParameters() => Parent.Parameters.OrderBy(k => k);
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public FilterByProperty()
+        {
+            base.SetDefaults();
+        }
+
         /// <inheritdoc/>
         public override Func<T, bool> Compile<T>()
         {
@@ -89,8 +97,8 @@ namespace Models.CLEM.Groupings
                 else
                 {
                     filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", htmlTags: htmltags)}");
-                    filterWriter.Write($" {OperatorToSymbol()}");
-                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value.ToString(), "No value", htmlTags: htmltags)}");
+                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", htmlTags: htmltags)}");
+                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", htmlTags: htmltags)}");
                 }
                 return filterWriter.ToString();
             }

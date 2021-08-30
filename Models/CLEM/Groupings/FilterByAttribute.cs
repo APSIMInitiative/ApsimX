@@ -57,6 +57,14 @@ namespace Models.CLEM.Groupings
         }
 
         /// <summary>
+        /// Constructor
+        /// </summary>
+        public FilterByAttribute()
+        {
+            base.SetDefaults();
+        }
+
+        /// <summary>
         /// Convert sort to string
         /// </summary>
         /// <returns></returns>
@@ -93,8 +101,8 @@ namespace Models.CLEM.Groupings
                 else
                 {
                     filterWriter.Write($" Attribute({CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags)})");
-                    filterWriter.Write($" {OperatorToSymbol()}");
-                    filterWriter.Write($" Attribute({CLEMModel.DisplaySummaryValueSnippet(Value.ToString(), "No value", htmlTags: htmltags)})");
+                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", htmlTags: htmltags)}");
+                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value.ToString(), "No value", htmlTags: htmltags)}");
                 }
                 return filterWriter.ToString();
             }

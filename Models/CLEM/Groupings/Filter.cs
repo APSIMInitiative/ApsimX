@@ -29,6 +29,7 @@ namespace Models.CLEM.Groupings
         [Description("Operator to use")]
         [Required]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetOperators))]
+        [System.ComponentModel.DefaultValueAttribute(ExpressionType.Equal)]
         public ExpressionType Operator { get; set; }
         
         /// <summary>
@@ -72,7 +73,7 @@ namespace Models.CLEM.Groupings
                 case ExpressionType.IsFalse:
                     return "not";
                 default:
-                    return "invalid operator";
+                    return "";
             }
         }
 
@@ -86,7 +87,7 @@ namespace Models.CLEM.Groupings
             {
                 case ExpressionType.Equal:
                 case ExpressionType.NotEqual:
-                    return (Value.ToString().ToLower() == "true" | Value.ToString().ToLower() == "false");
+                    return (Value?.ToString().ToLower() == "true" | Value?.ToString().ToLower() == "false");
                 case ExpressionType.IsTrue:
                 case ExpressionType.IsFalse:
                     return true;
