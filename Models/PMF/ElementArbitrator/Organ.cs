@@ -321,9 +321,9 @@
             {
                 Clear();
                 ClearBiomassFlows();
-                Live.Weight.Structural = InitialWt.Structural.Value();
-                Live.Weight.Metabolic = InitialWt.Metabolic.Value();
-                Live.Weight.Storage = InitialWt.Storage.Value();
+                Live.Carbon.Structural = InitialWt.Structural.Value()*Cconc;
+                Live.Carbon.Metabolic = InitialWt.Metabolic.Value()*Cconc;
+                Live.Carbon.Storage = InitialWt.Storage.Value()*Cconc;
                 Live.Nitrogen.Structural = Live.Weight.Total * Nitrogen.Concentrations.Minimum;
                 Live.Nitrogen.Metabolic = Live.Weight.Total * (Nitrogen.Concentrations.Critical - Nitrogen.Concentrations.Minimum);
                 Live.Nitrogen.Storage = Live.Weight.Total * (Nitrogen.Concentrations.Maximum - Nitrogen.Concentrations.Critical);
@@ -359,7 +359,7 @@
                 Live.SubtractDelta(ReAllocated);
 
                 //do retranslocation
-                ReTranslocated.Carbon = Nitrogen.SuppliesAllocated.ReTranslocation;
+                ReTranslocated.Carbon = Carbon.SuppliesAllocated.ReTranslocation;
                 ReTranslocated.Nitrogen = Nitrogen.Supplies.ReTranslocation;
                 Live.SubtractDelta(ReTranslocated);
                 

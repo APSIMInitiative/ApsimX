@@ -71,7 +71,7 @@ namespace Models.PMF
 
         /// <summary>The list of organs</summary>
         [JsonIgnore]
-        public List<Organ> Organs = new List<Organ>();
+        public List<Organ> PlantOrgans = new List<Organ>();
 
         /// <summary>The variables for DM</summary>
         [JsonIgnore]
@@ -100,11 +100,13 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         virtual protected void OnSimulationCommencing(object sender, EventArgs e) 
         {
+            PlantOrgans = new List<Organ>();
             List<OrganNutrientDelta> organsToArbitrateC = new List<OrganNutrientDelta>();
             List<OrganNutrientDelta> organsToArbitrateN = new List<OrganNutrientDelta>();
 
             foreach (Organ organ in plant.FindAllChildren<Organ>())
             {
+                PlantOrgans.Add(organ);
                 organsToArbitrateC.Add(organ.Carbon);
                 organsToArbitrateN.Add(organ.Nitrogen);
             }
@@ -128,7 +130,7 @@ namespace Models.PMF
                 // Calculate potential DM allocaiton without nutrient limitation
 
                 double CTotalReAllocationAllocated = DoAllocation(Carbon.TotalReAllocationSupply, Carbon);
-                foreach (OrganNutrientDelta o in Carbon.organs)
+                foreach (OrganNutrientDelta o in Carbon.ArbitratingOrgans)
                     if (o.Supplies.ReAllocation.Total > 0)
                     {
                         double RelativeSupply = o.Supplies.ReAllocation.Metabolic / Carbon.TotalReAllocationSupply;
@@ -138,7 +140,7 @@ namespace Models.PMF
                     }
                 
                 double CTotalFixationAllocated = DoAllocation(Carbon.TotalFixationSupply, Carbon);
-                foreach (OrganNutrientDelta o in Carbon.organs)
+                foreach (OrganNutrientDelta o in Carbon.ArbitratingOrgans)
                     if (o.Supplies.Fixation > 0)
                     {
                         double RelativeSupply = o.Supplies.Fixation / Carbon.TotalFixationSupply;
@@ -146,7 +148,7 @@ namespace Models.PMF
                     }
 
                 double CTotalReTranslocationAllocated = DoAllocation(Carbon.TotalReTranslocationSupply, Carbon);
-                foreach (OrganNutrientDelta o in Carbon.organs)
+                foreach (OrganNutrientDelta o in Carbon.ArbitratingOrgans)
                     if (o.Supplies.ReTranslocation.Total > 0)
                     {
                         double RelativeSupply = o.Supplies.ReTranslocation.Metabolic / Carbon.TotalReTranslocationSupply;
@@ -155,12 +157,12 @@ namespace Models.PMF
                         o.SuppliesAllocated.ReTranslocation.Storage = CTotalReTranslocationAllocated * RelativeSupply;
                     }
 
-                foreach (Organ o in Organs)
+                foreach (Organ o in PlantOrgans)
                     o.Nitrogen.SetSuppliesAndDemands();
 
                 // Calculate N Reallocation
                 double NTotalReTranslocationAllocated = DoAllocation(Nitrogen.TotalReAllocationSupply, Nitrogen);
-                foreach (OrganNutrientDelta o in Nitrogen.organs)
+                foreach (OrganNutrientDelta o in Nitrogen.ArbitratingOrgans)
                     if (o.Supplies.ReAllocation.Total > 0)
                     {
                         double RelativeSupply = o.Supplies.ReAllocation.Metabolic / Nitrogen.TotalReAllocationSupply;
@@ -176,7 +178,7 @@ namespace Models.PMF
         {
             //Let uptake organs know what theire uptake
             int count = 0;
-            foreach (Organ o in Organs)
+            foreach (Organ o in PlantOrgans)
             {
                 if (o.WaterNitrogenUptakeObject != null)
                 {
@@ -198,7 +200,7 @@ namespace Models.PMF
             if (plant.IsEmerged)
             {
                 double NTotalFixationAllocated = DoAllocation(Nitrogen.TotalFixationSupply, Nitrogen);
-                foreach (OrganNutrientDelta o in Nitrogen.organs)
+                foreach (OrganNutrientDelta o in Nitrogen.ArbitratingOrgans)
                     if (o.Supplies.Fixation > 0)
                     {
                         double RelativeSupply = o.Supplies.Fixation / Nitrogen.TotalReTranslocationSupply;
@@ -206,7 +208,7 @@ namespace Models.PMF
                     }
 
                 double NTotalReTranslocationAllocated = DoAllocation(Nitrogen.TotalReTranslocationSupply, Nitrogen);
-                foreach (OrganNutrientDelta o in Nitrogen.organs)
+                foreach (OrganNutrientDelta o in Nitrogen.ArbitratingOrgans)
                     if (o.Supplies.ReTranslocation.Total > 0)
                     {
                         double RelativeSupply = o.Supplies.ReTranslocation.Metabolic / Nitrogen.TotalReAllocationSupply;
@@ -226,7 +228,7 @@ namespace Models.PMF
 
             //To introduce functionality for other nutrients we need to repeat this for loop for each new nutrient type
             // Calculate posible growth based on Minimum N requirement of organs
-            foreach (Organ o in Organs)
+            foreach (Organ o in PlantOrgans)
             {
                 var N = o.Nitrogen;
                 if (N.DemandsAllocated.Total > N.Demands.Total || MathUtilities.FloatsAreEqual(N.DemandsAllocated.Total, N.Demands.Total))
@@ -262,7 +264,7 @@ namespace Models.PMF
                 double NotAllocated = TotalSupply;
                 
                 ////First time round allocate with priority factors applied so higher priority sinks get more allocation
-                foreach (OrganNutrientDelta o in PRS.organs)
+                foreach (OrganNutrientDelta o in PRS.ArbitratingOrgans)
                 {
                     if (o.OutstandingDemands.Total > 0.0)
                     {
@@ -280,7 +282,7 @@ namespace Models.PMF
                 double FirstPassNotallocated = NotAllocated;
                 double RemainingDemand = PRS.TotalPlantDemand - PRS.TotalPlantDemandsAllocated;
                 // Second time round if there is still biomass to allocate do it based on relative demands so lower priority organs have the change to be allocated full demand
-                foreach (OrganNutrientDelta o in PRS.organs)
+                foreach (OrganNutrientDelta o in PRS.ArbitratingOrgans)
                 {
                     if (o.OutstandingDemands.Total > 0.0)
                     {

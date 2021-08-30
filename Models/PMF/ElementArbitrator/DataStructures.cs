@@ -343,30 +343,30 @@
     public class PlantNutrientDeltas : Model
     {
         /// <summary>The organs on the plant /// </summary>
-        public List<OrganNutrientDelta> organs { get; set; }
+        public List<OrganNutrientDelta> ArbitratingOrgans { get; set; }
 
         /// <summary>The total supply of resoure that may be allocated /// </summary>
-        public double TotalPlantSupply { get { return organs.Sum(o => o.Supplies.Total); } }
+        public double TotalPlantSupply { get { return ArbitratingOrgans.Sum(o => o.Supplies.Total); } }
 
         /// <summary>The total supply from fixation  /// </summary>
-        public double TotalReAllocationSupply { get { return organs.Sum(o => o.Supplies.ReAllocation.Total); } }
+        public double TotalReAllocationSupply { get { return ArbitratingOrgans.Sum(o => o.Supplies.ReAllocation.Total); } }
 
         /// <summary>The total supply from fixation  /// </summary>
-        public double TotalUptakeSupply { get { return organs.Sum(o => o.Supplies.Uptake); } }
+        public double TotalUptakeSupply { get { return ArbitratingOrgans.Sum(o => o.Supplies.Uptake); } }
 
         /// <summary>The total supply from fixation  /// </summary>
-        public double TotalFixationSupply { get { return organs.Sum(o => o.Supplies.Fixation); } }
+        public double TotalFixationSupply { get { return ArbitratingOrgans.Sum(o => o.Supplies.Fixation); } }
         /// <summary>The total supply from Retranslocation  /// </summary>
-        public double TotalReTranslocationSupply { get { return organs.Sum(o => o.Supplies.ReTranslocation.Total); } }
+        public double TotalReTranslocationSupply { get { return ArbitratingOrgans.Sum(o => o.Supplies.ReTranslocation.Total); } }
 
         /// <summary>The total demand for resoure  /// </summary>
-        public double TotalPlantDemand { get { return organs.Sum(o => o.Demands.Total); } }
+        public double TotalPlantDemand { get { return ArbitratingOrgans.Sum(o => o.Demands.Total); } }
 
         /// <summary>The total demand for resoure  /// </summary>
-        public double TotalPlantPriorityScalledDemand { get { return organs.Sum(o => o.PriorityScaledDemand.Total); } }
+        public double TotalPlantPriorityScalledDemand { get { return ArbitratingOrgans.Sum(o => o.PriorityScaledDemand.Total); } }
 
         /// <summary>The total demand for resoure  /// </summary>
-        public double TotalPlantDemandsAllocated { get { return organs.Sum(o => o.DemandsAllocated.Total); } }
+        public double TotalPlantDemandsAllocated { get { return ArbitratingOrgans.Sum(o => o.DemandsAllocated.Total); } }
 
         //Error checking variables
         /// <summary>Gets or sets the start.</summary>
@@ -379,9 +379,9 @@
         /// <summary>The constructor</summary>
         public PlantNutrientDeltas(List<OrganNutrientDelta> orgs)
         {
-            organs = new List<OrganNutrientDelta>();
+            ArbitratingOrgans = new List<OrganNutrientDelta>();
             foreach (OrganNutrientDelta org in orgs)
-                organs.Add(org);
+                ArbitratingOrgans.Add(org);
             Start = new double();
             End = new double();
             BalanceError = new double();

@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 281,
   "Version": 139,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -3758,7 +3758,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
+                      "FixedValue": 0.5,
                       "Units": "g/m^2",
                       "Name": "Structural",
                       "Children": [],
@@ -3768,7 +3768,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
+                      "FixedValue": 0.5,
                       "Units": null,
                       "Name": "Metabolic",
                       "Children": [],
@@ -3778,8 +3778,8 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
+                      "FixedValue": 0.1,
+                      "Units": "0",
                       "Name": "Storage",
                       "Children": [],
                       "IncludeInDocumentation": true,

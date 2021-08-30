@@ -194,7 +194,7 @@ namespace Models.PMF
             {
                 double NSupply = 0;//NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
 
-                foreach (Organ o in biomassArbitrator.Organs)
+                foreach (Organ o in biomassArbitrator.PlantOrgans)
                     o.Nitrogen.Supplies.Uptake = 0;
 
                 List<ZoneWaterAndN> zones = new List<ZoneWaterAndN>();
@@ -207,7 +207,7 @@ namespace Models.PMF
                     UptakeDemands.Water = new double[UptakeDemands.NO3N.Length];
 
                     //Get Nuptake supply from each organ and set the PotentialUptake parameters that are passed to the soil arbitrator
-                    foreach (Organ o in biomassArbitrator.Organs)
+                    foreach (Organ o in biomassArbitrator.PlantOrgans)
                     {
                         if (o.WaterNitrogenUptakeObject != null)
                         {
