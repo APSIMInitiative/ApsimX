@@ -195,6 +195,15 @@ namespace Models.CLEM.Activities
             {
                 // FeedTypeName includes the ResourceGroup name eg. AnimalFoodStore.FeedItemName
                 string feedItemName = FeedTypeName.Split('.').Last();
+
+                // create food resrouce packet with details
+                FoodResourcePacket foodPacket = new FoodResourcePacket()
+                {
+                    Amount = feedEstimated,
+                    DMD = FeedType.DMD,
+                    PercentN = FeedType.Nitrogen
+                };
+
                 return new List<ResourceRequest>()
                 {
                     new ResourceRequest()
@@ -206,7 +215,8 @@ namespace Models.CLEM.Activities
                         ResourceTypeName = feedItemName,
                         ActivityModel = this,
                         Category = TransactionCategory,
-                        RelatesToResource = this.PredictedHerdName
+                        RelatesToResource = this.PredictedHerdName,
+                        AdditionalDetails = foodPacket
                     }
                 };
             }
@@ -408,7 +418,6 @@ namespace Models.CLEM.Activities
                                 details.Amount = (ind.PotentialIntake + (Math.Max(0, ind.BreedParams.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.PotentialIntake)) - ind.Intake;
 
                         ind.AddIntake(details);
-
                     }
                 }
                 SetStatusSuccess();
