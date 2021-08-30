@@ -23,6 +23,8 @@ namespace Models.PMF.Organs
         }
 
         private List<PerrenialLeafCohort> Leaves = new List<PerrenialLeafCohort>();
+        private Biomass live = new Biomass();
+        private Biomass dead = new Biomass();
 
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]
@@ -65,6 +67,23 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>
+        /// Get the total live biomass of the cohort.
+        /// </summary>
+        public Biomass GetLive()
+        {
+            return live;
+        }
+
+        /// <summary>
+        /// Get the total dead biomass of the cohort.
+        /// </summary>
+        /// <returns></returns>
+        public Biomass GetDead()
+        {
+            return dead;
+        }
+
         // Update methods
 
         /// <summary>
@@ -77,37 +96,32 @@ namespace Models.PMF.Organs
         /// <param name="SLA"></param>
         public void AddNewLeafMaterial(double StructuralWt, double StorageWt, double StructuralN, double StorageN, double SLA)
         {
-            Leaves[Leaves.Count - 1].Live.StructuralWt += StructuralWt;
-            Leaves[Leaves.Count - 1].Live.StorageWt += StorageWt;
-            Leaves[Leaves.Count - 1].Live.StructuralN += StructuralN;
-            Leaves[Leaves.Count - 1].Live.StorageN += StorageN;
+            foreach (Biomass biomass in new[] { Leaves[Leaves.Count - 1].Live, live })
+            {
+                biomass.StructuralWt += StructuralWt;
+                biomass.StorageWt += StorageWt;
+                biomass.StructuralN += StructuralN;
+                biomass.StorageN += StorageN;
+            }
             Leaves[Leaves.Count - 1].Area += (StructuralWt + StorageWt) * SLA;
         }
 
         /// <summary>
         /// Reduce all live leaves' size by a given fraction.
         /// </summary>
-        /// <param name="fraction">The fraction by which to reduce the size of the leaves.</param>
-        public void ReduceLeavesUniformly(double fraction)
+        /// <param name="liveFraction">The fraction by which to reduce the size of live leaves.</param>
+        /// <param name="deadFraction">The fraction by whith to reduce the size of dead leaves.</param>
+        public void ReduceLeavesUniformly(double liveFraction, double deadFraction)
         {
             foreach (PerrenialLeafCohort L in Leaves)
             {
-                L.Live.Multiply(fraction);
-                L.Area *= fraction;
+                L.Live.Multiply(liveFraction);
+                L.Area *= liveFraction;
+                L.Dead.Multiply(deadFraction);
+                L.AreaDead *= deadFraction;
             }
-        }
-
-        /// <summary>
-        /// Reduce the size of all dead leaves by a given fraction.
-        /// </summary>
-        /// <param name="fraction">The fraction by which to reduce the dead leaves' size.</param>
-        public void ReduceDeadLeavesUniformly(double fraction)
-        {
-            foreach (PerrenialLeafCohort L in Leaves)
-            {
-                L.Dead.Multiply(fraction);
-                L.AreaDead *= fraction;
-            }
+            live.Multiply(liveFraction);
+            dead.Multiply(deadFraction);
         }
 
         /// <summary>
@@ -121,6 +135,8 @@ namespace Models.PMF.Organs
                 L.Live.StorageWt *= (1 - fraction);
                 L.Live.MetabolicWt *= (1 - fraction);
             }
+            live.StorageWt *= (1 - fraction);
+            live.MetabolicWt *= (1 - fraction);
         }
 
         /// <summary>
@@ -137,18 +153,23 @@ namespace Models.PMF.Organs
         }
 
         /// <summary>
-        /// Do leaf senescence.
+        /// Senesce any leaves older than the specified age.
         /// </summary>
+        /// <param name="residenceTime">Leaf age - any leaves older than this will be senesced.</param>
         public void SenesceLeaves(double residenceTime)
         {
             foreach (PerrenialLeafCohort L in Leaves)
+            {
                 if (L.Age >= residenceTime)
                 {
+                    live.Subtract(L.Live);
+                    dead.Add(L.Live);
                     L.Dead.Add(L.Live);
                     L.AreaDead += L.Area;
                     L.Live.Clear();
                     L.Area = 0;
                 }
+            }
         }
 
         /// <summary>
@@ -158,11 +179,12 @@ namespace Models.PMF.Organs
         public void KillLeavesUniformly(double fraction)
         {
             Biomass Loss = new Biomass();
-
             foreach (PerrenialLeafCohort L in Leaves)
             {            
                 Loss.SetTo(L.Live);
                 Loss.Multiply(fraction);
+                dead.Add(Loss);
+                live.Subtract(Loss);
                 L.Dead.Add(Loss);
                 L.Live.Subtract(Loss);
                 L.AreaDead += L.Area * fraction;
@@ -178,10 +200,14 @@ namespace Models.PMF.Organs
         {
             Biomass Detached = new Biomass();
 
+            Predicate<PerrenialLeafCohort> isOld = l => l.Age >= (residenceTime + detachmentTime);
             foreach (PerrenialLeafCohort L in Leaves)
-                if (L.Age >= (residenceTime + detachmentTime))
+            {
+                if (isOld(L))
                     Detached.Add(L.Dead);
-            Leaves.RemoveAll(L => L.Age >= (residenceTime + detachmentTime));
+                dead.Subtract(L.Dead);
+            }
+            Leaves.RemoveAll(isOld);
             return Detached;
         }
 
@@ -229,6 +255,7 @@ namespace Models.PMF.Organs
             {
                 double delta = Math.Min(leaf.Live.StorageWt, removal);
                 leaf.Live.StorageWt -= delta;
+                live.StorageWt -= delta;
                 removal -= delta;
             }
             if (MathUtilities.IsGreaterThan(removal, 0))
@@ -245,6 +272,7 @@ namespace Models.PMF.Organs
             {
                 double delta = Math.Min(leaf.Live.StorageN, removal);
                 leaf.Live.StorageN -= delta;
+                live.StorageN -= delta;
                 removal -= delta;
             }
             if (MathUtilities.IsGreaterThan(removal, 0))

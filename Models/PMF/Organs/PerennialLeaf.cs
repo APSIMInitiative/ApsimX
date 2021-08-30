@@ -36,12 +36,12 @@ namespace Models.PMF.Organs
         /// <summary>Gets the cohort live.</summary>
         [JsonIgnore]
         [Units("g/m^2")]
-        public Biomass Live { get; private set; }
+        public Biomass Live => cohort.GetLive();
 
         /// <summary>Gets the cohort live.</summary>
         [JsonIgnore]
         [Units("g/m^2")]
-        public Biomass Dead { get; private set; }
+        public Biomass Dead => cohort.GetDead();
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         public bool IsAboveGround { get { return true; } }
@@ -664,8 +664,7 @@ namespace Models.PMF.Organs
             double remainingLiveFraction = MathUtilities.Divide(liveAfterRemoval.Wt, Live.Wt, 0);
             double remainingDeadFraction = MathUtilities.Divide(deadAfterRemoval.Wt, Dead.Wt, 0);
 
-            cohort.ReduceLeavesUniformly(remainingLiveFraction);
-            cohort.ReduceDeadLeavesUniformly(remainingDeadFraction);
+            cohort.ReduceLeavesUniformly(remainingLiveFraction, remainingDeadFraction);
         }
     }
 }
