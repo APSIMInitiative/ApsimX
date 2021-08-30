@@ -35,7 +35,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return (this.IsBreeder && !this.IsPregnant && this.Age <= BreedParams.MaximumAgeMating && (Age - AgeAtLastBirth) * 30.4 >= BreedParams.MinimumDaysBirthToConception);
+                return (this.IsBreeder && !this.IsPregnant && (Age - AgeAtLastBirth) * 30.4 >= BreedParams.MinimumDaysBirthToConception);
             }
         }
 

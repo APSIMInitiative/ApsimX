@@ -121,7 +121,11 @@ namespace Models.CLEM.Activities
 
             var breedersList = females.Where(r => r.IsBreeder);
 
-            var breedersNotTooOldToMate = breedersList.Where(a => a.Age <= breedParams.MaximumAgeMating);
+            double tooOldToMate = double.PositiveInfinity;
+            if (controlledMatingParent != null)
+                tooOldToMate = controlledMatingParent.MaximumAgeMating;
+
+            var breedersNotTooOldToMate = breedersList.Where(a => a.Age <= tooOldToMate);
             if (!breedersNotTooOldToMate.Any())
             {
                 return;
