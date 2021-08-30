@@ -23,59 +23,11 @@ namespace Models.CLEM
         protected Dictionary<string, PropertyInfo> properties;
 
         /// <summary>
-        /// 
+        /// Constructor, for objects created for UI
         /// </summary>
         public FilterGroup()
         {
-            properties = typeof(TFilter)
-                .GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
-                .ToDictionary(prop => prop.Name, prop => prop);
-
-            var types = Assembly.GetExecutingAssembly()
-                .GetTypes()
-                .Where(t => t.Namespace != null && t.Namespace.Contains(nameof(Models.CLEM)))
-                .Where(t => t.IsSubclassOf(typeof(TFilter)));
-
-            foreach (var type in types)
-            {
-                var props = type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance);
-                //foreach (var prop in props)
-                //    properties.Add(prop.DeclaringType.Name + "." + prop.Name, prop);
-                foreach (var prop in props)
-                {
-                    string key = prop.DeclaringType.Name;
-                    if (key.StartsWith(typeof(TFilter).Name))
-                        key = key.Substring(typeof(TFilter).Name.Length);
-                    properties.Add($"{key}.{prop.Name}", prop);
-                }
-
-            }
-        }
-
-        ///<inheritdoc/>
-        [EventSubscribe("Commencing")]
-        protected void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            properties = typeof(TFilter)
-                .GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
-                .ToDictionary(prop => prop.Name, prop => prop);
-
-            var types = Assembly.GetExecutingAssembly()
-                .GetTypes()
-                .Where(t => t.Namespace != null && t.Namespace.Contains(nameof(Models.CLEM)))
-                .Where(t => t.IsSubclassOf(typeof(TFilter)));
-
-            foreach (var type in types)
-            {
-                var props = type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance);
-                foreach (var prop in props)
-                {
-                    string key = prop.DeclaringType.Name;
-                    if (key.StartsWith(typeof(TFilter).Name))
-                        key = key.Substring(typeof(TFilter).Name.Length);
-                    properties.Add($"{key}.{prop.Name}", prop);
-                }
-            }
+            InitialiseFilters();
         }
 
         /// <inheritdoc/>
@@ -88,6 +40,41 @@ namespace Models.CLEM
 
         /// <inheritdoc/>
         public PropertyInfo GetProperty(string name) => properties[name];
+
+        ///<inheritdoc/>
+        [EventSubscribe("Commencing")]
+        protected void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            InitialiseFilters();
+        }
+
+        /// <summary>
+        /// Initialise filter rules and dropdown lists of properties available for TFilter
+        /// </summary>
+        private void InitialiseFilters()
+        {
+            properties = typeof(TFilter)
+                .GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
+                .ToDictionary(prop => prop.Name, prop => prop);
+
+            var types = Assembly.GetExecutingAssembly()
+                .GetTypes()
+                .Where(t => t.Namespace != null && t.Namespace.Contains(nameof(Models.CLEM)))
+                .Where(t => t.IsSubclassOf(typeof(TFilter)));
+
+            foreach (var type in types)
+            {
+                var props = type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance);
+                foreach (var prop in props)
+                {
+                    string key = prop.DeclaringType.Name;
+                    if (key.StartsWith(typeof(TFilter).Name))
+                        key = key.Substring(typeof(TFilter).Name.Length);
+                    properties.Add($"{key}.{prop.Name}", prop);
+                }
+
+            }
+        }
 
         /// <summary>
         /// Return some proportion of a ruminant collection after filtering
