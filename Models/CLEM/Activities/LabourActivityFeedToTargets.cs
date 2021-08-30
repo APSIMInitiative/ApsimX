@@ -597,7 +597,7 @@ namespace Models.CLEM.Activities
             var results = new List<ValidationResult>();
 
             // if finances and not account provided throw error
-            if (SellExcess && Resources.GetResourceGroupByType(typeof(Finance)) != null)
+            if (SellExcess && Resources.FindResource<Finance>() != null)
             {
                 if (bankAccount is null)
                 {

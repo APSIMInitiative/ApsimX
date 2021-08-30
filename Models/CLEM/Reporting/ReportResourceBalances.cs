@@ -125,12 +125,12 @@ namespace Models.CLEM.Reporting
                         else
                         {
                             // check it is a ResourceGroup
-                            CLEMModel model = resources.GetResourceGroupByName(this.ResourceGroupsToReport[i]) as CLEMModel;
+                            CLEMModel model = resources.FindResource<ResourceBaseWithTransactions>(this.ResourceGroupsToReport[i]);
                             if (model == null)
                                 summary.WriteWarning(this, $"Invalid resource group [r={this.ResourceGroupsToReport[i]}] in ReportResourceBalances [{this.Name}]{Environment.NewLine}Entry has been ignored");
                             else
                             {
-                                if (model.GetType().Name == "Labour")
+                                if (model is Labour)
                                 {
                                     string amountStr = "Amount";
                                     if (ReportLabourIndividuals)
@@ -150,12 +150,12 @@ namespace Models.CLEM.Reporting
                                     foreach (CLEMModel item in model.FindAllChildren<CLEMModel>())
                                     {
                                         string amountStr = "Amount";
-                                        switch (item.GetType().Name)
+                                        switch (item)
                                         {
-                                            case "FinanceType":
+                                            case FinanceType ftype:
                                                 amountStr = "Balance";
                                                 break;
-                                            case "LandType":
+                                            case LandType ltype:
                                                 if (ReportLandEntire)
                                                     amountStr = "LandArea";
                                                 break;
@@ -181,7 +181,7 @@ namespace Models.CLEM.Reporting
                                         {
                                             if (ReportAmount)
                                                 variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.{ item.Name}.{ amountStr } as { item.Name.Replace(" ", "_") }_Amount");
-                                            if (ReportValue & item.GetType().Name != "FinanceType")
+                                            if (ReportValue & item.GetType() != typeof(FinanceType))
                                                 variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.{ item.Name}.CalculateValue({ $"[Resources].{this.ResourceGroupsToReport[i]}.{ item.Name}.{ amountStr }" }, False) as { item.Name.Replace(" ", "_") }_Value");
                                         }
                                     }

@@ -99,7 +99,7 @@ namespace Models.CLEM.Reporting
             if (ResourceGroupsToReport != null && ResourceGroupsToReport.Trim() != "")
             {
                 // check it is a ResourceGroup
-                CLEMModel model = resources.GetResourceGroupByName(ResourceGroupsToReport) as CLEMModel;
+                CLEMModel model = resources.FindResource<ResourceBaseWithTransactions>(ResourceGroupsToReport);
                 if (model == null)
                 {
                     summary.WriteWarning(this, String.Format("Invalid resource group [{0}] in ReportResourceBalances [{1}]\r\nEntry has been ignored", this.ResourceGroupsToReport, this.Name));
