@@ -33,7 +33,6 @@ namespace Models.CLEM.Resources
         object GetInheritedAttribute();
     }
 
-
     /// <summary>
     /// A ruminant attribute that stores an associated object
     /// </summary>
@@ -62,13 +61,9 @@ namespace Models.CLEM.Resources
             get
             {
                 if(float.TryParse(StoredValue.ToString(), out float val))
-                {
                     return val;
-                }
                 else
-                {
                     return 0;
-                }
             }
         }
 
@@ -80,16 +75,11 @@ namespace Models.CLEM.Resources
             get
             {
                 if (float.TryParse(StoredValue.ToString(), out float val))
-                {
                     return val;
-                }
                 else
-                {
                     return 0;
-                }
             }
         }
-
 
         /// <summary>
         /// Get the attribute inherited by an offspring given both parent attribute values stored for a breeder
@@ -114,68 +104,42 @@ namespace Models.CLEM.Resources
                     break;
                 case AttributeInheritanceStyle.LeastParentValue:
                     if (this.Value <= this.MateValue)
-                    {
                         newAttribute.StoredValue = StoredValue;
-                    }
                     else
-                    {
                         newAttribute.StoredValue = StoredMateValue;
-                    }
                     break;
                 case AttributeInheritanceStyle.GreatestParentValue:
                     if (this.Value >= this.MateValue)
-                    {
                         newAttribute.StoredValue = StoredValue;
-                    }
                     else
-                    {
                         newAttribute.StoredValue = StoredMateValue;
-                    }
                     break;
                 case AttributeInheritanceStyle.LeastBothParents:
                     if (StoredValue != null & StoredMateValue != null)
-                    {
                         if (this.Value <= this.MateValue)
-                        {
                             newAttribute.StoredValue = StoredValue;
-                        }
                         else
-                        {
                             newAttribute.StoredValue = StoredMateValue;
-                        }
-                    }
                     else
-                    {
                         return null;
-                    }
                     break;
                 case AttributeInheritanceStyle.GreatestBothParents:
                     if (StoredValue != null & StoredValue != null)
-                    {
                         if (Value >= MateValue)
-                        {
                             newAttribute.StoredValue = StoredValue;
-                        }
                         else
-                        {
                             newAttribute.StoredValue = StoredMateValue;
-                        }
-                    }
                     else
-                    {
                         return null;
-                    }
                     break;
                 case AttributeInheritanceStyle.MeanValueZeroAbsent:
                     float offSpringValue = 0;
                     if (StoredValue != null)
-                    {
                         offSpringValue += Value;
-                    }
+
                     if (StoredMateValue != null)
-                    {
                         offSpringValue += MateValue;
-                    }
+
                     newAttribute.StoredValue = (offSpringValue / 2.0f);
                     break;
                 case AttributeInheritanceStyle.MeanValueIgnoreAbsent:

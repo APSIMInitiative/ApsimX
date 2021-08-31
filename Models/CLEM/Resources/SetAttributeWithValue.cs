@@ -98,12 +98,14 @@ namespace Models.CLEM.Resources
                 randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
                                 Math.Sin(2.0 * Math.PI * u2);
             }
-            value = (float)Math.Min(MaximumValue, Math.Max(MinimumValue, value + StandardDeviation * randStdNormal));
+            value = Math.Min(MaximumValue, Math.Max(MinimumValue, value + StandardDeviation * randStdNormal));
+
+            Single valuef = Convert.ToSingle(value);
 
             return new IndividualAttribute()
             {
                 InheritanceStyle = InheritanceStyle,
-                StoredValue = value
+                StoredValue = valuef
             };
         }
 
