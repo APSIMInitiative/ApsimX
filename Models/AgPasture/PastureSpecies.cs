@@ -879,13 +879,6 @@
         [Units(">1.0")]
         public double PlantHeightExponent { get; set; } = 2.8;
 
-        ////- Digestibility and feed quality >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-        /// <summary>Digestibility of cell walls for each tissue age, emerging, developing, mature and dead (0-1).</summary>
-        //[Description("emerging, developing, mature and dead")]
-        [Units("0-1")]
-        public double[] DigestibilitiesCellWall { get; set; } = { 0.6, 0.6, 0.6, 0.2 };
-
         ////- Harvest limits and preferences >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Minimum above ground green DM, leaf and stems (kgDM/ha).</summary>
@@ -970,9 +963,6 @@
 
         /// <summary>Flag whether this species is alive (actively growing).</summary>
         private bool isAlive = false;
-
-        /// <summary>Flag whether several routines are ran by species or are controlled by the Sward.</summary>
-        internal bool isSwardControlled = false;
 
         /// <summary>Number of layers in the soil.</summary>
         private int nLayers;
@@ -1210,7 +1200,7 @@
         private double highTempStress = 1.0;
 
         /// <summary>Cumulative degrees of temperature for recovery from heat damage (oCd).</summary>
-        private double cumulativeDDHeat;
+        private double cumulativeDDHeat = 0.0;
 
         /// <summary>Growth factor due to cold stress (0-1).</summary>
         private double glfCold = 1.0;
@@ -1219,13 +1209,13 @@
         private double lowTempStress = 1.0;
 
         /// <summary>Cumulative degrees of temperature for recovery from cold damage (oCd).</summary>
-        private double cumulativeDDCold;
+        private double cumulativeDDCold = 0.0;
 
         /// <summary>Growth limiting factor due to water stress (0-1).</summary>
         private double glfWaterSupply = 1.0;
 
         /// <summary>Cumulative water logging factor (0-1).</summary>
-        private double cumWaterLogging;
+        private double cumWaterLogging = 0.0;
 
         /// <summary>Growth limiting factor due to water logging (0-1).</summary>
         private double glfWaterLogging = 1.0;
@@ -1234,7 +1224,7 @@
         private double glfNSupply = 1.0;
 
         /// <summary>Temperature effects on respiration (0-1).</summary>
-        private double tempEffectOnRespiration;
+        private double tempEffectOnRespiration = 0.0;
 
         ////- Harvest and digestibility >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2436,24 +2426,6 @@
 
             // Calculate the values for LAI
             EvaluateLAI();
-
-            glfRadn = 1;
-            glfCO2 = 1;
-            glfNc = 1;
-            glfTemp = 1;
-            usingHeatStressFactor = true;
-            usingColdStressFactor = true;
-            glfHeat = 1;
-            highTempStress = 1;
-            cumulativeDDHeat = 0;
-            glfCold = 1;
-            lowTempStress = 1;
-            cumulativeDDCold = 0;
-            glfWaterSupply = 1;
-            cumWaterLogging = 0;
-            glfWaterLogging = 1;
-            glfNSupply = 1;
-            tempEffectOnRespiration = 0;
         }
 
         /// <summary>Set the plant state at germination.</summary>
@@ -2583,7 +2555,7 @@
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            if (isAlive && !isSwardControlled)
+            if (isAlive)
             {
                 // check phenology of annuals
                 if (isAnnual)
@@ -2617,7 +2589,6 @@
                     EvaluateNitrogenDemand();
                 }
             }
-            //else { // Growth is controlled by Sward (all species) }
         }
 
         /// <summary>Performs the calculations for actual growth.</summary>
@@ -2626,7 +2597,7 @@
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            if (isAlive && !isSwardControlled)
+            if (isAlive)
             {
                 if (phenologicStage > 0)
                 {
@@ -2650,7 +2621,6 @@
                     // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
                 }
             }
-            //else { // Growth is controlled by Sward (all species) }
         }
 
         #region - Plant growth processes  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
