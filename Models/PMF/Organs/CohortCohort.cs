@@ -155,8 +155,6 @@ namespace Models.PMF.Organs
                 biomass.StorageN += storageN;
             }
             leaves[leaves.Count - 1].Area += (structuralMass + storageMass) * sla;
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
         }
 
         /// <summary>
@@ -166,8 +164,6 @@ namespace Models.PMF.Organs
         /// <param name="deadFraction">The fraction by whith to reduce the size of dead leaves.</param>
         public void ReduceLeavesUniformly(double liveFraction, double deadFraction)
         {
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
             foreach (PerrenialLeafCohort leaf in leaves)
             {
                 leaf.Live.Multiply(liveFraction);
@@ -177,8 +173,6 @@ namespace Models.PMF.Organs
             }
             live.Multiply(liveFraction);
             dead.Multiply(deadFraction);
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
         }
 
         /// <summary>
@@ -194,8 +188,6 @@ namespace Models.PMF.Organs
             }
             live.StorageWt *= fraction;
             live.MetabolicWt *= fraction;
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
         }
 
         /// <summary>
@@ -235,8 +227,6 @@ namespace Models.PMF.Organs
                     leaf.Area = 0;
                 }
             }
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
         }
 
         /// <summary>
@@ -258,8 +248,6 @@ namespace Models.PMF.Organs
                     dead.Subtract(leaf.Senesced);
             }
             leaves.RemoveAll(l => predicate(l));
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
             return detached;
         }
 
@@ -281,8 +269,6 @@ namespace Models.PMF.Organs
                 leaf.AreaDead += leaf.Area * fraction;
                 leaf.Area *= (1 - fraction);
             }
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
         }
 
         /// <summary>
@@ -303,8 +289,6 @@ namespace Models.PMF.Organs
                                    storageN: initialMass * (maxNConc - minNConc),
                                    sla: sla);
             }
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
         }
 
         /// <summary>
@@ -348,8 +332,6 @@ namespace Models.PMF.Organs
             }
             if (MathUtilities.IsGreaterThan(removal, 0))
                 throw new Exception("Insufficient Storage N to account for Retranslocation and Reallocation in Perrenial Leaf");
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
         }
 
         /// <summary>
@@ -373,8 +355,6 @@ namespace Models.PMF.Organs
             }
             if (MathUtilities.IsGreaterThan(removal, 0))
                 throw new Exception("Insufficient Storage N to account for Retranslocation and Reallocation in Perrenial Leaf");
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
         }
     }
 }

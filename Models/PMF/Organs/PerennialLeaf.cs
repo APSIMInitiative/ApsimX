@@ -613,7 +613,8 @@ namespace Models.PMF.Organs
             if (Plant.IsAlive)
             {
                 // Senesce any leaves older than residencce time.
-                cohort.SenesceWhere(l => l.Age >= LeafResidenceTime.Value());
+                double lrt = LeafResidenceTime.Value();
+                cohort.SenesceWhere(l => l.Age >= lrt);
                 double lkf = Math.Max(0.0, Math.Min(LeafKillFraction.Value(), MathUtilities.Divide(1 - MinimumLAI.Value(), LAI, 0.0)));
                 if (lkf > 0)
                    cohort.KillLeavesUniformly(lkf);
