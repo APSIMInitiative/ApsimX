@@ -13,7 +13,7 @@ This document assumes that your APSIM Next Generation folder is C:\Work\ApsimX.
 
 If you plan to modify or add to the APSIM code/datasets, you will need to fork the repository. A fork creates a copy of the repository associated with your github account.
 
-* Click on the fork link in the top right hand corner of the [APSIM repository](https://github.com/APSIMInitiative/ApsimX]) on GitHub
+* Click on the fork link in the top right hand corner of the [APSIM repository](https://github.com/APSIMInitiative/ApsimX) on GitHub
 
 ## Clone ApsimX to your computer
 
