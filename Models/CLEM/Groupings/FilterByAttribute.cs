@@ -1,7 +1,9 @@
 ﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq.Expressions;
@@ -20,7 +22,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantGroup))]
     [ValidParent(ParentType = typeof(AnimalPriceGroup))]
     [Version(1, 0, 0, "")]
-    public class FilterByAttribute : Filter
+    public class FilterByAttribute : Filter, IValidatableObject
     {
         /// <summary>
         /// Attribute tag to filter by
@@ -44,15 +46,66 @@ namespace Models.CLEM.Groupings
                 if (!(t is IAttributable attributable))
                     return false;
 
-                if (!attributable.Attributes.Exists(AttributeTag))
-                    return false;
+                //if (!attributable.Attributes.Exists(AttributeTag))
+                //    return false;
+
+                // using the provided operator
 
                 if (FilterStyle == AttributeFilterStyle.Exists)
-                    return attributable.Attributes.Exists(AttributeTag);
+                {
+                    bool boolResult = true;
+                    string value = Value?.ToString().ToLower();
+                    switch (Operator)
+                    {
+                        case ExpressionType.Equal:
+                            boolResult = value == "true";
+                            break;
+                        case ExpressionType.NotEqual:
+                            boolResult = value != "true";
+                            boolResult = false;
+                            break;
+                        case ExpressionType.IsTrue:
+                            boolResult = true;
+                            break;
+                        case ExpressionType.IsFalse:
+                            boolResult = false;
+                            break;
+                        case ExpressionType.GreaterThan:
+                        case ExpressionType.GreaterThanOrEqual:
+                        case ExpressionType.LessThan:
+                        case ExpressionType.LessThanOrEqual:
+                        default:
+                            throw new NotImplementedException($"The operator [{OperatorToSymbol()}] is not valid for the Atribute-based filter [f={Name}] of style [{FilterStyle}]");
+                    }
+                    return (attributable.Attributes.Exists(AttributeTag) == boolResult);
+                }
                 else
-                    return attributable.Attributes.GetValue(AttributeTag).storedValue == Value;
-            };
+                {
+                    // using filter by value
+                    var ce1 = Convert.ToDecimal(Value ?? "");
+                    var ce2 = Convert.ToDecimal(attributable.Attributes.GetValue(AttributeTag)?.StoredValue ?? 0);
 
+                    switch (Operator)
+                    {
+                        case ExpressionType.Equal:
+                            return ce2 == ce1;
+                        case ExpressionType.NotEqual:
+                            return ce2 != ce1;
+                        case ExpressionType.GreaterThan:
+                            return ce2 > ce1;
+                        case ExpressionType.GreaterThanOrEqual:
+                            return ce2 >= ce1;
+                        case ExpressionType.LessThan:
+                            return ce2 < ce1;
+                        case ExpressionType.LessThanOrEqual:
+                            return ce2 <= ce1;
+                        case ExpressionType.IsTrue:
+                        case ExpressionType.IsFalse:
+                        default:
+                            throw new NotImplementedException($"The operator [{OperatorToSymbol()}] is not valid for the Atribute-based filter [f={Name}] of style [{FilterStyle}]");
+                    }
+                }
+            };
             return lambda;
         }
 
@@ -93,20 +146,35 @@ namespace Models.CLEM.Groupings
                     filterWriter.Write(" is");
                     if (truefalse)
                     {
-                        if (Operator == ExpressionType.IsFalse | Value.ToString().ToLower() == "false")
+                        if (Operator == ExpressionType.IsFalse | Value?.ToString().ToLower() == "false")
                             filterWriter.Write(" not");
                     }
-                    filterWriter.Write($" Attribute({CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags)})");
+                    filterWriter.Write($" Attribute({CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)})");
                 }
                 else
                 {
-                    filterWriter.Write($" Attribute({CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags)})");
-                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", htmlTags: htmltags)}");
-                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value.ToString(), "No value", htmlTags: htmltags)}");
+                    filterWriter.Write($" Attribute-{CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
+                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
+                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
                 }
                 return filterWriter.ToString();
             }
         }
+
+        #region validation
+        /// <inheritdoc/>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if(FilterStyle == AttributeFilterStyle.ByValue)
+                if ((Value is null || Value.ToString() == "") & !(Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse))
+                {
+                    string[] memberNames = new string[] { "Missing filter compare value" };
+                    results.Add(new ValidationResult($"A value to compare with the Attribute value is required for [f={Name}] in [f={Parent.Name}]", memberNames));
+                }
+            return results;
+        }
+        #endregion
 
         #region descriptive summary
 

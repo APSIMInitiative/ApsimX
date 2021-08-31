@@ -21,12 +21,12 @@ namespace Models.CLEM.Groupings
     [Description("An filter component using properties and methods of the individual")]
     [ValidParent(ParentType = typeof(IFilterGroup))]
     [Version(1, 0, 0, "")]
-    public class FilterByProperty : Filter
+    public class FilterByProperty : Filter, IValidatableObject
     {
         /// <summary>
         /// The property or method to filter by
         /// </summary>
-        [Description("Property or method to use")]
+        [Description("Property or method")]
         [Required]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetParameters))]
         public string PropertyOfIndividual { get; set; }
@@ -45,21 +45,33 @@ namespace Models.CLEM.Groupings
         {
             // Check that the filter applies to objects of type T
             var info = Parent.GetProperty(PropertyOfIndividual);
-            if (!info.DeclaringType.IsAssignableFrom(typeof(T)))
+            if (!info.DeclaringType.IsSubclassOf(typeof(T)))
                 return (T t) => false;
 
             // Look for the property on T
             var genericType = Expression.Parameter(info.DeclaringType);
-            var key = Expression.Property(genericType, PropertyOfIndividual);
+            var key = Expression.Property(genericType, info.Name);
 
             // Try convert the Value into the same data type as the property
             var type = info.PropertyType;
-            var ce = type.IsEnum ? Enum.Parse(type, Value.ToString(), true) : Convert.ChangeType(Value, type);
+            var ce = type.IsEnum ? Enum.Parse(type, Value.ToString(), true) : Convert.ChangeType(Value??0, type);
             var value = Expression.Constant(ce);
 
             // Create a lambda that compares the filter value to the property on T
+
             // using the provided operator
-            var binary = Expression.MakeBinary(Operator, key, value);
+            Expression binary; 
+            if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
+            {
+                // Allow for IsTrue and IsFalse operator
+                ce = (Operator == ExpressionType.IsTrue) ? true : false;
+                binary = Expression.MakeBinary(ExpressionType.Equal, key, Expression.Constant(ce));
+            }
+            else
+            {
+                binary = Expression.MakeBinary(Operator, key, value);
+            }
+            
             var lambda = Expression.Lambda<Func<T, bool>>(binary, genericType).Compile();
             return lambda;
         }
@@ -90,20 +102,33 @@ namespace Models.CLEM.Groupings
                 bool truefalse = IsOperatorTrueFalseTest();
                 if (truefalse)
                 {
-                    if (Operator == ExpressionType.IsFalse | Value.ToString().ToLower() == "false")
+                    if (Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false")
                         filterWriter.Write(" not");
-                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", htmlTags: htmltags)}");
+                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
                 }
                 else
                 {
-                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", htmlTags: htmltags)}");
-                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", htmlTags: htmltags)}");
-                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", htmlTags: htmltags)}");
+                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
                 }
                 return filterWriter.ToString();
             }
         }
 
+        #region validation
+        /// <inheritdoc/>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if((Value is null || Value.ToString() == "") & !(Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse))
+            {
+                string[] memberNames = new string[] { "Missing filter compare value" };
+                results.Add(new ValidationResult($"A value to compare with the Property is required for [f={Name}] in [f={Parent.Name}]", memberNames));
+            }
+            return results;
+        }
+        #endregion
 
         #region descriptive summary
 

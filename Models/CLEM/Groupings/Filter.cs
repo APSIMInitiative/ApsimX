@@ -1,6 +1,5 @@
 ﻿using Models.CLEM.Interfaces;
 using Models.Core;
-using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.ComponentModel.DataAnnotations;
@@ -26,7 +25,7 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Filter operator
         /// </summary>
-        [Description("Operator to use")]
+        [Description("Operator")]
         [Required]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetOperators))]
         [System.ComponentModel.DefaultValueAttribute(ExpressionType.Equal)]
@@ -100,7 +99,6 @@ namespace Models.CLEM.Groupings
         /// Value to check for filter
         /// </summary>
         [Description("Value to compare")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Value to compare is required")]
         public object Value { get; set; }
 
         /// <summary>
