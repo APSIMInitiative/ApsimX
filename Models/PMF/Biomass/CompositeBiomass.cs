@@ -13,13 +13,13 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class CompositeBiomass : Model, ICustomDocumentation
+    public class CompositeBiomass : Model, ICustomDocumentation, IBiomass
     {
         private List<IOrganDamage> organs;
 
         /// <summary>List of organs to agregate.</summary>
         [Description("List of organs to agregate.")]
-        public string[] OrganNames {get; set;}
+        public string[] OrganNames { get; set; }
 
         /// <summary>Include live material?</summary>
         [Description("Include live material?")]
@@ -36,7 +36,7 @@ namespace Models.PMF
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             organs = new List<IOrganDamage>();
-            var parentPlant = Parent as Plant;
+            var parentPlant = this.FindAncestor<Plant>();
             if (parentPlant == null)
                 throw new Exception("CompositeBiomass can only be dropped on a plant.");
             foreach (var organName in OrganNames)
@@ -71,18 +71,18 @@ namespace Models.PMF
         [Units("g/m^2")]
         public double N
         {
-            get 
+            get
             {
                 double n = 0;
                 foreach (var organ in organs)
                 {
                     if (IncludeLive)
-                        n += organ.Live.StorageN;
+                        n += organ.Live.N;
                     if (IncludeDead)
-                        n += organ.Dead.StorageN;
+                        n += organ.Dead.N;
                 }
 
-                return n; 
+                return n;
             }
         }
 
@@ -96,6 +96,84 @@ namespace Models.PMF
                     return N / Wt;
                 else
                     return 0.0;
+            }
+        }
+
+
+        /// <summary>Gets the structural mass.</summary>
+        [Units("g/m^2")]
+        public double StructuralWt
+        {
+            get
+            {
+                double wt = 0;
+                foreach (var organ in organs)
+                {
+                    if (IncludeLive)
+                        wt += organ.Live.StructuralWt;
+                    if (IncludeDead)
+                        wt += organ.Dead.StructuralWt;
+                }
+
+                return wt;
+            }
+        }
+
+        /// <summary>Gets the structural nitrogen content.</summary>
+        [Units("g/m^2")]
+        public double StructuralN
+        {
+            get
+            {
+                double n = 0;
+                foreach (var organ in organs)
+                {
+                    if (IncludeLive)
+                        n += organ.Live.StructuralN;
+                    if (IncludeDead)
+                        n += organ.Dead.StructuralN;
+                }
+
+                return n;
+            }
+        }
+
+
+        /// <summary>Gets the storage mass.</summary>
+        [Units("g/m^2")]
+        public double StorageWt
+        {
+            get
+            {
+                double wt = 0;
+                foreach (var organ in organs)
+                {
+                    if (IncludeLive)
+                        wt += organ.Live.StorageWt;
+                    if (IncludeDead)
+                        wt += organ.Dead.StorageWt;
+                }
+
+                return wt;
+            }
+        }
+
+        /// <summary>Gets the storage nitrogen content.</summary>
+        [Units("g/m^2")]
+        public double StorageN
+        {
+            get
+            {
+                double n = 0;
+                foreach (var organ in organs)
+                {
+                    if (IncludeLive)
+                        n += organ.Live.StorageN;
+                    if (IncludeDead)
+                        n += organ.Dead.StorageN;
+                }
+
+                return n;
             }
         }
 

@@ -2372,7 +2372,7 @@
 
         /// <summary>Get above ground biomass</summary>
         [Units("g/m2")]
-        public Biomass AboveGround
+        public IBiomass AboveGround
         {
             get
             {
@@ -2386,7 +2386,7 @@
 
         /// <summary>Get above ground biomass</summary>
         [Units("g/m2")]
-        public Biomass AboveGroundHarvestable
+        public IBiomass AboveGroundHarvestable
         {
             get
             {
