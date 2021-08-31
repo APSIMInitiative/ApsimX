@@ -292,6 +292,8 @@ namespace Models.PMF.Organs
             leaves.Clear();
             live.Clear();
             dead.Clear();
+            Lai = 0;
+            LaiDead = 0;
         }
 
         /// <summary>
