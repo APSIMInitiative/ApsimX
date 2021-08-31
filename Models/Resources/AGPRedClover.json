@@ -242,7 +242,7 @@
           "NConcMaximum": 0.025,
           "RootDistributionDepthParam": 70.0,
           "RootDistributionExponent": 2.5,
-\          "SpecificRootLength": 50.0,
+          "SpecificRootLength": 50.0,
           "RootDepthMinimum": 50.0,
           "RootDepthMaximum": 750.0,
           "RootElongationRate": 25.0,
