@@ -24,7 +24,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 139; } }
+        public static int LatestVersion { get { return 140; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3647,6 +3647,22 @@
                 }
             }
         }
+
+        /// <summary>
+        /// Remove all occurences of SoilNitrogenPlantAvailable NO3 and NH4 types.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion140(JObject root, string fileName)
+        {
+            
+            foreach (var PAN in JsonUtilities.ChildrenOfType(root, "SoilNitrogenPlantAvailableNO3"))
+                PAN.Remove();
+            foreach (var PAN in JsonUtilities.ChildrenOfType(root, "SoilNitrogenPlantAvailableNH4"))
+                PAN.Remove();
+
+        }
+
 
         /// <summary>
         /// Update the SoilNitrogen component to be a Nutrient
