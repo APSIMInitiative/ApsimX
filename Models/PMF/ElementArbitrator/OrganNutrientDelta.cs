@@ -26,18 +26,20 @@
         [Link(Type = LinkType.Ancestor)]
         private Organ organ = null;
 
-         /// <summary>The DM demand function</summary>
+         /// <summary>The demand of nutrients by the organ from the arbitrator</summary>
         [Link(Type = LinkType.Child)]
         [Units("g/m2/d")]
         private NutrientDemandFunctions demandFunctions = null;
 
-        /// <summary>The photosynthesis</summary>
+        /// <summary>The supply of nutrients from the organ to the arbitrator</summary>
         [Units("g/m2")]
         [Link(Type = LinkType.Child)]
         private NutrientSupplyFunctions supplyFunctions = null;
 
-        [Link(IsOptional = true, Type = LinkType.Child)]
-        private NutrientConcentrationFunctions thresholds = null;
+        /// <summary>The concentrations of nutrients at cardinal thresholds</summary>
+        [Units("g Nutrient/g dWt")]
+        [Link(Type = LinkType.Child)]
+        private IConcentratinOrProportion concentrationOrProportionFunction = null;
 
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
@@ -52,9 +54,9 @@
         /// <summary>Constructor</summary>
         public OrganNutrientDelta() 
         {
-            demandFunctions = new NutrientDemandFunctions();
-            supplyFunctions = new NutrientSupplyFunctions();
-            thresholds = new NutrientConcentrationFunctions();
+            //demandFunctions = new NutrientDemandFunctions();
+            //supplyFunctions = new NutrientSupplyFunctions();
+            //thresholds = new NutrientConcentrationFunctions();
             Supplies = new OrganNutrientSupplies();
             SuppliesAllocated = new OrganNutrientSupplies();
             Demands = new NutrientPoolStates();
@@ -71,7 +73,7 @@
  
         /// <summary>The max, crit and min nutirent concentrations</summary>
         [JsonIgnore]
-        public NutrientConcentrations Concentrations { get; set; }
+        public NutrientPoolStates ConcentrationOrProportion { get; set; }
 
         /// <summary> Resource supplied to arbitration by the organ</summary>
         /// [JsonIgnore]
@@ -101,15 +103,11 @@
             {
                 NutrientPoolStates outstanding = new NutrientPoolStates();
                 outstanding.Structural = Demands.Structural - DemandsAllocated.Structural;
-                outstanding.Metabolic = Demands.Metabolic - DemandsAllocated.Structural;
+                outstanding.Metabolic = Demands.Metabolic - DemandsAllocated.Metabolic;
                 outstanding.Storage = Demands.Storage - DemandsAllocated.Storage;
                 return outstanding;
             }
         }
-
-        /// <summary> The minimum Nutrient Concnetration of biomass</summary>
-        [JsonIgnore]
-        public double MinimumConcentration { get; set; }
 
         /// <summary> The maximum possible biomass with Nutrient Allocation</summary>
         
@@ -137,17 +135,18 @@
         }
 
 
+        private void setConcentrationsOrProportions()
+        {
+            ConcentrationOrProportion = concentrationOrProportionFunction.ConcentrationsOrProportions;
+            if (this.Name == "Carbon")
+                if ((ConcentrationOrProportion.Total > 1.01) || (ConcentrationOrProportion.Total < 0.99))
+                    throw new Exception("Concentrations of Carbon must add to 1 to keep demands entire");
+        }
+        
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         public void SetSuppliesAndDemands()
-        {
-            if (thresholds != null)
-            {
-                Concentrations.Maximum = thresholds.Maximum.Value();
-                Concentrations.Critical = thresholds.Critical.Value();
-                Concentrations.Minimum = thresholds.Minimum.Value();
-                MinimumConcentration = Concentrations.Minimum;
-            }
-
+        { 
+            setConcentrationsOrProportions();
             Supplies.ReAllocation = ThrowIfNegative(supplyFunctions.ReAllocation);
             Supplies.ReTranslocation = ThrowIfNegative(supplyFunctions.ReTranslocation ) * (1 - organ.senescenceRate);
             Supplies.Fixation = ThrowIfNegative(supplyFunctions.Fixation);
@@ -182,6 +181,15 @@
             DemandsAllocated.Clear();
         }
 
+        /// <summary>Called when [Sowing] is broadcast</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Sowing")]
+        protected void OnSowing(object sender, EventArgs e)
+        {
+            setConcentrationsOrProportions();
+        }
+        
         /// <summary>Called when [do daily initialisation].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -202,7 +210,7 @@
             // Deltas = new OrganResourceStates();
             // Live = new ResourcePools();
             //  Dead = new ResourcePools();
-            Concentrations = new NutrientConcentrations();
+            ConcentrationOrProportion = new NutrientPoolStates();
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

@@ -51,7 +51,7 @@
             "[FodderBeet].Leaf.Canopy.Transpiration",
             "[FodderBeet].Leaf.Carbon.Demands.Total",
             "[FodderBeet].Leaf.Photosynthesis.RadnInt",
-            "[FodderBeet].Leaf.Nitrogen.Concentrations.Critical",
+            "[FodderBeet].Leaf.Nitrogen.ConcentrationOrProportion.Metabolic",
             "[FodderBeet].Leaf.Dead.N",
             "[FodderBeet].Leaf.Dead.NConc",
             "[FodderBeet].Leaf.Dead.Nitrogen.Metabolic",
@@ -65,17 +65,17 @@
             "[FodderBeet].Leaf.Live.N",
             "[FodderBeet].Leaf.Live.NConc",
             "[FodderBeet].Leaf.Live.Wt",
-            "[FodderBeet].Leaf.Nitrogen.Concentrations.Maximum",
-            "[FodderBeet].Leaf.Nitrogen.Concentrations.Minimum",
+            "[FodderBeet].Leaf.Nitrogen.ConcentrationOrProportion.Storage",
+            "[FodderBeet].Leaf.Nitrogen.ConcentrationOrProportion.Structural",
             "[FodderBeet].Leaf.NodeNumber",
             "[FodderBeet].Leaf.SpecificArea",
-            "[FodderBeet].Petiole.Nitrogen.Concentrations.Critical",
+            "[FodderBeet].Petiole.Nitrogen.ConcentrationOrProportion.Metabolic",
             "[FodderBeet].Petiole.Dead.NConc",
             "[FodderBeet].Petiole.Live.N",
             "[FodderBeet].Petiole.Live.NConc",
             "[FodderBeet].Petiole.Live.Wt",
-            "[FodderBeet].Petiole.Nitrogen.Concentrations.Critical",
-            "[FodderBeet].Petiole.Nitrogen.Concentrations.Minimum",
+            "[FodderBeet].Petiole.Nitrogen.ConcentrationOrProportion.Metabolic",
+            "[FodderBeet].Petiole.Nitrogen.ConcentrationOrProportion.Structural",
             "[FodderBeet].Petiole.NConc",
             "[FodderBeet].Phenology.AccumulatedThermalTime",
             "[FodderBeet].Phenology.CurrentPhase.Name",
@@ -83,24 +83,24 @@
             "[FodderBeet].Phenology.Photoperiod",
             "[FodderBeet].Phenology.Stage",
             "[FodderBeet].Phenology.ThermalTime",
-            "[FodderBeet].Root.Nitrogen.Concentrations.Critical",
+            "[FodderBeet].Root.Nitrogen.ConcentrationOrProportion.Metabolic",
             "[FodderBeet].Root.Live.N",
             "[FodderBeet].Root.Live.NConc",
             "[FodderBeet].Root.Live.Wt",
-            "[FodderBeet].Root.Nitrogen.Concentrations.Maximum",
-            "[FodderBeet].Root.Nitrogen.Concentrations.Minimum",
+            "[FodderBeet].Root.Nitrogen.ConcentrationOrProportion.Storage",
+            "[FodderBeet].Root.Nitrogen.ConcentrationOrProportion.Structural",
             "[FodderBeet].Root.N",
             "[FodderBeet].Root.Nconc",
             "[FodderBeet].Root.Network.Depth",
             "[FodderBeet].Root.Network.WaterUptake",
             "[FodderBeet].SCS",
             "[FodderBeet].SowingData.Cultivar",
-            "[FodderBeet].StorageRoot.Nitrogen.Concentrations.Critical",
+            "[FodderBeet].StorageRoot.Nitrogen.ConcentrationOrProportion.Metabolic",
             "[FodderBeet].StorageRoot.Live.N",
             "[FodderBeet].StorageRoot.Live.NConc",
             "[FodderBeet].StorageRoot.Live.Wt",
-            "[FodderBeet].StorageRoot.Nitrogen.Concentrations.Maximum",
-            "[FodderBeet].StorageRoot.Nitrogen.Concentrations.Minimum",
+            "[FodderBeet].StorageRoot.Nitrogen.ConcentrationOrProportion.Storage",
+            "[FodderBeet].StorageRoot.Nitrogen.ConcentrationOrProportion.Structural",
             "[FodderBeet].StorageRoot.NConc",
             "[FodderBeet].StorageRoot.Wt",
             "//[FodderBeet].Total.N",
@@ -687,7 +687,7 @@
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.0,
-                      "Units": null,
+                      "Units": "g/m^2",
                       "Name": "Metabolic",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -697,7 +697,7 @@
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.0,
-                      "Units": null,
+                      "Units": "g/m^2",
                       "Name": "Storage",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -751,85 +751,25 @@
                       "Name": "DemandFunctions",
                       "Children": [
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Structural",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[StorageRoot].TotalDMDemand",
-                              "Name": "TotalDMDemand",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.1,
-                              "Units": null,
-                              "Name": "StructuralFraction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Metabolic",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[StorageRoot].TotalDMDemand",
-                              "Name": "TotalDMDemand",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.1,
-                              "Units": null,
-                              "Name": "MetabolicFraction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Storage",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[StorageRoot].TotalDMDemand",
-                              "Name": "TotalDMDemand",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.8,
-                              "Units": null,
-                              "Name": "StorageFraction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -908,32 +848,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 1.0,
                                   "Units": null,
-                                  "Name": "ReAllocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].StartLive.Carbon.Metabolic",
-                                  "Name": "MetabolicC",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].senescenceRate",
-                                  "Name": "SenescenceRate",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -945,32 +867,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 1.0,
                                   "Units": null,
-                                  "Name": "ReAllocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].StartLive.Carbon.Storage",
-                                  "Name": "StorageC",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].senescenceRate",
-                                  "Name": "SenescenceRate",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -1001,23 +905,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 0.0,
                                   "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].StartLive.Carbon.Metabolic",
-                                  "Name": "MetabolicC",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -1029,23 +924,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 0.0,
                                   "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].StartLive.Carbon.Storage",
-                                  "Name": "StorageC",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -1057,6 +943,45 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.NutrientProportionFunctions, Models",
+                      "Name": "PoolFractions",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.1,
+                          "Units": null,
+                          "Name": "Structural",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.1,
+                          "Units": null,
+                          "Name": "Metabolic",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.8,
+                          "Units": null,
+                          "Name": "Storage",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -1113,112 +1038,25 @@
                       "Name": "DemandFunctions",
                       "Children": [
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "Structural",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[StorageRoot].Nitrogen.Concentrations.Minimum",
-                              "Name": "MinNconc",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[StorageRoot].Carbon.DemandsAllocated.Total",
-                              "Name": "PotentialDMAllocation",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Metabolic",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "MetabolicNconc",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].Nitrogen.Concentrations.Critical",
-                                  "Name": "CriticalNConc",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].Nitrogen.Concentrations.Minimum",
-                                  "Name": "MinNconc",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[StorageRoot].Carbon.DemandsAllocated.Total",
-                              "Name": "PotentialDMAllocation",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.DemandFunctions.StorageNDemandFunction, Models",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Storage",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[StorageRoot].Nitrogen.Concentrations.Maximum",
-                              "Name": "MaxNconc",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.PhaseLookupValue, Models",
-                              "Start": "Emergence",
-                              "End": "Maturity",
-                              "Name": "NitrogenDemandSwitch",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "Constant",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
+                          "Name": "Structural",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -1297,32 +1135,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 1.0,
                                   "Units": null,
-                                  "Name": "ReAllocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].StartLive.Nitrogen.Metabolic",
-                                  "Name": "MetabolicN",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].SenescenceRate",
-                                  "Name": "SenescenceRate",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -1334,32 +1154,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 1.0,
                                   "Units": null,
-                                  "Name": "ReAllocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].StartLive.Nitrogen.Storage",
-                                  "Name": "StorageN",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].SenescenceRate",
-                                  "Name": "SenescenceRate",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -1390,23 +1192,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 0.0,
                                   "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].StartLive.Nitrogen.Metabolic",
-                                  "Name": "MetabolicN",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -1418,23 +1211,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 0.0,
                                   "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[StorageRoot].StartLive.Nitrogen.Storage",
-                                  "Name": "StorageN",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -1637,16 +1421,6 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.4,
-                  "Units": null,
-                  "Name": "CarbonConcentration",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
                   "Units": "0-1",
                   "Name": "DMConversionEfficiency",
@@ -1677,19 +1451,9 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "DMSinkCapacity",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
                   "Units": "/d",
-                  "Name": "SenescenceRate",
+                  "Name": "SenescenceRateFunction",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -1788,7 +1552,7 @@
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
+                      "FixedValue": 10.0,
                       "Units": "g/m^2",
                       "Name": "Structural",
                       "Children": [],
@@ -1798,7 +1562,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
+                      "FixedValue": 10.0,
                       "Units": null,
                       "Name": "Metabolic",
                       "Children": [],
@@ -1808,7 +1572,7 @@
                     },
                     {
                       "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.2,
+                      "FixedValue": 2.0,
                       "Units": null,
                       "Name": "Storage",
                       "Children": [],
@@ -2022,92 +1786,32 @@
                       "Name": "DemandFunctions",
                       "Children": [
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Structural",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].TotalDMDemand",
-                              "Name": "TotalDMDemand",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.4,
-                              "Units": "g/g",
-                              "Name": "StructuralFraction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Metabolic",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].TotalDMDemand",
-                              "Name": "TotalDMDemand",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.4,
-                              "Units": "g/g",
-                              "Name": "MetabolicFraction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Storage",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].TotalDMDemand",
-                              "Name": "TotalDMDemand",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.2,
-                              "Units": "g/g",
-                              "Name": "StorageFraction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.5,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QStructuralPriority",
                           "Children": [],
@@ -2117,7 +1821,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.5,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QMetabolicPriority",
                           "Children": [],
@@ -2127,7 +1831,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.01,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QStoragePriority",
                           "Children": [],
@@ -2178,32 +1882,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 1.0,
                                   "Units": null,
-                                  "Name": "ReAllocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].StartLive.Carbon.Metabolic",
-                                  "Name": "MetabolicC",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].senescenceRate",
-                                  "Name": "SenescenceRate",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -2215,32 +1901,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 1.0,
                                   "Units": null,
-                                  "Name": "ReAllocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].StartLive.Carbon.Storage",
-                                  "Name": "StorageC",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].senescenceRate",
-                                  "Name": "SenescenceRate",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -2271,23 +1939,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 0.0,
                                   "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].StartLive.Carbon.Metabolic",
-                                  "Name": "MetabolicC",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -2299,23 +1958,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 0.0,
                                   "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].StartLive.Carbon.Storage",
-                                  "Name": "StorageC",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -2327,6 +1977,45 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.NutrientProportionFunctions, Models",
+                      "Name": "PoolProportions",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.4,
+                          "Units": null,
+                          "Name": "Structural",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.4,
+                          "Units": null,
+                          "Name": "Metabolic",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.2,
+                          "Units": null,
+                          "Name": "Storage",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -2383,108 +2072,32 @@
                       "Name": "DemandFunctions",
                       "Children": [
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Structural",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].Nitrogen.Concentrations.Minimum",
-                              "Name": "MinNconc",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].Carbon.DemandsAllocated.Total",
-                              "Name": "PotentialDMAllocation",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Metabolic",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.SubtractFunction, Models",
-                              "Name": "MetabolicNconc",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].Nitrogen.Concentrations.Critical",
-                                  "Name": "CritNconc",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].Nitrogen.Concentrations.Minimum",
-                                  "Name": "MinNconc",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].Carbon.DemandsAllocated.Total",
-                              "Name": "PotentialDMAllocation",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.DemandFunctions.StorageNDemandFunction, Models",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Storage",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
-                              "Units": null,
-                              "Name": "NitrogenDemandSwitch",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].Nitrogen.Concentrations.Maximum",
-                              "Name": "MaxNconc",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QStructuralPriority",
                           "Children": [],
@@ -2494,7 +2107,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QMetabolicPriority",
                           "Children": [],
@@ -2504,7 +2117,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QStoragePriority",
                           "Children": [],
@@ -2556,32 +2169,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 1.0,
                                   "Units": null,
-                                  "Name": "ReAllocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].StartLive.Nitrogen.Metabolic",
-                                  "Name": "MetabolicN",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].senescenceRate",
-                                  "Name": "SenescenceRate",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -2593,32 +2188,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 1.0,
                                   "Units": null,
-                                  "Name": "ReAllocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].StartLive.Nitrogen.Storage",
-                                  "Name": "StorageN",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].senescenceRate",
-                                  "Name": "SenescenceRate",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -2649,23 +2226,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 0.0,
                                   "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].StartLive.Nitrogen.Metabolic",
-                                  "Name": "MetabolicN",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -2677,23 +2245,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
+                                  "FixedValue": 0.0,
                                   "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].StartLive.Nitrogen.Storage",
-                                  "Name": "StorageN",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -3470,7 +3029,7 @@
                 },
                 {
                   "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "SenescenceRate",
+                  "Name": "SenescenceRateFunction",
                   "Children": [
                     {
                       "$type": "Models.Functions.LinearInterpolationFunction, Models",
@@ -3637,16 +3196,6 @@
                   "FixedValue": 1.0,
                   "Units": "0-1",
                   "Name": "DMConversionEfficiency",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.4,
-                  "Units": null,
-                  "Name": "CarbonConcentration",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -3850,37 +3399,15 @@
                       "Name": "DemandFunctions",
                       "Children": [
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Structural",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Petiole].TotalDMDemand",
-                              "Name": "DMDemandFunction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.5,
-                              "Units": null,
-                              "Name": "StructuralFraction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Metabolic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3888,36 +3415,16 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Storage",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Petiole].TotalDMDemand",
-                              "Name": "DMDemandFunction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.5,
-                              "Units": null,
-                              "Name": "StorageFraction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.2,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QStructuralPriority",
                           "Children": [],
@@ -3927,7 +3434,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.2,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QMetabolicPriority",
                           "Children": [],
@@ -3937,7 +3444,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.01,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QStoragePriority",
                           "Children": [],
@@ -3989,32 +3496,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 1.0,
                                   "Units": null,
-                                  "Name": "ReAllocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].StartLive.Carbon.Metabolic",
-                                  "Name": "MetabolicC",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].senescenceRate",
-                                  "Name": "SenescenceRate",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -4026,32 +3515,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 1.0,
                                   "Units": null,
-                                  "Name": "ReAllocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].StartLive.Carbon.Storage",
-                                  "Name": "StorateC",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].senescenceRate",
-                                  "Name": "SenescenceRate",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -4082,23 +3553,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 0.0,
                                   "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].StartLive.Carbon.Metabolic",
-                                  "Name": "MetabolicC",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -4110,23 +3572,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 0.0,
                                   "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].StartLive.Carbon.Storage",
-                                  "Name": "StorateC",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -4138,6 +3591,45 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.NutrientProportionFunctions, Models",
+                      "Name": "PoolProportions",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.5,
+                          "Units": null,
+                          "Name": "Structural",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Metabolic",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.5,
+                          "Units": null,
+                          "Name": "Storage",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -4194,36 +3686,15 @@
                       "Name": "DemandFunctions",
                       "Children": [
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Structural",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Petiole].Nitrogen.Concentrations.Minimum",
-                              "Name": "MinNconc",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Petiole].Carbon.DemandsAllocated.Total",
-                              "Name": "PotentialDMAllocation",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": "g/m2/d",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Metabolic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -4231,47 +3702,16 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.DemandFunctions.StorageNDemandFunction, Models",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Storage",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Petiole].Nitrogen.Concentrations.Maximum",
-                              "Name": "MaxNconc",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.PhaseLookupValue, Models",
-                              "Start": "Germination",
-                              "End": "Maturity",
-                              "Name": "NitrogenDemandSwitch",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "Constant",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QStructuralPriority",
                           "Children": [],
@@ -4281,7 +3721,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QMetabolicPriority",
                           "Children": [],
@@ -4291,7 +3731,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QStoragePriority",
                           "Children": [],
@@ -4343,32 +3783,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 1.0,
                                   "Units": null,
-                                  "Name": "ReAllocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].StartLive.Nitrogen.Metabolic",
-                                  "Name": "MetabolicN",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].senescenceRate",
-                                  "Name": "SenescenceRate",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -4380,32 +3802,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 1.0,
                                   "Units": null,
-                                  "Name": "ReAllocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].StartLive.Nitrogen.Storage",
-                                  "Name": "StorageN",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].senescenceRate",
-                                  "Name": "SenescenceRate",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -4436,23 +3840,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 0.0,
                                   "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].StartLive.Nitrogen.Metabolic",
-                                  "Name": "MetabolicN",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -4464,23 +3859,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 0.0,
                                   "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Petiole].StartLive.Nitrogen.Storage",
-                                  "Name": "StorageN",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -4585,7 +3971,7 @@
                 {
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Leaf].senescenceRate",
-                  "Name": "SenescenceRate",
+                  "Name": "SenescenceRateFunction",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -4716,24 +4102,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.4,
-                  "Units": null,
-                  "Name": "CarbonConcentration",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
-                  "Name": "RetranslocateNitrogen",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -4827,37 +4195,15 @@
                       "Name": "DemandFunctions",
                       "Children": [
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Structural",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Petiole].TotalDMDemand",
-                              "Name": "DMDemandFunction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.5,
-                              "Units": null,
-                              "Name": "StructuralFraction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Metabolic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -4865,36 +4211,16 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Storage",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Petiole].TotalDMDemand",
-                              "Name": "DMDemandFunction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.5,
-                              "Units": null,
-                              "Name": "StorageFraction",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.2,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QStructuralPriority",
                           "Children": [],
@@ -4904,7 +4230,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.2,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QMetabolicPriority",
                           "Children": [],
@@ -4914,7 +4240,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.01,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QStoragePriority",
                           "Children": [],
@@ -4966,32 +4292,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 1.0,
                                   "Units": null,
-                                  "Name": "ReAllocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].StartLive.Carbon.Metabolic",
-                                  "Name": "MetabolicWt",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].senescenceRate",
-                                  "Name": "SenescenceRate",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -5003,32 +4311,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 1.0,
                                   "Units": null,
-                                  "Name": "ReAllocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].StartLive.Carbon.Storage",
-                                  "Name": "StorateC",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].senescenceRate",
-                                  "Name": "SenescenceRate",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -5059,23 +4349,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
+                                  "FixedValue": 1.0,
                                   "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].StartLive.Carbon.Metabolic",
-                                  "Name": "MetabolicC",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -5087,23 +4368,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
+                                  "FixedValue": 1.0,
                                   "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].StartLive.Carbon.Storage",
-                                  "Name": "StorateC",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -5115,6 +4387,45 @@
                               "ReadOnly": false
                             }
                           ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.NutrientProportionFunctions, Models",
+                      "Name": "PoolProportions",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.4,
+                          "Units": null,
+                          "Name": "Structural",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.4,
+                          "Units": null,
+                          "Name": "Metabolic",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.2,
+                          "Units": null,
+                          "Name": "Storage",
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -5171,36 +4482,23 @@
                       "Name": "DemandFunctions",
                       "Children": [
                         {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Structural",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].Nitrogen.Concentrations.Minimum",
-                              "Name": "MinNconc",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].Carbon.DemandsAllocated.Total",
-                              "Name": "PotentialDMAllocation",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": "g/m2/d",
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
+                          "Name": "Storage",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.DemandFunctions.DeficitDemandFunction, Models",
                           "Name": "Metabolic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5208,47 +4506,8 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.DemandFunctions.StorageNDemandFunction, Models",
-                          "Name": "Storage",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].Nitrogen.Concentrations.Maximum",
-                              "Name": "MaxNconc",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.PhaseLookupValue, Models",
-                              "Start": "Germination",
-                              "End": "Maturity",
-                              "Name": "NitrogenDemandSwitch",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "Constant",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QStructuralPriority",
                           "Children": [],
@@ -5258,7 +4517,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QMetabolicPriority",
                           "Children": [],
@@ -5268,7 +4527,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
+                          "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QStoragePriority",
                           "Children": [],
@@ -5320,32 +4579,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 1.0,
                                   "Units": null,
-                                  "Name": "ReAllocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].StartLive.Nitrogen.Metabolic",
-                                  "Name": "MetabolicN",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].senescenceRate",
-                                  "Name": "SenescenceRate",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -5357,32 +4598,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 1.0,
                                   "Units": null,
-                                  "Name": "ReAllocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].StartLive.Nitrogen.Storage",
-                                  "Name": "StorageC",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].senescenceRate",
-                                  "Name": "SenescenceRate",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -5413,23 +4636,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Metabolic",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 0.0,
                                   "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].StartLive.Nitrogen.Metabolic",
-                                  "Name": "MetabolicN",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -5441,23 +4655,14 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.Functions.SupplyFunctions.MobilisationSupplyFunction, Models",
                               "Name": "Storage",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
                                   "FixedValue": 0.0,
                                   "Units": null,
-                                  "Name": "ReTranslocationFactor",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].StartLive.Nitrogen.Storage",
-                                  "Name": "StorateN",
+                                  "Name": "Multiplier",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
                                   "Enabled": true,
@@ -5791,7 +4996,7 @@
                 },
                 {
                   "$type": "Models.Functions.MaximumFunction, Models",
-                  "Name": "SenescenceRate",
+                  "Name": "SenescenceRateFunction",
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
@@ -5938,24 +5143,6 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "RemobilisationCost",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.4,
-                  "Units": null,
-                  "Name": "CarbonConcentration",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.RetranslocateNonStructural, Models",
-                  "Name": "RetranslocateNitrogen",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -6494,7 +5681,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].Nitrogen.Concentrations.Minimum",
+                          "VariableName": "[Root].Nitrogen.ConcentrationOrProportion.Minimum",
                           "Name": "MinNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6525,7 +5712,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].Nitrogen.Concentrations.Critical",
+                              "VariableName": "[Root].Nitrogen.ConcentrationOrProportion.Critical",
                               "Name": "CritNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -6534,7 +5721,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].Nitrogen.Concentrations.Minimum",
+                              "VariableName": "[Root].Nitrogen.ConcentrationOrProportion.Minimum",
                               "Name": "MinNconc",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -6575,7 +5762,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].Nitrogen.Concentrations.Maximum",
+                          "VariableName": "[Root].Nitrogen.ConcentrationOrProportion.Maximum",
                           "Name": "MaxNconc",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -6624,7 +5811,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Root].Nitrogen.Concentrations.Minimum",
+                  "VariableName": "[Root].Nitrogen.ConcentrationOrProportion.Minimum",
                   "Name": "CriticalNConc",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -8696,7 +7883,7 @@
                       "Inverted": false,
                       "Minimum": 0.0,
                       "Maximum": "NaN",
-                      "Interval": 1.0,
+                      "Interval": "NaN",
                       "DateTimeAxis": false,
                       "CrossesAtZero": false
                     },
@@ -8875,7 +8062,7 @@
                       "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
+                      "Cumulative": true,
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "ReAllocation",
@@ -8904,7 +8091,7 @@
                       "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
+                      "Cumulative": true,
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "ReTranslocaiton",
@@ -8933,7 +8120,7 @@
                       "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
+                      "Cumulative": true,
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Uptake",
@@ -9001,7 +8188,7 @@
                       "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
+                      "Cumulative": true,
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "StorageRoot",
@@ -9030,7 +8217,7 @@
                       "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
+                      "Cumulative": true,
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Leaf",
@@ -9059,7 +8246,7 @@
                       "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
+                      "Cumulative": true,
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Petiole",
@@ -9088,7 +8275,7 @@
                       "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
+                      "Cumulative": true,
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Root",
@@ -9156,7 +8343,7 @@
                       "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
+                      "Cumulative": true,
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "ReAllocation",
@@ -9185,7 +8372,7 @@
                       "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
+                      "Cumulative": true,
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "ReTranslocaiton",
@@ -9214,7 +8401,7 @@
                       "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
+                      "Cumulative": true,
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Fixation",
@@ -9282,7 +8469,7 @@
                       "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
+                      "Cumulative": true,
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "StorageRoot",
@@ -9311,7 +8498,7 @@
                       "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
+                      "Cumulative": true,
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Leaf",
@@ -9340,7 +8527,7 @@
                       "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
+                      "Cumulative": true,
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Petiole",
@@ -9369,7 +8556,7 @@
                       "Y2FieldName": "",
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
+                      "Cumulative": true,
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Root",

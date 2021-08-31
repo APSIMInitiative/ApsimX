@@ -224,10 +224,10 @@ namespace Models.PMF
                 if (N.DemandsAllocated.Total > N.Demands.Total || MathUtilities.FloatsAreEqual(N.DemandsAllocated.Total, N.Demands.Total))
                     N.MaxCDelta = 100000000; //given high value so where there is no N deficit in organ and N limitation to growth  
                 else
-                    if (N.DemandsAllocated.Total == 0 | N.MinimumConcentration == 0)
+                    if (N.DemandsAllocated.Total == 0 | N.ConcentrationOrProportion.Structural == 0)
                     N.MaxCDelta = 0;
                 else
-                    N.MaxCDelta = N.DemandsAllocated.Total / N.MinimumConcentration;
+                    N.MaxCDelta = N.DemandsAllocated.Total / N.ConcentrationOrProportion.Structural;
 
                 var C = o.Carbon;
                 if ((C.DemandsAllocated.Metabolic + C.DemandsAllocated.Structural) != 0)

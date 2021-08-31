@@ -38,7 +38,7 @@
         /// <summary>The senescence rate function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
-        public IFunction SenescenceRate = null;
+        public IFunction senescenceRateFunction = null;
 
         /// <summary>The detachment rate function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -49,6 +49,11 @@
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/plant")]
         public NutrientPoolFunctions InitialWt = null;
+
+        /// <summary>The proportion of biomass respired each day</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("/d")]
+        private IFunction TotalDMDemand = null;
 
         /// <summary>The proportion of biomass respired each day</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -67,11 +72,11 @@
 
         /// <summary>The list of nurtients to arbitration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        public OrganNutrientDelta Carbon { get; set; }
+        public OrganNutrientDelta Carbon = null;
 
         /// <summary>The list of nurtients to arbitration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        public OrganNutrientDelta Nitrogen { get; set; }
+        public OrganNutrientDelta Nitrogen = null;
 
         
         ///2. Private And Protected Fields
@@ -80,19 +85,15 @@
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double BiomassToleranceValue = 0.0000000001;
 
-        private List<OrganNutrientDelta> nutrientsToArbitrate { get; set; }
-
+        
         ///3. The Constructor
         /// -------------------------------------------------------------------------------------------------
 
         /// <summary>Organ constructor</summary>
         public Organ()
         {
-            Carbon = new OrganNutrientDelta();
-            Nitrogen = new OrganNutrientDelta();
-            nutrientsToArbitrate = new List<OrganNutrientDelta>();
-            nutrientsToArbitrate.Add(Carbon);
-            nutrientsToArbitrate.Add(Nitrogen);
+            //Carbon = new OrganNutrientDelta();
+            //Nitrogen = new OrganNutrientDelta();
             Clear();
         }
 
@@ -171,6 +172,10 @@
 
         /// <summary>Rate of senescence for the day</summary>
         [JsonIgnore]
+        public double totalDMDemand { get; private set; }
+
+        /// <summary>Rate of senescence for the day</summary>
+        [JsonIgnore]
         public double senescenceRate { get; private set; }
 
         /// <summary>efficiency of converting allocated DM to wt</summary>
@@ -195,17 +200,17 @@
         /// <summary>Gets the maximum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double MaxNconc { get { return Nitrogen.Concentrations != null ? Nitrogen.Concentrations.Maximum : 0; } }
+        public double MaxNconc { get { return Nitrogen.ConcentrationOrProportion != null ? Nitrogen.ConcentrationOrProportion.Storage : 0; } }
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double MinNconc { get { return Nitrogen.Concentrations != null ? Nitrogen.Concentrations.Minimum : 0; } }
+        public double MinNconc { get { return Nitrogen.ConcentrationOrProportion != null ? Nitrogen.ConcentrationOrProportion.Structural : 0; } }
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double CritNconc { get { return Nitrogen.Concentrations != null ? Nitrogen.Concentrations.Critical : 0; } }
+        public double CritNconc { get { return Nitrogen.ConcentrationOrProportion != null ? Nitrogen.ConcentrationOrProportion.Metabolic : 0; } }
 
         /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
         [JsonIgnore]
@@ -282,9 +287,6 @@
             Senesced = new OrganNutrientStates(Cconc);
             Detached = new OrganNutrientStates(Cconc);
             Removed = new OrganNutrientStates(Cconc);
-
-            Carbon.Clear();
-            Nitrogen.Clear();
         }
 
         /// <summary>Clears the transferring biomass amounts.</summary>
@@ -315,6 +317,7 @@
         {
             if (parentPlant.IsAlive || parentPlant.IsEnding)
                 ClearBiomassFlows();
+            totalDMDemand = TotalDMDemand.Value();
         }
 
         /// <summary>Called when crop is ending</summary>
@@ -327,14 +330,12 @@
             {
                 Clear();
                 ClearBiomassFlows();
-                foreach (OrganNutrientDelta nut in nutrientsToArbitrate)
-                    nut.SetSuppliesAndDemands();  // This is necessary to have values assigned to the Nitrogen.Concentration members
                 Live.Carbon.Structural = InitialWt.Structural.Value()*Cconc;
                 Live.Carbon.Metabolic = InitialWt.Metabolic.Value()*Cconc;
                 Live.Carbon.Storage = InitialWt.Storage.Value()*Cconc;
-                Live.Nitrogen.Structural = Live.Weight.Total * Nitrogen.Concentrations.Minimum;
-                Live.Nitrogen.Metabolic = Live.Weight.Total * (Nitrogen.Concentrations.Critical - Nitrogen.Concentrations.Minimum);
-                Live.Nitrogen.Storage = Live.Weight.Total * (Nitrogen.Concentrations.Maximum - Nitrogen.Concentrations.Critical);
+                Live.Nitrogen.Structural = Live.Weight.Total * Nitrogen.ConcentrationOrProportion.Structural;
+                Live.Nitrogen.Metabolic = Live.Weight.Total * (Nitrogen.ConcentrationOrProportion.Metabolic - Nitrogen.ConcentrationOrProportion.Structural);
+                Live.Nitrogen.Storage = Live.Weight.Total * (Nitrogen.ConcentrationOrProportion.Structural - Nitrogen.ConcentrationOrProportion.Metabolic);
             }
         }
 
@@ -347,7 +348,7 @@
              // save current state
             if (parentPlant.IsAlive)
                 StartLive.SetTo(Live);
-            senescenceRate = SenescenceRate.Value();
+            senescenceRate = senescenceRateFunction.Value();
             dmConversionEfficiency = DMConversionEfficiency.Value();
         }
 
