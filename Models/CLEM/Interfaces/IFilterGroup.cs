@@ -18,11 +18,6 @@ namespace Models.CLEM.Interfaces
         IEnumerable<string> Parameters { get; }
 
         /// <summary>
-        /// The proportion of the filtered group to use
-        /// </summary>
-        double Proportion { get; set; }
-
-        /// <summary>
         /// Retrieves information on a property
         /// </summary>
         PropertyInfo GetProperty(string name);

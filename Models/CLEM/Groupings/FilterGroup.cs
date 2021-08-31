@@ -4,6 +4,7 @@ using Models.Core;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 
@@ -33,10 +34,6 @@ namespace Models.CLEM
         /// <inheritdoc/>
         [JsonIgnore]
         public IEnumerable<string> Parameters => properties.Keys;
-
-        /// <inheritdoc/>
-        [JsonIgnore]
-        public double Proportion { get; set; }
 
         /// <inheritdoc/>
         public PropertyInfo GetProperty(string name) => properties[name];
@@ -81,9 +78,11 @@ namespace Models.CLEM
         /// </summary>
         public IEnumerable<T> FilterProportion<T>(IEnumerable<T> source)
         {
-            double proportion = Proportion <= 0 ? 1 : Proportion;
-            int number = Convert.ToInt32(Math.Ceiling(proportion * source.Count()));
-
+            int number = source.Count();
+            foreach (var take in FindAllChildren<TakeFromFiltered>())
+            {
+                number = take.NumberToTake(number);
+            }
             return Filter(source).Take(number);
         }
 
@@ -97,5 +96,35 @@ namespace Models.CLEM
 
             return rules.Any() ? source.Where(item => rules.All(rule => rule(item))) : source;
         }
+
+        #region descriptive summary
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        {
+            return "\r\n</div>";
+        }
+
+        /// <summary>
+        /// Provides the closing html tags for object
+        /// </summary>
+        /// <returns></returns>
+        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        {
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
+                if (FindAllChildren<Filter>().Count() == 0)
+                    htmlWriter.Write("<div class=\"filter\">All individuals</div>");
+
+                return htmlWriter.ToString();
+            }
+        }
+
+
+        #endregion
     }
 }
