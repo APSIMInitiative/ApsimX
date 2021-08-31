@@ -241,7 +241,7 @@ namespace Models.PMF.Organs
         /// <summary>
         /// This encapsulates the leaves.
         /// </summary>
-        private CohortCohort cohort = new CohortCohort();
+        private Cohorts cohort = new Cohorts();
 
         /// <summary>The structure</summary>
         [Link(IsOptional = true)]
