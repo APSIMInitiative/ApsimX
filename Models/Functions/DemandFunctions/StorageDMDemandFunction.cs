@@ -4,6 +4,7 @@ using Models.Core;
 using Models.PMF.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.PMF;
+using Models.PMF.Organs;
 
 namespace Models.Functions.DemandFunctions
 {
@@ -23,7 +24,7 @@ namespace Models.Functions.DemandFunctions
 
         private IArbitration parentOrgan = null;
 
-        private IAmOrganHearMeRoar parentSimpleOrgan = null;
+        private Organ parentSimpleOrgan = null;
 
         private string parentOrganType = "";
  
@@ -45,9 +46,9 @@ namespace Models.Functions.DemandFunctions
                     if (ParentClass is IPlant)
                         throw new Exception(Name + "cannot find parent organ to get Structural and Storage DM status");
                 }
-                if (ParentClass is IAmOrganHearMeRoar)
+                if (ParentClass is Organ)
                 {
-                    parentSimpleOrgan = ParentClass as IAmOrganHearMeRoar;
+                    parentSimpleOrgan = ParentClass as Organ;
                     ParentOrganIdentified = true;
                     parentOrganType = "ISubscribeToBiomassArbitration";
                     if (ParentClass is IPlant)

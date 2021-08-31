@@ -5,32 +5,25 @@ using Models.PMF;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 
-namespace Models.Functions.DemandFunctions
+namespace Models.Functions.SupplyFunctions
 {
     /// <summary>
-    /// The partitioning of daily N supply to storage N attempts to bring the organ's N content to the maximum concentration.
+    /// Calculates the Deficit of a given labile nutrient pool and returns it to use for a demand.
     /// </summary>
     [Serializable]
-    [Description("This function calculates...")]
+    [Description("This function calculates supplies of nutrients from metabolic or storage pools")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class StorageNDemandFunction : Model, IFunction, ICustomDocumentation
+    [ValidParent(ParentType = typeof(NutrientPoolFunctions))]
+    public class MobilisationSupplyFunction : Model, IFunction, ICustomDocumentation
     {
-        /// <summary>The maximum N concentration of the organ</summary>
-        [Description("The maximum N concentration of the organ")]
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction maxNConc = null;
+        /// <summary>Value to multiply demand for.  Use to switch demand on and off</summary>
+        [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
+        [Description("Multiplies calculated supply.  Use to switch ReAllocation on and off or to throttle ReTranslocation")]
+        [Units("unitless")]
+        public IFunction multiplier = null;
 
-        /// <summary>Switch to modulate N demand</summary>
-        [Description("Switch to modulate N demand")]
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction nitrogenDemandSwitch = null;
-
-        private IArbitration parentOrgan = null;
-
-        private Organ parentSimpleOrgan = null;
-
-        private string parentOrganType = "";
+        private Organ parentOrgan = null;
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
@@ -42,19 +35,10 @@ namespace Models.Functions.DemandFunctions
             IModel ParentClass = this.Parent;
             while (!ParentOrganIdentified)
             {
-                if (ParentClass is IArbitration)
-                {
-                    parentOrgan = ParentClass as IArbitration;
-                    ParentOrganIdentified = true;
-                    parentOrganType = "IArbitration";
-                    if (ParentClass is IPlant)
-                        throw new Exception(Name + "cannot find parent organ to get Structural and Storage N status");
-                }
                 if (ParentClass is Organ)
                 {
-                    parentSimpleOrgan = ParentClass as Organ;
+                    parentOrgan = ParentClass as Organ;
                     ParentOrganIdentified = true;
-                    parentOrganType = "ISubscribeToBiomassArbitration";
                     if (ParentClass is IPlant)
                         throw new Exception(Name + "cannot find parent organ to get Structural and Storage DM status");
                 }
@@ -65,22 +49,40 @@ namespace Models.Functions.DemandFunctions
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
         {
-            if (parentOrganType == "IArbitration")
+            if ((this.Name == "Metabolic") && (this.Parent.Name == "ReAllocation") && (this.Parent.Parent.Name == "Nitrogen"))
             {
-                double potentialAllocation = parentOrgan.potentialDMAllocation.Structural + parentOrgan.potentialDMAllocation.Metabolic;
-                double NDeficit = Math.Max(0.0, maxNConc.Value() * (parentOrgan.Live.Wt + potentialAllocation) - parentOrgan.Live.N);
-                NDeficit *= nitrogenDemandSwitch.Value();
-                return Math.Max(0, NDeficit - parentOrgan.NDemand.Structural - parentOrgan.NDemand.Metabolic);
+                return parentOrgan.StartLive.Nitrogen.Metabolic * multiplier.Value() * parentOrgan.senescenceRate;
             }
-            if (parentOrganType == "ISubscribeToBiomassArbitration")
+            else if ((this.Name == "Storage") && (this.Parent.Name == "ReAllocation") && (this.Parent.Parent.Name == "Nitrogen"))
             {
-                double potentialAllocation = parentSimpleOrgan.Carbon.DemandsAllocated.Structural + parentSimpleOrgan.Carbon.DemandsAllocated.Metabolic;
-                double NDeficit = Math.Max(0.0, maxNConc.Value() * (parentSimpleOrgan.Live.Wt + potentialAllocation) - parentSimpleOrgan.Live.Nitrogen.Total);
-                NDeficit *= nitrogenDemandSwitch.Value();
-                return Math.Max(0, NDeficit - parentSimpleOrgan.Nitrogen.Demands.Structural - parentSimpleOrgan.Nitrogen.Demands.Metabolic);
+                return parentOrgan.StartLive.Nitrogen.Storage * multiplier.Value() * parentOrgan.senescenceRate;
+            }
+            else if ((this.Name == "Metabolic") && (this.Parent.Name == "ReAllocation") && (this.Parent.Parent.Name == "Carbon"))
+            {
+                return parentOrgan.StartLive.Carbon.Metabolic * multiplier.Value() * parentOrgan.senescenceRate;
+            }
+            else if ((this.Name == "Storage") && (this.Parent.Name == "ReAllocation") && (this.Parent.Parent.Name == "Carbon"))
+            {
+                return parentOrgan.StartLive.Carbon.Storage * multiplier.Value() * parentOrgan.senescenceRate;
+            }
+            if ((this.Name == "Metabolic") && (this.Parent.Name == "ReTranslocation") && (this.Parent.Parent.Name == "Nitrogen"))
+            {
+                return parentOrgan.StartLive.Nitrogen.Metabolic * multiplier.Value();
+            }
+            else if ((this.Name == "Storage") && (this.Parent.Name == "ReTranslocation") && (this.Parent.Parent.Name == "Nitrogen"))
+            {
+                return parentOrgan.StartLive.Nitrogen.Storage * multiplier.Value();
+            }
+            else if ((this.Name == "Metabolic") && (this.Parent.Name == "ReTranslocation") && (this.Parent.Parent.Name == "Carbon"))
+            {
+                return parentOrgan.StartLive.Carbon.Metabolic * multiplier.Value();
+            }
+            else if ((this.Name == "Storage") && (this.Parent.Name == "ReTranslocation") && (this.Parent.Parent.Name == "Carbon"))
+            {
+                return parentOrgan.StartLive.Carbon.Storage * multiplier.Value();
             }
             else
-                throw new Exception("Could not locate parent organ");
+                throw new Exception(this.FullPath + " Must be named Metabolic or Structural to represent the pool it is parameterising and be placed on a NutrientDemand Object which is on Carbon or Nitrogen OrganNutrienDeltaObject");
         }
 
             /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

@@ -6,7 +6,7 @@
     using Models.PMF.Organs;
     using System;
     using System.Collections.Generic;
-    
+
     /// <summary>
     /// This class holds the functions for calculating values for each Nutrient component. 
     /// </summary>
@@ -34,9 +34,7 @@
         public IFunction Storage = null;
 
         /// <summary> The constructor</summary>
-        public NutrientPoolFunctions()
-        {
-        }
+        public NutrientPoolFunctions() { }
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
         /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
@@ -92,7 +90,7 @@
         public NutrientPoolFunctions ReTranslocation = null;
 
         /// <summary> The constructor</summary>
-        public NutrientSupplyFunctions(){}
+        public NutrientSupplyFunctions() { }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
@@ -159,7 +157,7 @@
         public IFunction QStoragePriority = null;
 
         /// <summary> The constructor</summary>
-        public NutrientDemandFunctions(){ }
+        public NutrientDemandFunctions() { }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
@@ -193,24 +191,91 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(OrganNutrientDelta))]
-    public class NutrientConcentrationFunctions : Model
+    public class NutrientConcentrationFunctions : Model, IConcentratinOrProportion
     {
         /// <summary>Maximum Nutrient Concentration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/g")]
+        [Units("g Nutrient/ g dWt")]
         public IFunction Maximum = null;
         /// <summary>Critical Nutrient Concentration</summary>
         /// <summary>Maximum Nutrient Concentration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/g")]
+        [Units("g Nutrient/ g dWt")]
         public IFunction Critical = null;
         /// <summary>Minimum Nutrient Concentration</summary>
         /// <summary>Maximum Nutrient Concentration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        [Units("g/g")]
+        [Units("g Nutrient/ g dWt")]
         public IFunction Minimum = null;
 
-        /// <summary> The constructor</summary>
-        public NutrientConcentrationFunctions(){ }
+        /// <summary> Interface member that is got by other methods </summary>
+        public NutrientPoolStates ConcentrationsOrProportions
+        {
+            get
+            {
+                NutrientPoolStates concentrationOrProportion = new NutrientPoolStates()
+                {
+                    Structural = Minimum.Value(),
+                    Metabolic = Critical.Value(),
+                    Storage = Maximum.Value(),
+                };
+                return concentrationOrProportion;
+            }
+        }
     }
+
+    /// <summary>
+    /// This class holds the functions for calculating the Nutrient concentration thresholds
+    /// </summary>
+    [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(OrganNutrientDelta))]
+    public class NutrientProportionFunctions : Model, IConcentratinOrProportion
+    {
+        /// <summary>Maximum Nutrient Concentration</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g Nutrient/g Nutrient")]
+        public IFunction Structural = null;
+        /// <summary>Critical Nutrient Concentration</summary>
+        /// <summary>Maximum Nutrient Concentration</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g Nutrient/g Nutrient")]
+        public IFunction Metabolic = null;
+        /// <summary>Minimum Nutrient Concentration</summary>
+        /// <summary>Maximum Nutrient Concentration</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g Nutrient/g Nutrient")]
+        public IFunction Storage = null;
+
+        /// <summary> Interface member that is got by other methods </summary>
+        public NutrientPoolStates ConcentrationsOrProportions
+        {
+            get
+            {
+                NutrientPoolStates concentrationOrProportion = new NutrientPoolStates()
+                {
+                    Structural = Structural.Value(),
+                    Metabolic = Metabolic.Value(),
+                    Storage = Storage.Value(),
+                };
+                return concentrationOrProportion;
+            }
+
+        }
+    }
+
+    /// <summary>
+    /// Interface class for Uptake Methods.
+    /// </summary>
+    public interface IConcentratinOrProportion
+
+    {
+        /// <summary>
+        /// Nutrient concnetration or fraction values
+        /// </summary>
+        NutrientPoolStates ConcentrationsOrProportions { get; }
+    }
+
+
 }

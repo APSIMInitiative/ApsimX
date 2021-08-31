@@ -16,11 +16,11 @@
     /// </summary>
     public interface IAmOrganHearMeRoar
     {
-        ///<summary>The Carbon Element</summary>
-        OrganNutrientDelta Carbon { get; }
+        //<summary>The Carbon Element</summary>
+        //OrganNutrientDelta Carbon { get; }
 
-        ///<summary>The Carbon Element</summary>
-        OrganNutrientDelta Nitrogen { get; }
+        //<summary>The Carbon Element</summary>
+        //OrganNutrientDelta Nitrogen { get; }
 
         /// <summary>Gets the total biomass</summary>
         OrganNutrientStates Total { get; }
@@ -91,11 +91,11 @@
         /// <summary>Pools can not be negative.  Test for negatives each time an opperator is applied</summary>
         private void testPools(NutrientPoolStates p)
         {
-            if (p.Structural < 0)
+            if (p.Structural < -0.0000000000001)
                     throw new Exception(this.FullPath + ".Structural was set to negative value");
-            if (p.Metabolic < 0)
+            if (p.Metabolic < -0.0000000000001)
                 throw new Exception(this.FullPath + ".Metabolic was set to negative value");
-            if (p.Storage < 0)
+            if (p.Storage < -0.0000000000001)
                 throw new Exception(this.FullPath + ".Storage was set to negative value");
             if (Double.IsNaN(p.Structural))
                 throw new Exception(this.FullPath + ".Structural was set to nan");
@@ -108,16 +108,30 @@
         /// <summary>Add Delta</summary>
         public void AddDelta(NutrientPoolStates delta)
         {
+            if (delta.Structural < -0.0000000000001)
+                throw new Exception(this.FullPath + ".Structural trying to add a negative");
+            if (delta.Metabolic < -0.0000000000001)
+                throw new Exception(this.FullPath + ".Metabolic trying to add a negative");
+            if (delta.Storage < -0.0000000000001)
+                throw new Exception(this.FullPath + ".Storage trying to add a negative");
+
             Structural += delta.Structural;
             Metabolic += delta.Metabolic;
             Storage += delta.Storage;
 
-            testPools(this); 
+            testPools(this);
         }
 
         /// <summary>subtract Delta</summary>
         public void SubtractDelta(NutrientPoolStates delta)
         {
+            if (delta.Structural < -0.0000000000001)
+                throw new Exception(this.FullPath + ".Structural trying to subtract a negative");
+            if (delta.Metabolic < -0.0000000000001)
+                throw new Exception(this.FullPath + ".Metabolic trying to subtract a negative");
+            if (delta.Storage < -0.0000000000001)
+                throw new Exception(this.FullPath + ".Storage trying to subtract a negative");
+
             Structural -= delta.Structural;
             Metabolic -= delta.Metabolic;
             Storage -= delta.Storage;
@@ -456,17 +470,4 @@
             ReTranslocation.Clear();
         }
     }
-
-    /// <summary>Thresholds for nutrient concentrations</summary>
-    [Serializable]
-    public class NutrientConcentrations: Model
-    {
-        /// <summary>Maximum Nutrient Concentration</summary>
-        public double Maximum { get; set; }
-        /// <summary>Critical Nutrient Concentration</summary>
-        public double Critical { get; set; }
-        /// <summary>Minimum Nutrient Concentration</summary>
-        public double Minimum { get; set; }
-    }
-
 }
