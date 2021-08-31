@@ -74,19 +74,19 @@ namespace Models.PMF.Organs
         /// Total dead LAI.
         /// </summary>
         [Units("m^2/m^2")]
-        public double LAIDead { get; private set; }
+        public double LaiDead { get; private set; }
 
         /// <summary>
         /// Total live LAI.
         /// </summary>
         [Units("m^2/m^2")]
-        public double LAI { get; private set; }
+        public double Lai { get; private set; }
 
         /// <summary>
         /// Change total leaf area.
         /// </summary>
         /// <param name="value">New LAI value.</param>
-        public void SetLAI(double value)
+        public void SetLai(double value)
         {
             if (LAI > 0)
             {
