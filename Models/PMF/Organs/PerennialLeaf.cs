@@ -506,11 +506,11 @@ namespace Models.PMF.Organs
             double growthRespFactor = ((1 / DMConversionEfficiency.Value()) * (12.0 / 30.0) - 1.0 * CarbonConcentration.Value()) * 44.0 / 12.0;
             GrowthRespiration = (dryMatter.Structural + dryMatter.Storage) * growthRespFactor;
             
-            cohort.AddNewLeafMaterial(StructuralWt: Math.Min(dryMatter.Structural * DMConversionEfficiency.Value(), DMDemand.Structural),
-                               StorageWt: dryMatter.Storage * DMConversionEfficiency.Value(),
-                               StructuralN: 0,
-                               StorageN: 0,
-                               SLA: SpecificLeafAreaFunction.Value());
+            cohort.AddNewLeafMaterial(structuralMass: Math.Min(dryMatter.Structural * DMConversionEfficiency.Value(), DMDemand.Structural),
+                               storageMass: dryMatter.Storage * DMConversionEfficiency.Value(),
+                               structuralN: 0,
+                               storageN: 0,
+                               sla: SpecificLeafAreaFunction.Value());
 
             cohort.DoBiomassRetranslocation(dryMatter.Retranslocation);
         }
@@ -518,11 +518,11 @@ namespace Models.PMF.Organs
         /// <summary>Sets the n allocation.</summary>
         public void SetNitrogenAllocation(BiomassAllocationType nitrogen)
         {
-            cohort.AddNewLeafMaterial(StructuralWt: 0,
-                StorageWt: 0,
-                StructuralN: nitrogen.Structural,
-                StorageN: nitrogen.Storage,
-                SLA: SpecificLeafAreaFunction.Value());
+            cohort.AddNewLeafMaterial(structuralMass: 0,
+                storageMass: 0,
+                structuralN: nitrogen.Structural,
+                storageN: nitrogen.Storage,
+                sla: SpecificLeafAreaFunction.Value());
 
             cohort.DoNitrogenRetranslocation(nitrogen.Retranslocation + nitrogen.Reallocation);
         }

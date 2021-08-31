@@ -56,11 +56,24 @@ namespace Models.PMF.Organs
     [Serializable]
     public class CohortCohort
     {
+        /// <summary>
+        /// The leaves in the cohort.
+        /// </summary>
         private List<PerrenialLeafCohort> leaves = new List<PerrenialLeafCohort>();
+
+        /// <summary>
+        /// Running total of the live biomass of all leaves.
+        /// </summary>
         private Biomass live = new Biomass();
+
+        /// <summary>
+        /// Running total of the dead biomass of all leaves.
+        /// </summary>
         private Biomass dead = new Biomass();
 
-        /// <summary>Total dead LAI.</summary>
+        /// <summary>
+        /// Total dead LAI.
+        /// </summary>
         [Units("m^2/m^2")]
         public double LAIDead
         {
@@ -73,7 +86,9 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Total live LAI.</summary>
+        /// <summary>
+        /// Total live LAI.
+        /// </summary>
         [Units("m^2/m^2")]
         public double LAI
         {
@@ -125,21 +140,21 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Add new leaf material to the last leaf in the list.
         /// </summary>
-        /// <param name="StructuralWt">Structural mass to remove.</param>
-        /// <param name="StorageWt"></param>
-        /// <param name="StructuralN"></param>
-        /// <param name="StorageN"></param>
-        /// <param name="SLA"></param>
-        public void AddNewLeafMaterial(double StructuralWt, double StorageWt, double StructuralN, double StorageN, double SLA)
+        /// <param name="structuralMass">Structural biomass to add to the leaf.</param>
+        /// <param name="storageMass">Storage biomass to add to the leaf.</param>
+        /// <param name="structuralN">Sturctural N to add to the leaf.</param>
+        /// <param name="storageN">Storage N to add to the leaf..</param>
+        /// <param name="sla">Specific leaf area.</param>
+        public void AddNewLeafMaterial(double structuralMass, double storageMass, double structuralN, double storageN, double sla)
         {
             foreach (Biomass biomass in new[] { leaves[leaves.Count - 1].Live, live })
             {
-                biomass.StructuralWt += StructuralWt;
-                biomass.StorageWt += StorageWt;
-                biomass.StructuralN += StructuralN;
-                biomass.StorageN += StorageN;
+                biomass.StructuralWt += structuralMass;
+                biomass.StorageWt += storageMass;
+                biomass.StructuralN += structuralN;
+                biomass.StorageN += storageN;
             }
-            leaves[leaves.Count - 1].Area += (StructuralWt + StorageWt) * SLA;
+            leaves[leaves.Count - 1].Area += (structuralMass + storageMass) * sla;
             if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
                 throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
         }
@@ -273,16 +288,20 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Add a leaf to the cohort.
         /// </summary>
+        /// <param name="initialMass">Initial mass of the leaf.</param>
+        /// <param name="minNConc">Minimum N concentration of the new leaf.</param>
+        /// <param name="maxNConc">Maximum N concentration in the new leaf.</param>
+        /// <param name="sla">Specific leaf area of the new leaf.</param>
         public void AddLeaf(double initialMass, double minNConc, double maxNConc, double sla)
         {
             leaves.Add(new PerrenialLeafCohort());
             if (leaves.Count == 1)
             {
                 AddNewLeafMaterial(initialMass,
-                                   StorageWt: 0,
-                                   StructuralN: initialMass * minNConc,
-                                   StorageN: initialMass * (maxNConc - minNConc),
-                                   SLA: sla);
+                                   storageMass: 0,
+                                   structuralN: initialMass * minNConc,
+                                   storageN: initialMass * (maxNConc - minNConc),
+                                   sla: sla);
             }
             if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
                 throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
