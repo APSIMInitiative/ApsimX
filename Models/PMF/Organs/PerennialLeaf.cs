@@ -122,7 +122,7 @@ namespace Models.PMF.Organs
             }
             set
             {
-                cohort.LAI = value;
+                cohort.SetLai(value);
             }
         }
 
