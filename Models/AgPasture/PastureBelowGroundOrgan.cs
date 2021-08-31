@@ -101,14 +101,15 @@
             TargetDistribution = RootDistributionTarget();
         }
 
-        /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
-        public double NConcOptimum { get; set; } = 0.02;
+        /// <summary>Minimum rooting depth (mm).</summary>
+        public double RootDepthMinimum { get; set; } = 50.0;
 
-        /// <summary>Gets or sets the minimum N concentration, structural N (kg/kg).</summary>
-        public double NConcMinimum { get; set; } = 0.006;
+        /// <summary>Maximum rooting depth (mm).</summary>
+        public double RootDepthMaximum { get; set; } = 750.0;
 
-        /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
-        public double NConcMaximum { get; set; } = 0.025;
+        /// <summary>Daily root elongation rate at optimum temperature (mm/day).</summary>
+        [Units("mm/day")]
+        public double RootElongationRate { get; set; } = 25.0;
 
         /// <summary>Depth from surface where root proportion starts to decrease (mm).</summary>
         [Units("mm")]
@@ -124,20 +125,19 @@
         /// <summary>Specific root length (m/gDM).</summary>
         public double SpecificRootLength { get; set; } = 100.0;
 
-        /// <summary>Minimum rooting depth (mm).</summary>
-        public double RootDepthMinimum { get; set; } = 50.0;
+        /// <summary>N concentration for optimum growth (kg/kg).</summary>
+        public double NConcOptimum { get; set; } = 0.02;
 
-        /// <summary>Maximum rooting depth (mm).</summary>
-        public double RootDepthMaximum { get; set; } = 750.0;
+        /// <summary>Minimum N concentration, structural N (kg/kg).</summary>
+        public double NConcMinimum { get; set; } = 0.006;
 
-        /// <summary>Daily root elongation rate at optimum temperature (mm/day).</summary>
-        [Units("mm/day")]
-        public double RootElongationRate { get; set; } = 25.0;
+        /// <summary>Maximum N concentration, for luxury uptake (kg/kg).</summary>
+        public double NConcMaximum { get; set; } = 0.025;
 
-        /// <summary>Ammonium uptake coefficient.</summary>
+        /// <summary>Ammonium uptake coefficient (/ppm).</summary>
         public double KNH4 { get; set; } = 0.01;
 
-        /// <summary>Nitrate uptake coefficient.</summary>
+        /// <summary>Nitrate uptake coefficient (/ppm).</summary>
         public double KNO3 { get; set; } = 0.02;
 
         /// <summary>Maximum daily amount of N that can be taken up by the plant (kg/ha).</summary>
