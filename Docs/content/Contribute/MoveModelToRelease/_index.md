@@ -7,12 +7,12 @@ Once a model has been approved by the APSIM Initiative it can be moved into the 
 
 1. Copy the plant model node from the Replacements node in the prototype simulation
 ![Copy model from replacements](/images/Development.Contribute.MoveModelToRelease.CopyModel.png)
-2. Paste this into a text editor and save as an xml file into ApsimX\Models\Resources folder.
+2. Paste this into a text editor and save as a json file into ApsimX\Models\Resources folder.
 3. Add the new file into the APSIMX solution. In VisualStudio, use the Solution Explorer tab 
 to locate Model\Resources in the Models project, right-click on Resources to open a pop-up menu, 
-select Add>Existing Item. Navigate to the folder where the newly created xml file was saved, 
+select Add>Existing Item. Navigate to the folder where the newly created json file was saved, 
 select it and click Add. The file should now appear under Model\Resources.
-![Add model xml as resource](/images/Development.Contribute.MoveModelToRelease.AddModelXmlAsResource.png)
+![Add model json as resource](/images/Development.Contribute.MoveModelToRelease.AddModelXmlAsResource.png)
 5. Locate it and right-click, select properties and change Build Action to ‘None’.
 6. Add a reference to the model as an Apsim resource. For this, open the Resources.resx file
  (locate under Model/Properties). Copy a node from a similar existing model and change the name 

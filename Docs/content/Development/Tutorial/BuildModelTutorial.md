@@ -217,3 +217,4 @@ The implementation is quite simple:
 2. It tests the current simulation date (*clock.Today*) to see if it is greater than the user specified *StartDate*
 3. If the simulation date is greater than the start date it modifies the rainfall.
 
+It is worth noting that when multiple models respond to a published event, they will be processed in the order they appear in the Explorer tree structure. In this example, if two instances the model were provided, they both respond to the published PreparingNewWeatherData event. The first would provide the response outlined above, with the second model using this altered rainfall as its OriginalRainfall and further modifying the rainfall in weather.
