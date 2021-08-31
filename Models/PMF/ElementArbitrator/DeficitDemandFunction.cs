@@ -1,25 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
 using Models.Core;
+using Models.Functions;
 using Models.PMF;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 
-namespace Models.Functions.SupplyFunctions
+namespace Models.PMF
 {
     /// <summary>
     /// Calculates the Deficit of a given labile nutrient pool and returns it to use for a demand.
     /// </summary>
     [Serializable]
-    [Description("This function calculates supplies of nutrients from metabolic or storage pools")]
+    [Description("This function calculates demands for metabolic and storage pools based on the size of the potential deficits of these pools.  For nutrients is uses maximum, critical and minimum concentration thresholds and for carbon it uses structural, metabolic and storage partitioning proportions to ")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(NutrientPoolFunctions))]
-    public class MobilisationSupplyFunction : Model, IFunction, ICustomDocumentation
+    [ValidParent(ParentType = typeof(NutrientDemandFunctions))]
+    public class DeficitDemandFunction : Model, IFunction, ICustomDocumentation
     {
         /// <summary>Value to multiply demand for.  Use to switch demand on and off</summary>
         [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
-        [Description("Multiplies calculated supply.  Use to switch ReAllocation on and off or to throttle ReTranslocation")]
+        [Description("Multiplies calculated demand.  Use to switch demand on and off")]
         [Units("unitless")]
         public IFunction multiplier = null;
 
@@ -49,40 +50,54 @@ namespace Models.Functions.SupplyFunctions
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
         {
-            if ((this.Name == "Metabolic") && (this.Parent.Name == "ReAllocation") && (this.Parent.Parent.Name == "Nitrogen"))
+            if ((this.Name == "Structural") && (this.Parent.Parent.Name == "Nitrogen"))
             {
-                return parentOrgan.StartLive.Nitrogen.Metabolic * multiplier.Value() * parentOrgan.senescenceRate;
+                return parentOrgan.Carbon.DemandsAllocated.Total * parentOrgan.Nitrogen.ConcentrationOrProportion.Structural;
             }
-            else if ((this.Name == "Storage") && (this.Parent.Name == "ReAllocation") && (this.Parent.Parent.Name == "Nitrogen"))
+            
+            if ((this.Name == "Structural") && (this.Parent.Parent.Name == "Carbon"))
             {
-                return parentOrgan.StartLive.Nitrogen.Storage * multiplier.Value() * parentOrgan.senescenceRate;
+                return parentOrgan.totalDMDemand * parentOrgan.Carbon.ConcentrationOrProportion.Structural;
             }
-            else if ((this.Name == "Metabolic") && (this.Parent.Name == "ReAllocation") && (this.Parent.Parent.Name == "Carbon"))
+
+            double deficit = Double.NaN;
+            double PotentialWt = (parentOrgan.StartLive.Carbon.Total + parentOrgan.Carbon.DemandsAllocated.Total)/parentOrgan.Cconc;
+            
+            if ((this.Name == "Metabolic") && (this.Parent.Parent.Name == "Nitrogen"))
             {
-                return parentOrgan.StartLive.Carbon.Metabolic * multiplier.Value() * parentOrgan.senescenceRate;
+                double targetMetabolicN = (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrProportion.Metabolic) - (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrProportion.Structural);
+                deficit = targetMetabolicN - parentOrgan.Live.Nitrogen.Metabolic;
             }
-            else if ((this.Name == "Storage") && (this.Parent.Name == "ReAllocation") && (this.Parent.Parent.Name == "Carbon"))
+
+            double potentialStructuralC = parentOrgan.Live.Carbon.Structural + parentOrgan.totalDMDemand * parentOrgan.Carbon.ConcentrationOrProportion.Structural;
+            double potentialTotalC = potentialStructuralC / parentOrgan.Carbon.ConcentrationOrProportion.Structural;
+
+            if ((this.Name == "Metabolic") && (this.Parent.Parent.Name == "Carbon"))
             {
-                return parentOrgan.StartLive.Carbon.Storage * multiplier.Value() * parentOrgan.senescenceRate;
+                double targetMetabolicC = potentialTotalC * parentOrgan.Carbon.ConcentrationOrProportion.Metabolic;
+                deficit = targetMetabolicC - parentOrgan.Live.Carbon.Metabolic;
             }
-            if ((this.Name == "Metabolic") && (this.Parent.Name == "ReTranslocation") && (this.Parent.Parent.Name == "Nitrogen"))
+            
+            else if ((this.Name == "Storage") && (this.Parent.Parent.Name == "Nitrogen"))
             {
-                return parentOrgan.StartLive.Nitrogen.Metabolic * multiplier.Value();
+                double targetStorageN = (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrProportion.Storage) - (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrProportion.Metabolic);
+                deficit = targetStorageN - parentOrgan.Live.Nitrogen.Storage;
             }
-            else if ((this.Name == "Storage") && (this.Parent.Name == "ReTranslocation") && (this.Parent.Parent.Name == "Nitrogen"))
+            
+            else if ((this.Name == "Storage") && (this.Parent.Parent.Name == "Carbon"))
             {
-                return parentOrgan.StartLive.Nitrogen.Storage * multiplier.Value();
+                double targetStorageC = potentialTotalC * parentOrgan.Carbon.ConcentrationOrProportion.Storage; 
+                deficit = targetStorageC - parentOrgan.Live.Nitrogen.Storage;
             }
-            else if ((this.Name == "Metabolic") && (this.Parent.Name == "ReTranslocation") && (this.Parent.Parent.Name == "Carbon"))
-            {
-                return parentOrgan.StartLive.Carbon.Metabolic * multiplier.Value();
-            }
-            else if ((this.Name == "Storage") && (this.Parent.Name == "ReTranslocation") && (this.Parent.Parent.Name == "Carbon"))
-            {
-                return parentOrgan.StartLive.Carbon.Storage * multiplier.Value();
-            }
+            
+            if (Double.IsNaN(deficit))
+                    throw new Exception(this.FullPath + " Must be named Metabolic or Structural to represent the pool it is parameterising and be placed on a NutrientDemand Object which is on Carbon or Nitrogen OrganNutrienDeltaObject");
+
+            // Deficit is limited to max of zero as it cases where ConcentrationsOrProportions change deficits can become negative.
+            if (multiplier != null)
+                return Math.Max(0, deficit * multiplier.Value());
             else
-                throw new Exception(this.FullPath + " Must be named Metabolic or Structural to represent the pool it is parameterising and be placed on a NutrientDemand Object which is on Carbon or Nitrogen OrganNutrienDeltaObject");
+                return Math.Max(0, deficit);
         }
 
             /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

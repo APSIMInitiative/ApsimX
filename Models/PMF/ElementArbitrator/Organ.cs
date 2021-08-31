@@ -330,12 +330,20 @@
             {
                 Clear();
                 ClearBiomassFlows();
-                Live.Carbon.Structural = InitialWt.Structural.Value()*Cconc;
-                Live.Carbon.Metabolic = InitialWt.Metabolic.Value()*Cconc;
-                Live.Carbon.Storage = InitialWt.Storage.Value()*Cconc;
-                Live.Nitrogen.Structural = Live.Weight.Total * Nitrogen.ConcentrationOrProportion.Structural;
-                Live.Nitrogen.Metabolic = Live.Weight.Total * (Nitrogen.ConcentrationOrProportion.Metabolic - Nitrogen.ConcentrationOrProportion.Structural);
-                Live.Nitrogen.Storage = Live.Weight.Total * (Nitrogen.ConcentrationOrProportion.Structural - Nitrogen.ConcentrationOrProportion.Metabolic);
+                NutrientPoolStates initC = new NutrientPoolStates()
+                {
+                    Structural = InitialWt.Structural.Value() * Cconc,
+                    Metabolic = InitialWt.Metabolic.Value() * Cconc,
+                    Storage = InitialWt.Storage.Value() * Cconc,
+                };
+                Live.Carbon.SetTo(initC);
+                NutrientPoolStates initN = new NutrientPoolStates()
+                {
+                    Structural = Live.Weight.Total * Nitrogen.ConcentrationOrProportion.Structural,
+                    Metabolic = Live.Weight.Total * (Nitrogen.ConcentrationOrProportion.Metabolic - Nitrogen.ConcentrationOrProportion.Structural),
+                    Storage = Live.Weight.Total * (Nitrogen.ConcentrationOrProportion.Storage - Nitrogen.ConcentrationOrProportion.Metabolic),
+                };
+                Live.Nitrogen.SetTo(initN);
             }
         }
 
@@ -345,7 +353,7 @@
         [EventSubscribe("DoPotentialPlantGrowth")]
         protected virtual void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-             // save current state
+            // save current state
             if (parentPlant.IsAlive)
                 StartLive.SetTo(Live);
             senescenceRate = senescenceRateFunction.Value();
