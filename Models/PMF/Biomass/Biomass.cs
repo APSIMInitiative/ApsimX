@@ -14,7 +14,7 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(IOrgan))]
     [ValidParent(ParentType = typeof(Plant))]
     [ValidParent(ParentType = typeof(IOrgan))]
-    public class Biomass: Model
+    public class Biomass : Model
     {
         /// <summary>The structural wt</summary>
         protected double _StructuralWt = 0;
