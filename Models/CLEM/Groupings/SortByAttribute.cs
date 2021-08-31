@@ -59,21 +59,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ToString()
         {
-            using (StringWriter sortString = new StringWriter())
-            {
-                sortString.Write("Sort by Attribute");
-                if (this.AttributeTag == null)
-                    sortString.Write($"[NO TAG]");
-                else
-                {
-                    sortString.Write($"[{AttributeTag}]");
-                    if (FilterStyle == AttributeFilterStyle.Exists)
-                        sortString.Write((FilterStyle == AttributeFilterStyle.Exists)?" exists": " value");
-
-                    sortString.WriteLine($" {SortDirection.ToString().ToLower()}");
-                }
-                return sortString.ToString();
-            }
+            return sortString(false);
         }
 
         /// <summary>
@@ -82,16 +68,28 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public string ToHTMLString()
         {
-            using (StringWriter sortString = new StringWriter())
-            {
-                sortString.Write($"Sort by Attribute({CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag")})");
-                sortString.Write((FilterStyle == AttributeFilterStyle.Exists) ? " exists" : " value");
-                sortString.WriteLine($" {SortDirection.ToString().ToLower()}");
-                return sortString.ToString();
-            }
+            return sortString(true);
         }
 
+        private string sortString(bool htmltags)
+        {
+            string cssSet = "";
+            string cssClose = "";
+            if (htmltags)
+            {
+                cssSet = "<span class = \"filterset\">";
+                cssClose = "</span>";
+            }
 
+            using (StringWriter sortWriter = new StringWriter())
+            {
+                sortWriter.Write($"Sort: Atrribute-");
+                sortWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                sortWriter.Write($" {cssSet}{FilterStyle.ToString().ToLower()}{cssClose}");
+                sortWriter.Write($" {cssSet}{SortDirection.ToString().ToLower()}{cssClose}");
+                return sortWriter.ToString();
+            }
+        }
 
         #region descriptive summary
 

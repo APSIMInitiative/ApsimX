@@ -55,11 +55,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ToString()
         {
-            using (StringWriter sortString = new StringWriter())
-            {
-                sortString.Write($"Sort by [{PropertyOfIndividual}] {SortDirection.ToString().ToLower()}");
-                return sortString.ToString();
-            }
+            return sortString(false);
         }
 
         /// <summary>
@@ -68,10 +64,25 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public string ToHTMLString()
         {
-            using (StringWriter sortString = new StringWriter())
+            return sortString(true);
+        }
+
+        private string sortString(bool htmltags)
+        {
+            string cssSet = "";
+            string cssClose = "";
+            if (htmltags)
             {
-                sortString.Write($"Sort by {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set")} {SortDirection.ToString().ToLower()}");
-                return sortString.ToString();
+                cssSet = "<span class = \"filterset\">";
+                cssClose = "</span>";
+            }
+
+            using (StringWriter sortWriter = new StringWriter())
+            {
+                sortWriter.Write($"Sort: ");
+                sortWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                sortWriter.Write($" {cssSet}{SortDirection.ToString().ToLower()}{cssClose}");
+                return sortWriter.ToString();
             }
         }
 
