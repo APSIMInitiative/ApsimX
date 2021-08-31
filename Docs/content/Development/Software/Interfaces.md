@@ -3,7 +3,7 @@ title: "Software interfaces"
 draft: false
 ---
 
-A model needs to loosely coupled to other models to allow it to be replaced by an alternate implemention. To enable this, it is important that models implement the required interfaces.
+A model needs to be loosely coupled to other models to allow it to be replaced by an alternate implementation. To enable this, it is important that models implement the required interfaces.
 
 | Model type                    | Description |
 |-------------------------------|-------------------------------------------------------|
