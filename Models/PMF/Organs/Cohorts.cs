@@ -10,7 +10,7 @@ namespace Models.PMF.Organs
     /// Represents a perennial leaf cohort.
     /// </summary>
     [Serializable]
-    public class PerrenialLeafCohort
+    public class PerennialLeafCohort
     {
         /// <summary>
         /// Age of the leaf.
@@ -25,7 +25,6 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Area of dead leaf.
         /// </summary>
-        /// <remarks>fixme</remarks>
         public double AreaDead { get; set; } = 0;
 
         /// <summary>
@@ -54,12 +53,12 @@ namespace Models.PMF.Organs
     /// Encapsulates a collection of perennial leaf cohorts.
     /// </summary>
     [Serializable]
-    public class CohortCohort
+    public class Cohorts
     {
         /// <summary>
         /// The leaves in the cohort.
         /// </summary>
-        private List<PerrenialLeafCohort> leaves = new List<PerrenialLeafCohort>();
+        private List<PerennialLeafCohort> leaves = new List<PerennialLeafCohort>();
 
         /// <summary>
         /// Running total of the live biomass of all leaves.
@@ -72,47 +71,35 @@ namespace Models.PMF.Organs
         private Biomass dead = new Biomass();
 
         /// <summary>
-        /// Total dead LAI.
+        /// Total dead Lai.
         /// </summary>
         [Units("m^2/m^2")]
-        public double LAIDead
-        {
-            get
-            {
-                double lai = 0;
-                foreach (PerrenialLeafCohort leaf in leaves)
-                    lai = lai + leaf.AreaDead;
-                return lai;
-            }
-        }
+        public double LaiDead { get; private set; }
 
         /// <summary>
-        /// Total live LAI.
+        /// Total live Lai.
         /// </summary>
         [Units("m^2/m^2")]
-        public double LAI
+        public double Lai { get; private set; }
+
+        /// <summary>
+        /// Change total leaf area.
+        /// </summary>
+        /// <param name="value">New Lai value.</param>
+        public void SetLai(double value)
         {
-            get
+            if (Lai > 0)
             {
-                double lai = 0;
-                foreach (PerrenialLeafCohort leaf in leaves)
-                    lai = lai + leaf.Area;
-                return lai;
-            }
-            set
-            {
-                var totalLeafArea = leaves.Sum(x => x.Area);
-                if (totalLeafArea > 0)
+                var delta = Lai - value;
+                var prop = delta / Lai;
+                foreach (var L in leaves)
                 {
-                    var delta = totalLeafArea - value;
-                    var prop = delta / totalLeafArea;
-                    foreach (var L in leaves)
-                    {
-                        var amountToRemove = L.Area * prop;
-                        L.Area -= amountToRemove;
-                        L.AreaDead += amountToRemove;
-                    }
+                    var amountToRemove = L.Area * prop;
+                    L.Area -= amountToRemove;
+                    L.AreaDead += amountToRemove;
                 }
+                Lai -= value;
+                LaiDead += value;
             }
         }
 
@@ -155,8 +142,7 @@ namespace Models.PMF.Organs
                 biomass.StorageN += storageN;
             }
             leaves[leaves.Count - 1].Area += (structuralMass + storageMass) * sla;
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
+            Lai += (structuralMass + storageMass) * sla;
         }
 
         /// <summary>
@@ -166,9 +152,7 @@ namespace Models.PMF.Organs
         /// <param name="deadFraction">The fraction by whith to reduce the size of dead leaves.</param>
         public void ReduceLeavesUniformly(double liveFraction, double deadFraction)
         {
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
-            foreach (PerrenialLeafCohort leaf in leaves)
+            foreach (PerennialLeafCohort leaf in leaves)
             {
                 leaf.Live.Multiply(liveFraction);
                 leaf.Dead.Multiply(deadFraction);
@@ -177,8 +161,8 @@ namespace Models.PMF.Organs
             }
             live.Multiply(liveFraction);
             dead.Multiply(deadFraction);
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
+            Lai *= liveFraction;
+            LaiDead *= deadFraction;
         }
 
         /// <summary>
@@ -187,15 +171,13 @@ namespace Models.PMF.Organs
         /// <param name="fraction">Fraction of non-structural biomass to remove from each leaf.</param>
         public void ReduceNonStructuralWt(double fraction)
         {
-            foreach (PerrenialLeafCohort leaf in leaves)
+            foreach (PerennialLeafCohort leaf in leaves)
             {
                 leaf.Live.StorageWt *= fraction;
                 leaf.Live.MetabolicWt *= fraction;
             }
             live.StorageWt *= fraction;
             live.MetabolicWt *= fraction;
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
         }
 
         /// <summary>
@@ -204,7 +186,7 @@ namespace Models.PMF.Organs
         /// </summary>
         /// <param name="predicate">The condition - value will be taken for all leaves matching this predicate.</param>
         /// <param name="selector">The property value of each leaf to be summed.</param>
-        internal double SelectWhere(Func<PerrenialLeafCohort, bool> predicate, Func<PerrenialLeafCohort, double> selector)
+        internal double SelectWhere(Func<PerennialLeafCohort, bool> predicate, Func<PerennialLeafCohort, double> selector)
         {
             return leaves.Where(predicate).Select(selector).Sum();
         }
@@ -213,9 +195,9 @@ namespace Models.PMF.Organs
         /// Senesce any leaves matching the given condition.
         /// </summary>
         /// <param name="predicate">Any leaves matching this predicate will be senesced.</param>
-        public void SenesceWhere(Func<PerrenialLeafCohort, bool> predicate)
+        public void SenesceWhere(Func<PerennialLeafCohort, bool> predicate)
         {
-            foreach (PerrenialLeafCohort leaf in leaves.Where(predicate))
+            foreach (PerennialLeafCohort leaf in leaves.Where(predicate))
             {
                 leaf.IsSenesced = true;
 
@@ -232,22 +214,21 @@ namespace Models.PMF.Organs
 
                     // Move leaf area into dead area.
                     leaf.AreaDead += leaf.Area;
+                    Lai -= leaf.Area;
                     leaf.Area = 0;
                 }
             }
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
         }
 
         /// <summary>
         /// Detach any leaves older than the specified age.
         /// </summary>
         /// <param name="predicate">Any leaves matching this predicate will be deatched..</param>
-        public Biomass DetachWhere(Func<PerrenialLeafCohort, bool> predicate)
+        public Biomass DetachWhere(Func<PerennialLeafCohort, bool> predicate)
         {
             Biomass detached = new Biomass();
 
-            foreach (PerrenialLeafCohort leaf in leaves.Where(predicate))
+            foreach (PerennialLeafCohort leaf in leaves.Where(predicate))
             {
                 detached.Add(leaf.Dead);
 
@@ -258,8 +239,6 @@ namespace Models.PMF.Organs
                     dead.Subtract(leaf.Senesced);
             }
             leaves.RemoveAll(l => predicate(l));
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
             return detached;
         }
 
@@ -270,7 +249,8 @@ namespace Models.PMF.Organs
         public void KillLeavesUniformly(double fraction)
         {
             Biomass loss = new Biomass();
-            foreach (PerrenialLeafCohort leaf in leaves)
+            LaiDead += Lai * fraction;
+            foreach (PerennialLeafCohort leaf in leaves)
             {            
                 loss.SetTo(leaf.Live);
                 loss.Multiply(fraction);
@@ -281,8 +261,7 @@ namespace Models.PMF.Organs
                 leaf.AreaDead += leaf.Area * fraction;
                 leaf.Area *= (1 - fraction);
             }
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
+            Lai *= (1 - fraction);
         }
 
         /// <summary>
@@ -294,7 +273,7 @@ namespace Models.PMF.Organs
         /// <param name="sla">Specific leaf area of the new leaf.</param>
         public void AddLeaf(double initialMass, double minNConc, double maxNConc, double sla)
         {
-            leaves.Add(new PerrenialLeafCohort());
+            leaves.Add(new PerennialLeafCohort());
             if (leaves.Count == 1)
             {
                 AddNewLeafMaterial(initialMass,
@@ -303,8 +282,6 @@ namespace Models.PMF.Organs
                                    storageN: initialMass * (maxNConc - minNConc),
                                    sla: sla);
             }
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
         }
 
         /// <summary>
@@ -323,7 +300,7 @@ namespace Models.PMF.Organs
         /// <param name="delta">Amount by which to increase leaf age.</param>
         public void IncreaseAge(double delta)
         {
-            foreach (PerrenialLeafCohort L in leaves)
+            foreach (PerennialLeafCohort L in leaves)
                 L.Age += delta;
         }
 
@@ -336,7 +313,7 @@ namespace Models.PMF.Organs
             if (removal == 0)
                 return;
 
-            foreach (PerrenialLeafCohort leaf in leaves)
+            foreach (PerennialLeafCohort leaf in leaves)
             {
                 double delta = Math.Min(leaf.Live.StorageWt, removal);
                 if (delta > 0)
@@ -348,8 +325,6 @@ namespace Models.PMF.Organs
             }
             if (MathUtilities.IsGreaterThan(removal, 0))
                 throw new Exception("Insufficient Storage N to account for Retranslocation and Reallocation in Perrenial Leaf");
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
         }
 
         /// <summary>
@@ -361,7 +336,7 @@ namespace Models.PMF.Organs
             if (removal == 0)
                 return;
 
-            foreach (PerrenialLeafCohort leaf in leaves)
+            foreach (PerennialLeafCohort leaf in leaves)
             {
                 double delta = Math.Min(leaf.Live.StorageN, removal);
                 if (delta > 0)
@@ -373,8 +348,6 @@ namespace Models.PMF.Organs
             }
             if (MathUtilities.IsGreaterThan(removal, 0))
                 throw new Exception("Insufficient Storage N to account for Retranslocation and Reallocation in Perrenial Leaf");
-            if (MathUtilities.IsGreaterThan(leaves.Sum(l => l.Live.Wt), live.Wt))
-                throw new Exception($"Total leaf live biomass exceeds running total live biomass.");
         }
     }
 }

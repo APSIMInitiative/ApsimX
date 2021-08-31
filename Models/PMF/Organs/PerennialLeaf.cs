@@ -118,11 +118,11 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return cohort.LAI;
+                return cohort.Lai;
             }
             set
             {
-                cohort.LAI = value;
+                cohort.SetLai(value);
             }
         }
 
@@ -241,7 +241,7 @@ namespace Models.PMF.Organs
         /// <summary>
         /// This encapsulates the leaves.
         /// </summary>
-        private CohortCohort cohort = new CohortCohort();
+        private Cohorts cohort = new Cohorts();
 
         /// <summary>The structure</summary>
         [Link(IsOptional = true)]
@@ -301,7 +301,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]
-        public double LAIDead => cohort.LAIDead;
+        public double LAIDead => cohort.LaiDead;
 
         /// <summary>Gets the cover dead.</summary>
         public double CoverDead { get { return 1.0 - Math.Exp(-ExtinctionCoefficientDead.Value() * LAIDead); } }
@@ -343,7 +343,8 @@ namespace Models.PMF.Organs
         private void SetNSupply(object sender, EventArgs e)
         {
             double LabileN = Math.Max(0, StartLive.StorageN - StartLive.StorageWt * MinimumNConc.Value());
-            double senescingStorageN = cohort.SelectWhere(leaf => leaf.Age >= LeafResidenceTime.Value(), l => l.Live.StorageN);
+            double lrt = LeafResidenceTime.Value();
+            double senescingStorageN = cohort.SelectWhere(leaf => leaf.Age >= lrt, l => l.Live.StorageN);
 
             NSupply.Reallocation = senescingStorageN * NReallocationFactor.Value();
             NSupply.Retranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value();
@@ -613,7 +614,8 @@ namespace Models.PMF.Organs
             if (Plant.IsAlive)
             {
                 // Senesce any leaves older than residencce time.
-                cohort.SenesceWhere(l => l.Age >= LeafResidenceTime.Value());
+                double lrt = LeafResidenceTime.Value();
+                cohort.SenesceWhere(l => l.Age >= lrt);
                 double lkf = Math.Max(0.0, Math.Min(LeafKillFraction.Value(), MathUtilities.Divide(1 - MinimumLAI.Value(), LAI, 0.0)));
                 if (lkf > 0)
                    cohort.KillLeavesUniformly(lkf);
