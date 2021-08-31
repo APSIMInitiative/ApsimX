@@ -71,13 +71,13 @@ namespace Models.PMF.Organs
         private Biomass dead = new Biomass();
 
         /// <summary>
-        /// Total dead LAI.
+        /// Total dead Lai.
         /// </summary>
         [Units("m^2/m^2")]
         public double LaiDead { get; private set; }
 
         /// <summary>
-        /// Total live LAI.
+        /// Total live Lai.
         /// </summary>
         [Units("m^2/m^2")]
         public double Lai { get; private set; }
@@ -85,21 +85,21 @@ namespace Models.PMF.Organs
         /// <summary>
         /// Change total leaf area.
         /// </summary>
-        /// <param name="value">New LAI value.</param>
+        /// <param name="value">New Lai value.</param>
         public void SetLai(double value)
         {
-            if (LAI > 0)
+            if (Lai > 0)
             {
-                var delta = LAI - value;
-                var prop = delta / LAI;
+                var delta = Lai - value;
+                var prop = delta / Lai;
                 foreach (var L in leaves)
                 {
                     var amountToRemove = L.Area * prop;
                     L.Area -= amountToRemove;
                     L.AreaDead += amountToRemove;
                 }
-                LAI -= value;
-                LAIDead += value;
+                Lai -= value;
+                LaiDead += value;
             }
         }
 
@@ -142,7 +142,7 @@ namespace Models.PMF.Organs
                 biomass.StorageN += storageN;
             }
             leaves[leaves.Count - 1].Area += (structuralMass + storageMass) * sla;
-            LAI += (structuralMass + storageMass) * sla;
+            Lai += (structuralMass + storageMass) * sla;
         }
 
         /// <summary>
@@ -161,8 +161,8 @@ namespace Models.PMF.Organs
             }
             live.Multiply(liveFraction);
             dead.Multiply(deadFraction);
-            LAI *= liveFraction;
-            LAIDead *= deadFraction;
+            Lai *= liveFraction;
+            LaiDead *= deadFraction;
         }
 
         /// <summary>
@@ -214,7 +214,7 @@ namespace Models.PMF.Organs
 
                     // Move leaf area into dead area.
                     leaf.AreaDead += leaf.Area;
-                    LAI -= leaf.Area;
+                    Lai -= leaf.Area;
                     leaf.Area = 0;
                 }
             }
@@ -249,7 +249,7 @@ namespace Models.PMF.Organs
         public void KillLeavesUniformly(double fraction)
         {
             Biomass loss = new Biomass();
-            LAIDead += LAI * fraction;
+            LaiDead += Lai * fraction;
             foreach (PerennialLeafCohort leaf in leaves)
             {            
                 loss.SetTo(leaf.Live);
@@ -261,7 +261,7 @@ namespace Models.PMF.Organs
                 leaf.AreaDead += leaf.Area * fraction;
                 leaf.Area *= (1 - fraction);
             }
-            LAI *= (1 - fraction);
+            Lai *= (1 - fraction);
         }
 
         /// <summary>

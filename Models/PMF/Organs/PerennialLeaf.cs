@@ -118,7 +118,7 @@ namespace Models.PMF.Organs
         {
             get
             {
-                return cohort.LAI;
+                return cohort.Lai;
             }
             set
             {
@@ -301,7 +301,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the LAI</summary>
         [Units("m^2/m^2")]
-        public double LAIDead => cohort.LAIDead;
+        public double LAIDead => cohort.LaiDead;
 
         /// <summary>Gets the cover dead.</summary>
         public double CoverDead { get { return 1.0 - Math.Exp(-ExtinctionCoefficientDead.Value() * LAIDead); } }
@@ -343,7 +343,8 @@ namespace Models.PMF.Organs
         private void SetNSupply(object sender, EventArgs e)
         {
             double LabileN = Math.Max(0, StartLive.StorageN - StartLive.StorageWt * MinimumNConc.Value());
-            double senescingStorageN = cohort.SelectWhere(leaf => leaf.Age >= LeafResidenceTime.Value(), l => l.Live.StorageN);
+            double lrt = LeafResidenceTime.Value();
+            double senescingStorageN = cohort.SelectWhere(leaf => leaf.Age >= lrt, l => l.Live.StorageN);
 
             NSupply.Reallocation = senescingStorageN * NReallocationFactor.Value();
             NSupply.Retranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value();
