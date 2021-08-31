@@ -69,61 +69,6 @@ namespace Models.CLEM.Groupings
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
-        {
-            return "";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
-        {
-            return "";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
-        {
-            return "\r\n</div>";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-
-                if (Proportion < 1)
-                {
-                    htmlWriter.Write("<div class=\"filter\">");
-
-                    if (Proportion <= 0)                    
-                        htmlWriter.Write("<span class=\"errorlink\">[NOT SET%]</span>");                    
-                    else                    
-                        htmlWriter.Write($"{Proportion.ToString("P0")} of");
-                    
-                    htmlWriter.Write("</div>");
-                }
-
-                if (FindAllChildren<Filter>().Count() < 1)                
-                    htmlWriter.Write("<div class=\"filter\">All individuals</div>");
-                
-                return htmlWriter.ToString(); 
-            }
-        } 
         #endregion
 
     }

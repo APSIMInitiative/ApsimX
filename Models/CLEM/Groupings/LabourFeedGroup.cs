@@ -101,31 +101,6 @@ namespace Models.CLEM.Groupings
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
-        {
-            return "\r\n</div>";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                if (FindAllChildren<Filter>().Count() == 0)                
-                    htmlWriter.Write("<div class=\"filter\">All individuals</div>");
-                
-                return htmlWriter.ToString(); 
-            }
-        }
-
         #endregion
     }
 }
