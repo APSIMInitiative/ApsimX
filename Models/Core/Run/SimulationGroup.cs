@@ -245,7 +245,7 @@
                     }
                     
                     if (numJobsToRun == 0)
-                       Add(new EmptyJob());
+                       Add(new JobRunnerSleepJob());
                 }
             }
             catch (Exception readException)
