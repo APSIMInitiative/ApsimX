@@ -17,6 +17,8 @@ namespace Models.CLEM
     public abstract class FilterGroup<TFilter> : CLEMModel, IFilterGroup
         where TFilter : IFilterable
     {
+        private protected IEnumerable<Func<IFilterable, bool>> filterRules = null;
+
         /// <summary>
         /// The properties available for filtering
         /// </summary>
@@ -69,32 +71,27 @@ namespace Models.CLEM
                         key = key.Substring(typeof(TFilter).Name.Length);
                     properties.Add($"{key}.{prop.Name}", prop);
                 }
-
             }
-        }
-
-        /// <summary>
-        /// Return some proportion of a ruminant collection after filtering
-        /// </summary>
-        public IEnumerable<T> FilterProportion<T>(IEnumerable<T> source)
-        {
-            int number = source.Count();
-            foreach (var take in FindAllChildren<TakeFromFiltered>())
-            {
-                number = take.NumberToTake(number);
-            }
-            return Filter(source).Take(number);
         }
 
         /// <inheritdoc/>
-        public virtual IEnumerable<T> Filter<T>(IEnumerable<T> source)
+        public virtual IEnumerable<T> Filter<T>(IEnumerable<T> source) where T : IFilterable
         {
             if (source is null)
                 throw new NullReferenceException("Cannot filter a null object");
 
-            var rules = FindAllChildren<Filter>().Select(filter => filter.Compile<T>());
+            if (filterRules is null)
+                filterRules = FindAllChildren<Filter>().Select(filter => filter.Compile<IFilterable>());
 
-            return rules.Any() ? source.Where(item => rules.All(rule => rule(item))) : source;
+            // add sorting
+
+            // calculate the specified number/proportion of the filtered group to take from group
+            int number = source.Count();
+            foreach (var take in FindAllChildren<TakeFromFiltered>())
+                // cummulative take through all TakeFromFiltered components
+                number = take.NumberToTake(number);
+
+            return filterRules.Any() ? source.Where(item => filterRules.All(rule => rule(item))).Take(number) : source.Take(number);
         }
 
         #region descriptive summary

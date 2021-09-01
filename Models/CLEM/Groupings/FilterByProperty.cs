@@ -53,11 +53,9 @@ namespace Models.CLEM.Groupings
             
             // check if the parameter passes can inherit the declaring type
             // this will not allow females to check male properties
-            if (!filterParam.Type.IsAssignableFrom(filterProp.DeclaringType))
-                return (T t) => false;
-
-            // convert parameter to the type of the property
-            var filterInherit = Expression.Convert(filterParam, filterProp.DeclaringType);
+            // convert parameter to the type of the property, null if fails
+            var filterInherit = Expression.TypeAs(filterParam, filterProp.DeclaringType);
+            var typeis = Expression.TypeEqual(filterParam, filterProp.DeclaringType);
 
             // Look for the property
             var key = Expression.Property(filterInherit, filterProp.Name);
@@ -78,10 +76,16 @@ namespace Models.CLEM.Groupings
                 binary = Expression.MakeBinary(ExpressionType.Equal, key, Expression.Constant(ce));
             }
             else
-            {
                 binary = Expression.MakeBinary(Operator, key, value);
-            }
-            var lambda = Expression.Lambda<Func<T, bool>>(binary, filterParam).Compile();
+
+            // only perfom if the type is a match to the type of property
+            var body = Expression.Condition(
+                typeis,
+                binary,
+                Expression.Constant(false)
+                );
+
+            var lambda = Expression.Lambda<Func<T, bool>>(body, filterParam).Compile();
             return lambda;
         }
 

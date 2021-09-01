@@ -9,7 +9,7 @@ using Display = Models.Core.DisplayAttribute;
 namespace Models.CLEM.Groupings
 {
     ///<summary>
-    /// abstarct base filter not used on its own
+    /// abstract base filter not used on its own
     ///</summary> 
     [Serializable]
     public abstract class Filter : CLEMModel
@@ -104,6 +104,6 @@ namespace Models.CLEM.Groupings
         /// <summary>
         /// Takes the conditions set by the user and converts them to a logical test as a lambda expression
         /// </summary>
-        public abstract Func<T, bool> Compile<T>();
+        public abstract Func<T, bool> Compile<T>() where T:IFilterable;
     }
 }

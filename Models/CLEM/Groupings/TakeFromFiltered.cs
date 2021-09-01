@@ -54,7 +54,7 @@ namespace Models.CLEM.Groupings
                 numberToTake = Convert.ToInt32(Value);
             else
                 numberToTake = Convert.ToInt32(Math.Ceiling(Value * groupSize));
-            return numberToTake;
+            return Math.Min(numberToTake, groupSize);
         }
 
         /// <summary>
