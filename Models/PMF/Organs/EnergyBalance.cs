@@ -216,9 +216,19 @@
         /// <summary>Clears this instance.</summary>
         private void Clear()
         {
-              Height = 0;
+            FRGR = 0.0;
+            Height = 0;
             Depth = 0;
+            Width = 0.0;
             LAI = 0;
+            LAIDead = 0.0;
+            KDead = 0.0;
+            WaterAllocation = 0.0;
+            WaterDemand = 0.0;
+            _PotentialEP = 0.0;
+
+
+
         }
 
         #endregion
