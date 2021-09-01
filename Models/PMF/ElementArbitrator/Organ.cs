@@ -201,17 +201,17 @@
         /// <summary>Gets the maximum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double MaxNconc { get { return Nitrogen.ConcentrationOrProportion != null ? Nitrogen.ConcentrationOrProportion.Storage : 0; } }
+        public double MaxNconc { get { return Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Storage : 0; } }
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double MinNconc { get { return Nitrogen.ConcentrationOrProportion != null ? Nitrogen.ConcentrationOrProportion.Structural : 0; } }
+        public double MinNconc { get { return Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Structural : 0; } }
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double CritNconc { get { return Nitrogen.ConcentrationOrProportion != null ? Nitrogen.ConcentrationOrProportion.Metabolic : 0; } }
+        public double CritNconc { get { return Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Metabolic : 0; } }
 
         /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
         [JsonIgnore]
@@ -245,7 +245,7 @@
             get
             {
                 if (Live != null)
-                    return MathUtilities.Divide(N, Wt * MinNconc, 1);
+                    return MathUtilities.Divide(Live.Nitrogen.Total, Live.Wt * MaxNconc, 1);
                 return 0;
             }
         }
@@ -259,7 +259,7 @@
             {
                 double factor = 0.0;
                 if (Live != null)
-                    factor = MathUtilities.Divide(N - Live.Nitrogen.Structural, Wt * (CritNconc - MinNconc), 1.0);
+                    factor = MathUtilities.Divide(Live.Nitrogen.Total - Live.Nitrogen.Structural, Live.Wt * (CritNconc - MinNconc), 1.0);
                 return Math.Min(1.0, factor);
             }
         }
@@ -340,9 +340,9 @@
                 Live.Carbon.SetTo(initC);
                 NutrientPoolStates initN = new NutrientPoolStates()
                 {
-                    Structural = Live.Weight.Total * Nitrogen.ConcentrationOrProportion.Structural,
-                    Metabolic = Live.Weight.Total * (Nitrogen.ConcentrationOrProportion.Metabolic - Nitrogen.ConcentrationOrProportion.Structural),
-                    Storage = Live.Weight.Total * (Nitrogen.ConcentrationOrProportion.Storage - Nitrogen.ConcentrationOrProportion.Metabolic),
+                    Structural = Live.Weight.Total * Nitrogen.ConcentrationOrFraction.Structural,
+                    Metabolic = Live.Weight.Total * (Nitrogen.ConcentrationOrFraction.Metabolic - Nitrogen.ConcentrationOrFraction.Structural),
+                    Storage = Live.Weight.Total * (Nitrogen.ConcentrationOrFraction.Storage - Nitrogen.ConcentrationOrFraction.Metabolic),
                 };
                 Live.Nitrogen.SetTo(initN);
             }

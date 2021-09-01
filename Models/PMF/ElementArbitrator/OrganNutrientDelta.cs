@@ -39,7 +39,7 @@
         /// <summary>The concentrations of nutrients at cardinal thresholds</summary>
         [Units("g Nutrient/g dWt")]
         [Link(Type = LinkType.Child)]
-        private IConcentratinOrProportion concentrationOrProportionFunction = null;
+        private IConcentratinOrFraction concentrationOrFractionFunction = null;
 
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
@@ -73,7 +73,7 @@
  
         /// <summary>The max, crit and min nutirent concentrations</summary>
         [JsonIgnore]
-        public NutrientPoolStates ConcentrationOrProportion { get; set; }
+        public NutrientPoolStates ConcentrationOrFraction { get; set; }
 
         /// <summary> Resource supplied to arbitration by the organ</summary>
         /// [JsonIgnore]
@@ -137,9 +137,9 @@
 
         private void setConcentrationsOrProportions()
         {
-            ConcentrationOrProportion = concentrationOrProportionFunction.ConcentrationsOrProportions;
+            ConcentrationOrFraction = concentrationOrFractionFunction.ConcentrationsOrFractionss;
             if (this.Name == "Carbon")
-                if ((ConcentrationOrProportion.Total > 1.01) || (ConcentrationOrProportion.Total < 0.99))
+                if ((ConcentrationOrFraction.Total > 1.01) || (ConcentrationOrFraction.Total < 0.99))
                     throw new Exception("Concentrations of Carbon must add to 1 to keep demands entire");
         }
         
@@ -210,7 +210,7 @@
             // Deltas = new OrganResourceStates();
             // Live = new ResourcePools();
             //  Dead = new ResourcePools();
-            ConcentrationOrProportion = new NutrientPoolStates();
+            ConcentrationOrFraction = new NutrientPoolStates();
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

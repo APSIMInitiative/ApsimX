@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 408,
   "Version": 139,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -24,6 +24,9 @@
             "[Clock].Today",
             "[FodderBeet].AboveGround.Wt",
             "[FodderBeet].AboveGround.N",
+            "[FodderBeet].TotalDead.Wt",
+            "[FodderBeet].TotalDead.N",
+            "[FodderBeet].TotalDead.NConc",
             "[FodderBeet].Arbitrator.Nitrogen.TotalUptakeSupply",
             "[FodderBeet].Arbitrator.Nitrogen.TotalReAllocationSupply",
             "[FodderBeet].Arbitrator.Nitrogen.TotalReTranslocationSupply",
@@ -53,7 +56,7 @@
             "[FodderBeet].Leaf.Canopy.Transpiration",
             "[FodderBeet].Leaf.Carbon.Demands.Total",
             "[FodderBeet].Leaf.Photosynthesis.RadnInt",
-            "[FodderBeet].Leaf.Nitrogen.ConcentrationOrProportion.Metabolic",
+            "[FodderBeet].Leaf.Nitrogen.ConcentrationOrFraction.Metabolic",
             "[FodderBeet].Leaf.Dead.N",
             "[FodderBeet].Leaf.Dead.NConc",
             "[FodderBeet].Leaf.Dead.Nitrogen.Metabolic",
@@ -67,17 +70,17 @@
             "[FodderBeet].Leaf.Live.N",
             "[FodderBeet].Leaf.Live.NConc",
             "[FodderBeet].Leaf.Live.Wt",
-            "[FodderBeet].Leaf.Nitrogen.ConcentrationOrProportion.Storage",
-            "[FodderBeet].Leaf.Nitrogen.ConcentrationOrProportion.Structural",
+            "[FodderBeet].Leaf.Nitrogen.ConcentrationOrFraction.Storage",
+            "[FodderBeet].Leaf.Nitrogen.ConcentrationOrFraction.Structural",
             "[FodderBeet].Leaf.NodeNumber",
             "[FodderBeet].Leaf.SpecificArea",
-            "[FodderBeet].Petiole.Nitrogen.ConcentrationOrProportion.Metabolic",
+            "[FodderBeet].Petiole.Nitrogen.ConcentrationOrFraction.Metabolic",
             "[FodderBeet].Petiole.Dead.NConc",
             "[FodderBeet].Petiole.Live.N",
             "[FodderBeet].Petiole.Live.NConc",
             "[FodderBeet].Petiole.Live.Wt",
-            "[FodderBeet].Petiole.Nitrogen.ConcentrationOrProportion.Metabolic",
-            "[FodderBeet].Petiole.Nitrogen.ConcentrationOrProportion.Structural",
+            "[FodderBeet].Petiole.Nitrogen.ConcentrationOrFraction.Storage",
+            "[FodderBeet].Petiole.Nitrogen.ConcentrationOrFraction.Structural",
             "[FodderBeet].Petiole.NConc",
             "[FodderBeet].Phenology.AccumulatedThermalTime",
             "[FodderBeet].Phenology.CurrentPhase.Name",
@@ -85,24 +88,24 @@
             "[FodderBeet].Phenology.Photoperiod",
             "[FodderBeet].Phenology.Stage",
             "[FodderBeet].Phenology.ThermalTime",
-            "[FodderBeet].Root.Nitrogen.ConcentrationOrProportion.Metabolic",
+            "[FodderBeet].Root.Nitrogen.ConcentrationOrFraction.Metabolic",
             "[FodderBeet].Root.Live.N",
             "[FodderBeet].Root.Live.NConc",
             "[FodderBeet].Root.Live.Wt",
-            "[FodderBeet].Root.Nitrogen.ConcentrationOrProportion.Storage",
-            "[FodderBeet].Root.Nitrogen.ConcentrationOrProportion.Structural",
+            "[FodderBeet].Root.Nitrogen.ConcentrationOrFraction.Storage",
+            "[FodderBeet].Root.Nitrogen.ConcentrationOrFraction.Structural",
             "[FodderBeet].Root.N",
             "[FodderBeet].Root.Nconc",
             "[FodderBeet].Root.Network.Depth",
             "[FodderBeet].Root.Network.WaterUptake",
             "[FodderBeet].SCS",
             "[FodderBeet].SowingData.Cultivar",
-            "[FodderBeet].StorageRoot.Nitrogen.ConcentrationOrProportion.Metabolic",
+            "[FodderBeet].StorageRoot.Nitrogen.ConcentrationOrFraction.Metabolic",
             "[FodderBeet].StorageRoot.Live.N",
             "[FodderBeet].StorageRoot.Live.NConc",
             "[FodderBeet].StorageRoot.Live.Wt",
-            "[FodderBeet].StorageRoot.Nitrogen.ConcentrationOrProportion.Storage",
-            "[FodderBeet].StorageRoot.Nitrogen.ConcentrationOrProportion.Structural",
+            "[FodderBeet].StorageRoot.Nitrogen.ConcentrationOrFraction.Storage",
+            "[FodderBeet].StorageRoot.Nitrogen.ConcentrationOrFraction.Structural",
             "[FodderBeet].StorageRoot.NConc",
             "[FodderBeet].StorageRoot.Wt",
             "//[FodderBeet].Total.N",
@@ -1476,6 +1479,26 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "/d",
+                  "Name": "SenescenceRateFunction",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "/d",
+                  "Name": "DetachmentRateFunction",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.0,
                   "Units": "0-1",
                   "Name": "DMConversionEfficiency",
@@ -1499,26 +1522,6 @@
                   "FixedValue": 0.0,
                   "Units": null,
                   "Name": "RemobilisationCost",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "/d",
-                  "Name": "SenescenceRateFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "/d",
-                  "Name": "DetachmentRateFunction",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -1904,10 +1907,28 @@
                       "Name": "SupplyFunctions",
                       "Children": [
                         {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Photosynthesis",
+                          "$type": "Models.Functions.MultiplyFunction, Models",
                           "Name": "Fixation",
-                          "Children": [],
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].Photosynthesis",
+                              "Name": "Fixation",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[Leaf].Cconc",
+                              "Name": "Cconc",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -2305,7 +2326,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
+                                  "FixedValue": 1.0,
                                   "Units": null,
                                   "Name": "Multiplier",
                                   "Children": [],
@@ -2721,6 +2742,115 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.MultiplyFunction, Models",
+                  "Name": "SenescenceRateFunction",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "CoverEffect",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            0.8,
+                            1.0
+                          ],
+                          "Y": [
+                            1.0,
+                            1.0,
+                            1.0
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "The maximum height of 500 mm was estimated from the 2014 sowing date trial ([Khaembah_etal_2017]).",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Canopy.CoverTotal",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "AgeEffect",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.0,
+                            13.0,
+                            17.0
+                          ],
+                          "Y": [
+                            0.0,
+                            0.0,
+                            0.004
+                          ],
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "The maximum height of 500 mm was estimated from the 2014 sowing date trial ([Khaembah_etal_2017]).",
+                          "Name": "Memo",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].NodeNumber",
+                          "Name": "XValue",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": "/d",
+                  "Name": "DetachmentRateFunction",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.PhaseLookup, Models",
                   "Name": "DeltaLAI",
                   "Children": [
@@ -3128,145 +3258,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MultiplyFunction, Models",
-                  "Name": "SenescenceRateFunction",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "CoverEffect",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            0.8,
-                            1.0
-                          ],
-                          "Y": [
-                            1.0,
-                            1.0,
-                            1.0
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "The maximum height of 500 mm was estimated from the 2014 sowing date trial ([Khaembah_etal_2017]).",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Canopy.CoverTotal",
-                          "Name": "XValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "AgeEffect",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.0,
-                            13.0,
-                            17.0
-                          ],
-                          "Y": [
-                            0.0,
-                            0.0,
-                            0.004
-                          ],
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "The maximum height of 500 mm was estimated from the 2014 sowing date trial ([Khaembah_etal_2017]).",
-                          "Name": "Memo",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].NodeNumber",
-                          "Name": "XValue",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "RemobilisationCost",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "0-1",
-                  "Name": "MaintenanceRespiration",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": "0-1",
-                  "Name": "DMConversionEfficiency",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "/d",
-                  "Name": "DetachmentRate",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.PMF.Library.BiomassRemoval, Models",
                   "Name": "BiomassRemovalDefaults",
                   "Children": [
@@ -3344,9 +3335,19 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": "0-1",
+                  "Name": "DMConversionEfficiency",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
-                  "Units": "/d",
-                  "Name": "DetachmentRateFunction",
+                  "Units": null,
+                  "Name": "RemobilisationCost",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -4024,15 +4025,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].senescenceRate",
-                  "Name": "SenescenceRateFunction",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.DemandFunctions.AllometricDemandFunction, Models",
                   "Const": 0.045,
                   "Power": 1.6,
@@ -4057,6 +4049,15 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].senescenceRate",
+                  "Name": "SenescenceRateFunction",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -4409,7 +4410,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
+                                  "FixedValue": 0.0,
                                   "Units": null,
                                   "Name": "Multiplier",
                                   "Children": [],
@@ -4428,7 +4429,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
+                                  "FixedValue": 0.0,
                                   "Units": null,
                                   "Name": "Multiplier",
                                   "Children": [],
@@ -4457,7 +4458,7 @@
                       "Children": [
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.4,
+                          "FixedValue": 0.5,
                           "Units": null,
                           "Name": "Structural",
                           "Children": [],
@@ -4467,7 +4468,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.4,
+                          "FixedValue": 0.5,
                           "Units": null,
                           "Name": "Metabolic",
                           "Children": [],
@@ -4477,7 +4478,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.2,
+                          "FixedValue": 0.0,
                           "Units": null,
                           "Name": "Storage",
                           "Children": [],
@@ -5050,34 +5051,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MaximumFunction, Models",
-                  "Name": "SenescenceRateFunction",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].SenescenceRate",
-                      "Name": "SenescenceRate",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "Zero",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.DemandFunctions.AllometricDemandFunction, Models",
                   "Const": 0.045,
                   "Power": 1.6,
@@ -5107,6 +5080,15 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].SenescenceRate",
+                  "Name": "SenescenceRateFunction",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 0.0,
                   "Units": "/d",
@@ -5131,6 +5113,16 @@
                   "FixedValue": 1.0,
                   "Units": "0-1",
                   "Name": "DMConversionEfficiency",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "RemobilisationCost",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
@@ -5189,16 +5181,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "RemobilisationCost",
-                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -10044,7 +10026,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.StorageRoot.Nitrogen.ConcentrationOrProportion.Structural",
+                      "YFieldName": "FodderBeet.StorageRoot.Nitrogen.ConcentrationOrFraction.Structural",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -10073,7 +10055,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.StorageRoot.Nitrogen.ConcentrationOrProportion.Storage",
+                      "YFieldName": "FodderBeet.StorageRoot.Nitrogen.ConcentrationOrFraction.Storage",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -10102,7 +10084,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.StorageRoot.Nitrogen.ConcentrationOrProportion.Metabolic",
+                      "YFieldName": "FodderBeet.StorageRoot.Nitrogen.ConcentrationOrFraction.Metabolic",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -10239,7 +10221,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.Leaf.Nitrogen.ConcentrationOrProportion.Structural",
+                      "YFieldName": "FodderBeet.Leaf.Nitrogen.ConcentrationOrFraction.Structural",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -10268,7 +10250,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.Leaf.Nitrogen.ConcentrationOrProportion.Storage",
+                      "YFieldName": "FodderBeet.Leaf.Nitrogen.ConcentrationOrFraction.Storage",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -10297,7 +10279,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.Leaf.Nitrogen.ConcentrationOrProportion.Metabolic",
+                      "YFieldName": "FodderBeet.Leaf.Nitrogen.ConcentrationOrFraction.Metabolic",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -10423,7 +10405,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.Petiole.Nitrogen.ConcentrationOrProportion.Structural",
+                      "YFieldName": "FodderBeet.Petiole.Nitrogen.ConcentrationOrFraction.Structural",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -10452,7 +10434,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.Petiole.Nitrogen.ConcentrationOrProportion.Storage",
+                      "YFieldName": "FodderBeet.Petiole.Nitrogen.ConcentrationOrFraction.Storage",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -10481,7 +10463,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.Petiole.Nitrogen.ConcentrationOrProportion.Metabolic",
+                      "YFieldName": "FodderBeet.Petiole.Nitrogen.ConcentrationOrFraction.Metabolic",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -10704,7 +10686,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.Leaf.Nitrogen.ConcentrationOrProportion.Structural",
+                      "YFieldName": "FodderBeet.Leaf.Nitrogen.ConcentrationOrFraction.Structural",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -10733,7 +10715,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.Leaf.Nitrogen.ConcentrationOrProportion.Storage",
+                      "YFieldName": "FodderBeet.Leaf.Nitrogen.ConcentrationOrFraction.Storage",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -10762,7 +10744,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.Leaf.Nitrogen.ConcentrationOrProportion.Metabolic",
+                      "YFieldName": "FodderBeet.Leaf.Nitrogen.ConcentrationOrFraction.Metabolic",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -10888,7 +10870,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.Petiole.Nitrogen.ConcentrationOrProportion.Structural",
+                      "YFieldName": "FodderBeet.Petiole.Nitrogen.ConcentrationOrFraction.Structural",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -10917,7 +10899,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.Petiole.Nitrogen.ConcentrationOrProportion.Storage",
+                      "YFieldName": "FodderBeet.Petiole.Nitrogen.ConcentrationOrFraction.Storage",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -10946,7 +10928,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.Petiole.Nitrogen.ConcentrationOrProportion.Metabolic",
+                      "YFieldName": "FodderBeet.Petiole.Nitrogen.ConcentrationOrFraction.Metabolic",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -11043,7 +11025,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.Root.Nitrogen.ConcentrationOrProportion.Structural",
+                      "YFieldName": "FodderBeet.Root.Nitrogen.ConcentrationOrFraction.Structural",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -11072,7 +11054,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.Root.Nitrogen.ConcentrationOrProportion.Storage",
+                      "YFieldName": "FodderBeet.Root.Nitrogen.ConcentrationOrFraction.Storage",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -11101,7 +11083,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Clock.Today",
-                      "YFieldName": "FodderBeet.Root.Nitrogen.ConcentrationOrProportion.Metabolic",
+                      "YFieldName": "FodderBeet.Root.Nitrogen.ConcentrationOrFraction.Metabolic",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,

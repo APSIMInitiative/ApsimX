@@ -52,12 +52,12 @@ namespace Models.PMF
         {
             if ((this.Name == "Structural") && (this.Parent.Parent.Name == "Nitrogen"))
             {
-                return parentOrgan.Carbon.DemandsAllocated.Total * parentOrgan.Nitrogen.ConcentrationOrProportion.Structural;
+                return parentOrgan.Carbon.DemandsAllocated.Total * parentOrgan.Nitrogen.ConcentrationOrFraction.Structural;
             }
             
             if ((this.Name == "Structural") && (this.Parent.Parent.Name == "Carbon"))
             {
-                return parentOrgan.totalDMDemand * parentOrgan.Carbon.ConcentrationOrProportion.Structural;
+                return parentOrgan.totalDMDemand * parentOrgan.Carbon.ConcentrationOrFraction.Structural;
             }
 
             double deficit = Double.NaN;
@@ -65,28 +65,28 @@ namespace Models.PMF
             
             if ((this.Name == "Metabolic") && (this.Parent.Parent.Name == "Nitrogen"))
             {
-                double targetMetabolicN = (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrProportion.Metabolic) - (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrProportion.Structural);
+                double targetMetabolicN = (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrFraction.Metabolic) - (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrFraction.Structural);
                 deficit = targetMetabolicN - parentOrgan.Live.Nitrogen.Metabolic;
             }
 
-            double potentialStructuralC = parentOrgan.Live.Carbon.Structural + parentOrgan.totalDMDemand * parentOrgan.Carbon.ConcentrationOrProportion.Structural;
-            double potentialTotalC = potentialStructuralC / parentOrgan.Carbon.ConcentrationOrProportion.Structural;
+            double potentialStructuralC = parentOrgan.Live.Carbon.Structural + parentOrgan.totalDMDemand * parentOrgan.Carbon.ConcentrationOrFraction.Structural;
+            double potentialTotalC = potentialStructuralC / parentOrgan.Carbon.ConcentrationOrFraction.Structural;
 
             if ((this.Name == "Metabolic") && (this.Parent.Parent.Name == "Carbon"))
             {
-                double targetMetabolicC = potentialTotalC * parentOrgan.Carbon.ConcentrationOrProportion.Metabolic;
+                double targetMetabolicC = potentialTotalC * parentOrgan.Carbon.ConcentrationOrFraction.Metabolic;
                 deficit = targetMetabolicC - parentOrgan.Live.Carbon.Metabolic;
             }
             
             else if ((this.Name == "Storage") && (this.Parent.Parent.Name == "Nitrogen"))
             {
-                double targetStorageN = (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrProportion.Storage) - (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrProportion.Metabolic);
+                double targetStorageN = (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrFraction.Storage) - (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrFraction.Metabolic);
                 deficit = targetStorageN - parentOrgan.Live.Nitrogen.Storage;
             }
             
             else if ((this.Name == "Storage") && (this.Parent.Parent.Name == "Carbon"))
             {
-                double targetStorageC = potentialTotalC * parentOrgan.Carbon.ConcentrationOrProportion.Storage; 
+                double targetStorageC = potentialTotalC * parentOrgan.Carbon.ConcentrationOrFraction.Storage; 
                 deficit = targetStorageC - parentOrgan.Live.Nitrogen.Storage;
             }
             

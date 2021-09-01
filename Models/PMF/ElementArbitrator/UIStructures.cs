@@ -191,7 +191,7 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(OrganNutrientDelta))]
-    public class NutrientConcentrationFunctions : Model, IConcentratinOrProportion
+    public class NutrientConcentrationFunctions : Model, IConcentratinOrFraction
     {
         /// <summary>Maximum Nutrient Concentration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -209,7 +209,7 @@
         public IFunction Minimum = null;
 
         /// <summary> Interface member that is got by other methods </summary>
-        public NutrientPoolStates ConcentrationsOrProportions
+        public NutrientPoolStates ConcentrationsOrFractionss
         {
             get
             {
@@ -231,7 +231,7 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(OrganNutrientDelta))]
-    public class NutrientProportionFunctions : Model, IConcentratinOrProportion
+    public class NutrientProportionFunctions : Model, IConcentratinOrFraction
     {
         /// <summary>Maximum Nutrient Concentration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -249,7 +249,7 @@
         public IFunction Storage = null;
 
         /// <summary> Interface member that is got by other methods </summary>
-        public NutrientPoolStates ConcentrationsOrProportions
+        public NutrientPoolStates ConcentrationsOrFractionss
         {
             get
             {
@@ -268,13 +268,13 @@
     /// <summary>
     /// Interface class for Uptake Methods.
     /// </summary>
-    public interface IConcentratinOrProportion
+    public interface IConcentratinOrFraction
 
     {
         /// <summary>
         /// Nutrient concnetration or fraction values
         /// </summary>
-        NutrientPoolStates ConcentrationsOrProportions { get; }
+        NutrientPoolStates ConcentrationsOrFractionss { get; }
     }
 
 
