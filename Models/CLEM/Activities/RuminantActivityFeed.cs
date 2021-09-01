@@ -40,7 +40,7 @@ namespace Models.CLEM.Activities
         // amount actually needed to satisfy animals allowing for overfeeding
         private double feedToOverSatisfy = 0;
         // does this feeding style need a potential intake modifier
-        private bool usingPotentialintakeMultiplier = false;
+        private bool usingPotentialIntakeMultiplier = false;
         private double overfeedProportion = 1;
 
         /// <summary>
@@ -60,12 +60,6 @@ namespace Models.CLEM.Activities
         public double ProportionTramplingWastage { get; set; }
 
         /// <summary>
-        /// Feed type
-        /// </summary>
-        [JsonIgnore]
-        public IFeedType FeedType { get; set; }
-
-        /// <summary>
         /// Feeding style to use
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(RuminantFeedActivityTypes.SpecifiedDailyAmount)]
@@ -79,6 +73,12 @@ namespace Models.CLEM.Activities
         [Description("Stop feeding when satisfied")]
         [Required]
         public bool StopFeedingWhenSatisfied { get; set; }
+
+        /// <summary>
+        /// Feed type
+        /// </summary>
+        [JsonIgnore]
+        public IFeedType FeedType { get; set; }
 
         /// <summary>
         /// Constructor
@@ -114,8 +114,6 @@ namespace Models.CLEM.Activities
             // get list from filters
             foreach (var child in FindAllChildren<FilterGroup<Ruminant>>())
             {
-                var subgroup = child.Filter(herd);
-
                 double value = 0;
                 if (child is RuminantFeedGroup rfg)
                     value = rfg.Value;
@@ -126,22 +124,12 @@ namespace Models.CLEM.Activities
 
                 var selectedIndividuals = child.Filter(herd);
 
-                //switch (FeedStyle)
-                //{
-                //    case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                //    case RuminantFeedActivityTypes.ProportionOfWeight:
-                //    case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                //    case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                //        usingPotentialintakeMultiplier = true;
-                //        break;
-                //}
-
                 var intakeToPotential = selectedIndividuals.Sum(a => a.PotentialIntake - a.Intake);
 
                 switch (FeedStyle)
                 {
                     case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                        usingPotentialintakeMultiplier = true;
+                        usingPotentialIntakeMultiplier = true;
                         if (!singleFeedAmountsCalculated && selectedIndividuals.Count() > 0)
                         {
                             feedEstimated += value * 30.4;
@@ -150,10 +138,10 @@ namespace Models.CLEM.Activities
                         break;
                     case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
                         feedEstimated += (value * 30.4)*selectedIndividuals.Count();
-                        usingPotentialintakeMultiplier = true;
+                        usingPotentialIntakeMultiplier = true;
                         break;
                     case RuminantFeedActivityTypes.ProportionOfWeight:
-                        usingPotentialintakeMultiplier = true;
+                        usingPotentialIntakeMultiplier = true;
                         feedEstimated += selectedIndividuals.Sum(a => value * a.Weight * 30.4);
                         break;
                     case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
@@ -163,7 +151,7 @@ namespace Models.CLEM.Activities
                         feedEstimated += intakeToPotential * value;
                         break;
                     case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                        usingPotentialintakeMultiplier = true;
+                        usingPotentialIntakeMultiplier = true;
                         if (!singleFeedAmountsCalculated && selectedIndividuals.Count() > 0)
                         {
                             feedEstimated += value * FeedType.Amount;
@@ -178,38 +166,7 @@ namespace Models.CLEM.Activities
                 // accounts for some feeding style allowing overeating to the user declared value in ruminant 
 
                 feedToSatisfy += intakeToPotential;
-                feedToOverSatisfy += selectedIndividuals.Sum(a => a.PotentialIntake * (usingPotentialintakeMultiplier ? a.BreedParams.OverfeedPotentialIntakeModifier : 1) - a.Intake);
-
-//                feedToSatisfy += selectedIndividuals.Sum(a => a.PotentialIntake - a.Intake);
-//                feedToOverSatisfy += selectedIndividuals.Sum(a => a.PotentialIntake * (usingPotentialintakeMultiplier ? a.BreedParams.OverfeedPotentialIntakeModifier : 1) - a.Intake);
-
-//                if (FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount)
-//                    feedEstimated += value * 30.4;
-//                else if(FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
-//                    feedEstimated += value * FeedType.Amount;
-                //else
-                //{
-                //    foreach (Ruminant ind in selectedIndividuals)
-                //    {
-                //        switch (FeedStyle)
-                //        {
-                //            case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                //                feedEstimated += value * 30.4;
-                //                break;
-                //            case RuminantFeedActivityTypes.ProportionOfWeight:
-                //                feedEstimated += value * ind.Weight * 30.4;
-                //                break;
-                //            case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                //                feedEstimated += value * ind.PotentialIntake;
-                //                break;
-                //            case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                //                feedEstimated += value * (ind.PotentialIntake - ind.Intake);
-                //                break;
-                //            default:
-                //                throw new Exception(String.Format("FeedStyle {0} is not supported in {1}", FeedStyle, this.Name));
-                //        }
-                //    }
-                //}
+                feedToOverSatisfy += selectedIndividuals.Sum(a => a.PotentialIntake * (usingPotentialIntakeMultiplier ? a.BreedParams.OverfeedPotentialIntakeModifier : 1) - a.Intake);
             }
 
             if(StopFeedingWhenSatisfied)
@@ -219,7 +176,7 @@ namespace Models.CLEM.Activities
             if (feedEstimated > 0)
             {
                 // FeedTypeName includes the ResourceGroup name eg. AnimalFoodStore.FeedItemName
-                string feedItemName = FeedTypeName.Split('.').Last();
+//                string feedItemName = FeedTypeName.Split('.').Last();
 
                 // create food resrouce packet with details
                 FoodResourcePacket foodPacket = new FoodResourcePacket()
@@ -237,7 +194,7 @@ namespace Models.CLEM.Activities
                         Required = feedEstimated,
                         Resource = FeedType,
                         ResourceType = typeof(AnimalFoodStore),
-                        ResourceTypeName = feedItemName,
+                        ResourceTypeName = FeedTypeName,
                         ActivityModel = this,
                         Category = TransactionCategory,
                         RelatesToResource = this.PredictedHerdName,
@@ -396,7 +353,7 @@ namespace Models.CLEM.Activities
                 }
 
                 // feed animals
-                if(feedRequest == null || (feedRequest.Required == 0 | feedRequest.Available == 0))
+                if(feedRequest == null || (feedRequest.Required == 0 | feedRequest.Available == 0) || feedLimit <= 0.00001)
                 {
                     Status = ActivityStatus.NotNeeded;
                     return;
@@ -419,7 +376,7 @@ namespace Models.CLEM.Activities
                         {
                             case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                             case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                                details.Amount = ((ind.PotentialIntake * (usingPotentialintakeMultiplier ? ind.BreedParams.OverfeedPotentialIntakeModifier : 1)) - ind.Intake);
+                                details.Amount = ((ind.PotentialIntake * (usingPotentialIntakeMultiplier ? ind.BreedParams.OverfeedPotentialIntakeModifier : 1)) - ind.Intake);
                                 details.Amount *= feedLimit;
                                 break;
                             case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
@@ -442,7 +399,7 @@ namespace Models.CLEM.Activities
                                 throw new Exception($"FeedStyle [{FeedStyle}] is not supported in [a={Name}]");
                         }
                         // check amount meets intake limits
-                        if (usingPotentialintakeMultiplier)
+                        if (usingPotentialIntakeMultiplier)
                             if (details.Amount > (ind.PotentialIntake + (Math.Max(0,ind.BreedParams.OverfeedPotentialIntakeModifier-1)*overfeedProportion*ind.PotentialIntake)) - ind.Intake)
                                 details.Amount = (ind.PotentialIntake + (Math.Max(0, ind.BreedParams.OverfeedPotentialIntakeModifier - 1) * overfeedProportion * ind.PotentialIntake)) - ind.Intake;
 
