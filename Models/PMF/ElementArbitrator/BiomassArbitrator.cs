@@ -156,7 +156,7 @@ namespace Models.PMF
                     o.Nitrogen.SetSuppliesAndDemands();
 
                 // Calculate N Reallocation
-                double NTotalReAlocationAllocated = DoAllocation(Nitrogen.TotalReAllocationSupply, Nitrogen);
+                NTotalReAlocationAllocated = DoAllocation(Nitrogen.TotalReAllocationSupply, Nitrogen);
                 foreach (OrganNutrientDelta o in Nitrogen.ArbitratingOrgans)
                     if (o.Supplies.ReAllocation.Total > 0)
                     {
@@ -166,9 +166,15 @@ namespace Models.PMF
             }
         }
 
+        double NTotalReAlocationAllocated = 0;
         /// <summary>Takes N Allocation from Soil arbitration and partitions it within the plant</summary>
         public void AllocateNUptake(double TotalPlantUptake)
         {
+            double NTotalUptakeAllocated = DoAllocation(TotalPlantUptake, Nitrogen);
+
+            double check = NTotalUptakeAllocated - (Nitrogen.TotalPlantDemand - NTotalReAlocationAllocated);
+            if (check > 0.0000000000001)
+                throw new Exception("NUptake exceeds demand");
             //Let uptake organs know what theire uptake
             int count = 0;
             foreach (Organ o in PlantOrgans)
@@ -177,8 +183,7 @@ namespace Models.PMF
                 {
                     if (count > 0)
                         throw new Exception("Two organs have IWaterNitrogenUptake");
-                    double relativeSupply = MathUtilities.Divide(o.Nitrogen.Supplies.Uptake,  Nitrogen.TotalUptakeSupply, 0);
-                    o.Nitrogen.SuppliesAllocated.Uptake = TotalPlantUptake / zone.Area * relativeSupply;
+                    o.Nitrogen.SuppliesAllocated.Uptake = TotalPlantUptake / zone.Area;
                     count += 1;
                 }
             }
@@ -235,9 +240,9 @@ namespace Models.PMF
                     double StructuralProportion = C.DemandsAllocated.Structural / C.DemandsAllocated.Total;
                     double MetabolicProportion = C.DemandsAllocated.Metabolic / C.DemandsAllocated.Total;
                     double StorageProportion = C.DemandsAllocated.Storage / C.DemandsAllocated.Total; ;
-                    C.DemandsAllocated.Metabolic = Math.Min(C.DemandsAllocated.Metabolic, C.MaxCDelta * MetabolicProportion);
-                    C.DemandsAllocated.Structural = Math.Min(C.DemandsAllocated.Structural, C.MaxCDelta * StructuralProportion);  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
-                    C.DemandsAllocated.Storage = Math.Min(C.DemandsAllocated.Storage, C.MaxCDelta * StorageProportion);  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
+                    C.DemandsAllocated.Metabolic = Math.Min(C.DemandsAllocated.Metabolic, N.MaxCDelta * MetabolicProportion);
+                    C.DemandsAllocated.Structural = Math.Min(C.DemandsAllocated.Structural, N.MaxCDelta * StructuralProportion);  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
+                    C.DemandsAllocated.Storage = Math.Min(C.DemandsAllocated.Storage, N.MaxCDelta * StorageProportion);  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
                 }
             }
         }

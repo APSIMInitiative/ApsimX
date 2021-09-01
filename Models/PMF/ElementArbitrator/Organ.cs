@@ -104,6 +104,7 @@
         ///5. Public Properties
         /// --------------------------------------------------------------------------------------------------
 
+        /// <summary>Interface to uptakes</summary>
         public IWaterNitrogenUptake WaterNitrogenUptakeObject
         {
             get

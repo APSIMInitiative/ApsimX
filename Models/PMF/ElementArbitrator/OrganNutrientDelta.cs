@@ -119,7 +119,7 @@
 
         private double ThrowIfNegative (IFunction function)
         {
-                if (function.Value() < 0)
+                if (function.Value() < -0.0000000000001)
                     throw new Exception((function as IModel).FullPath + " is returning a negative supply ("+ function.Value()+ ").  It must be >= 0");
                 else
                     return function.Value();
