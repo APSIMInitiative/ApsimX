@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.IO.Pipes;
 
-namespace APSIM.Tests
+namespace UnitTests.Server
 {
     [TestFixture]
     public class NativeSocketConnectionTests
