@@ -160,7 +160,7 @@ namespace Models.CLEM.Resources
 
                 foreach (AnimalPriceGroup item in priceGroups.Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
                 {
-                    if (item.FilterProportion(animalList).Count() == 1)
+                    if (item.Filter(animalList).Count() == 1)
                     {
                         //priceOfIndividual = item.Value * ((item.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
                         return item;
@@ -200,7 +200,7 @@ namespace Models.CLEM.Resources
 
                 foreach (AnimalPriceGroup item in items)
                 {
-                    if (item.FilterProportion(animalList).Count() == 1 && matchIndividual == null)
+                    if (item.Filter(animalList).Count() == 1 && matchIndividual == null)
                     {
                         matchIndividual = item;
                     }

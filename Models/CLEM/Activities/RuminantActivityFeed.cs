@@ -114,7 +114,7 @@ namespace Models.CLEM.Activities
             // get list from filters
             foreach (var child in FindAllChildren<FilterGroup<Ruminant>>())
             {
-                var subgroup = child.FilterProportion(herd);
+                var subgroup = child.Filter(herd);
 
                 double value = 0;
                 if (child is RuminantFeedGroup rfg)
@@ -124,7 +124,7 @@ namespace Models.CLEM.Activities
                 else
                     continue;
 
-                var selectedIndividuals = child.FilterProportion(herd);
+                var selectedIndividuals = child.Filter(herd);
 
                 //switch (FeedStyle)
                 //{
@@ -413,7 +413,7 @@ namespace Models.CLEM.Activities
                     else
                         continue;
 
-                    foreach (Ruminant ind in child.FilterProportion(herd))
+                    foreach (Ruminant ind in child.Filter(herd))
                     {
                         switch (FeedStyle)
                         {

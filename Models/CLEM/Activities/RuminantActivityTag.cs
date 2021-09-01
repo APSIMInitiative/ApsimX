@@ -76,9 +76,9 @@ namespace Models.CLEM.Activities
                 foreach (RuminantGroup item in filterGroups)
                 {
                     if (ApplicationStyle == TagApplicationStyle.Add)
-                        numberToTag += item.FilterProportion(herd).Where(a => !a.Attributes.Exists(TagLabel)).Count();
+                        numberToTag += item.Filter(herd).Where(a => !a.Attributes.Exists(TagLabel)).Count();
                     else
-                        numberToTag += item.FilterProportion(herd).Where(a => a.Attributes.Exists(TagLabel)).Count();
+                        numberToTag += item.Filter(herd).Where(a => a.Attributes.Exists(TagLabel)).Count();
                 }
             }
             else
@@ -135,7 +135,7 @@ namespace Models.CLEM.Activities
                 {
                     foreach (RuminantGroup item in filterGroups)
                     {
-                        foreach (Ruminant ind in item.FilterProportion(herd).Where(a => (ApplicationStyle == TagApplicationStyle.Add)? !a.Attributes.Exists(TagLabel): a.Attributes.Exists(TagLabel)).Take(numberToTag))
+                        foreach (Ruminant ind in item.Filter(herd).Where(a => (ApplicationStyle == TagApplicationStyle.Add)? !a.Attributes.Exists(TagLabel): a.Attributes.Exists(TagLabel)).Take(numberToTag))
                         {
                             if(this.Status != ActivityStatus.Partial)
                                 this.Status = ActivityStatus.Success;

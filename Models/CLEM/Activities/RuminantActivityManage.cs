@@ -876,7 +876,7 @@ namespace Models.CLEM.Activities
                     foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
                     {
                         // works with current filtered herd to obey filtering.
-                        List<Ruminant> herdToSell = item.FilterProportion(herd).ToList();
+                        List<Ruminant> herdToSell = item.Filter(herd).ToList();
                         int sellNum = herdToSell.Count();
                         int cnt = 0;
                         while (cnt < sellNum && excessBreeders > 0)
