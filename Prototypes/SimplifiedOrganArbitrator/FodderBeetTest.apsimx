@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 408,
+  "ExplorerWidth": 285,
   "Version": 139,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -3844,7 +3844,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
+                                  "FixedValue": 0.0,
                                   "Units": null,
                                   "Name": "Multiplier",
                                   "Children": [],
@@ -3863,7 +3863,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
+                                  "FixedValue": 0.0,
                                   "Units": null,
                                   "Name": "Multiplier",
                                   "Children": [],
