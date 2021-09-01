@@ -18,20 +18,13 @@ namespace Models.CLEM
         where TFilter : IFilterable
     {
         private protected IEnumerable<Func<IFilterable, bool>> filterRules = null;
+        private protected IEnumerable<ISort> sortList = null;
 
         /// <summary>
         /// The properties available for filtering
         /// </summary>
         [NonSerialized]
         protected Dictionary<string, PropertyInfo> properties;
-
-        /// <summary>
-        /// Constructor, for objects created for UI
-        /// </summary>
-        public FilterGroup()
-        {
-            InitialiseFilters();
-        }
 
         /// <inheritdoc/>
         [JsonIgnore]
@@ -40,11 +33,21 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public PropertyInfo GetProperty(string name) => properties[name];
 
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public FilterGroup()
+        {
+            // needed for UI to access property lists
+            InitialiseFilters();
+        }
+
         ///<inheritdoc/>
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
             InitialiseFilters();
+            sortList = FindAllChildren<ISort>();
         }
 
         /// <summary>
@@ -83,15 +86,19 @@ namespace Models.CLEM
             if (filterRules is null)
                 filterRules = FindAllChildren<Filter>().Select(filter => filter.Compile<IFilterable>());
 
-            // add sorting
-
             // calculate the specified number/proportion of the filtered group to take from group
             int number = source.Count();
             foreach (var take in FindAllChildren<TakeFromFiltered>())
-                // cummulative take through all TakeFromFiltered components
+                // cummulative take calculation through all TakeFromFiltered components
                 number = take.NumberToTake(number);
 
-            return filterRules.Any() ? source.Where(item => filterRules.All(rule => rule(item))).Take(number) : source.Take(number);
+            var filtered = (filterRules.Any() ? source.Where(item => filterRules.All(rule => rule(item))) : source);
+
+            if(sortList?.Any()??false)
+                // add sorting and take specified
+                return filtered.Sort(sortList).Take(number); 
+            else
+                return filtered.Take(number);
         }
 
         #region descriptive summary
