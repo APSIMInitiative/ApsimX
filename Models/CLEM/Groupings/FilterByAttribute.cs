@@ -6,7 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Models.CLEM.Groupings
 {
@@ -41,73 +43,126 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override Func<T, bool> Compile<T>()
         {
-            Func<T, bool> lambda = t =>
+            // check that the T is attributabe
+            if (!(typeof(IAttributable).IsAssignableFrom(typeof(T))))
+                return (T t) => false;
+
+            var filterParam = Expression.Parameter(typeof(T));
+            var attProperty = Expression.Property(filterParam, typeof(IAttributable).GetProperty("Attributes"));
+            
+            var tag = Expression.Constant(AttributeTag);
+            var compareValue = Expression.Constant(Value??"");
+
+            MethodInfo method; // method to get the value
+            Expression methodcall; // call the method with arguments
+            Expression binary; // binary expression for lambda
+            
+            if (FilterStyle == AttributeFilterStyle.Exists)
             {
-                if (!(t is IAttributable attributable))
-                    return false;
+                // need to get the methodinfo from attributes (it is nested T.Attributes.Exists(tag))
+                method = typeof(IndividualAttributeList).GetMethods().Where(m => m.Name == "Exists").FirstOrDefault();
 
-                //if (!attributable.Attributes.Exists(AttributeTag))
-                //    return false;
-
-                // using the provided operator
-
-                if (FilterStyle == AttributeFilterStyle.Exists)
+                methodcall = Expression.Call(attProperty, method, tag);
+                if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
                 {
-                    bool boolResult = true;
-                    string value = Value?.ToString().ToLower();
-                    switch (Operator)
-                    {
-                        case ExpressionType.Equal:
-                            boolResult = value == "true";
-                            break;
-                        case ExpressionType.NotEqual:
-                            boolResult = value != "true";
-                            boolResult = false;
-                            break;
-                        case ExpressionType.IsTrue:
-                            boolResult = true;
-                            break;
-                        case ExpressionType.IsFalse:
-                            boolResult = false;
-                            break;
-                        case ExpressionType.GreaterThan:
-                        case ExpressionType.GreaterThanOrEqual:
-                        case ExpressionType.LessThan:
-                        case ExpressionType.LessThanOrEqual:
-                        default:
-                            throw new NotImplementedException($"The operator [{OperatorToSymbol()}] is not valid for the Atribute-based filter [f={Name}] of style [{FilterStyle}]");
-                    }
-                    return (attributable.Attributes.Exists(AttributeTag) == boolResult);
+                    // Allow for IsTrue and IsFalse operator
+                    var boolres = Expression.Constant(Operator == ExpressionType.IsTrue);
+                    binary = Expression.MakeBinary(ExpressionType.Equal, methodcall, boolres);
+                    return Expression.Lambda<Func<T, bool>>(binary, filterParam).Compile();
                 }
                 else
                 {
-                    // using filter by value
-                    var ce1 = Convert.ToDecimal(Value ?? "");
-                    var ce2 = Convert.ToDecimal(attributable.Attributes.GetValue(AttributeTag)?.StoredValue ?? 0);
-
-                    switch (Operator)
-                    {
-                        case ExpressionType.Equal:
-                            return ce2 == ce1;
-                        case ExpressionType.NotEqual:
-                            return ce2 != ce1;
-                        case ExpressionType.GreaterThan:
-                            return ce2 > ce1;
-                        case ExpressionType.GreaterThanOrEqual:
-                            return ce2 >= ce1;
-                        case ExpressionType.LessThan:
-                            return ce2 < ce1;
-                        case ExpressionType.LessThanOrEqual:
-                            return ce2 <= ce1;
-                        case ExpressionType.IsTrue:
-                        case ExpressionType.IsFalse:
-                        default:
-                            throw new NotImplementedException($"The operator [{OperatorToSymbol()}] is not valid for the Atribute-based filter [f={Name}] of style [{FilterStyle}]");
-                    }
+                    binary = Expression.MakeBinary(Operator, methodcall, compareValue);
+                    return Expression.Lambda<Func<T, bool>>(binary, filterParam).Compile();
                 }
-            };
-            return lambda;
+            }
+            else
+            {
+                // need to get the methodinfo from attributes (it is nested T.Attributes.GetValue(tag))
+                method = typeof(IndividualAttributeList).GetMethods().Where(m => m.Name == "GetValue").FirstOrDefault();
+
+                // get compare value from Value - assumed to be single 
+                // TODO: will also need string when haplotypes implemented
+                compareValue = Expression.Constant(Convert.ToSingle(Value??"0.0"));
+                methodcall = Expression.Call(attProperty, method, tag);
+
+                var returnValue = Expression.Property(methodcall, "StoredValue");
+                var returnValueAsFloat = Expression.Convert(returnValue, typeof(Single));
+                binary = Expression.MakeBinary(Operator, returnValueAsFloat, compareValue);
+                return Expression.Lambda<Func<T, bool>>(binary, filterParam).Compile();
+            }
         }
+
+        ///// <inheritdoc/>
+        //public override Func<T, bool> Compile<T>()
+        //{
+        //    Func<T, bool> lambda = t =>
+        //    {
+        //        if (!(t is IAttributable attributable))
+        //            return false;
+
+        //        //if (!attributable.Attributes.Exists(AttributeTag))
+        //        //    return false;
+
+        //        // using the provided operator
+
+        //        if (FilterStyle == AttributeFilterStyle.Exists)
+        //        {
+        //            bool boolResult = true;
+        //            string value = Value?.ToString().ToLower();
+        //            switch (Operator)
+        //            {
+        //                case ExpressionType.Equal:
+        //                    boolResult = value == "true";
+        //                    break;
+        //                case ExpressionType.NotEqual:
+        //                    boolResult = value != "true";
+        //                    boolResult = false;
+        //                    break;
+        //                case ExpressionType.IsTrue:
+        //                    boolResult = true;
+        //                    break;
+        //                case ExpressionType.IsFalse:
+        //                    boolResult = false;
+        //                    break;
+        //                case ExpressionType.GreaterThan:
+        //                case ExpressionType.GreaterThanOrEqual:
+        //                case ExpressionType.LessThan:
+        //                case ExpressionType.LessThanOrEqual:
+        //                default:
+        //                    throw new NotImplementedException($"The operator [{OperatorToSymbol()}] is not valid for the Atribute-based filter [f={Name}] of style [{FilterStyle}]");
+        //            }
+        //            return (attributable.Attributes.Exists(AttributeTag) == boolResult);
+        //        }
+        //        else
+        //        {
+        //            // using filter by value
+        //            var ce1 = Convert.ToDecimal(Value ?? "");
+        //            var ce2 = Convert.ToDecimal(attributable.Attributes.GetValue(AttributeTag)?.StoredValue ?? 0);
+
+        //            switch (Operator)
+        //            {
+        //                case ExpressionType.Equal:
+        //                    return ce2 == ce1;
+        //                case ExpressionType.NotEqual:
+        //                    return ce2 != ce1;
+        //                case ExpressionType.GreaterThan:
+        //                    return ce2 > ce1;
+        //                case ExpressionType.GreaterThanOrEqual:
+        //                    return ce2 >= ce1;
+        //                case ExpressionType.LessThan:
+        //                    return ce2 < ce1;
+        //                case ExpressionType.LessThanOrEqual:
+        //                    return ce2 <= ce1;
+        //                case ExpressionType.IsTrue:
+        //                case ExpressionType.IsFalse:
+        //                default:
+        //                    throw new NotImplementedException($"The operator [{OperatorToSymbol()}] is not valid for the Atribute-based filter [f={Name}] of style [{FilterStyle}]");
+        //            }
+        //        }
+        //    };
+        //    return lambda;
+        //}
 
         /// <summary>
         /// Constructor
@@ -145,10 +200,8 @@ namespace Models.CLEM.Groupings
                 {
                     filterWriter.Write(" is");
                     if (truefalse)
-                    {
                         if (Operator == ExpressionType.IsFalse | Value?.ToString().ToLower() == "false")
                             filterWriter.Write(" not");
-                    }
                     filterWriter.Write($" Attribute({CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)})");
                 }
                 else

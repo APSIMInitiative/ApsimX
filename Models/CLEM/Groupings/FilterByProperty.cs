@@ -44,16 +44,26 @@ namespace Models.CLEM.Groupings
         public override Func<T, bool> Compile<T>()
         {
             // Check that the filter applies to objects of type T
-            var info = Parent.GetProperty(PropertyOfIndividual);
-            if (!info.DeclaringType.IsSubclassOf(typeof(T)))
+            var filterParam = Expression.Parameter(typeof(T));
+            var filterProp = Parent.GetProperty(PropertyOfIndividual);
+
+            // check if the type f the prop is a subclass of T
+            if (!filterProp.DeclaringType.IsSubclassOf(typeof(T)))
+                return (T t) => false;
+            
+            // check if the parameter passes can inherit the declaring type
+            // this will not allow females to check male properties
+            if (!filterParam.Type.IsAssignableFrom(filterProp.DeclaringType))
                 return (T t) => false;
 
-            // Look for the property on T
-            var genericType = Expression.Parameter(info.DeclaringType);
-            var key = Expression.Property(genericType, info.Name);
+            // convert parameter to the type of the property
+            var filterInherit = Expression.Convert(filterParam, filterProp.DeclaringType);
+
+            // Look for the property
+            var key = Expression.Property(filterInherit, filterProp.Name);
 
             // Try convert the Value into the same data type as the property
-            var type = info.PropertyType;
+            var type = filterProp.PropertyType;
             var ce = type.IsEnum ? Enum.Parse(type, Value.ToString(), true) : Convert.ChangeType(Value??0, type);
             var value = Expression.Constant(ce);
 
@@ -64,20 +74,19 @@ namespace Models.CLEM.Groupings
             if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
             {
                 // Allow for IsTrue and IsFalse operator
-                ce = (Operator == ExpressionType.IsTrue) ? true : false;
+                ce = (Operator == ExpressionType.IsTrue);
                 binary = Expression.MakeBinary(ExpressionType.Equal, key, Expression.Constant(ce));
             }
             else
             {
                 binary = Expression.MakeBinary(Operator, key, value);
             }
-            
-            var lambda = Expression.Lambda<Func<T, bool>>(binary, genericType).Compile();
+            var lambda = Expression.Lambda<Func<T, bool>>(binary, filterParam).Compile();
             return lambda;
         }
 
         /// <summary>
-        /// Convert sort to string
+        /// Convert filter to string
         /// </summary>
         /// <returns></returns>
         public override string ToString()
@@ -86,7 +95,7 @@ namespace Models.CLEM.Groupings
         }
 
         /// <summary>
-        /// Convert sort to html string
+        /// Convert filter to html string
         /// </summary>
         /// <returns></returns>
         public string ToHTMLString()
