@@ -36,7 +36,7 @@ The setter for a property must not have side affects. In other words, the setter
 If models need to communicate with other models, they may do so by declaring a public or private field with a [Link] attribute. APSIM will provide a valid reference for the field at simulation start time by finding another model that is in scope and has the same type as the field declaration. Once found, models can then call properties and methods of the referenced model as normal. e.g
 
 ```c#
-[Link] private Clock Clock = null;
+[Link] private Clock clock = null;
 [EventSubscribe("StartOfDay")]
 private void OnStartOfDay(object sender, EventArgs e)
 {

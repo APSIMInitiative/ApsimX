@@ -5,7 +5,7 @@ using System.Data;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace APSIM.Tests.UtilityTests
+namespace UnitTests.Server
 {
     [TestFixture]
     public class DataTableUtilitiesTests

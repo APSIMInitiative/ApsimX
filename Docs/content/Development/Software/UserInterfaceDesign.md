@@ -67,7 +67,7 @@ namespace UserInterface.Commands
 
 # Model View Presenter
 
-A 'Model' in this context is self explanatory. It is the class that holds the problem domain data (deserialised from the XML files) that is editable by the user and executes during a simulation run. Some examples include SoilWater, Clock and Graph.
+A 'Model' in this context is self explanatory. It is the class that holds the problem domain data (deserialised from the json files) that is editable by the user and executes during a simulation run. Some examples include SoilWater, Clock and Graph.
 
 A 'View' is a form that allows user interaction. It doesn't have any functionality beyond the display of information and receiving user input. It does not have any functionality that determines what data gets put on the screen. i.e. it doesn't talk to the model. A 'view' does not have a reference to a model or presenter. It is essentially a very passive (humble) form that is told what to do by the presenter. It does not contain any logic that describes what to do when the user interacts with it. In short, the idea is to keep it as simple as possible.
 
@@ -102,13 +102,14 @@ namespace UserInterface.Presenters
 
 #Example Model / View / Presenter
 
-The Axis model is a simple data container for storing properties associated with an axis on a graph. The data deserialised from the XML looks like this:
+The Axis model is a simple data container for storing properties associated with an axis on a graph. The data deserialised from the json looks like this:
 
-```c#
-<Axis>
-    <Type>Left</Type>
-    <Title>Y axis title</Title>
-</Axis>
+```json
+	{
+	  "$type": "Models.Axis, Models",
+	  "Type": 3,
+	  "Title": "Y axis title",
+	}
 ```
 
 The axis model source looks like this:

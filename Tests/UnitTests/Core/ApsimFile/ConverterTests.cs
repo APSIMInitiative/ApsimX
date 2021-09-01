@@ -345,7 +345,7 @@
             using (StringWriter writer = new StringWriter())
             {
                 writer.Write(converter.Root.ToString());
-                Assert.AreEqual(writer.ToString(), expectedJson);
+                Assert.AreEqual(expectedJson, writer.ToString());
             }
         }
 
