@@ -55,13 +55,14 @@ namespace Models.PMF
             get
             {
                 double wt = 0;
-                foreach (var organ in organs)
-                {
-                    if (IncludeLive)
-                        wt += organ.Live.Wt;
-                    if (IncludeDead)
-                        wt += organ.Dead.Wt;
-                }
+                if (organs != null)
+                    foreach (var organ in organs)
+                    {
+                        if (IncludeLive)
+                            wt += organ.Live.Wt;
+                        if (IncludeDead)
+                            wt += organ.Dead.Wt;
+                    }
 
                 return wt;
             }
@@ -74,13 +75,14 @@ namespace Models.PMF
             get
             {
                 double n = 0;
-                foreach (var organ in organs)
-                {
-                    if (IncludeLive)
-                        n += organ.Live.N;
-                    if (IncludeDead)
-                        n += organ.Dead.N;
-                }
+                if (organs != null)
+                    foreach (var organ in organs)
+                    {
+                        if (IncludeLive)
+                            n += organ.Live.N;
+                        if (IncludeDead)
+                            n += organ.Dead.N;
+                    }
 
                 return n;
             }
@@ -107,13 +109,14 @@ namespace Models.PMF
             get
             {
                 double wt = 0;
-                foreach (var organ in organs)
-                {
-                    if (IncludeLive)
-                        wt += organ.Live.StructuralWt;
-                    if (IncludeDead)
-                        wt += organ.Dead.StructuralWt;
-                }
+                if (organs != null)
+                    foreach (var organ in organs)
+                    {
+                        if (IncludeLive)
+                            wt += organ.Live.StructuralWt;
+                        if (IncludeDead)
+                            wt += organ.Dead.StructuralWt;
+                    }
 
                 return wt;
             }
@@ -126,13 +129,14 @@ namespace Models.PMF
             get
             {
                 double n = 0;
-                foreach (var organ in organs)
-                {
-                    if (IncludeLive)
-                        n += organ.Live.StructuralN;
-                    if (IncludeDead)
-                        n += organ.Dead.StructuralN;
-                }
+                if (organs != null)
+                    foreach (var organ in organs)
+                    {
+                        if (IncludeLive)
+                            n += organ.Live.StructuralN;
+                        if (IncludeDead)
+                            n += organ.Dead.StructuralN;
+                    }
 
                 return n;
             }
@@ -146,13 +150,14 @@ namespace Models.PMF
             get
             {
                 double wt = 0;
-                foreach (var organ in organs)
-                {
-                    if (IncludeLive)
-                        wt += organ.Live.StorageWt;
-                    if (IncludeDead)
-                        wt += organ.Dead.StorageWt;
-                }
+                if (organs != null)
+                    foreach (var organ in organs)
+                    {
+                        if (IncludeLive)
+                            wt += organ.Live.StorageWt;
+                        if (IncludeDead)
+                            wt += organ.Dead.StorageWt;
+                    }
 
                 return wt;
             }
@@ -165,13 +170,14 @@ namespace Models.PMF
             get
             {
                 double n = 0;
-                foreach (var organ in organs)
-                {
-                    if (IncludeLive)
-                        n += organ.Live.StorageN;
-                    if (IncludeDead)
-                        n += organ.Dead.StorageN;
-                }
+                if (organs != null)
+                    foreach (var organ in organs)
+                    {
+                        if (IncludeLive)
+                            n += organ.Live.StorageN;
+                        if (IncludeDead)
+                            n += organ.Dead.StorageN;
+                    }
 
                 return n;
             }
