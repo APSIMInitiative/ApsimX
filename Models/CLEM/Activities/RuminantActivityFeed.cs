@@ -89,25 +89,6 @@ namespace Models.CLEM.Activities
             TransactionCategory = "Livestock.Feed";
         }
 
-        #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-
-            if (FindAllChildren<RuminantFeedGroup>().Count() + this.FindAllChildren<RuminantFeedGroupMonthly>().Count() == 0)
-            {
-                string[] memberNames = new string[] { "Ruminant feed group" };
-                results.Add(new ValidationResult("At least one [f=RuminantFeedGroup] or [f=RuminantFeedGroupMonthly] is required to define the animals and amount fed", memberNames));
-            }
-            return results;
-        } 
-        #endregion
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -128,10 +109,13 @@ namespace Models.CLEM.Activities
             feedEstimated = 0;
             feedToSatisfy = 0;
             feedToOverSatisfy = 0;
+            bool singleFeedAmountsCalculated = false;
 
             // get list from filters
-            foreach (var child in Children.OfType<FilterGroup<Ruminant>>())
+            foreach (var child in FindAllChildren<FilterGroup<Ruminant>>())
             {
+                var subgroup = child.FilterProportion(herd);
+
                 double value = 0;
                 if (child is RuminantFeedGroup rfg)
                     value = rfg.Value;
@@ -142,49 +126,90 @@ namespace Models.CLEM.Activities
 
                 var selectedIndividuals = child.FilterProportion(herd);
 
+                //switch (FeedStyle)
+                //{
+                //    case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                //    case RuminantFeedActivityTypes.ProportionOfWeight:
+                //    case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
+                //    case RuminantFeedActivityTypes.SpecifiedDailyAmount:
+                //        usingPotentialintakeMultiplier = true;
+                //        break;
+                //}
+
+                var intakeToPotential = selectedIndividuals.Sum(a => a.PotentialIntake - a.Intake);
+
                 switch (FeedStyle)
                 {
-                    case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                    case RuminantFeedActivityTypes.ProportionOfWeight:
-                    case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
                     case RuminantFeedActivityTypes.SpecifiedDailyAmount:
                         usingPotentialintakeMultiplier = true;
+                        if (!singleFeedAmountsCalculated && selectedIndividuals.Count() > 0)
+                        {
+                            feedEstimated += value * 30.4;
+                            singleFeedAmountsCalculated = true;
+                        }
                         break;
+                    case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                        feedEstimated += (value * 30.4)*selectedIndividuals.Count();
+                        usingPotentialintakeMultiplier = true;
+                        break;
+                    case RuminantFeedActivityTypes.ProportionOfWeight:
+                        usingPotentialintakeMultiplier = true;
+                        feedEstimated += selectedIndividuals.Sum(a => value * a.Weight * 30.4);
+                        break;
+                    case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
+                        feedEstimated += selectedIndividuals.Sum(a => value * a.PotentialIntake);
+                        break;
+                    case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+                        feedEstimated += intakeToPotential * value;
+                        break;
+                    case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
+                        usingPotentialintakeMultiplier = true;
+                        if (!singleFeedAmountsCalculated && selectedIndividuals.Count() > 0)
+                        {
+                            feedEstimated += value * FeedType.Amount;
+                            singleFeedAmountsCalculated = true;
+                        }
+                        break;
+                    default:
+                        throw new Exception($"FeedStyle [{FeedStyle}] is not supported in [a={Name}]");
                 }
 
                 // get the amount that can be eaten. Does not account for individuals in multiple filters
                 // accounts for some feeding style allowing overeating to the user declared value in ruminant 
-                feedToSatisfy += selectedIndividuals.Sum(a => a.PotentialIntake - a.Intake);
+
+                feedToSatisfy += intakeToPotential;
                 feedToOverSatisfy += selectedIndividuals.Sum(a => a.PotentialIntake * (usingPotentialintakeMultiplier ? a.BreedParams.OverfeedPotentialIntakeModifier : 1) - a.Intake);
 
-                
-                if (FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount)
-                    feedEstimated += value * 30.4;
-                else if(FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
-                    feedEstimated += value * FeedType.Amount;
-                else
-                {
-                    foreach (Ruminant ind in selectedIndividuals)
-                    {
-                        switch (FeedStyle)
-                        {
-                            case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                                feedEstimated += value * 30.4;
-                                break;
-                            case RuminantFeedActivityTypes.ProportionOfWeight:
-                                feedEstimated += value * ind.Weight * 30.4;
-                                break;
-                            case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                                feedEstimated += value * ind.PotentialIntake;
-                                break;
-                            case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                                feedEstimated += value * (ind.PotentialIntake - ind.Intake);
-                                break;
-                            default:
-                                throw new Exception(String.Format("FeedStyle {0} is not supported in {1}", FeedStyle, this.Name));
-                        }
-                    }
-                }
+//                feedToSatisfy += selectedIndividuals.Sum(a => a.PotentialIntake - a.Intake);
+//                feedToOverSatisfy += selectedIndividuals.Sum(a => a.PotentialIntake * (usingPotentialintakeMultiplier ? a.BreedParams.OverfeedPotentialIntakeModifier : 1) - a.Intake);
+
+//                if (FeedStyle == RuminantFeedActivityTypes.SpecifiedDailyAmount)
+//                    feedEstimated += value * 30.4;
+//                else if(FeedStyle == RuminantFeedActivityTypes.ProportionOfFeedAvailable)
+//                    feedEstimated += value * FeedType.Amount;
+                //else
+                //{
+                //    foreach (Ruminant ind in selectedIndividuals)
+                //    {
+                //        switch (FeedStyle)
+                //        {
+                //            case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                //                feedEstimated += value * 30.4;
+                //                break;
+                //            case RuminantFeedActivityTypes.ProportionOfWeight:
+                //                feedEstimated += value * ind.Weight * 30.4;
+                //                break;
+                //            case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
+                //                feedEstimated += value * ind.PotentialIntake;
+                //                break;
+                //            case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+                //                feedEstimated += value * (ind.PotentialIntake - ind.Intake);
+                //                break;
+                //            default:
+                //                throw new Exception(String.Format("FeedStyle {0} is not supported in {1}", FeedStyle, this.Name));
+                //        }
+                //    }
+                //}
             }
 
             if(StopFeedingWhenSatisfied)
@@ -232,15 +257,19 @@ namespace Models.CLEM.Activities
             IEnumerable<Ruminant> herd = CurrentHerd(false);
             int head = 0;
             double adultEquivalents = 0;
-            foreach (IFilterGroup child in Children.OfType<RuminantFeedGroup>())
-            {
-                var subherd = child.Filter(herd);
-                head += subherd.Count();
-                adultEquivalents += subherd.Sum(a => a.AdultEquivalent);
-            }
-
             double daysNeeded = 0;
             double numberUnits = 0;
+
+            if (requirement.UnitType == LabourUnitType.perHead || requirement.UnitType == LabourUnitType.perAE)
+                foreach (IFilterGroup child in Children.OfType<RuminantFeedGroup>())
+                {
+                    var subherd = child.Filter(herd);
+                    if (requirement.UnitType == LabourUnitType.perHead)
+                        head += subherd.Count();
+                    if (requirement.UnitType == LabourUnitType.perAE)
+                        adultEquivalents += subherd.Sum(a => a.AdultEquivalent);
+                }
+
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
@@ -318,7 +347,7 @@ namespace Models.CLEM.Activities
                     }
                 }
 
-                // report any excess fed above feed needed to fill animals itake (including potential multiplier if required for overfeeding)
+                // report any excess fed above feed needed to fill animals intake (including potential multiplier if required for overfeeding)
                 double excess = 0;
                 if (Math.Min(item.Available, item.Required) >= feedToOverSatisfy)
                 {
@@ -410,7 +439,7 @@ namespace Models.CLEM.Activities
                                 details.Amount *= feedLimit;
                                 break;
                             default:
-                                throw new Exception("Feed style used [" + FeedStyle + "] not implemented in [" + this.Name + "]");
+                                throw new Exception($"FeedStyle [{FeedStyle}] is not supported in [a={Name}]");
                         }
                         // check amount meets intake limits
                         if (usingPotentialintakeMultiplier)
@@ -425,6 +454,25 @@ namespace Models.CLEM.Activities
             else
                 Status = ActivityStatus.NotNeeded;
         }
+
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            if (FindAllChildren<RuminantFeedGroup>().Count() + this.FindAllChildren<RuminantFeedGroupMonthly>().Count() == 0)
+            {
+                string[] memberNames = new string[] { "Ruminant feed group" };
+                results.Add(new ValidationResult("At least one [f=RuminantFeedGroup] or [f=RuminantFeedGroupMonthly] is required to define the animals and amount fed", memberNames));
+            }
+            return results;
+        }
+        #endregion
 
         #region descriptive summary
 
