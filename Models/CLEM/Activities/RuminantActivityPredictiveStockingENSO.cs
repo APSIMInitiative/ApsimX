@@ -257,11 +257,7 @@ namespace Models.CLEM.Activities
                     {
                         string warn = $"No pasture biomass to herd change proportion [Relationship] provided for {((forecastEnsoState== ENSOState.ElNino)? "El Niño":"La Niña")} phase in [a={this.Name}]\r\nNo stock management will be performed in this phase.";
                         this.Status = ActivityStatus.Warning;
-                        if (!Warnings.Exists(warn))
-                        {
-                            Summary.WriteWarning(this, warn);
-                            Warnings.Add(warn);
-                        } 
+                        Warnings.CheckAndWrite(warn, Summary, this);
                     }
 
                     if (herdChange> 1.0)
@@ -313,11 +309,7 @@ namespace Models.CLEM.Activities
             {
                 string warn = $"No [f=FilterGroup]s with a [Destock] Reason were provided in [a={this.Name}]\r\nNo destocking will be performed.";
                 this.Status = ActivityStatus.Warning;
-                if (!Warnings.Exists(warn))
-                {
-                    Summary.WriteWarning(this, warn);
-                    Warnings.Add(warn);
-                }
+                Warnings.CheckAndWrite(warn, Summary, this);
             }
 
             foreach (var item in destockGroups)
@@ -363,11 +355,7 @@ namespace Models.CLEM.Activities
                 {
                     string warn = $"No [f=SpecifyRuminant]s were provided in [a={this.Name}]\r\nNo restocking will be performed.";
                     this.Status = ActivityStatus.Warning;
-                    if (!Warnings.Exists(warn))
-                    {
-                        Summary.WriteWarning(this, warn);
-                        Warnings.Add(warn);
-                    }
+                    Warnings.CheckAndWrite(warn, Summary, this);
                 }
 
                 // buy animals specified in restock ruminant groups

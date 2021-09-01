@@ -138,11 +138,7 @@ namespace Models.CLEM.Activities
                                 case "Models.CLEM.Resources.GrazeFoodStoreType":
                                 case "Models.CLEM.Resources.OtherAnimalsType":
                                     string warn = $"[a={this.Name}] does not support [r={resource.GetType()}]\r\nThis resource will be ignored. Contact developers for more information";
-                                    if (!Warnings.Exists(warn))
-                                    {
-                                        Summary.WriteWarning(this, warn);
-                                        Warnings.Add(warn);
-                                    }
+                                    Warnings.CheckAndWrite(warn, Summary, this);
                                     resource = null;
                                     break;
                             default:

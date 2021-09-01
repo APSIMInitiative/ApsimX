@@ -470,11 +470,7 @@ namespace Models.CLEM.Activities
                             {
                                 // add warning
                                 string warn = $"Unable to reduce breeders at the start of the simulation to number required [{maxBreeders}] using [a={this.Name}]";
-                                if (!Warnings.Exists(warn))
-                                {
-                                    Summary.WriteWarning(this, warn);
-                                    Warnings.Add(warn);
-                                }
+                                Warnings.CheckAndWrite(warn, Summary, this);
                             }
                             breederHerdSize = maxBreeders;
                         }
@@ -500,11 +496,7 @@ namespace Models.CLEM.Activities
                             {
                                 // add warning
                                 string warn = $"Unable to increase breeding sires at the start of the simulation to number required [{SiresKept}] using [a={this.Name}]\r\nNo representative sires are present in the initial herd. Future sire purchases will be used.";
-                                if (!Warnings.Exists(warn))
-                                {
-                                    Summary.WriteWarning(this, warn);
-                                    Warnings.Add(warn);
-                                }
+                                Warnings.CheckAndWrite(warn, Summary, this);
                             }
                             else
                             {
@@ -537,11 +529,7 @@ namespace Models.CLEM.Activities
                             {
                                 // add warning
                                 string warn = $"Unable to reduce breeding sires at the start of the simulation to number required [{SiresKept}] using [a={this.Name}]";
-                                if (!Warnings.Exists(warn))
-                                {
-                                    Summary.WriteWarning(this, warn);
-                                    Warnings.Add(warn);
-                                }
+                                Warnings.CheckAndWrite(warn, Summary, this);
                             }
                         }
                     }
@@ -685,12 +673,8 @@ namespace Models.CLEM.Activities
                     // ensure females are not pregnant and add warning if pregnant old females found.
                     if (ind.Sex == Sex.Female && (ind as RuminantFemale).IsPregnant)
                     {
-                        string warning = "Some females sold at maximum age in [a=" + this.Name + "] were pregnant.\r\nConsider changing the MaximumBreederAge in [a=RuminantActivityManage] or ensure [r=RuminantType.MaxAgeMating] is Gestation length less than the MaximumBreederAge to avoid selling pregnant individuals.";
-                        if (!Warnings.Exists(warning))
-                        {
-                            Warnings.Add(warning);
-                            Summary.WriteWarning(this, warning);
-                        }
+                        string warn = "Some females sold at maximum age in [a=" + this.Name + "] were pregnant.\r\nConsider changing the MaximumBreederAge in [a=RuminantActivityManage] or ensure [r=RuminantType.MaxAgeMating] is Gestation length less than the MaximumBreederAge to avoid selling pregnant individuals.";
+                        Warnings.CheckAndWrite(warn, Summary, this);
                     }
                 }
 
@@ -895,22 +879,14 @@ namespace Models.CLEM.Activities
                                 {
                                     // warning trying to sell non-breeder to reduce breeder herd
                                     string warn = $"The [f={item.Name}] filter group used to reduce breeder numbers in [a={this.Name}] includes non-breeding females.\r\nThese individuals will be ignored.";
-                                    if (!Warnings.Exists(warn))
-                                    {
-                                        Summary.WriteWarning(this, warn);
-                                        Warnings.Add(warn);
-                                    }
+                                    Warnings.CheckAndWrite(warn, Summary, this);
                                 }
                             }
                             else
                             {
                                 // warning trying to sell a male to reduce breeder herd
                                 string warn = $"The [f={item.Name}] filter group used to reduce breeder numbers in [a={this.Name}] includes males.\r\nThese individuals will be ignored.";
-                                if (!Warnings.Exists(warn))
-                                {
-                                    Summary.WriteWarning(this, warn);
-                                    Warnings.Add(warn);
-                                }
+                                Warnings.CheckAndWrite(warn, Summary, this);
                             }
                             cnt++;
                         }

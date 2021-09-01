@@ -503,9 +503,7 @@ namespace Models.CLEM
                         + ", GrassBA: " + grassBasalArea + ", LandCon: " + landCondition + ", StkRate: " + stockingRate + System.Environment.NewLine;
 
             if (clock.EndDate == clock.Today)
-            {
                 return;
-            }
 
             //Check no gaps in the months
             DateTime tempdate = startDate;

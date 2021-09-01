@@ -412,11 +412,7 @@ namespace Models.CLEM.Activities
                     if (numberServiced > 0 & !useControlledMating)
                     {
                         string warning = $"Natural (uncontrolled) mating ocurred in [r={(location.Key ?? "Not specified - general yards")}]";
-                        if (!Warnings.Exists(warning))
-                        {
-                            Warnings.Add(warning);
-                            Summary.WriteMessage(this, warning);
-                        }
+                        Warnings.CheckAndWrite(warning, Summary, this);
                     }
                 }
             }

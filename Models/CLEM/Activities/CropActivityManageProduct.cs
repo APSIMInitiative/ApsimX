@@ -245,11 +245,7 @@ namespace Models.CLEM.Activities
                         if (previousTag == HarvestData.FirstOrDefault().HarvestType)
                         {
                             string warn = $"Invalid sequence of HarvetTags detected in [a={this.Name}]\r\nEnsure tags are ordered first, last in sequence.";
-                            if (!Warnings.Exists(warn))
-                            {
-                                Summary.WriteWarning(this, warn);
-                                Warnings.Add(warn);
-                            }
+                            Warnings.CheckAndWrite(warn, Summary, this);
                         }
                         previousTag = HarvestData.FirstOrDefault().HarvestType;
                     }

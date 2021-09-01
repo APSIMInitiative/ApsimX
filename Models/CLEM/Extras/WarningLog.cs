@@ -54,15 +54,16 @@ namespace Models.CLEM
         /// <summary>
         /// Add new warning to the List if it hasn't been reported
         /// </summary>
-        /// <param name="message">The warning message to report</param>
+        /// <param name="checkMessage">The warning message to check if it exists</param>
         /// <param name="summary">The summary model to write to</param>
         /// <param name="sender">The activity sending the warning</param>
-        public void CheckAndWrite(string message, ISummary summary, IModel sender)
+        /// <param name="fullMessage">A full message to report if check message does not exist, otherwise use check message</param>
+        public void CheckAndWrite(string checkMessage, ISummary summary, IModel sender, string fullMessage = "")
         {
-            if (!Exists(message) & summary != null)
+            if (!Exists(checkMessage) & summary != null)
             {
-                summary.WriteWarning(sender, message);
-                Add(message);
+                summary.WriteWarning(sender, (fullMessage.Any())?fullMessage:checkMessage);
+                Add(checkMessage);
             }
         }
 

@@ -137,11 +137,7 @@ namespace Models.CLEM.Resources
                 if(!ind.Attributes.Exists(attribute))
                 {
                     string warningString = $"No mandatory attribute [{attribute.ToUpper()}] present for individual added by [a={model.Name}]";
-                    if (!Warnings.Exists(warningString))
-                    {
-                        Warnings.Add(warningString);
-                        Summary.WriteWarning(this, warningString);
-                    }
+                    Warnings.CheckAndWrite(warningString, Summary, this);
                 }
             }
         }
@@ -169,12 +165,7 @@ namespace Models.CLEM.Resources
 
                 // no price match found.
                 string warningString = $"No [{purchaseStyle}] price entry was found for [r={ind.Breed}] meeting the required criteria [f=age: {ind.Age}] [f=gender: {ind.Sex}] [f=weight: {ind.Weight.ToString("##0")}]";
-
-                if (!Warnings.Exists(warningString))
-                {
-                    Warnings.Add(warningString);
-                    Summary.WriteWarning(this, warningString);
-                }
+                Warnings.CheckAndWrite(warningString, Summary, this);
             }
             return null;
         }
