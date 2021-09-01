@@ -79,6 +79,7 @@
               "$type": "Models.CLEM.ZoneCLEM, Models",
               "FarmMultiplier": 1.0,
               "ClimateRegion": 0,
+              "EcologicalIndicatorsCalculationInterval": 0,
               "EcologicalIndicatorsCalculationMonth": 12,
               "AutoCreateDescriptiveSummary": false,
               "Area": 0.0,
@@ -244,7 +245,7 @@
                           "Children": [
                             {
                               "$type": "Models.CLEM.Resources.RuminantInitialCohorts, Models",
-                              "WeightWarningOccurred": true,
+                              "WeightWarningOccurred": false,
                               "SelectedTab": null,
                               "Name": "Initial cohorts",
                               "Children": [
@@ -298,7 +299,7 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Sex": 0,
+                                  "Sex": 1,
                                   "Age": 30,
                                   "Number": 1.0,
                                   "Weight": 520.0,
@@ -314,7 +315,7 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Sex": 0,
+                                  "Sex": 1,
                                   "Age": 42,
                                   "Number": 1.0,
                                   "Weight": 610.0,
@@ -477,6 +478,31 @@
                                 {
                                   "$type": "Models.CLEM.Groupings.AnimalPriceGroup, Models",
                                   "PricingStyle": 1,
+                                  "Value": 2.2,
+                                  "PurchaseOrSale": 0,
+                                  "SelectedTab": null,
+                                  "Name": "Breeding Sires",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Male.IsSire",
+                                      "Operator": 13,
+                                      "Value": "True",
+                                      "SelectedTab": null,
+                                      "Name": "isSire",
+                                      "Children": [],
+                                      "IncludeInDocumentation": false,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.CLEM.Groupings.AnimalPriceGroup, Models",
+                                  "PricingStyle": 1,
                                   "Value": 2.5,
                                   "PurchaseOrSale": 0,
                                   "SelectedTab": null,
@@ -547,31 +573,6 @@
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.CLEM.Groupings.AnimalPriceGroup, Models",
-                                  "PricingStyle": 1,
-                                  "Value": 2.2,
-                                  "PurchaseOrSale": 0,
-                                  "SelectedTab": null,
-                                  "Name": "Breeding Sires",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
-                                      "PropertyOfIndividual": "Male.IsSire",
-                                      "Operator": 13,
-                                      "Value": "True",
-                                      "SelectedTab": null,
-                                      "Name": "isSire",
-                                      "Children": [],
-                                      "IncludeInDocumentation": false,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
                                 }
                               ],
                               "IncludeInDocumentation": false,
@@ -607,7 +608,7 @@
                       "Children": [
                         {
                           "$type": "Models.CLEM.Resources.GrazeFoodStoreType, Models",
-                          "Units": null,
+                          "Units": "kg",
                           "NToDMDCoefficient": 11.03,
                           "NToDMDIntercept": 41.4,
                           "NToDMDCrudeProteinDenominator": 0.0,
@@ -893,11 +894,11 @@
                           "MaleSellingWeight": 350.0,
                           "SellFemalesLikeMales": true,
                           "FemaleSellingAge": 24.0,
-                          "FemaleSellingWeight": 0.0,
+                          "FemaleSellingWeight": 300.0,
                           "GrazeFoodStoreNameSires": "GrazeFoodStore.NativePasture",
                           "GrazeFoodStoreNameBreeders": "GrazeFoodStore.NativePasture",
-                          "GrazeFoodStoreNameGrowOutFemales": null,
-                          "GrazeFoodStoreNameGrowOutMales": null,
+                          "GrazeFoodStoreNameGrowOutFemales": "GrazeFoodStore.NativePasture",
+                          "GrazeFoodStoreNameGrowOutMales": "GrazeFoodStore.NativePasture",
                           "MinimumPastureBeforeRestock": 1500.0,
                           "AdjustBreedingFemalesAtStartup": false,
                           "AdjustBreedingMalesAtStartup": false,
@@ -1044,7 +1045,8 @@
                       "$type": "Models.CLEM.Reporting.ReportResourceBalances, Models",
                       "ResourceGroupsToReport": [
                         "GrazeFoodStore",
-                        "AnimalFoodStore"
+                        "AnimalFoodStore",
+                        "Ruminants"
                       ],
                       "ReportAmount": true,
                       "ReportValue": false,
@@ -1441,7 +1443,7 @@
                           "LineThickness": 0,
                           "TableName": "ReportResourceBalances",
                           "XFieldName": "Date",
-                          "YFieldName": "Bos_indicus",
+                          "YFieldName": "Bos_indicus.Count",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -1556,7 +1558,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "Category = \"Grazing\"",
+                          "Filter": "Category = \"Livestock.Grazing\"",
                           "Name": "Native Pasture Grazed",
                           "Children": [],
                           "IncludeInDocumentation": true,
