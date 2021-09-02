@@ -101,6 +101,18 @@ namespace Models.CLEM
                 return filtered.Take(number);
         }
 
+        ///<inheritdoc/>
+        public virtual bool Filter<T>(T item) where T : IFilterable
+        {
+            if (item == null)
+                throw new NullReferenceException("Cannot filter a null object");
+
+            if (filterRules is null)
+                filterRules = FindAllChildren<Filter>().Select(filter => filter.Compile<IFilterable>());
+
+            return filterRules.All(rule => rule(item));
+        }
+
         #region descriptive summary
 
         /// <summary>

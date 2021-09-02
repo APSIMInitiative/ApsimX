@@ -26,5 +26,11 @@ namespace Models.CLEM.Interfaces
         /// Filters the source using the group items
         /// </summary>
         IEnumerable<T> Filter<T>(IEnumerable<T> source) where T : IFilterable;
+
+        /// <summary>
+        /// Determines if an item is in the filter group
+        /// </summary>
+        bool Filter<T>(T item) where T : IFilterable;
+
     }
 }
