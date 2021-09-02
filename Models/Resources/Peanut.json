@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 140,
+  "Version": 141,
   "Name": "Simulations",
   "Children": [
     {
@@ -3745,21 +3745,21 @@
               "ReadOnly": false
             },
             {
-                "$type": "Models.Functions.Constant, Models",
-                "FixedValue": 0.02,
-                "Units": null,
-                "Name": "KNO3",
-                "Children": [],
-                "IncludeInDocumentation": true,
-                "Enabled": true,
-                "ReadOnly": false
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.02,
+              "Units": null,
+              "Name": "KNO3",
+              "Children": [],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             },
             {
-                "$type": "Models.Functions.Constant, Models",
-                "FixedValue": 0.0,
-                "Units": null,
-                "Name": "KNH4",
-                "Children": [
+              "$type": "Models.Functions.Constant, Models",
+              "FixedValue": 0.0,
+              "Units": null,
+              "Name": "KNH4",
+              "Children": [
                 {
                   "$type": "Models.Memo, Models",
                   "Text": "The current model version considers only NO3 uptake but NH4 option can be activated by the user . We do not expect activation of NH4 to change total plant N uptake because the nitrification rate (conversion of NH4 to NO3) is very fast in the model. In the future we will re-valuate this. ",
@@ -3769,10 +3769,10 @@
                   "Enabled": true,
                   "ReadOnly": false
                 }
-                ],
-                "IncludeInDocumentation": true,
-                "Enabled": true,
-                "ReadOnly": false
+              ],
+              "IncludeInDocumentation": true,
+              "Enabled": true,
+              "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",

@@ -3674,26 +3674,29 @@
             foreach (var compositeBiomass in JsonUtilities.ChildrenRecursively(root, "CompositeBiomass"))
             {
                 var properties = compositeBiomass["Propertys"] as JArray;
-                bool includeLive = false;
-                bool includeDead = false;
-                var organNames = new List<string>();
-
-                foreach (var property in properties.Values<string>())
+                if (properties != null)
                 {
-                    var match = Regex.Match(property, @"\[(\w+)\]\.(\w+)");
-                    if (match.Success)
+                    bool includeLive = false;
+                    bool includeDead = false;
+                    var organNames = new List<string>();
+
+                    foreach (var property in properties.Values<string>())
                     {
-                        organNames.Add(match.Groups[1].Value);
-                        if (match.Groups[2].Value.Equals("Live", StringComparison.InvariantCultureIgnoreCase))
-                            includeLive = true;
-                        else
-                            includeDead = true;
+                        var match = Regex.Match(property, @"\[(\w+)\]\.(\w+)");
+                        if (match.Success)
+                        {
+                            organNames.Add(match.Groups[1].Value);
+                            if (match.Groups[2].Value.Equals("Live", StringComparison.InvariantCultureIgnoreCase))
+                                includeLive = true;
+                            else
+                                includeDead = true;
+                        }
                     }
+                    compositeBiomass["Propertys"] = null;
+                    compositeBiomass["OrganNames"] = new JArray(organNames.Distinct());
+                    compositeBiomass["IncludeLive"] = includeLive;
+                    compositeBiomass["IncludeDead"] = includeDead;
                 }
-                compositeBiomass["Propertys"] = null;
-                compositeBiomass["OrganNames"] = new JArray(organNames.Distinct());
-                compositeBiomass["IncludeLive"] = includeLive;
-                compositeBiomass["IncludeDead"] = includeDead;
             }
         }
 
