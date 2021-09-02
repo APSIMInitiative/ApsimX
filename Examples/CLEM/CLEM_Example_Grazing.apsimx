@@ -608,7 +608,7 @@
                       "Children": [
                         {
                           "$type": "Models.CLEM.Resources.GrazeFoodStoreType, Models",
-                          "Units": "kg",
+                          "Units": null,
                           "NToDMDCoefficient": 11.03,
                           "NToDMDIntercept": 41.4,
                           "NToDMDCrudeProteinDenominator": 0.0,
