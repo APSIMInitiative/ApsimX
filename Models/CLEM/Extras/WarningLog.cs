@@ -25,16 +25,11 @@ namespace Models.CLEM
         public static WarningLog GetInstance(int maxEntries)
         {
             if(instance == null)
-            {
                 instance = new WarningLog(maxEntries);
-            }
             else
-            {
                 if(maxEntries > instance.maxCount)
-                {
                     instance.maxCount = maxEntries;
-                }
-            }
+
             return instance;
         }
 
@@ -74,9 +69,7 @@ namespace Models.CLEM
         public void Add(string name)
         {
             if(!warningList.Contains(name))
-            {
                 warningList.Add(name.ToUpper());
-            }
         }
 
         /// <summary>
@@ -87,13 +80,9 @@ namespace Models.CLEM
         public bool Exists(string name)
         {
             if (warningList.Count <= maxCount)
-            {
                 return warningList.Contains(name.ToUpper());
-            }
             else
-            {
                 return true;
-            }
         }
     }
 }

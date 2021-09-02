@@ -90,9 +90,8 @@ namespace Models.CLEM.Resources
             {
                 var packets = (amount / PacketSize);
                 if(respectUseWholePacket && UseWholePackets)
-                {
                     packets = Math.Truncate(packets);
-                }
+
                 return packets * PricePerPacket;
             }
         }
@@ -119,9 +118,8 @@ namespace Models.CLEM.Resources
             PricePerPacket = amount;
 
             if (LastPriceChange is null)
-            {
                 LastPriceChange = new ResourcePriceChangeDetails();
-            }
+
             LastPriceChange.ChangedBy = model;
             LastPriceChange.PriceChanged = this;
 
@@ -170,34 +168,25 @@ namespace Models.CLEM.Resources
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("\r\nThis resource is managed ");
                 if (UseWholePackets)
-                {
                     htmlWriter.Write("only in whole ");
-                }
                 else
-                {
                     htmlWriter.Write("in ");
-                }
+
                 htmlWriter.Write("packets ");
                 if (PacketSize > 0)
-                {
                     htmlWriter.Write("<span class=\"setvalue\">" + this.PacketSize.ToString("#.###") + "</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"errorlink\">Not defined</span>");
-                }
+
                 htmlWriter.Write(" unit" + ((this.PacketSize == 1) ? "" : "s"));
                 htmlWriter.Write(" in size\r\n</div>");
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">\r\nEach packet is worth ");
                 if (PricePerPacket > 0)
-                {
                     htmlWriter.Write("<span class=\"setvalue\">" + this.PricePerPacket.ToString("#.00") + "</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"errorlink\">Not defined</span>");
-                }
+
                 htmlWriter.Write("\r\n</div>");
                 return htmlWriter.ToString(); 
             }

@@ -99,13 +99,9 @@ namespace Models.CLEM
                     htmlWriter.Write($"using the resource purchase price ");
                     var transmuteResourcePrice = ((this.FindAncestor<ResourcesHolder>()).FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceInShortfall, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore))?.Price(PurchaseOrSalePricingStyleType.Purchase);
                     if (transmuteResourcePrice != null)
-                    {
                         htmlWriter.Write("found");
-                    }
                     else
-                    {
                         htmlWriter.Write($"<span class=\"errorlink\">not found</span>");
-                    }
                 }
                 htmlWriter.WriteLine(" to provide this shortfall resource (A)");
 

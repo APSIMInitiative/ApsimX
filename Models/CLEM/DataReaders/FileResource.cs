@@ -110,20 +110,14 @@ namespace Models.CLEM
             get
             {
                 if ((this.FileName == null) || (this.FileName == ""))
-                {
                     return "";
-                }
                 else
                 {
                     Simulation simulation = FindAncestor<Simulation>();
                     if (simulation != null)
-                    {
                         return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
-                    }
                     else
-                    {
                         return this.FileName;
-                    }
                 }
             }
         }
@@ -146,9 +140,7 @@ namespace Models.CLEM
             {
                 string filename = FullFileName.Replace("\\", "\\&shy;");
                 if(filename == "")
-                {
                     filename = "Not set";
-                }
                 string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", filename, this.Name);
                 throw new ApsimXException(this, errorMsg);
             }
@@ -229,18 +221,14 @@ namespace Models.CLEM
                 primarykeys[1] = table.Columns[ResourceNameColumnName];
                 primarykeys[2] = table.Columns[YearColumnName];
                 if (StyleOfDateEntry == DateStyle.YearAndMonth)
-                {
                     primarykeys[3] = table.Columns[MonthColumnName];
-                }
 
                 table.PrimaryKey = primarykeys;
                 CloseDataFile();
                 return table;
             }
             else
-            {
                 return null;
-            }
         }
 
         /// <summary>
@@ -289,9 +277,8 @@ namespace Models.CLEM
                         string fileType = "Text file";
                         string extra = "\r\nExpecting Header row followed by units row in brackets.\r\nHeading1      Heading2      Heading3\r\n( )         ( )        ( )";
                         if (reader.IsCSVFile)
-                        {
                             fileType = "Comma delimited text file (csv)";
-                        }
+
                         if (reader.IsExcelFile)
                         {
                             fileType = "Excel file";
@@ -301,53 +288,30 @@ namespace Models.CLEM
                     }
 
                     if (StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, ResourceNameColumnName) == -1)
-                    {
                         if (this.reader == null || this.reader.Constant(ResourceNameColumnName) == null)
-                        {
                             throw new Exception($"Cannot find ResourceName column [o={ResourceNameColumnName ?? "Empty"}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
-                        }
-                    }
 
                     if (StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, YearColumnName) == -1)
-                    {
                         if (this.reader == null || this.reader.Constant(YearColumnName) == null)
-                        {
                             throw new Exception($"Cannot find Year column [o={YearColumnName ?? "Empty"}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
-                        }
-                    }
 
                     if (StyleOfDateEntry == DateStyle.YearAndMonth)
-                    {
                         if (StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, MonthColumnName) == -1)
-                        {
                             if (this.reader == null || this.reader.Constant(MonthColumnName) == null)
-                            {
                                 throw new Exception($"Cannot find Month column [o={MonthColumnName ?? "Empty"}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
-                            }
-                        }
 
-                    }
                     if (StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, AmountColumnName) == -1)
-                    {
                         if (this.reader == null || this.reader.Constant(AmountColumnName) == null)
-                        {
                             throw new Exception($"Cannot find Amount column [o={AmountColumnName}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
-                        }
-                    }
                 }
                 else
-                {
                     if (this.reader.IsExcelFile != true)
-                    {
                         this.reader.SeekToDate(this.reader.FirstDate);
-                    }
-                }
+
                 return true;
             }
             else
-            {
                 return false;
-            }
         }
 
         /// <summary>Close the datafile.</summary>

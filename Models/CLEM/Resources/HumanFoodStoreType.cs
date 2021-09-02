@@ -145,13 +145,9 @@ namespace Models.CLEM.Resources
             {
                 HumanFoodStorePool poolOfAge = Pools.Where(a => a.Age == pool.Age).FirstOrDefault();
                 if(poolOfAge is null)
-                {
                     Pools.Insert(0, pool);
-                }
                 else
-                {
                     poolOfAge.Add(pool.Amount);
-                }
 
                 ResourceTransaction details = new ResourceTransaction
                 {
@@ -176,15 +172,11 @@ namespace Models.CLEM.Resources
         public new void Remove(ResourceRequest request)
         {
             if (request.Required == 0)
-            {
                 return;
-            }
 
             // if this request aims to trade with a market see if we need to set up details for the first time
             if(request.MarketTransactionMultiplier > 0)
-            {
                 FindEquivalentMarketStore();
-            }
 
             double amountRequired = request.Required;
             foreach (HumanFoodStorePool pool in Pools.OrderByDescending(a => a.Age))
@@ -198,14 +190,10 @@ namespace Models.CLEM.Resources
 
                 // send to market if needed
                 if(request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
-                {
                     (EquivalentMarketStore as HumanFoodStoreType).Add(new HumanFoodStorePool(amountToRemove* request.MarketTransactionMultiplier, pool.Age), request.ActivityModel, this.NameWithParent, "Farm sales");
-                }
 
                 if (amountRequired <= 0)
-                {
                     break;
-                }
             }
 
             double amountRemoved = request.Required - amountRequired;
@@ -235,9 +223,7 @@ namespace Models.CLEM.Resources
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
             if (Pools != null)
-            {
                 Pools.Clear();
-            }
             Pools = null;
         }
 
@@ -252,9 +238,8 @@ namespace Models.CLEM.Resources
             if (UseByAge > 0)
             {
                 foreach (var pool in Pools)
-                {
                     pool.Age++;
-                }
+
                 // remove all spoiled pools
                 double spoiled = Pools.Where(a => a.Age >= UseByAge).Sum(a => a.Amount);
                 if (spoiled > 0)
@@ -314,43 +299,32 @@ namespace Models.CLEM.Resources
                 {
                     htmlWriter.Write("Each unit of this resource is equivalent to ");
                     if (ConvertToKg == 0)
-                    {
                         htmlWriter.Write("<span class=\"errorlink\">NOT SET");
-                    }
                     else
-                    {
                         htmlWriter.Write("<span class=\"setvalue\">" + this.ConvertToKg.ToString("0.###"));
-                    }
                     htmlWriter.Write("</span> kg");
                 }
                 else
-                {
                     if (ConvertToKg != 1)
-                    {
                         htmlWriter.Write("<span class=\"errorlink\">SET UnitsToKg to 1</span> as this Food Type is measured in kg");
-                    }
-                }
+
                 htmlWriter.Write("\r\n</div>");
                 if (StartingAmount > 0)
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("The simulation starts with <span class=\"setvalue\">" + this.StartingAmount.ToString("0.###") + "</span>");
                     if (StartingAge > 0)
-                    {
                         htmlWriter.Write(" with an age of <span class=\"setvalue\">" + this.StartingAge.ToString("###") + "%</span> months");
-                    }
+
                     htmlWriter.Write("\r\n</div>");
                 }
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (UseByAge == 0)
-                {
                     htmlWriter.Write("This food does not spoil");
-                }
                 else
-                {
                     htmlWriter.Write("This food must be consumed before <span class=\"setvalue\">" + this.UseByAge.ToString("###") + "</span> month" + ((UseByAge > 1) ? "s" : "") + " old");
-                }
+
                 htmlWriter.Write("\r\n</div>");
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\"><span class=\"setvalue\">");

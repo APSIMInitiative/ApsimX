@@ -74,30 +74,20 @@ namespace Models.CLEM
         {
             //Iterate through properties
             foreach (var property in GetType().GetProperties())
-            {
                 //Iterate through attributes of this property
                 foreach (Attribute attr in property.GetCustomAttributes(true))
-                {
                     //does this property have [DefaultValueAttribute]?
                     if (attr is System.ComponentModel.DefaultValueAttribute)
                     {
                         //So lets try to load default value to the property
                         System.ComponentModel.DefaultValueAttribute dv = (System.ComponentModel.DefaultValueAttribute)attr;
                         if (dv != null)
-                        {
                             if (property.PropertyType.IsEnum)
-                            {
                                 property.SetValue(this, Enum.Parse(property.PropertyType, dv.Value.ToString()));
-                            }
                             else
-                            {
                                 property.SetValue(this, dv.Value, null);
-                            }
-                        }
 
                     }
-                }
-            }
         }
 
         /// <summary>
@@ -108,9 +98,7 @@ namespace Models.CLEM
             get
             {
                 if (activityTimers is null)
-                {
                     activityTimers = FindAllChildren<IActivityTimer>();
-                }
                 return activityTimers;
             }
         }
@@ -324,21 +312,13 @@ namespace Models.CLEM
             if (this.ModelSummaryStyle == HTMLSummaryStyle.Default)
             {
                 if (this is Relationship || this.GetType().IsSubclassOf(typeof(Relationship)))
-                {
                     this.ModelSummaryStyle = HTMLSummaryStyle.Default;
-                }
                 else if (this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
-                {
                     this.ModelSummaryStyle = HTMLSummaryStyle.Resource;
-                }
                 else if (typeof(IResourceType).IsAssignableFrom(this.GetType()))
-                {
                     this.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-                }
                 else if (this.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
-                {
                     this.ModelSummaryStyle = HTMLSummaryStyle.Activity;
-                }
             }
 
             switch (ModelSummaryStyle)
@@ -403,23 +383,17 @@ namespace Models.CLEM
                     {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">This resource is measured in  ");
                         if (units == null || units == "")
-                        {
                             htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                        }
                         else
-                        {
                             htmlWriter.Write("<span class=\"setvalue\">" + units + "</span>");
-                        }
+
                         htmlWriter.Write("</div>");
                     }
                 }
                 if (this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
-                {
                     if (this.Children.Count() == 0)
-                    {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">Empty</div>");
-                    }
-                }
+
                 return htmlWriter.ToString(); 
             }
         }
@@ -655,26 +629,19 @@ namespace Models.CLEM
                     htmlWriter.Write(htmlString);
 
                     if (apsimFilename == "")
-                    {
                         htmlWriter.Write("\r\n<span style=\"font-size:0.8em; font-weight:bold\">You will need to keep refreshing this page to see changes relating to the last component selected</span><br /><br />");
-                    }
                 }
                 htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
 
                 string fullname = modelToSummarise.Name;
                 if (modelToSummarise is CLEMModel)
-                {
                     fullname = (modelToSummarise as CLEMModel).NameWithParent;
-                }
 
                 if (apsimFilename != "")
-                {
                     htmlWriter.Write($"<div class=\"namediv\">Full simulation settings</div>");
-                }
                 else
-                {
                     htmlWriter.Write($"<div class=\"namediv\">Component {modelToSummarise.GetType().Name} named {fullname}</div>");
-                }
+
                 htmlWriter.Write($"<div class=\"typediv\">Details</div>");
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
@@ -690,30 +657,18 @@ namespace Models.CLEM
                 htmlWriter.Write("\r\n</div>");
 
                 if (modelToSummarise is ZoneCLEM)
-                {
                     htmlWriter.Write((modelToSummarise as ZoneCLEM).GetFullSummary(modelToSummarise, true, htmlWriter.ToString(), markdown2Html));
-                }
                 else if (modelToSummarise is Market)
-                {
                     htmlWriter.Write((modelToSummarise as Market).GetFullSummary(modelToSummarise, true, htmlWriter.ToString(), markdown2Html));
-                }
                 else if (modelToSummarise is CLEMModel)
-                {
                     htmlWriter.Write((modelToSummarise as CLEMModel).GetFullSummary(modelToSummarise, false, htmlWriter.ToString(), markdown2Html));
-                }
                 else if (modelToSummarise is ICLEMDescriptiveSummary)
-                {
                     htmlWriter.Write((modelToSummarise as ICLEMDescriptiveSummary).GetFullSummary(modelToSummarise, false, htmlWriter.ToString(), markdown2Html));
-                }
                 else
-                {
                     htmlWriter.Write("<b>This component has no descriptive summary</b>");
-                }
 
                 if (!bodyOnly)
-                {
                     htmlWriter.WriteLine("\r\n</body>\r\n</html>");
-                }
 
                 if (htmlWriter.ToString().Contains("<canvas"))
                 {

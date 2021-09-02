@@ -78,9 +78,7 @@ namespace Models.CLEM.Resources
             {
                 mother = value;
                 if (mother != null)
-                {
                     MotherID = value.ID;
-                }
             }
         }
 
@@ -166,9 +164,7 @@ namespace Models.CLEM.Resources
 
                 // if highweight has not been defined set to initial weight
                 if (HighWeight == 0)
-                {
                     HighWeight = weight;
-                }
                 HighWeight = Math.Max(HighWeight, weight);
             }
         }
@@ -243,13 +239,9 @@ namespace Models.CLEM.Resources
                 double max = BreedParams.MaximumSizeOfIndividual;
 
                 if(weight < mid)
-                {
                     result = Math.Round((mid - Math.Max(min, weight)) / ((mid - min) / 2.5)) * -1;
-                }
                 else if (weight > mid)
-                {
                     result = Math.Round((weight - mid) / ((max - mid) / 2.5));
-                }
                 return Convert.ToInt32(result, CultureInfo.InvariantCulture);
             }
         }
@@ -262,36 +254,21 @@ namespace Models.CLEM.Resources
             get
             {
                 if(this.IsCalf)
-                {
                     return "Calf";
-                }
                 else if(this.IsWeaner)
-                {
                     return "Weaner";
-                }
                 else
                 {
                     if(this is RuminantFemale)
-                    {
                         if ((this as RuminantFemale).IsPreBreeder)
-                        {
                             return "PreBreeder";
-                        }
                         else
-                        {
                             return "Breeder";
-                        }
-                    }
                     else
-                    {
                         if((this as RuminantMale).IsSire)
-                        {
                             return "Sire";
-                        }
                         else if((this as RuminantMale).IsCastrated)
-                        {
                             return "Castrate";
-                        }
                         else
                         {
                             if((this as RuminantMale).IsWildBreeder)
@@ -303,7 +280,6 @@ namespace Models.CLEM.Resources
                                 return "PreBreeder";
                             }
                         }
-                    }
                 }
             }
         }
@@ -390,13 +366,9 @@ namespace Models.CLEM.Resources
             get
             {
                 if (PotentialIntake + MilkPotentialIntake > 0)
-                {
                     return (Intake + MilkIntake) / (PotentialIntake + MilkPotentialIntake);
-                }
                 else
-                {
                     return 0;
-                }
             }
         }
 
@@ -499,13 +471,9 @@ namespace Models.CLEM.Resources
             get
             {
                 if (Sex == Sex.Male)
-                {
                     return BreedParams.SRWFemale * BreedParams.SRWMaleMultiplier;
-                }
                 else
-                {
                     return BreedParams.SRWFemale;
-                }
             }
         }
 
@@ -556,14 +524,12 @@ namespace Models.CLEM.Resources
                 this.Mother.NumberOfWeaned++;
             }
             if(report)
-            {
                 RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
                 {
                     RumObj = this,
                     Category = reason
                 };
                 (this.BreedParams.Parent as RuminantHerd).OnWeanOccurred(args);
-            }
 
         }
 

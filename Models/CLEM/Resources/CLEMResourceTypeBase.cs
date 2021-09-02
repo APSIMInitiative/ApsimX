@@ -78,13 +78,9 @@ namespace Models.CLEM.Resources
 
             // if market exists look for market pricing to override local pricing as all transactions will be through the market
             if (!((this.Parent.Parent as ResourcesHolder).FoundMarket is null) && this.MarketStoreExists)
-            {
                 price = EquivalentMarketStore.FindAllChildren<ResourcePricing>().FirstOrDefault(a => a.Enabled && (a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both || a.PurchaseOrSale == priceType) && a.TimingOK);
-            }
             else
-            {
                 price = FindAllChildren<ResourcePricing>().FirstOrDefault(a => (a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both | a.PurchaseOrSale == priceType) && a.TimingOK);
-            }
 
             if (price == null)
             {
@@ -95,19 +91,13 @@ namespace Models.CLEM.Resources
                     if((this.Parent.Parent as ResourcesHolder).MarketPresent)
                     {
                         if(!(this.EquivalentMarketStore is null))
-                        {
                             market = this.EquivalentMarketStore.CLEMParentName + ".";
-                        }
                         else
-                        {
                             market = this.CLEMParentName + ".";
-                        }
                     }
                     string warn = $"No pricing is available for [r={market}{this.Parent.Name}.{this.Name}]";
                     if (clock != null && FindAllChildren<ResourcePricing>().Any())
-                    {
                         warn += " in month [" + clock.Today.ToString("MM yyyy") + "]";
-                    }
                     warn += "\r\nAdd [r=ResourcePricing] component to [r=" + market + this.Parent.Name + "." + this.Name + "] to include financial transactions for purchases and sales.";
 
                     if (Summary != null)
@@ -161,16 +151,11 @@ namespace Models.CLEM.Resources
                     {
                         string market = "";
                         if ((this.Parent.Parent as ResourcesHolder).MarketPresent)
-                        {
                             if (!(this.EquivalentMarketStore is null))
-                            {
                                 market = this.EquivalentMarketStore.CLEMParentName + ".";
-                            }
                             else
-                            {
                                 market = this.CLEMParentName + ".";
-                            }
-                        }
+
                         string warn = $"Cannot report the value of {((converterName.Contains("gain"))?"gains":"losses")} for [r={market}{this.Parent.Name}.{this.Name}]";
                         warn += $" in [o=ResourceLedger] as no [{((converterName.Contains("gain")) ? "purchase" : "sale")}] pricing has been provided.";
                         warn += $"\r\nInclude [r=ResourcePricing] component with [{((converterName.Contains("gain")) ? "purchases" : "sales")}] to resource to include all finance conversions";
@@ -189,9 +174,8 @@ namespace Models.CLEM.Resources
                     // convert to edible proportion for all HumanFoodStore converters
                     // this assumes these are all nutritional. Price will be handled above.
                     if(this.GetType() == typeof(HumanFoodStoreType))
-                    {
                         result *= (this as HumanFoodStoreType).EdibleProportion;
-                    }
+
                     return result * converter.Factor;
                 }
                 else
@@ -223,13 +207,9 @@ namespace Models.CLEM.Resources
         {
             ResourceUnitsConverter converter = this.FindAllChildren<ResourceUnitsConverter>().Where(a => a.Name.ToLower() == converterName.ToLower()).FirstOrDefault() as ResourceUnitsConverter;
             if (converter is null)
-            {
                 return 0;
-            }
             else
-            {
                 return converter.Factor;
-            }
         }
 
         /// <summary>
@@ -264,9 +244,7 @@ namespace Models.CLEM.Resources
                     {
                         IResourceWithTransactionType store = holder.FoundMarket.Resources.LinkToMarketResourceType(this);
                         if (store != null)
-                        {
                             EquivalentMarketStore = store as CLEMResourceTypeBase;
-                        }
                     }
                 }
                 EquivalentMarketStoreDetermined = true;

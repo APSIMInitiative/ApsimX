@@ -80,33 +80,23 @@ namespace Models.CLEM
         public double SolveY(double xValue)
         {
             if (xValue <= XValues[0])
-            {
                 return YValues[0];
-            }
 
             if (xValue >= XValues[XValues.Length - 1])
-            {
                 return YValues[YValues.Length - 1];
-            }
 
             int k = 0;
             for (int i = 0; i < XValues.Length; i++)
-            {
                 if (xValue <= XValues[i + 1])
                 {
                     k = i;
                     break;
                 }
-            }
 
             if (CalculationMethod == RelationshipCalculationMethod.Interpolation)
-            {
                 return YValues[k] + (YValues[k + 1] - YValues[k]) * (xValue - XValues[k]) / (XValues[k + 1] - XValues[k]);
-            }
             else
-            {
                 return YValues[k + 1];
-            }
         }
 
         #region validation
@@ -161,13 +151,9 @@ namespace Models.CLEM
                 // draw chart
 
                 if (XValues is null || XValues.Length == 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">No x values provided</span>");
-                }
                 else if (YValues is null || XValues.Length != YValues.Length)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">Number of x values does not equal number of y values</span>");
-                }
                 else
                 {
                     htmlWriter.Write(@"
@@ -183,12 +169,9 @@ namespace Models.CLEM
                             data: [");
                     string data = "";
                     for (int i = 0; i < XValues.Length; i++)
-                    {
                         if (YValues.Length > i)
-                        {
                             data += "{ x: " + XValues[i].ToString() + ", y: " + YValues[i] + "},";
-                        }
-                    }
+
                     data = data.TrimEnd(',');
                     htmlWriter.Write(data);
                     htmlWriter.Write(@"],

@@ -52,9 +52,8 @@ namespace Models.CLEM
             get 
             { 
                 if(generator is null)
-                {
                     throw new ApsimXException(new Model() { Name = "RandomNumberGenerator" }, "Missing random number generator!\r\nThis simulation uses stochastic processes requiring random numbers\r\nYou must add a [o=CLEM.RandomNumberGenerator] component below the [o=Simulation]");
-                }
+
                 return generator; 
             } 
         }
@@ -66,13 +65,9 @@ namespace Models.CLEM
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             if (Seed == 0)
-            {
                 generator = new Random(Guid.NewGuid().GetHashCode());
-            }
             else
-            {
                 generator = new Random(Seed);
-            }
         }
     }
 }

@@ -11,12 +11,6 @@ namespace Models.CLEM.Resources
 
     public class RuminantFemale : Ruminant
     {
-        ///// <inheritdoc/>
-        //public override Sex Sex
-        //{
-        //    get { return Sex.Female; }
-        //}
-
         /// <summary>
         /// Is female weaned and of minimum breeding age and weight 
         /// </summary>
@@ -53,13 +47,9 @@ namespace Models.CLEM.Resources
             get 
             {
                 if (AgeAtLastBirth > 0)
-                {
                     return Age - AgeAtLastBirth;
-                }
                 else
-                {
                     return 0;
-                }
             } 
         }
 
@@ -161,9 +151,7 @@ namespace Models.CLEM.Resources
                     birthCount++;
                     birthProb += i;
                     if (rnd <= birthProb)
-                    {
                         return birthCount;
-                    }
                 }
                 birthCount = 1;
             }
@@ -180,13 +168,9 @@ namespace Models.CLEM.Resources
             get
             {
                 if (IsPregnant)
-                {
                     return this.Age >= this.AgeAtLastConception + this.BreedParams.GestationLength;
-                }
                 else
-                {
                     return false;
-                }
             }
         }
 
@@ -229,9 +213,7 @@ namespace Models.CLEM.Resources
         {
             CarryingCount--;
             if(CarryingCount <= 0)
-            {
                 AgeAtLastBirth = this.Age;
-            }
         }
 
         /// <summary>
@@ -252,9 +234,8 @@ namespace Models.CLEM.Resources
         {
             // if she was dry breeder remove flag as she has become pregnant.
             if (SaleFlag == HerdChangeReason.DryBreederSale)
-            {
                 SaleFlag = HerdChangeReason.None;
-            }
+
             PreviousConceptionRate = rate;
             CarryingCount = number;
             AgeAtLastConception = this.Age + ageOffset;
@@ -294,9 +275,7 @@ namespace Models.CLEM.Resources
                     return dl+15;
                 }
                 else
-                {
                     return 0;
-                }
             }
         }
 

@@ -88,9 +88,7 @@ namespace Models.CLEM.Resources
         {
             this.amount = 0;
             if (StartingAmount > 0)
-            {
                 Add(StartingAmount, this, NameWithParent, "Starting value");
-            }
         }
 
         #region Transactions
@@ -147,15 +145,11 @@ namespace Models.CLEM.Resources
         public new void Remove(ResourceRequest request)
         {
             if (request.Required == 0)
-            {
                 return;
-            }
 
             // if this request aims to trade with a market see if we need to set up details for the first time
             if (request.MarketTransactionMultiplier > 0)
-            {
                 FindEquivalentMarketStore();
-            }
 
             double amountRemoved = request.Required;
             // avoid taking too much
@@ -243,13 +237,10 @@ namespace Models.CLEM.Resources
                 htmlWriter.Write("<div class=\"activityentry\">");
                 htmlWriter.Write("This food has a nitrogen content of <span class=\"setvalue\">" + this.Nitrogen.ToString("0.###") + "%</span>");
                 if (DMD > 0)
-                {
                     htmlWriter.Write(" and a Dry Matter Digesibility of <span class=\"setvalue\">" + this.DMD.ToString("0.###") + "%</span>");
-                }
                 else
-                {
                     htmlWriter.Write(" and a Dry Matter Digesibility estimated from N%");
-                }
+
                 htmlWriter.Write("</div>");
                 if (StartingAmount > 0)
                 {

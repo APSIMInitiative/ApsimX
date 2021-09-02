@@ -89,16 +89,12 @@ namespace Models.CLEM.Resources
 
             // for each Ruminant type 
             foreach (RuminantType rType in this.FindAllChildren<RuminantType>())
-            {
                 foreach (RuminantInitialCohorts ruminantCohorts in rType.FindAllChildren<RuminantInitialCohorts>())
-                {
                     foreach (var ind in ruminantCohorts.CreateIndividuals())
                     {
                         ind.SaleFlag = HerdChangeReason.InitialHerd;
                         AddRuminant(ind, this);
                     }
-                }
-            }
 
             // Assign mothers to suckling calves
             foreach (string herdName in Herd.Select(a => a.HerdName).Distinct())

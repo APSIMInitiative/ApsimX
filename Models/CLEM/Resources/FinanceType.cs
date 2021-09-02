@@ -69,13 +69,9 @@ namespace Models.CLEM.Resources
             get
             {
                 if(!EnforceWithdrawalLimit)
-                {
                     return double.PositiveInfinity;
-                }
                 else
-                {
                     return amount - WithdrawalLimit;
-                }
             }
         }
 
@@ -115,9 +111,7 @@ namespace Models.CLEM.Resources
         {
             this.amount = 0;
             if (OpeningBalance > 0)
-            {
                 Add(OpeningBalance, this, "", "Opening balance");
-            }
         }
 
         #region Transactions
@@ -208,36 +202,26 @@ namespace Models.CLEM.Resources
         public new void Remove(ResourceRequest request)
         {
             if (request.Required == 0)
-            {
                 return;
-            }
 
             // if this request aims to trade with a market see if we need to set up details for the first time
             if (request.MarketTransactionMultiplier > 0)
-            {
                 FindEquivalentMarketStore();
-            }
 
             double amountRemoved = Math.Round(request.Required, 2, MidpointRounding.ToEven); 
             
             // more than positive balance can be taken if withdrawal limit set to false
             if(this.EnforceWithdrawalLimit)
-            {
                 amountRemoved = Math.Min(amountRemoved, FundsAvailable);
-            }
 
             if (amountRemoved == 0)
-            {
                 return;
-            }
 
             this.amount -= amountRemoved;
 
             // send to market if needed
             if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
-            {
                 (EquivalentMarketStore as FinanceType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, this.NameWithParent,  "Farm purchases");
-            }
 
             request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction
@@ -279,19 +263,15 @@ namespace Models.CLEM.Resources
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("Opening balance of <span class=\"setvalue\">" + this.OpeningBalance.ToString("#,##0.00") + "</span>");
                 if (this.EnforceWithdrawalLimit)
-                {
                     htmlWriter.Write(" that can be withdrawn to <span class=\"setvalue\">" + this.WithdrawalLimit.ToString("#,##0.00") + "</span>");
-                }
                 else
-                {
                     htmlWriter.Write(" with no withdrawal limit");
-                }
+
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (this.InterestRateCharged + this.InterestRatePaid == 0)
-                {
                     htmlWriter.Write("No interest rates included");
-                }
+
                 else
                 {
                     htmlWriter.Write("Interest rate of ");
@@ -300,9 +280,7 @@ namespace Models.CLEM.Resources
                         htmlWriter.Write("<span class=\"setvalue\">");
                         htmlWriter.Write(this.InterestRateCharged.ToString("0.##") + "</span>% charged ");
                         if (this.InterestRatePaid > 0)
-                        {
                             htmlWriter.Write("and ");
-                        }
                     }
                     if (this.InterestRatePaid > 0)
                     {

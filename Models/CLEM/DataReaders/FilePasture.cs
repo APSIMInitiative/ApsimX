@@ -294,7 +294,9 @@ namespace Models.CLEM
         public DataTable GetTable()
         {
             try
+            {
                 return GetAllData();
+            }
             catch (Exception err)
             {
                 ErrorMessage = err.Message;

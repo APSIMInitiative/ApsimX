@@ -75,9 +75,7 @@ namespace Models.CLEM.Resources
             availabilityList = this.FindAllChildren<LabourAvailabilityList>().FirstOrDefault();
 
             if (clock.Today.Day != 1)
-            {
                 OnStartOfMonth(this, null);
-            }
         }
 
         /// <summary>
@@ -91,13 +89,11 @@ namespace Models.CLEM.Resources
         {
             double value = 0;
             foreach (LabourType ind in Items.Where(a => includeHiredLabour | (a.Hired == false)))
-            {
                 value += ind.GetDietDetails(metric)*ind.Individuals;
-            }
+
             if(reportPerAE)
-            {
                 value /= (AdultEquivalents(includeHiredLabour));
-            }
+
             return value;
         }
 
@@ -194,9 +190,7 @@ namespace Models.CLEM.Resources
             }
             // clone pricelist so model can modify if needed and not affect initial parameterisation
             if (this.FindAllChildren<LabourPricing>().Count() > 0)
-            {
                 PayList = Apsim.Clone(this.FindAllChildren<LabourPricing>().FirstOrDefault());
-            }
         }
 
         /// <summary>

@@ -116,13 +116,10 @@ namespace Models.CLEM
                 htmlWriter.Write($"A running value starting at <span class=\"setvalue\">{StartingValue}</span>");
                 htmlWriter.Write($" and ranging between <span class=\"setvalue\">{Minimum}</span> and ");
                 if (Maximum <= Minimum)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">Invalid</span>");
-                }
                 else
-                {
                     htmlWriter.Write($"<span class=\"setvalue\">{Maximum}</span>");
-                }
+
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 
             }

@@ -48,9 +48,7 @@ namespace Models.CLEM.Resources
         {
             this.amount = 0;
             if (StartingAmount > 0)
-            {
                 Add(StartingAmount, this, "", "Starting value");
-            }
         }
 
         /// <summary>
@@ -135,15 +133,11 @@ namespace Models.CLEM.Resources
         public new void Remove(ResourceRequest request)
         {
             if (request.Required == 0)
-            {
                 return;
-            }
 
             // if this request aims to trade with a market see if we need to set up details for the first time
             if (request.MarketTransactionMultiplier > 0)
-            {
                 FindEquivalentMarketStore();
-            }
 
             // avoid taking too much
             double amountRemoved = request.Required;
@@ -152,9 +146,7 @@ namespace Models.CLEM.Resources
 
             // send to market if needed
             if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
-            {
                 (EquivalentMarketStore as ProductStoreType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, this.NameWithParent, "Farm sales");
-            }
 
             request.Provided = amountRemoved;
             if (amountRemoved > 0)
@@ -198,9 +190,7 @@ namespace Models.CLEM.Resources
 
             html += "\r\n<div class=\"activityentry\">";
             if (StartingAmount > 0)
-            {
                 html += "There is <span class=\"setvalue\">" + this.StartingAmount.ToString("#.###") + "</span> at the start of the simulation.";
-            }
             html += "\r\n</div>";
             return html;
         }

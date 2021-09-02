@@ -66,9 +66,8 @@ namespace Models.CLEM
             int endYear = clock.EndDate.Year;
 
             for (int i = startYear; i <= endYear; i++)
-            {
                 ShuffledYears.Add(new ShuffleYear() { Year = i, RandomYear = i });
-            }
+
             for (int i = 0; i < ShuffledYears.Count(); i++)
             {
                 int randIndex = RandomNumberGenerator.Generator.Next(ShuffledYears.Count());
@@ -91,9 +90,7 @@ namespace Models.CLEM
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("\r\nThe rainfall year starts in ");
                 if (StartSeasonMonth == MonthsOfYear.NotSet)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">Not set");
-                }
                 else
                 {
                     htmlWriter.Write("<span class=\"setvalue\">");

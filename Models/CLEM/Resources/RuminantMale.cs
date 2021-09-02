@@ -10,12 +10,6 @@ namespace Models.CLEM.Resources
     /// </summary>
     public class RuminantMale: Ruminant
     {
-        ///// <inheritdoc/>
-        //public override Sex Sex
-        //{
-        //    get { return Sex.Male; }
-        //}
-
         /// <summary>
         /// Indicates if individual is breeding sire
         /// Represents any uncastrated male of breeding age
@@ -25,13 +19,11 @@ namespace Models.CLEM.Resources
             get
             {
                 if(Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
-                {
                     if (Age >= BreedParams.MinimumAge1stMating)
                     {
                         ReplacementBreeder = false;
                         return true;
                     }
-                }
                 return false;
             }
         }
@@ -45,12 +37,8 @@ namespace Models.CLEM.Resources
             get
             {
                 if (!Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
-                {
                     if (Age >= BreedParams.MinimumAge1stMating)
-                    {
                         return true;
-                    }
-                }
                 return false;
             }
         }

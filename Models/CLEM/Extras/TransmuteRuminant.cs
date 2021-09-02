@@ -188,10 +188,8 @@ namespace Models.CLEM
             {
                 shortfallPricing = shortfallResourceType.Price(PurchaseOrSalePricingStyleType.Purchase);
                 if (FinanceTypeForTransactionsName != "No transactions")
-                {
                     // link to first bank account
                     financeType = resources.FindResourceType<Finance, FinanceType>(this, FinanceTypeForTransactionsName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning);
-                }
             }
         }
 

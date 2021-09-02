@@ -44,9 +44,8 @@ namespace Models.CLEM.Resources
             List<ISetAttribute> initialCohortAttributes = this.FindAllChildren<ISetAttribute>().ToList();
             List<Ruminant> individuals = new List<Ruminant>();
             foreach (RuminantTypeCohort cohort in this.FindAllChildren<RuminantTypeCohort>())
-            {
                 individuals.AddRange(cohort.CreateIndividuals(initialCohortAttributes));
-            }
+
             return individuals;
         }
 
@@ -64,9 +63,7 @@ namespace Models.CLEM.Resources
         {
             string html = "</table>";
             if(WeightWarningOccurred)
-            {
                 html += "</br><span class=\"errorlink\">Warning: Initial weight differs from the expected normalised weight by more than 20%</span>";
-            }
             return html;
         }
 

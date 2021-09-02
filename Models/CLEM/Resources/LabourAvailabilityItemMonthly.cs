@@ -37,13 +37,9 @@ namespace Models.CLEM.Resources
         public double GetAvailability(int month)
         {
             if(month<=12 && month>0 && month<=MonthlyValues.Count())
-            {
                 return MonthlyValues[month - 1];
-            }
             else
-            {
                 return 0;
-            }
         }
 
         /// <summary>
@@ -68,32 +64,24 @@ namespace Models.CLEM.Resources
                 if (!formatForParentControl)
                 {
                     if (MonthlyValues == null)
-                    {
                         return "\r\n<div class=\"activityentry\">No availability provided</div>";
-                    }
+
                     double min = MonthlyValues.Min();
                     double max = MonthlyValues.Max();
                     htmlWriter.Write("\r\n<div class=\"activityentry\">Monthly availability ");
                     if (min != max)
-                    {
                         htmlWriter.Write("ranges from ");
-                    }
                     else
-                    {
                         htmlWriter.Write("is ");
-                    }
+
                     if (min <= 0)
-                    {
                         htmlWriter.Write("<span class=\"errorlink\">" + min.ToString() + "</span>");
-                    }
                     else
-                    {
                         htmlWriter.Write("<span class=\"setvalue\">" + min.ToString() + "</span>");
-                    }
+
                     if (min != max)
-                    {
                         htmlWriter.Write("to <span class=\"setvalue\">" + max.ToString() + "</span>");
-                    }
+
                     htmlWriter.Write(" days each month</div>");
                 }
                 return htmlWriter.ToString(); 
@@ -112,26 +100,16 @@ namespace Models.CLEM.Resources
                 {
                     htmlWriter.Write("</td>");
                     for (int i = 0; i < 12; i++)
-                    {
                         if (MonthlyValues == null)
-                        {
                             htmlWriter.Write("<td><span class=\"errorlink\">?</span></td>");
-                        }
                         else if (i > MonthlyValues.Count() - 1)
-                        {
                             htmlWriter.Write("<td><span class=\"errorlink\">?</span></td>");
-                        }
                         else
-                        {
                             htmlWriter.Write("<td><span class=\"setvalue\">" + ((this.MonthlyValues.Length - 1 >= i) ? this.MonthlyValues[i].ToString() : "") + "</span></td>");
-                        }
-                    }
                     htmlWriter.Write("</tr>");
                 }
                 else
-                {
                     htmlWriter.Write("\r\n</div>");
-                }
                 return htmlWriter.ToString(); 
             }
         }

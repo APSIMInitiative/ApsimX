@@ -101,13 +101,10 @@ namespace Models.CLEM
 
                 // get all validations 
                 if (summary.Messages() != null)
-                {
                     foreach (DataRow item in summary.Messages().Rows)
-                    {
                         if (item[3].ToString().StartsWith("Invalid"))
                             error += "\r\n" + item[3].ToString();
-                    }
-                }
+
                 throw new ApsimXException(this, error.Replace("&shy;", "."));
             }
         }

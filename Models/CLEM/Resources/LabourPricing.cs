@@ -94,9 +94,7 @@ namespace Models.CLEM.Resources
         {
             string html = "";
             if (this.Children.OfType<LabourPriceGroup>().Count() > 0)
-            {
                 html += "<table><tr><th>Name</th><th>Filter</th><th>Rate per day</th></tr>";
-            }
             return html;
         }
 

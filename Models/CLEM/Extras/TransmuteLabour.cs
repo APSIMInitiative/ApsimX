@@ -143,9 +143,7 @@ namespace Models.CLEM
             {
                 htmlWriter.Write("<div class=\"activityentry\">");
                 if (TransmuteStyle == TransmuteStyle.Direct)
-                {
                     htmlWriter.Write($"<span class=\"setvalue\">{AmountPerPacket:#,##0.##}</span> days labour ");
-                }
 
                 htmlWriter.Write(" ruminants (B) are taken from the following groups to supply shortfall resource (A) ");
 

@@ -55,9 +55,7 @@ namespace Models.CLEM.Resources
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
             if (Cohorts != null)
-            {
                 Cohorts.Clear();
-            }
             Cohorts = null;
         }
 
@@ -124,9 +122,7 @@ namespace Models.CLEM.Resources
         {
             EventHandler invoker = TransactionOccurred;
             if (invoker != null)
-            {
                 invoker(this, e);
-            }
         }
 
         /// <summary>
@@ -148,14 +144,10 @@ namespace Models.CLEM.Resources
             OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToAdd.Age && a.Sex == cohortToAdd.Sex).FirstOrDefault();
 
             if (cohortexists == null)
-            {
                 // add new
                 Cohorts.Add(cohortToAdd);
-            }
             else
-            {
                 cohortexists.Number += cohortToAdd.Number;
-            }
 
             LastCohortChanged = cohortToAdd;
             ResourceTransaction details = new ResourceTransaction

@@ -65,13 +65,9 @@ namespace Models.CLEM.Resources
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     if (Value <= 0)
-                    {
                         htmlWriter.Write("<span class=\"errorlink\">" + Value.ToString() + "</span>");
-                    }
                     else if (Value > 0)
-                    {
                         htmlWriter.Write("<span class=\"setvalue\">" + Value.ToString() + "</span> x ");
-                    }
                     htmlWriter.Write(" days available each month</div>");
                 }
                 return htmlWriter.ToString(); 
@@ -90,21 +86,17 @@ namespace Models.CLEM.Resources
                 {
                     string classstr = "setvalue";
                     if (Value == 0)
-                    {
                         classstr = "errorlink";
-                    }
+
                     htmlWriter.Write("</td>");
                     htmlWriter.Write("<td><span class=\"" + classstr + "\">" + this.Value.ToString() + "</span></td>");
                     for (int i = 1; i < 12; i++)
-                    {
                         htmlWriter.Write("<td><span class=\"disabled\">" + this.Value.ToString() + "</span></td>");
-                    }
+
                     htmlWriter.Write("</tr>");
                 }
                 else
-                {
                     htmlWriter.Write("\r\n</div>");
-                }
 
                 return htmlWriter.ToString(); 
             }
