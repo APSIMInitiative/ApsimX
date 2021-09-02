@@ -669,13 +669,8 @@ namespace Models.CLEM.Activities
                 {
                     ind.SaleFlag = HerdChangeReason.MaxAgeSale;
                     this.Status = ActivityStatus.Success;
-
                     // ensure females are not pregnant and add warning if pregnant old females found.
-                    if (ind.Sex == Sex.Female && (ind as RuminantFemale).IsPregnant)
-                    {
-                        string warn = "Some females sold at maximum age in [a=" + this.Name + "] were pregnant.\r\nConsider changing the MaximumBreederAge in [a=RuminantActivityManage] or ensure [r=RuminantType.MaxAgeMating] is Gestation length less than the MaximumBreederAge to avoid selling pregnant individuals.";
-                        Warnings.CheckAndWrite(warn, Summary, this);
-                    }
+                    // TODO: need to report pregnant females here. Not really a warning that's critical and can be handled by user in other activities
                 }
 
                 // MALES

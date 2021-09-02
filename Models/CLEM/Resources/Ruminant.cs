@@ -523,13 +523,17 @@ namespace Models.CLEM.Resources
                 this.Mother.SucklingOffspringList.Remove(this);
                 this.Mother.NumberOfWeaned++;
             }
-            if(report)
-                RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
+            if (report)
+            {
                 {
-                    RumObj = this,
-                    Category = reason
-                };
-                (this.BreedParams.Parent as RuminantHerd).OnWeanOccurred(args);
+                    RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
+                    {
+                        RumObj = this,
+                        Category = reason
+                    };
+                    (this.BreedParams.Parent as RuminantHerd).OnWeanOccurred(args);
+                }
+            }
 
         }
 

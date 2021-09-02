@@ -47,15 +47,11 @@ namespace Models.CLEM.Groupings
             var filterParam = Expression.Parameter(typeof(T));
             var filterProp = Parent.GetProperty(PropertyOfIndividual);
 
-            // check if the type f the prop is a subclass of T
-            if (!filterProp.DeclaringType.IsSubclassOf(typeof(T)))
-                return (T t) => false;
-            
             // check if the parameter passes can inherit the declaring type
             // this will not allow females to check male properties
             // convert parameter to the type of the property, null if fails
             var filterInherit = Expression.TypeAs(filterParam, filterProp.DeclaringType);
-            var typeis = Expression.TypeEqual(filterParam, filterProp.DeclaringType);
+            var typeis = Expression.TypeIs(filterParam, filterProp.DeclaringType);
 
             // Look for the property
             var key = Expression.Property(filterInherit, filterProp.Name);

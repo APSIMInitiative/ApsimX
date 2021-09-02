@@ -326,16 +326,13 @@ namespace Models.CLEM.Resources
         {
             if (PricingAvailable)
             {
-                List<LabourType> labourList = new List<LabourType>() { ind };
-
                 // search through RuminantPriceGroups for first match with desired purchase or sale flag
                 foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>())
-                {
-                    if (item.Filter(labourList).Count() == 1)                    
+                    if (item.Filter(ind))                    
                         return item.Value;
-                }
+
                 // no price match found.
-                string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {ind.Age}] [f=gender: {ind.Sex.ToString()}]";
+                string warningString = $"No [Pay] price entry was found for individual [r={ind.Name}] with details [f=age: {ind.Age}] [f=sex: {ind.Sex}]";
                 if (!warningsNotFound.Contains(warningString))
                 {
                     warningsNotFound.Add(warningString);
@@ -355,25 +352,34 @@ namespace Models.CLEM.Resources
             if (PricingAvailable)
             {
                 string criteria = property.Name.ToUpper() + ":" + value.ToUpper();
-                List<LabourType> labourList = new List<LabourType>() { ind };
 
                 //find first pricing entry matching specific criteria
                 LabourPriceGroup matchIndividual = null;
                 LabourPriceGroup matchCriteria = null;
-                foreach (LabourPriceGroup item in PayList.FindAllChildren<LabourPriceGroup>())
+                foreach (LabourPriceGroup priceGroup in PayList.FindAllChildren<LabourPriceGroup>())
                 {
-                    if (item.Filter(labourList).Count() == 1 && matchIndividual == null)                    
-                        matchIndividual = item;
+                    if (priceGroup.Filter(ind) && matchIndividual == null)                    
+                        matchIndividual = priceGroup;
 
                     // check that pricing item meets the specified criteria.
-                    var items = item.FindAllChildren<FilterByProperty>()
-                        .Where(f => item.GetProperty(f.PropertyOfIndividual) == property)
+                    var items = priceGroup.FindAllChildren<FilterByProperty>()
+                        .Where(f => priceGroup.GetProperty(f.PropertyOfIndividual) == property)
                         .Where(f => f.Value.ToString().ToUpper() == value.ToUpper());
 
-                    if (items.Any())
+                    var suitableFilters = priceGroup.FindAllChildren<FilterByProperty>()
+                        .Where(a => (priceGroup.GetProperty(a.PropertyOfIndividual) == property) &
+                        (
+                            (a.Operator == System.Linq.Expressions.ExpressionType.Equal && a.Value.ToString().ToUpper() == value.ToUpper()) |
+                            (a.Operator == System.Linq.Expressions.ExpressionType.NotEqual && a.Value.ToString().ToUpper() != value.ToUpper()) |
+                            (a.Operator == System.Linq.Expressions.ExpressionType.IsTrue && value.ToUpper() == "TRUE") |
+                            (a.Operator == System.Linq.Expressions.ExpressionType.IsFalse && value.ToUpper() == "FALSE")
+                        )
+                        ).Any();
+
+                    if (suitableFilters)
                     {
                         if (matchCriteria == null)
-                            matchCriteria = item;
+                            matchCriteria = priceGroup;
                         else
                         {
                             // multiple price entries were found. using first. value = xxx.

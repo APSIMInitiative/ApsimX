@@ -111,9 +111,7 @@ namespace Models.CLEM.Resources
         public void AddMandatoryAttribute(string name)
         {
             if(!mandatoryAttributes.Contains(name.ToLower()))
-            {
-                mandatoryAttributes.Add(name.ToLower());
-            }
+               mandatoryAttributes.Add(name.ToLower());
         }
 
         /// <summary>
@@ -150,21 +148,13 @@ namespace Models.CLEM.Resources
         {
             if (PricingAvailable())
             {
-                List<Ruminant> animalList = new List<Ruminant>() { ind };
-
                 // search through RuminantPriceGroups for first match with desired purchase or sale flag
-
-                foreach (AnimalPriceGroup item in priceGroups.Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
-                {
-                    if (item.Filter(animalList).Count() == 1)
-                    {
-                        //priceOfIndividual = item.Value * ((item.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
-                        return item;
-                    }
-                }
+                foreach (AnimalPriceGroup priceGroup in priceGroups.Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
+                    if (priceGroup.Filter(ind))
+                        return priceGroup;
 
                 // no price match found.
-                string warningString = $"No [{purchaseStyle}] price entry was found for [r={ind.Breed}] meeting the required criteria [f=age: {ind.Age}] [f=gender: {ind.Sex}] [f=weight: {ind.Weight.ToString("##0")}]";
+                string warningString = $"No [{purchaseStyle}] price entry was found for [r={ind.Breed}] meeting the required criteria [f=age: {ind.Age}] [f=sex: {ind.Sex}] [f=weight: {ind.Weight:##0}]";
                 Warnings.CheckAndWrite(warningString, Summary, this);
             }
             return null;
@@ -180,39 +170,40 @@ namespace Models.CLEM.Resources
             if (PricingAvailable())
             {
                 string criteria = property.ToUpper() + ":" + value.ToUpper();
-                List<Ruminant> animalList = new List<Ruminant>() { ind };
 
                 //find first pricing entry matching specific criteria
                 AnimalPriceGroup matchIndividual = null;
                 AnimalPriceGroup matchCriteria = null;
 
-                var items = PriceList.FindAllChildren<AnimalPriceGroup>()
+                var priceGroups = PriceList.FindAllChildren<AnimalPriceGroup>()
                     .Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both);
 
-                foreach (AnimalPriceGroup item in items)
+                foreach (AnimalPriceGroup priceGroup in priceGroups)
                 {
-                    if (item.Filter(animalList).Count() == 1 && matchIndividual == null)
-                    {
-                        matchIndividual = item;
-                    }
+                    if (priceGroup.Filter(ind) && matchIndividual == null)
+                        matchIndividual = priceGroup;
+
+                    var suitableFilters = priceGroup.FindAllChildren<FilterByProperty>()
+                        .Where(a => (a.PropertyOfIndividual == property) & 
+                        (
+                            (a.Operator == System.Linq.Expressions.ExpressionType.Equal && a.Value.ToString().ToUpper() == value.ToUpper()) |
+                            (a.Operator == System.Linq.Expressions.ExpressionType.NotEqual && a.Value.ToString().ToUpper() != value.ToUpper()) |
+                            (a.Operator == System.Linq.Expressions.ExpressionType.IsTrue && value.ToUpper() == "TRUE") |
+                            (a.Operator == System.Linq.Expressions.ExpressionType.IsFalse && value.ToUpper() == "FALSE")
+                        )
+                        ).Any();
 
                     // check that pricing item meets the specified criteria.
-                    if (item.FindAllChildren<FilterByProperty>().Where(a => (a.PropertyOfIndividual == property.ToUpper() && a.Value.ToString().ToUpper() == value.ToUpper())).Count() > 0)
-                    {
+                    if (suitableFilters)
                         if (matchCriteria == null)
-                        {
-                            matchCriteria = item;
-                        }
+                            matchCriteria = priceGroup;
                         else
-                        {
                             // multiple price entries were found. using first. value = xxx.
                             if (!warningsMultipleEntry.Contains(criteria))
                             {
                                 warningsMultipleEntry.Add(criteria);
                                 Summary.WriteWarning(this, "Multiple specific [" + purchaseStyle.ToString() + "] price entries were found for [r=" + ind.Breed + "] where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")+"\r\nOnly the first entry will be used. Price [" + matchCriteria.Value.ToString("#,##0.##") + "] [" + matchCriteria.PricingStyle.ToString() + "].");
                             }
-                        }
-                    }
                 }
 
                 if(matchCriteria == null)
@@ -227,9 +218,7 @@ namespace Models.CLEM.Resources
                         price = matchIndividual.Value * ((matchIndividual.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
                     }
                     else
-                    {
                         warningString += "\r\nNo alternate price for individuals could be found for the individuals. Add a new [r=AnimalPriceGroup] entry in the [r=AnimalPricing] for [" +ind.Breed+"]";
-                    }
                     if (!warningsNotFound.Contains(criteria))
                     {
                         warningsNotFound.Add(criteria);
@@ -237,9 +226,7 @@ namespace Models.CLEM.Resources
                     }
                 }
                 else
-                {
                     return matchCriteria;
-                }
             }
             return null;
         }
@@ -333,9 +320,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (parentHerd != null)
-                {
                     return parentHerd.Herd.Where(a => a.HerdName == this.Name).Count();
-                }
                 return 0;
             }
         }
@@ -348,9 +333,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (parentHerd != null)
-                {
                     return parentHerd.Herd.Where(a => a.HerdName == this.Name).Sum(a => a.AdultEquivalent);
-                }
                 return 0;
             }
         }
