@@ -79,20 +79,14 @@ namespace Models.CLEM
             get
             {
                 if ((this.FileName == null) || (this.FileName == ""))
-                {
                     return "";
-                }
                 else
                 {
                     Simulation simulation = FindAncestor<Simulation>();
                     if (simulation != null)
-                    {
                         return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
-                    }
                     else
-                    {
                         return this.FileName;
-                    }
                 }
             }
         }
@@ -115,9 +109,8 @@ namespace Models.CLEM
             {
                 string filename = FullFileName.Replace("\\", "\\&shy;");
                 if (filename == "")
-                {
                     filename = "Not set";
-                }
+
                 string errorMsg = String.Format("Could not locate file [o={0}] for [x={1}]", filename, this.Name);
                 throw new ApsimXException(this, errorMsg);
             }
@@ -126,9 +119,7 @@ namespace Models.CLEM
             // put in a list that provides a link to the object so we can use this to set values
             var resources = FindAllAncestors<Zone>().FirstOrDefault();
             if (resources != null)
-            {
                 pricingComonentsFound = resources.FindAllDescendants<IResourcePricing>().ToList();
-            }
 
             DataView dataView = new DataView(GetAllData())
             {
@@ -182,9 +173,7 @@ namespace Models.CLEM
                             Warnings.CheckAndWrite(warn, Summary, this);
                         }
                         foreach (IResourcePricing resourcePricing in components)
-                        {
                             resourcePricing.SetPrice(res, this);
-                        }
                     }
                     cnt++;
                 }
@@ -240,9 +229,7 @@ namespace Models.CLEM
                 return table;
             }
             else
-            {
                 return null;
-            }
         }
 
         /// <summary>
@@ -263,9 +250,7 @@ namespace Models.CLEM
                         string fileType = "Text file";
                         string extra = "\r\nExpecting Header row followed by units row in brackets.\r\nHeading1      Heading2      Heading3\r\n( )         ( )        ( )";
                         if (reader.IsCSVFile)
-                        {
                             fileType = "Comma delimited text file (csv)";
-                        }
                         if (reader.IsExcelFile)
                         {
                             fileType = "Excel file";
@@ -275,26 +260,16 @@ namespace Models.CLEM
                     }
 
                     if (StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, DateColumnName) == -1)
-                    {
                         if (this.reader == null || this.reader.Constant(DateColumnName) == null)
-                        {
                             throw new Exception($"Cannot find Date column [o={DateColumnName ?? "Empty"}] in Pricing file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
-                        }
-                    }
                 }
                 else
-                {
                     if (this.reader.IsExcelFile != true)
-                    {
                         this.reader.SeekToDate(this.reader.FirstDate);
-                    }
-                }
                 return true;
             }
             else
-            {
                 return false;
-            }
         }
 
         /// <summary>Close the datafile.</summary>
@@ -320,29 +295,18 @@ namespace Models.CLEM
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (FileName == null || FileName == "")
-                {
                     htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
-                }
                 else if (!this.FileExists)
-                {
                     htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
-                }
                 else
-                {
                     htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
-                }
 
                 if (FileName != null && FileName.Contains(".xls"))
-                {
                     if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")
-                    {
                         htmlWriter.Write(" with <span class=\"errorlink\">WORKSHEET NOT SET</span>");
-                    }
                     else
-                    {
                         htmlWriter.Write(" with worksheet <span class=\"filelink\">" + ExcelWorkSheetName + "</span>");
-                    }
-                }
+
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString();
             }

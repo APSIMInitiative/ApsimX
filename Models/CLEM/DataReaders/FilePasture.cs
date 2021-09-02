@@ -213,13 +213,9 @@ namespace Models.CLEM
             {
                 Simulation simulation = FindAncestor<Simulation>();
                 if (simulation != null && this.FileName != null)
-                {
                     return PathUtilities.GetAbsolutePath(this.FileName, simulation.FileName);
-                }
                 else
-                {
                     return this.FileName;
-                }
             }
         }
 
@@ -236,9 +232,7 @@ namespace Models.CLEM
         {
             // check filename exists
             if(!this.FileExists)
-            {
                 throw new ApsimXException(this, "The database[o="+FullFileName+"] could not be found for [x="+this.Name+"]");
-            }
 
             this.regionIndex = 0;
             this.soilIndex = 0;
@@ -300,9 +294,7 @@ namespace Models.CLEM
         public DataTable GetTable()
         {
             try
-            {
                 return GetAllData();
-            }
             catch (Exception err)
             {
                 ErrorMessage = err.Message;
@@ -373,9 +365,7 @@ namespace Models.CLEM
                 return table;
             }
             else
-            {
                 return null;
-            }
         }
 
         /// <summary>
@@ -437,9 +427,8 @@ namespace Models.CLEM
             int startMonth = ecolCalculationDate.Month;
             DateTime endDate = ecolCalculationDate.AddMonths(ecolCalculationInterval+1);
             if(endDate > clock.EndDate)
-            {
                 endDate = clock.EndDate;
-            }
+
             int endYear = endDate.Year;
             int endMonth = endDate.Month;
 
@@ -449,15 +438,12 @@ namespace Models.CLEM
 
             string filter;
             if (startYear == endYear)
-            {
                 filter = "( Region = " + region + ") AND (Soil = " + soil + ")"
                 + " AND (GrassBA = " + grassBasalArea + ") AND (LandCon = " + landCondition + ") AND (StkRate = " + stkRateCategory + ")"
                 + " AND ("
                 + "( Year = " + startYear + " AND Month >= " + startMonth + " AND Month < " + endMonth + ")"
                 + ")";
-            }
             else
-            {
                 filter = "( Region = " + region + ") AND (Soil = " + soil + ")"
                 + " AND (GrassBA = " + grassBasalArea + ") AND (LandCon = " + landCondition + ") AND (StkRate = " + stkRateCategory + ")"
                 + " AND ("
@@ -465,16 +451,13 @@ namespace Models.CLEM
                 + " OR  ( Year > " + startYear + " AND Year < " + endYear + ")"
                 + " OR  ( Year = " + endYear + " AND Month < " + endMonth + ")"
                 + ")";
-            }
 
             DataRow[] foundRows = this.pastureFileAsTable.Select(filter);
 
             List<PastureDataType> filtered = new List<PastureDataType>();
 
             foreach (DataRow dr in foundRows)
-            {
                 filtered.Add(DataRow2PastureDataType(dr));
-            }
 
             filtered.Sort((r, s) => DateTime.Compare(r.CutDate, s.CutDate));
 
@@ -510,19 +493,15 @@ namespace Models.CLEM
             foreach (PastureDataType month in filtered)
             {
                 if ((tempdate.Year != month.Year) || (tempdate.Month != month.Month))
-                {
                     throw new ApsimXException(this, errormessageStart 
                         + "Missing entry for Year: " + month.Year + " and Month: " + month.Month);
-                }
                 tempdate = tempdate.AddMonths(1);
             }
 
             //Check months go right up until EndDate
             if ((tempdate.Month != endDate.Month)&&(tempdate.Year != endDate.Year))
-            {
                 throw new ApsimXException(this, errormessageStart
                         + "Missing entry for Year: " + tempdate.Year + " and Month: " + tempdate.Month);
-            }
         }
 
         /// <summary>
@@ -608,9 +587,7 @@ namespace Models.CLEM
         public bool OpenDataFile()
         {
             if (this.FullFileName == null || this.FullFileName == "")
-            {
                 return false;
-            }
 
             if (System.IO.File.Exists(this.FullFileName))
             {
@@ -640,171 +617,89 @@ namespace Models.CLEM
                     this.runoffIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Runoff");
 
                     if (this.regionIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("Region") == null)
-                        {
                             throw new Exception("Cannot find Region in pasture file: " + this.FullFileName);
-                        }
-                    }
 
                     if (this.soilIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("Soil") == null)
-                        {
                             throw new Exception("Cannot find Soil in pasture file: " + this.FullFileName);
-                        }
-                    }
 
                     if (this.forageNoIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("ForageNo") == null)
-                        {
                             throw new Exception("Cannot find ForageNo in pasture file: " + this.FullFileName);
-                        }
-                    }
 
                     if (this.grassBAIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("GrassBA") == null)
-                        {
                             throw new Exception("Cannot find GrassBA in pasture file: " + this.FullFileName);
-                        }
-                    }
 
                     if (this.landConIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("LandCon") == null)
-                        {
                             throw new Exception("Cannot find LandCon in pasture file: " + this.FullFileName);
-                        }
-                    }
 
                     if (this.stkRateIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("StkRate") == null)
-                        {
                             throw new Exception("Cannot find StkRate in pasture file: " + this.FullFileName);
-                        }
-                    }
 
                     if (this.yearNumIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("YearNum") == null)
-                        {
                             throw new Exception("Cannot find YearNum in pasture file: " + this.FullFileName);
-                        }
-                    }
 
                     if (this.yearIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("Year") == null)
-                        {
                             throw new Exception("Cannot find Year in pasture file: " + this.FullFileName);
-                        }
-                    }
 
                     if (this.cutNumIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("CutNum") == null)
-                        {
                             throw new Exception("Cannot find CutNum in pasture file: " + this.FullFileName);
-                        }
-                    }
 
                     if (this.monthIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("Month") == null)
-                        {
                             throw new Exception("Cannot find Month in pasture file: " + this.FullFileName);
-                        }
-                    }
 
                     if (this.growthIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("Growth") == null)
-                        {
                             throw new Exception("Cannot find Growth in pasture file: " + this.FullFileName);
-                        }
-                    }
 
                     if (this.bp1Index == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("BP1") == null)
-                        {
                             throw new Exception("Cannot find BP1 in pasture file: " + this.FullFileName);
-                        }
-                    }
 
                     if (this.bp2Index == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("BP2") == null)
-                        {
                             throw new Exception("Cannot find BP2 in pasture file: " + this.FullFileName);
-                        }
-                    }
 
                     if (this.utilisnIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("Utilisn") == null)
-                        {
                             throw new Exception("Cannot find Utilisn in pasture file: " + this.FullFileName);
-                        }
-                    }
 
                     if (this.soillossIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("SoilLoss") == null)
-                        {
                             throw new Exception("Cannot find SoilLoss in pasture file: " + this.FullFileName);
-                        }
-                    }
 
                     if (this.coverIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("Cover") == null)
-                        {
                             throw new Exception("Cannot find Cover in pasture file: " + this.FullFileName);
-                        }
-                    }
 
                     if (this.treeBAIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("TreeBA") == null)
-                        {
                             throw new Exception("Cannot find TreeBA in pasture file: " + this.FullFileName);
-                        }
-                    }
 
                     if (this.rainfallIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("Rainfall") == null)
-                        {
                             throw new Exception("Cannot find RainFall in pasture file: " + this.FullFileName);
-                        }
-                    }
 
                     if (this.runoffIndex == -1)
-                    {
                         if (this.reader == null || this.reader.Constant("Runoff") == null)
-                        {
                             throw new Exception("Cannot find Runoff in pasture file: " + this.FullFileName);
-                        }
-                    }
                 }
                 else
-                {
                     if (this.reader.IsExcelFile != true)
-                    {
                         this.reader.SeekToDate(this.reader.FirstDate);
-                    }
-                }
 
                 return true;
             }
             else
-            {
                 return false;
-            }
         }
 
         /// <summary>Close the datafile.</summary>
@@ -830,17 +725,11 @@ namespace Models.CLEM
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (FileName == null || FileName == "")
-                {
                     htmlWriter.Write("Using <span class=\"errorlink\">[FILE NOT SET]</span>");
-                }
                 else if (!this.FileExists)
-                {
                     htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
-                }
                 else
-                {
                     htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
-                }
                 htmlWriter.Write("\r\n</div>");
                 return htmlWriter.ToString(); 
             }
