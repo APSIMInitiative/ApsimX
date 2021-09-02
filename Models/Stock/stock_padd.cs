@@ -746,13 +746,13 @@ namespace Models.GrazPlan
         /// <summary>
         /// Gets or sets the crop, pasture component
         /// </summary>
-        public IPlantDamage ForageObj { get; set; }
+        public Forage ForageObj { get; set; }
 
         /// <summary>
         /// Update the forage data for this crop/agpasture object
         /// </summary>
         /// <param name="forageObj">The crop/pasture object</param>
-        public void UpdateForages(IPlantDamage forageObj)
+        public void UpdateForages(Forage forageObj)
         {
             // ensure this forage is in the list
             // the forage key in this case is component name
@@ -819,7 +819,7 @@ namespace Models.GrazPlan
         /// </summary>
         /// <param name="forageObj">The forage object - a Plant/AgPasture component</param>
         /// <returns>The grazing inputs</returns>
-        private GrazType.GrazingInputs Crop2GrazingInputs(IPlantDamage forageObj)
+        private GrazType.GrazingInputs Crop2GrazingInputs(Forage forageObj)
         {
             GrazType.GrazingInputs result = new GrazType.GrazingInputs();
             GrazType.zeroGrazingInputs(ref result);
@@ -843,21 +843,18 @@ namespace Models.GrazPlan
             }
 
             // calculate the total live and dead biomass
-            foreach (IOrganDamage biomass in forageObj.Organs)
+            foreach (var biomass in forageObj.Material)
             {
-                if (biomass.IsAboveGround)
+                if (biomass.Live.Wt > 0 || biomass.Dead.Wt > 0)
                 {
-                    if (biomass.Live.Wt > 0 || biomass.Dead.Wt > 0)
-                    {
-                        result.TotalGreen += (greenPropn * biomass.Live.Wt);   // g/m^2
-                        result.TotalDead += biomass.Dead.Wt;
+                    result.TotalGreen += (greenPropn * biomass.Live.Wt);   // g/m^2
+                    result.TotalDead += biomass.Dead.Wt;
 
-                        // we can find the dmd of structural, assume storage and metabolic are 100% digestible
-                        dmd = (biomass.Live.DMDOfStructural * greenPropn * biomass.Live.StructuralWt) + (1 * greenPropn * biomass.Live.StorageWt) + (1 * greenPropn * biomass.Live.MetabolicWt);    // storage and metab are 100% dmd
-                        dmd += ((biomass.Dead.DMDOfStructural * biomass.Dead.StructuralWt) + (1 * biomass.Dead.StorageWt) + (1 * biomass.Dead.MetabolicWt));
-                        totalDMD += dmd;
-                        totalN += (greenPropn * biomass.Live.N) + (biomass.Dead.Wt > 0 ? biomass.Dead.N : 0);   // g/m^2
-                    }
+                    // we can find the dmd of structural, assume storage and metabolic are 100% digestible
+                    dmd = (biomass.DigestibilityLive * greenPropn * biomass.Live.StructuralWt) + (1 * greenPropn * biomass.Live.StorageWt) + (1 * greenPropn * biomass.Live.MetabolicWt);    // storage and metab are 100% dmd
+                    dmd += ((biomass.Dead.DMDOfStructural * biomass.Dead.StructuralWt) + (1 * biomass.Dead.StorageWt) + (1 * biomass.Dead.MetabolicWt));
+                    totalDMD += dmd;
+                    totalN += (greenPropn * biomass.Live.N) + (biomass.Dead.Wt > 0 ? biomass.Dead.N : 0);   // g/m^2
                 }
             }
 
@@ -930,27 +927,27 @@ namespace Models.GrazPlan
 
                 // calculations of proportions each organ of the total plant removed (in the native units)
                 double totalDM = 0;
-                foreach (IOrganDamage organ in ForageObj.Organs)
+                foreach (var material in ForageObj.Material)
                 {
-                    if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
+                    if (material.Live.Wt + material.Dead.Wt > 0)
                     {
-                        totalDM += organ.Live.Wt + organ.Dead.Wt;
+                        totalDM += material.Live.Wt + material.Dead.Wt;
                     }
                 }
                 double amountRemoved = 0;
                 double amountToRemove = propnRemoved * totalDM;
-                foreach (IOrganDamage organ in ForageObj.Organs)
+                foreach (var material in ForageObj.Material)
                 {
-                    if (organ.IsAboveGround && (organ.Live.Wt + organ.Dead.Wt) > 0)
+                    if (material.Live.Wt + material.Dead.Wt > 0)
                     {
-                        double propnOfPlantDM = (organ.Live.Wt + organ.Dead.Wt) / totalDM;
+                        double propnOfPlantDM = (material.Live.Wt + material.Dead.Wt) / totalDM;
                         double amountOfOrganToRemove = propnOfPlantDM * amountToRemove;
-                        double prpnOfOrganToRemove = amountOfOrganToRemove / (organ.Live.Wt + organ.Dead.Wt);
+                        double prpnOfOrganToRemove = amountOfOrganToRemove / (material.Live.Wt + material.Dead.Wt);
                         prpnOfOrganToRemove = Math.Min(prpnOfOrganToRemove, 1.0);
                         PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
                         removal.FractionDeadToRemove = prpnOfOrganToRemove;
                         removal.FractionLiveToRemove = prpnOfOrganToRemove;
-                        ForageObj.RemoveBiomass(organ.Name, "Graze", removal);
+                        material.RemoveBiomass("Graze", removal);
 
                         amountRemoved += amountOfOrganToRemove;
                     }
@@ -1072,7 +1069,7 @@ namespace Models.GrazPlan
         /// <param name="hostID">Component ID</param>
         /// <param name="driverID">Driver ID</param>
         /// <param name="forageObj">The forage object</param>
-        public void AddProvider(PaddockInfo paddock, string paddName, string forageName, int hostID, int driverID, IPlantDamage forageObj)
+        public void AddProvider(PaddockInfo paddock, string paddName, string forageName, int hostID, int driverID, Forage forageObj)
         {
             ForageProvider forageProvider;
 

@@ -4114,14 +4114,11 @@
                     {
                         if (forageProvider.ForageObj != null)
                         {
-                            foreach (IOrganDamage biomass in forageProvider.ForageObj.Organs)
+                            foreach (var biomass in forageProvider.ForageObj.Material)
                             {
-                                if (biomass.IsAboveGround)
+                                if (biomass.Live.Wt > 0)
                                 {
-                                    if (biomass.Live.Wt > 0)
-                                    {
-                                        pastureGreen += biomass.Live.Wt;   // g/m^2
-                                    }
+                                    pastureGreen += biomass.Live.Wt;   // g/m^2
                                 }
                             }
                         }
