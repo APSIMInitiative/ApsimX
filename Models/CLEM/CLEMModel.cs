@@ -407,7 +407,7 @@ namespace Models.CLEM
         /// <inheritdoc/>
         public virtual string ModelSummaryNameTypeHeaderText()
         {
-            return this.GetType().Name;
+            return this.Name;
         }
 
         /// <inheritdoc/>
