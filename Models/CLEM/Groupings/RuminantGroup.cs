@@ -45,6 +45,7 @@ namespace Models.CLEM.Groupings
         /// </summary>
         public RuminantGroup()
         {
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
             this.SetDefaults();
         }
 
