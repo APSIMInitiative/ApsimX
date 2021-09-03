@@ -120,8 +120,6 @@ namespace Models.CLEM.Activities
             // Calculate potential intake and reset stores
             // Order age descending so breeder females calculate milkproduction before suckings grow
 
-            DateTime start = DateTime.Now;
-
             foreach (var ind in herd.GroupBy(a => a.Weaned).OrderByDescending(a => a.Key))
             {
                 foreach (var indi in ind)
@@ -134,8 +132,6 @@ namespace Models.CLEM.Activities
                     CalculatePotentialIntake(indi);
                 }
             }
-
-            var diff = DateTime.Now - start;
         }
 
         private void CalculatePotentialIntake(Ruminant ind)
