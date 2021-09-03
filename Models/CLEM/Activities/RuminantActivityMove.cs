@@ -66,6 +66,11 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
+            if (!FindAllChildren<RuminantGroup>().Any())
+            {
+                string[] memberNames = new string[] { "Specify individuals" };
+                results.Add(new ValidationResult($"No individuals have been specified by [f=RuminantGroup] to be moved in [a={Name}]. Provide at least an empty RuminantGroup to move all individuals.", memberNames));
+            }
             return results;
         }
 
@@ -91,11 +96,7 @@ namespace Models.CLEM.Activities
         {
             Status = ActivityStatus.NotNeeded;
             // allow multiple filter groups for moving. 
-            var filterGroups = FindAllChildren<RuminantGroup>().ToList();
-            if(filterGroups.Count() == 0)
-            {
-                filterGroups.Add(new RuminantGroup());
-            }
+            var filterGroups = FindAllChildren<RuminantGroup>();
             foreach (RuminantGroup item in filterGroups)
             {
                 foreach (Ruminant ind in item.Filter(CurrentHerd(false)))
@@ -191,6 +192,8 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("</div>");
                 if (PerformAtStartOfSimulation)
                     htmlWriter.Write("\r\n<div class=\"activityentry\">These individuals will be located on the specified pasture at startup</div>");
+                if(!FindAllChildren<RuminantGroup>().Where(a => a.Enabled).Any())
+                    htmlWriter.Write("\r\n<div class=\"warningbanner\">WARNING: No Rumiant Group has been supplied below. No individuals will be moved!</div>");
                 return htmlWriter.ToString(); 
             }
         } 
