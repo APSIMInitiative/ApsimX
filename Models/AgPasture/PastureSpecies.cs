@@ -185,7 +185,7 @@
                 // (RCichota, May-2017) Made intercepted radiation equal to solar radiation and implemented the variable 'effective cover'.
                 // To compute photosynthesis AgPasture needs radiation on top of canopy, but MicroClimate only passes the value of total
                 //  intercepted radiation (over all canopy). Here it is assumed/defined that solar radiation is indeed the best value for
-                //  AgPasture to use in its photosynthesis (agrees with the implementation in Ecomod).
+                //  AgPasture to use in its photosynthesis calculations (agrees with the implementation in Ecomod).
                 // The 'effective cover' is computed using an 'effective light extinction coefficient', which is obtained based on the 
                 //  value for intercepted radiation supplied by MicroClimate. This is the light extinction coefficient that result in the
                 //  same total intercepted radiation, but using solar radiation on top of canopy.
@@ -2752,7 +2752,7 @@
             double carbonAssimilation = Pc_Daily * 0.001 * (12.0 / 44.0); // Convert from mgCO2 to gC           
 
             // Gross photosynthesis, converted to kg C/ha/day
-            basePhotosynthesis = carbonAssimilation * 10; // convert from g/m2 to kg/ha (= 10000/1000)
+            basePhotosynthesis = carbonAssimilation * 10.0; // convert from g/m2 to kg/ha (= 10000/1000)
 
             // Consider the extreme temperature effects (in practice only one temp stress factor is < 1)
             glfHeat = HeatStress();
