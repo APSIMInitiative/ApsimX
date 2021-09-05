@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 139,
+  "Version": 140,
   "Name": "Simulations",
   "Children": [
     {
@@ -3745,72 +3745,34 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "Name": "KNO3",
-              "Children": [
-                {
-                  "$type": "Models.Functions.XYPairs, Models",
-                  "X": [
-                    0.0,
-                    0.003
-                  ],
-                  "Y": [
-                    0.02,
-                    0.02
-                  ],
-                  "Name": "XYPairs",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Root].LengthDensity",
-                  "Name": "XValue",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
+                "$type": "Models.Functions.Constant, Models",
+                "FixedValue": 0.02,
+                "Units": null,
+                "Name": "KNO3",
+                "Children": [],
+                "IncludeInDocumentation": true,
+                "Enabled": true,
+                "ReadOnly": false
             },
             {
-              "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "Name": "KNH4",
-              "Children": [
+                "$type": "Models.Functions.Constant, Models",
+                "FixedValue": 0.0,
+                "Units": null,
+                "Name": "KNH4",
+                "Children": [
                 {
-                  "$type": "Models.Functions.XYPairs, Models",
-                  "X": [
-                    0.0,
-                    0.003
-                  ],
-                  "Y": [
-                    0.0,
-                    0.0
-                  ],
-                  "Name": "XYPairs",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Root].LengthDensity",
-                  "Name": "XValue",
+                  "$type": "Models.Memo, Models",
+                  "Text": "The current model version considers only NO3 uptake but NH4 option can be activated by the user . We do not expect activation of NH4 to change total plant N uptake because the nitrification rate (conversion of NH4 to NO3) is very fast in the model. In the future we will re-valuate this. ",
+                  "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": true,
-              "ReadOnly": false
+                ],
+                "IncludeInDocumentation": true,
+                "Enabled": true,
+                "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
