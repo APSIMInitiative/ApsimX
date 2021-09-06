@@ -85,25 +85,44 @@
 
         //----------------------- Public methods -----------------------
 
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs args)
+        {
+            ClearDailyTransferredAmounts();
+        }
+
         /// <summary>Preparation before the main daily processes.</summary>
         public void OnDoDailyInitialisation()
         {
             DMRemoved = 0;
             NRemoved = 0;
-            ClearDailyDeltas();
+            ClearDailyTransferredAmounts();
         }
 
-        /// <summary>Updates the tissue state, make changes in DM and N effective.</summary>
-        public void Update()
+        /// <summary>Sets the biomass of this tissue.</summary>
+        /// <param name="dmAmount">The DM amount to set to (kg/ha).</param>
+        /// <param name="nAmount">The amount of N to set to (kg/ha).</param>
+        public void SetBiomass(double dmAmount, double nAmount)
         {
-            dryMatter.Wt += DMTransferedIn - DMTransferedOut;
-            dryMatter.N += NTransferedIn - (NTransferedOut + NRemobilised);
-            CalculateStates();
+            dryMatter.Wt = dmAmount;
+            dryMatter.N = nAmount;
+            CalculateDigestibility();
         }
 
-        /// <summary>Removes biomass from tissue.</summary>
-        /// <param name="fractionToRemove">The fraction of the total biomass to remove from the simulation.</param>
-        /// <param name="fractionToSoil">The fraction of the total biomass to send to soil.</param>
+        /// <summary>Adds an amount of biomass to this tissue.</summary>
+        /// <param name="dmAmount">The amount of dry matter to add (kg/ha).</param>
+        /// <param name="nAmount">The amount of nitrogen to add (kg/ha).</param>
+        public void AddBiomass(double dmAmount, double nAmount)
+        {
+            dryMatter.Wt += dmAmount;
+            dryMatter.N += nAmount;
+
+            CalculateDigestibility();
+        }
+
+        /// <summary>Removes a fraction of the biomass from this tissue.</summary>
+        /// <param name="fractionToRemove">The fraction of biomass to remove.</param>
+        /// <param name="fractionToSoil">The fraction of removed biomass to send to soil.</param>
         public void RemoveBiomass(double fractionToRemove, double fractionToSoil)
         {
             var dmToSoil = fractionToSoil * dryMatter.Wt;
@@ -125,33 +144,19 @@
                 surfaceOrganicMatter.Add(dmToSoil, nToSoil, 0.0, species.Name, species.Name);
             }
 
-            CalculateStates();
+            CalculateDigestibility();
         }
 
-        /// <summary>Add an amount of biomass to this tissue.</summary>
-        /// <param name="dmAmount">The amount of dry matter to add (kg/ha).</param>
-        /// <param name="nAmount">The amount of nitrogen to add (kg/ha).</param>
-        public void AddBiomass(double dmAmount, double nAmount)
+        /// <summary>Updates the tissue state, make changes in DM and N effective.</summary>
+        public void Update()
         {
-            dryMatter.Wt += dmAmount;
-            dryMatter.N += nAmount;
-
-            CalculateStates();
-        }
-
-        /// <summary>Reset the biomass of this tissue to the specified amount.</summary>
-        /// <param name="dmAmount">The amount of dry matter to reset to (kg/ha).</param>
-        /// <param name="nAmount">The amount of nitrogen to reset to (kg/ha).</param>
-        public void Reset(double dmAmount, double nAmount)
-        {
-            dryMatter.Wt = dmAmount;
-            dryMatter.N = nAmount;
-            CalculateStates();
-            ClearDailyDeltas();
+            dryMatter.Wt += DMTransferedIn - DMTransferedOut;
+            dryMatter.N += NTransferedIn - (NTransferedOut + NRemobilised);
+            CalculateDigestibility();
         }
 
         /// <summary>Clear the daily flows of DM and N.</summary>
-        public void ClearDailyDeltas()
+        public void ClearDailyTransferredAmounts()
         {
             DMTransferedIn = 0.0;
             DMTransferedOut = 0.0;
@@ -164,7 +169,7 @@
         //----------------------- Private methods -----------------------
 
         /// <summary>Calculate the values for calculated states.</summary>
-        private void CalculateStates()
+        private void CalculateDigestibility()
         {
             Digestibility = 0.0;
             if (DM.Wt > 0.0)
@@ -177,12 +182,6 @@
                 double fractionCellWall = 1.0 - fractionSugar - fractionProtein;
                 Digestibility = fractionSugar + (fractionProtein * DigestibilityProtein) + (fractionCellWall * DigestibilityCellWall);
             }
-        }
-
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs args)
-        {
-            ClearDailyDeltas();
         }
     }
 }

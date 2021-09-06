@@ -186,31 +186,6 @@
             }
         }
 
-        /// <summary>Remove a fraction of the biomass.</summary>
-        /// <param name="fractionToRemove">The fraction from each layer to remove.</param>
-        /// <param name="sendToSoil">Whether the biomass should be sent to soil.</param>
-        /// <returns></returns>
-        public BiomassAndNLayered RemoveBiomass(double fractionToRemove, bool sendToSoil)
-        {
-            var removed = new BiomassAndNLayered();
-            removed.Wt = MathUtilities.Multiply_Value(dmLayer, fractionToRemove);
-            removed.N = MathUtilities.Multiply_Value(nLayer, fractionToRemove);
-            for (int layer = 0; layer < dmLayer.Length; layer++)
-            {
-                dmLayer[layer] -= removed.Wt[layer];
-                nLayer[layer] -= removed.N[layer];
-            }
-
-            UpdateDM();
-
-            if (sendToSoil)
-            {
-                DetachBiomass(removed.Wt, removed.N);
-            }
-
-            return removed;
-        }
-
         /// <summary>Move a fraction of the biomass from this tissue to another tissue.</summary>
         /// <param name="fractionToRemove">The fraction to move.</param>
         /// <param name="toTissue">The tissue to move to biomass to.</param>
@@ -218,10 +193,6 @@
         {
             var removed = RemoveBiomass(fractionToRemove, sendToSoil: false);
             toTissue.AddBiomass(removed.Wt, removed.N);
-            if (fractionToRemove == 1.0)
-            {
-                Reset();
-            }
         }
 
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>
@@ -293,7 +264,38 @@
             };
         }
 
-        /// <summary>Add biomass.</summary>
+        /// <summary>Removes a fraction of remobilisable N for use into new growth.</summary>
+        /// <param name="fraction">The fraction to remove (0-1)</param>
+        public void DoRemobiliseN(double fraction)
+        {
+            nRemobilised = NRemobilisable * fraction;
+        }
+
+        /// <summary>Reset tissue to the specified amount.</summary>
+        /// <param name="dmAmount">The amount of dry matter by layer to reset to (kg/ha).</param>
+        public void ResetTo(double[] dmAmount)
+        {
+            for (int layer = 0; layer < dmLayer.Length; layer++)
+                dmLayer[layer] += dmAmount[layer];
+
+            UpdateDM();
+        }
+
+        /// <summary>Sets the biomass of this tissue.</summary>
+        /// <param name="dmAmount">The DM amount, by layer, to set to (kg/ha).</param>
+        /// <param name="nAmount">The amount of N, by layer, to set to (kg/ha).</param>
+        public void SetBiomass(double[] dmAmount, double[] nAmount)
+        {
+            for (int layer = 0; layer < dmLayer.Length; layer++)
+            {
+                dmLayer[layer] = dmAmount[layer];
+                nLayer[layer] = nAmount[layer];
+            }
+
+            UpdateDM();
+        }
+
+        /// <summary>Adds an amount of biomass to this tissue.</summary>
         /// <param name="dmToAdd">Dry matter amount to add (kg/ha).</param>
         /// <param name="nToAdd">Nitrogen amount to add (kg/ha).</param>
         public void AddBiomass(double[] dmToAdd, double[] nToAdd)
@@ -307,11 +309,30 @@
             UpdateDM();
         }
 
-        /// <summary>Removes a fraction of remobilisable N for use into new growth.</summary>
-        /// <param name="fraction">The fraction to remove (0-1)</param>
-        public void DoRemobiliseN(double fraction)
+        /// <summary>Removes a fraction of the biomass from this tissue.</summary>
+        /// <param name="fractionToRemove">The fraction of biomass to remove.</param>
+        /// <param name="sendToSoil">Whether the biomass should be sent to soil.</param>
+        /// <remarks>The same fraction is used for all layers.</remarks>
+        /// <returns></returns>
+        public BiomassAndNLayered RemoveBiomass(double fractionToRemove, bool sendToSoil)
         {
-            nRemobilised = NRemobilisable * fraction;
+            var removed = new BiomassAndNLayered();
+            removed.Wt = MathUtilities.Multiply_Value(dmLayer, fractionToRemove);
+            removed.N = MathUtilities.Multiply_Value(nLayer, fractionToRemove);
+            for (int layer = 0; layer < dmLayer.Length; layer++)
+            {
+                dmLayer[layer] -= removed.Wt[layer];
+                nLayer[layer] -= removed.N[layer];
+            }
+
+            UpdateDM();
+
+            if (sendToSoil)
+            {
+                DetachBiomass(removed.Wt, removed.N);
+            }
+
+            return removed;
         }
 
         /// <summary>Update dry matter.</summary>
@@ -321,30 +342,8 @@
             biomass.N = nLayer.Sum();
         }
 
-        /// <summary>Reset tissue to the specified amount.</summary>
-        /// <param name="dmAmount">The amount of dry matter by layer to reset to (kg/ha).</param>
-        public void ResetTo(double[] dmAmount)
-        {
-            for (int layer = 0; layer < dmLayer.Length; layer++)
-            {
-                dmLayer[layer] += dmAmount[layer];
-            }
-
-            UpdateDM();
-        }
-
-        /// <summary>Reset root tissue to initial state.</summary>
-        public void Reset()
-        {
-            for (int layer = 0; layer < dmLayer.Length; layer++)
-            {
-                dmLayer[layer] = 0;
-                nLayer[layer] = 0;
-            }
-        }
-
         /// <summary>Called each day to reset the transfer variables.</summary>
-        public void DailyReset()
+        public void ClearDailyTransferredAmounts()
         {
             dmTransferedIn = 0.0;
             dmTransferedOut = 0.0;
@@ -369,7 +368,6 @@
 
             var currentDM = tissue1.DM.Wt + tissue2.DM.Wt;
             var currentN = tissue1.DM.N + tissue2.DM.N;
-            var nRemobilised = tissue1.nRemobilised + tissue2.nRemobilised;
 
             // check mass balance
             if (!MathUtilities.FloatsAreEqual(0.0, previousDM + tissue1.dmTransferedIn - tissue2.dmTransferedOut - currentDM))

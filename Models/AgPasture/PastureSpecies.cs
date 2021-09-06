@@ -249,19 +249,24 @@
         public void EndCrop()
         {
             // Return all above ground parts to surface OM
-            DoAddDetachedShootToSurfaceOM(AboveGroundWt, AboveGroundN);
+            AddDetachedShootToSurfaceOM(AboveGroundWt, AboveGroundN);
 
             // Incorporate all root mass to soil fresh organic matter
             foreach (PastureBelowGroundOrgan root in roots)
-                root.DoEndCrop();
+            {
+                root.DetachRoots(RootWt, RootN);
+            }
 
             // zero all variables
             RefreshVariables();
-            Leaf.DoResetOrgan();
-            Stem.DoResetOrgan();
-            Stolon.DoResetOrgan();
+            Leaf.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+            Stem.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+            Stolon.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
             foreach (PastureBelowGroundOrgan root in roots)
-                root.DoResetOrgan();
+            {
+                root.SetBiomassState(0.0, 0.0, 0.0);
+                root.ClearDailyTransferredAmounts();
+            }
 
             // clean up secondary variables
             greenLAI = 0.0;
@@ -2369,7 +2374,7 @@
         /// </summary>
         private void SetInitialState()
         {
-            // 1. Choose the appropriate DM partition, based on species family
+            // choose the appropriate DM partition, based on species family
             double[] initialDMFractions;
             if (mySpeciesFamily == PlantFamilyType.Grass)
                 initialDMFractions = initialDMFractionsGrasses;
@@ -2378,31 +2383,39 @@
             else
                 initialDMFractions = initialDMFractionsForbs;
 
-            // Determine what biomass to reset the organs to. If a negative InitialShootDM
-            // was specified by user then that means the plant isn't sown yet so reset
-            // the organs to zero biomass. This is the reason Max is used below.
+            // determine what biomass to reset the organs to. If a negative InitialShootDM
+            //  was specified by user then that means the plant isn't sown yet so reset
+            //  the organs to zero biomass. This is the reason Max is used below.
             var shootDM = Math.Max(0.0, InitialShootDM);
             var rootDM = Math.Max(0.0, InitialRootDM);
 
-            // Perform the organ resets.
-            Leaf.Reset(emergingWt: shootDM * initialDMFractions[0],
-                       developingWt: shootDM * initialDMFractions[1],
-                       matureWt: shootDM * initialDMFractions[2],
-                       deadWt: shootDM * initialDMFractions[3]);
-
-            Stem.Reset(emergingWt: shootDM * initialDMFractions[4],
-                       developingWt: shootDM * initialDMFractions[5],
-                       matureWt: shootDM * initialDMFractions[6],
-                       deadWt: shootDM * initialDMFractions[7]);
-
-            Stolon.Reset(emergingWt: shootDM * initialDMFractions[8],
-                         developingWt: shootDM * initialDMFractions[9],
-                         matureWt: shootDM * initialDMFractions[10],
-                         deadWt: 0.0);
-
+            // set up initial biomass in each organ (note that Nconc is assumed to be at optimum level)
+            Leaf.SetBiomassState(emergingWt: shootDM * initialDMFractions[0],
+                                 emergingN: shootDM * initialDMFractions[0] * Leaf.NConcOptimum,
+                                 developingWt: shootDM * initialDMFractions[1],
+                                 developingN: shootDM * initialDMFractions[1] * Leaf.NConcOptimum,
+                                 matureWt: shootDM * initialDMFractions[2],
+                                 matureN: shootDM * initialDMFractions[2] * Leaf.NConcOptimum,
+                                 deadWt: shootDM * initialDMFractions[3],
+                                 deadN: shootDM * initialDMFractions[3] * Leaf.NConcMinimum);
+            Stem.SetBiomassState(emergingWt: shootDM * initialDMFractions[4],
+                                 emergingN: shootDM * initialDMFractions[4] * Stem.NConcOptimum,
+                                 developingWt: shootDM * initialDMFractions[5],
+                                 developingN: shootDM * initialDMFractions[5] * Stem.NConcOptimum,
+                                 matureWt: shootDM * initialDMFractions[6],
+                                 matureN: shootDM * initialDMFractions[6] * Stem.NConcOptimum,
+                                 deadWt: shootDM * initialDMFractions[7],
+                                 deadN: shootDM * initialDMFractions[7] * Stem.NConcMinimum);
+            Stolon.SetBiomassState(emergingWt: shootDM * initialDMFractions[8],
+                                   emergingN: shootDM * initialDMFractions[8] * Stolon.NConcOptimum,
+                                   developingWt: shootDM * initialDMFractions[9],
+                                   developingN: shootDM * initialDMFractions[9] * Stolon.NConcOptimum,
+                                   matureWt: shootDM * initialDMFractions[10],
+                                   matureN: shootDM * initialDMFractions[10] * Stolon.NConcOptimum,
+                                   deadWt: 0.0, deadN: 0.0);
             roots[0].Reset(rootDM, InitialRootDepth);
     
-            // Set initial phenological stage
+            // set initial phenological stage
             if (MathUtilities.IsGreaterThan(InitialShootDM, 0))
                 phenologicStage = 1;
             else if (MathUtilities.FloatsAreEqual(InitialShootDM, 0))
@@ -2438,20 +2451,32 @@
         /// <summary>Set the plant state at germination.</summary>
         internal void SetEmergenceState()
         {
-            Leaf.ResetEmergence(emergingWt: MinimumGreenWt * emergenceDMFractions[0],
-                                developingWt: MinimumGreenWt * emergenceDMFractions[1],
-                                matureWt: MinimumGreenWt * emergenceDMFractions[2],
-                                deadWt: MinimumGreenWt * emergenceDMFractions[3]);
-            Stem.ResetEmergence(emergingWt: MinimumGreenWt * emergenceDMFractions[4],
-                                developingWt: MinimumGreenWt * emergenceDMFractions[5],
-                                matureWt: MinimumGreenWt * emergenceDMFractions[6],
-                                deadWt: MinimumGreenWt * emergenceDMFractions[7]);
-            Stolon.ResetEmergence(emergingWt: MinimumGreenWt * emergenceDMFractions[8],
-                                  developingWt: MinimumGreenWt * emergenceDMFractions[9],
-                                  matureWt: MinimumGreenWt * emergenceDMFractions[10],
-                                  deadWt: 0.0);
-
-            roots[0].Reset();
+            Leaf.SetBiomassState(emergingWt: MinimumGreenWt * emergenceDMFractions[0],
+                                 emergingN: MinimumGreenWt * emergenceDMFractions[0] * Leaf.NConcOptimum,
+                                 developingWt: MinimumGreenWt * emergenceDMFractions[1],
+                                 developingN: MinimumGreenWt * emergenceDMFractions[1] * Leaf.NConcOptimum,
+                                 matureWt: MinimumGreenWt * emergenceDMFractions[2],
+                                 matureN: MinimumGreenWt * emergenceDMFractions[2] * Leaf.NConcOptimum,
+                                 deadWt: MinimumGreenWt * emergenceDMFractions[3],
+                                 deadN: MinimumGreenWt * emergenceDMFractions[3] * Leaf.NConcMinimum);
+            Stem.SetBiomassState(emergingWt: MinimumGreenWt * emergenceDMFractions[4],
+                                 emergingN: MinimumGreenWt * emergenceDMFractions[4] * Stem.NConcOptimum,
+                                 developingWt: MinimumGreenWt * emergenceDMFractions[5],
+                                 developingN: MinimumGreenWt * emergenceDMFractions[5] * Stem.NConcOptimum,
+                                 matureWt: MinimumGreenWt * emergenceDMFractions[6],
+                                 matureN: MinimumGreenWt * emergenceDMFractions[6] * Stem.NConcOptimum,
+                                 deadWt: MinimumGreenWt * emergenceDMFractions[7],
+                                 deadN: MinimumGreenWt * emergenceDMFractions[7] * Stem.NConcMinimum);
+            Stolon.SetBiomassState(emergingWt: MinimumGreenWt * emergenceDMFractions[8],
+                                   emergingN: MinimumGreenWt * emergenceDMFractions[8] * Stolon.NConcOptimum,
+                                   developingWt: MinimumGreenWt * emergenceDMFractions[9],
+                                   developingN: MinimumGreenWt * emergenceDMFractions[9] * Stolon.NConcOptimum,
+                                   matureWt: MinimumGreenWt * emergenceDMFractions[10],
+                                   matureN: MinimumGreenWt * emergenceDMFractions[10] * Stolon.NConcOptimum,
+                                   deadWt: 0.0, deadN: 0.0);
+            roots[0].SetBiomassState(rootWt: MinimumGreenWt * MinimumGreenRootProp,
+                                     rootN: MinimumGreenWt * MinimumGreenRootProp * roots[0].NConcOptimum,
+                                     rootDepth: roots[0].RootDepthMinimum);
 
             // 4. Set phenological stage to vegetative
             phenologicStage = 1;
@@ -2549,11 +2574,13 @@
             mySoilNO3Uptake = new double[nLayers];
 
             // reset transfer variables for all tissues in each organ
-            Leaf.DoCleanTransferAmounts();
-            Stem.DoCleanTransferAmounts();
-            Stolon.DoCleanTransferAmounts();
+            Leaf.ClearDailyTransferredAmounts();
+            Stem.ClearDailyTransferredAmounts();
+            Stolon.ClearDailyTransferredAmounts();
             foreach (PastureBelowGroundOrgan root in roots)
-                root.DoCleanTransferAmounts();
+            {
+                root.ClearDailyTransferredAmounts();
+            }
         }
 
         /// <summary>Performs the calculations for potential growth.</summary>
@@ -2621,7 +2648,7 @@
                     DoActualGrowthAndAllocation();
 
                     // Send detached material to other modules (litter to surfacesOM, roots to soilFOM) 
-                    DoAddDetachedShootToSurfaceOM(detachedShootDM, detachedShootN);
+                    AddDetachedShootToSurfaceOM(detachedShootDM, detachedShootN);
                     roots[0].DetachRoots(detachedRootDM, detachedRootN);
                     //foreach (PastureBelowGroundOrgan root in rootZones)
                     //    root.DoDetachBiomass(root.DMDetached, root.NDetached);
@@ -3353,7 +3380,7 @@
         /// <summary>Adds a given amount of detached plant material (DM and N) to the surface organic matter.</summary>
         /// <param name="amountDM">The DM amount to send (kg/ha)</param>
         /// <param name="amountN">The N amount to send (kg/ha)</param>
-        private void DoAddDetachedShootToSurfaceOM(double amountDM, double amountN)
+        private void AddDetachedShootToSurfaceOM(double amountDM, double amountN)
         {
             if (amountDM + amountN > 0.0)
             {
@@ -3537,11 +3564,13 @@
             if (fractionToKill < 1.0)
             {
                 // transfer fraction of live tissues into dead, will be detached later
-                Leaf.DoKillOrgan(fractionToKill);
-                Stem.DoKillOrgan(fractionToKill);
-                Stolon.DoKillOrgan(fractionToKill);
+                Leaf.KillOrgan(fractionToKill);
+                Stem.KillOrgan(fractionToKill);
+                Stolon.KillOrgan(fractionToKill);
                 foreach (PastureBelowGroundOrgan root in roots)
-                    root.DoKillOrgan(fractionToKill);
+                {
+                    root.KillOrgan(fractionToKill);
+                }
             }
             else
             {
@@ -3550,14 +3579,9 @@
             }
         }
 
-        /// <summary>Resets this plant state to its initial values.</summary>
+        /// <summary>Resets this plant to its initial state.</summary>
         public void Reset()
         {
-            Leaf.DoResetOrgan();
-            Stem.DoResetOrgan();
-            Stolon.DoResetOrgan();
-            foreach (PastureBelowGroundOrgan root in roots)
-                root.DoResetOrgan();
             SetInitialState();
         }
 
@@ -3723,11 +3747,17 @@
         {
             var organ = Organs.Find(o => o.Name == organName);
             if (organ == null)
+            {
                 throw new Exception("Cannot find organ to remove biomass from. Organ: " + organName);
+            }
             if (organ is PastureAboveGroundOrgan)
+            {
                 (organ as PastureAboveGroundOrgan).RemoveBiomass(biomassToRemove);
+            }
             else if (organ is PastureBelowGroundOrgan)
+            {
                 (organ as PastureBelowGroundOrgan).RemoveBiomass(biomassRemoveType, biomassToRemove);
+            }
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------

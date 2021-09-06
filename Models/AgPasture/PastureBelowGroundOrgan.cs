@@ -327,15 +327,15 @@
             var threshold = 0.01;
             if (!IsKLModiferDueToDamageActive)
             {
-                return 1;
+                return 1.0;
             }
-            else if (LengthDensity[layerIndex] < 0)
+            else if (LengthDensity[layerIndex] < 0.0)
             {
-                return 0;
+                return 0.0;
             }
             else if (LengthDensity[layerIndex] >= threshold)
             {
-                return 1;
+                return 1.0;
             }
             else
             {
@@ -352,41 +352,25 @@
             Depth = rootDepth;
             CalculateRootZoneBottomLayer();
 
-            var rootFractions = CurrentRootDistributionTarget();
             var rootBiomass = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), rootWt);
             Live.ResetTo(rootBiomass);
         }
 
-        /// <summary>Reset this root organ's state to the initial state.</summary>
-        public void Reset()
+        /// <summary>Set this root organ's biomass state.</summary>
+        /// <param name="rootWt">The DM amount of root biomass (kg/ha).</param>
+        /// <param name="rootN">The amount of N in root biomass (kg/ha).</param>
+        /// <param name="rootDepth">The depth of root zone (mm).</param>
+        public void SetBiomassState(double rootWt, double rootN, double rootDepth)
         {
-            Reset(minimumLiveDM, RootDepthMinimum);
-        }
-
-        /// <summary>Reset all amounts to zero in all tissues of this organ.</summary>
-        internal void DoResetOrgan()
-        {
-            Depth = 0;
+            Depth = rootDepth;
             CalculateRootZoneBottomLayer();
+
+            var rootBiomassWt = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), rootWt);
+            var rootBiomassN = MathUtilities.Multiply_Value(rootBiomassWt, MathUtilities.Divide(rootN, rootWt, 0.0));
             for (int t = 0; t < tissue.Length; t++)
             {
-                tissue[t].Reset();
-                DoCleanTransferAmounts();
+                tissue[t].SetBiomass(rootBiomassWt, rootBiomassN);
             }
-        }
-
-        /// <summary>Reset the transfer amounts in all tissues of this organ.</summary>
-        internal void DoCleanTransferAmounts()
-        {
-            for (int t = 0; t < tissue.Length; t++)
-                tissue[t].DailyReset();
-        }
-
-        /// <summary>Kills part of the organ (transfer DM and N to dead tissue).</summary>
-        /// <param name="fractionToRemove">The fraction to kill in each tissue</param>
-        internal void DoKillOrgan(double fractionToRemove = 1.0)
-        {
-            Live.MoveFractionToTissue(fractionToRemove, Dead);
         }
 
         /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
@@ -400,10 +384,28 @@
 
             // Dead removal
             Dead.RemoveBiomass(biomassToRemove.FractionDeadToRemove, sendToSoil: false);
-            Dead.RemoveBiomass(biomassToRemove.FractionDeadToResidue, sendToSoil:true);
+            Dead.RemoveBiomass(biomassToRemove.FractionDeadToResidue, sendToSoil: true);
 
             if (biomassRemoveType != "Harvest")
+            {
                 IsKLModiferDueToDamageActive = true;
+            }
+        }
+
+        /// <summary>Reset the transfer amounts in all tissues of this organ.</summary>
+        internal void ClearDailyTransferredAmounts()
+        {
+            for (int t = 0; t < tissue.Length; t++)
+            {
+                tissue[t].ClearDailyTransferredAmounts();
+            }
+        }
+
+        /// <summary>Kills part of the organ (transfer DM and N to dead tissue).</summary>
+        /// <param name="fractionToRemove">The fraction to kill in each tissue</param>
+        internal void KillOrgan(double fractionToRemove = 1.0)
+        {
+            Live.MoveFractionToTissue(fractionToRemove, Dead);
         }
 
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>
@@ -672,14 +674,6 @@
                 dRootDepth = 0.0;
             }
         }
-
-        /// <summary>User is ending the pasture.</summary>
-        public void DoEndCrop()
-        {
-            Live.RemoveBiomass(1, true);
-            Dead.RemoveBiomass(1, true);
-        }
-
 
         /// <summary>Set new growth to root.</summary>
         /// <param name="dmToRoot">Dry matter growth.</param>
