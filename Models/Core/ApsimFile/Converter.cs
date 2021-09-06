@@ -24,7 +24,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 140; } }
+        public static int LatestVersion { get { return 141; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3663,6 +3663,42 @@
 
         }
 
+
+        /// <summary>
+        /// Convert CompositeBiomass from a Propertys property to OrganNames.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion141(JObject root, string fileName)
+        {
+            foreach (var compositeBiomass in JsonUtilities.ChildrenRecursively(root, "CompositeBiomass"))
+            {
+                var properties = compositeBiomass["Propertys"] as JArray;
+                if (properties != null)
+                {
+                    bool includeLive = false;
+                    bool includeDead = false;
+                    var organNames = new List<string>();
+
+                    foreach (var property in properties.Values<string>())
+                    {
+                        var match = Regex.Match(property, @"\[(\w+)\]\.(\w+)");
+                        if (match.Success)
+                        {
+                            organNames.Add(match.Groups[1].Value);
+                            if (match.Groups[2].Value.Equals("Live", StringComparison.InvariantCultureIgnoreCase))
+                                includeLive = true;
+                            else
+                                includeDead = true;
+                        }
+                    }
+                    compositeBiomass["Propertys"] = null;
+                    compositeBiomass["OrganNames"] = new JArray(organNames.Distinct());
+                    compositeBiomass["IncludeLive"] = includeLive;
+                    compositeBiomass["IncludeDead"] = includeDead;
+                }
+            }
+        }
 
         /// <summary>
         /// Update the SoilNitrogen component to be a Nutrient

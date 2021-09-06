@@ -58,10 +58,10 @@
 
         /// <summary>Above ground weight</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        public Biomass AboveGround { get; set; }
+        public IBiomass AboveGround { get; set; }
 
         /// <summary>Above ground weight</summary>
-        public Biomass AboveGroundHarvestable { get { return AboveGround; } }
+        public IBiomass AboveGroundHarvestable { get { return AboveGround; } }
 
         /// <summary>Used by several organs to determine the type of crop.</summary>
         public string PlantType { get; set; }

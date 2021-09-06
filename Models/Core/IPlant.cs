@@ -1,4 +1,6 @@
-﻿namespace Models.Core
+﻿using Models.PMF;
+
+namespace Models.Core
 {
     /// <summary>
     /// The ICrop interface specifies the properties and methods that all
@@ -18,7 +20,7 @@
         string[] CultivarNames { get; }
 
         /// <summary>Get above ground biomass</summary>
-        PMF.Biomass AboveGround { get; }
+        IBiomass AboveGround { get; }
 
         /// <summary>Sows the plant</summary>
         /// <param name="cultivar">The cultivar.</param>

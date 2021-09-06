@@ -178,7 +178,6 @@
                     {
                         SimsRunning = SimsRunning.Add(job);
                     }
-
                 var startTime = DateTime.Now;
 
                 Exception error = null;
@@ -193,15 +192,17 @@
                     error = err;
                 }
 
-                // Signal to JobManager the job has finished.
-                InvokeJobCompleted(job, jobManager, startTime, error);
-
                 if (!(job is JobRunnerSleepJob))
+                {
+                    // Signal to JobManager the job has finished.
+                    InvokeJobCompleted(job, jobManager, startTime, error);
+
                     lock (runningLock)
                     {
                         NumJobsCompleted++;
                         SimsRunning = SimsRunning.Remove(job);
                     }
+                }
             }
             finally
             {
