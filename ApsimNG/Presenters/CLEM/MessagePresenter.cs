@@ -138,6 +138,8 @@ namespace UserInterface.Presenters
                                     else
                                     {
                                         msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
+                                        if (msgStr.Contains("\r\n   --- End of inner"))
+                                            msgStr = msgStr.Substring(0, msgStr.IndexOf("\r\n   --- End of inner"));
                                     }
                                     break;
                                 case "1":

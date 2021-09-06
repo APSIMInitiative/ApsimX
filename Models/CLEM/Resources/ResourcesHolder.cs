@@ -147,7 +147,7 @@ namespace Models.CLEM.Resources
                 switch (missingResourceAction)
                 {
                     case OnMissingResourceActionTypes.ReportErrorAndStop:
-                        throw new Exception(errorMsg);
+                        throw new ApsimXException(this, errorMsg);
                     case OnMissingResourceActionTypes.ReportWarning:
                         Warnings.CheckAndWrite(errorMsg, Summary, this);
                         break;
@@ -171,7 +171,7 @@ namespace Models.CLEM.Resources
                 switch (missingResourceTypeAction)
                 {
                     case OnMissingResourceActionTypes.ReportErrorAndStop:
-                        throw new Exception(errorMsg);
+                        throw new ApsimXException(this, errorMsg);
                     case OnMissingResourceActionTypes.ReportWarning:
                         Warnings.CheckAndWrite(errorMsg, Summary, this);
                         break;

@@ -411,13 +411,16 @@ namespace Models.CLEM.Resources
                     else
                     {
                         if (this.Individuals > 1)
-                            htmlWriter.Write("<span class=\"setvalue\">" + this.Individuals.ToString() + "</span> x ");
+                            htmlWriter.Write($"<span class=\"setvalue\">{ this.Individuals}</span> x ");
                         htmlWriter.Write($"<span class=\"setvalue\">{this.InitialAge}</span> year old ");
                         htmlWriter.Write($"<span class=\"setvalue\">{this.Sex}</span>");
                         if (Hired)
                             htmlWriter.Write(" as hired labour");
                     }
                     htmlWriter.Write("</div>");
+
+                    if (this.Individuals > 1)
+                        htmlWriter.Write($"<div class=\"warningbanner\">You will be unable to identify these individuals with <span class=\"setvalue\">Name</div> but need to use the Attribute with tag <span class=\"setvalue\">Group</span> and value <span class=\"setvalue\">{Name}</span></div>");
                 }
                 return htmlWriter.ToString(); 
             }

@@ -1195,6 +1195,9 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write("</div>");
 
+                if (GrazeFoodStoreNameBreeders != "" && GrazeFoodStoreNameBreeders == GrazeFoodStoreNameSires)
+                    htmlWriter.Write($"<div class=\"warningbanner\">Uncontrolled mating will occur as soon as Breeders and Sires are placed in <span class=\"resourcelink\">{GrazeFoodStoreNameBreeders}</span> if using natural mating.</div>");
+
                 if (MarkAgeWeightMalesForSale || MaleSellingAge + MaleSellingWeight > 0)
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
@@ -1214,6 +1217,9 @@ namespace Models.CLEM.Activities
                         else
                             htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreNameGrowOutFemales + "</span>");
                         htmlWriter.Write("</div>");
+
+                        if (GrazeFoodStoreNameGrowOutFemales != "" & !CastrateGrowOutMales && GrazeFoodStoreNameGrowOutFemales == GrazeFoodStoreNameGrowOutMales)
+                            htmlWriter.Write($"<div class=\"warningbanner\">Uncontrolled mating may occur in grow out females and males if allowed to mature before sales as they are placed in <span class=\"resourcelink\">{GrazeFoodStoreNameGrowOutFemales}</span> if using natural mating.</div>");
                     }
                 }
 

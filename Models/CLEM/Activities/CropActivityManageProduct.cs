@@ -61,7 +61,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Percentage of the crop growth that is kept
         /// </summary>
-        [Description("Proportion of product kept")]
+        [Description("Proportion of harvest achieved")]
         [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, Proportion]
         public double ProportionKept { get; set; }
