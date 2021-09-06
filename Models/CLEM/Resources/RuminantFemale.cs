@@ -105,6 +105,11 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Store for the style of mating
+        /// </summary>
+        public MatingStyle LastMatingStyle { get; set; }
+
+        /// <summary>
         /// Indicates if this female is a heifer
         /// Heifer equals less than min breed age and no offspring
         /// </summary>
@@ -366,4 +371,26 @@ namespace Models.CLEM.Resources
         Milked
     }
 
+    /// <summary>
+    /// Style of mating
+    /// </summary>
+    public enum MatingStyle
+    { 
+        /// <summary>
+        /// Natural mating
+        /// </summary>
+        Natural,
+        /// <summary>
+        /// Controlled mating
+        /// </summary>
+        Controlled,
+        /// <summary>
+        /// Wild breeder
+        /// </summary>
+        WildBreeder,
+        /// <summary>
+        /// Mating assigned at setup
+        /// </summary>
+        PreSimulation
+    }
 }

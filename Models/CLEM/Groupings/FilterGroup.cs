@@ -18,6 +18,7 @@ namespace Models.CLEM
         where TFilter : IFilterable
     {
         private protected IEnumerable<Func<IFilterable, bool>> filterRules = null;
+        [NonSerialized]
         private protected IEnumerable<ISort> sortList = null;
 
         /// <summary>

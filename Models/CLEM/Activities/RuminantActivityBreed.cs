@@ -169,6 +169,7 @@ namespace Models.CLEM.Activities
                                             if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                                             {
                                                 female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
+                                                female.LastMatingStyle = MatingStyle.PreSimulation;
 
                                                 // if mandatory attributes are present in the herd, save male value with female details.
                                                 if (female.BreedParams.IncludedAttributeInheritanceWhenMating)
@@ -215,6 +216,7 @@ namespace Models.CLEM.Activities
                                                 if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                                                 {
                                                     female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, i);
+                                                    female.LastMatingStyle = MatingStyle.Controlled;
 
                                                     // if mandatory attributes are present in the herd, save male value with female details.
                                                     if (female.BreedParams.IncludedAttributeInheritanceWhenMating)
@@ -383,7 +385,17 @@ namespace Models.CLEM.Activities
                                 if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                                 {
                                     female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
-                                    
+
+                                    object male = null;
+
+                                    if (useControlledMating)
+                                        female.LastMatingStyle = MatingStyle.Controlled;
+                                    else
+                                    {
+                                        male = maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count() - 1)];
+                                        female.LastMatingStyle = ((male as RuminantMale).IsWildBreeder ? MatingStyle.WildBreeder : MatingStyle.Natural);
+                                    }
+
                                     // if mandatory attributes are present in the herd, save male value with female details.
                                     if(female.BreedParams.IncludedAttributeInheritanceWhenMating)
                                     {
@@ -392,7 +404,7 @@ namespace Models.CLEM.Activities
                                             AddMalesAttributeDetails(female, controlledMating.SireAttributes);
                                         else
                                             // randomly select male
-                                            AddMalesAttributeDetails(female, maleBreeders[RandomNumberGenerator.Generator.Next(0,maleBreeders.Count()-1)]);
+                                            AddMalesAttributeDetails(female, male as Ruminant);
                                     }
                                     status = Reporting.ConceptionStatus.Conceived;
                                     NumberConceived++;
