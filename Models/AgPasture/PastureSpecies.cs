@@ -2373,11 +2373,17 @@
             // choose the appropriate DM partition, based on species family
             double[] initialDMFractions;
             if (mySpeciesFamily == PlantFamilyType.Grass)
+            {
                 initialDMFractions = initialDMFractionsGrasses;
+            }
             else if (mySpeciesFamily == PlantFamilyType.Legume)
+            {
                 initialDMFractions = initialDMFractionsLegumes;
+            }
             else
+            {
                 initialDMFractions = initialDMFractionsForbs;
+            }
 
             // determine what biomass to reset the organs to. If a negative InitialShootDM
             //  was specified by user then that means the plant isn't sown yet so reset
@@ -2410,38 +2416,28 @@
                                    matureN: shootDM * initialDMFractions[10] * Stolon.NConcOptimum,
                                    deadWt: 0.0, deadN: 0.0);
             roots[0].Reset(rootDM, InitialRootDepth);
-    
+
             // set initial phenological stage
             if (MathUtilities.IsGreaterThan(InitialShootDM, 0))
+            {
                 phenologicStage = 1;
+            }
             else if (MathUtilities.FloatsAreEqual(InitialShootDM, 0))
+            {
                 phenologicStage = 0;
+            }
             else
+            {
                 phenologicStage = -1;
+            }
 
             if (phenologicStage >= 0)
+            {
                 isAlive = true;
+            }
 
             // Calculate the values for LAI
             EvaluateLAI();
-
-            glfRadn = 1;
-            glfCO2 = 1;
-            glfNc = 1;
-            glfTemp = 1;
-            usingHeatStressFactor = true;
-            usingColdStressFactor = true;
-            glfHeat = 1;
-            highTempStress = 1;
-            cumulativeDDHeat = 0;
-            glfCold = 1;
-            lowTempStress = 1;
-            cumulativeDDCold = 0;
-            glfWaterSupply = 1;
-            cumWaterLogging = 0;
-            glfWaterLogging = 1;
-            glfNSupply = 1;
-            tempEffectOnRespiration = 0;
         }
 
         /// <summary>Set the plant state at germination.</summary>
