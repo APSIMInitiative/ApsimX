@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 140,
+  "Version": 141,
   "Name": "Simulations",
   "Children": [
     {
@@ -11806,127 +11806,133 @@
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Leaf].Dead",
-            "[Stem].Live",
-            "[Stem].Dead",
-            "[Panicle].Live",
-            "[Panicle].Dead",
-            "[Grain].Live",
-            "[Grain].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "AboveGround",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Panicle",
+            "Grain"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Stem].Live",
-            "[Panicle].Live",
-            "[Grain].Live"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "AboveGroundLive",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Panicle",
+            "Grain"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": false
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Dead",
-            "[Stem].Dead",
-            "[Panicle].Dead",
-            "[Grain].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "AboveGroundDead",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Panicle",
+            "Grain"
+          ],
+          "IncludeLive": false,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Root].Live",
-            "[Root].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "BelowGround",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Root"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Leaf].Dead",
-            "[Stem].Live",
-            "[Stem].Dead",
-            "[Root].Live",
-            "[Root].Dead",
-            "[Panicle].Live",
-            "[Panicle].Dead",
-            "[Grain].Live",
-            "[Grain].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "Total",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Root",
+            "Panicle",
+            "Grain"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Stem].Live",
-            "[Root].Live",
-            "[Panicle].Live",
-            "[Grain].Live"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "TotalLive",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Root",
+            "Panicle",
+            "Grain"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": false
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Dead",
-            "[Stem].Dead",
-            "[Root].Dead",
-            "[Panicle].Dead",
-            "[Grain].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "TotalDead",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Root",
+            "Panicle",
+            "Grain"
+          ],
+          "IncludeLive": false,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Panicle].Live",
-            "[Grain].Live",
-            "[Panicle].Dead",
-            "[Grain].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "Ear",
           "Children": [
@@ -11942,22 +11948,29 @@
           ],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Panicle",
+            "Grain"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Stem].Live",
-            "[Panicle].Live",
-            "[Stem].Dead",
-            "[Panicle].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "StemPlusPanicle",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Stem",
+            "Panicle"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CultivarFolder, Models",
