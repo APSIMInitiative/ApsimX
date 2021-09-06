@@ -1,7 +1,9 @@
 using System;
 using System.Globalization;
+using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
 {
@@ -41,6 +43,11 @@ namespace Models.CLEM.Resources
             }
             return result;
         }
+
+        /// <summary>
+        /// Current animal price group for this individual 
+        /// </summary>
+        public AnimalPriceGroup CurrentPrice { get; set; } = null;
 
         /// <inheritdoc/>
         public IndividualAttributeList Attributes { get; set; } = new IndividualAttributeList();
