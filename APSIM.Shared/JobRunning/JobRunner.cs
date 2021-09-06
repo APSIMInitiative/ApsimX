@@ -177,8 +177,8 @@
                     lock (runningLock)
                     {
                         SimsRunning = SimsRunning.Add(job);
-                        var startTime = DateTime.Now;
                     }
+                var startTime = DateTime.Now;
 
                 Exception error = null;
                 try
