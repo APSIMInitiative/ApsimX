@@ -206,6 +206,19 @@
             get { return tissue[tissue.Length - 1].DM.Wt; }
         }
 
+        /// <summary>Proportion of dry matter in each soil layer (0-1).</summary>
+        internal double[] DMFractions
+        {
+            get
+            {
+                double[] result = new double[soilPhysical.Thickness.Length];
+                for (int layer = 0; layer < soilPhysical.Thickness.Length; layer++)
+                    result[layer] = tissue[0].FractionWt[layer];
+
+                return result;
+            }
+        }
+
         /// <summary>Total N amount in this organ (kg/ha).</summary>
         internal double NTotal
         {
@@ -296,8 +309,8 @@
             get
             {
                 double[] result = new double[nLayers];
-                double totalRootLength = tissue[0].DM.Wt * SpecificRootLength; // m root/m2 
-                totalRootLength *= 0.0000001; // convert into mm root/mm2 soil)
+                double totalRootLength = tissue[0].DM.Wt * SpecificRootLength * 0.1; // m root/m2 
+                totalRootLength *= 0.001; // convert into mm root/mm2 soil)
                 for (int layer = 0; layer < result.Length; layer++)
                 {
                     result[layer] = tissue[0].FractionWt[layer] * totalRootLength / soilPhysical.Thickness[layer];
@@ -306,7 +319,7 @@
             }
         }
 
-        /// <summary>N remobilsed from live tissue.</summary>
+        /// <summary>N remobilised from live tissue.</summary>
         public double NLiveRemobilisable {  get { return tissue[0].NRemobilisable; } }
 
         /// <summary>Amount of plant available water in the soil (mm).</summary>

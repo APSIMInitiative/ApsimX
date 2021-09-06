@@ -23,31 +23,31 @@
         private AGPBiomass biomass = new AGPBiomass();
 
         /// <summary>Dry matter amount for each layer (kg/ha).</summary>
-        private double[] dmLayer;
+        private double[] dmByLayer;
 
         /// <summary>Nitrogen content for each layer (kg/ha).</summary>
-        private double[] nLayer;
+        private double[] nByLayer;
 
         /// <summary>Phosphorus content for each layer (kg/ha).</summary>
-        private double[] pLayer;
+        private double[] pByLayer;
 
         /// <summary>Amount of dry matter transferred into this tissue, for each layer (kg/ha).</summary>
-        private double[] dmLayersTransferedIn;
+        private double[] dmTransferredInByLayer;
 
         /// <summary>Amount of nitrogen transferred into this tissue, for each layer (kg/ha).</summary>
-        private double[] nLayersTransferedIn;
+        private double[] nTransferredInByLayer;
         
         /// <summary>Dry matter amount transferred into this tissue (kg/ha).</summary>
-        private double dmTransferedIn;
+        private double dmTransferredIn;
 
         /// <summary>Dry matter amount transferred out of this tissue (kg/ha).</summary>
-        private double dmTransferedOut;
+        private double dmTransferredOut;
 
         /// <summary>Nitrogen transferred into this tissue (kg/ha).</summary>
-        private double nTransferedIn;
+        private double nTransferredIn;
 
         /// <summary>Nitrogen transferred out of this tissue (kg/ha).</summary>
-        private double nTransferedOut;
+        private double nTransferredOut;
 
         /// <summary>Nitrogen remobilised into new growth (kg/ha).</summary>
         private double nRemobilised;
@@ -69,18 +69,18 @@
         /// <param name="initialNByLayer">Initial nitrogen by layer.</param>
         public void Initialise(double[] initialDMByLayer, double[] initialNByLayer)
         {
-            pLayer = new double[soilPhysical.Thickness.Length];
-            dmLayersTransferedIn = new double[soilPhysical.Thickness.Length];
-            nLayersTransferedIn = new double[soilPhysical.Thickness.Length];
+            pByLayer = new double[soilPhysical.Thickness.Length];
+            dmTransferredInByLayer = new double[soilPhysical.Thickness.Length];
+            nTransferredInByLayer = new double[soilPhysical.Thickness.Length];
             if (initialNByLayer != null && initialNByLayer != null)
             {
-                dmLayer = initialDMByLayer;
-                nLayer = initialNByLayer;
+                dmByLayer = initialDMByLayer;
+                nByLayer = initialNByLayer;
             }
             else
             {
-                dmLayer = new double[soilPhysical.Thickness.Length];
-                nLayer = new double[soilPhysical.Thickness.Length];
+                dmByLayer = new double[soilPhysical.Thickness.Length];
+                nByLayer = new double[soilPhysical.Thickness.Length];
             }
             UpdateDM();
         }
@@ -92,41 +92,41 @@
         public IAGPBiomass DM {  get { return biomass; } }
 
         /// <summary>Dry matter fraction for each layer (0-1).</summary>
-        public double[] FractionWt { get { return MathUtilities.Divide_Value(dmLayer, DM.Wt); } }
+        public double[] FractionWt { get { return MathUtilities.Divide_Value(dmByLayer, DM.Wt); } }
         
         /// <summary>Set the biomass moving into the tissue.</summary>
         /// <param name="dm">Dry matter (kg/ha).</param>
         /// <param name="n">The nitrogen (kg/ha).</param>
         public void SetBiomassTransferIn(double[] dm, double[] n)
         {
-            dmLayersTransferedIn = dm;
-            nLayersTransferedIn = n;
+            dmTransferredInByLayer = dm;
+            nTransferredInByLayer = n;
         }
 
         /// <summary>Updates the tissue state, make changes in DM and N effective.</summary>
         public void Update()
         {
             // removals first as they do not change distribution over the profile
-            var amountDMToRemove = DM.Wt - dmTransferedOut;
-            var amountNToRemove = DM.N - nTransferedOut;
+            var amountDMToRemove = DM.Wt - dmTransferredOut;
+            var amountNToRemove = DM.N - nTransferredOut;
             double[] prevRootFraction = FractionWt;
-            for (int layer = 0; layer < dmLayer.Length; layer++)
-                dmLayer[layer] = amountDMToRemove * prevRootFraction[layer];
+            for (int layer = 0; layer < dmByLayer.Length; layer++)
+                dmByLayer[layer] = amountDMToRemove * prevRootFraction[layer];
 
             UpdateDM();
             double[] newRootFraction = FractionWt;
-            for (int layer = 0; layer < dmLayer.Length; layer++)
-                nLayer[layer] = amountNToRemove * newRootFraction[layer];
+            for (int layer = 0; layer < dmByLayer.Length; layer++)
+                nByLayer[layer] = amountNToRemove * newRootFraction[layer];
 
             // additions need to consider distribution over the profile
-            dmTransferedIn = dmLayersTransferedIn.Sum();
-            nTransferedIn = nLayersTransferedIn.Sum();
-            if (dmTransferedIn > 0 || nTransferedIn > 0)
+            dmTransferredIn = dmTransferredInByLayer.Sum();
+            nTransferredIn = nTransferredInByLayer.Sum();
+            if (dmTransferredIn > 0 || nTransferredIn > 0)
             {
-                for (int layer = 0; layer < dmLayer.Length; layer++)
+                for (int layer = 0; layer < dmByLayer.Length; layer++)
                 {
-                    dmLayer[layer] += dmLayersTransferedIn[layer];
-                    nLayer[layer] += nLayersTransferedIn[layer] - (nRemobilised * (nLayersTransferedIn[layer] / nTransferedIn));
+                    dmByLayer[layer] += dmTransferredInByLayer[layer];
+                    nByLayer[layer] += nTransferredInByLayer[layer] - (nRemobilised * (nTransferredInByLayer[layer] / nTransferredIn));
                 }
             }
 
@@ -140,11 +140,11 @@
         {
             if (amountDM + amountN > 0.0)
             {
-                var amountDMLayered = new double[dmLayer.Length];
-                var amountNLayered = new double[dmLayer.Length];
+                var amountDMLayered = new double[dmByLayer.Length];
+                var amountNLayered = new double[dmByLayer.Length];
 
                 var fractionWt = FractionWt;
-                for (int layer = 0; layer < dmLayer.Length; layer++)
+                for (int layer = 0; layer < dmByLayer.Length; layer++)
                 {
                     amountDMLayered[layer] = amountDM * fractionWt[layer];
                     amountNLayered[layer] = amountN * fractionWt[layer];
@@ -161,8 +161,8 @@
         {
             if (amountDM.Sum() + amountN.Sum() > 0.0)
             {
-                FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[dmLayer.Length];
-                for (int layer = 0; layer < dmLayer.Length; layer++)
+                FOMLayerLayerType[] FOMdataLayer = new FOMLayerLayerType[dmByLayer.Length];
+                for (int layer = 0; layer < dmByLayer.Length; layer++)
                 {
                     FOMType fomData = new FOMType();
                     fomData.amount = amountDM[layer];
@@ -207,29 +207,36 @@
             {
                 var turnoverDM = DM.Wt * turnoverRate;
                 var turnoverN = DM.N * turnoverRate;
-                dmTransferedOut += turnoverDM;
-                nTransferedOut += turnoverN;
+                dmTransferredOut += turnoverDM;
+                nTransferredOut += turnoverN;
 
                 if (to != null)
                 {
                     to.SetBiomassTurnover(turnoverDM, turnoverN, bottomLayer, FractionWt);
 
                     // get the amounts remobilisable (luxury N)
-                    double totalLuxuryN = (DM.Wt + dmTransferedIn - dmTransferedOut) * nConc;
+                    double totalLuxuryN = (DM.Wt + dmTransferredIn - dmTransferredOut) * nConc;
                     NRemobilisable = Math.Max(0.0, totalLuxuryN * RootTissue.fractionNLuxuryRemobilisable);
                 }
                 else
                 {
                     // N transferred into dead tissue in excess of minimum N concentration is remobilisable
-                    double remobilisableN = dmTransferedIn * nConc;
+                    double remobilisableN = dmTransferredIn * nConc;
                     NRemobilisable = Math.Max(0.0, remobilisableN);
                 }
             }
             return new BiomassAndN()
             {
-                Wt = dmTransferedOut,
-                N = nTransferedOut
+                Wt = dmTransferredOut,
+                N = nTransferredOut
             };
+        }
+
+        /// <summary>Removes a fraction of remobilisable N for use into new growth.</summary>
+        /// <param name="fraction">The fraction to remove (0-1)</param>
+        public void DoRemobiliseN(double fraction)
+        {
+            nRemobilised = NRemobilisable * fraction;
         }
 
         /// <summary>Adds biomass from tissue turnover.</summary>
@@ -241,12 +248,12 @@
         {
             for (int layer = 0; layer <= bottomLayer; layer++)
             {
-                dmLayersTransferedIn[layer] = turnoverDM * fractionWt[layer];
-                nLayersTransferedIn[layer] = turnoverN * fractionWt[layer];
+                dmTransferredInByLayer[layer] = turnoverDM * fractionWt[layer];
+                nTransferredInByLayer[layer] = turnoverN * fractionWt[layer];
             }
 
-            dmTransferedIn += turnoverDM;
-            nTransferedIn += turnoverN;
+            dmTransferredIn += turnoverDM;
+            nTransferredIn += turnoverN;
             UpdateDM();
         }
 
@@ -255,28 +262,21 @@
         /// <param name="n">Nitrogen amount (kg/ha).</param>
         public BiomassAndN SetNewGrowthAllocation(double dm, double n)
         {
-            dmTransferedIn += dm;
-            nTransferedIn += n;
+            dmTransferredIn += dm;
+            nTransferredIn += n;
             return new BiomassAndN()
             {
-                Wt = dmTransferedIn,
-                N = nTransferedIn
+                Wt = dmTransferredIn,
+                N = nTransferredIn
             };
-        }
-
-        /// <summary>Removes a fraction of remobilisable N for use into new growth.</summary>
-        /// <param name="fraction">The fraction to remove (0-1)</param>
-        public void DoRemobiliseN(double fraction)
-        {
-            nRemobilised = NRemobilisable * fraction;
         }
 
         /// <summary>Reset tissue to the specified amount.</summary>
         /// <param name="dmAmount">The amount of dry matter by layer to reset to (kg/ha).</param>
         public void ResetTo(double[] dmAmount)
         {
-            for (int layer = 0; layer < dmLayer.Length; layer++)
-                dmLayer[layer] += dmAmount[layer];
+            for (int layer = 0; layer < dmByLayer.Length; layer++)
+                dmByLayer[layer] += dmAmount[layer];
 
             UpdateDM();
         }
@@ -286,10 +286,10 @@
         /// <param name="nAmount">The amount of N, by layer, to set to (kg/ha).</param>
         public void SetBiomass(double[] dmAmount, double[] nAmount)
         {
-            for (int layer = 0; layer < dmLayer.Length; layer++)
+            for (int layer = 0; layer < dmByLayer.Length; layer++)
             {
-                dmLayer[layer] = dmAmount[layer];
-                nLayer[layer] = nAmount[layer];
+                dmByLayer[layer] = dmAmount[layer];
+                nByLayer[layer] = nAmount[layer];
             }
 
             UpdateDM();
@@ -300,10 +300,10 @@
         /// <param name="nToAdd">Nitrogen amount to add (kg/ha).</param>
         public void AddBiomass(double[] dmToAdd, double[] nToAdd)
         {
-            for (int layer = 0; layer < dmLayer.Length; layer++)
+            for (int layer = 0; layer < dmByLayer.Length; layer++)
             {
-                dmLayer[layer] += dmToAdd[layer];
-                nLayer[layer] += nToAdd[layer];
+                dmByLayer[layer] += dmToAdd[layer];
+                nByLayer[layer] += nToAdd[layer];
             }
 
             UpdateDM();
@@ -317,12 +317,12 @@
         public BiomassAndNLayered RemoveBiomass(double fractionToRemove, bool sendToSoil)
         {
             var removed = new BiomassAndNLayered();
-            removed.Wt = MathUtilities.Multiply_Value(dmLayer, fractionToRemove);
-            removed.N = MathUtilities.Multiply_Value(nLayer, fractionToRemove);
-            for (int layer = 0; layer < dmLayer.Length; layer++)
+            removed.Wt = MathUtilities.Multiply_Value(dmByLayer, fractionToRemove);
+            removed.N = MathUtilities.Multiply_Value(nByLayer, fractionToRemove);
+            for (int layer = 0; layer < dmByLayer.Length; layer++)
             {
-                dmLayer[layer] -= removed.Wt[layer];
-                nLayer[layer] -= removed.N[layer];
+                dmByLayer[layer] -= removed.Wt[layer];
+                nByLayer[layer] -= removed.N[layer];
             }
 
             UpdateDM();
@@ -338,21 +338,21 @@
         /// <summary>Update dry matter.</summary>
         private void UpdateDM()
         {
-            biomass.Wt = dmLayer.Sum();
-            biomass.N = nLayer.Sum();
+            biomass.Wt = dmByLayer.Sum();
+            biomass.N = nByLayer.Sum();
         }
 
         /// <summary>Called each day to reset the transfer variables.</summary>
         public void ClearDailyTransferredAmounts()
         {
-            dmTransferedIn = 0.0;
-            dmTransferedOut = 0.0;
-            nTransferedIn = 0.0;
-            nTransferedOut = 0.0;
+            dmTransferredIn = 0.0;
+            dmTransferredOut = 0.0;
+            nTransferredIn = 0.0;
+            nTransferredOut = 0.0;
             NRemobilisable = 0.0;
             nRemobilised = 0.0;
-            Array.Clear(dmLayersTransferedIn, 0, dmLayersTransferedIn.Length);
-            Array.Clear(nLayersTransferedIn, 0, nLayersTransferedIn.Length);
+            Array.Clear(dmTransferredInByLayer, 0, dmTransferredInByLayer.Length);
+            Array.Clear(nTransferredInByLayer, 0, nTransferredInByLayer.Length);
         }
 
         /// <summary>Updates each tissue, make changes in DM and N effective.</summary>
@@ -370,9 +370,9 @@
             var currentN = tissue1.DM.N + tissue2.DM.N;
 
             // check mass balance
-            if (!MathUtilities.FloatsAreEqual(0.0, previousDM + tissue1.dmTransferedIn - tissue2.dmTransferedOut - currentDM))
+            if (!MathUtilities.FloatsAreEqual(0.0, previousDM + tissue1.dmTransferredIn - tissue2.dmTransferredOut - currentDM))
                 throw new Exception("Growth and tissue turnover resulted in loss of dry matter mass balance for roots");
-            if (!MathUtilities.FloatsAreEqual(0.0, previousN + tissue1.nTransferedIn - tissue1.nRemobilised - tissue2.nRemobilised - tissue2.nTransferedOut - currentN))
+            if (!MathUtilities.FloatsAreEqual(0.0, previousN + tissue1.nTransferredIn - tissue1.nRemobilised - tissue2.nRemobilised - tissue2.nTransferredOut - currentN))
                 throw new Exception("Growth and tissue turnover resulted in loss of nitrogen mass balance for roots");
         }
     }

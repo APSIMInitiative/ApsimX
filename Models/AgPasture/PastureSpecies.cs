@@ -884,17 +884,6 @@
         [Units("-")]
         public double PreferenceForLeafOverStems { get; set; } = 1.0;
 
-        ////- Soil related (water and N uptake) >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-        /// <summary>Maximum fraction of water or N in the soil that is available to plants.</summary>
-        /// <remarks>This is used to limit the amount taken up and avoid issues with very small numbers</remarks>
-        [Units("0-1")]
-        public double MaximumFractionAvailable { get; set; } = 0.999;
-
-        /// <summary>Exponent of function determining soil extractable N.</summary>
-        [Units("-")]
-        public double NuptakeSWFactor { get; set; } = 0.25;
-
         ////- Parameters for annual species >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Day of year when seeds are allowed to germinate.</summary>
@@ -2090,6 +2079,13 @@
         public int RootFrontier
         {
             get { return roots[0].BottomLayer; }
+        }
+
+        /// <summary>Proportion of root biomass in each soil layer (0-1).</summary>
+        [Units("-")]
+        public double[] RootWtFraction
+        {
+            get { return roots[0].DMFractions; }
         }
 
         ////- Harvest outputs >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
@@ -3582,6 +3578,14 @@
         /// <summary>Resets this plant to its initial state.</summary>
         public void Reset()
         {
+            Leaf.ClearDailyTransferredAmounts();
+            Stem.ClearDailyTransferredAmounts();
+            Stolon.ClearDailyTransferredAmounts();
+            foreach (PastureBelowGroundOrgan root in roots)
+            {
+                root.ClearDailyTransferredAmounts();
+            }
+
             SetInitialState();
         }
 
@@ -3724,6 +3728,7 @@
             // Set outputs and check balance
             var defoliatedDM = preRemovalDMShoot - AboveGroundWt;
             var defoliatedN = preRemovalNShoot - AboveGroundN;
+            defoliatedFraction = MathUtilities.Divide(defoliatedDM, preRemovalDMShoot, 0.0);
             if (!MathUtilities.FloatsAreEqual(defoliatedDM, amountToRemove))
                 throw new ApsimXException(this, "  AgPasture " + Name + " - removal of DM resulted in loss of mass balance");
             else
