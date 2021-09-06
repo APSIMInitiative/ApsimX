@@ -118,6 +118,7 @@ namespace Models.CLEM
         public ZoneCLEM()
         {
             ModelSummaryStyle = HTMLSummaryStyle.Helper;
+            CLEMModel.SetPropertyDefaults(this);
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>

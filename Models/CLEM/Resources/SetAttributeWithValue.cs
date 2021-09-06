@@ -115,6 +115,7 @@ namespace Models.CLEM.Resources
         public SetAttributeWithValue()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+            SetDefaults();
         }
 
         #region validation
