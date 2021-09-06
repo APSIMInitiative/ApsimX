@@ -2,6 +2,7 @@
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -26,6 +27,17 @@ namespace Models.CLEM.Groupings
     [Version(1, 0, 0, "")]
     public class FilterByAttribute : Filter, IValidatableObject
     {
+        [NonSerialized]
+        private PropertyInfo attributesProperty;
+        private ConstantExpression attributeTag;
+        private ConstantExpression compareValueAttribute;
+        private ConstantExpression compareValueValue;
+        private ConstantExpression attributeExistsOperator;
+        [NonSerialized]
+        private MethodInfo methodExists;
+        [NonSerialized]
+        private MethodInfo methodValue;
+
         /// <summary>
         /// Attribute tag to filter by
         /// </summary>
@@ -40,6 +52,13 @@ namespace Models.CLEM.Groupings
         [Required]
         public AttributeFilterStyle FilterStyle { get; set; }
 
+        ///<inheritdoc/>
+        [EventSubscribe("Commencing")]
+        protected void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Initialise();
+        }
+
         /// <inheritdoc/>
         public override Func<T, bool> Compile<T>()
         {
@@ -48,121 +67,54 @@ namespace Models.CLEM.Groupings
                 return (T t) => false;
 
             var filterParam = Expression.Parameter(typeof(T));
-            var attProperty = Expression.Property(filterParam, typeof(IAttributable).GetProperty("Attributes"));
-            
-            var tag = Expression.Constant(AttributeTag);
-            var compareValue = Expression.Constant(Value??"");
+            var attProperty = Expression.Property(filterParam, attributesProperty);
 
-            MethodInfo method; // method to get the value
             Expression methodcall; // call the method with arguments
             Expression binary; // binary expression for lambda
             
             if (FilterStyle == AttributeFilterStyle.Exists)
             {
-                // need to get the methodinfo from attributes (it is nested T.Attributes.Exists(tag))
-                method = typeof(IndividualAttributeList).GetMethods().Where(m => m.Name == "Exists").FirstOrDefault();
-
-                methodcall = Expression.Call(attProperty, method, tag);
+                methodcall = Expression.Call(attProperty, methodExists, attributeTag);
                 if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
                 {
                     // Allow for IsTrue and IsFalse operator
-                    var boolres = Expression.Constant(Operator == ExpressionType.IsTrue);
-                    binary = Expression.MakeBinary(ExpressionType.Equal, methodcall, boolres);
+                    binary = Expression.MakeBinary(ExpressionType.Equal, methodcall, attributeExistsOperator);
                     return Expression.Lambda<Func<T, bool>>(binary, filterParam).Compile();
                 }
                 else
                 {
-                    binary = Expression.MakeBinary(Operator, methodcall, compareValue);
+                    binary = Expression.MakeBinary(Operator, methodcall, compareValueAttribute);
                     return Expression.Lambda<Func<T, bool>>(binary, filterParam).Compile();
                 }
             }
             else
             {
-                // need to get the methodinfo from attributes (it is nested T.Attributes.GetValue(tag))
-                method = typeof(IndividualAttributeList).GetMethods().Where(m => m.Name == "GetValue").FirstOrDefault();
-
                 // get compare value from Value - assumed to be single 
                 // TODO: will also need string when haplotypes implemented
-                compareValue = Expression.Constant(Convert.ToSingle(Value??"0.0"));
-                methodcall = Expression.Call(attProperty, method, tag);
+                methodcall = Expression.Call(attProperty, methodValue, attributeTag);
 
                 var returnValue = Expression.Property(methodcall, "StoredValue");
                 var returnValueAsFloat = Expression.Convert(returnValue, typeof(Single));
-                binary = Expression.MakeBinary(Operator, returnValueAsFloat, compareValue);
+                binary = Expression.MakeBinary(Operator, returnValueAsFloat, compareValueValue);
                 return Expression.Lambda<Func<T, bool>>(binary, filterParam).Compile();
             }
         }
 
-        ///// <inheritdoc/>
-        //public override Func<T, bool> Compile<T>()
-        //{
-        //    Func<T, bool> lambda = t =>
-        //    {
-        //        if (!(t is IAttributable attributable))
-        //            return false;
-
-        //        //if (!attributable.Attributes.Exists(AttributeTag))
-        //        //    return false;
-
-        //        // using the provided operator
-
-        //        if (FilterStyle == AttributeFilterStyle.Exists)
-        //        {
-        //            bool boolResult = true;
-        //            string value = Value?.ToString().ToLower();
-        //            switch (Operator)
-        //            {
-        //                case ExpressionType.Equal:
-        //                    boolResult = value == "true";
-        //                    break;
-        //                case ExpressionType.NotEqual:
-        //                    boolResult = value != "true";
-        //                    boolResult = false;
-        //                    break;
-        //                case ExpressionType.IsTrue:
-        //                    boolResult = true;
-        //                    break;
-        //                case ExpressionType.IsFalse:
-        //                    boolResult = false;
-        //                    break;
-        //                case ExpressionType.GreaterThan:
-        //                case ExpressionType.GreaterThanOrEqual:
-        //                case ExpressionType.LessThan:
-        //                case ExpressionType.LessThanOrEqual:
-        //                default:
-        //                    throw new NotImplementedException($"The operator [{OperatorToSymbol()}] is not valid for the Atribute-based filter [f={Name}] of style [{FilterStyle}]");
-        //            }
-        //            return (attributable.Attributes.Exists(AttributeTag) == boolResult);
-        //        }
-        //        else
-        //        {
-        //            // using filter by value
-        //            var ce1 = Convert.ToDecimal(Value ?? "");
-        //            var ce2 = Convert.ToDecimal(attributable.Attributes.GetValue(AttributeTag)?.StoredValue ?? 0);
-
-        //            switch (Operator)
-        //            {
-        //                case ExpressionType.Equal:
-        //                    return ce2 == ce1;
-        //                case ExpressionType.NotEqual:
-        //                    return ce2 != ce1;
-        //                case ExpressionType.GreaterThan:
-        //                    return ce2 > ce1;
-        //                case ExpressionType.GreaterThanOrEqual:
-        //                    return ce2 >= ce1;
-        //                case ExpressionType.LessThan:
-        //                    return ce2 < ce1;
-        //                case ExpressionType.LessThanOrEqual:
-        //                    return ce2 <= ce1;
-        //                case ExpressionType.IsTrue:
-        //                case ExpressionType.IsFalse:
-        //                default:
-        //                    throw new NotImplementedException($"The operator [{OperatorToSymbol()}] is not valid for the Atribute-based filter [f={Name}] of style [{FilterStyle}]");
-        //            }
-        //        }
-        //    };
-        //    return lambda;
-        //}
+        /// <summary>
+        /// Initialise this filter by property 
+        /// </summary>
+        public override void Initialise()
+        {
+            attributesProperty = typeof(IAttributable).GetProperty("Attributes");
+            attributeTag = Expression.Constant(AttributeTag);
+            attributeExistsOperator = Expression.Constant(Operator == ExpressionType.IsTrue);
+            compareValueAttribute = Expression.Constant(Value ?? "");
+            compareValueValue = Expression.Constant(Convert.ToSingle(Value ?? "0.0"));
+            // need to get the methodinfo from attributes (it is nested T.Attributes.Exists(tag))
+            methodExists = typeof(IndividualAttributeList).GetMethods().Where(m => m.Name == "Exists").FirstOrDefault();
+            // need to get the methodinfo from attributes (it is nested T.Attributes.GetValue(tag))
+            methodValue = typeof(IndividualAttributeList).GetMethods().Where(m => m.Name == "GetValue").FirstOrDefault();
+        }
 
         /// <summary>
         /// Constructor

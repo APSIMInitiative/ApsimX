@@ -105,5 +105,10 @@ namespace Models.CLEM.Groupings
         /// Takes the conditions set by the user and converts them to a logical test as a lambda expression
         /// </summary>
         public abstract Func<T, bool> Compile<T>() where T:IFilterable;
+
+        /// <summary>
+        /// A method to initialise this filter
+        /// </summary>
+        public abstract void Initialise();
     }
 }

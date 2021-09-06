@@ -47,13 +47,12 @@ namespace Models.CLEM
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
             InitialiseFilters();
-            sortList = FindAllChildren<ISort>();
         }
 
         /// <summary>
         /// Initialise filter rules and dropdown lists of properties available for TFilter
         /// </summary>
-        private void InitialiseFilters()
+        public void InitialiseFilters()
         {
             properties = typeof(TFilter)
                 .GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
@@ -75,6 +74,13 @@ namespace Models.CLEM
                     properties.Add($"{key}.{prop.Name}", prop);
                 }
             }
+
+            foreach (Filter filter in FindAllChildren<Filter>())
+            {
+                filter.Initialise();
+            }
+
+            sortList = FindAllChildren<ISort>();
         }
 
         /// <inheritdoc/>
@@ -89,7 +95,6 @@ namespace Models.CLEM
             // calculate the specified number/proportion of the filtered group to take from group
             int number = source.Count();
             foreach (var take in FindAllChildren<TakeFromFiltered>())
-                // cummulative take calculation through all TakeFromFiltered components
                 number = take.NumberToTake(number);
 
             var filtered = (filterRules.Any() ? source.Where(item => filterRules.All(rule => rule(item))) : source);

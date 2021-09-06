@@ -1,4 +1,5 @@
 ﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -8,12 +9,13 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 using Display = Models.Core.DisplayAttribute;
 
 namespace Models.CLEM.Groupings
 {
     ///<summary>
-    /// Filter using property or method (withut arguments) of the IFilterable individual
+    /// Filter using property or method (without arguments) of the IFilterable individual
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -23,6 +25,10 @@ namespace Models.CLEM.Groupings
     [Version(1, 0, 0, "")]
     public class FilterByProperty : Filter, IValidatableObject
     {
+        [NonSerialized]
+        private PropertyInfo propertyInfo;
+        private bool useSimpleApporach = false;
+
         /// <summary>
         /// The property or method to filter by
         /// </summary>
@@ -40,29 +46,69 @@ namespace Models.CLEM.Groupings
             base.SetDefaults();
         }
 
+        ///<inheritdoc/>
+        [EventSubscribe("Commencing")]
+        protected void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Initialise();
+        }
+
+        /// <summary>
+        /// Initialise this filter by property 
+        /// </summary>
+        public override void Initialise()
+        {
+            propertyInfo = Parent.GetProperty(PropertyOfIndividual);
+            useSimpleApporach = IsSimpleRuminantProperty();
+        }
+
         /// <inheritdoc/>
         public override Func<T, bool> Compile<T>()
         {
+            if (useSimpleApporach)
+            {
+                Func<T, bool> simple = t => {
+                    var simpleFilterParam = Expression.Parameter(typeof(T));
+
+                    // Try convert the Value into the same data type as the property
+                    var simpleVal = Expression.Constant(propertyInfo.PropertyType.IsEnum ? Enum.Parse(propertyInfo.PropertyType, Value.ToString(), true) : Convert.ChangeType(Value ?? 0, propertyInfo.PropertyType));
+                    BinaryExpression simpleBinary;
+                    bool success = GetSimpleRuminantProperty(t, out ConstantExpression propertyValue);
+                    if (!success)
+                        return false;
+
+                    if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
+                    {
+                        // Allow for IsTrue and IsFalse operator
+                        simpleVal = Expression.Constant((Operator == ExpressionType.IsTrue));
+                        simpleBinary = Expression.MakeBinary(ExpressionType.Equal, propertyValue, simpleVal);
+                    }
+                    else
+                        simpleBinary = Expression.MakeBinary(Operator, propertyValue, simpleVal);
+
+                    var simpleLambda = Expression.Lambda<Func<T, bool>>(simpleBinary, simpleFilterParam).Compile();
+                    return simpleLambda(t);
+                };
+                return simple;
+            }
+
             // Check that the filter applies to objects of type T
             var filterParam = Expression.Parameter(typeof(T));
-            var filterProp = Parent.GetProperty(PropertyOfIndividual);
 
             // check if the parameter passes can inherit the declaring type
             // this will not allow females to check male properties
             // convert parameter to the type of the property, null if fails
-            var filterInherit = Expression.TypeAs(filterParam, filterProp.DeclaringType);
-            var typeis = Expression.TypeIs(filterParam, filterProp.DeclaringType);
+            var filterInherit = Expression.TypeAs(filterParam, propertyInfo.DeclaringType);
+            var typeis = Expression.TypeIs(filterParam, propertyInfo.DeclaringType);
 
             // Look for the property
-            var key = Expression.Property(filterInherit, filterProp.Name);
+            var key = Expression.Property(filterInherit, propertyInfo.Name);
 
             // Try convert the Value into the same data type as the property
-            var type = filterProp.PropertyType;
-            var ce = type.IsEnum ? Enum.Parse(type, Value.ToString(), true) : Convert.ChangeType(Value??0, type);
+            var ce = propertyInfo.PropertyType.IsEnum ? Enum.Parse(propertyInfo.PropertyType, Value.ToString(), true) : Convert.ChangeType(Value??0, propertyInfo.PropertyType);
             var value = Expression.Constant(ce);
 
             // Create a lambda that compares the filter value to the property on T
-
             // using the provided operator
             Expression binary; 
             if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
@@ -83,6 +129,231 @@ namespace Models.CLEM.Groupings
 
             var lambda = Expression.Lambda<Func<T, bool>>(body, filterParam).Compile();
             return lambda;
+        }
+
+        private bool IsSimpleRuminantProperty()
+        {
+            if (propertyInfo != null && (propertyInfo.DeclaringType == typeof(Ruminant) || propertyInfo.DeclaringType.IsSubclassOf(typeof(Ruminant))))
+            {
+                switch (propertyInfo.Name)
+                {
+                    case "Age":
+                    case "Weight":
+                    case "Sex":
+                    case "IsWeaner":
+                    case "IsSire":
+                    case "IsBreeder":
+                    case "IsAbleToBreed":
+                    case "IsHeifer":
+                    case "IsLactating":
+                    case "IsPreBreeder":
+                    case "IsPregnant":
+                    case "IsCalf":
+                    case "Breed":
+                    case "Class":
+                    case "EnergyBalance":
+                    case "HerdName":
+                    case "HighWeight":
+                    case "Location":
+                    case "ProportionOfHighWeight":
+                    case "ProportionOfNormalisedWeight":
+                    case "AdultEquivalent":
+                    case "HealthScore":
+                    case "ProportionOfSRW":
+                    case "ReadyForSale":
+                    case "RelativeCondition":
+                    case "RelativeSize":
+                    case "ReplacementBreeder":
+                    case "SaleFlag":
+                    case "Weaned":
+                    case "WeightGain":
+                    case "Cashmere":
+                    case "Wool":
+                    case "IsWildBreeder":
+                    case "DaysLactating":
+                    case "MonthsSinceLastBirth":
+                    case "NumberOfBirths":
+                    case "NumberOfBreedingMonths":
+                    case "NumberOfConceptions":
+                    case "NumberOfOffspring":
+                    case "NumberOfWeaned":
+                    case "SuccessfulPregnancy":
+                        return true;
+                    default:
+                        return false;
+                }
+            }
+            else if (propertyInfo != null && (propertyInfo.DeclaringType == typeof(LabourType)))
+            {
+                switch (propertyInfo.Name)
+                {
+                    case "Age":
+                    case "Sex":
+                    case "Hired":
+                    case "Name":
+                        return true;
+                    default:
+                        return false;
+
+                }
+            }
+            return false;
+        }
+
+        private bool GetSimpleRuminantProperty(IFilterable individual, out ConstantExpression propertyValue)
+        {
+            propertyValue = null;
+            if (!propertyInfo.DeclaringType.IsAssignableFrom(individual.GetType()))
+                return false;
+
+            if (propertyInfo != null && (propertyInfo.DeclaringType == typeof(Ruminant) || propertyInfo.DeclaringType.IsSubclassOf(typeof(Ruminant))))
+            {
+                switch (propertyInfo.Name)
+                {
+                    case "Age":
+                        propertyValue = Expression.Constant((individual as Ruminant).Age, propertyInfo.PropertyType);
+                        break;
+                    case "Weight":
+                        propertyValue = Expression.Constant((individual as Ruminant).Weight, propertyInfo.PropertyType);
+                        break;
+                    case "Sex":
+                        propertyValue = Expression.Constant((individual as Ruminant).Sex, propertyInfo.PropertyType);
+                        break;
+                    case "IsWeaner":
+                        propertyValue = Expression.Constant((individual as Ruminant).IsWeaner, propertyInfo.PropertyType);
+                        break;
+                    case "IsSire":
+                        propertyValue = Expression.Constant((individual as RuminantMale).IsSire, propertyInfo.PropertyType);
+                        break;
+                    case "IsAbleToBreed":
+                        propertyValue = Expression.Constant((individual as Ruminant).IsAbleToBreed, propertyInfo.PropertyType);
+                        break;
+                    case "IsHeifer":
+                        propertyValue = Expression.Constant((individual as RuminantFemale).IsHeifer, propertyInfo.PropertyType);
+                        break;
+                    case "IsLactating":
+                        propertyValue = Expression.Constant((individual as RuminantFemale).IsLactating, propertyInfo.PropertyType);
+                        break;
+                    case "IsPreBreeder":
+                        propertyValue = Expression.Constant((individual as RuminantFemale).IsPreBreeder, propertyInfo.PropertyType);
+                        break;
+                    case "IsPregnant":
+                        propertyValue = Expression.Constant((individual as RuminantFemale).IsPregnant, propertyInfo.PropertyType);
+                        break;
+                    case "IsCalf":
+                        propertyValue = Expression.Constant((individual as Ruminant).IsCalf, propertyInfo.PropertyType);
+                        break;
+                    case "Breed":
+                        propertyValue = Expression.Constant((individual as Ruminant).Breed, propertyInfo.PropertyType);
+                        break;
+                    case "Class":
+                        propertyValue = Expression.Constant((individual as Ruminant).Class, propertyInfo.PropertyType);
+                        break;
+                    case "EnergyBalance":
+                        propertyValue = Expression.Constant((individual as Ruminant).EnergyBalance, propertyInfo.PropertyType);
+                        break;
+                    case "HerdName":
+                        propertyValue = Expression.Constant((individual as Ruminant).HerdName, propertyInfo.PropertyType);
+                        break;
+                    case "HighWeight":
+                        propertyValue = Expression.Constant((individual as Ruminant).HighWeight, propertyInfo.PropertyType);
+                        break;
+                    case "Location":
+                        propertyValue = Expression.Constant((individual as Ruminant).Location, propertyInfo.PropertyType);
+                        break;
+                    case "ProportionOfHighWeight":
+                        propertyValue = Expression.Constant((individual as Ruminant).ProportionOfHighWeight, propertyInfo.PropertyType);
+                        break;
+                    case "ProportionOfNormalisedWeight":
+                        propertyValue = Expression.Constant((individual as Ruminant).ProportionOfNormalisedWeight, propertyInfo.PropertyType);
+                        break;
+                    case "AdultEquivalent":
+                        propertyValue = Expression.Constant((individual as Ruminant).AdultEquivalent, propertyInfo.PropertyType);
+                        break;
+                    case "HealthScore":
+                        propertyValue = Expression.Constant((individual as Ruminant).HealthScore, propertyInfo.PropertyType);
+                        break;
+                    case "ProportionOfSRW":
+                        propertyValue = Expression.Constant((individual as Ruminant).ProportionOfSRW, propertyInfo.PropertyType);
+                        break;
+                    case "ReadyForSale":
+                        propertyValue = Expression.Constant((individual as Ruminant).ReadyForSale, propertyInfo.PropertyType);
+                        break;
+                    case "RelativeCondition":
+                        propertyValue = Expression.Constant((individual as Ruminant).RelativeCondition, propertyInfo.PropertyType);
+                        break;
+                    case "RelativeSize":
+                        propertyValue = Expression.Constant((individual as Ruminant).RelativeSize, propertyInfo.PropertyType);
+                        break;
+                    case "ReplacementBreeder":
+                        propertyValue = Expression.Constant((individual as Ruminant).ReplacementBreeder, propertyInfo.PropertyType);
+                        break;
+                    case "SaleFlag":
+                        propertyValue = Expression.Constant((individual as Ruminant).SaleFlag, propertyInfo.PropertyType);
+                        break;
+                    case "Weaned":
+                        propertyValue = Expression.Constant((individual as Ruminant).Weaned, propertyInfo.PropertyType);
+                        break;
+                    case "WeightGain":
+                        propertyValue = Expression.Constant((individual as Ruminant).WeightGain, propertyInfo.PropertyType);
+                        break;
+                    case "Cashmere":
+                        propertyValue = Expression.Constant((individual as Ruminant).Cashmere, propertyInfo.PropertyType);
+                        break;
+                    case "Wool":
+                        propertyValue = Expression.Constant((individual as Ruminant).Wool, propertyInfo.PropertyType);
+                        break;
+                    case "IsWildBreeder":
+                        propertyValue = Expression.Constant((individual as RuminantMale).IsWildBreeder, propertyInfo.PropertyType);
+                        break;
+                    case "DaysLactating":
+                        propertyValue = Expression.Constant((individual as RuminantFemale).DaysLactating, propertyInfo.PropertyType);
+                        break;
+                    case "MonthsSinceLastBirth":
+                        propertyValue = Expression.Constant((individual as RuminantFemale).MonthsSinceLastBirth, propertyInfo.PropertyType);
+                        break;
+                    case "NumberOfBirths":
+                        propertyValue = Expression.Constant((individual as RuminantFemale).NumberOfBirths, propertyInfo.PropertyType);
+                        break;
+                    case "NumberOfBreedingMonths":
+                        propertyValue = Expression.Constant((individual as RuminantFemale).NumberOfBreedingMonths, propertyInfo.PropertyType);
+                        break;
+                    case "NumberOfConceptions":
+                        propertyValue = Expression.Constant((individual as RuminantFemale).NumberOfConceptions, propertyInfo.PropertyType);
+                        break;
+                    case "NumberOfOffspring":
+                        propertyValue = Expression.Constant((individual as RuminantFemale).NumberOfOffspring, propertyInfo.PropertyType);
+                        break;
+                    case "NumberOfWeaned":
+                        propertyValue = Expression.Constant((individual as RuminantFemale).NumberOfWeaned, propertyInfo.PropertyType);
+                        break;
+                    case "SuccessfulPregnancy":
+                        propertyValue = Expression.Constant((individual as RuminantFemale).SuccessfulPregnancy, propertyInfo.PropertyType);
+                        break;
+                    case "IsBreeder":
+                        propertyValue = Expression.Constant((individual as RuminantFemale).IsBreeder, propertyInfo.PropertyType);
+                        break;
+                }
+            }
+            else if (propertyInfo != null && (propertyInfo.DeclaringType == typeof(LabourType)))
+            {
+                switch (propertyInfo.Name)
+                {
+                    case "Age":
+                        propertyValue = Expression.Constant((individual as LabourType).Age, propertyInfo.PropertyType);
+                        break;
+                    case "Sex":
+                        propertyValue = Expression.Constant((individual as LabourType).Sex, propertyInfo.PropertyType);
+                        break;
+                    case "Hired":
+                        propertyValue = Expression.Constant((individual as LabourType).Hired, propertyInfo.PropertyType);
+                        break;
+                    case "Name":
+                        propertyValue = Expression.Constant((individual as LabourType).Name, propertyInfo.PropertyType);
+                        break;
+                }
+            }
+            return (propertyValue != null);
         }
 
         /// <summary>
