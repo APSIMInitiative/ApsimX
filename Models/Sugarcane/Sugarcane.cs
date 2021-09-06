@@ -501,7 +501,7 @@ namespace Models
         public bool IsC4 { get { return true; } }
 
         /// <summary>Aboveground mass</summary>
-        public Biomass AboveGround { get { return new Biomass(); } }
+        public IBiomass AboveGround { get { return new Biomass(); } }
 
         //CONSTANTS
 

@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 139,
+  "Version": 141,
   "Name": "Simulations",
   "Children": [
     {
@@ -2095,8 +2095,8 @@
           "$type": "Models.PMF.Organs.Leaf, Models",
           "Leaves": [],
           "CurrentExpandingLeaf": 34.0,
-          "StartFractionExpanded": 0.83819041077407885,
-          "FractionNextleafExpanded": 0.92664093062319453,
+          "StartFractionExpanded": 0.8381904107740789,
+          "FractionNextleafExpanded": 0.9266409306231945,
           "DeadNodesYesterday": 0.0,
           "MaxCover": 1.0,
           "GrowthRespiration": 0.0,
@@ -3052,16 +3052,18 @@
             },
             {
               "$type": "Models.PMF.CompositeBiomass, Models",
-              "Propertys": [
-                "[Leaf].Live",
-                "[Leaf].Dead"
-              ],
+              "Propertys": null,
               "DMDOfStructural": 0.6,
               "Name": "Total",
               "Children": [],
               "IncludeInDocumentation": false,
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "OrganNames": [
+                "Leaf"
+              ],
+              "IncludeLive": true,
+              "IncludeDead": true
             },
             {
               "$type": "Models.PMF.Library.BiomassRemoval, Models",
@@ -3789,82 +3791,89 @@
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Leaf].Dead",
-            "[Stem].Live",
-            "[Stem].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "AboveGround",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Root].Live",
-            "[Root].Dead",
-            "[Tuber].Live",
-            "[Tuber].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "BelowGround",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Root",
+            "Tuber"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Leaf].Dead",
-            "[Stem].Live",
-            "[Stem].Dead",
-            "[Root].Live",
-            "[Root].Dead",
-            "[Tuber].Live",
-            "[Tuber].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "Total",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Root",
+            "Tuber"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Stem].Live",
-            "[Root].Live",
-            "[Tuber].Live"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "TotalLive",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Root",
+            "Tuber"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": false
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Dead",
-            "[Stem].Dead",
-            "[Root].Dead",
-            "[Tuber].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "TotalDead",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Root",
+            "Tuber"
+          ],
+          "IncludeLive": false,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CultivarFolder, Models",
