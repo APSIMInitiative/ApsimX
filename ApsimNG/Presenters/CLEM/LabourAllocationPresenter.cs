@@ -77,6 +77,7 @@ namespace UserInterface.Presenters
             this.genericView = view as IMarkdownView;
             this.explorerPresenter = explorerPresenter;
             System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), (model as ISpecificOutputFilename).HtmlOutputFilename), CreateHTML());
+            this.genericView.Text = CreateMarkdown();
         }
 
         public void Refresh()
@@ -84,7 +85,6 @@ namespace UserInterface.Presenters
             System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), (model as ISpecificOutputFilename).HtmlOutputFilename), CreateHTML());
             this.genericView.Text = CreateMarkdown();
         }
-
 
         private string CreateHTML()
         {
@@ -311,9 +311,13 @@ namespace UserInterface.Presenters
 
                                 while (nested != null)
                                 {
+                                    nested.InitialiseFilters();
                                     level++;
-                                    tblstr.Write("<span class=\"dot dot" + ((level < 5) ? level.ToString() : "5") + " \">" + "</span>");
-                                    if (!nested.Filter(new List<LabourType> { lt }).Any()) break;
+                                    if (nested.Filter(lt))
+                                    {
+                                        tblstr.Write("<span class=\"dot dot" + ((level < 5) ? level.ToString() : "5") + " \">" + "</span>");
+                                        break;
+                                    }
                                     nested = nested.FindAllChildren<LabourFilterGroup>().FirstOrDefault();
                                 }
                                 tblstr.Write("</div>");
@@ -473,9 +477,10 @@ namespace UserInterface.Presenters
 
                                 while (nested != null)
                                 {
+                                    nested.InitialiseFilters();
                                     level++;
                                     levelstring = (level < 5) ? level.ToString() : "5";
-                                    if (!nested.Filter(new List<LabourType> { lt }).Any()) break;
+                                    if (nested.Filter(lt)) break;
                                     nested = nested.FindAllChildren<LabourFilterGroup>().FirstOrDefault();
                                 }
                             }
