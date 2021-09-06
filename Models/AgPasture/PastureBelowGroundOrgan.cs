@@ -18,30 +18,32 @@
         [Link(Type=LinkType.Ancestor)]
         private PastureSpecies species = null;
 
-        /// <summary>The collection of tissues for this organ.</summary>
+        /// <summary>Collection of tissues for this organ.</summary>
         [Link(Type=LinkType.Child)]
         private RootTissue[] tissue = null;
 
         /// <summary>Soil object where these roots are growing.</summary>
         private Soil soil = null;
 
-
-        /// <summary>The soil physical node</summary>
+        /// <summary>Soil physical parameterisation.</summary>
         private IPhysical soilPhysical = null;
 
-        /// <summary>The water balance model</summary>
+        /// <summary>Soil-plant parameterisation.</summary>
+        private SoilCrop soilCropData;
+
+        /// <summary>Water balance model.</summary>
         private ISoilWater waterBalance = null;
 
-        /// <summary>Soil nutrient model where these roots are growing.</summary>
+        /// <summary>Soil nutrient model.</summary>
         private INutrient nutrient;
 
         private double[] dulMM;
         private double[] ll15MM;
 
-        /// <summary>The NO3 solute.</summary>
+        /// <summary>NO3 solute in the soil.</summary>
         private ISolute no3 = null;
 
-        /// <summary>The NH4 solute.</summary>
+        /// <summary>NH4 solute in the soil.</summary>
         private ISolute nh4 = null;
 
         /// <summary>Name of zone where roots are growing.</summary>
@@ -52,8 +54,6 @@
 
         /// <summary>Number of layers in the soil.</summary>
         private int nLayers;
-
-        private SoilCrop soilCropData;
 
         /// <summary>Constructor, initialise tissues for the roots.</summary>
         /// <param name="zone">The zone the roots belong in.</param>
@@ -90,40 +90,38 @@
             if (nh4 == null)
                 throw new Exception($"Cannot find NH4 solute in zone {zone.Name}");
 
-            // save the parameters for this organ
+            // link to soil and initialise related variables
+            zoneName = soil.Parent.Name;
             nLayers = soilPhysical.Thickness.Length;
-            minimumLiveDM = minLiveDM;
             dulMM = soilPhysical.DULmm;
             ll15MM = soilPhysical.LL15mm;
-            Live = tissue[0];
-            Dead = tissue[1];
-
-            // Link to soil and initialise variables
-            zoneName = soil.Parent.Name;
             mySoilNH4Available = new double[nLayers];
             mySoilNO3Available = new double[nLayers];
 
-            // Initialise root DM, N, depth, and distribution
+            // save minimum DM and get target root distribution
             Depth = initialDepth;
+            minimumLiveDM = minLiveDM;
             CalculateRootZoneBottomLayer();
             TargetDistribution = RootDistributionTarget();
 
+            // initialise tissues
             double[] initialDMByLayer = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), initialDM);
             double[] initialNByLayer = MathUtilities.Multiply_Value(initialDMByLayer, NConcOptimum);
-
-            // Initialise the live tissue.
+            Live = tissue[0];
+            Dead = tissue[1];
             Live.Initialise(initialDMByLayer, initialNByLayer);
             Dead.Initialise(null, null);
         }
 
-        /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
-        public double NConcOptimum { get; set; } = 0.02;
+        /// <summary>Minimum rooting depth (mm).</summary>
+        public double RootDepthMinimum { get; set; } = 50.0;
 
-        /// <summary>Gets or sets the minimum N concentration, structural N (kg/kg).</summary>
-        public double NConcMinimum { get; set; } = 0.006;
+        /// <summary>Maximum rooting depth (mm).</summary>
+        public double RootDepthMaximum { get; set; } = 750.0;
 
-        /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
-        public double NConcMaximum { get; set; } = 0.025;
+        /// <summary>Daily root elongation rate at optimum temperature (mm/day).</summary>
+        [Units("mm/day")]
+        public double RootElongationRate { get; set; } = 25.0;
 
         /// <summary>Depth from surface where root proportion starts to decrease (mm).</summary>
         [Units("mm")]
@@ -139,44 +137,43 @@
         /// <summary>Specific root length (m/gDM).</summary>
         public double SpecificRootLength { get; set; } = 100.0;
 
-        /// <summary>Minimum rooting depth (mm).</summary>
-        public double RootDepthMinimum { get; set; } = 50.0;
+        /// <summary>N concentration for optimum growth (kg/kg).</summary>
+        public double NConcOptimum { get; set; } = 0.02;
 
-        /// <summary>Maximum rooting depth (mm).</summary>
-        public double RootDepthMaximum { get; set; } = 750.0;
+        /// <summary>Minimum N concentration, structural N (kg/kg).</summary>
+        public double NConcMinimum { get; set; } = 0.006;
 
-        /// <summary>Daily root elongation rate at optimum temperature (mm/day).</summary>
-        [Units("mm/day")]
-        public double RootElongationRate { get; set; } = 25.0;
+        /// <summary>Maximum N concentration, for luxury uptake (kg/kg).</summary>
+        public double NConcMaximum { get; set; } = 0.025;
 
-        /// <summary>Ammonium uptake coefficient.</summary>
+        /// <summary>Ammonium uptake coefficient (/ppm).</summary>
         public double KNH4 { get; set; } = 0.01;
 
-        /// <summary>Nitrate uptake coefficient.</summary>
+        /// <summary>Nitrate uptake coefficient (/ppm).</summary>
         public double KNO3 { get; set; } = 0.02;
 
         /// <summary>Maximum daily amount of N that can be taken up by the plant (kg/ha).</summary>
         public double MaximumNUptake { get; set; } = 10.0;
 
-        /// <summary>Reference value for root length density for the Water and N availability.</summary>
-        public double ReferenceRLD { get; set; } = 5.0;
-
         /// <summary>Exponent controlling the effect of soil moisture variations on water extractability.</summary>
-        private double ExponentSoilMoisture = 1.50;
+        public double ExponentSoilMoisture = 1.50;
 
-        /// <summary>Reference value of Ksat for water availability function.</summary>
-        public double ReferenceKSuptake { get; set; } = 15.0;
-
-        /// <summary>Gets or sets the rooting depth (mm).</summary>
+        /// <summary>Rooting depth (mm).</summary>
         public double Depth { get; set; }
 
-        /// <summary>Gets or sets the layer at the bottom of the root zone.</summary>
+        /// <summary>Soil layer at the bottom of the root zone.</summary>
         internal int BottomLayer { get; private set; }
 
-        /// <summary>Gets or sets the target (ideal) DM fractions for each layer (0-1).</summary>
+        /// <summary>Target (idealised) DM fractions for each layer (0-1).</summary>
         internal double[] TargetDistribution { get; set; }
 
-        /// <summary>Gets the total dry matter in this organ (kg/ha).</summary>
+        /// <summary>Root live tissue.</summary>
+        public RootTissue Live { get; private set; }
+
+        /// <summary>Root dead tissue.</summary>
+        public RootTissue Dead { get; private set; }
+
+        /// <summary>Total dry matter in this organ (kg/ha).</summary>
         internal double DMTotal
         {
             get
@@ -189,13 +186,7 @@
             }
         }
 
-        /// <summary>Returns the root live tissue.</summary>
-        public RootTissue Live { get; private set; }
-
-        /// <summary>Returns the root live tissue.</summary>
-        public RootTissue Dead { get; private set; }
-
-        /// <summary>Gets the dry matter in the live (green) tissues (kg/ha).</summary>
+        /// <summary>Dry matter in the live (green) tissues (kg/ha).</summary>
         internal double DMLive
         {
             get
@@ -208,14 +199,14 @@
             }
         }
 
-        /// <summary>Gets the dry matter in the dead tissues (kg/ha).</summary>
-        /// <remarks>Last tissues is assumed to represent dead material.</remarks>
+        /// <summary>Dry matter in the dead tissues (kg/ha).</summary>
+        /// <remarks>Last tissue is assumed to represent dead material.</remarks>
         internal double DMDead
         {
             get { return tissue[tissue.Length - 1].DM.Wt; }
         }
 
-        /// <summary>The total N amount in this tissue (kg/ha).</summary>
+        /// <summary>Total N amount in this organ (kg/ha).</summary>
         internal double NTotal
         {
             get
@@ -228,7 +219,7 @@
             }
         }
 
-        /// <summary>Gets the N amount in the live (green) tissues (kg/ha).</summary>
+        /// <summary>N amount in the live (green) tissues (kg/ha).</summary>
         internal double NLive
         {
             get
@@ -241,38 +232,38 @@
             }
         }
 
-        /// <summary>Gets the N amount in the dead tissues (kg/ha).</summary>
+        /// <summary>N amount in the dead tissues (kg/ha).</summary>
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
         internal double NDead
         {
             get { return tissue[tissue.Length - 1].DM.N; }
         }
 
-        /// <summary>Gets the average N concentration in this organ (kg/kg).</summary>
+        /// <summary>Average N concentration in this organ (kg/kg).</summary>
         internal double NconcTotal
         {
             get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); }
         }
 
-        /// <summary>Gets the average N concentration in the live tissues (kg/kg).</summary>
+        /// <summary>Average N concentration in the live tissues (kg/kg).</summary>
         internal double NconcLive
         {
             get { return MathUtilities.Divide(NLive, DMLive, 0.0); }
         }
 
-        /// <summary>Gets the average N concentration in dead tissues (kg/kg).</summary>
+        /// <summary>Average N concentration in dead tissues (kg/kg).</summary>
         internal double NconcDead
         {
             get { return MathUtilities.Divide(NDead, DMDead, 0.0); }
         }
 
-        /// <summary>Gets the amount of senesced N available for remobilisation (kg/ha).</summary>
+        /// <summary>Amount of senesced N available for remobilisation (kg/ha).</summary>
         internal double NSenescedRemobilisable
         {
             get { return tissue[tissue.Length - 1].NRemobilisable; }
         }
 
-        /// <summary>Gets the amount of luxury N available for remobilisation (kg/ha).</summary>
+        /// <summary>Amount of luxury N available for remobilisation (kg/ha).</summary>
         internal double NLuxuryRemobilisable
         {
             get
@@ -299,7 +290,7 @@
             return result;
         }
 
-        /// <summary>Gets the root length density by volume (mm/mm^3).</summary>
+        /// <summary>Root length density by volume (mm/mm^3).</summary>
         public double[] LengthDensity
         {
             get
@@ -330,26 +321,32 @@
         /// <summary>Returns true if the KL modifier due to root damage is active or not.</summary>
         private bool IsKLModiferDueToDamageActive { get; set; } = false;
 
-        /// <summary>Gets the KL modifier due to root damage (0-1).</summary>
+        /// <summary>KL modifier due to root damage (0-1).</summary>
         private double KLModiferDueToDamage(int layerIndex)
         {
             var threshold = 0.01;
             if (!IsKLModiferDueToDamageActive)
+            {
                 return 1;
+            }
             else if (LengthDensity[layerIndex] < 0)
+            {
                 return 0;
+            }
             else if (LengthDensity[layerIndex] >= threshold)
+            {
                 return 1;
+            }
             else
-                return (1 / threshold) * LengthDensity[layerIndex];
+            {
+                return LengthDensity[layerIndex] / threshold;
+            }
         }
 
-
-        /// <summary>
-        /// Reset this root organ's state.
-        /// </summary>
+        /// <summary>Reset this root organ's state.</summary>
         /// <param name="rootWt">The amount of root biomass (kg/ha).</param>
         /// <param name="rootDepth">The depth of roots to reset to(mm).</param>
+        /// <remarks>It is assumed that N is at optimum content.</remarks>
         public void Reset(double rootWt, double rootDepth)
         {
             Depth = rootDepth;
@@ -360,7 +357,7 @@
             Live.ResetTo(rootBiomass);
         }
 
-        /// <summary>Reset this root organ's state to the inital state.</summary>
+        /// <summary>Reset this root organ's state to the initial state.</summary>
         public void Reset()
         {
             Reset(minimumLiveDM, RootDepthMinimum);
@@ -684,9 +681,7 @@
         }
 
 
-        /// <summary>
-        /// Set new growth to root.
-        /// </summary>
+        /// <summary>Set new growth to root.</summary>
         /// <param name="dmToRoot">Dry matter growth.</param>
         /// <param name="nToRoot">Nitrogen growth.</param>
         /// <returns></returns>
@@ -695,9 +690,7 @@
             return Live.SetNewGrowthAllocation(dmToRoot, nToRoot);
         }
 
-        /// <summary>
-        /// Detach roots.
-        /// </summary>
+        /// <summary>Detach roots.</summary>
         /// <param name="dryMatter">Dry matter to detach.</param>
         /// <param name="nitrogen">Nitrogen to detach.</param>
         public void DetachRoots(double dryMatter, double nitrogen)
@@ -705,27 +698,21 @@
             Live.DetachBiomass(dryMatter, nitrogen);
         }
 
-        /// <summary>
-        /// Remobilse N.
-        /// </summary>
+        /// <summary>Remobilise N from live tissues.</summary>
         /// <param name="fracRemobilised">Fraction remobilised.</param>
         public void RemobiliseLiveN(double fracRemobilised)
         {
             Live.DoRemobiliseN(fracRemobilised);
         }
 
-        /// <summary>
-        /// Remobilse Dead N.
-        /// </summary>
+        /// <summary>Remobilise N from live tissues.</summary>
         /// <param name="fracRemobilised">Fraction remobilised.</param>
         public void RemobiliseDeadN(double fracRemobilised)
         {
             tissue[1].DoRemobiliseN(fracRemobilised);
         }
 
-        /// <summary>
-        /// Remove water from soil - uptake.
-        /// </summary>
+        /// <summary>Remove water from soil - uptake.</summary>
         /// <param name="amount">Amount of water to remove.</param>
         public void PerformWaterUptake(double[] amount)
         {
@@ -733,9 +720,7 @@
                 waterBalance.RemoveWater(amount);
         }
 
-        /// <summary>
-        /// Remove nutrients from soil - uptake.
-        /// </summary>
+        /// <summary>Remove nutrients from soil - uptake.</summary>
         /// <param name="no3Amount">Amount of no3 to remove.</param>
         /// <param name="nh4Amount">Amount of nh4 to remove.</param>
         public void PerformNutrientUptake(double[] no3Amount, double[] nh4Amount)
@@ -744,18 +729,14 @@
             nh4.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(nh4.kgha, nh4Amount));
         }
 
-        /// <summary>
-        /// Return true if roots in this organ are in the specified zone.
-        /// </summary>
+        /// <summary>Flag indicating whether roots are in the specified zone.</summary>
         /// <param name="zoneName">The zone name.</param>
         public bool IsInZone(string zoneName)
         {
             return this.zoneName == zoneName;
         }
 
-        /// <summary>
-        /// Computes the turnover rate.
-        /// </summary>
+        /// <summary>Computes the turnover rate.</summary>
         /// <param name="gamaR">Daily DM turnover rate for root tissue.</param>
         /// <returns></returns>
         public double EvaluateTissueTurnover(double gamaR)

@@ -35,13 +35,13 @@
 
         //---------------------------- Parameters -----------------------
 
-        /// <summary>Gets or sets the N concentration for optimum growth (kg/kg).</summary>
+        /// <summary>N concentration for optimum growth (kg/kg).</summary>
         public double NConcOptimum { get; set; } = 0.04;
 
-        /// <summary>Gets or sets the minimum N concentration, structural N (kg/kg).</summary>
+        /// <summary>Minimum N concentration, structural N (kg/kg).</summary>
         public double NConcMinimum { get; set; } = 0.012;
 
-        /// <summary>Gets or sets the maximum N concentration, for luxury uptake (kg/kg).</summary>
+        /// <summary>Maximum N concentration, for luxury uptake (kg/kg).</summary>
         public double NConcMaximum { get; set; } = 0.05;
 
         /// <summary>Proportion of organ DM that is standing, available to harvest (0-1).</summary>
@@ -55,7 +55,7 @@
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
         public double MinimumLiveDM { get; set; }
 
-        /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
+        /// <summary>Flag indicating whether the biomass is above ground or not.</summary>
         public bool IsAboveGround { get { return true; } }
 
         /// <summary>Return live biomass. Used by STOCK (g/m2).</summary>
@@ -64,7 +64,7 @@
         /// <summary>Dead biomass. Used by STOCK (g/m2).</summary>
         public Biomass Dead { get; private set; } = new Biomass();
 
-        /// <summary>Gets the total dry matter in this organ (kg/ha).</summary>
+        /// <summary>Total dry matter in this organ (kg/ha).</summary>
         [Units("kg/ha")]
         public double DMTotal { get; private set; }
        
@@ -190,7 +190,7 @@
         /// <summary>N removed from this tissue (kg/ha).</summary>
         public double NRemoved => Tissue.Sum(t => t.NRemoved);
 
-        /// <summary>Average digestibility of all biomas.</summary>
+        /// <summary>Average digestibility of all biomass.</summary>
         [Units("kg/kg")]
         public double DigestibilityTotal { get; private set; }
 
@@ -214,13 +214,12 @@
             MinimumLiveDM = minimumLiveWt;
         }
 
-        /// <summary>
-        /// Reset this organ's state.
-        /// </summary>
+        /// <summary>Reset this organ's state.</summary>
         /// <param name="emergingWt">The amount of emerging biomass (kg/ha).</param>
         /// <param name="developingWt">The amount of developing biomass (kg/ha).</param>
         /// <param name="matureWt">The amount of developing biomass (kg/ha).</param>
         /// <param name="deadWt">The amount of developing biomass (kg/ha).</param>
+        /// <remarks>It is assumed that N is at optimum content.</remarks>
         public void Reset(double emergingWt, double developingWt, double matureWt, double deadWt)
         {
             EmergingTissue.Reset(emergingWt, emergingWt * NConcOptimum);
@@ -232,9 +231,7 @@
             CalculateStates();
         }
 
-        /// <summary>
-        /// Reset this organ's state at emergence.
-        /// </summary>
+        /// <summary>Reset this organ's state at emergence.</summary>
         /// <param name="emergingWt">The amount of emerging biomass (kg/ha).</param>
         /// <param name="developingWt">The amount of developing biomass (kg/ha).</param>
         /// <param name="matureWt">The amount of developing biomass (kg/ha).</param>
@@ -250,9 +247,7 @@
             CalculateStates();
         }
 
-        /// <summary>
-        /// Remove biomass from organ
-        /// </summary>
+        /// <summary>Remove biomass from organ.</summary>
         /// <param name="biomassToRemove">The fraction of the harvestable biomass to remove</param>
         public void RemoveBiomass(OrganBiomassRemovalType biomassToRemove)
         {
@@ -278,7 +273,9 @@
         public void DoResetOrgan()
         {
             for (int t = 0; t < Tissue.Length; t++)
-                Tissue[t].Reset(0, 0);
+            {
+                Tissue[t].Reset(0.0, 0.0);
+            }
 
             // Tissue states have changed so recalculate our states.
             CalculateStates();

@@ -16,7 +16,7 @@
         /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
         private const double carbonFractionInDM = 0.4;
 
-        /// <summary>The fraction of luxury N remobilisable per day (0-1).</summary>
+        /// <summary>Fraction of luxury N remobilisable per day (0-1).</summary>
         private const double fractionNLuxuryRemobilisable = 0.1;
 
         /// <summary>Tissue biomass.</summary>
@@ -52,15 +52,15 @@
         /// <summary>Nitrogen remobilised into new growth (kg/ha).</summary>
         private double nRemobilised;
 
-        /// <summary>Nutrient model.</summary>
+        /// <summary>Pasture species this tissue belongs to.</summary>
         [Link]
         private PastureSpecies species = null;
 
-        /// <summary>Link to the soil physical properties.</summary>
+        /// <summary>Soil physical parameterisation.</summary>
         [Link]
         private IPhysical soilPhysical = null;
 
-        /// <summary>Nutrient model.</summary>
+        /// <summary>Soil nutrient model.</summary>
         [Link]
         private INutrient nutrient = null;
 
@@ -85,17 +85,17 @@
             UpdateDM();
         }
 
-        /// <summary>The amount of N available for remobilisation (kg/ha).</summary>
+        /// <summary>Amount of N available for remobilisation (kg/ha).</summary>
         public double NRemobilisable { get; private set; }
 
-        /// <summary>Amount of biomass.</summary>
+        /// <summary>Dry matter biomass.</summary>
         public IAGPBiomass DM {  get { return biomass; } }
 
-        /// <summary>The dry matter fraction for each layer (0-1).</summary>
+        /// <summary>Dry matter fraction for each layer (0-1).</summary>
         public double[] FractionWt { get { return MathUtilities.Divide_Value(dmLayer, DM.Wt); } }
         
         /// <summary>Set the biomass moving into the tissue.</summary>
-        /// <param name="dm">The dry matter (kg/ha).</param>
+        /// <param name="dm">Dry matter (kg/ha).</param>
         /// <param name="n">The nitrogen (kg/ha).</param>
         public void SetBiomassTransferIn(double[] dm, double[] n)
         {
@@ -129,12 +129,13 @@
                     nLayer[layer] += nLayersTransferedIn[layer] - (nRemobilised * (nLayersTransferedIn[layer] / nTransferedIn));
                 }
             }
+
             UpdateDM();
         }
 
         /// <summary>Adds a given amount of detached root material (DM and N) to the soil's FOM pool.</summary>
-        /// <param name="amountDM">The DM amount to send (kg/ha)</param>
-        /// <param name="amountN">The N amount to send (kg/ha)</param>
+        /// <param name="amountDM">The DM amount to detach (kg/ha).</param>
+        /// <param name="amountN">The N amount to detach (kg/ha).</param>
         public void DetachBiomass(double amountDM, double amountN)
         {
             if (amountDM + amountN > 0.0)
@@ -148,13 +149,14 @@
                     amountDMLayered[layer] = amountDM * fractionWt[layer];
                     amountNLayered[layer] = amountN * fractionWt[layer];
                 }
+
                 DetachBiomass(amountDMLayered, amountNLayered);
             }
         }
 
-        /// <summary>Adds a given amount of detached root material (DM and N) to the soil's FOM pool.</summary>
-        /// <param name="amountDM">The DM amount to send (kg/ha)</param>
-        /// <param name="amountN">The N amount to send (kg/ha)</param>
+        /// <summary>Adds a given amount of detached root material (DM and N) to the soil's FOM pool, per layer.</summary>
+        /// <param name="amountDM">The DM amount to detach (kg/ha).</param>
+        /// <param name="amountN">The N amount to detach (kg/ha).</param>
         public void DetachBiomass(double[] amountDM, double[] amountN)
         {
             if (amountDM.Sum() + amountN.Sum() > 0.0)
@@ -184,11 +186,9 @@
             }
         }
 
-        /// <summary>
-        /// Remove a fraction of the biomass.
-        /// </summary>
+        /// <summary>Remove a fraction of the biomass.</summary>
         /// <param name="fractionToRemove">The fraction from each layer to remove.</param>
-        /// <param name="sendToSoil">Send to soil?</param>
+        /// <param name="sendToSoil">Whether the biomass should be sent to soil.</param>
         /// <returns></returns>
         public BiomassAndNLayered RemoveBiomass(double fractionToRemove, bool sendToSoil)
         {
@@ -200,25 +200,28 @@
                 dmLayer[layer] -= removed.Wt[layer];
                 nLayer[layer] -= removed.N[layer];
             }
+
             UpdateDM();
 
             if (sendToSoil)
+            {
                 DetachBiomass(removed.Wt, removed.N);
+            }
 
             return removed;
         }
 
-        /// <summary>
-        /// Move a fraction of the biomass from this tissue to another tissue.
-        /// </summary>
+        /// <summary>Move a fraction of the biomass from this tissue to another tissue.</summary>
         /// <param name="fractionToRemove">The fraction to move.</param>
         /// <param name="toTissue">The tissue to move to biomass to.</param>
         public void MoveFractionToTissue(double fractionToRemove, RootTissue toTissue)
         {
             var removed = RemoveBiomass(fractionToRemove, sendToSoil: false);
             toTissue.AddBiomass(removed.Wt, removed.N);
-            if (fractionToRemove == 1)
+            if (fractionToRemove == 1.0)
+            {
                 Reset();
+            }
         }
 
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>
@@ -258,11 +261,9 @@
             };
         }
 
-        /// <summary>
-        /// Set the tissue turnover rates.
-        /// </summary>
-        /// <param name="turnoverDM">The dry matter turnover (kg/ha).</param>
-        /// <param name="turnoverN"></param>
+        /// <summary>Adds biomass from tissue turnover.</summary>
+        /// <param name="turnoverDM">Dry matter amount turned over (kg/ha).</param>
+        /// <param name="turnoverN">Nitrogen amount turned over (kg/ha).</param>
         /// <param name="bottomLayer">Bottom layer index where roots are located.</param>
         /// <param name="fractionWt">The dry matter fraction for each layer (0-1)</param>
         public void SetBiomassTurnover(double turnoverDM, double turnoverN, int bottomLayer, double[] fractionWt)
@@ -272,16 +273,15 @@
                 dmLayersTransferedIn[layer] = turnoverDM * fractionWt[layer];
                 nLayersTransferedIn[layer] = turnoverN * fractionWt[layer];
             }
+
             dmTransferedIn += turnoverDM;
             nTransferedIn += turnoverN;
             UpdateDM();
         }
 
-        /// <summary>
-        /// Set the new growth allocation for the day.
-        /// </summary>
-        /// <param name="dm">The dry matter (kg/ha).</param>
-        /// <param name="n">The nitrogen (kg/ha).</param>
+        /// <summary>Adds biomass from new growth.</summary>
+        /// <param name="dm">Dry matter amount (kg/ha).</param>
+        /// <param name="n">Nitrogen amount (kg/ha).</param>
         public BiomassAndN SetNewGrowthAllocation(double dm, double n)
         {
             dmTransferedIn += dm;
@@ -293,11 +293,9 @@
             };
         }
 
-        /// <summary>
-        /// Add biomass.
-        /// </summary>
-        /// <param name="dmToAdd">The amount of dry matter to add (kg/ha).</param>
-        /// <param name="nToAdd">The amount of nitrogen to add (kg/ha).</param>
+        /// <summary>Add biomass.</summary>
+        /// <param name="dmToAdd">Dry matter amount to add (kg/ha).</param>
+        /// <param name="nToAdd">Nitrogen amount to add (kg/ha).</param>
         public void AddBiomass(double[] dmToAdd, double[] nToAdd)
         {
             for (int layer = 0; layer < dmLayer.Length; layer++)
@@ -305,6 +303,7 @@
                 dmLayer[layer] += dmToAdd[layer];
                 nLayer[layer] += nToAdd[layer];
             }
+
             UpdateDM();
         }
 
@@ -322,14 +321,14 @@
             biomass.N = nLayer.Sum();
         }
 
-        /// <summary>
-        /// Reset tissue to the specified amount.
-        /// </summary>
+        /// <summary>Reset tissue to the specified amount.</summary>
         /// <param name="dmAmount">The amount of dry matter by layer to reset to (kg/ha).</param>
         public void ResetTo(double[] dmAmount)
         {
             for (int layer = 0; layer < dmLayer.Length; layer++)
+            {
                 dmLayer[layer] += dmAmount[layer];
+            }
 
             UpdateDM();
         }

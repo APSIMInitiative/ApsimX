@@ -35,16 +35,16 @@
 
         //---------------------------- Parameters -----------------------
 
-        /// <summary>The fraction of luxury N remobilisable per day (0-1).</summary>
+        /// <summary>Fraction of luxury N remobilisable per day (0-1).</summary>
         public double FractionNLuxuryRemobilisable { get; set; } = 0.1;
 
-        /// <summary>The sugar fraction on new growth, i.e. soluble carbohydrate (0-1).</summary>
+        /// <summary>Sugar fraction on new growth, i.e. soluble carbohydrate (0-1).</summary>
         public double FractionSugarNewGrowth { get; set; } = 0.0;
 
-        /// <summary>The digestibility of cell walls (0-1).</summary>
+        /// <summary>Digestibility of cell walls (0-1).</summary>
         public double DigestibilityCellWall { get; set; } = 0.5;
 
-        /// <summary>The digestibility of proteins (0-1).</summary>
+        /// <summary>Digestibility of proteins (0-1).</summary>
         public double DigestibilityProtein { get; set; } = 1.0;
 
         //----------------------- Daily Deltas -----------------------
@@ -70,7 +70,7 @@
 
         //----------------------- States -----------------------
 
-        /// <summary>Dry matter.</summary>
+        /// <summary>Dry matter biomass.</summary>
         public IAGPBiomass DM { get { return dryMatter; } }
 
         /// <summary>DM removed from this tissue (kg/ha).</summary>
@@ -113,22 +113,22 @@
             DMRemoved = totalFraction * dryMatter.Wt;
             NRemoved = totalFraction * dryMatter.N;
 
-            if (totalFraction > 0)
+            if (totalFraction > 0.0)
             {
-                dryMatter.Wt *= (1 - totalFraction);
-                dryMatter.N *= (1 - totalFraction);
-                NRemobilisable *= (1 - totalFraction);
+                dryMatter.Wt *= (1.0 - totalFraction);
+                dryMatter.N *= (1.0 - totalFraction);
+                NRemobilisable *= (1.0 - totalFraction);
             }
 
-            if (dmToSoil > 0)
-                    surfaceOrganicMatter.Add(dmToSoil, nToSoil, 0.0, species.Name, species.Name);
+            if (dmToSoil > 0.0)
+            {
+                surfaceOrganicMatter.Add(dmToSoil, nToSoil, 0.0, species.Name, species.Name);
+            }
 
             CalculateStates();
         }
 
-        /// <summary>
-        /// Add biomass.
-        /// </summary>
+        /// <summary>Add an amount of biomass to this tissue.</summary>
         /// <param name="dmAmount">The amount of dry matter to add (kg/ha).</param>
         /// <param name="nAmount">The amount of nitrogen to add (kg/ha).</param>
         public void AddBiomass(double dmAmount, double nAmount)
@@ -139,9 +139,7 @@
             CalculateStates();
         }
 
-        /// <summary>
-        /// Initialise tissue to the specified amount.
-        /// </summary>
+        /// <summary>Reset the biomass of this tissue to the specified amount.</summary>
         /// <param name="dmAmount">The amount of dry matter to reset to (kg/ha).</param>
         /// <param name="nAmount">The amount of nitrogen to reset to (kg/ha).</param>
         public void Reset(double dmAmount, double nAmount)
@@ -152,7 +150,7 @@
             ClearDailyDeltas();
         }
 
-        /// <summary>Clear the daily deltas.</summary>
+        /// <summary>Clear the daily flows of DM and N.</summary>
         public void ClearDailyDeltas()
         {
             DMTransferedIn = 0.0;
