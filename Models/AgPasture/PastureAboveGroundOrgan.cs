@@ -11,7 +11,7 @@
 
     /// <summary>Describes a generic above ground organ of a pasture species.</summary>
     [Serializable]
-    public class PastureAboveGroundOrgan : Model, IOrganDamage
+    public class PastureAboveGroundOrgan : Model, IOrganDamage, IOrganDigestibility
     {
         /// <summary>The collection of tissues for this organ.</summary>
         [Link(Type = LinkType.Child)]
@@ -61,8 +61,14 @@
         /// <summary>Return live biomass. Used by STOCK (g/m2).</summary>
         public Biomass Live { get; private set; } = new Biomass();
 
+        /// <summary>Digestibility of live biomass. Used by STOCK (g/m2).</summary>
+        public double LiveDigestibility { get; private set; }
+
         /// <summary>Dead biomass. Used by STOCK (g/m2).</summary>
         public Biomass Dead { get; private set; } = new Biomass();
+
+        /// <summary>Digestibility of dead biomass. Used by STOCK (g/m2).</summary>
+        public double DeadDigestibility { get; private set; }
 
         /// <summary>Gets the total dry matter in this organ (kg/ha).</summary>
         [Units("kg/ha")]
@@ -411,11 +417,11 @@
 
             Live.StructuralWt = DMLiveHarvestable / 10;  // to g/m2
             Live.StructuralN = NLiveHarvestable / 10;    // to g/m2
-            Live.DMDOfStructural = DigestibilityLive;
+            LiveDigestibility = DigestibilityLive;
 
             Dead.StructuralWt = DMDeadHarvestable / 10;  // to g/m2
             Dead.StructuralN = NDeadHarvestable / 10;    // to g/m2
-            Dead.DMDOfStructural = DigestibilityDead;
+            DeadDigestibility = DigestibilityDead;
         }
     }
 }

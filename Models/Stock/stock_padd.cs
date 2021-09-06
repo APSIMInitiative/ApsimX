@@ -852,7 +852,7 @@ namespace Models.GrazPlan
 
                     // we can find the dmd of structural, assume storage and metabolic are 100% digestible
                     dmd = (biomass.DigestibilityLive * greenPropn * biomass.Live.StructuralWt) + (1 * greenPropn * biomass.Live.StorageWt) + (1 * greenPropn * biomass.Live.MetabolicWt);    // storage and metab are 100% dmd
-                    dmd += ((biomass.Dead.DMDOfStructural * biomass.Dead.StructuralWt) + (1 * biomass.Dead.StorageWt) + (1 * biomass.Dead.MetabolicWt));
+                    dmd += ((biomass.DigestibilityDead * biomass.Dead.StructuralWt) + (1 * biomass.Dead.StorageWt) + (1 * biomass.Dead.MetabolicWt));
                     totalDMD += dmd;
                     totalN += (greenPropn * biomass.Live.N) + (biomass.Dead.Wt > 0 ? biomass.Dead.N : 0);   // g/m^2
                 }

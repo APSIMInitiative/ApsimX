@@ -283,7 +283,6 @@
                     MetabolicN = 0.0,
                     StorageWt = 0.0,
                     StorageN = 0.0,
-                    DMDOfStructural = 0.4  // ???????
                 };
             }
         }
@@ -318,6 +317,40 @@
                 SurfOM[i].nh4 -= MathUtilities.Divide(nh4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
                 SurfOM[i].po4 -= MathUtilities.Divide(po4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
             }
+        }
+
+        /// <summary>
+        /// Remove an amount of biomass.
+        /// </summary>
+        /// <param name="amount">Amount of biomass to remove.</param>
+        public Biomass RemoveBiomass(double amount)
+        {
+            var returnedBiomass = new Biomass();
+            for (int i = 0; i < SurfOM.Count; i++)
+            {
+                double totalMassRemoved = 0;
+                foreach (var standing in SurfOM[i].Standing)
+                {
+                    double amountToRemove = Math.Min(Math.Min(amount, standing.amount), amount-totalMassRemoved);
+                    standing.amount -= amountToRemove;
+                    totalMassRemoved += amountToRemove;
+                }
+                foreach (var lying in SurfOM[i].Lying)
+                {
+                    double amountToRemove = Math.Min(Math.Min(amount, lying.amount), amount-totalMassRemoved);
+                    lying.amount -= amountToRemove;
+                    totalMassRemoved += amountToRemove;
+                }
+                returnedBiomass.StructuralWt = totalMassRemoved;
+                returnedBiomass.StructuralN = MathUtilities.Divide(no3ppm[i], 1000000.0, 0.0) * totalMassRemoved +
+                                              MathUtilities.Divide(nh4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
+
+                SurfOM[i].no3 -= MathUtilities.Divide(no3ppm[i], 1000000.0, 0.0) * totalMassRemoved;
+                SurfOM[i].nh4 -= MathUtilities.Divide(nh4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
+                SurfOM[i].po4 -= MathUtilities.Divide(po4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
+            }
+
+            return returnedBiomass;
         }
 
         /// <summary>Called when [reset].</summary>

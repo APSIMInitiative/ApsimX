@@ -92,7 +92,7 @@
                 Paddocks.Add(newPadd);
 
                 // find all the child crop, pasture components that have removable biomass
-                var forages = zone.FindChild<Forages>();
+                var forages = stockModel.FindChild<Forages>();
                 if (forages != null)
                 {
                     foreach (var forage in forages.GetForages(zone))

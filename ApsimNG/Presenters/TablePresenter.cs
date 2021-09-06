@@ -55,6 +55,8 @@
             view.Grid1.ReadOnly = readOnly;
             view.Grid2.ReadOnly = readOnly;
 
+            view.ShowGrid2(view.Grid2.DataSource != null);
+
             parentPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
             gridPresenter1 = new GridPresenter();
@@ -116,7 +118,8 @@
             {
                 tables = tableModel.Tables;
                 view.Grid1.DataSource = tables[0];
-                view.Grid2.DataSource = tables[1];
+                if (tables.Count == 2)
+                    view.Grid2.DataSource = tables[1];
             }
         }
 

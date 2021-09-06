@@ -1392,7 +1392,7 @@
         private double myDefoliatedFraction;
 
         /// <summary>Digestibility of defoliated material (0-1).</summary>
-        private double defoliatedDigestibility;
+        public double DefoliatedDigestibility { get; private set; }
 
         #endregion  --------------------------------------------------------------------------------------------------------
 
@@ -2379,7 +2379,6 @@
                 Biomass mass = new Biomass();
                 mass.StructuralWt = (Leaf.StandingHerbageWt + Stem.StandingHerbageWt + Stolon.StandingHerbageWt) / 10.0; // to g/m2
                 mass.StructuralN = (Leaf.StandingHerbageN + Stem.StandingHerbageN + Stolon.StandingHerbageN) / 10.0;    // to g/m2
-                mass.DMDOfStructural = Leaf.DigestibilityLive;
                 return mass;
             }
         }
@@ -2393,7 +2392,6 @@
                 Biomass mass = new Biomass();
                 mass.StructuralWt = Harvestable.Wt / 10.0; // to g/m2
                 mass.StructuralN = Harvestable.N / 10.0;    // to g/m2
-                mass.DMDOfStructural = Harvestable.Digestibility;
                 return mass;
             }
         }
@@ -2521,7 +2519,7 @@
         [Units("0-1")]
         public double HarvestedDigestibility
         {
-            get { return defoliatedDigestibility; }
+            get { return DefoliatedDigestibility; }
         }
 
         /// <summary>Gets the average metabolisable energy concentration of harvested material (MJ/kgDM).</summary>
@@ -2529,7 +2527,7 @@
         [Units("MJ/kg")]
         public double HarvestedME
         {
-            get { return PotentialMEOfHerbage * defoliatedDigestibility; }
+            get { return PotentialMEOfHerbage * DefoliatedDigestibility; }
         }
 
 
@@ -2803,7 +2801,7 @@
         {
             // reset variables for whole plant
             defoliatedFraction = 0.0;
-            defoliatedDigestibility = 0.0;
+            DefoliatedDigestibility = 0.0;
 
             grossPhotosynthesis = 0.0;
             dGrowthPot = 0.0;
@@ -3992,7 +3990,7 @@
                 double greenDigestibility = (Leaf.DigestibilityLive * fracRemoving[0]) + (Stem.DigestibilityLive * fracRemoving[1])
                                             + (Stolon.DigestibilityLive * fracRemoving[2]);
                 double deadDigestibility = (Leaf.DigestibilityDead * fracRemoving[3]) + (Stem.DigestibilityDead * fracRemoving[4]) + (Stolon.DigestibilityDead * fracRemoving[5]);
-                defoliatedDigestibility = greenDigestibility + deadDigestibility;
+                DefoliatedDigestibility = greenDigestibility + deadDigestibility;
 
                 // Remove biomass from the organs.
                 Leaf.RemoveBiomass(
@@ -4031,7 +4029,6 @@
             {
                 StructuralWt = defoliatedDM,
                 StructuralN = defoliatedN,
-                DMDOfStructural = defoliatedDigestibility
             };
         }
 

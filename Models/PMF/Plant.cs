@@ -500,8 +500,6 @@
                     var amountDeadToRemove = organ.Dead.Wt * 10 / preRemovalBiomass * amountToRemove;
                     var fractionLiveToRemove = MathUtilities.Divide(amountLiveToRemove, (organ.Live.Wt * 10), 0);
                     var fractionDeadToRemove = MathUtilities.Divide(amountDeadToRemove, (organ.Dead.Wt * 10), 0);
-                    var defoliatedDigestibility = organ.Live.DMDOfStructural * fractionLiveToRemove
-                                                + organ.Dead.DMDOfStructural * fractionDeadToRemove;
                     var defoliatedDM = amountLiveToRemove + amountDeadToRemove;
                     var defoliatedN = organ.Live.N * 10 * fractionLiveToRemove + organ.Dead.N * 10 * fractionDeadToRemove;
                     if (defoliatedDM > 0)
@@ -517,7 +515,6 @@
                         {
                             StructuralWt = defoliatedDM,
                             StructuralN = defoliatedN,
-                            DMDOfStructural = defoliatedDigestibility
                         };
                     }
                 }
