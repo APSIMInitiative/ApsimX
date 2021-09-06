@@ -214,6 +214,7 @@ namespace Models.PMF.Organs
 
                     // Move leaf area into dead area.
                     leaf.AreaDead += leaf.Area;
+                    LaiDead += leaf.Area;
                     Lai -= leaf.Area;
                     leaf.Area = 0;
                 }
@@ -236,7 +237,10 @@ namespace Models.PMF.Organs
                 // be senesced before they are detached. If this assumption
                 // doesn't hold up, mass balance will be violated.
                 if (leaf.IsSenesced)
+                {
+                    LaiDead -= leaf.AreaDead;
                     dead.Subtract(leaf.Senesced);
+                }
             }
             leaves.RemoveAll(l => predicate(l));
             return detached;
