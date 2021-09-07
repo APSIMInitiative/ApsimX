@@ -1,17 +1,9 @@
 using NUnit.Framework;
 using APSIM.Interop.Documentation;
 using APSIM.Interop.Markdown.Renderers;
-using APSIM.Interop.Markdown.Renderers.Blocks;
-using Markdig.Syntax;
-using Markdig.Syntax.Inlines;
-using APSIM.Interop.Documentation.Extensions;
 using APSIM.Interop.Markdown;
 using MigraDocCore.DocumentObjectModel;
-using APSIM.Interop.Markdown.Renderers.Inlines;
-using Moq;
-using Markdig.Parsers.Inlines;
 using System;
-using System.IO;
 
 namespace APSIM.Tests.Interop
 {
@@ -164,6 +156,36 @@ namespace APSIM.Tests.Interop
         }
 
         /// <summary>
+        /// Ensure that heading styles work correctly, and that
+        /// font size decreases as heading level increases (up to
+        /// h6, anyway).
+        /// </summary>
+        [Test]
+        public void TestHeadingStyle()
+        {
+            // Add 6 headings - one of each level.
+            Style h1 = CreateHeading(1);
+            Style h2 = CreateHeading(2);
+            Style h3 = CreateHeading(3);
+            Style h4 = CreateHeading(4);
+            Style h5 = CreateHeading(5);
+            Style h6 = CreateHeading(6);
+
+            Assert.Greater(h1.Font.Size.Point, h2.Font.Size.Point);
+            Assert.Greater(h2.Font.Size.Point, h3.Font.Size.Point);
+            Assert.Greater(h3.Font.Size.Point, h4.Font.Size.Point);
+            Assert.Greater(h4.Font.Size.Point, h5.Font.Size.Point);
+            Assert.Greater(h5.Font.Size.Point, h6.Font.Size.Point);
+
+            Assert.True(h1.Font.Bold);
+            Assert.True(h2.Font.Bold);
+            Assert.True(h3.Font.Bold);
+            Assert.True(h4.Font.Bold);
+            Assert.True(h5.Font.Bold);
+            Assert.True(h6.Font.Bold);
+        }
+
+        /// <summary>
         /// Ensure that style applied via <see cref="PdfBuilder.PushStyle(TextStyle)"/>
         /// is used when inserting text.
         /// </summary>
@@ -225,6 +247,25 @@ namespace APSIM.Tests.Interop
         public void EnsurePopStyleCanThrow()
         {
             Assert.Throws<InvalidOperationException>(() => builder.PopStyle());
+        }
+
+        /// <summary>
+        /// Create a heading with the given heading level.
+        /// </summary>
+        /// <param name="headingLevel">Heading level.</param>
+        private Style CreateHeading(uint headingLevel)
+        {
+            builder.StartNewParagraph();
+            builder.SetHeadingLevel(headingLevel);
+            builder.AppendText($"h{headingLevel}", TextStyle.Normal);
+            builder.ClearHeadingLevel();
+            builder.StartNewParagraph();
+
+            // We could have some assertions here, but we have explicit tests
+            // for these casts elsewhere.
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[doc.LastSection.Elements.Count - 1];
+            FormattedText formatted = (FormattedText)paragraph.Elements[0];
+            return doc.Styles[formatted.Style];
         }
 
         /// <summary>
