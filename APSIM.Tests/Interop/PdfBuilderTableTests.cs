@@ -1,18 +1,10 @@
 using NUnit.Framework;
 using APSIM.Interop.Documentation;
 using APSIM.Interop.Markdown.Renderers;
-using APSIM.Interop.Markdown.Renderers.Blocks;
-using Markdig.Syntax;
-using Markdig.Syntax.Inlines;
 using APSIM.Interop.Documentation.Extensions;
 using APSIM.Interop.Markdown;
 using MigraDocCore.DocumentObjectModel;
-using APSIM.Interop.Markdown.Renderers.Inlines;
-using Moq;
-using Markdig.Parsers.Inlines;
 using System;
-using System.Drawing;
-using System.IO;
 using MigraDocCore.DocumentObjectModel.Tables;
 using System.Data;
 
@@ -113,10 +105,23 @@ namespace APSIM.Tests.Interop
         /// <see cref="PdfBuilder.FinishTable()"/>.
         /// </summary>
         [Test]
-        public void TestFinishTable()
+        public void TestTableSizePartitioning()
         {
+            string longString = new string('x', 50);
+
             // Good luck.
-            throw new NotImplementedException();
+            builder.StartTable(1);
+
+            builder.StartTableRow(false);
+            builder.StartTableCell();
+            builder.AppendText(longString, TextStyle.Normal);
+            builder.FinishTableCell();
+
+            builder.FinishTable();
+
+            double width = ((Table)doc.LastSection.Elements[0]).Columns[0].Width.Point;
+            // fixme
+            Assert.GreaterOrEqual(width, 250);
         }
 
         /// <summary>
