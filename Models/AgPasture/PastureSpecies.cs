@@ -197,7 +197,10 @@
         public string PlantType { get; set; }
 
         /// <summary>Flag indicating whether the biomass is from a c4 plant or not</summary>
-        public bool IsC4 { get { return PhotosyntheticPathway == PastureSpecies.PhotosynthesisPathwayType.C4; } }
+        public bool IsC4
+        {
+            get { return PhotosyntheticPathway == PastureSpecies.PhotosynthesisPathwayType.C4; }
+        }
 
         /// <summary>List of cultivar names (not used by AgPasture).</summary>
         public string[] CultivarNames
@@ -947,7 +950,7 @@
         private bool isAlive = false;
 
         /// <summary>Number of layers in the soil.</summary>
-        private int nLayers = 0;
+        private int nLayers;
 
         ////- Defining the plant type >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2438,7 +2441,17 @@
             // Calculate the values for LAI
             EvaluateLAI();
 
-            //->>
+            // re-initialise some variables (these are used in properties so need here again)
+            glfRadn = 1.0;
+            glfCO2 = 1.0;
+            glfNc = 1.0;
+            glfTemp = 1.0;
+            glfHeat = 1.0;
+            glfCold = 1.0;
+            glfWaterSupply = 1.0;
+            glfWaterLogging = 1.0;
+            glfNSupply = 1.0;
+            tempEffectOnRespiration = 0.0;
         }
 
         /// <summary>Set the plant state at germination.</summary>

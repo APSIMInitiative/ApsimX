@@ -53,7 +53,7 @@
         private double nRemobilised = 0.0;
 
         /// <summary>Pasture species this tissue belongs to.</summary>
-        [Link]
+        [Link(Type = LinkType.Ancestor)]
         private PastureSpecies species = null;
 
         /// <summary>Soil physical parameterisation.</summary>
