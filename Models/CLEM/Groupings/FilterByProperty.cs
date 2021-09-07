@@ -51,6 +51,8 @@ namespace Models.CLEM.Groupings
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
             Initialise();
+            if (!CheckValidOperator(propertyInfo, out string errorMessage))
+                throw new ApsimXException(this, errorMessage);
         }
 
         /// <summary>
@@ -69,22 +71,45 @@ namespace Models.CLEM.Groupings
             {
                 Func<T, bool> simple = t => {
                     var simpleFilterParam = Expression.Parameter(typeof(T));
+                    var thisOperator = Operator;
 
                     // Try convert the Value into the same data type as the property
-                    var simpleVal = Expression.Constant(propertyInfo.PropertyType.IsEnum ? Enum.Parse(propertyInfo.PropertyType, Value.ToString(), true) : Convert.ChangeType(Value ?? 0, propertyInfo.PropertyType));
-                    BinaryExpression simpleBinary;
+                    var simpleCompareVal = Expression.Constant(propertyInfo.PropertyType.IsEnum? Convert.ChangeType(Value.ToString(), typeof(string)) :Convert.ChangeType(Value ?? 0, propertyInfo.PropertyType));
+                    //var simpleCompareVal = Expression.Constant(Convert.ChangeType(Value ?? 0, propertyInfo.PropertyType.IsEnum? typeof(string): propertyInfo.PropertyType));
                     bool success = GetSimpleRuminantProperty(t, out ConstantExpression propertyValue);
+
                     if (!success)
                         return false;
 
-                    if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
+                    if (propertyInfo.PropertyType.IsEnum)
+                    {
+                        propertyValue = Expression.Constant(true, typeof(bool));
+                        if(thisOperator != ExpressionType.IsFalse)
+                            thisOperator = ExpressionType.IsTrue;
+                        // convert to boolean match for enum
+                        try
+                        {
+                            var enumOK = Enum.Parse(propertyInfo.PropertyType, Value.ToString(), true);
+                            simpleCompareVal = Expression.Constant(true, typeof(bool));
+                        }
+                        catch
+                        {
+                            simpleCompareVal = Expression.Constant(false, typeof(bool));
+                        }
+                    }
+
+
+
+
+                    BinaryExpression simpleBinary;
+                    if (thisOperator == ExpressionType.IsTrue | thisOperator == ExpressionType.IsFalse)
                     {
                         // Allow for IsTrue and IsFalse operator
-                        simpleVal = Expression.Constant((Operator == ExpressionType.IsTrue));
-                        simpleBinary = Expression.MakeBinary(ExpressionType.Equal, propertyValue, simpleVal);
+                        simpleCompareVal = Expression.Constant((thisOperator == ExpressionType.IsTrue), typeof(bool));
+                        simpleBinary = Expression.MakeBinary(ExpressionType.Equal, propertyValue, simpleCompareVal);
                     }
                     else
-                        simpleBinary = Expression.MakeBinary(Operator, propertyValue, simpleVal);
+                        simpleBinary = Expression.MakeBinary(thisOperator, propertyValue, simpleCompareVal);
 
                     var simpleLambda = Expression.Lambda<Func<T, bool>>(simpleBinary, simpleFilterParam).Compile();
                     return simpleLambda(t);
@@ -357,6 +382,49 @@ namespace Models.CLEM.Groupings
         }
 
         /// <summary>
+        /// Check if the specified operator is valid for the selected property
+        /// </summary>
+        /// <param name="property">PropertyInfo of the property</param>
+        /// <param name="errorMessage">Error message returned for reporting</param>
+        /// <returns>True if operator is valid</returns>
+        public bool CheckValidOperator(PropertyInfo property, out string errorMessage)
+        {
+            errorMessage = "";
+            switch (property.PropertyType.Name)
+            {
+                case "String":
+                    switch (Operator)
+                    {
+                        case ExpressionType.GreaterThan:
+                        case ExpressionType.GreaterThanOrEqual:
+                        case ExpressionType.LessThan:
+                        case ExpressionType.LessThanOrEqual:
+                            errorMessage = $"Invalid operator of type [{OperatorToSymbol()}] for [{property.PropertyType.Name}] property [{property.Name}] in [{this.NameWithParent}] ";
+                            return false;
+                        default:
+                            break;
+                    };
+                    break;
+                case "int":
+                case "double":
+                case "Single":
+                    switch (Operator)
+                    {
+                        case ExpressionType.IsFalse:
+                        case ExpressionType.IsTrue:
+                            errorMessage = $"Invalid operator of type [{OperatorToSymbol()}] for [{property.PropertyType.Name}] property [{property.Name}] in [{this.NameWithParent}] ";
+                            return false;
+                        default:
+                            break;
+                    };
+                    break;
+                default:
+                    break;
+            }
+            return true;
+        }
+
+        /// <summary>
         /// Convert filter to string
         /// </summary>
         /// <returns></returns>
@@ -376,20 +444,38 @@ namespace Models.CLEM.Groupings
 
         private string filterString(bool htmltags)
         {
+            Initialise();
+
             using (StringWriter filterWriter = new StringWriter())
             {
                 filterWriter.Write($"Filter:");
                 bool truefalse = IsOperatorTrueFalseTest();
-                if (truefalse)
+                if (truefalse | propertyInfo.PropertyType.IsEnum)
                 {
-                    if (Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false")
-                        filterWriter.Write(" not");
-                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                    if(propertyInfo.PropertyType == typeof(bool))
+                    {
+                        if (Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false")
+                            filterWriter.Write(" not");
+                        filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                    }
+                    else
+                    {
+                        filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                        filterWriter.Write((Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false") ? " not" : " is");
+                        filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                    }
                 }
                 else
                 {
                     filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                    if (CheckValidOperator(propertyInfo, out _))
+                        filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                    else
+                    {
+                        string errorlink = (htmltags)? "<span class=\"errorlink\">": "";
+                        string spanclose = (htmltags) ? "</span>": "";
+                        filterWriter.Write($"{errorlink}{OperatorToSymbol()} is invalid for {propertyInfo.PropertyType.Name} properties{spanclose}");
+                    }
                     filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
                 }
                 return filterWriter.ToString();

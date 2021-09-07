@@ -50,7 +50,7 @@ namespace Models.CLEM.Groupings
             if (FilterStyle == AttributeFilterStyle.Exists)
                 return (t as Ruminant).Attributes.Exists(AttributeTag);
             else
-                return (t as Ruminant).Attributes.GetValue(AttributeTag);
+                return (t as Ruminant).Attributes.GetValue(AttributeTag).StoredValue;
         }
 
         /// <summary>
