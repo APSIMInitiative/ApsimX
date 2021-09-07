@@ -65,7 +65,8 @@ namespace APSIM.Cli
             foreach (string file in files)
             {
                 Simulations model = FileFormat.ReadFromFile<Simulations>(file, e => throw e, false);
-                // model.Links.Resolve(model, true, true, true);
+                if (Path.GetExtension(file) == ".json")
+                    model.Links.Resolve(model, true, true, false);
                 string pdfFile = Path.ChangeExtension(file, ".pdf");
                 string directory = Path.GetDirectoryName(file);
                 PdfWriter writer = new PdfWriter(new PdfOptions(directory));
