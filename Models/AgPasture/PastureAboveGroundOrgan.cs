@@ -66,15 +66,15 @@
 
         /// <summary>Total dry matter in this organ (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMTotal { get; private set; } = 0.0;
+        public double DMTotal { get; private set; }
 
         /// <summary>Dry matter in the live (green) tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMLive { get; private set; } = 0.0;
+        public double DMLive { get; private set; }
 
         /// <summary>Dry matter in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMDead { get; private set; } = 0.0;
+        public double DMDead { get; private set; }
 
         /// <summary>Standing herbage weight (kg/ha).</summary>
         [Units("kg/ha")]
@@ -108,51 +108,51 @@
 
         /// <summary>Total harvestable dry matter (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMTotalHarvestable { get; private set; } = 0.0;
+        public double DMTotalHarvestable { get; private set; }
 
         /// <summary>Harvestable dry matter in the live (green) tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMLiveHarvestable { get; private set; } = 0.0;
+        public double DMLiveHarvestable { get; private set; }
 
         /// <summary>Dry matter in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMDeadHarvestable { get; private set; } = 0.0;
+        public double DMDeadHarvestable { get; private set; }
 
         /// <summary>N in the total harvestable dry matter (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NTotalHarvestable { get; private set; } = 0.0;
+        public double NTotalHarvestable { get; private set; }
 
         /// <summary>N in the harvestable dry matter in the live (green) tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NLiveHarvestable { get; private set; } = 0.0;
+        public double NLiveHarvestable { get; private set; }
 
         /// <summary>N in the harvestable dry matter in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NDeadHarvestable { get; private set; } = 0.0;
+        public double NDeadHarvestable { get; private set; }
 
         /// <summary>Total N in this tissue (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NTotal { get; private set; } = 0.0;
+        public double NTotal { get; private set; }
 
         /// <summary>N in the live (green) tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NLive { get; private set; } = 0.0;
+        public double NLive { get; private set; }
 
         /// <summary>N amount in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NDead { get; private set; } = 0.0;
+        public double NDead { get; private set; }
 
         /// <summary>Average N concentration.</summary>
         [Units("kg/kg")]
-        public double NConcTotal { get; private set; } = 0.0;
+        public double NConcTotal { get; private set; }
 
         /// <summary>Average N concentration in the live tissues (kg/kg).</summary>
         [Units("kg/kg")]
-        public double NConcLive { get; private set; } = 0.0;
+        public double NConcLive { get; private set; }
 
         /// <summary>Average N concentration in dead tissues (kg/kg).</summary>
         [Units("kg/kg")]
-        public double NConcDead { get; private set; } = 0.0;
+        public double NConcDead { get; private set; }
 
         /// <summary>Luxury N available for remobilisation (kg/ha).</summary>
         public double NLuxuryRemobilisable => LiveTissue.Sum(tissue => tissue.NRemobilisable);
@@ -192,19 +192,19 @@
 
         /// <summary>Average digestibility of all biomass.</summary>
         [Units("kg/kg")]
-        public double DigestibilityTotal { get; private set; } = 0.0;
+        public double DigestibilityTotal { get; private set; }
 
         /// <summary>Average digestibility of live biomass.</summary>
         [Units("kg/kg")]
-        public double DigestibilityLive { get; private set; } = 0.0;
+        public double DigestibilityLive { get; private set; }
 
         /// <summary>Average digestibility of dead biomass.</summary>
         [Units("kg/kg")]
-        public double DigestibilityDead { get; private set; } = 0.0;
+        public double DigestibilityDead { get; private set; }
 
         /// <summary>Digestibility of standing herbage.</summary>
         [Units("kg/kg")]
-        public double StandingDigestibility { get; private set; } = 0.0;
+        public double StandingDigestibility { get; private set; }
 
         /// <summary>Initialisation</summary>
         /// <param name="minimumLiveWt">Minimum live dry matter (kg/ha)</param>
@@ -245,8 +245,8 @@
             // fractions of total biomass so that we can pass these to the tissue RemoveBiomass methods.
             biomassToRemove.FractionLiveToRemove = MathUtilities.Divide(biomassToRemove.FractionLiveToRemove * DMLiveHarvestable, DMLive, 0);
             biomassToRemove.FractionDeadToRemove = MathUtilities.Divide(biomassToRemove.FractionDeadToRemove * DMDeadHarvestable, DMDead, 0);
-            biomassToRemove.FractionLiveToResidue  = MathUtilities.Divide(biomassToRemove.FractionLiveToResidue * DMLiveHarvestable, DMLive, 0);
-            biomassToRemove.FractionDeadToResidue  = MathUtilities.Divide(biomassToRemove.FractionDeadToResidue * DMDeadHarvestable, DMDead, 0);
+            biomassToRemove.FractionLiveToResidue = MathUtilities.Divide(biomassToRemove.FractionLiveToResidue * DMLiveHarvestable, DMLive, 0);
+            biomassToRemove.FractionDeadToResidue = MathUtilities.Divide(biomassToRemove.FractionDeadToResidue * DMDeadHarvestable, DMDead, 0);
 
             // Live removal
             for (int t = 0; t < Tissue.Length - 1; t++)
@@ -267,6 +267,15 @@
             for (int t = 0; t < Tissue.Length; t++)
             {
                 Tissue[t].ClearDailyTransferredAmounts();
+            }
+        }
+
+        /// <summary>Preparation before the main daily processes.</summary>
+        public void OnDoDailyInitialisation()
+        {
+            foreach (var tissue in Tissue)
+            {
+                tissue.OnDoDailyInitialisation();
             }
         }
 

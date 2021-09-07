@@ -50,19 +50,19 @@
         private double[] nTransferredInByLayer;
 
         /// <summary>Dry matter amount transferred into this tissue (kg/ha).</summary>
-        private double dmTransferredIn = 0.0;
+        private double dmTransferredIn;
 
         /// <summary>Dry matter amount transferred out of this tissue (kg/ha).</summary>
-        private double dmTransferredOut = 0.0;
+        private double dmTransferredOut;
 
         /// <summary>Nitrogen transferred into this tissue (kg/ha).</summary>
-        private double nTransferredIn = 0.0;
+        private double nTransferredIn;
 
         /// <summary>Nitrogen transferred out of this tissue (kg/ha).</summary>
-        private double nTransferredOut = 0.0;
+        private double nTransferredOut;
 
         /// <summary>Nitrogen remobilised into new growth (kg/ha).</summary>
-        private double nRemobilised = 0.0;
+        private double nRemobilised;
 
         /// <summary>Initialise this root instance.</summary>
         /// <param name="initialDMByLayer">Initial dry matter by layer.</param>
@@ -86,14 +86,14 @@
         }
 
         /// <summary>Amount of N available for remobilisation (kg/ha).</summary>
-        public double NRemobilisable { get; private set; } = 0.0;
+        public double NRemobilisable { get; private set; }
 
         /// <summary>Dry matter biomass.</summary>
-        public IAGPBiomass DM {  get { return biomass; } }
+        public IAGPBiomass DM { get { return biomass; } }
 
         /// <summary>Dry matter fraction for each layer (0-1).</summary>
         public double[] FractionWt { get { return MathUtilities.Divide_Value(dmByLayer, DM.Wt); } }
-        
+
         /// <summary>Set the biomass moving into the tissue.</summary>
         /// <param name="dm">Dry matter (kg/ha).</param>
         /// <param name="n">The nitrogen (kg/ha).</param>

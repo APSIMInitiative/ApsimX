@@ -51,22 +51,22 @@
         // These get applied once each day during Update()
 
         /// <summary>DM transferred into this tissue (kg/ha).</summary>
-        public double DMTransferedIn { get; set; } = 0.0;
+        public double DMTransferedIn { get; set; }
 
         /// <summary>DM transferred out of this tissue (kg/ha).</summary>
-        public double DMTransferedOut { get; set; } = 0.0;
+        public double DMTransferedOut { get; set; }
 
         /// <summary>N transferred into this tissue (kg/ha).</summary>
-        public double NTransferedIn { get; set; } = 0.0;
+        public double NTransferedIn { get; set; }
 
         /// <summary>N transferred out of this tissue (kg/ha).</summary>
-        public double NTransferedOut { get; set; } = 0.0;
+        public double NTransferedOut { get; set; }
 
         /// <summary>N available for remobilisation (kg/ha).</summary>
-        public double NRemobilisable { get; set; } = 0.0;
+        public double NRemobilisable { get; set; }
 
         /// <summary>N remobilised into new growth (kg/ha).</summary>
-        public double NRemobilised { get; set; } = 0.0;
+        public double NRemobilised { get; set; }
 
         //----------------------- States -----------------------
 
@@ -74,16 +74,30 @@
         public IAGPBiomass DM { get { return dryMatter; } }
 
         /// <summary>DM removed from this tissue (kg/ha).</summary>
-        public double DMRemoved { get; private set; } = 0.0;
+        public double DMRemoved { get; private set; }
 
         /// <summary>N removed from this tissue (kg/ha).</summary>
-        public double NRemoved { get; private set; } = 0.0;
+        public double NRemoved { get; private set; }
 
         /// <summary>Digestibility of this tissue (kg/kg).</summary>
         /// <remarks>Digestibility of sugars is assumed to be 100%.</remarks>
-        public double Digestibility { get; private set; } = 0.0;
+        public double Digestibility { get; private set; }
 
         //----------------------- Public methods -----------------------
+
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs args)
+        {
+            ClearDailyTransferredAmounts();
+        }
+
+        /// <summary>Preparation before the main daily processes.</summary>
+        public void OnDoDailyInitialisation()
+        {
+            DMRemoved = 0;
+            NRemoved = 0;
+            ClearDailyTransferredAmounts();
+        }
 
         /// <summary>Sets the biomass of this tissue.</summary>
         /// <param name="dmAmount">The DM amount to set to (kg/ha).</param>

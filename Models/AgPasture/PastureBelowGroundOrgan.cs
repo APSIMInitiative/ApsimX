@@ -15,11 +15,11 @@
     public class PastureBelowGroundOrgan : Model
     {
         /// <summary>Nutrient model.</summary>
-        [Link(Type=LinkType.Ancestor)]
+        [Link(Type = LinkType.Ancestor)]
         private PastureSpecies species = null;
 
         /// <summary>Collection of tissues for this organ.</summary>
-        [Link(Type=LinkType.Child)]
+        [Link(Type = LinkType.Child)]
         private RootTissue[] tissue = null;
 
         /// <summary>Soil object where these roots are growing.</summary>
@@ -320,7 +320,7 @@
         }
 
         /// <summary>N remobilised from live tissue.</summary>
-        public double NLiveRemobilisable {  get { return tissue[0].NRemobilisable; } }
+        public double NLiveRemobilisable { get { return tissue[0].NRemobilisable; } }
 
         /// <summary>Amount of plant available water in the soil (mm).</summary>
         internal double[] mySoilWaterAvailable { get; private set; }

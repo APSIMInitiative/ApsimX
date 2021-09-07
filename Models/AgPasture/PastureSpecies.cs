@@ -228,7 +228,7 @@
                 mySummary.WriteWarning(this, " Cannot sow the pasture species \"" + Name + "\", as it is already growing");
             else
             {
-                ClearDailyTransferredAmounts();
+                RefreshVariables();
                 isAlive = true;
                 phenologicStage = 0;
                 mySummary.WriteMessage(this, " The pasture species \"" + Name + "\" has been sown today");
@@ -261,8 +261,7 @@
             }
 
             // zero all transfer variables
-            ClearDailyTransferredAmounts();
-
+            RefreshVariables();
             // reset state variables
             Leaf.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
             Stem.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
@@ -270,6 +269,7 @@
             foreach (PastureBelowGroundOrgan root in roots)
             {
                 root.SetBiomassState(0.0, 0.0, 0.0);
+                root.ClearDailyTransferredAmounts();
             }
 
             greenLAI = 0.0;
@@ -803,7 +803,7 @@
 
         /// <summary>Minimum fraction of N demand supplied by biologic N fixation (0-1).</summary>
         [Units("0-1")]
-        public double MinimumNFixation { get; set; }  = 0.0;
+        public double MinimumNFixation { get; set; } = 0.0;
 
         /// <summary>Maximum fraction of N demand supplied by biologic N fixation (0-1).</summary>
         [Units("0-1")]
@@ -967,78 +967,78 @@
         private int phenologicStage = -1;
 
         /// <summary>Number of days since emergence (days).</summary>
-        private double daysSinceEmergence = 0.0;
+        private double daysSinceEmergence;
 
         /// <summary>Cumulative degrees day during vegetative phase (oCd).</summary>
-        private double cumulativeDDVegetative = 0.0;
+        private double cumulativeDDVegetative;
 
         /// <summary>Factor describing progress through phenological phases (0-1).</summary>
-        private double phenoFactor = 0.0;
+        private double phenoFactor;
 
         /// <summary>Cumulative degrees-day during germination phase (oCd).</summary>
-        private double cumulativeDDGermination = 0.0;
+        private double cumulativeDDGermination;
 
         ////- Photosynthesis, growth, and turnover >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Base gross photosynthesis rate, before damages (kg C/ha/day).</summary>
-        private double basePhotosynthesis = 0.0;
+        private double basePhotosynthesis;
 
         /// <summary>Gross photosynthesis rate, after considering damages (kg C/ha/day).</summary>
-        private double grossPhotosynthesis = 0.0;
+        private double grossPhotosynthesis;
 
         /// <summary>Growth respiration rate (kg C/ha/day).</summary>
-        private double respirationGrowth = 0.0;
+        private double respirationGrowth;
 
         /// <summary>Maintenance respiration rate (kg C/ha/day).</summary>
-        private double respirationMaintenance = 0.0;
+        private double respirationMaintenance;
 
         /// <summary>Amount of C remobilisable from senesced tissue (kg C/ha/day).</summary>
-        private double remobilisableC = 0.0;
+        private double remobilisableC;
 
         /// <summary>Amount of C remobilised from senesced tissue (kg C/ha/day).</summary>
-        private double remobilisedC = 0.0;
+        private double remobilisedC;
 
         /// <summary>Daily net growth potential (kg DM/ha).</summary>
-        private double dGrowthPot = 0.0;
+        private double dGrowthPot;
 
         /// <summary>Daily potential growth after water stress (kg DM/ha).</summary>
-        private double dGrowthAfterWaterLimitations = 0.0;
+        private double dGrowthAfterWaterLimitations;
 
         /// <summary>Daily growth after nutrient stress, actual growth (kg DM/ha).</summary>
-        private double dGrowthAfterNutrientLimitations = 0.0;
+        private double dGrowthAfterNutrientLimitations;
 
         /// <summary>Effective plant growth, actual growth minus senescence (kg DM/ha).</summary>
-        private double dGrowthNet = 0.0;
+        private double dGrowthNet;
 
         /// <summary>Actual growth of shoot (kg/ha).</summary>
-        private double dGrowthShootDM = 0.0;
+        private double dGrowthShootDM;
 
         /// <summary>Actual growth of roots (kg/ha).</summary>
-        private double dGrowthRootDM = 0.0;
+        private double dGrowthRootDM;
 
         /// <summary>Actual N allocation into shoot (kg/ha).</summary>
-        private double dGrowthShootN = 0.0;
+        private double dGrowthShootN;
 
         /// <summary>Actual N allocation into roots (kg/ha).</summary>
-        private double dGrowthRootN = 0.0;
+        private double dGrowthRootN;
 
         /// <summary>DM amount detached from shoot, added to surface OM (kg/ha).</summary>
-        private double detachedShootDM = 0.0;
+        private double detachedShootDM;
 
         /// <summary>N amount in detached tissues from shoot (kg/ha).</summary>
-        private double detachedShootN = 0.0;
+        private double detachedShootN;
 
         /// <summary>DM amount detached from roots, added to soil FOM (kg/ha).</summary>
-        private double detachedRootDM = 0.0;
+        private double detachedRootDM;
 
         /// <summary>N amount in detached tissues from roots (kg/ha).</summary>
-        private double detachedRootN = 0.0;
+        private double detachedRootN;
 
         /// <summary>Fraction of new growth allocated to shoot (0-1).</summary>
-        private double fractionToShoot = 0.5;
+        private double fractionToShoot;
 
         /// <summary>Fraction of new shoot growth allocated to leaves (0-1).</summary>
-        private double fractionToLeaf = 1.0;
+        private double fractionToLeaf;
 
         /// <summary>Flag whether the factor adjusting Shoot:Root ratio during reproductive season is being used.</summary>
         private bool usingReproSeasonFactor = true;
@@ -1047,73 +1047,73 @@
         private double[] reproSeasonInterval;
 
         /// <summary>Day of the year for the start of the reproductive season.</summary>
-        private double doyIniReproSeason = 0.0;
+        private double doyIniReproSeason;
 
         /// <summary>Relative increase in the shoot-root ratio during reproductive season (0-1).</summary>
-        private double allocationIncreaseRepro = 0.0;
+        private double allocationIncreaseRepro;
 
         /// <summary>Daily DM turnover rate for live shoot tissues (0-1).</summary>
-        private double gama = 0.0;
+        private double gama;
 
         /// <summary>Daily DM turnover rate for dead shoot tissues (0-1).</summary>
-        private double gamaD = 0.0;
+        private double gamaD;
 
         /// <summary>Daily DM turnover rate for roots tissue (0-1).</summary>
-        private double gamaR = 0.0;
+        private double gamaR;
 
         /// <summary>Daily DM turnover rate for stolon tissue (0-1).</summary>
-        private double gamaS = 0.0;
+        private double gamaS;
 
         /// <summary>Tissue turnover factor due to variations in temperature (0-1).</summary>
-        private double ttfTemperature = 0.0;
+        private double ttfTemperature;
 
         /// <summary>Tissue turnover factor for shoot due to variations in moisture (0-1).</summary>
-        private double ttfMoistureShoot = 0.0;
+        private double ttfMoistureShoot;
 
         /// <summary>Tissue turnover factor for roots due to variations in moisture (0-1).</summary>
-        private double ttfMoistureRoot = 0.0;
+        private double ttfMoistureRoot;
 
         /// <summary>Tissue turnover adjusting factor for number of leaves (0-1).</summary>
-        private double ttfLeafNumber = 0.0;
+        private double ttfLeafNumber;
 
         /// <summary>Effect of defoliation on stolon turnover (0-1).</summary>
-        private double cumDefoliationFactor = 0.0;
+        private double cumDefoliationFactor;
 
         ////- Plant height, LAI and cover >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>LAI of green plant tissues (m^2/m^2).</summary>
-        private double greenLAI = 0.0;
+        private double greenLAI;
 
         /// <summary>LAI of dead plant tissues (m^2/m^2).</summary>
-        private double deadLAI = 0.0;
+        private double deadLAI;
 
         /// <summary>Effective cover for computing photosynthesis (0-1).</summary>
-        private double effectiveGreenCover = 0.0;
+        private double effectiveGreenCover;
 
         ////- Amounts and fluxes of N in the plant >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Amount of N demanded for new growth, with luxury uptake (kg/ha).</summary>
-        private double demandLuxuryN = 0.0;
+        private double demandLuxuryN;
 
         /// <summary>Amount of N demanded for new growth, at optimum N content (kg/ha).</summary>
-        private double demandOptimumN = 0.0;
+        private double demandOptimumN;
 
         /// <summary>Amount of N fixation from atmosphere, for legumes (kg/ha).</summary>
-        private double fixedN = 0.0;
+        private double fixedN;
 
         /// <summary>Amount of senesced N actually remobilised (kg/ha).</summary>
-        private double senescedNRemobilised = 0.0;
+        private double senescedNRemobilised;
 
         /// <summary>Amount of luxury N actually remobilised (kg/ha).</summary>
-        private double luxuryNRemobilised = 0.0;
+        private double luxuryNRemobilised;
 
         /// <summary>Amount of N used up in new growth (kg/ha).</summary>
-        private double dNewGrowthN = 0.0;
+        private double dNewGrowthN;
 
         ////- N uptake process >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Amount of N demanded from the soil (kg/ha).</summary>
-        private double mySoilNDemand = 0.0;
+        private double mySoilNDemand;
 
         /// <summary>Amount of NH4-N in the soil available to the plant (kg/ha).</summary>
         private double[] mySoilNH4Available
@@ -1150,7 +1150,7 @@
         ////- Water uptake process >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Amount of water demanded for new growth (mm).</summary>
-        private double myWaterDemand = 0.0;
+        private double myWaterDemand;
 
         /// <summary>Amount of plant available water in the soil (mm).</summary>
         private double[] mySoilWaterAvailable;
@@ -1214,13 +1214,13 @@
         ////- Harvest and digestibility >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Fraction of standing DM that was harvested (0-1).</summary>
-        private double defoliatedFraction = 0.0;
+        private double defoliatedFraction;
 
         /// <summary>Fraction of standing DM harvested (0-1), used on tissue turnover.</summary>
-        private double myDefoliatedFraction = 0.0;
+        private double myDefoliatedFraction;
 
         /// <summary>Digestibility of defoliated material (0-1).</summary>
-        private double defoliatedDigestibility = 0.0;
+        private double defoliatedDigestibility;
 
         #endregion  --------------------------------------------------------------------------------------------------------
 
@@ -2337,7 +2337,7 @@
 
                 var newRootOrgan = Apsim.Clone(roots[0]) as PastureBelowGroundOrgan;
                 // add the zone to the list
-                newRootOrgan.Initialise(zone, 
+                newRootOrgan.Initialise(zone,
                                         rootZone.RootDM, rootZone.RootDepth,
                                         MinimumGreenWt * MinimumGreenRootProp);
                 roots.Add(newRootOrgan);
@@ -2441,26 +2441,24 @@
             // Calculate the values for LAI
             EvaluateLAI();
 
-            // re-initialise some variables (these are used in properties so need here again)
+            // re-initialise some variables (needed here to make sure all vars are zeroed!!??)
             glfRadn = 1.0;
             glfCO2 = 1.0;
             glfNc = 1.0;
             glfTemp = 1.0;
+            usingHeatStressFactor = true;
             glfHeat = 1.0;
+            highTempStress = 1.0;
+            cumulativeDDHeat = 0.0;
+            usingColdStressFactor = true;
             glfCold = 1.0;
+            lowTempStress = 1.0;
+            cumulativeDDCold = 0.0;
             glfWaterSupply = 1.0;
+            cumWaterLogging = 0.0;
             glfWaterLogging = 1.0;
             glfNSupply = 1.0;
             tempEffectOnRespiration = 0.0;
-            usingHeatStressFactor = true;
-            usingColdStressFactor = true;
-
-            // this is making no sense...
-            highTempStress = 1.0;
-            lowTempStress = 1.0;
-            cumulativeDDHeat = 0.0;
-            cumulativeDDCold = 0.0;
-            cumWaterLogging = 0.0;
         }
 
         /// <summary>Set the plant state at germination.</summary>
@@ -2546,11 +2544,15 @@
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            ClearDailyTransferredAmounts();
+            // 1. Zero out several variables
+            RefreshVariables();
+            Leaf.OnDoDailyInitialisation();
+            Stem.OnDoDailyInitialisation();
+            Stolon.OnDoDailyInitialisation();
         }
 
         /// <summary>Reset the transfer amounts in the plant and all organs.</summary>
-        internal void ClearDailyTransferredAmounts()
+        internal void RefreshVariables()
         {
             // reset variables for whole plant
             defoliatedFraction = 0.0;
@@ -3593,7 +3595,14 @@
         /// <summary>Resets this plant to its initial state.</summary>
         public void Reset()
         {
-            ClearDailyTransferredAmounts();
+            Leaf.ClearDailyTransferredAmounts();
+            Stem.ClearDailyTransferredAmounts();
+            Stolon.ClearDailyTransferredAmounts();
+            foreach (PastureBelowGroundOrgan root in roots)
+            {
+                root.ClearDailyTransferredAmounts();
+            }
+
             SetInitialState();
         }
 
@@ -3710,7 +3719,7 @@
 
                 // Remove biomass from the organs.
                 Leaf.RemoveBiomass(
-                    new OrganBiomassRemovalType() 
+                    new OrganBiomassRemovalType()
                     {
                         FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[0], Leaf.DMLiveHarvestable, 0.0)),
                         FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[3], Leaf.DMDeadHarvestable, 0.0))
