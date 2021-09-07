@@ -2456,11 +2456,11 @@
             usingColdStressFactor = true;
 
             // this is making no sense...
-            /*highTempStress = 1.0;
+            highTempStress = 1.0;
             lowTempStress = 1.0;
             cumulativeDDHeat = 0.0;
             cumulativeDDCold = 0.0;
-            cumWaterLogging = 0.0;*/
+            cumWaterLogging = 0.0;
         }
 
         /// <summary>Set the plant state at germination.</summary>
