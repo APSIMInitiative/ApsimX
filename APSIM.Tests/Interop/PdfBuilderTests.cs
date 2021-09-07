@@ -13,7 +13,18 @@ using Markdig.Parsers.Inlines;
 using System;
 using System.Drawing;
 using System.IO;
-using APSIM.Services.Documentation;
+using ITag = APSIM.Services.Documentation.ITag;
+using Color = System.Drawing.Color;
+using SectionTag = APSIM.Services.Documentation.Section;
+using ParagraphTag = APSIM.Services.Documentation.Paragraph;
+using ImageTag = APSIM.Services.Documentation.Image;
+using TableTag = APSIM.Services.Documentation.Table;
+using GraphTag = APSIM.Services.Documentation.Graph;
+using GraphPageTag = APSIM.Services.Documentation.GraphPage;
+using MigraDocImage = MigraDocCore.DocumentObjectModel.Shapes.Image;
+using System.Data;
+using System.Collections.Generic;
+using APSIM.Services.Graphing;
 
 namespace APSIM.Tests.Interop
 {
@@ -73,7 +84,57 @@ namespace APSIM.Tests.Interop
         [Test]
         public void EnsureCanRenderKnownTagTypes()
         {
-            throw new NotImplementedException();
+            EnsureCanRenderTag(new SectionTag("title", new ITag[1] { new ParagraphTag("") }));
+            EnsureCanRenderTag(new ParagraphTag("paragraph text"));
+            using (Image image = new Bitmap(2, 2))
+                EnsureCanRenderTag(new ImageTag(image));
+            EnsureCanRenderTag(new TableTag(CreateTable()));
+            EnsureCanRenderTag(CreateGraphTag());
+            EnsureCanRenderTag(new GraphPageTag(new[] { CreateGraphTag() }));
+        }
+
+        /// <summary>
+        /// Create a simple graph tag.
+        /// </summary>
+        private GraphTag CreateGraphTag()
+        {
+            Marker marker = new Marker(MarkerType.None, MarkerSize.Normal, 1);
+            Line line = new Line(LineType.Solid, LineThickness.Normal);
+            IEnumerable<object> x = new object[] { 0, 1 };
+            IEnumerable<object> y = new object[] { 1, 2 };
+            IEnumerable<Series> series = new Series[1] { new LineSeries("s0", Color.Red, true, x, y, line, marker) };
+            IEnumerable<Axis> axes = new Axis[2]
+            {
+                new Axis("x", AxisPosition.Bottom, false, false),
+                new Axis("Y", AxisPosition.Left, false, false),
+            };
+            LegendConfiguration legend = new LegendConfiguration(LegendOrientation.Horizontal, LegendPosition.BottomCenter, true);
+            GraphTag graph = new GraphTag("title", series, axes, legend);
+            return graph;
+        }
+
+        /// <summary>
+        /// Create a simple DataTable.
+        /// </summary>
+        private DataTable CreateTable()
+        {
+            DataTable table = new DataTable("sample table");
+            table.Columns.Add("x", typeof(string));
+            table.Columns.Add("y", typeof(string));
+            table.Rows.Add("x0", "y0");
+            table.Rows.Add("x1", "y1");
+            return table;
+        }
+
+        /// <summary>
+        /// Ensure that the given tag is rendered without error and
+        /// adds something to the document.
+        /// </summary>
+        /// <param name="tag">The tag to be rendered.</param>
+        private void EnsureCanRenderTag(ITag tag)
+        {
+            builder.Write(tag);
+            Assert.Greater(doc.LastSection.Elements.Count, 0);
         }
 
         /// <summary>
@@ -84,7 +145,8 @@ namespace APSIM.Tests.Interop
         [Test]
         public void EnsureUnknownTagTypesCauseError()
         {
-            throw new NotImplementedException();
+            Mock<ITag> mockTag = new Mock<ITag>();
+            Assert.Throws<NotImplementedException>(() => builder.Write(mockTag.Object));
         }
 
         /// <summary>
@@ -94,7 +156,20 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestSetLinkState()
         {
-            throw new NotImplementedException();
+            string linkUri = "linkuri";
+            string linkText = "this is a hyperlink";
+            builder.SetLinkState(linkUri);
+            builder.AppendText(linkText, TextStyle.Normal);
+            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            Assert.AreEqual(1, paragraph.Elements.Count);
+            Hyperlink link = (Hyperlink)paragraph.Elements[0];
+            Assert.AreEqual(linkUri, link.Name);
+            Assert.AreEqual(1, link.Elements.Count);
+            FormattedText text = (FormattedText)link.Elements[0];
+            Assert.AreEqual(1, text.Elements.Count);
+            Text rawText = (Text)text.Elements[0];
+            Assert.AreEqual(linkText, rawText.Content);
         }
 
         /// <summary>
@@ -115,7 +190,16 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestClearLinkState()
         {
-            throw new NotImplementedException();
+            builder.SetLinkState("this is a link");
+            builder.ClearLinkState();
+            builder.AppendText("some text", TextStyle.Normal);
+            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+
+            // This hyperlink is empty - arguably it shouldn't be inserted at all.
+            Assert.AreEqual(2, paragraph.Elements.Count);
+            Assert.True(paragraph.Elements[0] is Hyperlink);
+            Assert.True(paragraph.Elements[1] is FormattedText);
         }
 
         /// <summary>
@@ -133,10 +217,39 @@ namespace APSIM.Tests.Interop
         /// Ensure that calls to <see cref="PdfBuilder.StartListItem(string)"/> cause
         /// a bullet point to be inserted.
         /// </summary>
-        [Test]
-        public void TestStartListItem()
+        [TestCase('-')]
+        [TestCase('*')]
+        public void TestStartListItem(char bulletChar)
         {
-            throw new NotImplementedException();
+            string bullet = bulletChar.ToString();
+            builder.StartListItem(bullet);
+            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            Assert.AreEqual(1, paragraph.Elements.Count);
+            Text text = (Text)paragraph.Elements[0];
+            Assert.AreEqual(bullet, text.Content);
+        }
+
+        /// <summary>
+        /// Ensure that text appended after <see cref="PdfBuilder.StartListItem(string)"/>
+        /// is added to the list item (ie not after a line break or in a new paragraph).
+        /// </summary>
+        [TestCase('-')]
+        public void TestWriteToListItem(char bulletChar)
+        {
+            string bullet = bulletChar.ToString();
+            builder.StartListItem(bullet);
+            string text = "list item contents";
+            builder.AppendText(text, TextStyle.Normal);
+            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            Assert.AreEqual(2, paragraph.Elements.Count);
+            Text bulletElement = (Text)paragraph.Elements[0];
+            Assert.AreEqual(bullet, bulletElement.Content);
+            FormattedText insertedText = (FormattedText)paragraph.Elements[1];
+            Assert.AreEqual(1, insertedText.Elements.Count);
+            Text rawText = (Text)insertedText.Elements[0];
+            Assert.AreEqual(text, rawText.Content);
         }
 
         /// <summary>
@@ -153,12 +266,44 @@ namespace APSIM.Tests.Interop
 
         /// <summary>
         /// Ensure that after finishing a list item (via <see cref="PdfBuilder.FinishListItem()"/>),
-        /// any newly-inserted text is not added to that list item.
+        /// any newly-inserted text is not added to that list item, but is still inserted
+        /// into the same paragraph.
         /// </summary>
         [Test]
         public void TestFinishListItem()
         {
-            throw new NotImplementedException();
+            string bullet = "-";
+            string bulletText = "bullet point text";
+            string serialText = "this goes after the list item.";
+
+            builder.StartListItem(bullet);
+            builder.AppendText(bulletText, TextStyle.Normal);
+            builder.FinishListItem();
+            builder.AppendText(serialText, TextStyle.Normal);
+
+            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            Assert.AreEqual(4, paragraph.Elements.Count);
+
+            // First element is the bullet.
+            Text insertedBullet = (Text)paragraph.Elements[0];
+            Assert.AreEqual(bullet, insertedBullet.Content);
+
+            // Second element is the list item text.
+            FormattedText listItem = (FormattedText)paragraph.Elements[1];
+            Assert.AreEqual(1, listItem.Elements.Count);
+            Text listItemText = (Text)listItem.Elements[0];
+            Assert.AreEqual(bulletText, listItemText.Content);
+
+            // Third element is a newline character.
+            Character newline = (Character)paragraph.Elements[2];
+            Assert.AreEqual(SymbolName.LineBreak, newline.SymbolName);
+
+            // Fourth element is the text inserted after the list item.
+            FormattedText serialContent = (FormattedText)paragraph.Elements[3];
+            Assert.AreEqual(1, serialContent.Elements.Count);
+            Text rawText = (Text)serialContent.Elements[0];
+            Assert.AreEqual(serialText, rawText.Content);
         }
 
         /// <summary>
@@ -178,11 +323,53 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestMultipleListItems()
         {
-            throw new NotImplementedException();
+            string bullet = "+";
+            string listItem0 = "list item 0";
+            string listItem1 = "the next list item";
+
+            builder.StartListItem(bullet);
+            builder.AppendText(listItem0, TextStyle.Normal);
+            builder.FinishListItem();
+
+            builder.StartListItem(bullet);
+            builder.AppendText(listItem1, TextStyle.Normal);
+            builder.FinishListItem();
+
+            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            Assert.AreEqual(6, paragraph.Elements.Count);
+
+            // 1. Bullet.
+            Text insertedBullet = (Text)paragraph.Elements[0];
+            Assert.AreEqual(bullet, insertedBullet.Content);
+
+            // 2. List item 0.
+            FormattedText listItem = (FormattedText)paragraph.Elements[1];
+            Assert.AreEqual(1, listItem.Elements.Count);
+            Text listItemText = (Text)listItem.Elements[0];
+            Assert.AreEqual(listItem0, listItemText.Content);
+
+            // 3. Newline.
+            Character newline = (Character)paragraph.Elements[2];
+            Assert.AreEqual(SymbolName.LineBreak, newline.SymbolName);
+
+            // 4. Another bullet.
+            insertedBullet = (Text)paragraph.Elements[3];
+            Assert.AreEqual(bullet, insertedBullet.Content);
+
+            // 5. List item 1.
+            listItem = (FormattedText)paragraph.Elements[4];
+            Assert.AreEqual(1, listItem.Elements.Count);
+            listItemText = (Text)listItem.Elements[0];
+            Assert.AreEqual(listItem1, listItemText.Content);
+
+            // 6. Another newline.
+            newline = (Character)paragraph.Elements[5];
+            Assert.AreEqual(SymbolName.LineBreak, newline.SymbolName);
         }
 
         /// <summary>
-        /// tbi
+        /// tbi: bookmarks are a TBI feature in PdfBuilder.
         /// </summary>
         [Test]
         public void TestAppendBookmarkedText()
@@ -197,17 +384,41 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestAppendText()
         {
-            throw new NotImplementedException();
+            string message = "This is a plaintext message.";
+            builder.AppendText(message, TextStyle.Normal);
+            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            Assert.AreEqual(1, paragraph.Elements.Count);
+            FormattedText formatted = (FormattedText)paragraph.Elements[0];
+            Assert.AreEqual(1, formatted.Elements.Count);
+            Text plain = (Text)formatted.Elements[0];
+            Assert.AreEqual(message, plain.Content);
         }
 
         /// <summary>
         /// Ensure that <see cref="PdfBuilder.AppendText(string, TextStyle)"/>
         /// will apply the specified style to the inserted text.
         /// </summary>
-        [Test]
-        public void TestAppendTextStyle()
+        [TestCase(TextStyle.Normal)]
+        [TestCase(TextStyle.Italic)]
+        [TestCase(TextStyle.Strong)]
+        [TestCase(TextStyle.Underline)]
+        // [TestCase(TextStyle.Strikethrough)] // tbi
+        [TestCase(TextStyle.Superscript)]
+        [TestCase(TextStyle.Subscript)]
+        [TestCase(TextStyle.Quote)]
+        [TestCase(TextStyle.Code)]
+        public void TestAppendTextStyle(TextStyle style)
         {
-            throw new NotImplementedException();
+            builder.AppendText("some text", style);
+            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            Assert.AreEqual(1, paragraph.Elements.Count);
+            FormattedText formatted = (FormattedText)paragraph.Elements[0];
+            if (style == TextStyle.Normal)
+                Assert.AreEqual(doc.Styles.Normal.Name, formatted.Style);
+            else
+                Assert.AreNotEqual(doc.Styles.Normal.Name, formatted.Style);
         }
 
         /// <summary>
@@ -218,7 +429,38 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestAppendTextLocation()
         {
-            throw new NotImplementedException();
+            string existingText = "Some existing content.";
+            string addedText = "This should be inserted into the same paragraph";
+
+            doc.AddSection().AddParagraph(existingText);
+            builder.AppendText(addedText, TextStyle.Normal);
+
+            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            Assert.AreEqual(2, paragraph.Elements.Count);
+
+            Text text = (Text)paragraph.Elements[0];
+            Assert.AreEqual(existingText, text.Content);
+
+            FormattedText formatted = (FormattedText)paragraph.Elements[1];
+            Assert.AreEqual(1, formatted.Elements.Count);
+            Text plain = (Text)formatted.Elements[0];
+            Assert.AreEqual(addedText, plain.Content);
+        }
+
+        /// <summary>
+        /// Ensure that <see cref="PdfBuilder.AppendText(string, TextStyle)"/>
+        /// will insert the text in to the final paragraph in the document.
+        /// </summary>
+        [Test]
+        public void TestAppendTextCorrectParagraph()
+        {
+            doc.AddSection().AddParagraph("paragraph 1");
+            doc.LastSection.AddParagraph("paragraph 2");
+            builder.AppendText("new text", TextStyle.Normal);
+            Assert.AreEqual(2, doc.LastSection.Elements.Count);
+            Assert.True(doc.LastSection.Elements[0] is Paragraph);
+            Assert.True(doc.LastSection.Elements[1] is Paragraph);
         }
 
         /// <summary>
@@ -228,7 +470,9 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestAppendTextNewParagraph()
         {
-            throw new NotImplementedException();
+            builder.AppendText("new paragraph", TextStyle.Normal);
+            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Assert.True(doc.LastSection.Elements[0] is Paragraph);
         }
 
         /// <summary>
@@ -238,7 +482,16 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestAppendImage()
         {
-            throw new NotImplementedException();
+            using (Image image = new Bitmap(2, 2))
+            {
+                builder.AppendImage(image);
+                Assert.AreEqual(1, doc.LastSection.Elements.Count);
+                Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+                Assert.AreEqual(1, paragraph.Elements.Count);
+                MigraDocImage inserted = (MigraDocImage)paragraph.Elements[0];
+                Assert.AreEqual(image.Width, inserted.Source.Width);
+                Assert.AreEqual(image.Height, inserted.Source.Height);
+            }
         }
 
         /// <summary>
@@ -249,7 +502,14 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestAppendImageLocation()
         {
-            throw new NotImplementedException();
+            doc.AddSection().AddParagraph("some text is already in the paragraph");
+            using (Image image = new Bitmap(2, 2))
+                builder.AppendImage(image);
+            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            Assert.AreEqual(2, paragraph.Elements.Count);
+            Assert.True(paragraph.Elements[0] is Text);
+            Assert.True(paragraph.Elements[1] is MigraDocImage);
         }
 
         /// <summary>
@@ -259,7 +519,11 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestAppendHR()
         {
-            throw new NotImplementedException();
+            builder.AppendHorizontalRule();
+            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            Assert.AreEqual(0, paragraph.Elements.Count);
+            Assert.AreEqual(1, paragraph.Format.Borders.Bottom.Width.Point);
         }
 
         /// <summary>
@@ -269,7 +533,10 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestAppendAfterHR()
         {
-            throw new NotImplementedException();
+            builder.AppendText("existing paragraph", TextStyle.Normal);
+            builder.AppendHorizontalRule();
+            builder.AppendText("additional text.", TextStyle.Normal);
+            Assert.AreEqual(2, doc.LastSection.Elements.Count);
         }
 
         /// <summary>
@@ -280,7 +547,18 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestStartNewParagraph()
         {
-            throw new NotImplementedException();
+            doc.AddSection().AddParagraph("existing paragraph");
+            builder.StartNewParagraph();
+            string text = "this should be in a new paragraph";
+            builder.AppendText(text, TextStyle.Normal);
+
+            Assert.AreEqual(2, doc.LastSection.Elements.Count);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[1];
+            Assert.AreEqual(1, paragraph.Elements.Count);
+            FormattedText formatted = (FormattedText)paragraph.Elements[0];
+            Assert.AreEqual(1, formatted.Elements.Count);
+            Text plain = (Text)formatted.Elements[0];
+            Assert.AreEqual(text, plain.Content);
         }
 
         /// <summary>
@@ -290,7 +568,8 @@ namespace APSIM.Tests.Interop
         [Test]
         public void EnsureStartParagraphCanThrow()
         {
-            throw new NotImplementedException();
+            builder.SetLinkState("link uri");
+            Assert.Throws<InvalidOperationException>(() => builder.StartNewParagraph());
         }
 
         /// <summary>
@@ -300,7 +579,15 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestGetPageSize()
         {
-            throw new NotImplementedException();
+            Section section = doc.AddSection();
+            section.PageSetup.PageWidth = 216;
+            section.PageSetup.PageHeight = 288;
+
+            builder.GetPageSize(out double width, out double height);
+
+            // fixme: should probably find a better way to test this...
+            Assert.AreEqual(288, width);
+            Assert.AreEqual(384, height);
         }
 
         /// <summary>
@@ -311,13 +598,126 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestGetPageSizeMultipleSections()
         {
-            throw new NotImplementedException();
+            Section section0 = doc.AddSection();
+            Section section1 = doc.AddSection();
+            section0.PageSetup.PageWidth = 300;
+            section0.PageSetup.PageHeight = 450;
+            section1.PageSetup.PageWidth = 324;
+            section1.PageSetup.PageHeight = 360;
+
+            builder.GetPageSize(out double width, out double height);
+
+            Assert.AreEqual(432, width);
+            Assert.AreEqual(480, height);
+        }
+
+        /// <summary>
+        /// Ensure that <see cref="PdfBuilder.GetPageSize(out double, out double)"/>
+        /// returns the document's default page width/height if the last section's
+        /// width or height are 0.
+        /// </summary>
+        [TestCase(123, 0)]
+        [TestCase(0, 666)]
+        [TestCase(0, 0)]
+        public void TestGetDefaultPageSize(double sectionWidth, double sectionHeight)
+        {
+            // Unfortunately, changes to the default document page width/height
+            // don't seem to persist. Should probably revisit this later, but
+            // for now I'm just going to hardcode the default page width/height
+            // as chosen by MigraDoc.
+            const double defaultWidth = 604.72440944881873;
+            const double defaultHeight = 952.44102177657487;
+
+            Section section = doc.AddSection();
+            section.PageSetup.PageWidth = sectionWidth;
+            section.PageSetup.PageHeight = sectionHeight;
+
+            builder.GetPageSize(out double width, out double height);
+
+            Assert.AreEqual(defaultWidth, width);
+            Assert.AreEqual(defaultHeight, height);
+        }
+
+        /// <summary>
+        /// Ensure that <see cref="PdfBuilder.GetPageSize(out double, out double)"/>
+        /// takes the left margin width into account.
+        /// </summary>
+        [Test]
+        public void TestGetPageSizeLeftMargin()
+        {
+            Section section = doc.AddSection();
+            section.PageSetup.PageWidth = 576;
+            section.PageSetup.PageHeight = 648;
+            section.PageSetup.LeftMargin = 72;
+
+            builder.GetPageSize(out double width, out double height);
+
+            Assert.AreEqual(672, width);
+            Assert.AreEqual(864, height);
+        }
+
+        /// <summary>
+        /// Ensure that <see cref="PdfBuilder.GetPageSize(out double, out double)"/>
+        /// takes the right margin width into account.
+        /// </summary>
+        [Test]
+        public void TestGetPageSizeRightMargin()
+        {
+            Section section = doc.AddSection();
+            section.PageSetup.PageWidth = 576;
+            section.PageSetup.PageHeight = 648;
+            section.PageSetup.RightMargin = 144;
+
+            builder.GetPageSize(out double width, out double height);
+
+            Assert.AreEqual(576, width);
+            Assert.AreEqual(864, height);
+        }
+
+        /// <summary>
+        /// Ensure that <see cref="PdfBuilder.GetPageSize(out double, out double)"/>
+        /// takes the top margin height into account.
+        /// </summary>
+        [Test]
+        public void TestGetPageSizeTopMargin()
+        {
+            Section section = doc.AddSection();
+            section.PageSetup.PageWidth = 720;
+            section.PageSetup.PageHeight = 792;
+            section.PageSetup.TopMargin = 216;
+
+            builder.GetPageSize(out double width, out double height);
+
+            Assert.AreEqual(960, width);
+            Assert.AreEqual(768, height);
+        }
+
+        /// <summary>
+        /// Ensure that <see cref="PdfBuilder.GetPageSize(out double, out double)"/>
+        /// takes the bottom margin height into account.
+        /// </summary>
+        [Test]
+        public void TestGetPageSizeBottomMargin()
+        {
+            Section section = doc.AddSection();
+            section.PageSetup.PageWidth = 792;
+            section.PageSetup.PageHeight = 864;
+            section.PageSetup.BottomMargin = 72;
+
+            builder.GetPageSize(out double width, out double height);
+
+            Assert.AreEqual(1056, width);
+            Assert.AreEqual(1056, height);
         }
 
         /// <summary>
         /// Ensure that <see cref="PdfBuilder.Write(ITag)"/> causes the tag to be
         /// written to the document via an appropriate tag renderer.
         /// </summary>
+        /// <remarks>
+        /// TBI. This will be much easier once I've refactored PdfBuilder such that
+        /// it doesn't contain any markdown or tag logic.
+        /// </remarks>
         [Test]
         public void TestWriteTag()
         {
