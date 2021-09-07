@@ -632,6 +632,7 @@ namespace APSIM.Interop.Markdown.Renderers
         {
             Style hrStyle = GetHorizontalRuleStyle();
             GetLastParagraph().Format = hrStyle.ParagraphFormat.Clone();
+            StartNewParagraph();
         }
 
         /// <summary>
