@@ -409,29 +409,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Report, Models",
-                  "VariableNames": [
-                    "[Clock].Today as Date",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.ID as UId",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.Breed as Breed",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.HerdName as Herd",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.Sex as Sex",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.Age as Age",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.Weight as Weight",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.SaleFlag as Reason",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.PopulationChangeDirection as Change"
-                  ],
-                  "EventNames": [
-                    "[Resources].Ruminants.TransactionOccurred"
-                  ],
-                  "GroupByVariableName": null,
-                  "Name": "HerdLedger",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                   "ReportStyle": 0,
                   "ResourceGroupsToReport": "Finances",
@@ -444,6 +421,22 @@
                   "EventNames": null,
                   "GroupByVariableName": null,
                   "Name": "FinancesLedger",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                  "ReportStyle": 0,
+                  "ResourceGroupsToReport": "Ruminants",
+                  "ReportLossesAsNegative": true,
+                  "IncludePrice": false,
+                  "IncludeConversions": false,
+                  "VariableNames": null,
+                  "EventNames": null,
+                  "GroupByVariableName": null,
+                  "Name": "HerdLedger",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
