@@ -16,6 +16,7 @@ using APSIM.Interop.Markdown.Renderers.Extras;
 using APSIM.Interop.Documentation.Renderers;
 using System.Diagnostics;
 using APSIM.Interop.Utility;
+using APSIM.Interop.Documentation.Helpers;
 #if NETCOREAPP
 using MigraDocCore.DocumentObjectModel;
 using MigraDocCore.DocumentObjectModel.Tables;
@@ -23,12 +24,14 @@ using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
 using static MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes.ImageSource;
 using Color = MigraDocCore.DocumentObjectModel.Color;
 using PdfSharpCore.Drawing;
+using PdfSharpCore.Fonts;
 #else
 using MigraDoc.DocumentObjectModel;
 using MigraDoc.DocumentObjectModel.Tables;
 using Color = MigraDoc.DocumentObjectModel.Color;
 using System.Drawing.Imaging;
 using PdfSharp.Drawing;
+using PdfSharp.Fonts;
 #endif
 
 namespace APSIM.Interop.Markdown.Renderers
@@ -39,16 +42,24 @@ namespace APSIM.Interop.Markdown.Renderers
     /// </summary>
     public class PdfBuilder : RendererBase
     {
-#if NETCOREAPP
         /// <summary>
         /// Static constructor to initialise PDFSharp ImageSource.
         /// </summary>
         static PdfBuilder()
         {
+#if NETCOREAPP
             if (ImageSource.ImageSourceImpl == null)
                 ImageSource.ImageSourceImpl = new PdfSharpCore.Utils.ImageSharpImageSource<SixLabors.ImageSharp.PixelFormats.Rgba32>();
-        }
 #endif
+            // This is a bit tricky on non-Windows platforms. 
+            // Normally PdfSharp tries to get a Windows DC for associated font information
+            // See https://alex-maz.info/pdfsharp_150 for the work-around we can apply here.
+            // See also http://stackoverflow.com/questions/32726223/pdfsharp-migradoc-font-resolver-for-embedded-fonts-system-argumentexception
+            // The work-around is to register our own fontresolver. We don't need to do this on Windows.
+            if (!ProcessUtilities.CurrentOS.IsWindows && !(GlobalFontSettings.FontResolver is FontResolver))
+                GlobalFontSettings.FontResolver = new FontResolver();
+
+        }
 
         /// <summary>
         /// This struct describes a link in the PDF document. This provides
@@ -528,7 +539,7 @@ namespace APSIM.Interop.Markdown.Renderers
             {
                 if (inTableCell)
                     // The other possibility is that the renderer is missing a call to FinishCell().
-                    throw new NotImplementedException("Nested tables not implemented");
+                    throw new InvalidOperationException("Nested tables not implemented");
 
                 Table table = GetLastSection().GetLastTable();
                 if (table.Columns.Count == 0)
@@ -553,7 +564,7 @@ namespace APSIM.Interop.Markdown.Renderers
         {
             if (inTableCell)
                 // An exception here may be a bit harsh.
-                throw new Exception($"Programmer is missing a call to FinishTableCell().");
+                throw new InvalidOperationException($"Programmer is missing a call to FinishTableCell().");
 
             // todo: Do we need to add cells to the row?
             inTableCell = true;
@@ -565,7 +576,7 @@ namespace APSIM.Interop.Markdown.Renderers
         public void FinishTableCell()
         {
             if (!inTableCell)
-                throw new Exception($"Programmer is missing a call to StartTableCell().");
+                throw new InvalidOperationException($"Programmer is missing a call to StartTableCell().");
 
             // Cell cell = GetLastSection().GetLastTable().GetLastRow().Cells[tableCellIndex];
             // for (int i = cell.Elements.Count - 1; i >= 0; i--)
@@ -841,7 +852,10 @@ namespace APSIM.Interop.Markdown.Renderers
             Section section = GetLastSection();
             if (inTableCell)
             {
-                Cell cell = section.GetLastTable().GetLastRow().Cells[tableCellIndex];
+                Table table = section.GetLastTable();
+                if (tableCellIndex >= table.Columns.Count)
+                    throw new InvalidOperationException($"Attempted to write past the final column in the table. Programmer is possibly missing a call to StartTableRow()");
+                Cell cell = table.GetLastRow().Cells[tableCellIndex];
                 Paragraph paragraph = cell.Elements.OfType<Paragraph>().LastOrDefault();
                 if (paragraph == null)
                     return cell.AddParagraph();
