@@ -52,7 +52,7 @@ namespace Models.PMF
         {
             if ((this.Name == "Structural") && (this.Parent.Parent.Name == "Nitrogen"))
             {
-                return parentOrgan.Carbon.DemandsAllocated.Total * parentOrgan.Nitrogen.ConcentrationOrFraction.Structural;
+                return parentOrgan.Carbon.DemandsAllocated.Total/parentOrgan.Cconc * parentOrgan.Nitrogen.ConcentrationOrFraction.Structural;
             }
             
             if ((this.Name == "Structural") && (this.Parent.Parent.Name == "Carbon"))
@@ -69,7 +69,7 @@ namespace Models.PMF
                 deficit = targetMetabolicN - parentOrgan.Live.Nitrogen.Metabolic;
             }
 
-            double potentialStructuralC = parentOrgan.Live.Carbon.Structural + parentOrgan.totalDMDemand * parentOrgan.Carbon.ConcentrationOrFraction.Structural;
+            double potentialStructuralC = parentOrgan.Live.Carbon.Structural + parentOrgan.totalDMDemand/parentOrgan.Cconc * parentOrgan.Carbon.ConcentrationOrFraction.Structural;
             double potentialTotalC = potentialStructuralC / parentOrgan.Carbon.ConcentrationOrFraction.Structural;
 
             if ((this.Name == "Metabolic") && (this.Parent.Parent.Name == "Carbon"))
