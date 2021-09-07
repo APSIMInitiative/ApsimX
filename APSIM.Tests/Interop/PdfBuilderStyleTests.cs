@@ -11,9 +11,7 @@ using APSIM.Interop.Markdown.Renderers.Inlines;
 using Moq;
 using Markdig.Parsers.Inlines;
 using System;
-using System.Drawing;
 using System.IO;
-using APSIM.Services.Documentation;
 
 namespace APSIM.Tests.Interop
 {
@@ -50,7 +48,8 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestNormal()
         {
-            throw new NotImplementedException();
+            Style style = InsertText(TextStyle.Normal);
+            Assert.AreEqual(doc.Styles.Normal, style);
         }
 
         /// <summary>
@@ -59,7 +58,8 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestItalic()
         {
-            throw new NotImplementedException();
+            Style style = InsertText(TextStyle.Italic);
+            Assert.True(style.Font.Italic);
         }
 
         /// <summary>
@@ -68,7 +68,8 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestStrong()
         {
-            throw new NotImplementedException();
+            Style style = InsertText(TextStyle.Strong);
+            Assert.True(style.Font.Bold);
         }
 
         /// <summary>
@@ -77,16 +78,20 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestUnderline()
         {
-            throw new NotImplementedException();
+            Style style = InsertText(TextStyle.Underline);
+            Assert.AreEqual(Underline.Single, style.Font.Underline);
         }
 
         /// <summary>
         /// Test strikethrough style.
         /// </summary>
+        /// <remarks>
+        /// Strikethrough is a TBI feature.
+        /// </remarks>
         [Test]
         public void TestStrikethrough()
         {
-            throw new NotImplementedException();
+            
         }
 
         /// <summary>
@@ -95,7 +100,8 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestSuperscript()
         {
-            throw new NotImplementedException();
+            Style style = InsertText(TextStyle.Superscript);
+            Assert.True(style.Font.Superscript);
         }
 
         /// <summary>
@@ -104,7 +110,8 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestSubscript()
         {
-            throw new NotImplementedException();
+            Style style = InsertText(TextStyle.Subscript);
+            Assert.True(style.Font.Subscript);
         }
 
         /// <summary>
@@ -113,7 +120,24 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestQuote()
         {
-            throw new NotImplementedException();
+            Style style = InsertText(TextStyle.Quote);
+
+            // Paragraph should be indented.
+            Assert.Greater(style.ParagraphFormat.FirstLineIndent, 0);
+
+            // Should not have the "normal" text colour.
+            Assert.AreNotEqual(doc.Styles.Normal.Font.Color, style.Font.Color);
+
+            // Should have a visible left border.
+            Assert.True(style.ParagraphFormat.Borders.Left.Visible);
+            Assert.AreNotEqual(Color.Empty, style.ParagraphFormat.Borders.Left.Color);
+            Assert.Greater(style.ParagraphFormat.Borders.Left.Width, 0);
+
+            // Border should have non-zero distance from bottom.
+            Assert.Greater(style.ParagraphFormat.Borders.DistanceFromBottom, 0);
+
+            // Should have extra space after the paragraph.
+            Assert.Greater(style.ParagraphFormat.SpaceAfter, 0);
         }
 
         /// <summary>
@@ -122,7 +146,21 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestCode()
         {
-            throw new NotImplementedException();
+            Style style = InsertText(TextStyle.Code);
+
+            // This is not great. Need to fix this in PdfBuilder.
+            Assert.AreEqual("courier", style.Font.Name);
+
+            // Code block should have visible borders.
+            Assert.True(style.ParagraphFormat.Borders.Visible);
+            Assert.AreNotEqual(Color.Empty, style.ParagraphFormat.Borders.Color);
+            Assert.Greater(style.ParagraphFormat.Borders.Width, 0);
+
+            // Code blocks should have padding on all sides.
+            Assert.Greater(style.ParagraphFormat.Borders.DistanceFromBottom, 0);
+            Assert.Greater(style.ParagraphFormat.Borders.DistanceFromTop, 0);
+            Assert.Greater(style.ParagraphFormat.Borders.DistanceFromLeft, 0);
+            Assert.Greater(style.ParagraphFormat.Borders.DistanceFromRight, 0);
         }
 
         /// <summary>
@@ -132,7 +170,9 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestPushStyle()
         {
-            throw new NotImplementedException();
+            builder.PushStyle(TextStyle.Strong);
+            Style style = InsertText(TextStyle.Normal);
+            Assert.True(style.Font.Bold);
         }
 
         /// <summary>
@@ -142,7 +182,11 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestNestedStyle()
         {
-            throw new NotImplementedException();
+            builder.PushStyle(TextStyle.Strong);
+            builder.PushStyle(TextStyle.Italic);
+            Style style = InsertText(TextStyle.Normal);
+            Assert.True(style.Font.Bold);
+            Assert.True(style.Font.Italic);
         }
 
         /// <summary>
@@ -153,7 +197,10 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestCombinedStyle()
         {
-            throw new NotImplementedException();
+            builder.PushStyle(TextStyle.Superscript);
+            Style style = InsertText(TextStyle.Italic);
+            Assert.True(style.Font.Superscript);
+            Assert.True(style.Font.Italic);
         }
 
         /// <summary>
@@ -163,7 +210,10 @@ namespace APSIM.Tests.Interop
         [Test]
         public void TestPopStyle()
         {
-            throw new NotImplementedException();
+            builder.PushStyle(TextStyle.Subscript);
+            builder.PopStyle();
+            Style style = InsertText(TextStyle.Normal);
+            Assert.False(style.Font.Subscript);
         }
 
         /// <summary>
@@ -172,9 +222,24 @@ namespace APSIM.Tests.Interop
         /// will trigger an exception.
         /// </summary>
         [Test]
-        public void EnsurePopStyleCantThrow()
+        public void EnsurePopStyleCanThrow()
         {
             Assert.Throws<InvalidOperationException>(() => builder.PopStyle());
+        }
+
+        /// <summary>
+        /// Insert some text with the given style, and return the MigraDoc
+        /// style of the inserted text.
+        /// </summary>
+        /// <param name="style">Style to be applied to the inserted text.</param>
+        private Style InsertText(TextStyle style)
+        {
+            builder.AppendText("normal text", style);
+            // We could have some assertions here, but we have explicit tests
+            // for these casts elsewhere.
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            FormattedText formatted = (FormattedText)paragraph.Elements[0];
+            return doc.Styles[formatted.Style];
         }
     }
 }
