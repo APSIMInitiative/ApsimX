@@ -66,15 +66,15 @@
 
         /// <summary>Total dry matter in this organ (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMTotal { get; private set; }
-       
+        public double DMTotal { get; private set; } = 0.0;
+
         /// <summary>Dry matter in the live (green) tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMLive { get; private set; }
+        public double DMLive { get; private set; } = 0.0;
 
         /// <summary>Dry matter in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMDead { get; private set; }
+        public double DMDead { get; private set; } = 0.0;
 
         /// <summary>Standing herbage weight (kg/ha).</summary>
         [Units("kg/ha")]
@@ -108,52 +108,52 @@
 
         /// <summary>Total harvestable dry matter (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMTotalHarvestable { get; private set; }
+        public double DMTotalHarvestable { get; private set; } = 0.0;
 
         /// <summary>Harvestable dry matter in the live (green) tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMLiveHarvestable { get; private set; }
+        public double DMLiveHarvestable { get; private set; } = 0.0;
 
         /// <summary>Dry matter in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMDeadHarvestable { get; private set; }
+        public double DMDeadHarvestable { get; private set; } = 0.0;
 
         /// <summary>N in the total harvestable dry matter (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NTotalHarvestable { get; private set; }
+        public double NTotalHarvestable { get; private set; } = 0.0;
 
         /// <summary>N in the harvestable dry matter in the live (green) tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NLiveHarvestable { get; private set; }
+        public double NLiveHarvestable { get; private set; } = 0.0;
 
         /// <summary>N in the harvestable dry matter in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NDeadHarvestable { get; private set; }
+        public double NDeadHarvestable { get; private set; } = 0.0;
 
         /// <summary>Total N in this tissue (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NTotal { get; private set; }
+        public double NTotal { get; private set; } = 0.0;
 
         /// <summary>N in the live (green) tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NLive { get; private set; }
+        public double NLive { get; private set; } = 0.0;
 
         /// <summary>N amount in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NDead { get; private set; }
+        public double NDead { get; private set; } = 0.0;
 
         /// <summary>Average N concentration.</summary>
         [Units("kg/kg")]
-        public double NConcTotal { get; private set; }
+        public double NConcTotal { get; private set; } = 0.0;
 
         /// <summary>Average N concentration in the live tissues (kg/kg).</summary>
         [Units("kg/kg")]
-        public double NConcLive { get; private set; }
+        public double NConcLive { get; private set; } = 0.0;
 
         /// <summary>Average N concentration in dead tissues (kg/kg).</summary>
         [Units("kg/kg")]
-        public double NConcDead { get; private set; }
-        
+        public double NConcDead { get; private set; } = 0.0;
+
         /// <summary>Luxury N available for remobilisation (kg/ha).</summary>
         public double NLuxuryRemobilisable => LiveTissue.Sum(tissue => tissue.NRemobilisable);
 
@@ -192,19 +192,19 @@
 
         /// <summary>Average digestibility of all biomass.</summary>
         [Units("kg/kg")]
-        public double DigestibilityTotal { get; private set; }
+        public double DigestibilityTotal { get; private set; } = 0.0;
 
         /// <summary>Average digestibility of live biomass.</summary>
         [Units("kg/kg")]
-        public double DigestibilityLive { get; private set; }
+        public double DigestibilityLive { get; private set; } = 0.0;
 
         /// <summary>Average digestibility of dead biomass.</summary>
         [Units("kg/kg")]
-        public double DigestibilityDead { get; private set; }
+        public double DigestibilityDead { get; private set; } = 0.0;
 
         /// <summary>Digestibility of standing herbage.</summary>
         [Units("kg/kg")]
-        public double StandingDigestibility { get; private set; }
+        public double StandingDigestibility { get; private set; } = 0.0;
 
         /// <summary>Initialisation</summary>
         /// <param name="minimumLiveWt">Minimum live dry matter (kg/ha)</param>
@@ -270,37 +270,19 @@
             }
         }
 
-        /// <summary>Preparation before the main daily processes.</summary>
-        public void OnDoDailyInitialisation()
-        {
-            foreach (var tissue in Tissue)
-            {
-                tissue.OnDoDailyInitialisation();
-            }
-        }
-
         /// <summary>Kills part of the organ (transfer DM and N to dead tissue).</summary>
         /// <param name="fractionToRemove">The fraction to kill in each tissue</param>
-        public void KillOrgan(double fractionToRemove = 1.0)
+        public void KillOrgan(double fractionToRemove)
         {
             if (MathUtilities.IsGreaterThan(1.0 - fractionToRemove, 0))
             {
-                double fractionRemaining = 1.0 - fractionToRemove;
                 for (int t = 0; t < Tissue.Length - 1; t++)
                 {
                     DeadTissue.AddBiomass(Tissue[t].DM.Wt * fractionToRemove, Tissue[t].DM.N * fractionToRemove);
                     Tissue[t].RemoveBiomass(fractionToRemove, 0.0);
                 }
             }
-            else
-            {
-                for (int t = 0; t < Tissue.Length - 1; t++)
-                {
-                    DeadTissue.AddBiomass(Tissue[t].DM.Wt, Tissue[t].DM.N);
-                    Tissue[t].SetBiomass(0.0, 0.0);
-                    Tissue[t].ClearDailyTransferredAmounts();
-                }
-            }
+
             // Tissue states have changed so recalculate our states.
             CalculateStates();
         }

@@ -36,21 +36,21 @@
 
         /// <summary>Amount of nitrogen transferred into this tissue, for each layer (kg/ha).</summary>
         private double[] nTransferredInByLayer;
-        
+
         /// <summary>Dry matter amount transferred into this tissue (kg/ha).</summary>
-        private double dmTransferredIn;
+        private double dmTransferredIn = 0.0;
 
         /// <summary>Dry matter amount transferred out of this tissue (kg/ha).</summary>
-        private double dmTransferredOut;
+        private double dmTransferredOut = 0.0;
 
         /// <summary>Nitrogen transferred into this tissue (kg/ha).</summary>
-        private double nTransferredIn;
+        private double nTransferredIn = 0.0;
 
         /// <summary>Nitrogen transferred out of this tissue (kg/ha).</summary>
-        private double nTransferredOut;
+        private double nTransferredOut = 0.0;
 
         /// <summary>Nitrogen remobilised into new growth (kg/ha).</summary>
-        private double nRemobilised;
+        private double nRemobilised = 0.0;
 
         /// <summary>Pasture species this tissue belongs to.</summary>
         [Link]
@@ -86,7 +86,7 @@
         }
 
         /// <summary>Amount of N available for remobilisation (kg/ha).</summary>
-        public double NRemobilisable { get; private set; }
+        public double NRemobilisable { get; private set; } = 0.0;
 
         /// <summary>Dry matter biomass.</summary>
         public IAGPBiomass DM {  get { return biomass; } }

@@ -416,7 +416,7 @@
 
         /// <summary>Kills part of the organ (transfer DM and N to dead tissue).</summary>
         /// <param name="fractionToRemove">The fraction to kill in each tissue</param>
-        internal void KillOrgan(double fractionToRemove = 1.0)
+        internal void KillOrgan(double fractionToRemove)
         {
             Live.MoveFractionToTissue(fractionToRemove, Dead);
         }
