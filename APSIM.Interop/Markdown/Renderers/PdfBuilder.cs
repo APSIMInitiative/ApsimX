@@ -510,9 +510,14 @@ namespace APSIM.Interop.Markdown.Renderers
                 for (int j = 0; j < table.Columns.Count; j++)
                 {
                     Cell cell = table.Rows[i][j];
+                    // Measure the text of the cell. todo: should probably account for
+                    // style such as heading/bold which can theoretically affect font
+                    // size. For now though, this is good enough.
                     IEnumerable<Paragraph> paragraphs = cell.Elements.OfType<Paragraph>();
                     string text = string.Join("", paragraphs.Select(p => p.GetRawText()));
-                    Unit width = (1 + columnPadding) * Unit.FromPoint(graphics.MeasureString(text, gdiFont).Width);
+
+                    // Allow an extra 20pt for column/cell padding.
+                    Unit width = Unit.FromPoint(20 + graphics.MeasureString(text, gdiFont).Width);
 
                     if (width > maxWidths[j])
                         maxWidths[j] = width;
@@ -618,6 +623,9 @@ namespace APSIM.Interop.Markdown.Renderers
                 for (int i = 0; i < data.Columns.Count; i++)
                     row[i].AddParagraph(dataRow[i]?.ToString() ?? "");
             }
+
+            // This will fix the column width partitioning.
+            FinishTable();
         }
 
         /// <summary>
