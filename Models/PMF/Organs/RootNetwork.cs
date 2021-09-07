@@ -581,11 +581,34 @@
         [EventSubscribe("DoActualPlantGrowth")]
         private void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
+            double TotalRAw = 0;
+            foreach (ZoneState Z in Zones)
+                TotalRAw += Z.CalculateRootActivityValues().Sum();
+
+            Biomass rootMassDelta = new Biomass()
+            {
+                StructuralWt = parentOrgan.Allocated.Weight.Structural,
+                MetabolicWt = parentOrgan.Allocated.Weight.Metabolic,
+                StorageWt = parentOrgan.Allocated.Weight.Storage,
+                StructuralN = parentOrgan.Allocated.Nitrogen.Structural,
+                MetabolicN = parentOrgan.Allocated.Nitrogen.Metabolic,
+                StorageN = parentOrgan.Allocated.Nitrogen.Storage,
+            };
+
             if (parentPlant.IsAlive)
             {
                 foreach (ZoneState Z in Zones)
+                {
                     Z.GrowRootDepth();
+                    Z.PartitionRootMass(TotalRAw, rootMassDelta);
+                }
             }
+        }
+
+        /// <summary>Sets the dry matter allocation.</summary>
+        public void SetDryMatterAllocation(BiomassAllocationType dryMatter)
+        {
+
         }
 
         /// <summary>Called when crop is sown</summary>
