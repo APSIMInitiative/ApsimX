@@ -13,6 +13,18 @@
     [Serializable]
     public class RootTissue: Model
     {
+        /// <summary>Pasture species this tissue belongs to.</summary>
+        [Link(Type = LinkType.Ancestor)]
+        private PastureSpecies species = null;
+
+        /// <summary>Soil physical parameterisation.</summary>
+        [Link]
+        private IPhysical soilPhysical = null;
+
+        /// <summary>Soil nutrient model.</summary>
+        [Link]
+        private INutrient nutrient = null;
+
         /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
         private const double carbonFractionInDM = 0.4;
 
@@ -51,18 +63,6 @@
 
         /// <summary>Nitrogen remobilised into new growth (kg/ha).</summary>
         private double nRemobilised = 0.0;
-
-        /// <summary>Pasture species this tissue belongs to.</summary>
-        [Link(Type = LinkType.Ancestor)]
-        private PastureSpecies species = null;
-
-        /// <summary>Soil physical parameterisation.</summary>
-        [Link]
-        private IPhysical soilPhysical = null;
-
-        /// <summary>Soil nutrient model.</summary>
-        [Link]
-        private INutrient nutrient = null;
 
         /// <summary>Initialise this root instance.</summary>
         /// <param name="initialDMByLayer">Initial dry matter by layer.</param>
