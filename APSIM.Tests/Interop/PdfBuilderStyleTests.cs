@@ -186,6 +186,27 @@ namespace APSIM.Tests.Interop
         }
 
         /// <summary>
+        /// Ensure that hyperlinks have the appropriate style applied.
+        /// </summary>
+        [Test]
+        public void TestLinkStyle()
+        {
+            builder.SetLinkState("link uri");
+            builder.AppendText("link text", TextStyle.Normal);
+            builder.ClearLinkState();
+
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            Hyperlink link = (Hyperlink)paragraph.Elements[0];
+            FormattedText formatted = (FormattedText)link.Elements[0];
+            Style style = doc.Styles[formatted.Style];
+
+            // Links should not have the "Normal" font colour - they should be blue.
+            // I'm not going to test the exact shade. As long as it's not the
+            // default font colour then we're good.
+            Assert.AreNotEqual(doc.Styles.Normal.Font.Color, style.Font.Color);
+        }
+
+        /// <summary>
         /// Ensure that style applied via <see cref="PdfBuilder.PushStyle(TextStyle)"/>
         /// is used when inserting text.
         /// </summary>

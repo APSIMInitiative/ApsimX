@@ -4,7 +4,6 @@ using System.Data;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
 using APSIM.Interop.Documentation;
 using APSIM.Interop.Markdown.Renderers.Blocks;
 using APSIM.Interop.Markdown.Renderers.Inlines;

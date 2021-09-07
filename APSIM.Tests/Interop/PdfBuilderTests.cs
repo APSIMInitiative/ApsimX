@@ -1,18 +1,12 @@
 using NUnit.Framework;
 using APSIM.Interop.Documentation;
 using APSIM.Interop.Markdown.Renderers;
-using APSIM.Interop.Markdown.Renderers.Blocks;
 using Markdig.Syntax;
-using Markdig.Syntax.Inlines;
-using APSIM.Interop.Documentation.Extensions;
 using APSIM.Interop.Markdown;
 using MigraDocCore.DocumentObjectModel;
-using APSIM.Interop.Markdown.Renderers.Inlines;
 using Moq;
-using Markdig.Parsers.Inlines;
 using System;
 using System.Drawing;
-using System.IO;
 using ITag = APSIM.Services.Documentation.ITag;
 using Color = System.Drawing.Color;
 using SectionTag = APSIM.Services.Documentation.Section;
@@ -32,31 +26,32 @@ namespace APSIM.Tests.Interop
     /// Unit tests for <see cref="PdfBuilder"/>.
     /// </summary>
     /// <remarks>
-    /// I've added skeleton tests for most of the public API.
-    /// Now need to test some of the implied features. E.g.
-    /// - GetLastParagraph()
-    ///   - Section with no paragraphs
-    ///   - No sections
-    ///   - Multiple sections
-    ///   - Existing paragraph with/without content
-    /// - GetLastSection()
-    /// - Heading font size
-    /// - Link style
-    /// - Style naming
-    /// - HR style (this may be done already in the skeleton tests)
-    /// - ReadResizeImage doesn't belong in this class
-    /// - GetPageSize edge cases
-    ///   - no sections
-    ///   - section but no content
-    /// - Markdown object rendering
-    ///   - this should ultimately be extracted to another class
-    ///   - Known tag with default renderer
-    ///   - Unknown tag - exception
-    ///   - Custom tag with custom renderer added
+    /// I haven't explicitly tested GetLastParagraph() and GetLastSection(),
+    /// both of which are pretty important internal functions of the
+    /// PdfBuilder implementation. I'm not sure of the best way to test them.
+    /// They are also tested pretty extensively due to the large number of
+    /// tests for this class so I'm going to leave this as-is for now.
+    /// 
+    /// I haven't tested bookmarks yet, as this feature is TBI.
+    /// 
+    /// The only other major part which I haven't tested is the algorithm
+    /// for finding a tag renderer for the given tag. Again, this should be
+    /// implicitly tested fairly extensively, but it might be nice to revisit
+    /// this in the future.
     /// </remarks>
     [TestFixture]
     public class PdfBuilderTests
     {
+        /// <summary>
+        /// Default page width.
+        /// </summary>
+        private const double defaultWidth = 604.72440944881873;
+
+        /// <summary>
+        /// Default page height.
+        /// </summary>
+        private const double defaultHeight = 952.44102177657487;
+
         /// <summary>
         /// The pdf builder instance used for testing.
         /// </summary>
@@ -91,50 +86,6 @@ namespace APSIM.Tests.Interop
             EnsureCanRenderTag(new TableTag(CreateTable()));
             EnsureCanRenderTag(CreateGraphTag());
             EnsureCanRenderTag(new GraphPageTag(new[] { CreateGraphTag() }));
-        }
-
-        /// <summary>
-        /// Create a simple graph tag.
-        /// </summary>
-        private GraphTag CreateGraphTag()
-        {
-            Marker marker = new Marker(MarkerType.None, MarkerSize.Normal, 1);
-            Line line = new Line(LineType.Solid, LineThickness.Normal);
-            IEnumerable<object> x = new object[] { 0, 1 };
-            IEnumerable<object> y = new object[] { 1, 2 };
-            IEnumerable<Series> series = new Series[1] { new LineSeries("s0", Color.Red, true, x, y, line, marker) };
-            IEnumerable<Axis> axes = new Axis[2]
-            {
-                new Axis("x", AxisPosition.Bottom, false, false),
-                new Axis("Y", AxisPosition.Left, false, false),
-            };
-            LegendConfiguration legend = new LegendConfiguration(LegendOrientation.Horizontal, LegendPosition.BottomCenter, true);
-            GraphTag graph = new GraphTag("title", series, axes, legend);
-            return graph;
-        }
-
-        /// <summary>
-        /// Create a simple DataTable.
-        /// </summary>
-        private DataTable CreateTable()
-        {
-            DataTable table = new DataTable("sample table");
-            table.Columns.Add("x", typeof(string));
-            table.Columns.Add("y", typeof(string));
-            table.Rows.Add("x0", "y0");
-            table.Rows.Add("x1", "y1");
-            return table;
-        }
-
-        /// <summary>
-        /// Ensure that the given tag is rendered without error and
-        /// adds something to the document.
-        /// </summary>
-        /// <param name="tag">The tag to be rendered.</param>
-        private void EnsureCanRenderTag(ITag tag)
-        {
-            builder.Write(tag);
-            Assert.Greater(doc.LastSection.Elements.Count, 0);
         }
 
         /// <summary>
@@ -369,15 +320,6 @@ namespace APSIM.Tests.Interop
         }
 
         /// <summary>
-        /// tbi: bookmarks are a TBI feature in PdfBuilder.
-        /// </summary>
-        [Test]
-        public void TestAppendBookmarkedText()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
         /// Ensure that <see cref="PdfBuilder.AppendText(string, TextStyle)"/>
         /// will insert the text into the document.
         /// </summary>
@@ -491,6 +433,41 @@ namespace APSIM.Tests.Interop
                 MigraDocImage inserted = (MigraDocImage)paragraph.Elements[0];
                 Assert.AreEqual(image.Width, inserted.Source.Width);
                 Assert.AreEqual(image.Height, inserted.Source.Height);
+            }
+        }
+
+        /// <summary>
+        /// Ensure that any images are resized so that they fit the document
+        /// before they are added, and that the aspect ratio of the image
+        /// is preserved when it is resized.
+        /// </summary>
+        /// <param name="pageWidth">Page width (in px).</param>
+        /// <param name="pageHeight">Page height (in px).</param>
+        /// <param name="imageWidth">Image width (in px).</param>
+        /// <param name="imageHeight">Image height (in px).</param>
+        /// <param name="expectedWidth">Expected width of the image after it's resized (in px).</param>
+        /// <param name="expectedHeight">Expected height of the image after it's resized (in px).</param>
+        [TestCase(10, 10, 20, 20, 10, 10)]
+        [TestCase(10, 10, 21, 9, 10, 4)]
+        [TestCase(10, 10, 8, 14, 5, 10)]
+        public void TestAppendImageSizing(double pageWidth, double pageHeight, int imageWidth, int imageHeight, int expectedWidth, int expectedHeight)
+        {
+            Section section = doc.AddSection();
+            _ = section.Elements;
+            const double pointsToPixels = 96.0 / 72;
+            // When setting the page width and height, convert from px to points.
+            section.PageSetup.PageWidth =  Unit.FromPoint(pageWidth / pointsToPixels);
+            section.PageSetup.PageHeight = Unit.FromPoint(pageHeight / pointsToPixels);
+            using (Image image = new Bitmap(imageWidth, imageHeight))
+            {
+                builder.AppendImage(image);
+                Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+                MigraDocImage inserted = (MigraDocImage)paragraph.Elements[0];
+
+                // The image we inserted is 20x20. However, the page size is
+                // 10x10. The image would have been resized to fit this.
+                Assert.AreEqual(expectedWidth, inserted.Source.Width);
+                Assert.AreEqual(expectedHeight, inserted.Source.Height);
             }
         }
 
@@ -613,6 +590,18 @@ namespace APSIM.Tests.Interop
 
         /// <summary>
         /// Ensure that <see cref="PdfBuilder.GetPageSize(out double, out double)"/>
+        /// returns the default page size if the document contains no sections.
+        /// </summary>
+        [Test]
+        public void TestGetPageSizeNoSections()
+        {
+            builder.GetPageSize(out double width, out double height);
+            Assert.AreEqual(defaultWidth, width);
+            Assert.AreEqual(defaultHeight, height);
+        }
+
+        /// <summary>
+        /// Ensure that <see cref="PdfBuilder.GetPageSize(out double, out double)"/>
         /// returns the document's default page width/height if the last section's
         /// width or height are 0.
         /// </summary>
@@ -625,8 +614,6 @@ namespace APSIM.Tests.Interop
             // don't seem to persist. Should probably revisit this later, but
             // for now I'm just going to hardcode the default page width/height
             // as chosen by MigraDoc.
-            const double defaultWidth = 604.72440944881873;
-            const double defaultHeight = 952.44102177657487;
 
             Section section = doc.AddSection();
             section.PageSetup.PageWidth = sectionWidth;
@@ -711,17 +698,57 @@ namespace APSIM.Tests.Interop
         }
 
         /// <summary>
-        /// Ensure that <see cref="PdfBuilder.Write(ITag)"/> causes the tag to be
-        /// written to the document via an appropriate tag renderer.
+        /// Ensure that writing an unknown markdown block type does not cause an exception.
         /// </summary>
-        /// <remarks>
-        /// TBI. This will be much easier once I've refactored PdfBuilder such that
-        /// it doesn't contain any markdown or tag logic.
-        /// </remarks>
         [Test]
-        public void TestWriteTag()
+        public void TestWriteUnknownMarkdownBlock()
         {
-            throw new NotImplementedException();
+            Mock<MarkdownObject> mockBlock = new Mock<MarkdownObject>();
+            Assert.DoesNotThrow(() => builder.Write(mockBlock.Object));
+        }
+
+        /// <summary>
+        /// Create a simple graph tag.
+        /// </summary>
+        private GraphTag CreateGraphTag()
+        {
+            Marker marker = new Marker(MarkerType.None, MarkerSize.Normal, 1);
+            Line line = new Line(LineType.Solid, LineThickness.Normal);
+            IEnumerable<object> x = new object[] { 0, 1 };
+            IEnumerable<object> y = new object[] { 1, 2 };
+            IEnumerable<Series> series = new Series[1] { new LineSeries("s0", Color.Red, true, x, y, line, marker) };
+            IEnumerable<Axis> axes = new Axis[2]
+            {
+                new Axis("x", AxisPosition.Bottom, false, false),
+                new Axis("Y", AxisPosition.Left, false, false),
+            };
+            LegendConfiguration legend = new LegendConfiguration(LegendOrientation.Horizontal, LegendPosition.BottomCenter, true);
+            GraphTag graph = new GraphTag("title", series, axes, legend);
+            return graph;
+        }
+
+        /// <summary>
+        /// Create a simple DataTable.
+        /// </summary>
+        private DataTable CreateTable()
+        {
+            DataTable table = new DataTable("sample table");
+            table.Columns.Add("x", typeof(string));
+            table.Columns.Add("y", typeof(string));
+            table.Rows.Add("x0", "y0");
+            table.Rows.Add("x1", "y1");
+            return table;
+        }
+
+        /// <summary>
+        /// Ensure that the given tag is rendered without error and
+        /// adds something to the document.
+        /// </summary>
+        /// <param name="tag">The tag to be rendered.</param>
+        private void EnsureCanRenderTag(ITag tag)
+        {
+            Assert.DoesNotThrow(() => builder.Write(tag));
+            Assert.Greater(doc.LastSection.Elements.Count, 0);
         }
     }
 }
