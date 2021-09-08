@@ -188,7 +188,7 @@
             NRemobilised = NRemobilisable * fraction;
         }
 
-        /// <summary>Clear the daily flows of DM and N.</summary>
+        /// <summary>Reset the transfer amounts in this tissue.</summary>
         public void ClearDailyTransferredAmounts()
         {
             DMTransferredIn = 0.0;
