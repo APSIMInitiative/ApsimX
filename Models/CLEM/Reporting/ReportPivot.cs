@@ -121,12 +121,7 @@ namespace Models.CLEM.Reporting
         public DataTable GenerateTable()
         {
             // Find the DataStore
-            var storage = dataStore;
-            if(storage == null)
-            {
-                storage = FindInScope<IDataStore>();
-            }
-            //var storage = FindInScope("DataStore") as IDataStore;
+            var storage = dataStore ?? FindInScope<IDataStore>();
 
             // Find the data
             report = report ?? storage.Reader.GetData(Parent.Name);
@@ -174,16 +169,12 @@ namespace Models.CLEM.Reporting
         /// </returns>
         private bool HasDataValues(DataColumn col)
         {
-            if (col.DataType.Name == "String")
-            {
-                return false;
-            }
+            if (col.DataType.Name == "String")            
+                return false;            
 
             // We are looking for data values, not IDs
             if (col.ColumnName.EndsWith("ID"))
-            {
                 return false;
-            }
 
             // DateTime is handled separately from other value types
             return col.DataType != typeof(DateTime);
@@ -225,22 +216,16 @@ namespace Models.CLEM.Reporting
         /// <returns>A string representing the date in a new format</returns>
         private string FormatDate(DateTime date)
         {
-            if (Time == "Day")
-            {
+            if (Time == "Day")            
                 return date.ToString("dd/MM/yyyy");
-            }
-            else if (Time == "Month")
-            {
+            
+            if (Time == "Month")
                 return date.ToString("MM/yyyy");
-            }
-            else if (Time == "Year")
-            {
+            
+            if (Time == "Year")
                 return date.ToString("yyyy");
-            }
-            else
-            {
-                throw new Exception("");
-            }
+            
+            throw new Exception("Cannot format date {date}, no time format selected.");
         }
 
         /// <summary>
@@ -271,10 +256,8 @@ namespace Models.CLEM.Reporting
                         .Select(r => Convert.ToDouble(r[Value]));
 
                     // Aggregate the data, leaving blank cells for missing values
-                    if (values.Any())
-                    {
-                        row[col] = AggregateValues(values);
-                    }
+                    if (values.Any())                    
+                        row[col] = AggregateValues(values);                    
                 }
 
                 pivot.Rows.Add(row);
