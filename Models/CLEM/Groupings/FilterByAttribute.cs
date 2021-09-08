@@ -27,17 +27,6 @@ namespace Models.CLEM.Groupings
     [Version(1, 0, 0, "")]
     public class FilterByAttribute : Filter, IValidatableObject
     {
-        [NonSerialized]
-        private PropertyInfo attributesProperty;
-        private ConstantExpression attributeTag;
-        private ConstantExpression compareValueAttribute;
-        private ConstantExpression compareValueValue;
-        private ConstantExpression attributeExistsOperator;
-        [NonSerialized]
-        private MethodInfo methodExists;
-        [NonSerialized]
-        private MethodInfo methodValue;
-
         /// <summary>
         /// Attribute tag to filter by
         /// </summary>
@@ -62,42 +51,41 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override Func<T, bool> Compile<T>()
         {
-            // check that the T is attributabe
-            if (!(typeof(IAttributable).IsAssignableFrom(typeof(T))))
-                return (T t) => false;
+            Func<T, bool> simple = t => {
+                var simpleFilterParam = Expression.Parameter(typeof(T));
 
-            var filterParam = Expression.Parameter(typeof(T));
-            var attProperty = Expression.Property(filterParam, attributesProperty);
-
-            Expression methodcall; // call the method with arguments
-            Expression binary; // binary expression for lambda
-            
-            if (FilterStyle == AttributeFilterStyle.Exists)
-            {
-                methodcall = Expression.Call(attProperty, methodExists, attributeTag);
-                if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
+                bool exists = (t as IAttributable).Attributes.Exists(AttributeTag);
+                BinaryExpression simpleBinary;
+                if (FilterStyle == AttributeFilterStyle.Exists)
                 {
-                    // Allow for IsTrue and IsFalse operator
-                    binary = Expression.MakeBinary(ExpressionType.Equal, methodcall, attributeExistsOperator);
-                    return Expression.Lambda<Func<T, bool>>(binary, filterParam).Compile();
+                    var simpleVal = Expression.Constant(Convert.ChangeType(Value ?? 0, typeof(bool)));
+                    if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
+                    {
+                        // Allow for IsTrue and IsFalse operator
+                        simpleVal = Expression.Constant((Operator == ExpressionType.IsTrue));
+                        simpleBinary = Expression.MakeBinary(ExpressionType.Equal, Expression.Constant(exists), simpleVal);
+                    }
+                    else
+                        simpleBinary = Expression.MakeBinary(Operator, Expression.Constant(exists), simpleVal);
                 }
                 else
                 {
-                    binary = Expression.MakeBinary(Operator, methodcall, compareValueAttribute);
-                    return Expression.Lambda<Func<T, bool>>(binary, filterParam).Compile();
-                }
-            }
-            else
-            {
-                // get compare value from Value - assumed to be single 
-                // TODO: will also need string when haplotypes implemented
-                methodcall = Expression.Call(attProperty, methodValue, attributeTag);
+                    if (!exists) return false;
+                    object attributeValue = (t as IAttributable).Attributes.GetValue(AttributeTag).StoredValue;
+                    var simpleVal = Expression.Constant(Convert.ChangeType(Value ?? 0, attributeValue.GetType()));
+                    var expAttributeVal = Expression.Constant(Convert.ChangeType(attributeValue, attributeValue.GetType()));
 
-                var returnValue = Expression.Property(methodcall, "StoredValue");
-                var returnValueAsFloat = Expression.Convert(returnValue, typeof(Single));
-                binary = Expression.MakeBinary(Operator, returnValueAsFloat, compareValueValue);
-                return Expression.Lambda<Func<T, bool>>(binary, filterParam).Compile();
-            }
+                    if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
+                    {
+                        throw new ApsimXException(this, $"Invalid FilterByAttribute operator [{OperatorToSymbol()}] in [f={this.NameWithParent}]");
+                    }
+                    else
+                        simpleBinary = Expression.MakeBinary(Operator, expAttributeVal, simpleVal);
+                }
+                var simpleLambda = Expression.Lambda<Func<T, bool>>(simpleBinary, simpleFilterParam).Compile();
+                return simpleLambda(t);
+            };
+            return simple;
         }
 
         /// <summary>
@@ -105,15 +93,6 @@ namespace Models.CLEM.Groupings
         /// </summary>
         public override void Initialise()
         {
-            attributesProperty = typeof(IAttributable).GetProperty("Attributes");
-            attributeTag = Expression.Constant(AttributeTag);
-            attributeExistsOperator = Expression.Constant(Operator == ExpressionType.IsTrue);
-            compareValueAttribute = Expression.Constant(Value ?? "");
-            compareValueValue = Expression.Constant(Convert.ToSingle(Value ?? "0.0"));
-            // need to get the methodinfo from attributes (it is nested T.Attributes.Exists(tag))
-            methodExists = typeof(IndividualAttributeList).GetMethods().Where(m => m.Name == "Exists").FirstOrDefault();
-            // need to get the methodinfo from attributes (it is nested T.Attributes.GetValue(tag))
-            methodValue = typeof(IndividualAttributeList).GetMethods().Where(m => m.Name == "GetValue").FirstOrDefault();
         }
 
         /// <summary>

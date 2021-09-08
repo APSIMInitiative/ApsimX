@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 137,
+  "Version": 139,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -65,6 +65,7 @@
           "$type": "Models.CLEM.ZoneCLEM, Models",
           "FarmMultiplier": 1.0,
           "ClimateRegion": 0,
+          "EcologicalIndicatorsCalculationInterval": 12,
           "EcologicalIndicatorsCalculationMonth": 12,
           "AutoCreateDescriptiveSummary": false,
           "Area": 0.0,
@@ -76,11 +77,13 @@
           "Children": [
             {
               "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
+              "SelectedTab": null,
               "Name": "Resources",
               "Children": [
                 {
                   "$type": "Models.CLEM.Resources.RuminantHerd, Models",
                   "TransactionStyle": 0,
+                  "SelectedTab": null,
                   "Name": "Ruminants",
                   "Children": [
                     {
@@ -148,7 +151,6 @@
                       "InterParturitionIntervalCoefficient": -0.7994,
                       "GestationLength": 9.0,
                       "MinimumAge1stMating": 24.0,
-                      "MaximumAgeMating": 120.0,
                       "MinimumSize1stMating": 0.5,
                       "MinimumDaysBirthToConception": 61.0,
                       "MultipleBirthRate": null,
@@ -156,22 +158,25 @@
                       "MaximumMaleMatingsPerDay": 30.0,
                       "PrenatalMortality": 0.079,
                       "MethaneProductionCoefficient": 35.16,
+                      "SelectedTab": null,
                       "Name": "Bos indicus",
                       "Children": [
                         {
                           "$type": "Models.CLEM.Resources.RuminantInitialCohorts, Models",
                           "WeightWarningOccurred": false,
+                          "SelectedTab": null,
                           "Name": "Initial cohorts",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                              "Gender": 1,
+                              "Sex": 0,
                               "Age": 8,
                               "Number": 1.0,
                               "Weight": 180.0,
                               "WeightSD": 0.0,
                               "Suckling": false,
                               "Sire": false,
+                              "SelectedTab": null,
                               "Name": "WeanerF",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -195,6 +200,7 @@
                 },
                 {
                   "$type": "Models.CLEM.Resources.AnimalFoodStore, Models",
+                  "SelectedTab": null,
                   "Name": "AnimalFoodStore",
                   "Children": [
                     {
@@ -203,6 +209,7 @@
                       "DMD": 45.0,
                       "Nitrogen": 0.75,
                       "StartingAmount": 10000.0,
+                      "SelectedTab": null,
                       "Name": "RiceStraw",
                       "Children": [
                         {
@@ -211,6 +218,7 @@
                           "TransmutationPacketSize": 10000.0,
                           "UseWholePackets": false,
                           "TransactionCategory": "Transmutation",
+                          "SelectedTab": null,
                           "Name": "Purchase",
                           "Children": [
                             {
@@ -220,6 +228,7 @@
                               "TransmuteStyle": 0,
                               "ResourceGroup": null,
                               "FinanceTypeForTransactionsName": "No transactions",
+                              "SelectedTab": null,
                               "Name": "Money",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -244,6 +253,7 @@
                 {
                   "$type": "Models.CLEM.Resources.Finance, Models",
                   "CurrencyName": "Dollars",
+                  "SelectedTab": null,
                   "Name": "Finances",
                   "Children": [
                     {
@@ -253,6 +263,7 @@
                       "WithdrawalLimit": 0.0,
                       "InterestRateCharged": 7.5,
                       "InterestRatePaid": 2.0,
+                      "SelectedTab": null,
                       "Name": "General account",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -271,12 +282,14 @@
             },
             {
               "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
+              "SelectedTab": null,
               "Name": "Activities",
               "Children": [
                 {
                   "$type": "Models.CLEM.Activities.ActivityFolder, Models",
                   "TransactionCategory": null,
                   "OnPartialResourcesAvailableAction": 0,
+                  "SelectedTab": null,
                   "Name": "Manage herd",
                   "Children": [
                     {
@@ -287,11 +300,13 @@
                       "StopFeedingWhenSatisfied": false,
                       "TransactionCategory": "Livestock.Feed",
                       "OnPartialResourcesAvailableAction": 2,
+                      "SelectedTab": null,
                       "Name": "Feed rice straw",
                       "Children": [
                         {
                           "$type": "Models.CLEM.Groupings.RuminantFeedGroup, Models",
                           "Value": 1.0,
+                          "SelectedTab": null,
                           "Name": "Feed all",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -309,6 +324,7 @@
                       "MethaneStoreName": "Use store named Methane if present",
                       "OnPartialResourcesAvailableAction": 0,
                       "TransactionCategory": "Livestock.Manage",
+                      "SelectedTab": null,
                       "Name": "Grow all ruminants",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -323,6 +339,7 @@
                 {
                   "$type": "Models.CLEM.SummariseRuminantHerd, Models",
                   "HerdFilters": null,
+                  "SelectedTab": null,
                   "Name": "SummariseHerd",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -331,6 +348,7 @@
                 },
                 {
                   "$type": "Models.CLEM.Reporting.ReportRuminantHerd, Models",
+                  "SelectedTab": null,
                   "Name": "ReportHerd",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -391,29 +409,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Report, Models",
-                  "VariableNames": [
-                    "[Clock].Today as Date",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.ID as UId",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.Breed as Breed",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.HerdName as Herd",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.Gender as Sex",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.Age as Age",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.Weight as Weight",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.SaleFlag as Reason",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.PopulationChangeDirection as Change"
-                  ],
-                  "EventNames": [
-                    "[Resources].Ruminants.TransactionOccurred"
-                  ],
-                  "GroupByVariableName": null,
-                  "Name": "HerdLedger",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
                   "ReportStyle": 0,
                   "ResourceGroupsToReport": "Finances",
@@ -426,6 +421,22 @@
                   "EventNames": null,
                   "GroupByVariableName": null,
                   "Name": "FinancesLedger",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                  "ReportStyle": 0,
+                  "ResourceGroupsToReport": "Ruminants",
+                  "ReportLossesAsNegative": true,
+                  "IncludePrice": false,
+                  "IncludeConversions": false,
+                  "VariableNames": null,
+                  "EventNames": null,
+                  "GroupByVariableName": null,
+                  "Name": "HerdLedger",
                   "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,

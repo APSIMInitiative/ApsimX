@@ -78,7 +78,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Mandatory attribute
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0)]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         [Description("Mandatory attribute")]
         [Required]
         public bool Mandatory { get; set; }
