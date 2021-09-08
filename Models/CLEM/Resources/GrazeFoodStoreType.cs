@@ -23,10 +23,15 @@ namespace Models.CLEM.Resources
     [Version(1, 0, 2, "Grazing from pasture pools is fixed to reflect NABSA approach.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStoreType.htm")]
-    public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
+    public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IValidatableObject
     {
         [Link]
         private ZoneCLEM zoneCLEM = null;
+        [Link]
+        private Clock clock = null;
+
+        private IPastureManager manager;
+        private GrazeFoodStoreFertilityLimiter grazeFoodStoreFertilityLimiter;
 
         /// <summary>
         /// Unit type
@@ -153,8 +158,34 @@ namespace Models.CLEM.Resources
         [Required]
         public double IntakeQualityCoefficient { get; set; }
 
-        private IPastureManager manager;
-        private GrazeFoodStoreFertilityLimiter grazeFoodStoreFertilityLimiter;
+        /// <summary>
+        /// Initial pasture biomass
+        /// </summary>
+        [Description("Initial biomass (kg per ha)")]
+        public double InitialBiomass { get; set; }
+
+        /// <summary>
+        /// First month of seasonal growth
+        /// </summary>
+        [Description("First month of seasonal growth")]
+        [System.ComponentModel.DefaultValueAttribute(11)]
+        [Required, Month]
+        public MonthsOfYear FirstMonthOfGrowSeason { get; set; }
+
+        /// <summary>
+        /// Last month of seasonal growth
+        /// </summary>
+        [Description("Last month of seasonal growth")]
+        [System.ComponentModel.DefaultValueAttribute(3)]
+        [Required, Month]
+        public MonthsOfYear LastMonthOfGrowSeason { get; set; }
+
+        /// <summary>
+        /// Number of months for initial biomass
+        /// </summary>
+        [Description("Number of months for initial biomass")]
+        [System.ComponentModel.DefaultValueAttribute(5)]
+        public int NumberMonthsForInitialBiomass { get; set; }
 
         /// <summary>
         /// A link to the Activity managing this Graze Food Store
@@ -280,6 +311,14 @@ namespace Models.CLEM.Resources
                 else
                     return 0;
             }
+        }
+
+        /// <summary>
+        /// Constructor 
+        /// </summary>
+        public GrazeFoodStoreType()
+        {
+            SetDefaults();
         }
 
         /// <summary>
@@ -461,6 +500,105 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public EcologicalIndicators CurrentEcologicalIndicators { get; set; }
 
+        /// <summary>
+        /// A method to initialise initial pasture  biomass across pools 
+        /// </summary>
+        /// <param name="area">Area of pasture (ha)</param>
+        /// <param name="firstMonthsGrowth">The growth (kg per ha) expected in the first month for accuracy</param>
+        public void SetupStartingPasturePools(double area, double firstMonthsGrowth)
+        {
+
+            if (area <= 0) return;
+            if (NumberMonthsForInitialBiomass <= 0) return;
+
+            // Initial biomass
+            double amountToAdd = area * InitialBiomass;
+            if (amountToAdd <= 0)
+                return;
+
+            // Set up pasture pools to start run based on month and user defined pasture properties
+            // Locates the previous five months where growth occurred (Nov-Mar) and applies decomposition to current month
+            // This months growth will not be included.
+
+            int month = clock.Today.Month;
+            int monthCount = 0;
+            int includedMonthCount = 0;
+            double propBiomass = 1.0;
+            double currentN = GreenNitrogen;
+            // NABSA changes N by 0.8 for particular months. Not needed here as decay included.
+            double currentDMD = currentN * NToDMDCoefficient + NToDMDIntercept;
+            currentDMD = Math.Max(MinimumDMD, currentDMD);
+            Pools.Clear();
+
+            List<GrazeFoodStorePool> newPools = new List<GrazeFoodStorePool>();
+
+            // number of previous growth months to consider. default should be 5 
+            int growMonthHistory = NumberMonthsForInitialBiomass;
+
+            while (includedMonthCount < growMonthHistory)
+            {
+                // start month before start of simulation.
+                monthCount++;
+                month--;
+                currentN -= DecayNitrogen;
+                currentN = Math.Max(currentN, MinimumNitrogen);
+                currentDMD *= 1 - DecayDMD;
+                currentDMD = Math.Max(currentDMD, MinimumDMD);
+
+                if (month == 0)
+                    month = 12;
+
+                bool insideGrowthWindow = false;
+                int first = (int)FirstMonthOfGrowSeason;
+                int last = (int)LastMonthOfGrowSeason;
+
+                if (first < last)
+                    insideGrowthWindow = (month >= first & month <= last);
+                else
+                    insideGrowthWindow = (month >= first | month <= last);
+
+                if (insideGrowthWindow) // (month <= 3 | month >= 11)
+                {
+                    // add new pool
+                    newPools.Add(new GrazeFoodStorePool()
+                    {
+                        Age = monthCount,
+                        Nitrogen = currentN,
+                        DMD = currentDMD,
+                        StartingAmount = propBiomass
+                    });
+                    includedMonthCount++;
+                }
+                propBiomass *= 1 - DetachRate;
+            }
+
+            // assign pasture biomass to pools based on proportion of total
+            double total = newPools.Sum(a => a.StartingAmount);
+            foreach (var pool in newPools)
+                pool.Set(amountToAdd * (pool.StartingAmount / total));
+
+            // Previously: remove this months growth from pool age 0 to keep biomass at approximately setup.
+            // But as updates happen at the end of the month, the first month's biomass is never added so stay with 0 or delete following section
+            // Get this months growth
+            // Get this months pasture data from the pasture data list
+            if (firstMonthsGrowth > 0)
+            {
+                double thisMonthsGrowth = firstMonthsGrowth * area;
+                if (thisMonthsGrowth > 0)
+                    if (newPools.Where(a => a.Age == 0).FirstOrDefault() is GrazeFoodStorePool thisMonth)
+                        thisMonth.Set(Math.Max(0, thisMonth.Amount - thisMonthsGrowth));
+            }
+
+            // Add to pasture. This will add pool to pasture available store.
+            foreach (var pool in newPools)
+            {
+                string reason = "Initialise";
+                if (newPools.Count() > 1)
+                    reason = "Initialise pool " + pool.Age.ToString();
+
+                Add(pool, this, "", reason);
+            }
+        }
 
         #region transactions
 
@@ -705,6 +843,35 @@ namespace Models.CLEM.Resources
         public ResourceTransaction LastTransaction { get; set; }
 
         #endregion
+
+        #region validation
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            bool noGrowSeason = false;
+            int first = (int)FirstMonthOfGrowSeason;
+            int last = (int)LastMonthOfGrowSeason;
+            if (first < last)
+                noGrowSeason = (last - first <= 1);
+            else
+                noGrowSeason = ((12 - first) + last <= 1);
+
+            if (InitialBiomass > 0 & noGrowSeason)
+            {
+                string[] memberNames = new string[] { "Invalid initial biomass growth season" };
+                results.Add(new ValidationResult($"There must be at least one month differnece between the first month [{FirstMonthOfGrowSeason}] and the last month [{LastMonthOfGrowSeason}] of the growth season specified to calculate the initial biomass in [r={this.NameWithParent}]", memberNames));
+            }
+            return results;
+        }
+        #endregion
+
 
         #region descriptive summary
 
