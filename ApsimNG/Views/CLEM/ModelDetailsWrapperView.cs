@@ -29,7 +29,6 @@ namespace UserInterface.Views
         private Label modelTypeLabel = null;
         private Label modelDescriptionLabel = null;
         private LinkButton modelHelpLinkLabel = null;
-        private LinkButton modelHelpLinkImg = null;
         private Label modelVersionLabel = null;
         private Viewport bottomView = null;
         private string modelTypeLabelText;
@@ -140,41 +139,9 @@ namespace UserInterface.Views
 #endif
 
             vbox1.Add(scroll);
-            vbox1.SizeAllocated += Vbox1_SizeAllocated;
 
             mainWidget = vbox1;
             mainWidget.Destroyed += _mainWidget_Destroyed;
-        }
-
-        private void Hbox_SizeAllocated(object o, SizeAllocatedArgs args)
-        {
-            try
-            {
-                modelHelpLinkImg.HeightRequest = 50;
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// We want to wrap the description text within a space that uses all the available width,
-        /// but Gtk doesn't make that easy. Here we respond to changes in the size of the enclosing VBox
-        /// and adjust the width of the description label accordingly. We use a bit less than the full width
-        /// so that Windows can still be reduced in size. See http://blog.borovsak.si/2009/05/wrapping-adn-resizing-gtklabel.html
-        /// </summary>
-        private void Vbox1_SizeAllocated(object o, SizeAllocatedArgs args)
-        {
-            try
-            {
-                modelDescriptionLabel.WidthRequest = args.Allocation.Width - 8;
-                modelVersionLabel.WidthRequest = args.Allocation.Width - 8;
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
         }
 
         private void ModelHelpLinkLabel_Clicked(object sender, EventArgs e)
@@ -217,7 +184,6 @@ namespace UserInterface.Views
             try
             {
                 modelHelpLinkLabel.Clicked -= ModelHelpLinkLabel_Clicked;
-                vbox1.SizeAllocated -= Vbox1_SizeAllocated;
                 if (bottomView != null)
                 {
                     foreach (Widget child in bottomView.Children)
