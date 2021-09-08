@@ -120,10 +120,10 @@ namespace Models.CLEM.Groupings
 
             if (TakeStyle == TakeFromFilterStyle.Proportion)
             {
-                if (Value < 1)
+                if (Value > 1)
                 {
                     string[] memberNames = new string[] { "Invalid proportion to take from filter" };
-                    results.Add(new ValidationResult($"The proportion to take form [f={Name}] in [f={Parent.Name}] must be less than or equal to 1", memberNames));
+                    results.Add(new ValidationResult($"The proportion to take from [f={Name}] in [f={Parent.Name}] must be less than or equal to 1", memberNames));
                 }
             }
             return results;
