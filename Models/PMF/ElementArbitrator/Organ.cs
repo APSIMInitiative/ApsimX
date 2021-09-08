@@ -122,6 +122,11 @@
             }
         }
 
+        /// <summary>
+        /// Object that contains root specific functionality.  Only present if the organ is representing a root
+        /// </summary>
+        public RootNetwork RootNetworkObject { get; set; }
+        
         /// <summary>The Carbon concentration of the organ</summary>
         [Description("Carbon concentration")]
         [Units("g/g")]
@@ -169,7 +174,10 @@
 
         /// <summary>Gets the biomass removed from the system (harvested, grazed, etc.)</summary>
         [JsonIgnore]
-        public OrganNutrientStates Removed { get; private set; }
+        public OrganNutrientStates LiveRemoved { get; private set; }
+        /// <summary>Gets the biomass removed from the system (harvested, grazed, etc.)</summary>
+        [JsonIgnore]
+        public OrganNutrientStates DeadRemoved { get; private set; }
 
         /// <summary>Rate of senescence for the day</summary>
         [JsonIgnore]
@@ -307,6 +315,7 @@
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
+            RootNetworkObject = this.FindChild<RootNetwork>();
             Clear();
         }
 
@@ -391,8 +400,6 @@
                 Allocated.Nitrogen = Nitrogen.DemandsAllocated;
                 Live.AddDelta(Allocated);
 
-                
-                
                 // Do detachment
                 double detachedFrac = detachmentRateFunction.Value();
                 if (Dead.Weight.Total * (1.0 - detachedFrac) < BiomassToleranceValue)
@@ -405,6 +412,7 @@
                     surfaceOrganicMatter.Add(Detached.Wt * 10, Detached.N * 10, 0, parentPlant.PlantType, Name);
                 }
 
+                
                 // Do maintenance respiration
                 if (maintenanceRespirationFunction.Value() > 0)
                 {
@@ -412,6 +420,10 @@
                    // Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
                    // Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
                 }
+
+                if (RootNetworkObject != null)
+                    RootNetworkObject.PartitionBiomassThroughSoil(ReAllocated, ReTranslocated, Allocated, Senesced, Detached, LiveRemoved, DeadRemoved);
+
             }
         }
 
