@@ -270,15 +270,6 @@
             }
         }
 
-        /// <summary>Preparation before the main daily processes.</summary>
-        public void OnDoDailyInitialisation()
-        {
-            foreach (var tissue in Tissue)
-            {
-                tissue.OnDoDailyInitialisation();
-            }
-        }
-
         /// <summary>Kills part of the organ (transfer DM and N to dead tissue).</summary>
         /// <param name="fractionToRemove">The fraction to kill in each tissue</param>
         public void KillOrgan(double fractionToRemove)

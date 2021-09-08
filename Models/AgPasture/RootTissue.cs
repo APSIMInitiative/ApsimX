@@ -64,6 +64,15 @@
         /// <summary>Nitrogen remobilised into new growth (kg/ha).</summary>
         private double nRemobilised;
 
+        /// <summary>Amount of N available for remobilisation (kg/ha).</summary>
+        public double NRemobilisable { get; private set; }
+
+        /// <summary>Dry matter biomass.</summary>
+        public IAGPBiomass DM { get { return biomass; } }
+
+        /// <summary>Dry matter fraction for each layer (0-1).</summary>
+        public double[] FractionWt { get { return MathUtilities.Divide_Value(dmByLayer, DM.Wt); } }
+
         /// <summary>Initialise this root instance.</summary>
         /// <param name="initialDMByLayer">Initial dry matter by layer.</param>
         /// <param name="initialNByLayer">Initial nitrogen by layer.</param>
@@ -84,15 +93,6 @@
             }
             UpdateDM();
         }
-
-        /// <summary>Amount of N available for remobilisation (kg/ha).</summary>
-        public double NRemobilisable { get; private set; }
-
-        /// <summary>Dry matter biomass.</summary>
-        public IAGPBiomass DM { get { return biomass; } }
-
-        /// <summary>Dry matter fraction for each layer (0-1).</summary>
-        public double[] FractionWt { get { return MathUtilities.Divide_Value(dmByLayer, DM.Wt); } }
 
         /// <summary>Set the biomass moving into the tissue.</summary>
         /// <param name="dm">Dry matter (kg/ha).</param>
@@ -342,7 +342,7 @@
             biomass.N = nByLayer.Sum();
         }
 
-        /// <summary>Called each day to reset the transfer variables.</summary>
+        /// <summary>Reset the transfer amounts in this tissue.</summary>
         public void ClearDailyTransferredAmounts()
         {
             dmTransferredIn = 0.0;

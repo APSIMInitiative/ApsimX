@@ -85,20 +85,6 @@
 
         //----------------------- Public methods -----------------------
 
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs args)
-        {
-            ClearDailyTransferredAmounts();
-        }
-
-        /// <summary>Preparation before the main daily processes.</summary>
-        public void OnDoDailyInitialisation()
-        {
-            DMRemoved = 0;
-            NRemoved = 0;
-            ClearDailyTransferredAmounts();
-        }
-
         /// <summary>Sets the biomass of this tissue.</summary>
         /// <param name="dmAmount">The DM amount to set to (kg/ha).</param>
         /// <param name="nAmount">The amount of N to set to (kg/ha).</param>
@@ -155,7 +141,7 @@
             CalculateDigestibility();
         }
 
-        /// <summary>Clear the daily flows of DM and N.</summary>
+        /// <summary>Reset the transfer amounts in this tissue.</summary>
         public void ClearDailyTransferredAmounts()
         {
             DMTransferedIn = 0.0;

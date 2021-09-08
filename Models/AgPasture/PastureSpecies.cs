@@ -228,7 +228,7 @@
                 mySummary.WriteWarning(this, " Cannot sow the pasture species \"" + Name + "\", as it is already growing");
             else
             {
-                RefreshVariables();
+                ClearDailyTransferredAmounts();
                 isAlive = true;
                 phenologicStage = 0;
                 mySummary.WriteMessage(this, " The pasture species \"" + Name + "\" has been sown today");
@@ -261,7 +261,7 @@
             }
 
             // zero all transfer variables
-            RefreshVariables();
+            ClearDailyTransferredAmounts();
             // reset state variables
             Leaf.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
             Stem.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
@@ -269,7 +269,6 @@
             foreach (PastureBelowGroundOrgan root in roots)
             {
                 root.SetBiomassState(0.0, 0.0, 0.0);
-                root.ClearDailyTransferredAmounts();
             }
 
             greenLAI = 0.0;
@@ -2544,15 +2543,12 @@
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            // 1. Zero out several variables
-            RefreshVariables();
-            Leaf.OnDoDailyInitialisation();
-            Stem.OnDoDailyInitialisation();
-            Stolon.OnDoDailyInitialisation();
+            // zero out several variables
+            ClearDailyTransferredAmounts();
         }
 
         /// <summary>Reset the transfer amounts in the plant and all organs.</summary>
-        internal void RefreshVariables()
+        internal void ClearDailyTransferredAmounts()
         {
             // reset variables for whole plant
             defoliatedFraction = 0.0;
@@ -3595,14 +3591,7 @@
         /// <summary>Resets this plant to its initial state.</summary>
         public void Reset()
         {
-            Leaf.ClearDailyTransferredAmounts();
-            Stem.ClearDailyTransferredAmounts();
-            Stolon.ClearDailyTransferredAmounts();
-            foreach (PastureBelowGroundOrgan root in roots)
-            {
-                root.ClearDailyTransferredAmounts();
-            }
-
+            ClearDailyTransferredAmounts();
             SetInitialState();
         }
 
