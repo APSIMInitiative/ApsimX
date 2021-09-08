@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 140,
+  "Version": 141,
   "Name": "Simulations",
   "Children": [
     {
@@ -1602,16 +1602,18 @@
             },
             {
               "$type": "Models.PMF.CompositeBiomass, Models",
-              "Propertys": [
-                "[Leaf].Live",
-                "[Leaf].Dead"
-              ],
+              "Propertys": null,
               "DMDOfStructural": 0.6,
               "Name": "Total",
               "Children": [],
               "IncludeInDocumentation": true,
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "OrganNames": [
+                "Leaf"
+              ],
+              "IncludeLive": true,
+              "IncludeDead": true
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
@@ -4304,82 +4306,89 @@
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Leaf].Dead",
-            "[StorageRoot].Live",
-            "[StorageRoot].Dead",
-            "[Petiole].Live",
-            "[Petiole].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "AboveGround",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "StorageRoot",
+            "Petiole"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Root].Live",
-            "[Root].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "BelowGround",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Root"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Leaf].Dead",
-            "[StorageRoot].Live",
-            "[StorageRoot].Dead",
-            "[Petiole].Live",
-            "[Petiole].Dead",
-            "[Root].Live",
-            "[Root].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "Total",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "StorageRoot",
+            "Petiole",
+            "Root"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Petiole].Live",
-            "[StorageRoot].Live",
-            "[Root].Live"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "TotalLive",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Petiole",
+            "StorageRoot",
+            "Root"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": false
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Dead",
-            "[Petiole].Dead",
-            "[StorageRoot].Dead",
-            "[Root].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "TotalDead",
           "Children": [],
           "IncludeInDocumentation": true,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Petiole",
+            "StorageRoot",
+            "Root"
+          ],
+          "IncludeLive": false,
+          "IncludeDead": true
         },
         {
           "$type": "Models.Functions.LinearInterpolationFunction, Models",
