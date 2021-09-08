@@ -190,8 +190,9 @@ namespace Models.CLEM.Activities
                 throw new ApsimXException(this, String.Format("Unable to locate crop data reader [x={0}] requested by [a={1}]", this.ModelNameFileCrop??"Unknown", this.Name));
 
             LinkedResourceItem = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-            if((LinkedResourceItem as Model).Parent.GetType() == typeof(GrazeFoodStore))
+            if((LinkedResourceItem as Model).Parent is GrazeFoodStore)
             {
+                // set manager of graze food store if linked
                 (LinkedResourceItem as GrazeFoodStoreType).Manager = (Parent as IPastureManager);
                 addReason = "Growth";
             }
@@ -216,7 +217,16 @@ namespace Models.CLEM.Activities
             // check if harvest type tags have been provided
             HarvestTagsUsed = HarvestData.Where(a => a.HarvestType != "").Count() > 0;
 
-            // set manager of graze food store if linked
+            if (LinkedResourceItem is GrazeFoodStoreType)
+            {
+                double firstMonthsGrowth = 0;
+                CropDataType cropData = HarvestData.Where(a => a.Year == clock.StartDate.Year && a.Month == clock.StartDate.Month).FirstOrDefault();
+                if (cropData != null)
+                    firstMonthsGrowth = cropData.AmtKg;
+
+                (LinkedResourceItem as GrazeFoodStoreType).SetupStartingPasturePools(UnitsToHaConverter*(Parent as CropActivityManageCrop).Area * UnitsToHaConverter, firstMonthsGrowth);
+                addReason = "Growth";
+            }
         }
 
         /// <summary>
