@@ -51,13 +51,6 @@ namespace Models.CLEM.Resources
         public double NToDMDIntercept { get; set; }
 
         /// <summary>
-        /// Crude protein denominator to convert N% to DMD%
-        /// </summary>
-        [Description("Crude protein denominator to convert N% to DMD%")]
-        [Required]
-        public double NToDMDCrudeProteinDenominator { get; set; }
-
-        /// <summary>
         /// Nitrogen of common land pasture (%)
         /// </summary>
         [Description("Nitrogen of common land pasture (%)")]
@@ -226,9 +219,6 @@ namespace Models.CLEM.Resources
 
                 if (NToDMDIntercept == 0)
                     missing.Add("NToDMDIntercept");
-
-                if (NToDMDCrudeProteinDenominator == 0)
-                    missing.Add("NToDMDCrudeProteinDenominator");
 
                 if (missing.Count() > 0)
                 {
