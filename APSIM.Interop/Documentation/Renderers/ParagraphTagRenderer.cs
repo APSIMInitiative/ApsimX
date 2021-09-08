@@ -1,3 +1,4 @@
+using APSIM.Interop.Markdown.Parsers.Inlines;
 using APSIM.Interop.Markdown.Renderers;
 using APSIM.Services.Documentation;
 using Markdig;
@@ -19,7 +20,18 @@ namespace APSIM.Interop.Documentation.Renderers
         /// it for now so for now it will be faster to reuse a single pipeline each
         /// time we need to render a document, rather than constructing one each time.
         /// </summary>
-        private static readonly MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UsePipeTables().UseEmphasisExtras().Build();
+        private static readonly MarkdownPipeline pipeline;
+
+        /// <summary>
+        /// Static constructor, called once, to initialise a 'standard' markdown pipeline
+        /// which will be used to parse all markdown documents.
+        /// </summary>
+        static ParagraphTagRenderer()
+        {
+            MarkdownPipelineBuilder builder = new MarkdownPipelineBuilder().UsePipeTables().UseEmphasisExtras();
+            builder.InlineParsers.Add(new ReferenceInlineParser());
+            pipeline = builder.Build();
+        }
 
         /// <summary>
         /// Render the given Paragraph tag to the PDF document.

@@ -36,6 +36,7 @@
     using UserInterface.Extensions;
     using Markdig;
     using APSIM.Interop.Utility;
+    using APSIM.Interop.Documentation.Helpers;
 
     /// <summary>
     /// This class encapsulates code to convert a list of AutoDocumentation tags to a PDF file.
@@ -45,7 +46,7 @@
         private readonly ExplorerPresenter explorerPresenter;
         private readonly bool portrait;
         private BibTeX bibTeX;
-        private List<BibTeX.Citation> citations;
+        private List<ICitation> citations;
 
 #if NETCOREAPP
         /// <summary>
@@ -98,7 +99,7 @@
             string apsimDir = PathUtilities.GetAbsolutePath("%root%", null);
             string bibFile = Path.Combine(apsimDir, "APSIM.bib");
             bibTeX = new BibTeX(bibFile);
-            citations = new List<BibTeX.Citation>();
+            citations = new List<ICitation>();
             citations.Clear();
 
             // Scan for citations.
@@ -195,7 +196,7 @@
                             foreach (string inTextCitation in inTextCitations)
                             {
                                 // see if we have already encountered the citation.
-                                BibTeX.Citation citation = citations.Find(c => c.Name == inTextCitation);
+                                ICitation citation = citations.Find(c => c.Name == inTextCitation);
 
                                 // If we haven't encountered it, look it up in the .bib file.
                                 if (citation == null)
@@ -239,8 +240,8 @@
                 // Create the heading.
                 tags.Add(new AutoDocumentation.Heading("References", 1));
 
-                citations.Sort(new BibTeX.CitationComparer());
-                foreach (BibTeX.Citation citation in citations)
+                citations.Sort(new CitationComparer());
+                foreach (Citation citation in citations)
                 {
                     string url = citation.URL;
                     string text;

@@ -57,7 +57,6 @@ namespace APSIM.Interop.Markdown.Renderers
             // The work-around is to register our own fontresolver. We don't need to do this on Windows.
             if (!ProcessUtilities.CurrentOS.IsWindows && !(GlobalFontSettings.FontResolver is FontResolver))
                 GlobalFontSettings.FontResolver = new FontResolver();
-
         }
 
         /// <summary>
@@ -77,6 +76,13 @@ namespace APSIM.Interop.Markdown.Renderers
             /// </summary>
             public Hyperlink LinkObject { get; set; }
         }
+
+        /// <summary>
+        /// The citation helper used by this particular <see cref="PdfBuilder"/>
+        /// instance. Normally this will be a pointer to <see cref="globalCitationHelper"/>
+        /// unless the user specifies a custom bib file.
+        /// </summary>
+        private ICitationHelper citationHelper;
 
         /// <summary>
         /// Conversion factor from points to pixels.
@@ -180,14 +186,27 @@ namespace APSIM.Interop.Markdown.Renderers
         private IEnumerable<ITagRenderer> renderers = DefaultRenderers();
 
         /// <summary>
+        /// References which will be used to create the bibliography.
+        /// </summary>
+        /// <typeparam name="string">Short name of the reference.</typeparam>
+        /// <typeparam name="ICitation">The full citation.</typeparam>
+        private Dictionary<string, ICitation> references = new Dictionary<string, ICitation>();
+
+        /// <summary>
         /// Create a <see cref="PdfBuilder" /> instance.
         /// </summary>
         /// <param name="doc"></param>
         public PdfBuilder(Document doc, PdfOptions options)
         {
             document = doc;
+            citationHelper = options.CitationResolver;
+
+            if (citationHelper == null)
+                throw new ArgumentNullException(nameof(citationHelper));
+
             headingIndices.Push(0);
 
+            ObjectRenderers.Add(new ReferenceInlineRenderer());
             ObjectRenderers.Add(new AutolinkInlineRenderer());
             ObjectRenderers.Add(new CodeInlineRenderer());
             ObjectRenderers.Add(new EmphasisInlineRenderer());
@@ -432,11 +451,31 @@ namespace APSIM.Interop.Markdown.Renderers
         /// </summary>
         /// <param name="text">Text to be appended.</param>
         /// <param name="textStyle">Style to be applied to the text.</param>
-        public void AppendTextWithBookmark(string text, TextStyle textStyle)
+        public void AppendReference(string text, TextStyle textStyle)
         {
-            Paragraph paragraph = GetLastParagraph();
-            AppendText(text, textStyle, paragraph);
-            paragraph.AddBookmark(text);
+            if (!references.TryGetValue(text, out ICitation citation))
+            {
+                citation = citationHelper.Lookup(text);
+                references.Add(text, citation);
+            }
+
+            if (citation == null)
+                // If no matching citation found, just insert plaintext.
+                AppendText($"[{text}]", textStyle);
+            else
+            {
+                // Use the citation's url if it has one. Otherwise, we will use a link
+                // to the full reference in the bibliography section (which has yet to
+                // be created at this point).
+                string uri = string.IsNullOrWhiteSpace(citation.URL) ? $"#{text}" : citation.URL;
+                SetLinkState(uri);
+
+                // Insert the citation's in-text version.
+                AppendText(citation.InTextCite, textStyle);
+
+                // Remove link state.
+                ClearLinkState();
+            }
         }
 
         /// <summary>
@@ -671,6 +710,14 @@ namespace APSIM.Interop.Markdown.Renderers
         public void GetPageSize(out double width, out double height)
         {
             GetPageSize(GetLastSection(), out width, out height);
+        }
+
+        /// <summary>
+        /// Add a bibliography to the document.
+        /// </summary>
+        public void AddBibliography()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>

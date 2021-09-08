@@ -39,7 +39,7 @@ namespace APSIM.Tests.Interop.Documentation
             links.Resolve(model, allLinks: true, recurse: true, throwOnFail: false);
             var tags = new Section($"The APSIM {model.Name} model", model.Document());
 
-            var writer = new PdfWriter(new PdfOptions(imagePath));
+            var writer = new PdfWriter(new PdfOptions(imagePath, null));
             writer.Write("test.pdf", new ITag[] { tags });
         }
     }
