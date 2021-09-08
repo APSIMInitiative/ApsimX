@@ -1,10 +1,10 @@
 ﻿namespace Models.AgPasture
 {
+    using System;
+    using System.Linq;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Surface;
-    using System;
-    using Newtonsoft.Json;
 
     /// <summary>Describes a generic tissue of a pasture species.</summary>
     [Serializable]
@@ -28,10 +28,6 @@
 
         /// <summary>Carbon to nitrogen ratio of cell walls (kg/kg).</summary>
         private const double CNratioCellWall = 100.0;
-
-        //----------------------- Backing fields for states -----------------------
-
-        private AGPBiomass dryMatter = new AGPBiomass();
 
         //---------------------------- Parameters -----------------------
 
@@ -70,6 +66,9 @@
 
         //----------------------- States -----------------------
 
+        /// <summary>Tissue dry matter biomass.</summary>
+        private AGPBiomass dryMatter = new AGPBiomass();
+
         /// <summary>Dry matter biomass.</summary>
         public IAGPBiomass DM { get { return dryMatter; } }
 
@@ -84,6 +83,15 @@
         public double Digestibility { get; private set; }
 
         //----------------------- Public methods -----------------------
+
+        /// <summary>Performs the initialisation procedures for this tissue.</summary>
+        /// <param name="sender">The sender model.</param>
+        /// <param name="e">The <see cref="EventArgs"/>The event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            ClearDailyTransferredAmounts();
+        }
 
         /// <summary>Sets the biomass of this tissue.</summary>
         /// <param name="dmAmount">The DM amount to set to (kg/ha).</param>

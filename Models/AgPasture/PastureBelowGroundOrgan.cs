@@ -1,5 +1,8 @@
 ﻿namespace Models.AgPasture
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Interfaces;
@@ -7,8 +10,6 @@
     using Models.Soils;
     using Models.Soils.Arbitrator;
     using Models.Soils.Nutrients;
-    using System;
-    using System.Linq;
 
     /// <summary>Describes a generic below ground organ of a pasture species.</summary>
     [Serializable]
@@ -46,72 +47,7 @@
         /// <summary>NH4 solute in the soil.</summary>
         private ISolute nh4 = null;
 
-        /// <summary>Name of zone where roots are growing.</summary>
-        private string zoneName;
-
-        /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
-        private double minimumLiveDM = 0.0;
-
-        /// <summary>Number of layers in the soil.</summary>
-        private int nLayers;
-
-        /// <summary>Constructor, initialise tissues for the roots.</summary>
-        /// <param name="zone">The zone the roots belong in.</param>
-        /// <param name="initialDM">Initial dry matter weight</param>
-        /// <param name="initialDepth">Initial root depth</param>
-        /// <param name="minLiveDM">The minimum biomass for this organ</param>
-        public void Initialise(Zone zone, double initialDM, double initialDepth,
-                               double minLiveDM)
-        {
-            soil = zone.FindInScope<Soil>();
-            if (soil == null)
-                throw new Exception($"Cannot find soil in zone {zone.Name}");
-
-            soilPhysical = soil.FindInScope<IPhysical>();
-            if (soilPhysical == null)
-                throw new Exception($"Cannot find soil physical in soil {soil.Name}");
-            
-            waterBalance = soil.FindInScope<ISoilWater>();
-            if (waterBalance == null)
-                throw new Exception($"Cannot find a water balance model in soil {soil.Name}");
-
-            soilCropData = soil.FindDescendant<SoilCrop>(species.Name + "Soil");
-            if (soilCropData == null)
-                throw new Exception($"Cannot find a soil crop parameterisation called {species.Name + "Soil"}");
-
-            nutrient = zone.FindInScope<INutrient>();
-            if (nutrient == null)
-                throw new Exception($"Cannot find SoilNitrogen in zone {zone.Name}");
-
-            no3 = zone.FindInScope("NO3") as ISolute;
-            if (no3 == null)
-                throw new Exception($"Cannot find NO3 solute in zone {zone.Name}");
-            nh4 = zone.FindInScope("NH4") as ISolute;
-            if (nh4 == null)
-                throw new Exception($"Cannot find NH4 solute in zone {zone.Name}");
-
-            // link to soil and initialise related variables
-            zoneName = soil.Parent.Name;
-            nLayers = soilPhysical.Thickness.Length;
-            dulMM = soilPhysical.DULmm;
-            ll15MM = soilPhysical.LL15mm;
-            mySoilNH4Available = new double[nLayers];
-            mySoilNO3Available = new double[nLayers];
-
-            // save minimum DM and get target root distribution
-            Depth = initialDepth;
-            minimumLiveDM = minLiveDM;
-            CalculateRootZoneBottomLayer();
-            TargetDistribution = RootDistributionTarget();
-
-            // initialise tissues
-            double[] initialDMByLayer = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), initialDM);
-            double[] initialNByLayer = MathUtilities.Multiply_Value(initialDMByLayer, NConcOptimum);
-            Live = tissue[0];
-            Dead = tissue[1];
-            Live.Initialise(initialDMByLayer, initialNByLayer);
-            Dead.Initialise(null, null);
-        }
+        //---------------------------- Parameters -----------------------
 
         /// <summary>Minimum rooting depth (mm).</summary>
         public double RootDepthMinimum { get; set; } = 50.0;
@@ -157,6 +93,11 @@
 
         /// <summary>Exponent controlling the effect of soil moisture variations on water extractability.</summary>
         public double ExponentSoilMoisture = 1.50;
+
+        /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
+        private double minimumLiveDM = 0.0;
+
+        //----------------------- States -----------------------
 
         /// <summary>Rooting depth (mm).</summary>
         public double Depth { get; set; }
@@ -289,20 +230,6 @@
             }
         }
 
-        /// <summary>Finds out the amount of plant available water in the soil.</summary>
-        /// <param name="myZone">The soil information</param>
-        internal double[] EvaluateSoilWaterAvailable(ZoneWaterAndN myZone)
-        {
-            double[] result = new double[nLayers];
-            for (int layer = 0; layer <= BottomLayer; layer++)
-            {
-                result[layer] = Math.Max(0.0, myZone.Water[layer] - (soilCropData.LL[layer] * soilPhysical.Thickness[layer]));
-                result[layer] *= FractionLayerWithRoots(layer) * soilCropData.KL[layer] * KLModiferDueToDamage(layer);
-            }
-
-            return result;
-        }
-
         /// <summary>Root length density by volume (mm/mm^3).</summary>
         public double[] LengthDensity
         {
@@ -334,26 +261,70 @@
         /// <summary>Returns true if the KL modifier due to root damage is active or not.</summary>
         private bool IsKLModiferDueToDamageActive { get; set; } = false;
 
-        /// <summary>KL modifier due to root damage (0-1).</summary>
-        private double KLModiferDueToDamage(int layerIndex)
+        /// <summary>Name of zone where roots are growing.</summary>
+        private string zoneName;
+
+        /// <summary>Number of layers in the soil.</summary>
+        private int nLayers;
+
+        //----------------------- Public methods -----------------------
+
+        /// <summary>Constructor, initialise tissues for the roots.</summary>
+        /// <param name="zone">The zone the roots belong in.</param>
+        /// <param name="initialDM">Initial dry matter weight</param>
+        /// <param name="initialDepth">Initial root depth</param>
+        /// <param name="minLiveDM">The minimum biomass for this organ</param>
+        public void Initialise(Zone zone, double initialDM, double initialDepth,
+                               double minLiveDM)
         {
-            var threshold = 0.01;
-            if (!IsKLModiferDueToDamageActive)
-            {
-                return 1.0;
-            }
-            else if (LengthDensity[layerIndex] < 0.0)
-            {
-                return 0.0;
-            }
-            else if (LengthDensity[layerIndex] >= threshold)
-            {
-                return 1.0;
-            }
-            else
-            {
-                return LengthDensity[layerIndex] / threshold;
-            }
+            soil = zone.FindInScope<Soil>();
+            if (soil == null)
+                throw new Exception($"Cannot find soil in zone {zone.Name}");
+
+            soilPhysical = soil.FindInScope<IPhysical>();
+            if (soilPhysical == null)
+                throw new Exception($"Cannot find soil physical in soil {soil.Name}");
+
+            waterBalance = soil.FindInScope<ISoilWater>();
+            if (waterBalance == null)
+                throw new Exception($"Cannot find a water balance model in soil {soil.Name}");
+
+            soilCropData = soil.FindDescendant<SoilCrop>(species.Name + "Soil");
+            if (soilCropData == null)
+                throw new Exception($"Cannot find a soil crop parameterisation called {species.Name + "Soil"}");
+
+            nutrient = zone.FindInScope<INutrient>();
+            if (nutrient == null)
+                throw new Exception($"Cannot find SoilNitrogen in zone {zone.Name}");
+
+            no3 = zone.FindInScope("NO3") as ISolute;
+            if (no3 == null)
+                throw new Exception($"Cannot find NO3 solute in zone {zone.Name}");
+            nh4 = zone.FindInScope("NH4") as ISolute;
+            if (nh4 == null)
+                throw new Exception($"Cannot find NH4 solute in zone {zone.Name}");
+
+            // link to soil and initialise related variables
+            zoneName = soil.Parent.Name;
+            nLayers = soilPhysical.Thickness.Length;
+            dulMM = soilPhysical.DULmm;
+            ll15MM = soilPhysical.LL15mm;
+            mySoilNH4Available = new double[nLayers];
+            mySoilNO3Available = new double[nLayers];
+
+            // save minimum DM and get target root distribution
+            Depth = initialDepth;
+            minimumLiveDM = minLiveDM;
+            CalculateRootZoneBottomLayer();
+            TargetDistribution = RootDistributionTarget();
+
+            // initialise tissues
+            double[] initialDMByLayer = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), initialDM);
+            double[] initialNByLayer = MathUtilities.Multiply_Value(initialDMByLayer, NConcOptimum);
+            Live = tissue[0];
+            Dead = tissue[1];
+            Live.Initialise(initialDMByLayer, initialNByLayer);
+            Dead.Initialise(null, null);
         }
 
         /// <summary>Reset this root organ's state.</summary>
@@ -434,6 +405,42 @@
         internal void DoOrganUpdate()
         {
             RootTissue.UpdateTissues(Live, Dead);
+        }
+
+        /// <summary>Finds out the amount of plant available water in the soil.</summary>
+        /// <param name="myZone">The soil information</param>
+        internal double[] EvaluateSoilWaterAvailable(ZoneWaterAndN myZone)
+        {
+            double[] result = new double[nLayers];
+            for (int layer = 0; layer <= BottomLayer; layer++)
+            {
+                result[layer] = Math.Max(0.0, myZone.Water[layer] - (soilCropData.LL[layer] * soilPhysical.Thickness[layer]));
+                result[layer] *= FractionLayerWithRoots(layer) * soilCropData.KL[layer] * KLModiferDueToDamage(layer);
+            }
+
+            return result;
+        }
+
+        /// <summary>KL modifier due to root damage (0-1).</summary>
+        private double KLModiferDueToDamage(int layerIndex)
+        {
+            var threshold = 0.01;
+            if (!IsKLModiferDueToDamageActive)
+            {
+                return 1.0;
+            }
+            else if (LengthDensity[layerIndex] < 0.0)
+            {
+                return 0.0;
+            }
+            else if (LengthDensity[layerIndex] >= threshold)
+            {
+                return 1.0;
+            }
+            else
+            {
+                return LengthDensity[layerIndex] / threshold;
+            }
         }
 
         /// <summary>Finds out the amount of plant available nitrogen (NH4 and NO3) in the soil.</summary>

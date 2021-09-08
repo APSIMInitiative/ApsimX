@@ -1,13 +1,12 @@
 ﻿namespace Models.AgPasture
 {
+    using System;
+    using System.Linq;
+    using System.Collections.Generic;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.PMF;
     using Models.PMF.Interfaces;
-    using System;
-    using System.Collections.Generic;
-    using Newtonsoft.Json;
-    using System.Linq;
 
     /// <summary>Describes a generic above ground organ of a pasture species.</summary>
     [Serializable]
@@ -205,6 +204,8 @@
         /// <summary>Digestibility of standing herbage.</summary>
         [Units("kg/kg")]
         public double StandingDigestibility { get; private set; }
+
+        //----------------------- Public methods -----------------------
 
         /// <summary>Initialisation</summary>
         /// <param name="minimumLiveWt">Minimum live dry matter (kg/ha)</param>
