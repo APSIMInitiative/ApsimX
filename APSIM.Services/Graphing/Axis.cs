@@ -51,6 +51,7 @@ namespace APSIM.Services.Graphing
         /// <summary>
         /// Default constructor provided for json deserialization.
         /// </summary>
+        [Obsolete]
         public Axis() { }
 
         /// <summary>
@@ -70,6 +71,8 @@ namespace APSIM.Services.Graphing
             Minimum = min;
             Maximum = max;
             Interval = interval;
+            Title = title;
+            Position = position;
         }
 
         /// <summary>
@@ -77,15 +80,8 @@ namespace APSIM.Services.Graphing
         /// </summary>
         /// <param name="title">Axis title.</param>
         /// <param name="position">Axis location/position.</param>
-        public Axis(string title, AxisPosition position)
+        public Axis(string title, AxisPosition position) : this(title, position, false, false, null, null, null)
         {
-            Position = position;
-            Title = title;
-            Inverted = false;
-            CrossesAtZero = false;
-            Minimum = null;
-            Maximum = null;
-            Interval = null;
         }
     }
 }
