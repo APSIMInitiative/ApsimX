@@ -1,19 +1,19 @@
 namespace Models.AgPasture
 {
     using System;
-    using System.Collections.Generic;
     using System.Linq;
+    using System.Collections.Generic;
     using Newtonsoft.Json;
-    using Models.Core;
-    using Models.Soils;
-    using Models.PMF;
-    using Models.Soils.Arbitrator;
-    using Models.Interfaces;
     using APSIM.Shared.Utilities;
-    using Models.Functions;
+    using Models.Core;
+    using Models.PMF;
     using Models.PMF.Interfaces;
-    using Models.Surface;
+    using Models.Soils;
+    using Models.Soils.Arbitrator;
     using Models.Soils.Nutrients;
+    using Models.Surface;
+    using Models.Interfaces;
+    using Models.Functions;
 
     /// <summary>
     /// Describes a pasture species.
@@ -262,7 +262,8 @@ namespace Models.AgPasture
 
             // zero all transfer variables
             ClearDailyTransferredAmounts();
-            // reset state variables
+
+            // zero all state variables
             Leaf.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
             Stem.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
             Stolon.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
@@ -2329,8 +2330,8 @@ namespace Models.AgPasture
         }
 
         /// <summary>Performs the initialisation procedures for this species (set DM, N, LAI, etc.).</summary>
-        /// <param name="sender">The sender model</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
+        /// <param name="sender">The sender model.</param>
+        /// <param name="e">The <see cref="EventArgs"/>The event data.</param>
         /// <remarks>
         /// This occurs in StartOfSimulation so that various other components (such as GenericTissue) have time
         /// to initialise themselves during the Commencing event.

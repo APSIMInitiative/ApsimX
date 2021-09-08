@@ -1,13 +1,11 @@
 ﻿namespace Models.AgPasture
 {
-    using APSIM.Shared.Utilities;
-    using Models.Core;
-    using Models.Interfaces;
-    using Models.Soils;
-    using Models.Soils.Nutrients;
-    using Models.Surface;
     using System;
     using System.Linq;
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.Soils;
+    using Models.Soils.Nutrients;
 
     /// <summary>Describes a root tissue of a pasture species.</summary>
     [Serializable]
@@ -25,23 +23,15 @@
         [Link]
         private INutrient nutrient = null;
 
+        //----------------------- Constants -----------------------
+
         /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
         private const double carbonFractionInDM = 0.4;
 
         /// <summary>Fraction of luxury N remobilisable per day (0-1).</summary>
         private const double fractionNLuxuryRemobilisable = 0.1;
 
-        /// <summary>Tissue biomass.</summary>
-        private AGPBiomass biomass = new AGPBiomass();
-
-        /// <summary>Dry matter amount for each layer (kg/ha).</summary>
-        private double[] dmByLayer;
-
-        /// <summary>Nitrogen content for each layer (kg/ha).</summary>
-        private double[] nByLayer;
-
-        /// <summary>Phosphorus content for each layer (kg/ha).</summary>
-        private double[] pByLayer;
+        //----------------------- Daily Deltas -----------------------
 
         /// <summary>Amount of dry matter transferred into this tissue, for each layer (kg/ha).</summary>
         private double[] dmTransferredInByLayer;
@@ -64,14 +54,39 @@
         /// <summary>Nitrogen remobilised into new growth (kg/ha).</summary>
         private double nRemobilised;
 
-        /// <summary>Amount of N available for remobilisation (kg/ha).</summary>
-        public double NRemobilisable { get; private set; }
+        //----------------------- States -----------------------
+
+        /// <summary>Tissue dry matter biomass.</summary>
+        private AGPBiomass biomass = new AGPBiomass();
+
+        /// <summary>Dry matter amount for each layer (kg/ha).</summary>
+        private double[] dmByLayer;
+
+        /// <summary>Nitrogen content for each layer (kg/ha).</summary>
+        private double[] nByLayer;
+
+        /// <summary>Phosphorus content for each layer (kg/ha).</summary>
+        private double[] pByLayer;
 
         /// <summary>Dry matter biomass.</summary>
         public IAGPBiomass DM { get { return biomass; } }
 
         /// <summary>Dry matter fraction for each layer (0-1).</summary>
         public double[] FractionWt { get { return MathUtilities.Divide_Value(dmByLayer, DM.Wt); } }
+
+        /// <summary>Amount of N available for remobilisation (kg/ha).</summary>
+        public double NRemobilisable { get; private set; }
+
+        //----------------------- Public methods -----------------------
+
+        /// <summary>Performs the initialisation procedures for this tissue.</summary>
+        /// <param name="sender">The sender model.</param>
+        /// <param name="e">The <see cref="EventArgs"/>The event data.</param>
+        [EventSubscribe("Commencing")]
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            ClearDailyTransferredAmounts();
+        }
 
         /// <summary>Initialise this root instance.</summary>
         /// <param name="initialDMByLayer">Initial dry matter by layer.</param>
@@ -351,8 +366,11 @@
             nTransferredOut = 0.0;
             NRemobilisable = 0.0;
             nRemobilised = 0.0;
-            Array.Clear(dmTransferredInByLayer, 0, dmTransferredInByLayer.Length);
-            Array.Clear(nTransferredInByLayer, 0, nTransferredInByLayer.Length);
+            if (dmTransferredInByLayer != null && nTransferredInByLayer != null)
+            {
+                Array.Clear(dmTransferredInByLayer, 0, dmTransferredInByLayer.Length);
+                Array.Clear(nTransferredInByLayer, 0, nTransferredInByLayer.Length);
+            }
         }
 
         /// <summary>Updates each tissue, make changes in DM and N effective.</summary>
