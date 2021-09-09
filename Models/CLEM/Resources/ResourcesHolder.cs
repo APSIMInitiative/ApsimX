@@ -394,8 +394,8 @@ namespace Models.CLEM.Resources
                                 }
                             }
                             else // assumed successful transaction based on where clause in transaction selection
-                                // Add resource: tops up resource from tansmutation so available in CheckResources
-                                (resourceTypeInShortfall as IResourceType).Add(packetsNeeded * transmutation.TransmutationPacketSize, request.ActivityModel, request.ResourceTypeName, transmutation.TransactionCategory);
+                                // Add resource: tops up resource from transmutation so available in CheckResources
+                                (resourceTypeInShortfall as IResourceType).Add(packetsNeeded * ((transmutation.TransmutationPacketSize == 0)?1: transmutation.TransmutationPacketSize), request.ActivityModel, request.ResourceTypeName, transmutation.TransactionCategory);
                         }
                     }
                 }
