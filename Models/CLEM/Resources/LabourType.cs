@@ -273,20 +273,24 @@ namespace Models.CLEM.Resources
                 throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
 
             double addAmount = (double)resourceAmount;
-            this.AvailableDays += addAmount;
-            ResourceTransaction details = new ResourceTransaction
+
+            if (addAmount > 0)
             {
-                TransactionType = TransactionType.Gain,
-                Amount = addAmount,
-                Activity = activity,
-                RelatesToResource = relatesToResource,
-                Category = category,
-                ResourceType = this
-            };
-            LastTransaction = details;
-            LastGain = addAmount;
-            TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-            OnTransactionOccurred(te);
+                this.AvailableDays += addAmount;
+                ResourceTransaction details = new ResourceTransaction
+                {
+                    TransactionType = TransactionType.Gain,
+                    Amount = addAmount,
+                    Activity = activity,
+                    RelatesToResource = relatesToResource,
+                    Category = category,
+                    ResourceType = this
+                };
+                LastTransaction = details;
+                LastGain = addAmount;
+                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+                OnTransactionOccurred(te); 
+            }
         }
 
         /// <summary>

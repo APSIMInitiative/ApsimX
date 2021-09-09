@@ -151,37 +151,41 @@ namespace Models.CLEM.Resources
                 throw new Exception(String.Format("ResourceAmount object of type [{0}] is not supported. Add method in [r={1}]", resourceAmount.GetType().ToString(), this.GetType().ToString()));
 
             double addAmount = (double)resourceAmount;
-            double amountAdded = addAmount;
-            if (this.areaAvailable + addAmount > this.UsableArea)
-            {
-                amountAdded = this.UsableArea - this.areaAvailable;
-                string message = $"Tried to add more available land to [r={this.Name}] than exists.";
-                Summary.WriteWarning(this, message);
-                this.areaAvailable = this.UsableArea;
-            }
-            else
-                this.areaAvailable += addAmount;
 
-            ResourceTransaction details = new ResourceTransaction
+            if (addAmount > 0)
             {
-                TransactionType = TransactionType.Gain,
-                Amount = amountAdded,
-                Activity = activity,
-                RelatesToResource = relatesToResource,
-                Category = category,
-                ResourceType = this
-            };
-            LastGain = amountAdded;
-            LastTransaction = details;
-            TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-            OnTransactionOccurred(te);
+                double amountAdded = addAmount;
+                if (this.areaAvailable + addAmount > this.UsableArea)
+                {
+                    amountAdded = this.UsableArea - this.areaAvailable;
+                    string message = $"Tried to add more available land to [r={this.Name}] than exists.";
+                    Summary.WriteWarning(this, message);
+                    this.areaAvailable = this.UsableArea;
+                }
+                else
+                    this.areaAvailable += addAmount;
 
-            if (category != "Initialise")
-            {
-                UpdateLandAllocatedList(activity, amountAdded, true);
-                // adjust activity using all remaining land as well.
-                if (ActivityRequestingRemainingLand != null && ActivityRequestingRemainingLand != activity)
-                    UpdateLandAllocatedList(ActivityRequestingRemainingLand, amountAdded, true);
+                ResourceTransaction details = new ResourceTransaction
+                {
+                    TransactionType = TransactionType.Gain,
+                    Amount = amountAdded,
+                    Activity = activity,
+                    RelatesToResource = relatesToResource,
+                    Category = category,
+                    ResourceType = this
+                };
+                LastGain = amountAdded;
+                LastTransaction = details;
+                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+                OnTransactionOccurred(te);
+
+                if (category != "Initialise")
+                {
+                    UpdateLandAllocatedList(activity, amountAdded, true);
+                    // adjust activity using all remaining land as well.
+                    if (ActivityRequestingRemainingLand != null && ActivityRequestingRemainingLand != activity)
+                        UpdateLandAllocatedList(ActivityRequestingRemainingLand, amountAdded, true);
+                } 
             }
         }
 
