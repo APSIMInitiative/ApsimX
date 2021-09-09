@@ -791,6 +791,9 @@
         [Units("-")]
         public double TurnoverDefoliationCoefficient { get; set; } = 0.5;
 
+        /// <summary>Factor of function increasing the turnover rate due to defoliation (>0.0).</summary>
+        private double TurnoverDefoliationFactor { get; set; } = 1.0;
+
         /// <summary>Minimum significant daily effect of defoliation on tissue turnover rate (0-1).</summary>
         [Units("/day")]
         public double TurnoverDefoliationEffectMin { get; set; } = 0.025;
@@ -1215,9 +1218,6 @@
 
         /// <summary>Fraction of standing DM that was harvested (0-1).</summary>
         private double defoliatedFraction;
-
-        /// <summary>Fraction of standing DM harvested (0-1), used on tissue turnover.</summary>
-        private double myDefoliatedFraction;
 
         /// <summary>Digestibility of defoliated material (0-1).</summary>
         private double defoliatedDigestibility;
@@ -4098,25 +4098,22 @@
         private double DefoliationEffectOnTissueTurnover()
         {
             double defoliationEffect = 0.0;
-            cumDefoliationFactor += myDefoliatedFraction;
-            if (cumDefoliationFactor > 0.0)
+            cumDefoliationFactor += defoliatedFraction;
+            if ((cumDefoliationFactor > 0.0) && (TurnoverDefoliationFactor > 0.0))
             {
                 double todaysFactor = Math.Pow(cumDefoliationFactor, TurnoverDefoliationCoefficient + 1.0);
                 todaysFactor /= (TurnoverDefoliationCoefficient + 1.0);
                 if (cumDefoliationFactor - todaysFactor < TurnoverDefoliationEffectMin)
                 {
-                    defoliationEffect = cumDefoliationFactor;
+                    defoliationEffect = cumDefoliationFactor * TurnoverDefoliationFactor;
                     cumDefoliationFactor = 0.0;
                 }
                 else
                 {
-                    defoliationEffect = cumDefoliationFactor - todaysFactor;
+                    defoliationEffect = (cumDefoliationFactor - todaysFactor) * TurnoverDefoliationFactor;
                     cumDefoliationFactor = todaysFactor;
                 }
             }
-
-            // clear fraction defoliated after use
-            myDefoliatedFraction = 0.0;
 
             return defoliationEffect;
         }
