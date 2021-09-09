@@ -400,7 +400,7 @@
 
         /// <summary>Finds out the amount of plant available water in the soil.</summary>
         /// <param name="myZone">The soil information</param>
-        internal double[] EvaluateSoilWaterAvailable(ZoneWaterAndN myZone)
+        internal double[] EvaluateSoilWaterAvailability(ZoneWaterAndN myZone)
         {
             double[] result = new double[nLayers];
             for (int layer = 0; layer <= BottomLayer; layer++)
@@ -435,14 +435,20 @@
         }
 
         /// <summary>Finds out the amount of plant available nitrogen (NH4 and NO3) in the soil.</summary>
-        /// <param name="myZone">The soil information</param>
-        /// <param name="mySoilWaterUptake">Soil water uptake</param>
-        internal void EvaluateSoilNitrogenAvailable(ZoneWaterAndN myZone, double[] mySoilWaterUptake)
+        /// <remarks>
+        ///  N availability is considered only within the root zone, and is affected by moisture (dry soils
+        ///   having less N available) and N concentration (low concentration leads to reduced availability).
+        ///  The effect of soil moisture is a curve starting at LL, where it is zero, reaching one at DUL.
+        ///  An exponent bends the pattern between these two values, making it concave if the exponent is
+        ///   greater than one, with the derivative being zero at DUL;
+        ///  The effect of concentration is a simple linear function starting at zero when there is no N in
+        ///   the soil, and reaching its maximum (one) at a concentration defined by the 'kNxx' parameter.
+        ///   This (1/kNxx) represents the critical concentration (in ppm), below which N availability is
+        ///   limited (e.g. a KNO3 = 0.02 means no limitations if the NO3 concentration is above 50 ppm).
+        /// </remarks>
+        /// <param name="myZone">The soil information from the zone that contains the roots.</param>
+        internal void EvaluateSoilNitrogenAvailability(ZoneWaterAndN myZone)
         {
-            double layerFrac; // the fraction of layer within the root zone
-            double swFac;  // the soil water factor
-            double bdFac;  // the soil density factor
-            double potAvailableN; // potential available N
             var thickness = soilPhysical.Thickness;
             var bd = soilPhysical.BD;
             var dulMM = soilPhysical.DULmm;
@@ -450,44 +456,34 @@
             var swMM = myZone.Water;
             var nh4 = myZone.NH4N;
             var no3 = myZone.NO3N;
-            double depthOfTopOfLayer = 0;
+            double depthAtTopOfLayer = 0;
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
-                layerFrac = (Depth - depthOfTopOfLayer) / thickness[layer];
-                layerFrac = Math.Min(1.0, Math.Max(0.0, layerFrac));
+                // get the fraction of this layer that is within the root zone
+                double layerFraction = MathUtilities.Bound((Depth - depthAtTopOfLayer) / thickness[layer], 0.0, 1.0);
 
-                bdFac = 100.0 / (thickness[layer] * bd[layer]);
-                if (swMM[layer] >= dulMM[layer])
-                {
-                    swFac = 1.0;
-                }
-                else if (swMM[layer] <= llMM[layer])
-                {
-                    swFac = 0.0;
-                }
-                else
-                {
-                    double waterRatio = (swMM[layer] - llMM[layer]) / (dulMM[layer] - llMM[layer]);
-                    waterRatio = MathUtilities.Bound(waterRatio, 0.0, 1.0);
-                    swFac = 1.0 - Math.Pow(1.0 - waterRatio, ExponentSoilMoisture);
-                }
+                // get the soil moisture factor (less N available in drier soil)
+                double rwc = MathUtilities.Bound((swMM[layer] - llMM[layer]) / (dulMM[layer] - llMM[layer]), 0.0, 1.0);
+                double moistureFactor = 1.0 - Math.Pow(1.0 - rwc, ExponentSoilMoisture);
 
                 // get NH4 available
-                potAvailableN = nh4[layer] * layerFrac * swFac * bdFac * KNH4;
-                mySoilNH4Available[layer] = Math.Min(nh4[layer] * layerFrac, potAvailableN);
+                double nh4ppm = nh4[layer] * 100.0 / (thickness[layer] * bd[layer]);
+                double concentrationFactor = Math.Min(1.0, nh4ppm * KNH4);
+                mySoilNH4Available[layer] = nh4[layer] * layerFraction * Math.Min(0.999999, moistureFactor * concentrationFactor);
 
                 // get NO3 available
-                potAvailableN = no3[layer] * layerFrac * swFac * bdFac * KNO3;
-                mySoilNO3Available[layer] = Math.Min(no3[layer] * layerFrac, potAvailableN);
+                double no3ppm = no3[layer] * 100.0 / (thickness[layer] * bd[layer]);
+                concentrationFactor = Math.Min(1.0, no3ppm * KNO3);
+                mySoilNO3Available[layer] = no3[layer] * layerFraction * Math.Min(0.999999, moistureFactor * concentrationFactor);
 
-                depthOfTopOfLayer += thickness[layer];
+                depthAtTopOfLayer += thickness[layer];
             }
 
-            // check for maximum uptake
-            potAvailableN = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
-            if (potAvailableN > MaximumNUptake)
+            // check totals, reduce available N if greater than maximum uptake
+            double potentialAvailableN = mySoilNH4Available.Sum() + mySoilNO3Available.Sum();
+            if (potentialAvailableN > MaximumNUptake)
             {
-                double upFraction = MaximumNUptake / potAvailableN;
+                double upFraction = MaximumNUptake / potentialAvailableN;
                 for (int layer = 0; layer <= BottomLayer; layer++)
                 {
                     mySoilNH4Available[layer] *= upFraction;

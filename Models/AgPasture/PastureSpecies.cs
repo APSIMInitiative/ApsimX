@@ -301,7 +301,7 @@
                     PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
                     if (myRoot != null)
                     {
-                        double[] organSupply = myRoot.EvaluateSoilWaterAvailable(zone);
+                        double[] organSupply = myRoot.EvaluateSoilWaterAvailability(zone);
                         if (organSupply != null)
                         {
                             supplies.Add(organSupply);
@@ -358,7 +358,7 @@
                         zones.Add(UptakeDemands);
 
                         // get the N amount available in the soil
-                        myRoot.EvaluateSoilNitrogenAvailable(zone, mySoilWaterUptake);
+                        myRoot.EvaluateSoilNitrogenAvailability(zone);
 
                         UptakeDemands.NO3N = myRoot.mySoilNO3Available;
                         UptakeDemands.NH4N = myRoot.mySoilNH4Available;
