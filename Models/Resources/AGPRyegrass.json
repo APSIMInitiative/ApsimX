@@ -6,6 +6,7 @@
   "Children": [
     {
       "$type": "Models.AgPasture.PastureSpecies, Models",
+      "Name": "AGPRyegrass",
       "Albedo": 0.26,
       "Gsmax": 0.011,
       "R50": 200.0,
@@ -68,14 +69,13 @@
       "NDillutionCoefficient": 0.25,
       "GlfGeneric": 1.0,
       "GlfSoilFertility": 1.0,
-      "PlantHeightMinimum": 50.0,
-      "PlantHeightMaximum": 300.0,
+      "PlantHeightMinimum": 250.0,
+      "PlantHeightMaximum": 250.0,
       "PlantHeightMassForMax": 10000.0,
       "PlantHeightExponent": 2.8,
       "MinimumGreenWt": 100.0,
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
-      "Name": "AGPRyegrass",
       "Children": [
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",

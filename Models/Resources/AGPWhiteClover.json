@@ -6,6 +6,7 @@
   "Children": [
     {
       "$type": "Models.AgPasture.PastureSpecies, Models",
+      "Name": "AGPWhiteClover",
       "Albedo": 0.26,
       "Gsmax": 0.011,
       "R50": 200.0,
@@ -68,14 +69,13 @@
       "NDillutionCoefficient": 1.0,
       "GlfGeneric": 1.0,
       "GlfSoilFertility": 1.0,
-      "PlantHeightMinimum": 25.0,
-      "PlantHeightMaximum": 300.0,
+      "PlantHeightMinimum": 250.0,
+      "PlantHeightMaximum": 250.0,
       "PlantHeightMassForMax": 7500.0,
       "PlantHeightExponent": 2.5,
       "MinimumGreenWt": 50.0,
       "PreferenceForGreenOverDead": 1.0,
       "PreferenceForLeafOverStems": 1.0,
-      "Name": "AGPWhiteClover",
       "Children": [
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
