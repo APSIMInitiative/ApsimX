@@ -207,7 +207,7 @@
 
         //----------------------- Public methods -----------------------
 
-        /// <summary>Initialisation</summary>
+        /// <summary>Initialise this organ instance.</summary>
         /// <param name="minimumLiveWt">Minimum live dry matter (kg/ha)</param>
         public void Initialise(double minimumLiveWt)
         {

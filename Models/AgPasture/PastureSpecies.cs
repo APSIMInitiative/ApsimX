@@ -2308,24 +2308,15 @@
         /// <summary>Performs the initialisation procedures for this species (set DM, N, LAI, etc.).</summary>
         /// <param name="sender">The sender model.</param>
         /// <param name="e">The <see cref="EventArgs"/>The event data.</param>
-        /// <remarks>
-        /// This occurs in StartOfSimulation so that various other components (such as GenericTissue) have time
-        /// to initialise themselves during the Commencing event.
-        /// </remarks>
         [EventSubscribe("StartOfSimulation")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            EmergingTissue = new TissuesHelper(new GenericTissue[] { Leaf.EmergingTissue, Stem.EmergingTissue, Stolon.EmergingTissue });
-            DevelopingTissue = new TissuesHelper(new GenericTissue[] { Leaf.DevelopingTissue, Stem.DevelopingTissue, Stolon.DevelopingTissue });
-            MatureTissue = new TissuesHelper(new GenericTissue[] { Leaf.MatureTissue, Stem.MatureTissue, Stolon.MatureTissue });
-            DeadTissue = new TissuesHelper(new GenericTissue[] { Leaf.DeadTissue, Stem.DeadTissue, Stolon.DeadTissue });
-
-            // get the number of layers in the soil profile
+            // get the number of layers in the soil profile and initialise soil related variables
             nLayers = soilPhysical.Thickness.Length;
+            InitiliaseSoilArrays();
 
-            // set the base or main root zone (use 2 tissues, one live other dead), more zones can be added by user
-            roots[0].Initialise(zone, InitialRootDM, InitialRootDepth,
-                               MinimumGreenWt * MinimumGreenRootProp);
+            // initialise the base, or main, root zone; more zones can be added by user
+            roots[0].Initialise(zone, MinimumGreenWt * MinimumGreenRootProp);
 
             // add any other zones that have been given at initialisation
             foreach (RootZone rootZone in RootZonesInitialisations)
@@ -2337,16 +2328,11 @@
 
                 var newRootOrgan = Apsim.Clone(roots[0]) as PastureBelowGroundOrgan;
                 // add the zone to the list
-                newRootOrgan.Initialise(zone,
-                                        rootZone.RootDM, rootZone.RootDepth,
-                                        MinimumGreenWt * MinimumGreenRootProp);
+                newRootOrgan.Initialise(zone, MinimumGreenWt * MinimumGreenRootProp);
                 roots.Add(newRootOrgan);
             }
 
-            // initialise soil water and N variables
-            InitiliaseSoilArrays();
-
-            // Set the minimum green DM
+            // initialise the base aboveground organs
             Leaf.Initialise(MinimumGreenWt * MinimumGreenLeafProp);
             Stem.Initialise(MinimumGreenWt * (1.0 - MinimumGreenLeafProp));
             Stolon.Initialise(0.0);
@@ -2356,6 +2342,12 @@
 
             // initialise parameter for DM allocation during reproductive season
             InitReproductiveGrowthFactor();
+
+            // initialise helper variables, group organs by tissue type
+            EmergingTissue = new TissuesHelper(new GenericTissue[] { Leaf.EmergingTissue, Stem.EmergingTissue, Stolon.EmergingTissue });
+            DevelopingTissue = new TissuesHelper(new GenericTissue[] { Leaf.DevelopingTissue, Stem.DevelopingTissue, Stolon.DevelopingTissue });
+            MatureTissue = new TissuesHelper(new GenericTissue[] { Leaf.MatureTissue, Stem.MatureTissue, Stolon.MatureTissue });
+            DeadTissue = new TissuesHelper(new GenericTissue[] { Leaf.DeadTissue, Stem.DeadTissue, Stolon.DeadTissue });
         }
 
         /// <summary>Initialises arrays to same length as soil layers.</summary>
@@ -2417,7 +2409,9 @@
                                    matureWt: shootDM * initialDMFractions[10],
                                    matureN: shootDM * initialDMFractions[10] * Stolon.NConcOptimum,
                                    deadWt: 0.0, deadN: 0.0);
-            roots[0].Reset(rootDM, InitialRootDepth);
+            roots[0].SetBiomassState(rootWt: rootDM,
+                                     rootN: rootDM * roots[0].NConcOptimum,
+                                     rootDepth: InitialRootDepth);
 
             // set initial phenological stage
             if (MathUtilities.IsGreaterThan(InitialShootDM, 0))

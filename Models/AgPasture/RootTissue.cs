@@ -88,25 +88,14 @@
             ClearDailyTransferredAmounts();
         }
 
-        /// <summary>Initialise this root instance.</summary>
-        /// <param name="initialDMByLayer">Initial dry matter by layer.</param>
-        /// <param name="initialNByLayer">Initial nitrogen by layer.</param>
-        public void Initialise(double[] initialDMByLayer, double[] initialNByLayer)
+        /// <summary>Initialise this tissue instance.</summary>
+        public void Initialise()
         {
+            dmByLayer = new double[soilPhysical.Thickness.Length];
+            nByLayer = new double[soilPhysical.Thickness.Length];
             pByLayer = new double[soilPhysical.Thickness.Length];
             dmTransferredInByLayer = new double[soilPhysical.Thickness.Length];
             nTransferredInByLayer = new double[soilPhysical.Thickness.Length];
-            if (initialNByLayer != null && initialNByLayer != null)
-            {
-                dmByLayer = initialDMByLayer;
-                nByLayer = initialNByLayer;
-            }
-            else
-            {
-                dmByLayer = new double[soilPhysical.Thickness.Length];
-                nByLayer = new double[soilPhysical.Thickness.Length];
-            }
-            UpdateDM();
         }
 
         /// <summary>Set the biomass moving into the tissue.</summary>
@@ -284,16 +273,6 @@
                 Wt = dmTransferredIn,
                 N = nTransferredIn
             };
-        }
-
-        /// <summary>Reset tissue to the specified amount.</summary>
-        /// <param name="dmAmount">The amount of dry matter by layer to reset to (kg/ha).</param>
-        public void ResetTo(double[] dmAmount)
-        {
-            for (int layer = 0; layer < dmByLayer.Length; layer++)
-                dmByLayer[layer] += dmAmount[layer];
-
-            UpdateDM();
         }
 
         /// <summary>Sets the biomass of this tissue.</summary>

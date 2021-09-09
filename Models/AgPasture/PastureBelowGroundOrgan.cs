@@ -269,42 +269,55 @@
 
         //----------------------- Public methods -----------------------
 
-        /// <summary>Constructor, initialise tissues for the roots.</summary>
+        /// <summary>Initialise this root instance (and tissues).</summary>
         /// <param name="zone">The zone the roots belong in.</param>
-        /// <param name="initialDM">Initial dry matter weight</param>
-        /// <param name="initialDepth">Initial root depth</param>
         /// <param name="minLiveDM">The minimum biomass for this organ</param>
-        public void Initialise(Zone zone, double initialDM, double initialDepth,
-                               double minLiveDM)
+        public void Initialise(Zone zone, double minLiveDM)
         {
+            // link to soil models parameters
             soil = zone.FindInScope<Soil>();
             if (soil == null)
+            {
                 throw new Exception($"Cannot find soil in zone {zone.Name}");
+            }
 
             soilPhysical = soil.FindInScope<IPhysical>();
             if (soilPhysical == null)
+            {
                 throw new Exception($"Cannot find soil physical in soil {soil.Name}");
+            }
 
             waterBalance = soil.FindInScope<ISoilWater>();
             if (waterBalance == null)
+            {
                 throw new Exception($"Cannot find a water balance model in soil {soil.Name}");
+            }
 
             soilCropData = soil.FindDescendant<SoilCrop>(species.Name + "Soil");
             if (soilCropData == null)
+            {
                 throw new Exception($"Cannot find a soil crop parameterisation called {species.Name + "Soil"}");
+            }
 
             nutrient = zone.FindInScope<INutrient>();
             if (nutrient == null)
+            {
                 throw new Exception($"Cannot find SoilNitrogen in zone {zone.Name}");
+            }
 
             no3 = zone.FindInScope("NO3") as ISolute;
             if (no3 == null)
+            {
                 throw new Exception($"Cannot find NO3 solute in zone {zone.Name}");
+            }
+
             nh4 = zone.FindInScope("NH4") as ISolute;
             if (nh4 == null)
+            {
                 throw new Exception($"Cannot find NH4 solute in zone {zone.Name}");
+            }
 
-            // link to soil and initialise related variables
+            // initialise soil related variables
             zoneName = soil.Parent.Name;
             nLayers = soilPhysical.Thickness.Length;
             dulMM = soilPhysical.DULmm;
@@ -313,31 +326,14 @@
             mySoilNO3Available = new double[nLayers];
 
             // save minimum DM and get target root distribution
-            Depth = initialDepth;
             minimumLiveDM = minLiveDM;
-            CalculateRootZoneBottomLayer();
             TargetDistribution = RootDistributionTarget();
 
             // initialise tissues
-            double[] initialDMByLayer = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), initialDM);
-            double[] initialNByLayer = MathUtilities.Multiply_Value(initialDMByLayer, NConcOptimum);
             Live = tissue[0];
             Dead = tissue[1];
-            Live.Initialise(initialDMByLayer, initialNByLayer);
-            Dead.Initialise(null, null);
-        }
-
-        /// <summary>Reset this root organ's state.</summary>
-        /// <param name="rootWt">The amount of root biomass (kg/ha).</param>
-        /// <param name="rootDepth">The depth of roots to reset to(mm).</param>
-        /// <remarks>It is assumed that N is at optimum content.</remarks>
-        public void Reset(double rootWt, double rootDepth)
-        {
-            Depth = rootDepth;
-            CalculateRootZoneBottomLayer();
-
-            var rootBiomass = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), rootWt);
-            Live.ResetTo(rootBiomass);
+            Live.Initialise();
+            Dead.Initialise();
         }
 
         /// <summary>Set this root organ's biomass state.</summary>
