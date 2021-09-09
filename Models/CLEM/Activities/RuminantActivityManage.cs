@@ -679,16 +679,16 @@ namespace Models.CLEM.Activities
 
                 // Number of females
                 // weaned, >breeding age, female
-                int numberFemaleBreedingInHerd = herd.OfType<RuminantFemale>().Where(a => a.SaleFlag == HerdChangeReason.None && a.Weaned && a.Age >= a.BreedParams.MinimumAge1stMating ).Count();
+                int numberFemaleBreedingInHerd = herd.OfType<RuminantFemale>().Where(a => a.SaleFlag == HerdChangeReason.None && a.IsBreeder).Count();
                 int numberFemaleTotalInHerd = herd.OfType<RuminantFemale>().Where(a => a.SaleFlag == HerdChangeReason.None).Count();
 
                 // these are the breeders already marked for sale
                 // don't include those marked as max age sale as these can't be considered excess female
-                int numberFemaleMarkedForSale = herd.OfType<RuminantFemale>().Where(a => a.IsBreeder & a.SaleFlag != HerdChangeReason.None & a.SaleFlag != HerdChangeReason.MaxAgeSale).Count();
+                int numberFemaleMarkedForSale = herd.OfType<RuminantFemale>().Where(a => a.IsBreeder && a.SaleFlag != HerdChangeReason.None && a.SaleFlag != HerdChangeReason.MaxAgeSale).Count();
 
                 // defined heifers here as weaned and will be a breeder in the next year
                 // we should not include those individuals > 12 months before reaching breeder age
-                List<RuminantFemale> preBreeders = herd.OfType<RuminantFemale>().Where(a => a.Weaned && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.Age < a.BreedParams.MinimumAge1stMating && !a.Attributes.Exists("GrowOut")).ToList();
+                List<RuminantFemale> preBreeders = herd.OfType<RuminantFemale>().Where(a => a.IsPreBreeder && (a.Age - a.BreedParams.MinimumAge1stMating > -11) & !a.Attributes.Exists("GrowOut")).ToList();
                 int numberFemaleHeifersInHerd = preBreeders.Count();
 
                 // adjust males sires
@@ -927,12 +927,14 @@ namespace Models.CLEM.Activities
                         }
 
                         // remove grow out heifers from grow out if of breeding in next year age
-                        if (SellFemalesLikeMales & femaleBreedersRequired > 0)
+                        if (SellFemalesLikeMales && femaleBreedersRequired > 0)
                         {
                             foreach (Ruminant female in herd.OfType<RuminantFemale>().Where(a => (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.Attributes.Exists("GrowOut")).OrderByDescending(a => a.Weight * a.Age).Take(femaleBreedersRequired))
                             {
                                 female.Attributes.Remove("GrowOut");
                                 female.SaleFlag = HerdChangeReason.None;
+                                if (!(female as RuminantFemale).IsBreeder)
+                                    female.ReplacementBreeder = true;
                                 female.Location = grazeStoreBreeders;
                                 femaleBreedersRequired--;
                                 this.Status = ActivityStatus.Success;
@@ -1004,6 +1006,48 @@ namespace Models.CLEM.Activities
                                 }
                             }
                         }
+
+                        // still need breeders and couldn't buy them so look at even younger indvididuals still in sale herd
+                        if (femaleBreedersRequired > 0)
+                        {
+                            List<RuminantFemale> saleherd = herd.OfType<RuminantFemale>().Where(a => a.ReadyForSale && a.SaleFlag != HerdChangeReason.MaxAgeSale).ToList();
+                            foreach (RuminantFemale female in saleherd.OrderByDescending(a => a.Weight * a.Age).Take(femaleBreedersRequired))
+                            {
+                                // keep by removing any tag for sale.
+                                female.SaleFlag = HerdChangeReason.None;
+                                female.Location = grazeStoreBreeders;
+                                femaleBreedersRequired--;
+                                this.Status = ActivityStatus.Success;
+                            }
+                        }
+
+                        // remove grow out heifers from grow out if young as these will be future needed replacements
+                        if (SellFemalesLikeMales & femaleBreedersRequired > 0)
+                        {
+                            foreach (Ruminant female in herd.OfType<RuminantFemale>().Where(a => a.Attributes.Exists("GrowOut")).OrderByDescending(a => a.Weight * a.Age).Take(femaleBreedersRequired))
+                            {
+                                female.Attributes.Remove("GrowOut");
+                                female.SaleFlag = HerdChangeReason.None;
+                                female.Location = grazeStoreBreeders;
+                                if (!(female as RuminantFemale).IsBreeder)
+                                    female.ReplacementBreeder = true;
+                                femaleBreedersRequired--;
+                                this.Status = ActivityStatus.Success;
+                            }
+                        }
+
+                        // remove any pregnant female from sales even at max age as uoung is valuable this year
+                        if (femaleBreedersRequired > 0)
+                        {
+                            foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => a.ReadyForSale && a.IsPregnant).ToList())
+                            {
+                                female.SaleFlag = HerdChangeReason.None;
+                                female.Location = grazeStoreBreeders;
+                                femaleBreedersRequired--;
+                                this.Status = ActivityStatus.Success;
+                            }
+                        }
+
                     }
                 }
 
