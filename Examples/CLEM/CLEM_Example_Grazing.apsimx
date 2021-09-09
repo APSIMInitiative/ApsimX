@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 285,
-  "Version": 139,
+  "Version": 141,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -611,7 +611,6 @@
                           "Units": null,
                           "NToDMDCoefficient": 11.03,
                           "NToDMDIntercept": 41.4,
-                          "NToDMDCrudeProteinDenominator": 0.0,
                           "GreenNitrogen": 2.0,
                           "DecayNitrogen": 0.35,
                           "MinimumNitrogen": 0.4,
@@ -621,6 +620,10 @@
                           "CarryoverDetachRate": 0.12,
                           "IntakeTropicalQualityCoefficient": 0.16,
                           "IntakeQualityCoefficient": 1.7,
+                          "InitialBiomass": 2000.0,
+                          "FirstMonthOfGrowSeason": 11,
+                          "LastMonthOfGrowSeason": 3,
+                          "NumberMonthsForInitialBiomass": 5,
                           "SelectedTab": null,
                           "Name": "NativePasture",
                           "Children": [],
