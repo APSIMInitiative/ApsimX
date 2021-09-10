@@ -15,7 +15,7 @@ namespace Models.Functions.RootShape
     public class RootShapeSemiCircle : Model, IRootShape, ICustomDocumentation
     {
         /// <summary>Calculates the root area for a layer of soil</summary>
-        public void CalcRootProportionInLayers(ZoneState zone)
+        public void CalcRootProportionInLayers(IStuffForRootShapeThing zone)
         {
             var physical = zone.Soil.FindChild<Soils.IPhysical>();
 
@@ -44,7 +44,7 @@ namespace Models.Functions.RootShape
             }
         }
 
-        private double CalcRootAreaSemiCircleMaize(ZoneState zone, double top, double bottom, double hDist)
+        private double CalcRootAreaSemiCircleMaize(IStuffForRootShapeThing zone, double top, double bottom, double hDist)
         {
             if (zone.RootFront == 0.0)
             {

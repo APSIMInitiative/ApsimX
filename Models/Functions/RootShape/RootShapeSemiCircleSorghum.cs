@@ -16,7 +16,7 @@ namespace Models.Functions.RootShape
     public class RootShapeSemiCircleSorghum : Model, IRootShape, ICustomDocumentation
     {
         /// <summary>Calculates the root area for a layer of soil</summary>
-        public void CalcRootProportionInLayers(ZoneState zone)
+        public void CalcRootProportionInLayers(IStuffForRootShapeThing zone)
         {
             var physical = zone.Soil.FindChild<Soils.IPhysical>();
             zone.RootArea = 0;
@@ -49,7 +49,7 @@ namespace Models.Functions.RootShape
             return degs * Math.PI / 180.0;
         }
 
-        private double CalcRootAreaSemiCircleSorghum(ZoneState zone, double top, double bottom, double hDist)
+        private double CalcRootAreaSemiCircleSorghum(IStuffForRootShapeThing zone, double top, double bottom, double hDist)
         {
             if (zone.RootFront == 0.0)
             {

@@ -11,13 +11,54 @@ using Models.PMF.Interfaces;
 
 namespace Models.PMF.Organs
 {
+    /// <summary>
+    /// Interface for root zone objects to talk to root shape model
+    /// </summary>
+    public interface IStuffForRootShapeThing
+    {
+        /// <summary>The soil in this zone</summary>
+        Soil Soil { get; set; }
+
+       /// <summary>The parent plant</summary>
+        Plant plant { get; set; }
+
+        /// <summary>Gets or sets the length.</summary>
+        double Length { get; set; }
+
+        /// <summary>Gets or sets the depth.</summary>
+        [Units("mm")]
+        double Depth { get; set; }
+
+        /// <summary>Gets the RootFront</summary>
+        double RootLength { get; }
+
+        /// <summary>Gets the RootFront</summary>
+        double RootFront { get; set; }
+        /// <summary>Gets the RootFront</summary>
+        double RootSpread { get; set; }
+        /// <summary>Gets the RootFront</summary>
+        double LeftDist { get; set; }
+        /// <summary>Gets the RootFront</summary>
+        double RightDist { get; set; }
+
+        /// <summary>Gets the RootProportions</summary>
+        double[] RootProportions { get; set; }
+
+        /// <summary>Gets the LLModifier for leaf angles != RootAngleBase</summary>
+        double[] LLModifier { get; set; }
+
+        /// <summary>Soil area occipied by roots</summary>
+        [Units("m2")]
+        double RootArea { get; set; }
+    }
+
     /// <summary>The state of each zone that root knows about.</summary>
     [Serializable]
-    public class ZoneState
+    public class ZoneState: Model, IStuffForRootShapeThing
     {
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
-        
+
         /// <summary>The soil in this zone</summary>
         public IPhysical Physical { get; set; }
 
@@ -31,7 +72,7 @@ namespace Models.PMF.Organs
         public ISolute NH4 = null;
 
         /// <summary>The parent plant</summary>
-        public Plant plant = null;
+        public Plant plant { get; set; }
 
         /// <summary>Is the Weirdo model present in the simulation?</summary>
         public bool IsWeirdoPresent { get; set; }
@@ -52,7 +93,7 @@ namespace Models.PMF.Organs
         private IRootShape RootShape = null;
 
         /// <summary>Zone name</summary>
-        public string Name = null;
+        new public string Name = null;
 
         /// <summary>The water uptake</summary>
         public double[] WaterUptake { get; set; }
@@ -127,10 +168,10 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets AvailableSW during SW Uptake
         /// Old Sorghum does actual uptake at end of day
         /// PMF does actual uptake before N uptake</summary>
-        public double[] AvailableSW { get;  set; }
+        public double[] AvailableSW { get; set; }
 
         /// <summary>Gets or sets PotentialAvailableSW during SW Uptake</summary>
-        public double[] PotentialAvailableSW { get;  set; }
+        public double[] PotentialAvailableSW { get; set; }
 
         /// <summary>Record the Water level before </summary>
         public double[] StartWater { get; set; }
@@ -139,10 +180,10 @@ namespace Models.PMF.Organs
         public double[] Supply { get; set; }
 
         /// <summary>Gets or sets MassFlow during NitrogenUptake Calcs</summary>
-        public double[] MassFlow { get;  set; }
+        public double[] MassFlow { get; set; }
 
         /// <summary>Gets or sets Diffusion during NitrogenUptake Calcs</summary>
-        public double[] Diffusion { get;  set; }
+        public double[] Diffusion { get; set; }
 
 
         /// <summary>Constructor</summary>
@@ -268,6 +309,7 @@ namespace Models.PMF.Organs
                 }
             }
         }
+
         /// <summary>
         /// Growth depth of roots in this zone
         /// </summary>
@@ -288,7 +330,7 @@ namespace Models.PMF.Organs
 
                 xf = soilCrop.XF;
 
-                Depth = Depth + rootfrontvelocity * xf[RootLayer] * rootDepthWaterStress; ;
+                Depth = Depth + rootfrontvelocity * xf[RootLayer] * rootDepthWaterStress; 
                 MaxDepth = 0;
                 // Limit root depth for impeded layers
                 for (int i = 0; i < Physical.Thickness.Length; i++)
