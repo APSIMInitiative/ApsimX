@@ -22,6 +22,8 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [ValidParent(ParentType = typeof(ReportResourceBalances))]
+    [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
+    [ValidParent(ParentType = typeof(ReportRuminantHerd))]
     [Description("This activity time defines a start month and interval upon which to perform activities.")]
     [HelpUri(@"Content/Features/Timers/Interval.htm")]
     [Version(1, 0, 1, "")]
