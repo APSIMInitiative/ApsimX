@@ -60,8 +60,11 @@ namespace Models.CLEM.Groupings
         /// </summary>
         public override void Initialise()
         {
-            propertyInfo = Parent.GetProperty(PropertyOfIndividual);
-            useSimpleApporach = IsSimpleRuminantProperty();
+            if (PropertyOfIndividual != null && PropertyOfIndividual != "")
+            {
+                propertyInfo = Parent.GetProperty(PropertyOfIndividual);
+                useSimpleApporach = IsSimpleRuminantProperty();
+            }
         }
 
         /// <inheritdoc/>
@@ -450,7 +453,7 @@ namespace Models.CLEM.Groupings
             {
                 filterWriter.Write($"Filter:");
                 bool truefalse = IsOperatorTrueFalseTest();
-                if (truefalse | propertyInfo.PropertyType.IsEnum)
+                if (truefalse | (propertyInfo != null && propertyInfo.PropertyType.IsEnum))
                 {
                     if(propertyInfo.PropertyType == typeof(bool))
                     {
@@ -468,13 +471,21 @@ namespace Models.CLEM.Groupings
                 else
                 {
                     filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                    if (CheckValidOperator(propertyInfo, out _))
-                        filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+
+                    if (propertyInfo != null)
+                    {
+                        if (CheckValidOperator(propertyInfo, out _))
+                            filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                        else
+                        {
+                            string errorlink = (htmltags) ? "<span class=\"errorlink\">" : "";
+                            string spanclose = (htmltags) ? "</span>" : "";
+                            filterWriter.Write($"{errorlink}{OperatorToSymbol()} is invalid for {propertyInfo.PropertyType.Name} properties{spanclose}");
+                        }
+                    }
                     else
                     {
-                        string errorlink = (htmltags)? "<span class=\"errorlink\">": "";
-                        string spanclose = (htmltags) ? "</span>": "";
-                        filterWriter.Write($"{errorlink}{OperatorToSymbol()} is invalid for {propertyInfo.PropertyType.Name} properties{spanclose}");
+                        filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
                     }
                     filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
                 }
