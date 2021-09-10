@@ -102,7 +102,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Property indicates whether to include attribute inheritance when mating
         /// </summary>
-        public bool IncludedAttributeInheritanceWhenMating { get { return (mandatoryAttributes.Count() > 0); } }
+        public bool IncludedAttributeInheritanceWhenMating { get { return (mandatoryAttributes.Any()); } }
 
         /// <summary>
         /// Add a attribute name to the list of mandatory attributes for the type
@@ -110,8 +110,8 @@ namespace Models.CLEM.Resources
         /// <param name="name">name of attribute</param>
         public void AddMandatoryAttribute(string name)
         {
-            if(!mandatoryAttributes.Contains(name.ToLower()))
-               mandatoryAttributes.Add(name.ToLower());
+            if(!mandatoryAttributes.Contains(name))
+               mandatoryAttributes.Add(name);
         }
 
         /// <summary>

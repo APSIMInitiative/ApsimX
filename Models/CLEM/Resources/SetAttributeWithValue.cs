@@ -27,6 +27,11 @@ namespace Models.CLEM.Resources
     public class SetAttributeWithValue : CLEMModel, IValidatableObject, ISetAttribute
     {
         /// <summary>
+        /// Store of last instance of the individual attribute defined
+        /// </summary>
+        private IndividualAttribute lastInstance { get; set; } = null;
+
+        /// <summary>
         /// Name of attribute
         /// </summary>
         [Description("Name of attribute")]
@@ -83,30 +88,32 @@ namespace Models.CLEM.Resources
         [Required]
         public bool Mandatory { get; set; }
 
-        /// <summary>
-        /// Get a random realisation of the set value based on Value and Standard deviation 
-        /// </summary>
-        public IndividualAttribute GetRandomSetAttribute()
+        /// <inheritdoc/>
+        public IndividualAttribute GetAttribute(bool createNewInstance = true)
         {
-            double value = Value;
-            double randStdNormal = 0;
-
-            if (StandardDeviation > 0)
+            if (createNewInstance | lastInstance is null)
             {
-                double u1 = RandomNumberGenerator.Generator.NextDouble();
-                double u2 = RandomNumberGenerator.Generator.NextDouble();
-                randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
-                                Math.Sin(2.0 * Math.PI * u2);
+                double value = Value;
+                double randStdNormal = 0;
+
+                if (StandardDeviation > 0)
+                {
+                    double u1 = RandomNumberGenerator.Generator.NextDouble();
+                    double u2 = RandomNumberGenerator.Generator.NextDouble();
+                    randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
+                                    Math.Sin(2.0 * Math.PI * u2);
+                }
+                value = Math.Min(MaximumValue, Math.Max(MinimumValue, value + StandardDeviation * randStdNormal));
+
+                Single valuef = Convert.ToSingle(value);
+
+                lastInstance = new IndividualAttribute()
+                {
+                    InheritanceStyle = InheritanceStyle,
+                    StoredValue = valuef
+                }; 
             }
-            value = Math.Min(MaximumValue, Math.Max(MinimumValue, value + StandardDeviation * randStdNormal));
-
-            Single valuef = Convert.ToSingle(value);
-
-            return new IndividualAttribute()
-            {
-                InheritanceStyle = InheritanceStyle,
-                StoredValue = valuef
-            };
+            return lastInstance;
         }
 
         /// <summary>

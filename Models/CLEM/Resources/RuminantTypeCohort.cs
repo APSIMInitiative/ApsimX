@@ -174,10 +174,14 @@ namespace Models.CLEM.Resources
 
                     // initialise attributes
                     foreach (ISetAttribute item in initialAttributes)
-                        ruminant.Attributes.Add(item.AttributeName, item.GetRandomSetAttribute());
+                        ruminant.Attributes.Add(item.AttributeName, item.GetAttribute(true));
 
                     individuals.Add(ruminant);
                 }
+
+                // add any mandatory attributes to the list on the ruminant type
+                foreach (var mattrib in initialAttributes.Where(a => a.Mandatory))
+                    parent.AddMandatoryAttribute(mattrib.AttributeName);
             }
 
             return individuals;

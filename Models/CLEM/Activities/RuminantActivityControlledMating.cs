@@ -38,6 +38,14 @@ namespace Models.CLEM.Activities
         public double MaximumAgeMating { get; set; }
 
         /// <summary>
+        /// Number joinings per male
+        /// </summary>
+        [Description("Number of joinings per male")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(1)]
+        public int JoiningsPerMale { get; set; }
+
+        /// <summary>
         /// The available attributes for the breeding sires
         /// </summary>
         public List<SetAttributeWithValue> SireAttributes => attributeList;

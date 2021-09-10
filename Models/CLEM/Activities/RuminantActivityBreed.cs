@@ -373,6 +373,7 @@ namespace Models.CLEM.Activities
                     }
 
                     numberServiced = 0;
+                    lastJoinIndex = -1;
                     foreach (RuminantFemale female in location.OfType<RuminantFemale>().Where(a => !a.IsPregnant))
                     {
                         Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
@@ -401,7 +402,7 @@ namespace Models.CLEM.Activities
                                     {
                                         if(useControlledMating)
                                             // save all male attributes
-                                            AddMalesAttributeDetails(female, controlledMating.SireAttributes);
+                                            AddMalesAttributeDetails(female, controlledMating.SireAttributes, needsNewJoiningMale(controlledMating.JoiningsPerMale, numberServiced));
                                         else
                                             // randomly select male
                                             AddMalesAttributeDetails(female, male as Ruminant);
@@ -432,27 +433,43 @@ namespace Models.CLEM.Activities
             this.TriggerOnActivityPerformed();
         }
 
+        private int lastJoinIndex = 0;
+        private bool needsNewJoiningMale(int joiningsPerMale, int numberServiced)
+        {
+            var index = Convert.ToInt32(Math.Floor(numberServiced/((joiningsPerMale==0)?1: joiningsPerMale) * 1.0));
+            if (index == lastJoinIndex)
+                return false;
+            else
+            {
+                lastJoinIndex = index;
+                return true;
+            }
+        }
+
         /// <summary>
         /// A method to add the available male attributes to the female store at mating using attributes supplied by controlled mating 
         /// </summary>
         /// <param name="female">The female breeder successfully mated</param>
         /// <param name="maleAttributes">a list of available male attributes setters</param>
-        private void AddMalesAttributeDetails(RuminantFemale female, List<SetAttributeWithValue> maleAttributes)
+        /// <param name="newMale">Create new instance (T) or use last created (F)</param>
+        private void AddMalesAttributeDetails(RuminantFemale female, List<SetAttributeWithValue> maleAttributes, bool newMale = true)
         {
             foreach (var attribute in female.Attributes.Items)
             {
                 var maleAttribute = maleAttributes.Where(a => a.AttributeName == attribute.Key).FirstOrDefault();
                 if(maleAttribute != null)
                 {
-                    var calculatedAttribute = maleAttribute.GetRandomSetAttribute();
-                    if(attribute.Value.InheritanceStyle != calculatedAttribute.InheritanceStyle)
+                    var calculatedAttribute = maleAttribute.GetAttribute(newMale);
+                    if(attribute.Value != null && attribute.Value.InheritanceStyle != calculatedAttribute.InheritanceStyle)
                         throw new ApsimXException(this, $"The inheritance style for attribute [{attribute.Key}] differs between the breeder and attributes supplied by controlled mating in [a={this.Name}]");
 
-                    attribute.Value.StoredMateValue = calculatedAttribute.StoredValue;
+                    if (attribute.Value != null)
+                        attribute.Value.StoredMateValue = calculatedAttribute.StoredValue;
                 }
                 else
                 {
-                    attribute.Value.StoredMateValue = null;
+                    if(attribute.Value != null)
+                       attribute.Value.StoredMateValue = null;
                     if(female.BreedParams.IsMandatoryAttribute(attribute.Key))
                         throw new ApsimXException(this, $"The sire attributes provided for [a={this.Name}] do not include the madatory attribute [{attribute.Key}]");
                 }
@@ -473,14 +490,16 @@ namespace Models.CLEM.Activities
                     var maleAttribute = male.Attributes.GetValue(attribute.Key);
                     if (maleAttribute != null)
                     {
-                        if (attribute.Value.InheritanceStyle != maleAttribute.InheritanceStyle)
+                        if (attribute.Value != null && attribute.Value.InheritanceStyle != maleAttribute.InheritanceStyle)
                             throw new ApsimXException(this, $"The inheritance style for attribute [{attribute.Key}] differs between the breeder and breeding male from the herd in [a={this.Name}]");
 
-                        attribute.Value.StoredMateValue = maleAttribute.StoredValue;
+                        if (attribute.Value != null)
+                            attribute.Value.StoredMateValue = maleAttribute.StoredValue;
                     }
                     else
                     {
-                        attribute.Value.StoredMateValue = null;
+                        if (attribute.Value != null)
+                            attribute.Value.StoredMateValue = null;
                         if (female.BreedParams.IsMandatoryAttribute(attribute.Key))
                             throw new ApsimXException(this, $"The attributes provided with the breeding male from the herd does not include the madatory attribute [{attribute.Key}] in [a={this.Name}]");
                     }

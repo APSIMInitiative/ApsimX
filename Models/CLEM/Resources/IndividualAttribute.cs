@@ -36,6 +36,7 @@ namespace Models.CLEM.Resources
     /// <summary>
     /// A ruminant attribute that stores an associated object
     /// </summary>
+    [Serializable]
     public class IndividualAttribute: IIndividualAttribute
     {
         /// <summary>
@@ -74,7 +75,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (float.TryParse(StoredValue.ToString(), out float val))
+                if (float.TryParse(StoredMateValue.ToString(), out float val))
                     return val;
                 else
                     return 0;
