@@ -42,12 +42,18 @@ namespace UserInterface.Presenters
         {
             try
             {
+                bool parentOfReport = false;
                 Report report = clemPresenter.model as Report;
+                if(report is null)
+                {
+                    report = (clemPresenter.model as Model).FindChild<Report>();
+                    parentOfReport = true;
+                }
 
                 ReportView rv = new ReportView(clemPresenter.view as ViewBase);
                 ViewBase reportView = new ViewBase(rv, "ApsimNG.Resources.Glade.DataStoreView.glade");
 
-                DataStorePresenter dataStorePresenter = new DataStorePresenter(new string[] { report.Name });
+                DataStorePresenter dataStorePresenter = new DataStorePresenter(new string[] { (parentOfReport)? (clemPresenter.model as IModel).Name:report.Name });
 
                 Simulations simulations = report.FindAncestor<Simulations>();
                 if (simulations != null)
