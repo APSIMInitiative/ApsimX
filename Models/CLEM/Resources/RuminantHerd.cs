@@ -67,12 +67,6 @@ namespace Models.CLEM.Resources
         public RuminantReportItemEventArgs ReportIndividual { get; set; }
 
         /// <summary>
-        /// Statistical summar of a list of numbers (e.g. attribute values)
-        /// </summary>
-        [JsonIgnore]
-        public ListStatistics LastListStatistics { get; set; }
-
-        /// <summary>
         /// Get the next unique individual id number
         /// </summary>
         public int NextUniqueID { get { return id++; } }
@@ -323,30 +317,6 @@ namespace Models.CLEM.Resources
 
             // remove change flag
             ind.SaleFlag = HerdChangeReason.None;
-        }
-
-        /// <summary>
-        /// Return the mean and standard deviation of an attribute value
-        /// </summary>
-        public int SummariseAttribute(string tag, bool ignoreNotFound)
-        {
-            LastListStatistics = new ListStatistics();
-            if (Herd is null)
-                return 0;
-
-            var values = Herd.Where( a => (ignoreNotFound & a.Attributes.GetValue(tag) == null) ? false : true).Select(a => Convert.ToDouble(a.Attributes.GetValue(tag)?.StoredValue));
-            if (values.Count() == 0)
-                return 0;
-
-            double sd = 0;
-            double mean = values.Average();
-            double sum = values.Sum(d => Math.Pow(d - mean, 2));
-            sd = Math.Sqrt((sum) / values.Count() - 1);
-            LastListStatistics.Average = mean;
-            LastListStatistics.StandardDeviation = sd;
-            LastListStatistics.Count = values.Count();
-            LastListStatistics.Total = Herd.Count();
-            return Herd.Count();
         }
 
         /// <summary>
