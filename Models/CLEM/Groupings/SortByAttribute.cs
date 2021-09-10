@@ -30,7 +30,7 @@ namespace Models.CLEM.Groupings
         /// Name of attribute to sort by
         /// </summary>
         [Description("Attribute tag")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Attribute tag must be provided")]
         public string AttributeTag { get; set; }
 
         /// <summary>

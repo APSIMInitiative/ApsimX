@@ -73,23 +73,6 @@ namespace Models.CLEM
         public void SetDefaults()
         {
             SetPropertyDefaults(this);
-            
-            ////Iterate through properties
-            //foreach (var property in GetType().GetProperties())
-            //    //Iterate through attributes of this property
-            //    foreach (Attribute attr in property.GetCustomAttributes(true))
-            //        //does this property have [DefaultValueAttribute]?
-            //        if (attr is System.ComponentModel.DefaultValueAttribute)
-            //        {
-            //            //So lets try to load default value to the property
-            //            System.ComponentModel.DefaultValueAttribute dv = (System.ComponentModel.DefaultValueAttribute)attr;
-            //            if (dv != null)
-            //                if (property.PropertyType.IsEnum)
-            //                    property.SetValue(this, Enum.Parse(property.PropertyType, dv.Value.ToString()));
-            //                else
-            //                    property.SetValue(this, dv.Value, null);
-
-            //        }
         }
 
         /// <summary>
