@@ -295,7 +295,8 @@
             Allocated = new OrganNutrientStates(Cconc);
             Senesced = new OrganNutrientStates(Cconc);
             Detached = new OrganNutrientStates(Cconc);
-            Removed = new OrganNutrientStates(Cconc);
+            LiveRemoved = new OrganNutrientStates(Cconc);
+            DeadRemoved = new OrganNutrientStates(Cconc);
         }
 
         /// <summary>Clears the transferring biomass amounts.</summary>
@@ -306,7 +307,8 @@
             Allocated.Clear();
             Senesced.Clear();
             Detached.Clear();
-            Removed.Clear();
+            LiveRemoved.Clear();
+            DeadRemoved.Clear();
         }
 
         /// <summary>Called when [simulation commencing].</summary>
@@ -354,6 +356,10 @@
                     Storage = Live.Weight.Total * (Nitrogen.ConcentrationOrFraction.Storage - Nitrogen.ConcentrationOrFraction.Metabolic),
                 };
                 Live.Nitrogen.SetTo(initN);
+
+                if (RootNetworkObject != null)
+                    RootNetworkObject.InitailiseNetwork(Live);
+
             }
         }
 
@@ -422,8 +428,10 @@
                 }
 
                 if (RootNetworkObject != null)
+                {
                     RootNetworkObject.PartitionBiomassThroughSoil(ReAllocated, ReTranslocated, Allocated, Senesced, Detached, LiveRemoved, DeadRemoved);
-
+                    RootNetworkObject.GrowRootDepth();
+                }
             }
         }
 

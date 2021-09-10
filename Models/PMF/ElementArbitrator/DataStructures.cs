@@ -174,9 +174,20 @@
         {
             return new NutrientPoolStates
             {
-                Structural = a.Structural / b,
-                Metabolic = a.Metabolic / b,
-                Storage = a.Storage / b,
+                Structural = MathUtilities.Divide(a.Structural, b, 0),
+                Metabolic = MathUtilities.Divide(a.Metabolic, b, 0),
+                Storage = MathUtilities.Divide(a.Storage, b, 0),
+            };
+        }
+
+        /// <summary>return pools divied by value</summary>
+        public static NutrientPoolStates operator /(NutrientPoolStates a, NutrientPoolStates b)
+        {
+            return new NutrientPoolStates
+            {
+                Structural = MathUtilities.Divide(a.Structural, b.Structural, 0),
+                Metabolic = MathUtilities.Divide(a.Metabolic, b.Metabolic, 0),
+                Storage = MathUtilities.Divide(a.Storage, b.Storage, 0),
             };
         }
 
@@ -188,6 +199,17 @@
                 Structural = a.Structural * b,
                 Metabolic = a.Metabolic * b,
                 Storage = a.Storage * b,
+            };
+        }
+
+        /// <summary>return pools divied by value</summary>
+        public static NutrientPoolStates operator *(NutrientPoolStates a, NutrientPoolStates b)
+        {
+            return new NutrientPoolStates
+            {
+                Structural = a.Structural * b.Structural,
+                Metabolic = a.Metabolic * b.Metabolic,
+                Storage = a.Storage * b.Storage,
             };
         }
 
@@ -337,6 +359,17 @@
             };
         }
 
+        /// <summary>return pools divied by value</summary>
+        public static OrganNutrientStates operator /(OrganNutrientStates a, OrganNutrientStates b)
+        {
+            return new OrganNutrientStates(1)
+            {
+                Carbon = a.Carbon / b.Carbon,
+                Nitrogen = a.Nitrogen / b.Nitrogen,
+                Phosphorus = a.Phosphorus / b.Phosphorus,
+                Potassium = a.Potassium / b.Potassium,
+            };
+        }
         /// <summary>return pools multiplied by value</summary>
         public static OrganNutrientStates operator *(OrganNutrientStates a, double b)
         {
@@ -346,6 +379,19 @@
                 Nitrogen = a.Nitrogen * b,
                 Phosphorus = a.Phosphorus * b,
                 Potassium = a.Potassium * b
+            };
+        }
+
+
+        /// <summary>return pools divied by value</summary>
+        public static OrganNutrientStates operator *(OrganNutrientStates a, OrganNutrientStates b)
+        {
+            return new OrganNutrientStates(1)
+            {
+                Carbon = a.Carbon * b.Carbon,
+                Nitrogen = a.Nitrogen * b.Nitrogen,
+                Phosphorus = a.Phosphorus * b.Phosphorus,
+                Potassium = a.Potassium * b.Potassium,
             };
         }
 

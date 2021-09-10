@@ -14,7 +14,7 @@ namespace Models.PMF.Organs
 {
     /// <summary>The state of each zone that root knows about.</summary>
     [Serializable]
-    public class NetworkZoneState
+    public class NetworkZoneState : Model, IStuffForRootShapeThing
     {
         /// <summary>The soil in this zone</summary>
         public Soil Soil { get; set; }
@@ -33,15 +33,15 @@ namespace Models.PMF.Organs
         public ISolute NH4 = null;
 
         /// <summary>The parent plant</summary>
-        public Plant plant = null;
+        public Plant plant { get; set; }
 
         private RootNetwork parentNetwork { get; set; }
-        
+
         /// <summary>Is the Weirdo model present in the simulation?</summary>
         public bool IsWeirdoPresent { get; set; }
 
         /// <summary>Zone name</summary>
-        public string Name = null;
+        new public string Name { get; set; }
 
         /// <summary>The water uptake</summary>
         public double[] WaterUptake { get; set; }
@@ -59,10 +59,16 @@ namespace Models.PMF.Organs
         public double NuptakeSupply { get; set; }
 
         /// <summary>Gets or sets the layer live.</summary>
-        public List<OrganNutrientStates> LayerLive { get; set; }
+        public OrganNutrientStates[] LayerLive { get; set; }
 
         /// <summary>Gets or sets the layer dead.</summary>
-        public List<OrganNutrientStates> LayerDead { get; set; }
+        public OrganNutrientStates[] LayerDead { get; set; }
+
+        /// <summary>Gets or sets the layer live.</summary>
+        public OrganNutrientStates[] LayerLiveProportion { get; set; }
+
+        /// <summary>Gets or sets the layer dead.</summary>
+        public OrganNutrientStates[] LayerDeadProportion { get; set; }
 
         /// <summary>Gets or sets the length.</summary>
         public double Length { get; set; }
@@ -143,11 +149,9 @@ namespace Models.PMF.Organs
             Name = zone.Name;
         }
 
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantSowing")]
-        protected void OnPlantSowing(object sender, SowingParameters data)
+
+        /// <summary>Determine if XF constrains root growth to a maximum depth.</summary>
+        public void SetMaxDepthFromXF()
         {
             Clear();
             var soilCrop = Soil.FindDescendant<SoilCrop>(plant.Name + "Soil");
@@ -165,13 +169,18 @@ namespace Models.PMF.Organs
             }
         }
 
-        /// <summary>Called when [do daily initialisation].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        protected void OnDoDailyInitialisation(object sender, EventArgs e)
+        /// <summary>Calculate starting states.</summary>
+        public void Initialize()
         {
-            // Set root activity functions.  Will be based on yesterdays activity
+            SetMaxDepthFromXF();
+            CalculateRAw();
+        }
+
+
+        /// <summary>Calculate RAw for each layer.</summary>
+        public void CalculateRAw()
+        {
+            // Set root activity functions.
             RAw = new double[Physical.Thickness.Length];
             for (int layer = 0; layer < Physical.Thickness.Length; layer++)
             {
@@ -190,7 +199,17 @@ namespace Models.PMF.Organs
             }
         }
 
-
+        /// <summary>
+        /// Calculates the proportion of total root biomass in each zone layer
+        /// </summary>
+        public void CalculateRelativeBiomassProportions()
+        {
+            for (int i = 0; i < Physical.Thickness.Length; i++)
+            {
+                LayerLiveProportion[i] = LayerLive[i] / parentNetwork.parentOrgan.StartLive;
+                LayerDeadProportion[i] = LayerDead[i] / parentNetwork.parentOrgan.Dead;
+            }
+        }
 
         /// <summary>Clears this instance.</summary>
         public void Clear()
@@ -204,37 +223,39 @@ namespace Models.PMF.Organs
 
             Depth = 0.0;
 
-            if (LayerLive == null || LayerLive.Count == 0)
+            if (LayerLive == null || LayerLive.Length == 0)
             {
-                LayerLive = new List<OrganNutrientStates>();
-                LayerDead = new List<OrganNutrientStates>();
+                LayerLive = new OrganNutrientStates[Physical.Thickness.Length];
+                LayerDead = new OrganNutrientStates[Physical.Thickness.Length];
+                LayerLiveProportion = new OrganNutrientStates[Physical.Thickness.Length];
+                LayerDeadProportion = new OrganNutrientStates[Physical.Thickness.Length];
                 double rootCconc = parentNetwork.parentOrgan.Cconc;
                 for (int i = 0; i < Physical.Thickness.Length; i++)
                 {
-                    LayerLive.Add(new OrganNutrientStates(rootCconc));
-                    LayerDead.Add(new OrganNutrientStates(rootCconc));
+                    LayerLive[i] = new OrganNutrientStates(rootCconc);
+                    LayerDead[i]  = new OrganNutrientStates(rootCconc);
+                    LayerLiveProportion[i] = new OrganNutrientStates(1);
+                    LayerDeadProportion[i] = new OrganNutrientStates(1);
                 }
             }
             else
             {
-                foreach (OrganNutrientStates l in LayerLive)
-                    l.Clear();
-                foreach (OrganNutrientStates ld in LayerDead)
-                    ld.Clear();
+                for (int i = 0; i < Physical.Thickness.Length; i++)
+                {
+                    LayerLive[i].Clear();
+                    LayerDead[i].Clear();
+                }
             }
         }
         /// <summary>
         /// Growth depth of roots in this zone
         /// </summary>
-        /// <summary>Does the nutrient allocations.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoActualPlantGrowth")]
-        private void OnDoActualPlantGrowth(object sender, EventArgs e)
+        public void GrowRootDepth()
         {
             // Do Root Front Advance
             int RootLayer = SoilUtilities.LayerIndexOfDepth(Physical.Thickness, Depth);
             var rootfrontvelocity = parentNetwork.RootFrontVelocity;
+            var rootDepthWaterStress = parentNetwork.RootDepthStressFactor.Value(RootLayer);
 
             double MaxDepth;
             double[] xf = null;
@@ -246,7 +267,7 @@ namespace Models.PMF.Organs
 
                 xf = soilCrop.XF;
 
-                Depth = Depth + rootfrontvelocity * xf[RootLayer];
+                Depth = Depth + rootfrontvelocity * xf[RootLayer] * rootDepthWaterStress;
                 MaxDepth = 0;
                 // Limit root depth for impeded layers
                 for (int i = 0; i < Physical.Thickness.Length; i++)
@@ -264,6 +285,7 @@ namespace Models.PMF.Organs
             }
 
             // Limit root depth for the crop specific maximum depth
+            MaxDepth = Math.Min(parentNetwork.MaximumRootDepth, MaxDepth);
             Depth = Math.Min(Depth, MaxDepth);
 
             //RootFront - needed by sorghum
@@ -279,7 +301,7 @@ namespace Models.PMF.Organs
             {
                 RootFront = Depth;
             }
-            //parentNetwork.RootShape.CalcRootProportionInLayers(this);  Fixme.  Need to get RootShape working with NetworkZoneState
+            parentNetwork.RootShape.CalcRootProportionInLayers(this);
         }
     }
 }

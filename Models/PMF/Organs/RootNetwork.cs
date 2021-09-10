@@ -150,13 +150,15 @@
         [JsonIgnore]
         public List<NutrientPoolFunctions> ZoneInitialDM { get; set; }
 
-        /// <summary>Live Biomass in each soil layer</summary>
+        /*
+        // <summary>Live Biomass in each soil layer</summary>
         [JsonIgnore]
         public List<OrganNutrientStates> LayerLive { get { return PlantZone.LayerLive; } }
 
         /// <summary>Dead Biomass in each soil layer</summary>
         [JsonIgnore]
-        public List<OrganNutrientStates> LayerDead { get { return PlantZone.LayerDead; } }
+        public List<OrganNutrientStates> LayerDead { get { return PlantZone.LayerDead; } }*/
+
 
         /// <summary>A list of all zones to grow roots in</summary>
         [JsonIgnore]
@@ -168,6 +170,7 @@
 
         /// <summary>Gets the root length density.</summary>
         [Units("mm/mm3")]
+        [JsonIgnore]
         public double[] LengthDensity
         {
             get
@@ -189,7 +192,12 @@
         public double NTakenUp { get; set; }
 
         ///<Summary>The speed of root descent</Summary>
+        [JsonIgnore] 
         public double RootFrontVelocity { get; set; }
+
+        ///<Summary>The deepest roots will get</Summary>
+        [JsonIgnore] 
+        public double MaximumRootDepth { get; set; }
 
         /// <summary>Root depth.</summary>
         [JsonIgnore]
@@ -242,6 +250,7 @@
 
         /// <summary>Returns the Fraction of Available Soil Water for the root system (across zones and depths in zones)</summary>
         [Units("unitless")]
+        [JsonIgnore]
         public double FASW
         {
             get
@@ -270,6 +279,7 @@
 
         /// <summary>Gets a factor to account for root zone Water tension weighted for root mass.</summary>
         [Units("0-1")]
+        [JsonIgnore]
         public double WaterTensionFactor
         {
             get
@@ -287,12 +297,15 @@
                         var waterBalance = Z.Soil.FindChild<ISoilWater>();
                         double[] paw = waterBalance.PAW;
                         double[] pawc = soilPhysical.PAWC;
-                        Biomass[] layerLiveForZone = Z.LayerLive;
-                        for (int i = 0; i < Z.LayerLive.Length; i++)
+                        int i = 1;
+                        foreach (OrganNutrientStates l in Z.LayerLive)
+                        {
                             if (pawc[i] > 0)
                             {
-                                MeanWTF += layerLiveForZone[i].Wt / liveWt * MathUtilities.Bound(2 * paw[i] / pawc[i], 0, 1);
+                                MeanWTF += l.Wt / liveWt * MathUtilities.Bound(2 * paw[i] / pawc[i], 0, 1);
                             }
+                            i += 1;
+                        }
                     }
 
                 return MeanWTF;
@@ -301,6 +314,7 @@
 
         /// <summary>Gets a factor to account for root zone Water tension weighted for root mass.</summary>
         [Units("0-1")]
+        [JsonIgnore]
         public double PlantWaterPotentialFactor
         {
             get
@@ -319,11 +333,13 @@
 
                         double[] paw = waterBalance.PAW;
                         double[] pawc = soilPhysical.PAWC;
-                        Biomass[] layerLiveForZone = Z.LayerLive;
-                        for (int i = 0; i < Z.LayerLive.Length; i++)
-                            MeanWTF += layerLiveForZone[i].Wt / liveWt * MathUtilities.Bound(paw[i] / pawc[i], 0, 1);
+                        int i = 0;
+                        foreach (OrganNutrientStates l in Z.LayerLive)
+                        {
+                            MeanWTF += l.Wt / liveWt * MathUtilities.Bound(paw[i] / pawc[i], 0, 1);
+                            i += 1; 
+                        }
                     }
-
                 return MeanWTF;
             }
         }
@@ -574,8 +590,6 @@
             soilCrop = soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
             if (soilCrop == null)
                 throw new Exception("Cannot find a soil crop parameterisation for " + parentPlant.Name);
-
-            InitialiseZones();
         }
 
         /// <summary>Called when [do daily initialisation].</summary>
@@ -584,7 +598,29 @@
         [EventSubscribe("DoDailyInitialisation")]
         protected void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            RootFrontVelocity = rootFrontVelocity.Value();
+            if (parentPlant.IsAlive)
+            {
+                RootFrontVelocity = rootFrontVelocity.Value();
+                MaximumRootDepth = maximumRootDepth.Value();
+                foreach (NetworkZoneState z in Zones)
+                {
+                    z.CalculateRAw();
+                    z.CalculateRelativeBiomassProportions();
+                }
+            }
+        }
+
+        /// <summary>
+        /// Set the initial biomass
+        /// </summary>
+        public void InitailiseNetwork(OrganNutrientStates Initial)
+        {
+            Clear();
+            InitialiseZones();
+            foreach (NetworkZoneState Z in Zones)
+            {
+                Z.LayerLive[0].SetTo(Initial);
+            }
         }
 
         /// <summary>
@@ -597,10 +633,11 @@
         /// <param name="detached"></param>
         /// <param name="liveRemoved"></param>
         /// <param name="deadRemoved"></param>
+
         public void PartitionBiomassThroughSoil(OrganNutrientStates reAllocated, OrganNutrientStates reTranslocated,
-                                                 OrganNutrientStates allocated, OrganNutrientStates senesced,
-                                                 OrganNutrientStates detached,
-                                                 OrganNutrientStates liveRemoved, OrganNutrientStates deadRemoved)
+                                             OrganNutrientStates allocated, OrganNutrientStates senesced,
+                                             OrganNutrientStates detached,
+                                             OrganNutrientStates liveRemoved, OrganNutrientStates deadRemoved)
         {
             double TotalRAw = 0;
             foreach (NetworkZoneState Z in Zones)
@@ -614,15 +651,16 @@
                     {
                         for (int layer = 0; layer < Z.Physical.Thickness.Length; layer++)
                         {
-                            LayerLive[layer].SubtractDelta(reAllocated * Z.RAw[layer] / TotalRAw);
-                            LayerLive[layer].SubtractDelta(reTranslocated * Z.RAw[layer] / TotalRAw);
-                            LayerLive[layer].SubtractDelta(senesced * Z.RAw[layer] / TotalRAw);
-                            LayerLive[layer].AddDelta(allocated * Z.RAw[layer] / TotalRAw);
-                            LayerLive[layer].SubtractDelta(liveRemoved * Z.RAw[layer] / TotalRAw);
+                            Z.LayerLive[layer].SubtractDelta(reAllocated * Z.LayerLiveProportion[layer]);
+                            Z.LayerLive[layer].SubtractDelta(reTranslocated * Z.LayerLiveProportion[layer]);
+                            Z.LayerLive[layer].SubtractDelta(senesced * Z.LayerLiveProportion[layer]);
+                            Z.LayerLive[layer].SubtractDelta(liveRemoved * Z.LayerLiveProportion[layer]);
 
-                            LayerDead[layer].AddDelta(senesced * Z.RAw[layer] / TotalRAw);
-                            LayerDead[layer].SubtractDelta(detached * Z.RAw[layer] / TotalRAw);
-                            LayerDead[layer].SubtractDelta(deadRemoved * Z.RAw[layer] / TotalRAw);
+                            Z.LayerLive[layer].AddDelta(allocated * Z.RAw[layer] / TotalRAw);
+
+                            Z.LayerDead[layer].AddDelta(senesced * Z.LayerDeadProportion[layer]);
+                            Z.LayerDead[layer].SubtractDelta(detached * Z.LayerDeadProportion[layer]);
+                            Z.LayerDead[layer].SubtractDelta(deadRemoved * Z.LayerDeadProportion[layer]);
                         }
                     }
                 }
@@ -630,22 +668,16 @@
         }
 
 
-        /// <summary>Called when crop is sown</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantSowing")]
-        private void OnPlantSowing(object sender, SowingParameters data)
+        /// <summary>grow roots in each zone.</summary>
+        public void GrowRootDepth()
         {
-            if (data.Plant == parentPlant)
-            {
-                Clear();
-            }
+            foreach (NetworkZoneState z in Zones)
+                z.GrowRootDepth();
         }
-
         /// <summary>Initialise all zones.</summary>
         private void InitialiseZones()
         {
-            Zones.Clear();
+            PlantZone.Initialize();
             Zones.Add(PlantZone);
             if (ZoneRootDepths.Count != ZoneNamesToGrowRootsIn.Count ||
                 ZoneRootDepths.Count != ZoneInitialDM.Count)
@@ -660,6 +692,7 @@
                     if (soil == null)
                         throw new Exception("Cannot find soil in zone: " + zone.Name);
                     NetworkZoneState newZone = new NetworkZoneState(parentPlant, soil);
+                    newZone.Initialize();
                     Zones.Add(newZone);
                 }
             }
