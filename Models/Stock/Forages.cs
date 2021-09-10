@@ -1,5 +1,6 @@
 ﻿using Models.Core;
 using Models.Interfaces;
+using Models.PMF;
 using Models.PMF.Interfaces;
 using Newtonsoft.Json;
 using System;
@@ -22,10 +23,8 @@ namespace Models.GrazPlan
 
     public class Forages : Model, IModelAsTable
     {
-        private List<Forage> allForages;
-
         /// <summary>Forage parameters.</summary>
-        public List<ForageParameters> forageParameters = null;
+        public List<ForageParameters> Parameters { get; set; }
 
         /// <summary>Gets or sets the table of values.</summary>
         [JsonIgnore]
@@ -41,35 +40,14 @@ namespace Models.GrazPlan
             }
         }
 
-        /// <summary>Return a collection of forages for a zone.</summary>
-        public IEnumerable<Forage> GetForages(Zone zone)
+
+        /// <summary>Return a collection of biomasses than can be damaged.</summary>
+        public IEnumerable<IHasDigestibleBiomass> DamageableBiomasses
         {
-            if (allForages == null)
+            get
             {
-                allForages = new List<Forage>();
-                foreach (var organ in FindAllInScope<IOrganDamage>())
-                {
-                    string modelName = GetForageName(organ);
-                    if (allForages.Find(f => f.Name == modelName) == null)
-                    {
-                        var parameters = forageParameters.FirstOrDefault(f => f.Name.Equals(modelName, StringComparison.InvariantCultureIgnoreCase));
-                        if (parameters == null)
-                            throw new Exception($"Cannot find grazing parameters for {organ.Name}");
 
-                        parameters.Initialise();
-
-                        if (parameters.HasGrazableMaterial)
-                        {
-                            var organAsModel = organ as IModel;
-                            if (organAsModel.Parent is IPlantDamage plant)
-                                allForages.Add(new Forage(plant as IModel, parameters));
-                            else
-                                allForages.Add(new Forage(organ as IModel, parameters));
-                        }
-                    }
-                }
             }
-            return allForages.Where(f => f.Zone == zone);
         }
 
         /// <summary>Return a table of all parameters.</summary>
@@ -83,35 +61,22 @@ namespace Models.GrazPlan
             data.Columns.Add("Live fraction consumbable");
             data.Columns.Add("Dead fraction consumbable");
 
-            var organTypes = new List<string>();
-            foreach (var organ in FindAllInScope<IOrganDamage>())
+            var materialNames = new List<string>();
+            foreach (var forage in FindAllInScope<IHasDamageableBiomass>())
             {
-                string modelName = GetForageName(organ);
-                if (!organTypes.Contains(modelName+organ.Name))
+                foreach (var material in forage.Material)
                 {
-                    DataRow row = GetForageParametersAsRow(data, modelName, organ.Name);
-                    data.Rows.Add(row);
-                    organTypes.Add(modelName + organ.Name);
+                    var fullName = $"{forage.Name}.{material.Name}";
+                    if (!materialNames.Contains(fullName))
+                    {
+                        DataRow row = GetForageParametersAsRow(data, forage.Name, material.Name);
+                        data.Rows.Add(row);
+                        materialNames.Add(fullName);
+                    }
                 }
             }
 
             return data;
-        }
-
-        /// <summary>
-        /// Get name of forage from organ.
-        /// </summary>
-        /// <param name="organ">The organ</param>
-        /// <returns></returns>
-        private static string GetForageName(IOrganDamage organ)
-        {
-            string modelName;
-            var organAsIModel = organ as IModel;
-            if (organAsIModel.Parent is IPlantDamage)
-                modelName = organAsIModel.Parent.Name;
-            else
-                modelName = organ.Name;
-            return modelName;
         }
 
         /// <summary>
@@ -131,7 +96,7 @@ namespace Models.GrazPlan
             row[4] = 100;
             row[5] = 100;
 
-            var parameters = forageParameters?.Find(p => p.Name == modelName) as ForageParameters;
+            var parameters = Parameters?.Find(p => p.Name == modelName) as ForageParameters;
             if (parameters != null)
             {
                 var parametersForOrgan = parameters.Material?.FirstOrDefault(p => p.Name == organName);
@@ -153,18 +118,65 @@ namespace Models.GrazPlan
         /// <param name="data">The data table.</param>
         private void SetParametersFromGrid(DataTable data)
         {
-            forageParameters = new List<ForageParameters>();
+            Parameters = new List<ForageParameters>();
             foreach (DataRow row in data.Rows)
             {
                 var modelName = row[0].ToString();
-                ForageParameters forage = forageParameters.Find(p => p.Name == modelName);
+                ForageParameters forage = Parameters.Find(p => p.Name == modelName);
                 if (forage == null)
                 {
                     forage = new ForageParameters(modelName);
 
-                    forageParameters.Add(forage);
+                    Parameters.Add(forage);
                 }
                 forage.AddMaterial(row);
+            }
+        }
+
+        /// <summary>An interface for a model that has digestible material.</summary>
+        public interface IHasDigestibleBiomass
+        {
+            /// <summary>A list of digestible material that can be grazed.</summary>
+            IEnumerable<DigestibleBiomass> Material { get; }
+
+            /// <summary>
+            /// Remove biomass from an organ.
+            /// </summary>
+            /// <param name="materialName">Name of organ.</param>
+            /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+            /// <param name="biomassToRemove">Biomass to remove.</param>
+            void RemoveBiomass(string materialName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove);
+        }
+
+        /// <summary>A class to hold a mass of digestible biomass.</summary>
+        public class DigestibleBiomass
+        {
+            private readonly DamageableBiomass material;
+
+            /// <summary>
+            /// Constructor.
+            /// </summary>
+            /// <param name="material">Biomass.</param>
+            public DigestibleBiomass(DamageableBiomass material)
+            {
+                this.material = material;
+            }
+
+            /// <summary>Name of material.</summary>
+            public string Name { get; }
+
+            /// <summary>Biomass</summary>
+            public Biomass Biomass => material.Biomass;
+
+            /// <summary>Is biomass live.</summary>
+            public bool IsLive => material.IsLive;
+
+            /// <summary>Digestibility of material.</summary>
+            public double Digestibility
+            {
+                get
+                {
+                }
             }
         }
     }

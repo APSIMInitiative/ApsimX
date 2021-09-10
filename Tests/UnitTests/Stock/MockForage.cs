@@ -11,9 +11,10 @@
 
     public class MockForage : Model, IPlantDamage
     {
+        public MockForage() { }
         public MockForage(double liveWt)
         {
-            Organs.Add(new MockOrgan(liveWt));
+            Organs.Add(new MockOrgan("", liveWt));
         }
         public List<IOrganDamage> Organs { get; set; } = new List<MockOrgan>().Cast<IOrganDamage>().ToList();
 
@@ -62,13 +63,14 @@
 
     public class MockOrgan : IOrganDamage
     {
-        public MockOrgan(double liveWt)
+        public MockOrgan(string name, double liveWt, double deadWt = 0)
         {
+            Name = name;
             Live = new Biomass() { StructuralWt = liveWt };
-            Dead = new Biomass();
+            Dead = new Biomass() { StructuralWt = deadWt };
         }
 
-        public string Name => throw new NotImplementedException();
+        public string Name { get; set; }
 
         public Biomass Live { get; set; }
 
