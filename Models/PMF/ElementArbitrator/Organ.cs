@@ -374,6 +374,7 @@
                 StartLive.SetTo(Live);
             senescenceRate = senescenceRateFunction.Value();
             dmConversionEfficiency = DMConversionEfficiency.Value();
+            Carbon.SetSuppliesAndDemands();
         }
 
         
@@ -385,23 +386,23 @@
         {
             if (parentPlant.IsAlive)
             {
-                //do reallocation
+                //Calculate biomass to be lost from senescene
+                Senesced.Carbon = StartLive.Carbon * senescenceRate;
+                Senesced.Nitrogen = StartLive.Nitrogen * senescenceRate;
+                Live.SubtractDelta(Senesced);
+
+                //Catch the bits that were reallocated and add the bits that wernt into dead.
                 ReAllocated.Carbon = Carbon.SuppliesAllocated.ReAllocation;
                 ReAllocated.Nitrogen = Nitrogen.SuppliesAllocated.ReAllocation;
-                Live.SubtractDelta(ReAllocated);
-                
-                //do retranslocation
+                Senesced.SubtractDelta(ReAllocated);
+                Dead.AddDelta(Senesced);
+
+                //Retranslocate from live pools
                 ReTranslocated.Carbon = Carbon.SuppliesAllocated.ReTranslocation;
                 ReTranslocated.Nitrogen = Nitrogen.SuppliesAllocated.ReTranslocation;
                 Live.SubtractDelta(ReTranslocated);
 
-                //do senescene
-                Senesced.Carbon = Live.Carbon * senescenceRate;
-                Senesced.Nitrogen = Live.Nitrogen * senescenceRate;
-                Live.SubtractDelta(Senesced);
-                Dead.AddDelta(Senesced);
-
-                //do allocation
+                //Add in todays fresh allocation
                 Allocated.Carbon = Carbon.DemandsAllocated;
                 Allocated.Nitrogen = Nitrogen.DemandsAllocated;
                 Live.AddDelta(Allocated);

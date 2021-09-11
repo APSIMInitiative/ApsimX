@@ -26,7 +26,7 @@
         [Link(Type = LinkType.Ancestor)]
         private Organ organ = null;
 
-         /// <summary>The demand of nutrients by the organ from the arbitrator</summary>
+        /// <summary>The demand of nutrients by the organ from the arbitrator</summary>
         [Link(Type = LinkType.Child)]
         [Units("g/m2/d")]
         private NutrientDemandFunctions demandFunctions = null;
@@ -52,7 +52,7 @@
         /// -------------------------------------------------------------------------------------------------
 
         /// <summary>Constructor</summary>
-        public OrganNutrientDelta() 
+        public OrganNutrientDelta()
         {
             //demandFunctions = new NutrientDemandFunctions();
             //supplyFunctions = new NutrientSupplyFunctions();
@@ -70,7 +70,7 @@
         ///5. Public Properties
         /// --------------------------------------------------------------------------------------------------
         /// <summary>The dry matter potentially being allocated</summary>
- 
+
         /// <summary>The max, crit and min nutirent concentrations</summary>
         [JsonIgnore]
         public NutrientPoolStates ConcentrationOrFraction { get; set; }
@@ -110,19 +110,19 @@
         }
 
         /// <summary> The maximum possible biomass with Nutrient Allocation</summary>
-        
+
         public double MaxCDelta { get; set; }
 
 
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
 
-        private double ThrowIfNegative (IFunction function)
+        private double ThrowIfNegative(IFunction function)
         {
-                if (function.Value() < -0.0000000000001)
-                    throw new Exception((function as IModel).FullPath + " is returning a negative supply ("+ function.Value()+ ").  It must be >= 0");
-                else
-                    return function.Value();
+            if (function.Value() < -0.0000000000001)
+                throw new Exception((function as IModel).FullPath + " is returning a negative supply (" + function.Value() + ").  It must be >= 0");
+            else
+                return function.Value();
         }
 
         private NutrientPoolStates ThrowIfNegative(NutrientPoolFunctions functions)
@@ -142,13 +142,14 @@
                 if ((ConcentrationOrFraction.Total > 1.01) || (ConcentrationOrFraction.Total < 0.99))
                     throw new Exception("Concentrations of Carbon must add to 1 to keep demands entire");
         }
-        
+
         /// <summary>Calculate and return the dry matter demand (g/m2)</summary>
         public void SetSuppliesAndDemands()
-        { 
+        {
+            Clear();
             setConcentrationsOrProportions();
             Supplies.ReAllocation = ThrowIfNegative(supplyFunctions.ReAllocation);
-            Supplies.ReTranslocation = ThrowIfNegative(supplyFunctions.ReTranslocation ) * (1 - organ.senescenceRate);
+            Supplies.ReTranslocation = ThrowIfNegative(supplyFunctions.ReTranslocation) * (1 - organ.senescenceRate);
             Supplies.Fixation = ThrowIfNegative(supplyFunctions.Fixation);
             Supplies.Uptake = ThrowIfNegative(supplyFunctions.Uptake);
 
@@ -170,7 +171,7 @@
             }
         }
 
-       
+
         /// <summary>Clears this instance.</summary>
         public void Clear()
         {
@@ -189,22 +190,11 @@
         {
             setConcentrationsOrProportions();
         }
-        
-        /// <summary>Called when [do daily initialisation].</summary>
+
+        /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("DoDailyInitialisation")]
-        protected void OnDoDailyInitialisation(object sender, EventArgs e)
-        {
-            Clear();
-            if (organ.parentPlant.IsAlive)
-                SetSuppliesAndDemands();
-        }
-
-            /// <summary>Called when [simulation commencing].</summary>
-            /// <param name="sender">The sender.</param>
-            /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-            [EventSubscribe("Commencing")]
+        [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
             // Deltas = new OrganResourceStates();
