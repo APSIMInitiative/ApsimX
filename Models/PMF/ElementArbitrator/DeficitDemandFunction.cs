@@ -61,7 +61,7 @@ namespace Models.PMF
             }
 
             double deficit = Double.NaN;
-            double PotentialWt = (parentOrgan.StartLive.Carbon.Total + parentOrgan.Carbon.DemandsAllocated.Total)/parentOrgan.Cconc;
+            double PotentialWt = (parentOrgan.Live.Carbon.Total + parentOrgan.Carbon.DemandsAllocated.Total)/parentOrgan.Cconc;
             
             if ((this.Name == "Metabolic") && (this.Parent.Parent.Name == "Nitrogen"))
             {

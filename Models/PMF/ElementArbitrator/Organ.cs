@@ -136,10 +136,6 @@
         [Description("Is organ above ground?")]
         public bool IsAboveGround { get; set; } = true;
 
-        /// <summary>The live biomass state at start of the computation round</summary>
-        [JsonIgnore]
-        public OrganNutrientStates StartLive { get; private set; }
-
         /// <summary>The live biomass</summary>
         [JsonIgnore]
         public OrganNutrientStates Live { get; private set; }
@@ -289,7 +285,6 @@
         {
             Live = new OrganNutrientStates(Cconc);
             Dead = new OrganNutrientStates(Cconc);
-            StartLive = new OrganNutrientStates(Cconc);
             ReAllocated = new OrganNutrientStates(Cconc);
             ReTranslocated = new OrganNutrientStates(Cconc);
             Allocated = new OrganNutrientStates(Cconc);
@@ -369,9 +364,6 @@
         [EventSubscribe("DoPotentialPlantGrowth")]
         protected virtual void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            // save current state
-            if (parentPlant.IsAlive)
-                StartLive.SetTo(Live);
             senescenceRate = senescenceRateFunction.Value();
             dmConversionEfficiency = DMConversionEfficiency.Value();
             Carbon.SetSuppliesAndDemands();
@@ -387,8 +379,8 @@
             if (parentPlant.IsAlive)
             {
                 //Calculate biomass to be lost from senescene
-                Senesced.Carbon = StartLive.Carbon * senescenceRate;
-                Senesced.Nitrogen = StartLive.Nitrogen * senescenceRate;
+                Senesced.Carbon = Live.Carbon * senescenceRate;
+                Senesced.Nitrogen = Live.Nitrogen * senescenceRate;
                 Live.SubtractDelta(Senesced);
 
                 //Catch the bits that were reallocated and add the bits that wernt into dead.

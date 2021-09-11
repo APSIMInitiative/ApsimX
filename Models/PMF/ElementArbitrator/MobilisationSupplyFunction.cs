@@ -52,35 +52,35 @@ namespace Models.PMF
         {
             if ((this.Name == "Metabolic") && (this.Parent.Name == "ReAllocation") && (this.Parent.Parent.Parent.Name == "Nitrogen"))
             {
-                return parentOrgan.StartLive.Nitrogen.Metabolic * Math.Max(0,Math.Min(1,multiplier.Value())) * parentOrgan.senescenceRate;
+                return parentOrgan.Live.Nitrogen.Metabolic * Math.Max(0,Math.Min(1,multiplier.Value())) * parentOrgan.senescenceRate;
             }
             else if ((this.Name == "Storage") && (this.Parent.Name == "ReAllocation") && (this.Parent.Parent.Parent.Name == "Nitrogen"))
             {
-                return parentOrgan.StartLive.Nitrogen.Storage * Math.Max(0,Math.Min(1,multiplier.Value())) * parentOrgan.senescenceRate;
+                return parentOrgan.Live.Nitrogen.Storage * Math.Max(0,Math.Min(1,multiplier.Value())) * parentOrgan.senescenceRate;
             }
             else if ((this.Name == "Metabolic") && (this.Parent.Name == "ReAllocation") && (this.Parent.Parent.Parent.Name == "Carbon"))
             {
-                return parentOrgan.StartLive.Carbon.Metabolic * Math.Max(0,Math.Min(1,multiplier.Value())) * parentOrgan.senescenceRate;
+                return parentOrgan.Live.Carbon.Metabolic * Math.Max(0,Math.Min(1,multiplier.Value())) * parentOrgan.senescenceRate;
             }
             else if ((this.Name == "Storage") && (this.Parent.Name == "ReAllocation") && (this.Parent.Parent.Parent.Name == "Carbon"))
             {
-                return parentOrgan.StartLive.Carbon.Storage * Math.Max(0,Math.Min(1,multiplier.Value())) * parentOrgan.senescenceRate;
+                return parentOrgan.Live.Carbon.Storage * Math.Max(0,Math.Min(1,multiplier.Value())) * parentOrgan.senescenceRate;
             }
             if ((this.Name == "Metabolic") && (this.Parent.Name == "ReTranslocation") && (this.Parent.Parent.Parent.Name == "Nitrogen"))
             {
-                return parentOrgan.StartLive.Nitrogen.Metabolic * Math.Max(0,Math.Min(1,multiplier.Value()));
+                return parentOrgan.Live.Nitrogen.Metabolic * Math.Max(0,Math.Min(1,multiplier.Value()));
             }
             else if ((this.Name == "Storage") && (this.Parent.Name == "ReTranslocation") && (this.Parent.Parent.Parent.Name == "Nitrogen"))
             {
-                return parentOrgan.StartLive.Nitrogen.Storage * Math.Max(0,Math.Min(1,multiplier.Value()));
+                return parentOrgan.Live.Nitrogen.Storage * Math.Max(0,Math.Min(1,multiplier.Value()));
             }
             else if ((this.Name == "Metabolic") && (this.Parent.Name == "ReTranslocation") && (this.Parent.Parent.Parent.Name == "Carbon"))
             {
-                return parentOrgan.StartLive.Carbon.Metabolic * Math.Max(0,Math.Min(1,multiplier.Value()));
+                return parentOrgan.Live.Carbon.Metabolic * Math.Max(0,Math.Min(1,multiplier.Value()));
             }
             else if ((this.Name == "Storage") && (this.Parent.Name == "ReTranslocation") && (this.Parent.Parent.Parent.Name == "Carbon"))
             {
-                return parentOrgan.StartLive.Carbon.Storage * Math.Max(0,Math.Min(1,multiplier.Value()));
+                return parentOrgan.Live.Carbon.Storage * Math.Max(0,Math.Min(1,multiplier.Value()));
             }
             else
                 throw new Exception(this.FullPath + " Must be named Metabolic or Structural to represent the pool it is parameterising and be placed on a NutrientDemand Object which is on Carbon or Nitrogen OrganNutrienDeltaObject");

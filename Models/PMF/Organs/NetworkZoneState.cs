@@ -206,7 +206,7 @@ namespace Models.PMF.Organs
         {
             for (int i = 0; i < Physical.Thickness.Length; i++)
             {
-                LayerLiveProportion[i] = LayerLive[i] / parentNetwork.parentOrgan.StartLive;
+                LayerLiveProportion[i] = LayerLive[i] / parentNetwork.parentOrgan.Live;
                 LayerDeadProportion[i] = LayerDead[i] / parentNetwork.parentOrgan.Dead;
             }
         }
