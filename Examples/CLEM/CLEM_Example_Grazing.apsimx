@@ -824,6 +824,7 @@
                             {
                               "$type": "Models.CLEM.Activities.RuminantActivityControlledMating, Models",
                               "MaximumAgeMating": 120.0,
+                              "JoiningsPerMale": 1,
                               "TransactionCategory": "Livestock.Manage",
                               "OnPartialResourcesAvailableAction": 0,
                               "SelectedTab": null,
@@ -1001,6 +1002,7 @@
                     },
                     {
                       "$type": "Models.CLEM.SummariseRuminantHerd, Models",
+                      "GroupStyle": 0,
                       "HerdFilters": null,
                       "SelectedTab": null,
                       "Name": "SummariseHerd",
@@ -1011,9 +1013,21 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportRuminantHerd, Models",
-                      "SelectedTab": null,
+                      "ReportAtStart": true,
+                      "SelectedTab": "Summary",
                       "Name": "ReportHerd",
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Groupings.RuminantGroup, Models",
+                          "Reason": 0,
+                          "SelectedTab": null,
+                          "Name": "RuminantGroup",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false

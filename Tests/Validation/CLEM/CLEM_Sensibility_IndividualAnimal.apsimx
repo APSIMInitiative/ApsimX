@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 139,
+  "Version": 141,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -338,6 +338,7 @@
                 },
                 {
                   "$type": "Models.CLEM.SummariseRuminantHerd, Models",
+                  "GroupStyle": 0,
                   "HerdFilters": null,
                   "SelectedTab": null,
                   "Name": "SummariseHerd",
@@ -348,9 +349,21 @@
                 },
                 {
                   "$type": "Models.CLEM.Reporting.ReportRuminantHerd, Models",
+                  "ReportAtStart": true,
                   "SelectedTab": null,
-                  "Name": "ReportHerd",
-                  "Children": [],
+                  "Name": "HerdReport",
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Groupings.RuminantGroup, Models",
+                      "Reason": 0,
+                      "SelectedTab": null,
+                      "Name": "RuminantGroup",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -395,11 +408,11 @@
                   "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
-                    "[Activities].ReportHerd.ReportDetails.Individual.ID as UID",
-                    "[Activities].ReportHerd.ReportDetails.Individual.Weight as Weight"
+                    "[Activities].HerdReport.ReportDetails.Individual.ID as UID",
+                    "[Activities].HerdReport.ReportDetails.Individual.Weight as Weight"
                   ],
                   "EventNames": [
-                    "[Activities].ReportHerd.OnReportItemGenerated"
+                    "[Activities].HerdReport.OnReportItemGenerated"
                   ],
                   "GroupByVariableName": null,
                   "Name": "HerdReport",
@@ -454,7 +467,7 @@
                   "ReportAnimalWeight": false,
                   "ReportLandEntire": false,
                   "ReportLabourIndividuals": false,
-                  "SelectedTab": "Data",
+                  "SelectedTab": "Properties",
                   "VariableNames": [
                     "[Clock].Today",
                     "AnimalFoodStore",
@@ -476,7 +489,7 @@
                   "CreateHTML": false,
                   "RotateReport": false,
                   "AutoCreateHTML": false,
-                  "SelectedTab": null,
+                  "SelectedTab": "Display",
                   "ModelSummaryStyle": 0,
                   "VariableNames": null,
                   "EventNames": null,
@@ -535,8 +548,8 @@
                       "Line": 0,
                       "LineThickness": 0,
                       "TableName": "ReportResourceBalances",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "RiceStraw",
+                      "XFieldName": "Date",
+                      "YFieldName": "RiceStraw_Amount",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -739,8 +752,8 @@
                       "Line": 0,
                       "LineThickness": 0,
                       "TableName": "ReportResourceBalances",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "General account",
+                      "XFieldName": "Date",
+                      "YFieldName": "General_account_Amount",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
