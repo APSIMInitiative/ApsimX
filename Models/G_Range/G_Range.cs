@@ -9,6 +9,7 @@ namespace Models
     using Models.Soils.Arbitrator;
     using Models.Interfaces;
     using APSIM.Shared.Utilities;
+    using Models.PMF;
 
     /// <summary>
     /// Implements the plant growth model logic abstracted from G_Range
@@ -70,7 +71,7 @@ namespace Models
         public string[] CultivarNames { get { return null; } }
 
         /// <summary>Get above ground biomass</summary>
-        public PMF.Biomass AboveGround
+        public IBiomass AboveGround
         {
             get
             {

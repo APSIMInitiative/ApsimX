@@ -74,6 +74,12 @@
         private int windIndex;
 
         /// <summary>
+        /// The index of the co2 column in the weather file, or -1
+        /// if the weather file doesn't contain co2.
+        /// </summary>
+        private int co2Index;
+
+        /// <summary>
         /// The index of the DiffuseFraction column in the weather file
         /// </summary>
         private int DiffuseFractionIndex;
@@ -549,6 +555,7 @@
             this.rainfallHoursIndex = 0;
             this.vapourPressureIndex = 0;
             this.windIndex = 0;
+            this.co2Index = -1;
             this.DiffuseFractionIndex = 0;
             this.dayLengthIndex = 0;
             if (CO2 == 0)
@@ -656,6 +663,8 @@
             this.Wind = TodaysMetData.Wind;
             this.DiffuseFraction = TodaysMetData.DiffuseFraction;
             this.DayLength = TodaysMetData.DayLength;
+            if (co2Index != -1)
+                CO2 = TodaysMetData.CO2;
             
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
@@ -751,6 +760,9 @@
                 readMetData.Wind = 3.0;
             else
                 readMetData.Wind = Convert.ToSingle(values[this.windIndex], CultureInfo.InvariantCulture);
+
+            if (co2Index != -1)
+                readMetData.CO2 = Convert.ToDouble(values[co2Index], CultureInfo.InvariantCulture);
 
             if (this.DiffuseFractionIndex == -1)
             {
@@ -860,6 +872,7 @@
                     this.windIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Wind");
                     this.DiffuseFractionIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DifFr");
                     this.dayLengthIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DayLength");
+                    co2Index = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "CO2");
 
                     if (!string.IsNullOrEmpty(ConstantsFile))
                     {
