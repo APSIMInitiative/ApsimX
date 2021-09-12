@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Models.Core;
 using Models.Functions;
 using Models.PMF;
@@ -18,13 +19,12 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(NutrientDemandFunctions))]
     public class DeficitDemandFunction : Model, IFunction, ICustomDocumentation
     {
-        /// <summary>Value to multiply demand for.  Use to switch demand on and off</summary>
-        [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
-        [Description("Multiplies calculated demand.  Use to switch demand on and off")]
-        [Units("unitless")]
-        public IFunction multiplier = null;
-
         private Organ parentOrgan = null;
+
+        /// <summary>The child functions</summary>
+        private IEnumerable<IFunction> ChildFunctions;
+
+        private double multiplier { get; set; }
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
@@ -50,54 +50,60 @@ namespace Models.PMF
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
         {
-            if ((this.Name == "Structural") && (this.Parent.Parent.Name == "Nitrogen"))
-            {
-                return parentOrgan.Carbon.DemandsAllocated.Total/parentOrgan.Cconc * parentOrgan.Nitrogen.ConcentrationOrFraction.Structural;
-            }
+            if (ChildFunctions == null)
+                ChildFunctions = FindAllChildren<IFunction>().ToList();
+
+            multiplier = 1.0;
+
+            foreach (IFunction F in ChildFunctions)
+                multiplier *=  F.Value(arrayIndex);
             
-            if ((this.Name == "Structural") && (this.Parent.Parent.Name == "Carbon"))
+            if (this.Parent.Parent.Name == "Nitrogen")
             {
-                return parentOrgan.totalDMDemand * parentOrgan.Carbon.ConcentrationOrFraction.Structural;
+                if (this.Name == "Structural")
+                {
+                    return parentOrgan.Carbon.DemandsAllocated.Total / parentOrgan.Cconc * parentOrgan.Nitrogen.ConcentrationOrFraction.Structural;
+                }
+
+                double PotentialWt = (parentOrgan.Live.Carbon.Total + parentOrgan.Carbon.DemandsAllocated.Total) / parentOrgan.Cconc;
+
+                if (this.Name == "Metabolic") 
+                {
+                    double targetMetabolicN = (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrFraction.Metabolic) - (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrFraction.Structural);
+                    return Math.Max(0,(targetMetabolicN - parentOrgan.Live.Nitrogen.Metabolic) * multiplier);
+                }
+
+                if (this.Name == "Storage") 
+                {
+                    double targetStorageN = (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrFraction.Storage) - (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrFraction.Metabolic);
+                    return Math.Max(0,(targetStorageN - parentOrgan.Live.Nitrogen.Storage) * multiplier);
+                }
             }
 
-            double deficit = Double.NaN;
-            double PotentialWt = (parentOrgan.Live.Carbon.Total + parentOrgan.Carbon.DemandsAllocated.Total)/parentOrgan.Cconc;
-            
-            if ((this.Name == "Metabolic") && (this.Parent.Parent.Name == "Nitrogen"))
+            if (this.Parent.Parent.Name == "Carbon")
             {
-                double targetMetabolicN = (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrFraction.Metabolic) - (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrFraction.Structural);
-                deficit = targetMetabolicN - parentOrgan.Live.Nitrogen.Metabolic;
-            }
+                if (this.Name == "Structural")
+                {
+                    return parentOrgan.totalDMDemand * parentOrgan.Cconc * parentOrgan.Carbon.ConcentrationOrFraction.Structural;
+                }
 
-            double potentialStructuralC = parentOrgan.Live.Carbon.Structural + parentOrgan.totalDMDemand/parentOrgan.Cconc * parentOrgan.Carbon.ConcentrationOrFraction.Structural;
-            double potentialTotalC = potentialStructuralC / parentOrgan.Carbon.ConcentrationOrFraction.Structural;
+                double potentialStructuralC = parentOrgan.Live.Carbon.Structural + (parentOrgan.totalDMDemand * parentOrgan.Cconc * parentOrgan.Carbon.ConcentrationOrFraction.Structural);
+                double potentialTotalC = potentialStructuralC / parentOrgan.Carbon.ConcentrationOrFraction.Structural;
 
-            if ((this.Name == "Metabolic") && (this.Parent.Parent.Name == "Carbon"))
-            {
-                double targetMetabolicC = potentialTotalC * parentOrgan.Carbon.ConcentrationOrFraction.Metabolic;
-                deficit = targetMetabolicC - parentOrgan.Live.Carbon.Metabolic;
-            }
-            
-            else if ((this.Name == "Storage") && (this.Parent.Parent.Name == "Nitrogen"))
-            {
-                double targetStorageN = (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrFraction.Storage) - (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrFraction.Metabolic);
-                deficit = targetStorageN - parentOrgan.Live.Nitrogen.Storage;
-            }
-            
-            else if ((this.Name == "Storage") && (this.Parent.Parent.Name == "Carbon"))
-            {
-                double targetStorageC = potentialTotalC * parentOrgan.Carbon.ConcentrationOrFraction.Storage; 
-                deficit = targetStorageC - parentOrgan.Live.Nitrogen.Storage;
-            }
-            
-            if (Double.IsNaN(deficit))
-                    throw new Exception(this.FullPath + " Must be named Metabolic or Structural to represent the pool it is parameterising and be placed on a NutrientDemand Object which is on Carbon or Nitrogen OrganNutrienDeltaObject");
+                if (this.Name == "Metabolic")
+                {
+                    double targetMetabolicC = potentialTotalC * parentOrgan.Carbon.ConcentrationOrFraction.Metabolic;
+                    return Math.Max(0,(targetMetabolicC - parentOrgan.Live.Carbon.Metabolic) * multiplier);
+                }
 
-            // Deficit is limited to max of zero as it cases where ConcentrationsOrProportions change deficits can become negative.
-            if (multiplier != null)
-                return Math.Max(0, deficit * multiplier.Value());
-            else
-                return Math.Max(0, deficit);
+                if (this.Name == "Storage") 
+                {
+                    double targetStorageC = potentialTotalC * parentOrgan.Carbon.ConcentrationOrFraction.Storage;
+                    return Math.Max(0, (targetStorageC - parentOrgan.Live.Nitrogen.Storage)* multiplier);
+                }
+            }
+            
+            throw new Exception(this.FullPath + " Must be named Metabolic or Structural to represent the pool it is parameterising and be placed on a NutrientDemand Object which is on Carbon or Nitrogen OrganNutrienDeltaObject");
         }
 
             /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
