@@ -99,7 +99,7 @@ namespace Models.PMF
                 if (this.Name == "Storage") 
                 {
                     double targetStorageC = potentialTotalC * parentOrgan.Carbon.ConcentrationOrFraction.Storage;
-                    return Math.Max(0, (targetStorageC - parentOrgan.Live.Nitrogen.Storage)* multiplier);
+                    return Math.Max(0, (targetStorageC - parentOrgan.Live.Carbon.Storage)* multiplier);
                 }
             }
             
