@@ -2,14 +2,12 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Functions;
     using Models.PMF.Interfaces;
     using Models.PMF.Organs;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-
-
 
     /// <summary>
     /// An interface that defines what needs to be implemented by an organ
@@ -427,9 +425,21 @@
     /// The daily state of flows throughout the plant
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(BiomassArbitrator))]
     public class PlantNutrientDeltas : Model
     {
+        /// <summary>The top level plant object in the Plant Modelling Framework</summary>
+        [Link]
+        private Plant plant = null;
+
+        /// <summary>List of Organ states to include in composite state</summary>
+        [Description("Supply List of organs to customise order.")]
+        public string[] Propertys { get; set; }
+
         /// <summary>The organs on the plant /// </summary>
+        [JsonIgnore]
         public List<OrganNutrientDelta> ArbitratingOrgans { get; set; }
 
         /// <summary>The total supply of resoure that may be allocated /// </summary>
@@ -457,18 +467,19 @@
 
         //Error checking variables
         /// <summary>Gets or sets the start.</summary>
+        [JsonIgnore]
         public double Start { get; set; }
         /// <summary>Gets or sets the end.</summary>
+        [JsonIgnore]
         public double End { get; set; }
         /// <summary>Gets or sets the balance error.</summary>
+        [JsonIgnore]
         public double BalanceError { get; set; }
 
         /// <summary>The constructor</summary>
-        public PlantNutrientDeltas(List<OrganNutrientDelta> orgs)
+        public PlantNutrientDeltas()
         {
             ArbitratingOrgans = new List<OrganNutrientDelta>();
-            foreach (OrganNutrientDelta org in orgs)
-                ArbitratingOrgans.Add(org);
             Start = new double();
             End = new double();
             BalanceError = new double();
@@ -477,6 +488,30 @@
         /// <summary>Clear</summary>    
         public void Clear()
         {
+        }
+
+        /// <summary>Things the plant model does when the simulation starts</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("Commencing")]
+        virtual protected void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            ArbitratingOrgans = new List<OrganNutrientDelta>();
+            //If Propertys has a list of organ names then use that as a custom ordered list
+            var organs = Propertys?.Select(organName => plant.FindChild(organName));
+            organs = organs ?? plant.FindAllChildren<Organ>();
+
+            foreach (var organ in organs)
+            {
+                //Should we throw an exception here if the organ does not have an OrganNutrientDelta? 
+                var nutrientDelta = organ.FindChild(Name) as OrganNutrientDelta;
+                if (nutrientDelta != null)
+                    ArbitratingOrgans.Add(nutrientDelta);
+            }
+
+            Start = new double();
+            End = new double();
+            BalanceError = new double();
         }
     }
 

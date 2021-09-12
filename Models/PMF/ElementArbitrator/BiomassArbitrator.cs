@@ -74,11 +74,11 @@ namespace Models.PMF
         public List<Organ> PlantOrgans = new List<Organ>();
 
         /// <summary>The variables for DM</summary>
-        [JsonIgnore]
+        [Link(Type = LinkType.Child, ByName = true)]
         public PlantNutrientDeltas Carbon { get; private set; }
 
         /// <summary>The variables for N</summary>
-        [JsonIgnore]
+        [Link(Type = LinkType.Child, ByName = true)]
         public PlantNutrientDeltas Nitrogen { get; private set; }
 
         /// <summary>Gets the dry mass supply relative to dry mass demand.</summary>
@@ -100,19 +100,7 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         virtual protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            PlantOrgans = new List<Organ>();
-            List<OrganNutrientDelta> organsToArbitrateC = new List<OrganNutrientDelta>();
-            List<OrganNutrientDelta> organsToArbitrateN = new List<OrganNutrientDelta>();
-
-            foreach (Organ organ in plant.FindAllChildren<Organ>())
-            {
-                PlantOrgans.Add(organ);
-                organsToArbitrateC.Add(organ.Carbon);
-                organsToArbitrateN.Add(organ.Nitrogen);
-            }
-
-            Carbon = new PlantNutrientDeltas(organsToArbitrateC);
-            Nitrogen = new PlantNutrientDeltas(organsToArbitrateN);
+            PlantOrgans = plant.FindAllChildren<Organ>().ToList();
         }
 
 
@@ -148,8 +136,12 @@ namespace Models.PMF
                 foreach (OrganNutrientDelta o in Carbon.ArbitratingOrgans)
                     if (o.Supplies.ReTranslocation.Total > 0)
                     {
+                        //var metabolic = calcAllocated(CTotalReTranslocationAllocated, o.Supplies.ReTranslocation.Metabolic, Carbon.TotalReTranslocationSupply);
+                        //var storage = calcAllocated(CTotalReTranslocationAllocated, o.Supplies.ReTranslocation.Storage, Carbon.TotalReTranslocationSupply);
+                        //o.SuppliesAllocated.UpdateRetranslocation(metabolic, storage);
                         o.SuppliesAllocated.ReTranslocation.Metabolic = calcAllocated(CTotalReTranslocationAllocated, o.Supplies.ReTranslocation.Metabolic, Carbon.TotalReTranslocationSupply);
                         o.SuppliesAllocated.ReTranslocation.Storage = calcAllocated(CTotalReTranslocationAllocated, o.Supplies.ReTranslocation.Storage, Carbon.TotalReTranslocationSupply);
+                        //add an event here to notify the organ that it just gave up N/C??
                     }
 
                 foreach (Organ o in PlantOrgans)
@@ -300,7 +292,7 @@ namespace Models.PMF
                             Metabolic = Math.Min(o.OutstandingDemands.Metabolic, notAllocated * MathUtilities.Divide(o.OutstandingDemands.Metabolic, RemainingDemand, 0)),
                             Storage = Math.Min(o.OutstandingDemands.Storage, notAllocated * MathUtilities.Divide(o.OutstandingDemands.Storage, RemainingDemand, 0)),
                         };
-
+                        //check if there is something above 0 ta add?
                         o.DemandsAllocated.AddDelta(allocation);
                         totalAllocated += (allocation.Total);
                     }
