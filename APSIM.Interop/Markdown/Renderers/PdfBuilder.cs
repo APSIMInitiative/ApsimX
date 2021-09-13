@@ -449,9 +449,13 @@ namespace APSIM.Interop.Markdown.Renderers
         /// <summary>
         /// Append text to the PDF document, and create a bookmark to the text.
         /// </summary>
+        /// <remarks>
+        /// Can remove virtual if this is added to an interface. This is only
+        /// required for unit tests.
+        /// </remarks>
         /// <param name="text">Text to be appended.</param>
         /// <param name="textStyle">Style to be applied to the text.</param>
-        public void AppendReference(string text, TextStyle textStyle)
+        public virtual void AppendReference(string text, TextStyle textStyle)
         {
             if (!references.TryGetValue(text, out ICitation citation))
             {
