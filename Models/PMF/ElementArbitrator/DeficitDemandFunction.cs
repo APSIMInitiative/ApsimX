@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using Models.Core;
 using Models.Functions;
 using Models.PMF;
@@ -19,12 +18,35 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(NutrientDemandFunctions))]
     public class DeficitDemandFunction : Model, IFunction, ICustomDocumentation
     {
+        /// <summary>Value to multiply demand for.  Use to switch demand on and off</summary>
+        [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
+        [Description("Multiplies calculated demand.  Use to switch demand on and off")]
+        [Units("unitless")]
+        public IFunction multiplier = null;
+
         private Organ parentOrgan = null;
+        private OrganNutrientDelta Carbon = null;
+        private OrganNutrientDelta Nitrogen = null;
 
-        /// <summary>The child functions</summary>
-        private IEnumerable<IFunction> ChildFunctions;
+        // Declare a delegate type for calculating the IFunction return value:
+        private delegate double DeficitCalculation();
+        private DeficitCalculation CalcDeficit;
 
-        private double multiplier { get; set; }
+        private Organ FindParentOrgan(IModel model)
+        {
+            if (model is Organ) return model as Organ;
+
+            if (model is IPlant)
+                throw new Exception(Name + "cannot find parent organ to get Structural and Storage DM status");
+
+            return FindParentOrgan(model.Parent);
+        }
+        private OrganNutrientDelta FindNutrientDelta(string NutrientType, Organ parentOrgan)
+        {
+            var nutrientDelta = parentOrgan.FindChild(NutrientType) as OrganNutrientDelta;
+            //should we throw an exception if the delta is missing?
+            return nutrientDelta;
+        }
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
@@ -32,85 +54,80 @@ namespace Models.PMF
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            bool ParentOrganIdentified = false;
-            IModel ParentClass = this.Parent;
-            while (!ParentOrganIdentified)
+            parentOrgan = FindParentOrgan(this.Parent);
+            Carbon = FindNutrientDelta("Carbon", parentOrgan);
+            Nitrogen = FindNutrientDelta("Nitrogen", parentOrgan);
+
+            //setup a function pointer (delegate) at simulation commencing so it isn't performing multiple if statements every day
+            //cleaner method would probably be to use classes
+            var nutrientName = this.Parent.Parent.Name;
+            if (nutrientName == "Nitrogen")
             {
-                if (ParentClass is Organ)
+                switch (this.Name)
                 {
-                    parentOrgan = ParentClass as Organ;
-                    ParentOrganIdentified = true;
-                    if (ParentClass is IPlant)
-                        throw new Exception(Name + "cannot find parent organ to get Structural and Storage DM status");
-                }
-                ParentClass = ParentClass.Parent;
+                    case "Structural": CalcDeficit = CalculateStructuralDeficitForNitrogen; break;
+                    case "Metabolic": CalcDeficit = () => CalculateDeficitForNitrogen(parentOrgan.Live.Nitrogen.Metabolic, Nitrogen.ConcentrationOrFraction.Metabolic, Nitrogen.ConcentrationOrFraction.Structural); break;
+                    case "Storage": CalcDeficit = () => CalculateDeficitForNitrogen(parentOrgan.Live.Nitrogen.Storage, Nitrogen.ConcentrationOrFraction.Storage, Nitrogen.ConcentrationOrFraction.Metabolic); break;
+                };
             }
+            else if(nutrientName == "Carbon")
+            {
+                switch (this.Name)
+                {
+                    case "Structural" : CalcDeficit = CalculateStructuralDeficitForCarbon; break;
+                    case "Metabolic": CalcDeficit = () => CalculateDeficitForCarbon(parentOrgan.Live.Carbon.Metabolic, Carbon.ConcentrationOrFraction.Metabolic); break;
+                    case "Storage": CalcDeficit = () => CalculateDeficitForCarbon(parentOrgan.Live.Carbon.Storage, Carbon.ConcentrationOrFraction.Storage); break;
+                };
+            }
+            else
+            {
+                //throw exception for unhandled nutrient as parent?
+            }
+        }
+
+        private double CalculateStructuralDeficitForNitrogen()
+        {
+            return Carbon.DemandsAllocated.Total * Nitrogen.ConcentrationOrFraction.Structural;
+        }
+        private double CalculateStructuralDeficitForCarbon()
+        {
+            return parentOrgan.totalDMDemand * Carbon.ConcentrationOrFraction.Structural;
+        }
+        private double CalculateDeficitForCarbon(double existingPoolAmount, double poolTargetConcentration)
+        {
+            double potentialStructuralC = parentOrgan.Live.Carbon.Structural + parentOrgan.totalDMDemand * Carbon.ConcentrationOrFraction.Structural;
+            double potentialTotalC = potentialStructuralC / Carbon.ConcentrationOrFraction.Structural;
+
+            double targetMetabolicC = potentialTotalC * poolTargetConcentration;
+            return targetMetabolicC - existingPoolAmount;
+        }
+        private double CalculateDeficitForNitrogen(double existingPoolAmount, double poolTargetConcentration, double poolPreviousTargetConcentration)
+        {
+            double PotentialWt = (parentOrgan.Live.Carbon.Total + Carbon.DemandsAllocated.Total) / parentOrgan.Cconc;
+            double targetMetabolicN = (PotentialWt * poolTargetConcentration) - (PotentialWt * poolPreviousTargetConcentration);
+            return targetMetabolicN - existingPoolAmount;
         }
 
         /// <summary>Gets the value.</summary>
         public double Value(int arrayIndex = -1)
         {
-            if (ChildFunctions == null)
-                ChildFunctions = FindAllChildren<IFunction>().ToList();
-
-            multiplier = 1.0;
-
-            foreach (IFunction F in ChildFunctions)
-                multiplier *=  F.Value(arrayIndex);
+            double deficit = CalcDeficit();
             
-            if (this.Parent.Parent.Name == "Nitrogen")
-            {
-                if (this.Name == "Structural")
-                {
-                    return parentOrgan.Carbon.DemandsAllocated.Total / parentOrgan.Cconc * parentOrgan.Nitrogen.ConcentrationOrFraction.Structural;
-                }
+            if (Double.IsNaN(deficit))
+                    throw new Exception(this.FullPath + " Must be named Metabolic or Structural to represent the pool it is parameterising and be placed on a NutrientDemand Object which is on Carbon or Nitrogen OrganNutrienDeltaObject");
 
-                double PotentialWt = (parentOrgan.Live.Carbon.Total + parentOrgan.Carbon.DemandsAllocated.Total) / parentOrgan.Cconc;
-
-                if (this.Name == "Metabolic") 
-                {
-                    double targetMetabolicN = (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrFraction.Metabolic) - (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrFraction.Structural);
-                    return Math.Max(0,(targetMetabolicN - parentOrgan.Live.Nitrogen.Metabolic) * multiplier);
-                }
-
-                if (this.Name == "Storage") 
-                {
-                    double targetStorageN = (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrFraction.Storage) - (PotentialWt * parentOrgan.Nitrogen.ConcentrationOrFraction.Metabolic);
-                    return Math.Max(0,(targetStorageN - parentOrgan.Live.Nitrogen.Storage) * multiplier);
-                }
-            }
-
-            if (this.Parent.Parent.Name == "Carbon")
-            {
-                if (this.Name == "Structural")
-                {
-                    return parentOrgan.totalDMDemand * parentOrgan.Cconc * parentOrgan.Carbon.ConcentrationOrFraction.Structural;
-                }
-
-                double potentialStructuralC = parentOrgan.Live.Carbon.Structural + (parentOrgan.totalDMDemand * parentOrgan.Cconc * parentOrgan.Carbon.ConcentrationOrFraction.Structural);
-                double potentialTotalC = potentialStructuralC / parentOrgan.Carbon.ConcentrationOrFraction.Structural;
-
-                if (this.Name == "Metabolic")
-                {
-                    double targetMetabolicC = potentialTotalC * parentOrgan.Carbon.ConcentrationOrFraction.Metabolic;
-                    return Math.Max(0,(targetMetabolicC - parentOrgan.Live.Carbon.Metabolic) * multiplier);
-                }
-
-                if (this.Name == "Storage") 
-                {
-                    double targetStorageC = potentialTotalC * parentOrgan.Carbon.ConcentrationOrFraction.Storage;
-                    return Math.Max(0, (targetStorageC - parentOrgan.Live.Nitrogen.Storage)* multiplier);
-                }
-            }
-            
-            throw new Exception(this.FullPath + " Must be named Metabolic or Structural to represent the pool it is parameterising and be placed on a NutrientDemand Object which is on Carbon or Nitrogen OrganNutrienDeltaObject");
+            // Deficit is limited to max of zero as it cases where ConcentrationsOrProportions change deficits can become negative.
+            if (multiplier != null)
+                return Math.Max(0, deficit * multiplier.Value());
+            else
+                return Math.Max(0, deficit);
         }
 
-            /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-            /// <param name="tags">The list of tags to add to.</param>
-            /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-            /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-            public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        /// <param name="tags">The list of tags to add to.</param>
+        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
+        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
+        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
         {
             if (IncludeInDocumentation)
             {
@@ -124,29 +141,13 @@ namespace Models.PMF
                 foreach (IModel memo in this.FindAllChildren<Memo>())
                     AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
 
-                // find parent organ's name
-                if (Parent == null)
-                    return;
-                string organName = "";
-                bool seekingParentOrgan = true;
-                IModel parentClass = this.Parent;
-                while (seekingParentOrgan)
-                {
-                    if (parentClass is IOrgan)
-                    {
-                        seekingParentOrgan = false;
-                        organName = (parentClass as IOrgan).Name;
-                        if (parentClass is IPlant)
-                            throw new Exception(Name + "cannot find parent organ to get Structural and Storage N status");
-                    }
-                    parentClass = parentClass.Parent;
-                }
+                parentOrgan = FindParentOrgan(this.Parent);
 
                 // add a description of the equation for this function
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = [" + organName + "].maximumNconc × (["
-                    + organName + "].Live.Wt + potentialAllocationWt) - [" + organName + "].Live.N</i>", indent));
+                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = [" + parentOrgan.Name + "].maximumNconc × (["
+                    + parentOrgan.Name + "].Live.Wt + potentialAllocationWt) - [" + parentOrgan.Name + "].Live.N</i>", indent));
                 tags.Add(new AutoDocumentation.Paragraph("The demand for storage N is further reduced by a factor specified by the [" 
-                    + organName + "].NitrogenDemandSwitch.", indent));
+                    + parentOrgan.Name + "].NitrogenDemandSwitch.", indent));
             }
         }
     }
