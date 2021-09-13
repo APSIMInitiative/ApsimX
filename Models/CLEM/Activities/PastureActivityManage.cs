@@ -257,7 +257,6 @@ namespace Models.CLEM.Activities
                     }
 
                     LinkedNativeFoodType.SetupStartingPasturePools(Area * unitsOfArea2Ha, firstMonthsGrowth);
-                    //SetupStartingPasturePools(StartingAmount);
                 }
             }
         }

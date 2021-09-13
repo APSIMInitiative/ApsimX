@@ -13,7 +13,7 @@ namespace Models.CLEM.Groupings
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    //[Description("Selects specific individuals from the other animals")]
+    [Description("Selects specific individuals from the other animals")]
     [Version(1, 0, 1, "")]
     public class OtherAnimalsFilterGroup : FilterGroup<OtherAnimalsTypeCohort>
     {

@@ -371,14 +371,14 @@ namespace Models.CLEM
                     htmlWriter.Write(this.ModelSummaryOpeningTags(formatForParentControl));
                     htmlWriter.Write(this.ModelSummaryInnerOpeningTagsBeforeSummary());
                     htmlWriter.Write(this.ModelSummary(formatForParentControl));
-//                    htmlWriter.Write(CLEMModel.AddMemosToSummary(this));
+                    // TODO: May need to implament Adding Memos for some Models with reduced display
                     htmlWriter.Write(this.ModelSummaryInnerOpeningTags(formatForParentControl));
                     htmlWriter.Write(this.ModelSummaryInnerClosingTags(formatForParentControl));
                     htmlWriter.Write(this.ModelSummaryClosingTags(formatForParentControl));
                 }
 
                 // find random number generator
-                RandomNumberGenerator rnd = parentSim.FindAllChildren<RandomNumberGenerator>().FirstOrDefault();
+                RandomNumberGenerator rnd = parentSim.FindDescendant<RandomNumberGenerator>();
                 if (rnd != null)
                 {
                     htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
@@ -398,7 +398,7 @@ namespace Models.CLEM
                     htmlWriter.Write("\r\n</div>");
                 }
 
-                Clock clk = parentSim.FindAllChildren<Clock>().FirstOrDefault() as Clock;
+                Clock clk = parentSim.FindChild<Clock>();
                 if (clk != null)
                 {
                     htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
@@ -424,7 +424,7 @@ namespace Models.CLEM
                     htmlWriter.Write("\r\n</div>");
                 }
 
-                foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>().Cast<CLEMModel>())
+                foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
                     htmlWriter.Write(cm.GetFullSummary(cm, true, ""));
                 return htmlWriter.ToString(); 
             }

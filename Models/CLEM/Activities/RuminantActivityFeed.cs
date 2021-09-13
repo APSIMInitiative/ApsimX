@@ -170,21 +170,17 @@ namespace Models.CLEM.Activities
                             break;
                         case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
                             feedEstimated += (value * 30.4) * selectedIndividualsDetails.Count;
-                            //feedEstimated += (value * 30.4) * selectedIndividuals.Count();
                             usingPotentialIntakeMultiplier = true;
                             break;
                         case RuminantFeedActivityTypes.ProportionOfWeight:
                             usingPotentialIntakeMultiplier = true;
-                            //feedEstimated += selectedIndividuals.Sum(a => value * a.Weight * 30.4);
                             feedEstimated += value * selectedIndividualsDetails.Weight * 30.4;
                             break;
                         case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
                             feedEstimated += value * selectedIndividualsDetails.PotentialIntake;
-                            //feedEstimated += selectedIndividuals.Sum(a => value * a.PotentialIntake);
                             break;
                         case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
                             feedEstimated += value * (selectedIndividualsDetails.PotentialIntake - selectedIndividualsDetails.Intake);
-                            //feedEstimated += intakeToPotential * value;
                             break;
                         case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
                             usingPotentialIntakeMultiplier = true;
@@ -203,9 +199,6 @@ namespace Models.CLEM.Activities
 
                     feedToSatisfy += selectedIndividualsDetails.PotentialIntake - selectedIndividualsDetails.Intake;
                     feedToOverSatisfy += selectedIndividualsDetails.PotentialIntake * selectedIndividualsDetails.IntakeMultiplier - selectedIndividualsDetails.Intake;
-
-                    //feedToSatisfy += intakeToPotential;
-                    //feedToOverSatisfy += selectedIndividuals.Select(a => a.PotentialIntake * (usingPotentialIntakeMultiplier ? a.BreedParams.OverfeedPotentialIntakeModifier : 1) - a.Intake).Sum();
                 }
             }
 
@@ -267,12 +260,6 @@ namespace Models.CLEM.Activities
                         head += selectedIndividuals.FirstOrDefault().Count;
                         adultEquivalents += selectedIndividuals.FirstOrDefault().TotalAE;
                     }
-
-                    //var subherd = child.Filter(herd);
-                    //if (requirement.UnitType == LabourUnitType.perHead)
-                    //    head += subherd.Count();
-                    //if (requirement.UnitType == LabourUnitType.perAE)
-                    //    adultEquivalents += subherd.Sum(a => a.AdultEquivalent);
                 }
 
             switch (requirement.UnitType)
@@ -401,7 +388,7 @@ namespace Models.CLEM.Activities
                 }
 
                 // feed animals
-                if(feedRequest == null || (feedRequest.Required == 0 | feedRequest.Available == 0) || feedLimit <= 0.00001)
+                if(feedRequest == null | (feedRequest?.Required == 0 | feedRequest?.Available == 0) | APSIM.Shared.Utilities.MathUtilities.FloatsAreEqual(feedLimit, 0.0))
                 {
                     Status = ActivityStatus.NotNeeded;
                     return;

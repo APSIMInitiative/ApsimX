@@ -796,8 +796,4 @@ namespace Models.CLEM
         /// </summary>
         Individuals
     }
-
-
 }
-
-

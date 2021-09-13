@@ -61,7 +61,8 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if(float.TryParse(StoredValue.ToString(), out float val))
+                if(float.TryParse(StoredValue.ToString(), System.Globalization.NumberStyles.Float,
+        System.Globalization.CultureInfo.InvariantCulture, out float val))
                     return val;
                 else
                     return 0;
@@ -75,7 +76,8 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (float.TryParse(StoredMateValue.ToString(), out float val))
+                if (float.TryParse(StoredMateValue.ToString(), System.Globalization.NumberStyles.Float,
+        System.Globalization.CultureInfo.InvariantCulture, out float val))
                     return val;
                 else
                     return 0;

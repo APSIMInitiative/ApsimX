@@ -109,7 +109,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ToString()
         {
-            return filterString(false);
+            return FilterString(false);
         }
 
         /// <summary>
@@ -118,10 +118,10 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public string ToHTMLString()
         {
-            return filterString(true);
+            return FilterString(true);
         }
 
-        private string filterString(bool htmltags)
+        private string FilterString(bool htmltags)
         {
             using (StringWriter filterWriter = new StringWriter())
             {

@@ -91,7 +91,7 @@ namespace Models.CLEM.Resources
         /// <inheritdoc/>
         public IndividualAttribute GetAttribute(bool createNewInstance = true)
         {
-            if (createNewInstance | lastInstance is null)
+            if (createNewInstance || lastInstance is null)
             {
                 double value = Value;
                 double randStdNormal = 0;

@@ -55,7 +55,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ToString()
         {
-            return sortString(false);
+            return SortString(false);
         }
 
         /// <summary>
@@ -64,10 +64,10 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public string ToHTMLString()
         {
-            return sortString(true);
+            return SortString(true);
         }
 
-        private string sortString(bool htmltags)
+        private string SortString(bool htmltags)
         {
             string cssSet = "";
             string cssClose = "";

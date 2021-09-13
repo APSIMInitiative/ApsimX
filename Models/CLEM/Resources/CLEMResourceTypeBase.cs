@@ -222,10 +222,7 @@ namespace Models.CLEM.Resources
             {
                 case FinanceType _:
                 case HumanFoodStoreType _:
-                //case WaterType _:
-                //case AnimalFoodType _:
-                //case EquipmentType _:
-                //case GreenhousGasesType _:
+                //ToDo: add WaterType AnimalFoodType EquipmentType GreenhousGasesType _: as needed
                 case ProductStoreType _:
                     break;
                 default:

@@ -386,7 +386,7 @@ namespace Models.CLEM.Resources
                             if (!warningsMultipleEntry.Contains(criteria))
                             {
                                 warningsMultipleEntry.Add(criteria);
-                                Summary.WriteWarning(this, "Multiple specific pay rate entries were found where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".") + "\r\nOnly the first entry will be used. Pay [" + matchCriteria.Value.ToString("#,##0.##") + "].");
+                                Summary.WriteWarning(this, $"Multiple specific pay rate entries were found where [{property}]{(value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")}\r\nOnly the first entry will be used. Pay [{matchCriteria.Value.ToString("#,##0.##")}].");
                             }
                         }
                     }
@@ -395,12 +395,12 @@ namespace Models.CLEM.Resources
                 if (matchCriteria == null)
                 {
                     // report specific criteria not found in price list
-                    string warningString = "No [Pay] rate entry was found meeting the required criteria [" + property.Name + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".");
+                    string warningString = $"No [Pay] rate entry was found meeting the required criteria [{property.Name}]{(value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")}";
 
                     if (matchIndividual != null)
                     {
                         // add using the best pricing available for [][] purchases of xx per head
-                        warningString += "\r\nThe best available pay rate [" + matchIndividual.Value.ToString("#,##0.##") + "] will be used.";
+                        warningString += $"\r\nThe best available pay rate [{matchIndividual.Value:#,##0.##}] will be used.";
                         price = matchIndividual.Value;
                     }
                     else
