@@ -59,9 +59,9 @@
             //thresholds = new NutrientConcentrationFunctions();
             Supplies = new OrganNutrientSupplies();
             SuppliesAllocated = new OrganNutrientSupplies();
-            Demands = new NutrientPoolStates();
-            PriorityScaledDemand = new NutrientPoolStates();
-            DemandsAllocated = new NutrientPoolStates();
+            Demands = new NutrientPoolStates(0, 0, 0);
+            PriorityScaledDemand = new NutrientPoolStates(0, 0, 0);
+            DemandsAllocated = new NutrientPoolStates(0, 0, 0);
         }
 
         ///4. Public Events And Enums
@@ -101,10 +101,10 @@
         {
             get
             {
-                NutrientPoolStates outstanding = new NutrientPoolStates();
-                outstanding.Structural = Demands.Structural - DemandsAllocated.Structural;
-                outstanding.Metabolic = Demands.Metabolic - DemandsAllocated.Metabolic;
-                outstanding.Storage = Demands.Storage - DemandsAllocated.Storage;
+                NutrientPoolStates outstanding = new NutrientPoolStates(
+                Demands.Structural - DemandsAllocated.Structural,
+                Demands.Metabolic - DemandsAllocated.Metabolic,
+                Demands.Storage - DemandsAllocated.Storage);
                 return outstanding;
             }
         }
@@ -127,10 +127,10 @@
 
         private NutrientPoolStates ThrowIfNegative(NutrientPoolFunctions functions)
         {
-            NutrientPoolStates returns = new NutrientPoolStates();
-            returns.Structural = ThrowIfNegative(functions.Structural);
-            returns.Metabolic = ThrowIfNegative(functions.Metabolic);
-            returns.Storage = ThrowIfNegative(functions.Storage);
+            NutrientPoolStates returns = new NutrientPoolStates(
+            ThrowIfNegative(functions.Structural),
+            ThrowIfNegative(functions.Metabolic),
+            ThrowIfNegative(functions.Storage));
             return returns;
         }
 
@@ -156,18 +156,18 @@
             double dMCE = organ.dmConversionEfficiency;
             if (dMCE > 0.0)
             {
-                Demands.Structural = (ThrowIfNegative(demandFunctions.Structural) / dMCE);
-                Demands.Metabolic = (ThrowIfNegative(demandFunctions.Metabolic) / dMCE);
-                Demands.Storage = (ThrowIfNegative(demandFunctions.Storage) / dMCE);
-                PriorityScaledDemand.Structural = demandFunctions.Structural.Value() * demandFunctions.QStructuralPriority.Value();
-                PriorityScaledDemand.Metabolic = demandFunctions.Metabolic.Value() * demandFunctions.QMetabolicPriority.Value();
-                PriorityScaledDemand.Storage = demandFunctions.Storage.Value() * demandFunctions.QStoragePriority.Value();
+                Demands = new NutrientPoolStates(
+                (ThrowIfNegative(demandFunctions.Structural) / dMCE),
+                (ThrowIfNegative(demandFunctions.Metabolic) / dMCE),
+                (ThrowIfNegative(demandFunctions.Storage) / dMCE));
+                PriorityScaledDemand = new NutrientPoolStates(
+                demandFunctions.Structural.Value() * demandFunctions.QStructuralPriority.Value(),
+                demandFunctions.Metabolic.Value() * demandFunctions.QMetabolicPriority.Value(),
+                demandFunctions.Storage.Value() * demandFunctions.QStoragePriority.Value());
             }
             else
             { // Conversion efficiency is zero!!!!
-                Demands.Structural = 0;
-                Demands.Storage = 0;
-                Demands.Metabolic = 0;
+                Demands = new NutrientPoolStates(0, 0, 0);
             }
         }
 
@@ -200,7 +200,7 @@
             // Deltas = new OrganResourceStates();
             // Live = new ResourcePools();
             //  Dead = new ResourcePools();
-            ConcentrationOrFraction = new NutrientPoolStates();
+            ConcentrationOrFraction = new NutrientPoolStates(0,0,0);
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

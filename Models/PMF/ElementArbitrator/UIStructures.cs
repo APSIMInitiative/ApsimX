@@ -213,12 +213,10 @@
         {
             get
             {
-                NutrientPoolStates concentrationOrProportion = new NutrientPoolStates()
-                {
-                    Structural = Minimum.Value(),
-                    Metabolic = Critical.Value(),
-                    Storage = Maximum.Value(),
-                };
+                NutrientPoolStates concentrationOrProportion = new NutrientPoolStates(
+                Minimum.Value(),
+                Critical.Value(),
+                Maximum.Value());
                 return concentrationOrProportion;
             }
         }
@@ -253,15 +251,12 @@
         {
             get
             {
-                NutrientPoolStates concentrationOrProportion = new NutrientPoolStates()
-                {
-                    Structural = Structural.Value(),
-                    Metabolic = Metabolic.Value(),
-                    Storage = Storage.Value(),
-                };
+                NutrientPoolStates concentrationOrProportion = new NutrientPoolStates(
+                    Structural.Value(),
+                    Metabolic.Value(),
+                    Storage.Value());
                 return concentrationOrProportion;
             }
-
         }
     }
 

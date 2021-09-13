@@ -337,19 +337,16 @@
             {
                 Clear();
                 ClearBiomassFlows();
-                NutrientPoolStates initC = new NutrientPoolStates()
-                {
-                    Structural = InitialWt.Structural.Value() * Cconc,
-                    Metabolic = InitialWt.Metabolic.Value() * Cconc,
-                    Storage = InitialWt.Storage.Value() * Cconc,
-                };
+                NutrientPoolStates initC = new NutrientPoolStates(
+                    InitialWt.Structural.Value() * Cconc,
+                    InitialWt.Metabolic.Value() * Cconc,
+                    InitialWt.Storage.Value() * Cconc);
                 Live.Carbon.SetTo(initC);
-                NutrientPoolStates initN = new NutrientPoolStates()
-                {
-                    Structural = Live.Weight.Total * Nitrogen.ConcentrationOrFraction.Structural,
-                    Metabolic = Live.Weight.Total * (Nitrogen.ConcentrationOrFraction.Metabolic - Nitrogen.ConcentrationOrFraction.Structural),
-                    Storage = Live.Weight.Total * (Nitrogen.ConcentrationOrFraction.Storage - Nitrogen.ConcentrationOrFraction.Metabolic),
-                };
+
+                NutrientPoolStates initN = new NutrientPoolStates(
+                    Live.Weight.Total * Nitrogen.ConcentrationOrFraction.Structural,
+                    Live.Weight.Total * (Nitrogen.ConcentrationOrFraction.Metabolic - Nitrogen.ConcentrationOrFraction.Structural),
+                    Live.Weight.Total * (Nitrogen.ConcentrationOrFraction.Storage - Nitrogen.ConcentrationOrFraction.Metabolic));
                 Live.Nitrogen.SetTo(initN);
 
                 if (RootNetworkObject != null)
@@ -379,24 +376,24 @@
             if (parentPlant.IsAlive)
             {
                 //Calculate biomass to be lost from senescene
-                Senesced.Carbon = Live.Carbon * senescenceRate;
-                Senesced.Nitrogen = Live.Nitrogen * senescenceRate;
+                Senesced.Carbon.SetTo(Live.Carbon * senescenceRate);
+                Senesced.Nitrogen.SetTo(Live.Nitrogen * senescenceRate);
                 Live.SubtractDelta(Senesced);
 
                 //Catch the bits that were reallocated and add the bits that wernt into dead.
-                ReAllocated.Carbon = Carbon.SuppliesAllocated.ReAllocation;
-                ReAllocated.Nitrogen = Nitrogen.SuppliesAllocated.ReAllocation;
+                ReAllocated.Carbon.SetTo(Carbon.SuppliesAllocated.ReAllocation);
+                ReAllocated.Nitrogen.SetTo(Nitrogen.SuppliesAllocated.ReAllocation);
                 Senesced.SubtractDelta(ReAllocated);
                 Dead.AddDelta(Senesced);
 
                 //Retranslocate from live pools
-                ReTranslocated.Carbon = Carbon.SuppliesAllocated.ReTranslocation;
-                ReTranslocated.Nitrogen = Nitrogen.SuppliesAllocated.ReTranslocation;
+                ReTranslocated.Carbon.SetTo(Carbon.SuppliesAllocated.ReTranslocation);
+                ReTranslocated.Nitrogen.SetTo(Nitrogen.SuppliesAllocated.ReTranslocation);
                 Live.SubtractDelta(ReTranslocated);
 
                 //Add in todays fresh allocation
-                Allocated.Carbon = Carbon.DemandsAllocated;
-                Allocated.Nitrogen = Nitrogen.DemandsAllocated;
+                Allocated.Carbon.SetTo(Carbon.DemandsAllocated);
+                Allocated.Nitrogen.SetTo(Nitrogen.DemandsAllocated);
                 Live.AddDelta(Allocated);
 
                 // Do detachment

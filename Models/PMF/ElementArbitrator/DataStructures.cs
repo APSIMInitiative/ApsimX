@@ -59,25 +59,28 @@
     {
         /// <summary>Gets or sets the structural.</summary>
         [Units("g/m2")]
-        public double Structural { get; set; }
+        public double Structural { get; private set; }
         /// <summary>Gets or sets the storage.</summary>
         [Units("g/m2")]
-        public double Storage { get; set; }
+        public double Storage { get; private set; }
         /// <summary>Gets or sets the metabolic.</summary>
         [Units("g/m2")]
-        public double Metabolic { get; set; }
+        public double Metabolic { get; private set; }
         /// <summary>Gets the total amount of biomass.</summary>
         [Units("g/m2")]
-        public double Total
-        { get { return Structural + Metabolic + Storage; } }
+        public double Total { get; private set; }
+
+        private void updateTotal()
+        { Total = Structural + Metabolic + Storage; }
 
         /// <summary>the constructor.</summary>
-        public NutrientPoolStates()
+        public NutrientPoolStates(double structural, double metabolic, double storage)
         {
-            Structural = new double();
-            Metabolic = new double();
-            Storage = new double();
-            Clear();
+            Structural = structural;
+            Metabolic = metabolic;
+            Storage = storage;
+            updateTotal();
+            testPools(this);
         }
 
         /// <summary>Clear</summary>
@@ -86,6 +89,7 @@
             Structural = 0;
             Storage = 0;
             Metabolic = 0;
+            Total = 0;
         }
 
         /// <summary>Pools can not be negative.  Test for negatives each time an opperator is applied</summary>
@@ -118,7 +122,7 @@
             Structural += delta.Structural;
             Metabolic += delta.Metabolic;
             Storage += delta.Storage;
-
+            updateTotal();
             testPools(this);
         }
 
@@ -135,7 +139,7 @@
             Structural -= delta.Structural;
             Metabolic -= delta.Metabolic;
             Storage -= delta.Storage;
-
+            updateTotal();
             testPools(this);
         }
 
@@ -145,7 +149,7 @@
             Structural = newValue.Structural;
             Metabolic = newValue.Metabolic;
             Storage = newValue.Storage;
-
+            updateTotal();
             testPools(this);
         }
 
@@ -155,7 +159,7 @@
             Structural *= multiplier;
             Metabolic *= multiplier;
             Storage *= multiplier;
-
+            updateTotal();
             testPools(this);
         }
 
@@ -165,74 +169,62 @@
             Structural /= divisor;
             Metabolic /= divisor;
             Storage /= divisor;
-
+            updateTotal();
             testPools(this);
         }
 
         /// <summary>return pools divied by value</summary>
         public static NutrientPoolStates operator /(NutrientPoolStates a, double b)
         {
-            return new NutrientPoolStates
-            {
-                Structural = MathUtilities.Divide(a.Structural, b, 0),
-                Metabolic = MathUtilities.Divide(a.Metabolic, b, 0),
-                Storage = MathUtilities.Divide(a.Storage, b, 0),
-            };
+            return new NutrientPoolStates(
+            MathUtilities.Divide(a.Structural, b, 0),
+            MathUtilities.Divide(a.Metabolic, b, 0),
+            MathUtilities.Divide(a.Storage, b, 0));
         }
 
         /// <summary>return pools divied by value</summary>
         public static NutrientPoolStates operator /(NutrientPoolStates a, NutrientPoolStates b)
         {
-            return new NutrientPoolStates
-            {
-                Structural = MathUtilities.Divide(a.Structural, b.Structural, 0),
-                Metabolic = MathUtilities.Divide(a.Metabolic, b.Metabolic, 0),
-                Storage = MathUtilities.Divide(a.Storage, b.Storage, 0),
-            };
+            return new NutrientPoolStates(
+            MathUtilities.Divide(a.Structural, b.Structural, 0),
+            MathUtilities.Divide(a.Metabolic, b.Metabolic, 0),
+            MathUtilities.Divide(a.Storage, b.Storage, 0));
         }
 
         /// <summary>return pools multiplied by value</summary>
         public static NutrientPoolStates operator *(NutrientPoolStates a, double b)
         {
-            return new NutrientPoolStates
-            {
-                Structural = a.Structural * b,
-                Metabolic = a.Metabolic * b,
-                Storage = a.Storage * b,
-            };
+            return new NutrientPoolStates(
+                a.Structural * b,
+                a.Metabolic * b,
+                a.Storage * b);
         }
 
         /// <summary>return pools divied by value</summary>
         public static NutrientPoolStates operator *(NutrientPoolStates a, NutrientPoolStates b)
         {
-            return new NutrientPoolStates
-            {
-                Structural = a.Structural * b.Structural,
-                Metabolic = a.Metabolic * b.Metabolic,
-                Storage = a.Storage * b.Storage,
-            };
+            return new NutrientPoolStates(
+                a.Structural * b.Structural,
+                a.Metabolic * b.Metabolic,
+                a.Storage * b.Storage);
         }
 
         /// <summary>return sum or two pools</summary>
         public static NutrientPoolStates operator +(NutrientPoolStates a, NutrientPoolStates b)
         {
-            return new NutrientPoolStates
-            {
-                Structural = a.Structural + b.Structural,
-                Storage = a.Storage + b.Storage,
-                Metabolic = a.Metabolic + b.Metabolic,
-            };
+            return new NutrientPoolStates(
+                a.Structural + b.Structural,
+                a.Storage + b.Storage,
+                a.Metabolic + b.Metabolic);
         }
 
         /// <summary>return pool a - pool b</summary>
         public static NutrientPoolStates operator -(NutrientPoolStates a, NutrientPoolStates b)
         {
-            return new NutrientPoolStates
-            {
-                Structural = a.Structural - b.Structural,
-                Storage = a.Storage - b.Storage,
-                Metabolic = a.Metabolic - b.Metabolic,
-            };
+            return new NutrientPoolStates(
+                a.Structural - b.Structural,
+                a.Storage - b.Storage,
+                a.Metabolic - b.Metabolic);
         }
 
     }
@@ -244,53 +236,66 @@
     public class OrganNutrientStates : Model
     {
         /// <summary> The weight of the organ</summary>
-        public NutrientPoolStates Weight { get { return Carbon / CarbonConcentration; } }
+        public NutrientPoolStates Weight { get; private set; }
 
         /// <summary> The weight of the organ</summary>
-        public double Wt { get { return Weight.Total; } }
+        public double Wt { get; private set; }
 
         /// <summary> The Nitrogen of the organ</summary>
-        public double N { get { return Nitrogen.Total; } }
+        public double N { get; private set; }
 
         /// <summary> The Phosphorus of the organ</summary>
-        public double P { get { return Phosphorus.Total; } }
+        public double P { get; private set; }
 
         /// <summary> The Potassium of the organ</summary>
-        public double K { get { return Phosphorus.Total; } }
+        public double K { get; private set; }
 
         /// <summary> The N concentration of the organ</summary>
-        public double NConc { get { return Wt > 0 ? N / Wt : 0; } }
+        public double NConc { get; private set; }
 
         /// <summary> The P concentration of the organ</summary>
-        public double PConc { get { return Wt > 0 ? P / Wt : 0; } }
+        public double PConc { get; private set; }
 
         /// <summary> The K concentration of the organ</summary>
-        public double KConc { get { return Wt > 0 ? K / Wt : 0; } }
+        public double KConc { get; private set; }
 
 
         /// <summary> The concentraion of carbon in total dry weight</summary>
-        public double CarbonConcentration { get; set; }
+        public double CarbonConcentration { get; private set; }
 
         /// <summary> The organs Carbon components </summary>
-        public NutrientPoolStates Carbon { get; set; }
+        public NutrientPoolStates Carbon { get; private set; }
 
         /// <summary> The organs Carbon components </summary>
-        public NutrientPoolStates Nitrogen { get; set; }
+        public NutrientPoolStates Nitrogen { get; private set; }
 
         /// <summary> The organs phosphorus </summary>
-        public NutrientPoolStates Phosphorus { get; set; }
+        public NutrientPoolStates Phosphorus { get; private set; }
 
         /// <summary> The organs Potasium components </summary>
-        public NutrientPoolStates Potassium { get; set; }
+        public NutrientPoolStates Potassium { get; private set; }
+
+        private void updateAgregateValues()
+        {
+            Weight = Carbon / CarbonConcentration;
+            Wt = Weight.Total;
+            N = Nitrogen.Total;
+            P = Phosphorus.Total;
+            K = Potassium.Total;
+            NConc = Wt > 0 ? N / Wt : 0;
+            PConc = Wt > 0 ? P / Wt : 0;
+            KConc = Wt > 0 ? K / Wt : 0;
+        }
 
         /// <summary> The organs Carbon components </summary>
         public OrganNutrientStates(double Cconc)
         {
-            Carbon = new NutrientPoolStates();
-            Nitrogen = new NutrientPoolStates();
-            Phosphorus = new NutrientPoolStates();
-            Potassium = new NutrientPoolStates();
+            Carbon = new NutrientPoolStates(0,0,0);
+            Nitrogen = new NutrientPoolStates(0, 0, 0);
+            Phosphorus = new NutrientPoolStates(0, 0, 0);
+            Potassium = new NutrientPoolStates(0, 0, 0);
             CarbonConcentration = Cconc;
+            updateAgregateValues();
         }
 
         /// <summary> Clear the components </summary>
@@ -300,6 +305,7 @@
             Nitrogen.Clear();
             Phosphorus.Clear();
             Potassium.Clear();
+            updateAgregateValues();
         }
 
         /// <summary>Add Delta</summary>
@@ -309,6 +315,7 @@
             Nitrogen = newValue.Nitrogen;
             Phosphorus = newValue.Phosphorus;
             Potassium = newValue.Potassium;
+            updateAgregateValues();
         }
 
         /// <summary> Multiply components by factor </summary>
@@ -318,6 +325,7 @@
             Nitrogen.MultiplyBy(Multiplier);
             Phosphorus.MultiplyBy(Multiplier);
             Potassium.MultiplyBy(Multiplier);
+            updateAgregateValues();
         }
 
         /// <summary> Multiply components by factor </summary>
@@ -327,6 +335,7 @@
             Nitrogen.DivideBy(divisor);
             Phosphorus.DivideBy(divisor);
             Potassium.DivideBy(divisor);
+            updateAgregateValues();
         }
 
         /// <summary> Add delta to states </summary>
@@ -336,6 +345,7 @@
             Nitrogen.AddDelta(delta.Nitrogen);
             Phosphorus.AddDelta(delta.Phosphorus);
             Potassium.AddDelta(delta.Potassium);
+            updateAgregateValues();
         }
 
         /// <summary> subtract delta to states </summary>
@@ -345,6 +355,7 @@
             Nitrogen.SubtractDelta(delta.Nitrogen);
             Phosphorus.SubtractDelta(delta.Phosphorus);
             Potassium.SubtractDelta(delta.Potassium);
+            updateAgregateValues();
         }
 
         /// <summary>return pools divied by value</summary>
@@ -503,9 +514,9 @@
         public OrganNutrientSupplies()
         {
             Fixation = new double();
-            ReAllocation = new NutrientPoolStates();
+            ReAllocation = new NutrientPoolStates(0,0,0);
             Uptake = new double();
-            ReTranslocation = new NutrientPoolStates();
+            ReTranslocation = new NutrientPoolStates(0,0,0);
         }
 
         internal void Clear()
