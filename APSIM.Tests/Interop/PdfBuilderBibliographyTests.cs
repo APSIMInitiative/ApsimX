@@ -48,7 +48,7 @@ namespace APSIM.Tests.Interop.Documentation
             doc = new Document();
             citations = new Dictionary<string, ICitation>();
             citationResolver = new Mock<ICitationHelper>();
-            citationResolver.Setup(c => c.Lookup(It.IsAny<string>())).Returns<string>(n => citations[n]);
+            citationResolver.Setup(c => c.Lookup(It.IsAny<string>())).Returns<string>(n => { citations.TryGetValue(n, out ICitation result); return result; });
             builder = new PdfBuilder(doc, new PdfOptions(null, citationResolver.Object));
         }
 
@@ -64,7 +64,10 @@ namespace APSIM.Tests.Interop.Documentation
             foreach ((string name, ICitation _) in citations)
                 builder.AppendReference(name, TextStyle.Normal);
             builder.WriteBibliography();
-            Assert.AreEqual(3, doc.LastSection.Elements.Count);
+            // Should be 4 elements in the document - 1 paragraph containing the two
+            // citations above, second paragraph for bibliography heading, then two
+            // more paragraphs, one for each reference in the bibliography.
+            Assert.AreEqual(4, doc.LastSection.Elements.Count);
         }
 
         /// <summary>
@@ -80,9 +83,9 @@ namespace APSIM.Tests.Interop.Documentation
                 builder.AppendReference(name, TextStyle.Normal);
             builder.WriteBibliography();
 
-            Assert.AreEqual(3, doc.LastSection.Elements.Count);
-            Paragraph paragraph0 = (Paragraph)doc.LastSection.Elements[1];
-            Paragraph paragraph1 = (Paragraph)doc.LastSection.Elements[2];
+            Assert.AreEqual(4, doc.LastSection.Elements.Count);
+            Paragraph paragraph0 = (Paragraph)doc.LastSection.Elements[2];
+            Paragraph paragraph1 = (Paragraph)doc.LastSection.Elements[3];
 
             FormattedText formatted0 = (FormattedText)paragraph0.Elements[0];
             FormattedText formatted1 = (FormattedText)paragraph1.Elements[0];
@@ -109,7 +112,7 @@ namespace APSIM.Tests.Interop.Documentation
             builder.AppendReference(name, TextStyle.Normal);
             builder.WriteBibliography();
 
-            Paragraph bibliography = (Paragraph)doc.LastSection.Elements[1];
+            Paragraph bibliography = (Paragraph)doc.LastSection.Elements[2];
             Assert.AreEqual(typeof(Hyperlink), bibliography.Elements[0].GetType());
             Hyperlink link = (Hyperlink)bibliography.Elements[0];
             Assert.AreEqual(url, link.Name);
@@ -145,7 +148,7 @@ namespace APSIM.Tests.Interop.Documentation
             builder.AppendReference(name, TextStyle.Normal);
             builder.WriteBibliography();
 
-            Paragraph bibliography = (Paragraph)doc.LastSection.Elements[1];
+            Paragraph bibliography = (Paragraph)doc.LastSection.Elements[2];
             Assert.AreEqual(typeof(FormattedText), bibliography.Elements[0].GetType());
             FormattedText formatted = (FormattedText)bibliography.Elements[0];
             Assert.AreEqual(doc.Styles.Normal.Name, formatted.Style);
@@ -162,7 +165,7 @@ namespace APSIM.Tests.Interop.Documentation
             AddCitation(name, "full citation text");
             builder.AppendReference(name, TextStyle.Normal);
             builder.WriteBibliography();
-            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[1];
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[2];
             Assert.AreEqual(typeof(BookmarkField), paragraph.Elements[1].GetType());
             BookmarkField bookmark = (BookmarkField)paragraph.Elements[1];
             Assert.AreEqual(name, bookmark.Name);
@@ -181,13 +184,45 @@ namespace APSIM.Tests.Interop.Documentation
             builder.AppendReference(name, TextStyle.Normal);
             builder.WriteBibliography();
 
-            Assert.AreEqual(2, doc.LastSection.Elements.Count);
-            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[1];
+            Assert.AreEqual(3, doc.LastSection.Elements.Count);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[2];
             Assert.GreaterOrEqual(paragraph.Elements.Count, 1);
             FormattedText formatted = (FormattedText)paragraph.Elements[0];
             Assert.AreEqual(1, formatted.Elements.Count);
             Text text = (Text)formatted.Elements[0];
             Assert.AreEqual(citation, text.Content);
+        }
+
+        /// <summary>
+        /// Ensure that a heading is written before the bibliography.
+        /// </summary>
+        [Test]
+        public void EnsureHeadingIsWritten()
+        {
+            string name = "a citation";
+            AddCitation(name, "this is the full citation text");
+            builder.AppendReference(name, TextStyle.Normal);
+            builder.WriteBibliography();
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[1];
+            Assert.AreEqual(typeof(FormattedText), paragraph.Elements[0].GetType());
+            FormattedText formatted = (FormattedText)paragraph.Elements[1];
+            Style style = doc.Styles[formatted.Style];
+            Assert.Greater(style.Font.Size, doc.Styles.Normal.Font.Size);
+            Assert.AreEqual(typeof(Text), formatted.Elements[0].GetType());
+            Text text = (Text)formatted.Elements[0];
+            Assert.AreEqual("References", text.Content);
+        }
+
+        /// <summary>
+        /// Ensure that no heading or bibliography is written if the document
+        /// contains no references.
+        /// </summary>
+        [Test]
+        public void DontWriteEmptyBibliography()
+        {
+            builder.AppendReference("a citation", TextStyle.Normal);
+            builder.WriteBibliography();
+            Assert.AreEqual(1, doc.LastSection.Elements.Count);
         }
 
         /// <summary>

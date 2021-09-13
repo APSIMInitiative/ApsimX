@@ -369,7 +369,7 @@ namespace APSIM.Interop.Markdown.Renderers
             SetHeadingLevel((uint)headingIndices.Count);
             AppendText(text, TextStyle.Normal);
             ClearHeadingLevel();
-            startNewParagraph = true;
+            StartNewParagraph();
         }
 
         /// <summary>
