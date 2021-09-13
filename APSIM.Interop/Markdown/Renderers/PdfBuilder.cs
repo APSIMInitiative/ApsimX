@@ -726,9 +726,20 @@ namespace APSIM.Interop.Markdown.Renderers
 
             // Ensure references in bibliography are sorted alphabetically
             // by their full text.
-            IEnumerable<KeyValuePair<string, ICitation>> sorted = references.OrderBy(c => c.Value.BibliographyText);
+            IEnumerable<KeyValuePair<string, ICitation>> sorted = references.Where(c => c.Value != null).OrderBy(c => c.Value.BibliographyText);
+
+            if (sorted.Any())
+                AppendHeading("References");
+
+#if NETCOREAPP
             foreach ((string name, ICitation citation) in sorted)
             {
+#else
+            foreach (KeyValuePair<string, ICitation> pair in sorted)
+            {
+                string name = pair.Key;
+                ICitation citation = pair.Value;
+#endif
                 // If a URL is provided for this citation, insert the citation
                 // as a hyperlink.
                 bool isLink = !string.IsNullOrEmpty(citation.URL);
