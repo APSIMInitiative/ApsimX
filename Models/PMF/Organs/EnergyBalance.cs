@@ -216,10 +216,7 @@
                 return MathUtilities.Divide(WaterAllocation, PotentialEP, 1);
             }
         }
-        #endregion
-
-
-        #region Component Process Functions
+       
 
         /// <summary>Clears this instance.</summary>
         private void Clear()

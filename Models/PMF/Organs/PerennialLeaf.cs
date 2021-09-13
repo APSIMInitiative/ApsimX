@@ -346,8 +346,8 @@ namespace Models.PMF.Organs
             double lrt = LeafResidenceTime.Value();
             double senescingStorageN = cohort.SelectWhere(leaf => leaf.Age >= lrt, l => l.Live.StorageN);
 
-            NSupply.Reallocation = senescingStorageN * NReallocationFactor.Value();
-            NSupply.Retranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value();
+            NSupply.ReAllocation = senescingStorageN * NReallocationFactor.Value();
+            NSupply.ReTranslocation = (LabileN - StartNReallocationSupply) * NRetranslocationFactor.Value();
             NSupply.Uptake = 0.0;        
         }
 
