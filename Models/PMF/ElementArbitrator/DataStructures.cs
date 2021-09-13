@@ -231,6 +231,9 @@
     /// Daily state of flows into and out of each organ
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ValidParent(ParentType = typeof(Organ))]
     public class OrganNutrientsState : Model
     {
         /// <summary> The weight of the organ</summary>
@@ -273,7 +276,8 @@
         /// <summary> The organs Potasium components </summary>
         public NutrientPoolsState Potassium { get; private set; }
 
-        private void updateAgregateValues()
+        /// <summary> update variables derived from NutrientPoolsStates </summary>
+        public void updateAgregateValues()
         {
             Weight = Carbon / CarbonConcentration;
             Wt = Weight.Total;

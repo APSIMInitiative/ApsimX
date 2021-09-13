@@ -48,7 +48,7 @@
         /// <summary>Wt in each pool when plant is initialised</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/plant")]
-        public NutrientPoolFunctions InitialWt = null;
+        public IFunction InitialWt = null;
 
         /// <summary>The proportion of biomass respired each day</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -137,11 +137,9 @@
         public bool IsAboveGround { get; set; } = true;
 
         /// <summary>The live biomass</summary>
-        [JsonIgnore]
         public OrganNutrientsState Live { get; private set; }
 
         /// <summary>The dead biomass</summary>
-        [JsonIgnore]
         public OrganNutrientsState Dead { get; private set; }
 
         /// <summary>Gets the total biomass</summary>
@@ -338,16 +336,17 @@
                 Clear();
                 ClearBiomassFlows();
                 NutrientPoolsState initC = new NutrientPoolsState(
-                    InitialWt.Structural.Value() * Cconc,
-                    InitialWt.Metabolic.Value() * Cconc,
-                    InitialWt.Storage.Value() * Cconc);
+                    InitialWt.Value() * Cconc * Carbon.ConcentrationOrFraction.Structural,
+                    InitialWt.Value() * Cconc * Carbon.ConcentrationOrFraction.Metabolic,
+                    InitialWt.Value() * Cconc * Carbon.ConcentrationOrFraction.Storage);
                 Live.Carbon.SetTo(initC);
-
+                Live.updateAgregateValues();
                 NutrientPoolsState initN = new NutrientPoolsState(
                     Live.Weight.Total * Nitrogen.ConcentrationOrFraction.Structural,
                     Live.Weight.Total * (Nitrogen.ConcentrationOrFraction.Metabolic - Nitrogen.ConcentrationOrFraction.Structural),
                     Live.Weight.Total * (Nitrogen.ConcentrationOrFraction.Storage - Nitrogen.ConcentrationOrFraction.Metabolic));
                 Live.Nitrogen.SetTo(initN);
+                Live.updateAgregateValues();
 
                 if (RootNetworkObject != null)
                     RootNetworkObject.InitailiseNetwork(Live);
