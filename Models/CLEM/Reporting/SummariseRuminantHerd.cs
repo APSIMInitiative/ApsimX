@@ -195,7 +195,7 @@ namespace Models.CLEM
                                     Breed = breedGroup.Key,
                                     Herd = herdGroup.Key,
                                     Age = Convert.ToInt32(ageGroup.Key, CultureInfo.InvariantCulture),
-                                    Sex = sexGroup.Key.ToString().Substring(0, 1),
+                                    Sex = sexGroup.Key.ToString(), //.Substring(0, 1),
                                     Number = ageGroup.Sum(a => a.Number),
                                     AverageWeight = ageGroup.Average(a => a.Weight),
                                     AverageWeightGain = ageGroup.Average(a => a.WeightGain),

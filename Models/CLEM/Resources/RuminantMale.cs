@@ -11,6 +11,11 @@ namespace Models.CLEM.Resources
     public class RuminantMale: Ruminant
     {
         /// <summary>
+        /// Sex of individual
+        /// </summary>
+        public override Sex Sex { get { return Sex.Male; } }
+
+        /// <summary>
         /// Indicates if individual is breeding sire
         /// Represents any uncastrated male of breeding age
         /// </summary>
