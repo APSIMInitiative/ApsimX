@@ -60,6 +60,7 @@ namespace APSIM.Interop.Documentation
 
             foreach (ITag tag in tags)
                 pdfRenderer.Write(tag);
+            pdfRenderer.WriteBibliography();
 
             PdfDocumentRenderer renderer = new PdfDocumentRenderer(false);
             renderer.Document = pdf;
