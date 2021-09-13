@@ -719,9 +719,35 @@ namespace APSIM.Interop.Markdown.Renderers
         /// <summary>
         /// Add a bibliography to the document.
         /// </summary>
-        public void AddBibliography()
+        public void WriteBibliography()
         {
-            throw new NotImplementedException();
+            // Ensure that bibliography content does not go into
+            // same paragraph as any existing content.
+            StartNewParagraph();
+
+            // Ensure references in bibliography are sorted alphabetically
+            // by their full text.
+            IEnumerable<KeyValuePair<string, ICitation>> sorted = references.OrderBy(c => c.Value.BibliographyText);
+            foreach ((string name, ICitation citation) in sorted)
+            {
+                // If a URL is provided for this citation, insert the citation
+                // as a hyperlink.
+                bool isLink = !string.IsNullOrEmpty(citation.URL);
+                if (isLink)
+                    SetLinkState(citation.URL);
+
+                // Write the citation text.
+                AppendText(citation.BibliographyText, TextStyle.Normal);
+                GetLastParagraph().AddBookmark(name);
+
+                // Clear link state if a URL was provided.
+                if (isLink)
+                    ClearLinkState();
+
+                // Ensure that any subsequent additions to the document
+                // are written to a new paragraph.
+                StartNewParagraph();
+            }
         }
 
         /// <summary>
