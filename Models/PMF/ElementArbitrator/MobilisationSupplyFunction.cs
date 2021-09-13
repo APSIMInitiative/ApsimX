@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Models.Core;
 using Models.Functions;
 using Models.PMF;
@@ -18,12 +19,6 @@ namespace Models.PMF
     [ValidParent(ParentType = typeof(NutrientPoolFunctions))]
     public class MobilisationSupplyFunction : Model, IFunction, ICustomDocumentation
     {
-        /// <summary>Value to multiply demand for.  Use to switch demand on and off</summary>
-        [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
-        [Description("Multiplies calculated supply.  Use to switch ReAllocation on and off or to throttle ReTranslocation")]
-        [Units("unitless")]
-        public IFunction multiplier = null;
-
         private Organ parentOrgan = null;
 
         // Declare a delegate type for calculating the IFunction return value:
@@ -39,15 +34,6 @@ namespace Models.PMF
 
             return FindParentOrgan(model.Parent);
         }
-        private OrganNutrientDelta FindPoolSource(string NutrientType, Organ parentOrgan)
-        {
-            var nutrientDelta = parentOrgan.FindChild(NutrientType) as OrganNutrientDelta;
-            if (nutrientDelta == null)
-            {
-                throw new Exception("Error Finding Nutrient Source in "+ parentOrgan.Name + ":" + this.Parent.Parent.Parent.Name +  "SupplyFunctions." + this.Parent.Name + "." + this.Name);
-            }
-            return nutrientDelta;
-        }
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
@@ -56,50 +42,64 @@ namespace Models.PMF
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             parentOrgan = FindParentOrgan(this.Parent);
-            var nutrientSource = FindPoolSource(this.Parent.Parent.Parent.Name, parentOrgan);
+            var childFunctions = FindAllChildren<IFunction>().ToList();
+            var lookup = new Dictionary<string, Dictionary<string, Dictionary<string, DeficitCalculation>>>(StringComparer.InvariantCultureIgnoreCase);
 
-            //nutrientSource source should contain the current state at the beginning of the day (Live) of this Model's parent type ie: Carbon or Nitrogen
-            //Live doesn't exists at Simulation start - so can't use it until the function is actually called
-            if (this.Parent.Name.Equals("ReAllocation", StringComparison.InvariantCultureIgnoreCase))
+            var carbonReAllocationFuntions = new Dictionary<string, DeficitCalculation>(StringComparer.InvariantCultureIgnoreCase)
             {
-                switch (true)
-                {
-                    case bool b when this.Name.Equals("Structural", StringComparison.InvariantCultureIgnoreCase): 
-                        CalcValue = () => CalcAmountToReallocate(nutrientSource.Live.Structural); 
-                        break;
-                    case bool b when this.Name.Equals("Metabolic", StringComparison.InvariantCultureIgnoreCase):
-                        CalcValue = () => CalcAmountToReallocate(nutrientSource.Live.Metabolic); 
-                        break;
-                    case bool b when this.Name.Equals("Storage", StringComparison.InvariantCultureIgnoreCase):
-                        CalcValue = () => CalcAmountToReallocate(nutrientSource.Live.Storage); 
-                        break;
-                };
-            }
-            else if (this.Parent.Name.Equals("ReTranslocation", StringComparison.InvariantCultureIgnoreCase))
+                {"Structural", () => CalcAmountToReallocate(parentOrgan.Live.Carbon.Structural, childFunctions) },
+                {"Metabolic", () => CalcAmountToReallocate(parentOrgan.Live.Carbon.Metabolic, childFunctions) },
+                {"Storage", () => CalcAmountToReallocate(parentOrgan.Live.Carbon.Storage, childFunctions) },
+            };
+            var nitrogenReAllocationFunctions = new Dictionary<string, DeficitCalculation>(StringComparer.InvariantCultureIgnoreCase)
             {
-                switch (true)
-                {
-                    case bool b when this.Name.Equals("Structural", StringComparison.InvariantCultureIgnoreCase):
-                        CalcValue = () => CalcAmountToReTranslocate(nutrientSource.Live.Structural); 
-                        break;
-                    case bool b when this.Name.Equals("Metabolic", StringComparison.InvariantCultureIgnoreCase):
-                        CalcValue = () => CalcAmountToReTranslocate(nutrientSource.Live.Metabolic); 
-                        break;
-                    case bool b when this.Name.Equals("Storage", StringComparison.InvariantCultureIgnoreCase):
-                        CalcValue = () => CalcAmountToReTranslocate(nutrientSource.Live.Storage); 
-                        break;
-                };
-            }
+                {"Structural", () => CalcAmountToReallocate(parentOrgan.Live.Nitrogen.Structural, childFunctions) },
+                {"Metabolic", () => CalcAmountToReallocate(parentOrgan.Live.Nitrogen.Metabolic, childFunctions) },
+                {"Storage", () => CalcAmountToReallocate(parentOrgan.Live.Nitrogen.Storage, childFunctions) },
+            };
+            var carbonReTranslocationFuntions = new Dictionary<string, DeficitCalculation>(StringComparer.InvariantCultureIgnoreCase)
+            {
+                {"Structural", () => CalcAmountToReTranslocate(parentOrgan.Live.Carbon.Structural, childFunctions) },
+                {"Metabolic", () => CalcAmountToReTranslocate(parentOrgan.Live.Carbon.Metabolic, childFunctions) },
+                {"Storage", () => CalcAmountToReTranslocate(parentOrgan.Live.Carbon.Storage, childFunctions) },
+            };
+            var nitrogenReTranslocationFuntions = new Dictionary<string, DeficitCalculation>(StringComparer.InvariantCultureIgnoreCase)
+            {
+                {"Structural", () => CalcAmountToReTranslocate(parentOrgan.Live.Nitrogen.Structural, childFunctions) },
+                {"Metabolic", () => CalcAmountToReTranslocate(parentOrgan.Live.Nitrogen.Metabolic, childFunctions) },
+                {"Storage", () => CalcAmountToReTranslocate(parentOrgan.Live.Nitrogen.Storage, childFunctions) },
+            };
+
+            lookup.Add("ReAllocation", new Dictionary<string, Dictionary<string, DeficitCalculation>>(StringComparer.InvariantCultureIgnoreCase));
+            lookup["ReAllocation"].Add("Carbon", carbonReAllocationFuntions);
+            lookup["ReAllocation"].Add("Nitrogen", nitrogenReAllocationFunctions);
+            
+            lookup.Add("ReTranslocation", new Dictionary<string, Dictionary<string, DeficitCalculation>>(StringComparer.InvariantCultureIgnoreCase));
+            lookup["ReTranslocation"].Add("Carbon", carbonReTranslocationFuntions);
+            lookup["ReTranslocation"].Add("Nitrogen", nitrogenReTranslocationFuntions);
+
+            CalcValue = lookup[Parent.Name][this.Parent.Parent.Parent.Name][this.Name];
+
         }
-        private double CalcAmountToReallocate(double sourceAmount)
+        private double CalcAmountToReallocate(double sourceAmount, List<IFunction> childFunctions)
         {
+            var multiplier = 1.0;
+            foreach (IFunction F in childFunctions)
+                multiplier *= F.Value();
+            multiplier = Math.Max(0, Math.Min(1, multiplier));
+
             //sourceAmount ie: Leaf.Carbon.Live.Metabolic
-            return sourceAmount * multiplier.Value() * parentOrgan.senescenceRate;
+            return sourceAmount * multiplier * parentOrgan.senescenceRate;
         }
-        private double CalcAmountToReTranslocate(double sourceAmount)
+        private double CalcAmountToReTranslocate(double sourceAmount, List<IFunction> childFunctions)
         {
+            var multiplier = 1.0;
+            foreach (IFunction F in childFunctions)
+                multiplier *= F.Value();
+            multiplier = Math.Max(0, Math.Min(1, multiplier));
+
             //sourceAmount ie: Leaf.Carbon.Live.Metabolic
-            return sourceAmount * multiplier.Value();
+            return sourceAmount * multiplier;
         }
 
         /// <summary>Gets the value.</summary>
@@ -131,7 +131,7 @@ namespace Models.PMF
                 // add a description of the equation for this function
                 tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = [" + parentOrgan.Name + "].maximumNconc × (["
                     + parentOrgan.Name + "].Live.Wt + potentialAllocationWt) - [" + parentOrgan.Name + "].Live.N</i>", indent));
-                tags.Add(new AutoDocumentation.Paragraph("The demand for storage N is further reduced by a factor specified by the [" 
+                tags.Add(new AutoDocumentation.Paragraph("The demand for storage N is further reduced by a factor specified by the ["
                     + parentOrgan.Name + "].NitrogenDemandSwitch.", indent));
             }
         }
