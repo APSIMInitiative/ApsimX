@@ -31,7 +31,7 @@ namespace APSIM.Interop.Documentation
         public PdfOptions(string imagePath, ICitationHelper citationHelper)
         {
             if (citationHelper == null)
-                throw new ArgumentNullException(nameof(citationHelper));
+                citationHelper = GetDefaultCitationHelper();
 
             ImagePath = imagePath;
             CitationResolver = citationHelper;
