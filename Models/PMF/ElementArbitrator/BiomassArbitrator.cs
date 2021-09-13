@@ -75,11 +75,11 @@ namespace Models.PMF
 
         /// <summary>The variables for DM</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        public PlantNutrientDeltas Carbon { get; private set; }
+        public PlantNutrientsDelta Carbon { get; private set; }
 
         /// <summary>The variables for N</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        public PlantNutrientDeltas Nitrogen { get; private set; }
+        public PlantNutrientsDelta Nitrogen { get; private set; }
 
         /// <summary>Gets the dry mass supply relative to dry mass demand.</summary>
         [JsonIgnore]
@@ -121,7 +121,7 @@ namespace Models.PMF
                 foreach (OrganNutrientDelta o in Carbon.ArbitratingOrgans)
                     if (o.Supplies.ReAllocation.Total > 0)
                     {
-                        o.SuppliesAllocated.ReAllocation.SetTo(new NutrientPoolStates(
+                        o.SuppliesAllocated.ReAllocation.SetTo(new NutrientPoolsState(
                             0.0,
                             calcAllocated(CTotalReAllocationAllocated, o.Supplies.ReAllocation.Metabolic, Carbon.TotalReAllocationSupply),
                             calcAllocated(CTotalReAllocationAllocated, o.Supplies.ReAllocation.Storage, Carbon.TotalReAllocationSupply)));
@@ -138,7 +138,7 @@ namespace Models.PMF
                 foreach (OrganNutrientDelta o in Carbon.ArbitratingOrgans)
                     if (o.Supplies.ReTranslocation.Total > 0)
                     {
-                        o.SuppliesAllocated.ReTranslocation.SetTo(new NutrientPoolStates(
+                        o.SuppliesAllocated.ReTranslocation.SetTo(new NutrientPoolsState(
                             0,
                             calcAllocated(CTotalReTranslocationAllocated, o.Supplies.ReTranslocation.Metabolic, Carbon.TotalReTranslocationSupply),
                             calcAllocated(CTotalReTranslocationAllocated, o.Supplies.ReTranslocation.Storage, Carbon.TotalReTranslocationSupply)));
@@ -152,7 +152,7 @@ namespace Models.PMF
                 foreach (OrganNutrientDelta o in Nitrogen.ArbitratingOrgans)
                     if (o.Supplies.ReAllocation.Total > 0)
                     {
-                        o.SuppliesAllocated.ReAllocation.SetTo(new NutrientPoolStates(
+                        o.SuppliesAllocated.ReAllocation.SetTo(new NutrientPoolsState(
                             0,
                             calcAllocated(NTotalReAlocationAllocated, o.Supplies.ReAllocation.Metabolic , Nitrogen.TotalReAllocationSupply),
                             calcAllocated(NTotalReAlocationAllocated, o.Supplies.ReAllocation.Storage, Nitrogen.TotalReAllocationSupply)));
@@ -203,7 +203,7 @@ namespace Models.PMF
                 foreach (OrganNutrientDelta o in Nitrogen.ArbitratingOrgans)
                     if (o.Supplies.ReTranslocation.Total > 0)
                     {
-                        o.SuppliesAllocated.ReTranslocation.SetTo(new NutrientPoolStates(
+                        o.SuppliesAllocated.ReTranslocation.SetTo(new NutrientPoolsState(
                             0,
                             calcAllocated(NTotalReTranslocationAllocated, o.Supplies.ReTranslocation.Metabolic, Nitrogen.TotalReTranslocationSupply),
                             calcAllocated(NTotalReTranslocationAllocated, o.Supplies.ReTranslocation.Structural, Nitrogen.TotalReTranslocationSupply)));
@@ -238,7 +238,7 @@ namespace Models.PMF
                     double StructuralProportion = C.DemandsAllocated.Structural / C.DemandsAllocated.Total;
                     double MetabolicProportion = C.DemandsAllocated.Metabolic / C.DemandsAllocated.Total;
                     double StorageProportion = C.DemandsAllocated.Storage / C.DemandsAllocated.Total; ;
-                    C.DemandsAllocated.SetTo(new NutrientPoolStates(
+                    C.DemandsAllocated.SetTo(new NutrientPoolsState(
                         Math.Min(C.DemandsAllocated.Structural, N.MaxCDelta * StructuralProportion),  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
                         Math.Min(C.DemandsAllocated.Metabolic, N.MaxCDelta * MetabolicProportion),
                         Math.Min(C.DemandsAllocated.Storage, N.MaxCDelta * StorageProportion)));  //To introduce effects of other nutrients Need to include Plimited and Klimited growth in this min function
@@ -262,7 +262,7 @@ namespace Models.PMF
         /// <summary>Relatives the allocation.</summary>
         /// <param name="TotalSupply">The Allocation process</param>
         /// <param name="PRS">The bat.</param>
-        public double DoAllocation(double TotalSupply, PlantNutrientDeltas PRS)
+        public double DoAllocation(double TotalSupply, PlantNutrientsDelta PRS)
         {
             double totalAllocated = 0;
             if (TotalSupply > 0.00000000001)
@@ -275,7 +275,7 @@ namespace Models.PMF
                     if (o.OutstandingDemands.Total > 0.0)
                     {
                         double totalPriorityDemand = PRS.TotalPlantPriorityScalledDemand;
-                        NutrientPoolStates allocation = new NutrientPoolStates
+                        NutrientPoolsState allocation = new NutrientPoolsState
                         (
                             Math.Min(o.OutstandingDemands.Structural, TotalSupply * MathUtilities.Divide(o.PriorityScaledDemand.Structural, totalPriorityDemand, 0)),
                             Math.Min(o.OutstandingDemands.Metabolic, TotalSupply * MathUtilities.Divide(o.PriorityScaledDemand.Metabolic, totalPriorityDemand, 0)),
@@ -293,7 +293,7 @@ namespace Models.PMF
                 {
                     if (o.OutstandingDemands.Total > 0.0)
                     {
-                        NutrientPoolStates allocation = new NutrientPoolStates
+                        NutrientPoolsState allocation = new NutrientPoolsState
                         (
                             Math.Min(o.OutstandingDemands.Structural, notAllocated * MathUtilities.Divide(o.OutstandingDemands.Structural, RemainingDemand, 0)),
                             Math.Min(o.OutstandingDemands.Metabolic, notAllocated * MathUtilities.Divide(o.OutstandingDemands.Metabolic, RemainingDemand, 0)),

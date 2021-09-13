@@ -59,9 +59,9 @@
             //thresholds = new NutrientConcentrationFunctions();
             Supplies = new OrganNutrientSupplies();
             SuppliesAllocated = new OrganNutrientSupplies();
-            Demands = new NutrientPoolStates(0, 0, 0);
-            PriorityScaledDemand = new NutrientPoolStates(0, 0, 0);
-            DemandsAllocated = new NutrientPoolStates(0, 0, 0);
+            Demands = new NutrientPoolsState(0, 0, 0);
+            PriorityScaledDemand = new NutrientPoolsState(0, 0, 0);
+            DemandsAllocated = new NutrientPoolsState(0, 0, 0);
         }
 
         ///4. Public Events And Enums
@@ -73,7 +73,7 @@
 
         /// <summary>The max, crit and min nutirent concentrations</summary>
         [JsonIgnore]
-        public NutrientPoolStates ConcentrationOrFraction { get; set; }
+        public NutrientPoolsState ConcentrationOrFraction { get; set; }
 
         /// <summary> Resource supplied to arbitration by the organ</summary>
         /// [JsonIgnore]
@@ -85,23 +85,23 @@
 
         /// <summary> Resource demanded by the organ through arbitration</summary>
         [JsonIgnore]
-        public NutrientPoolStates Demands { get; set; }
+        public NutrientPoolsState Demands { get; set; }
 
         /// <summary> demands scaled for priority</summary>
         [JsonIgnore]
-        public NutrientPoolStates PriorityScaledDemand { get; set; }
+        public NutrientPoolsState PriorityScaledDemand { get; set; }
 
         /// <summary> Resource demands met as a result of arbitration</summary>
         [JsonIgnore]
-        public NutrientPoolStates DemandsAllocated { get; set; }
+        public NutrientPoolsState DemandsAllocated { get; set; }
 
         /// <summary> demands as yet un met by arbitration</summary>
         [JsonIgnore]
-        public NutrientPoolStates OutstandingDemands
+        public NutrientPoolsState OutstandingDemands
         {
             get
             {
-                NutrientPoolStates outstanding = new NutrientPoolStates(
+                NutrientPoolsState outstanding = new NutrientPoolsState(
                 Demands.Structural - DemandsAllocated.Structural,
                 Demands.Metabolic - DemandsAllocated.Metabolic,
                 Demands.Storage - DemandsAllocated.Storage);
@@ -125,9 +125,9 @@
                 return function.Value();
         }
 
-        private NutrientPoolStates ThrowIfNegative(NutrientPoolFunctions functions)
+        private NutrientPoolsState ThrowIfNegative(NutrientPoolFunctions functions)
         {
-            NutrientPoolStates returns = new NutrientPoolStates(
+            NutrientPoolsState returns = new NutrientPoolsState(
             ThrowIfNegative(functions.Structural),
             ThrowIfNegative(functions.Metabolic),
             ThrowIfNegative(functions.Storage));
@@ -156,18 +156,18 @@
             double dMCE = organ.dmConversionEfficiency;
             if (dMCE > 0.0)
             {
-                Demands = new NutrientPoolStates(
+                Demands = new NutrientPoolsState(
                 (ThrowIfNegative(demandFunctions.Structural) / dMCE),
                 (ThrowIfNegative(demandFunctions.Metabolic) / dMCE),
                 (ThrowIfNegative(demandFunctions.Storage) / dMCE));
-                PriorityScaledDemand = new NutrientPoolStates(
+                PriorityScaledDemand = new NutrientPoolsState(
                 demandFunctions.Structural.Value() * demandFunctions.QStructuralPriority.Value(),
                 demandFunctions.Metabolic.Value() * demandFunctions.QMetabolicPriority.Value(),
                 demandFunctions.Storage.Value() * demandFunctions.QStoragePriority.Value());
             }
             else
             { // Conversion efficiency is zero!!!!
-                Demands = new NutrientPoolStates(0, 0, 0);
+                Demands = new NutrientPoolsState(0, 0, 0);
             }
         }
 
@@ -200,7 +200,7 @@
             // Deltas = new OrganResourceStates();
             // Live = new ResourcePools();
             //  Dead = new ResourcePools();
-            ConcentrationOrFraction = new NutrientPoolStates(0,0,0);
+            ConcentrationOrFraction = new NutrientPoolsState(0,0,0);
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

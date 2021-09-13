@@ -209,11 +209,11 @@
         public IFunction Minimum = null;
 
         /// <summary> Interface member that is got by other methods </summary>
-        public NutrientPoolStates ConcentrationsOrFractionss
+        public NutrientPoolsState ConcentrationsOrFractionss
         {
             get
             {
-                NutrientPoolStates concentrationOrProportion = new NutrientPoolStates(
+                NutrientPoolsState concentrationOrProportion = new NutrientPoolsState(
                 Minimum.Value(),
                 Critical.Value(),
                 Maximum.Value());
@@ -247,11 +247,11 @@
         public IFunction Storage = null;
 
         /// <summary> Interface member that is got by other methods </summary>
-        public NutrientPoolStates ConcentrationsOrFractionss
+        public NutrientPoolsState ConcentrationsOrFractionss
         {
             get
             {
-                NutrientPoolStates concentrationOrProportion = new NutrientPoolStates(
+                NutrientPoolsState concentrationOrProportion = new NutrientPoolsState(
                     Structural.Value(),
                     Metabolic.Value(),
                     Storage.Value());
@@ -269,7 +269,7 @@
         /// <summary>
         /// Nutrient concnetration or fraction values
         /// </summary>
-        NutrientPoolStates ConcentrationsOrFractionss { get; }
+        NutrientPoolsState ConcentrationsOrFractionss { get; }
     }
 
 

@@ -14,9 +14,9 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class CompositeStates : OrganNutrientStates, ICustomDocumentation
+    public class CompositeStates : OrganNutrientsState, ICustomDocumentation
     {
-        private List<OrganNutrientStates> components = new List<OrganNutrientStates>();
+        private List<OrganNutrientsState> components = new List<OrganNutrientsState>();
 
         /// <summary> The concentraion of carbon in total dry weight</summary>
         [Description("Carbon Concentration of biomass")]
@@ -34,7 +34,7 @@ namespace Models.PMF
         {
             foreach (string PropertyName in Propertys)
             {
-                OrganNutrientStates c = (OrganNutrientStates)(this.FindByPath(PropertyName)?.Value);
+                OrganNutrientsState c = (OrganNutrientsState)(this.FindByPath(PropertyName)?.Value);
                 if (c == null)
                     throw new Exception("Cannot find: " + PropertyName + " in composite state: " + this.Name);
             }
@@ -48,7 +48,7 @@ namespace Models.PMF
             Clear();
             foreach (string PropertyName in Propertys)
                 {
-                    OrganNutrientStates c = (OrganNutrientStates)(this.FindByPath(PropertyName)?.Value);
+                    OrganNutrientsState c = (OrganNutrientsState)(this.FindByPath(PropertyName)?.Value);
                     AddDelta(c);
                 }
         }

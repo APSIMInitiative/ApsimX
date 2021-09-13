@@ -298,7 +298,7 @@
                         double[] paw = waterBalance.PAW;
                         double[] pawc = soilPhysical.PAWC;
                         int i = 1;
-                        foreach (OrganNutrientStates l in Z.LayerLive)
+                        foreach (OrganNutrientsState l in Z.LayerLive)
                         {
                             if (pawc[i] > 0)
                             {
@@ -334,7 +334,7 @@
                         double[] paw = waterBalance.PAW;
                         double[] pawc = soilPhysical.PAWC;
                         int i = 0;
-                        foreach (OrganNutrientStates l in Z.LayerLive)
+                        foreach (OrganNutrientsState l in Z.LayerLive)
                         {
                             MeanWTF += l.Wt / liveWt * MathUtilities.Bound(paw[i] / pawc[i], 0, 1);
                             i += 1; 
@@ -613,7 +613,7 @@
         /// <summary>
         /// Set the initial biomass
         /// </summary>
-        public void InitailiseNetwork(OrganNutrientStates Initial)
+        public void InitailiseNetwork(OrganNutrientsState Initial)
         {
             Clear();
             InitialiseZones();
@@ -634,10 +634,10 @@
         /// <param name="liveRemoved"></param>
         /// <param name="deadRemoved"></param>
 
-        public void PartitionBiomassThroughSoil(OrganNutrientStates reAllocated, OrganNutrientStates reTranslocated,
-                                             OrganNutrientStates allocated, OrganNutrientStates senesced,
-                                             OrganNutrientStates detached,
-                                             OrganNutrientStates liveRemoved, OrganNutrientStates deadRemoved)
+        public void PartitionBiomassThroughSoil(OrganNutrientsState reAllocated, OrganNutrientsState reTranslocated,
+                                             OrganNutrientsState allocated, OrganNutrientsState senesced,
+                                             OrganNutrientsState detached,
+                                             OrganNutrientsState liveRemoved, OrganNutrientsState deadRemoved)
         {
             double TotalRAw = 0;
             foreach (NetworkZoneState Z in Zones)

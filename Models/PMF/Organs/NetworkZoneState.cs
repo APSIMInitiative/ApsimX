@@ -59,16 +59,16 @@ namespace Models.PMF.Organs
         public double NuptakeSupply { get; set; }
 
         /// <summary>Gets or sets the layer live.</summary>
-        public OrganNutrientStates[] LayerLive { get; set; }
+        public OrganNutrientsState[] LayerLive { get; set; }
 
         /// <summary>Gets or sets the layer dead.</summary>
-        public OrganNutrientStates[] LayerDead { get; set; }
+        public OrganNutrientsState[] LayerDead { get; set; }
 
         /// <summary>Gets or sets the layer live.</summary>
-        public OrganNutrientStates[] LayerLiveProportion { get; set; }
+        public OrganNutrientsState[] LayerLiveProportion { get; set; }
 
         /// <summary>Gets or sets the layer dead.</summary>
-        public OrganNutrientStates[] LayerDeadProportion { get; set; }
+        public OrganNutrientsState[] LayerDeadProportion { get; set; }
 
         /// <summary>Gets or sets the length.</summary>
         public double Length { get; set; }
@@ -225,17 +225,17 @@ namespace Models.PMF.Organs
 
             if (LayerLive == null || LayerLive.Length == 0)
             {
-                LayerLive = new OrganNutrientStates[Physical.Thickness.Length];
-                LayerDead = new OrganNutrientStates[Physical.Thickness.Length];
-                LayerLiveProportion = new OrganNutrientStates[Physical.Thickness.Length];
-                LayerDeadProportion = new OrganNutrientStates[Physical.Thickness.Length];
+                LayerLive = new OrganNutrientsState[Physical.Thickness.Length];
+                LayerDead = new OrganNutrientsState[Physical.Thickness.Length];
+                LayerLiveProportion = new OrganNutrientsState[Physical.Thickness.Length];
+                LayerDeadProportion = new OrganNutrientsState[Physical.Thickness.Length];
                 double rootCconc = parentNetwork.parentOrgan.Cconc;
                 for (int i = 0; i < Physical.Thickness.Length; i++)
                 {
-                    LayerLive[i] = new OrganNutrientStates(rootCconc);
-                    LayerDead[i]  = new OrganNutrientStates(rootCconc);
-                    LayerLiveProportion[i] = new OrganNutrientStates(1);
-                    LayerDeadProportion[i] = new OrganNutrientStates(1);
+                    LayerLive[i] = new OrganNutrientsState(rootCconc);
+                    LayerDead[i]  = new OrganNutrientsState(rootCconc);
+                    LayerLiveProportion[i] = new OrganNutrientsState(1);
+                    LayerDeadProportion[i] = new OrganNutrientsState(1);
                 }
             }
             else

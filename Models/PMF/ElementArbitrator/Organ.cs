@@ -138,42 +138,42 @@
 
         /// <summary>The live biomass</summary>
         [JsonIgnore]
-        public OrganNutrientStates Live { get; private set; }
+        public OrganNutrientsState Live { get; private set; }
 
         /// <summary>The dead biomass</summary>
         [JsonIgnore]
-        public OrganNutrientStates Dead { get; private set; }
+        public OrganNutrientsState Dead { get; private set; }
 
         /// <summary>Gets the total biomass</summary>
         [JsonIgnore]
-        public OrganNutrientStates Total { get { return Live + Dead; } }
+        public OrganNutrientsState Total { get { return Live + Dead; } }
 
         /// <summary>Gets the biomass reallocated from senescing material</summary>
         [JsonIgnore]
-        public OrganNutrientStates ReAllocated { get; private set; }
+        public OrganNutrientsState ReAllocated { get; private set; }
 
         /// <summary>Gets the biomass reallocated from senescing material</summary>
         [JsonIgnore]
-        public OrganNutrientStates ReTranslocated { get; private set; }
+        public OrganNutrientsState ReTranslocated { get; private set; }
 
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
         [JsonIgnore]
-        public OrganNutrientStates Allocated { get; private set; }
+        public OrganNutrientsState Allocated { get; private set; }
 
         /// <summary>Gets the biomass senesced (transferred from live to dead material)</summary>
         [JsonIgnore]
-        public OrganNutrientStates Senesced { get; private set; }
+        public OrganNutrientsState Senesced { get; private set; }
 
         /// <summary>Gets the biomass detached (sent to soil/surface organic matter)</summary>
         [JsonIgnore]
-        public OrganNutrientStates Detached { get; private set; }
+        public OrganNutrientsState Detached { get; private set; }
 
         /// <summary>Gets the biomass removed from the system (harvested, grazed, etc.)</summary>
         [JsonIgnore]
-        public OrganNutrientStates LiveRemoved { get; private set; }
+        public OrganNutrientsState LiveRemoved { get; private set; }
         /// <summary>Gets the biomass removed from the system (harvested, grazed, etc.)</summary>
         [JsonIgnore]
-        public OrganNutrientStates DeadRemoved { get; private set; }
+        public OrganNutrientsState DeadRemoved { get; private set; }
 
         /// <summary>Rate of senescence for the day</summary>
         [JsonIgnore]
@@ -283,15 +283,15 @@
         /// <summary>Clears this instance.</summary>
         protected virtual void Clear()
         {
-            Live = new OrganNutrientStates(Cconc);
-            Dead = new OrganNutrientStates(Cconc);
-            ReAllocated = new OrganNutrientStates(Cconc);
-            ReTranslocated = new OrganNutrientStates(Cconc);
-            Allocated = new OrganNutrientStates(Cconc);
-            Senesced = new OrganNutrientStates(Cconc);
-            Detached = new OrganNutrientStates(Cconc);
-            LiveRemoved = new OrganNutrientStates(Cconc);
-            DeadRemoved = new OrganNutrientStates(Cconc);
+            Live = new OrganNutrientsState(Cconc);
+            Dead = new OrganNutrientsState(Cconc);
+            ReAllocated = new OrganNutrientsState(Cconc);
+            ReTranslocated = new OrganNutrientsState(Cconc);
+            Allocated = new OrganNutrientsState(Cconc);
+            Senesced = new OrganNutrientsState(Cconc);
+            Detached = new OrganNutrientsState(Cconc);
+            LiveRemoved = new OrganNutrientsState(Cconc);
+            DeadRemoved = new OrganNutrientsState(Cconc);
         }
 
         /// <summary>Clears the transferring biomass amounts.</summary>
@@ -337,13 +337,13 @@
             {
                 Clear();
                 ClearBiomassFlows();
-                NutrientPoolStates initC = new NutrientPoolStates(
+                NutrientPoolsState initC = new NutrientPoolsState(
                     InitialWt.Structural.Value() * Cconc,
                     InitialWt.Metabolic.Value() * Cconc,
                     InitialWt.Storage.Value() * Cconc);
                 Live.Carbon.SetTo(initC);
 
-                NutrientPoolStates initN = new NutrientPoolStates(
+                NutrientPoolsState initN = new NutrientPoolsState(
                     Live.Weight.Total * Nitrogen.ConcentrationOrFraction.Structural,
                     Live.Weight.Total * (Nitrogen.ConcentrationOrFraction.Metabolic - Nitrogen.ConcentrationOrFraction.Structural),
                     Live.Weight.Total * (Nitrogen.ConcentrationOrFraction.Storage - Nitrogen.ConcentrationOrFraction.Metabolic));

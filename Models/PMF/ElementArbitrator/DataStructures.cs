@@ -21,13 +21,13 @@
         //OrganNutrientDelta Nitrogen { get; }
 
         /// <summary>Gets the total biomass</summary>
-        OrganNutrientStates Total { get; }
+        OrganNutrientsState Total { get; }
 
         /// <summary>Gets the live biomass</summary>
-        OrganNutrientStates Live { get; }
+        OrganNutrientsState Live { get; }
 
         /// <summary>Gets the live biomass</summary>
-        OrganNutrientStates Dead { get; }
+        OrganNutrientsState Dead { get; }
 
         /// <summary>Gets the senescence rate</summary>
         double senescenceRate { get; }
@@ -35,10 +35,10 @@
         /// <summary>Gets the DMConversion efficiency</summary>
         double dmConversionEfficiency { get; }
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
-        OrganNutrientStates Allocated { get; }
+        OrganNutrientsState Allocated { get; }
 
         /// <summary>Gets the biomass allocated (represented actual growth)</summary>
-        OrganNutrientStates Senesced { get; }
+        OrganNutrientsState Senesced { get; }
 
         /// <summary> get the organs uptake object if it has one </summary>
         IWaterNitrogenUptake WaterNitrogenUptakeObject { get; }
@@ -53,7 +53,7 @@
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Organ))]
     [ValidParent(ParentType = typeof(OrganNutrientDelta))]
-    public class NutrientPoolStates : Model
+    public class NutrientPoolsState : Model
     {
         /// <summary>Gets or sets the structural.</summary>
         [Units("g/m2")]
@@ -72,7 +72,7 @@
         { Total = Structural + Metabolic + Storage; }
 
         /// <summary>the constructor.</summary>
-        public NutrientPoolStates(double structural, double metabolic, double storage)
+        public NutrientPoolsState(double structural, double metabolic, double storage)
         {
             Structural = structural;
             Metabolic = metabolic;
@@ -91,7 +91,7 @@
         }
 
         /// <summary>Pools can not be negative.  Test for negatives each time an opperator is applied</summary>
-        private void testPools(NutrientPoolStates p)
+        private void testPools(NutrientPoolsState p)
         {
             if (p.Structural < -0.0000000000001)
                     throw new Exception(this.FullPath + ".Structural was set to negative value");
@@ -108,7 +108,7 @@
         }
         
         /// <summary>Add Delta</summary>
-        public void AddDelta(NutrientPoolStates delta)
+        public void AddDelta(NutrientPoolsState delta)
         {
             if (delta.Structural < -0.0000000000001)
                 throw new Exception(this.FullPath + ".Structural trying to add a negative");
@@ -125,7 +125,7 @@
         }
 
         /// <summary>subtract Delta</summary>
-        public void SubtractDelta(NutrientPoolStates delta)
+        public void SubtractDelta(NutrientPoolsState delta)
         {
             if (delta.Structural < -0.0000000000001)
                 throw new Exception(this.FullPath + ".Structural trying to subtract a negative");
@@ -142,7 +142,7 @@
         }
 
         /// <summary>Set to new value</summary>
-        public void SetTo(NutrientPoolStates newValue)
+        public void SetTo(NutrientPoolsState newValue)
         {
             Structural = newValue.Structural;
             Metabolic = newValue.Metabolic;
@@ -172,54 +172,54 @@
         }
 
         /// <summary>return pools divied by value</summary>
-        public static NutrientPoolStates operator /(NutrientPoolStates a, double b)
+        public static NutrientPoolsState operator /(NutrientPoolsState a, double b)
         {
-            return new NutrientPoolStates(
+            return new NutrientPoolsState(
             MathUtilities.Divide(a.Structural, b, 0),
             MathUtilities.Divide(a.Metabolic, b, 0),
             MathUtilities.Divide(a.Storage, b, 0));
         }
 
         /// <summary>return pools divied by value</summary>
-        public static NutrientPoolStates operator /(NutrientPoolStates a, NutrientPoolStates b)
+        public static NutrientPoolsState operator /(NutrientPoolsState a, NutrientPoolsState b)
         {
-            return new NutrientPoolStates(
+            return new NutrientPoolsState(
             MathUtilities.Divide(a.Structural, b.Structural, 0),
             MathUtilities.Divide(a.Metabolic, b.Metabolic, 0),
             MathUtilities.Divide(a.Storage, b.Storage, 0));
         }
 
         /// <summary>return pools multiplied by value</summary>
-        public static NutrientPoolStates operator *(NutrientPoolStates a, double b)
+        public static NutrientPoolsState operator *(NutrientPoolsState a, double b)
         {
-            return new NutrientPoolStates(
+            return new NutrientPoolsState(
                 a.Structural * b,
                 a.Metabolic * b,
                 a.Storage * b);
         }
 
         /// <summary>return pools divied by value</summary>
-        public static NutrientPoolStates operator *(NutrientPoolStates a, NutrientPoolStates b)
+        public static NutrientPoolsState operator *(NutrientPoolsState a, NutrientPoolsState b)
         {
-            return new NutrientPoolStates(
+            return new NutrientPoolsState(
                 a.Structural * b.Structural,
                 a.Metabolic * b.Metabolic,
                 a.Storage * b.Storage);
         }
 
         /// <summary>return sum or two pools</summary>
-        public static NutrientPoolStates operator +(NutrientPoolStates a, NutrientPoolStates b)
+        public static NutrientPoolsState operator +(NutrientPoolsState a, NutrientPoolsState b)
         {
-            return new NutrientPoolStates(
+            return new NutrientPoolsState(
                 a.Structural + b.Structural,
                 a.Storage + b.Storage,
                 a.Metabolic + b.Metabolic);
         }
 
         /// <summary>return pool a - pool b</summary>
-        public static NutrientPoolStates operator -(NutrientPoolStates a, NutrientPoolStates b)
+        public static NutrientPoolsState operator -(NutrientPoolsState a, NutrientPoolsState b)
         {
-            return new NutrientPoolStates(
+            return new NutrientPoolsState(
                 a.Structural - b.Structural,
                 a.Storage - b.Storage,
                 a.Metabolic - b.Metabolic);
@@ -231,10 +231,10 @@
     /// Daily state of flows into and out of each organ
     /// </summary>
     [Serializable]
-    public class OrganNutrientStates : Model
+    public class OrganNutrientsState : Model
     {
         /// <summary> The weight of the organ</summary>
-        public NutrientPoolStates Weight { get; private set; }
+        public NutrientPoolsState Weight { get; private set; }
 
         /// <summary> The weight of the organ</summary>
         public double Wt { get; private set; }
@@ -262,16 +262,16 @@
         public double CarbonConcentration { get; private set; }
 
         /// <summary> The organs Carbon components </summary>
-        public NutrientPoolStates Carbon { get; private set; }
+        public NutrientPoolsState Carbon { get; private set; }
 
         /// <summary> The organs Carbon components </summary>
-        public NutrientPoolStates Nitrogen { get; private set; }
+        public NutrientPoolsState Nitrogen { get; private set; }
 
         /// <summary> The organs phosphorus </summary>
-        public NutrientPoolStates Phosphorus { get; private set; }
+        public NutrientPoolsState Phosphorus { get; private set; }
 
         /// <summary> The organs Potasium components </summary>
-        public NutrientPoolStates Potassium { get; private set; }
+        public NutrientPoolsState Potassium { get; private set; }
 
         private void updateAgregateValues()
         {
@@ -286,12 +286,12 @@
         }
 
         /// <summary> The organs Carbon components </summary>
-        public OrganNutrientStates(double Cconc)
+        public OrganNutrientsState(double Cconc)
         {
-            Carbon = new NutrientPoolStates(0,0,0);
-            Nitrogen = new NutrientPoolStates(0, 0, 0);
-            Phosphorus = new NutrientPoolStates(0, 0, 0);
-            Potassium = new NutrientPoolStates(0, 0, 0);
+            Carbon = new NutrientPoolsState(0,0,0);
+            Nitrogen = new NutrientPoolsState(0, 0, 0);
+            Phosphorus = new NutrientPoolsState(0, 0, 0);
+            Potassium = new NutrientPoolsState(0, 0, 0);
             CarbonConcentration = Cconc;
             updateAgregateValues();
         }
@@ -307,7 +307,7 @@
         }
 
         /// <summary>Add Delta</summary>
-        public void SetTo(OrganNutrientStates newValue)
+        public void SetTo(OrganNutrientsState newValue)
         {
             Carbon = newValue.Carbon;
             Nitrogen = newValue.Nitrogen;
@@ -337,7 +337,7 @@
         }
 
         /// <summary> Add delta to states </summary>
-        public void AddDelta(OrganNutrientStates delta)
+        public void AddDelta(OrganNutrientsState delta)
         {
             Carbon.AddDelta(delta.Carbon);
             Nitrogen.AddDelta(delta.Nitrogen);
@@ -347,7 +347,7 @@
         }
 
         /// <summary> subtract delta to states </summary>
-        public void SubtractDelta(OrganNutrientStates delta)
+        public void SubtractDelta(OrganNutrientsState delta)
         {
             Carbon.SubtractDelta(delta.Carbon);
             Nitrogen.SubtractDelta(delta.Nitrogen);
@@ -357,9 +357,9 @@
         }
 
         /// <summary>return pools divied by value</summary>
-        public static OrganNutrientStates operator /(OrganNutrientStates a, double b)
+        public static OrganNutrientsState operator /(OrganNutrientsState a, double b)
         {
-            return new OrganNutrientStates(1)
+            return new OrganNutrientsState(1)
             {
                 Carbon = a.Carbon / b,
                 Nitrogen = a.Nitrogen / b,
@@ -369,9 +369,9 @@
         }
 
         /// <summary>return pools divied by value</summary>
-        public static OrganNutrientStates operator /(OrganNutrientStates a, OrganNutrientStates b)
+        public static OrganNutrientsState operator /(OrganNutrientsState a, OrganNutrientsState b)
         {
-            return new OrganNutrientStates(1)
+            return new OrganNutrientsState(1)
             {
                 Carbon = a.Carbon / b.Carbon,
                 Nitrogen = a.Nitrogen / b.Nitrogen,
@@ -380,9 +380,9 @@
             };
         }
         /// <summary>return pools multiplied by value</summary>
-        public static OrganNutrientStates operator *(OrganNutrientStates a, double b)
+        public static OrganNutrientsState operator *(OrganNutrientsState a, double b)
         {
-            return new OrganNutrientStates(1)
+            return new OrganNutrientsState(1)
             {
                 Carbon = a.Carbon * b,
                 Nitrogen = a.Nitrogen * b,
@@ -393,9 +393,9 @@
 
 
         /// <summary>return pools divied by value</summary>
-        public static OrganNutrientStates operator *(OrganNutrientStates a, OrganNutrientStates b)
+        public static OrganNutrientsState operator *(OrganNutrientsState a, OrganNutrientsState b)
         {
-            return new OrganNutrientStates(1)
+            return new OrganNutrientsState(1)
             {
                 Carbon = a.Carbon * b.Carbon,
                 Nitrogen = a.Nitrogen * b.Nitrogen,
@@ -405,9 +405,9 @@
         }
 
         /// <summary>return sum or two pools</summary>
-        public static OrganNutrientStates operator +(OrganNutrientStates a, OrganNutrientStates b)
+        public static OrganNutrientsState operator +(OrganNutrientsState a, OrganNutrientsState b)
         {
-            return new OrganNutrientStates(1)
+            return new OrganNutrientsState(1)
             {
                 Carbon = a.Carbon + b.Carbon,
                 Nitrogen = a.Nitrogen + b.Carbon,
@@ -417,9 +417,9 @@
         }
 
         /// <summary>return sum or two pools</summary>
-        public static OrganNutrientStates operator -(OrganNutrientStates a, OrganNutrientStates b)
+        public static OrganNutrientsState operator -(OrganNutrientsState a, OrganNutrientsState b)
         {
-            return new OrganNutrientStates(1)
+            return new OrganNutrientsState(1)
             {
                 Carbon = a.Carbon - b.Carbon,
                 Nitrogen = a.Nitrogen - b.Carbon,
@@ -439,7 +439,7 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(BiomassArbitrator))]
-    public class PlantNutrientDeltas : Model
+    public class PlantNutrientsDelta : Model
     {
         /// <summary>The top level plant object in the Plant Modelling Framework</summary>
         [Link]
@@ -488,7 +488,7 @@
         public double BalanceError { get; set; }
 
         /// <summary>The constructor</summary>
-        public PlantNutrientDeltas()
+        public PlantNutrientsDelta()
         {
             ArbitratingOrgans = new List<OrganNutrientDelta>();
             Start = new double();
@@ -535,11 +535,11 @@
         /// <summary>Gets or sets the fixation.</summary>
         public double Fixation { get; set; }
         /// <summary>Gets or sets the reallocation.</summary>
-        public NutrientPoolStates ReAllocation { get; set; }
+        public NutrientPoolsState ReAllocation { get; set; }
         /// <summary>Gets or sets the uptake.</summary>
         public double Uptake { get; set; }
         /// <summary>Gets or sets the retranslocation.</summary>
-        public NutrientPoolStates ReTranslocation{ get; set; }
+        public NutrientPoolsState ReTranslocation{ get; set; }
 
         /// <summary>Gets the total supply.</summary>
         public double Total
@@ -549,9 +549,9 @@
         public OrganNutrientSupplies()
         {
             Fixation = new double();
-            ReAllocation = new NutrientPoolStates(0,0,0);
+            ReAllocation = new NutrientPoolsState(0,0,0);
             Uptake = new double();
-            ReTranslocation = new NutrientPoolStates(0,0,0);
+            ReTranslocation = new NutrientPoolsState(0,0,0);
         }
 
         internal void Clear()
