@@ -60,8 +60,7 @@ namespace APSIM.Tests.Interop.Documentation
         public void TestUseCustomBibFile()
         {
             string reference = "custom_reference";
-            Mock<ICitation> citation = new Mock<ICitation>();
-            citationResolver.Setup(r => r.Lookup(reference)).Returns(citation.Object);
+            AddCitation(reference);
             citationResolver.Setup(r => r.Lookup(It.IsNotIn<string>(reference))).Throws<NotImplementedException>();
             Assert.DoesNotThrow(() => builder.AppendReference(reference, TextStyle.Normal));
         }
@@ -73,7 +72,14 @@ namespace APSIM.Tests.Interop.Documentation
         [Test]
         public void TestAppendReferenceWithoutUrl()
         {
-            throw new NotImplementedException();
+            string reference = "reference *name*";
+            string inTextCite = "in-text citation words";
+            Mock<ICitation> citation = AddCitation(reference, inTextCite);
+
+            Assert.DoesNotThrow(() => builder.AppendReference(reference, TextStyle.Normal));
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            Hyperlink link = (Hyperlink)paragraph.Elements[0];
+            Assert.AreEqual($"#{reference}", link.Name);
         }
 
         /// <summary>
@@ -83,7 +89,15 @@ namespace APSIM.Tests.Interop.Documentation
         [Test]
         public void TestAppendReferenceWithUrl()
         {
-            throw new NotImplementedException();
+            string reference = "ref";
+            string url = "link uri";
+            Mock<ICitation> citation = AddCitation(reference);
+            citation.Setup(c => c.URL).Returns(url);
+
+            builder.AppendReference(reference, TextStyle.Normal);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            Hyperlink link = (Hyperlink)paragraph.Elements[0];
+            Assert.AreEqual(url, link.Name);
         }
 
         /// <summary>
@@ -94,7 +108,12 @@ namespace APSIM.Tests.Interop.Documentation
         [Test]
         public void TestAppendInvalidReference()
         {
-            throw new NotImplementedException();
+            string reference = "some invalid reference";
+            builder.AppendReference(reference, TextStyle.Normal);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            FormattedText formatted = (FormattedText)paragraph.Elements[0];
+            Text text = (Text)formatted.Elements[0];
+            Assert.AreEqual($"[{reference}]", text.Content);
         }
 
         /// <summary>
@@ -104,7 +123,16 @@ namespace APSIM.Tests.Interop.Documentation
         [Test]
         public void TestAppendReferenceText()
         {
-            throw new NotImplementedException();
+            string reference = "a reference";
+            string inText = "in-text citation";
+            AddCitation(reference, inText);
+
+            builder.AppendReference(reference, TextStyle.Normal);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            Hyperlink link = (Hyperlink)paragraph.Elements[0];
+            FormattedText formatted = (FormattedText)link.Elements[0];
+            Text text = (Text)formatted.Elements[0];
+            Assert.AreEqual(inText, text.Content);
         }
 
         /// <summary>
@@ -114,7 +142,16 @@ namespace APSIM.Tests.Interop.Documentation
         [Test]
         public void TestAppendValidReferenceStyle()
         {
-            throw new NotImplementedException();
+            string reference = "a reference";
+            string inText = "in-text citation";
+            AddCitation(reference, inText);
+
+            builder.AppendReference(reference, TextStyle.Italic);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            Hyperlink link = (Hyperlink)paragraph.Elements[0];
+            FormattedText formatted = (FormattedText)link.Elements[0];
+            Style style = doc.Styles[formatted.Style];
+            Assert.True(style.Font.Italic);
         }
 
         /// <summary>
@@ -124,17 +161,47 @@ namespace APSIM.Tests.Interop.Documentation
         [Test]
         public void TestAppendInalidReferenceStyle()
         {
-            throw new NotImplementedException();
+            builder.AppendReference("a reference", TextStyle.Strong);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            FormattedText formatted = (FormattedText)paragraph.Elements[0];
+            Style style = doc.Styles[formatted.Style];
+            Assert.True(style.Font.Bold);
         }
 
         /// <summary>
-        /// Ensure taht <see cref="PdfBuilder.AppendReference(string, TextStyle)"/>
+        /// Ensure that <see cref="PdfBuilder.AppendReference(string, TextStyle)"/>
         /// will insert the text in the final paragraph of the document.
         /// </summary>
         [Test]
-        public void TestAppendReferenceCorrectParagraph()
+        public void TestAppendValidReferenceCorrectParagraph()
         {
-            throw new NotImplementedException();
+            builder.AppendText("some text", TextStyle.Normal);
+            builder.StartNewParagraph();
+
+            string reference = "a reference";
+            AddCitation(reference, "in-text citation");
+
+            builder.AppendReference(reference, TextStyle.Normal);
+            Assert.AreEqual(2, doc.LastSection.Elements.Count);
+            Assert.AreEqual(typeof(Paragraph), doc.LastSection.Elements[0].GetType());
+            Assert.AreEqual(typeof(Paragraph), doc.LastSection.Elements[1].GetType());
+        }
+
+        /// <summary>
+        /// Ensure that <see cref="PdfBuilder.AppendReference(string, TextStyle)"/>
+        /// will insert the text in the final paragraph of the document for invalid
+        /// references.
+        /// </summary>
+        [Test]
+        public void TestAppendInvalidReferenceCorrectParagraph()
+        {
+            builder.AppendText("some text", TextStyle.Normal);
+            builder.StartNewParagraph();
+
+            builder.AppendReference("a reference", TextStyle.Normal);
+            Assert.AreEqual(2, doc.LastSection.Elements.Count);
+            Assert.AreEqual(typeof(Paragraph), doc.LastSection.Elements[0].GetType());
+            Assert.AreEqual(typeof(Paragraph), doc.LastSection.Elements[1].GetType());
         }
 
         /// <summary>
@@ -144,7 +211,27 @@ namespace APSIM.Tests.Interop.Documentation
         [Test]
         public void TestMultipleReferencesToSamePaper()
         {
-            throw new NotImplementedException();
+            string reference = "refname";
+            string inText = "in-txt";
+            AddCitation(reference, inText);
+            builder.AppendReference(reference, TextStyle.Normal);
+            builder.AppendReference(reference, TextStyle.Normal);
+
+            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            Assert.AreEqual(2, paragraph.Elements.Count);
+            Assert.AreEqual(typeof(Hyperlink), paragraph.Elements[0].GetType());
+            Assert.AreEqual(typeof(Hyperlink), paragraph.Elements[1].GetType());
+
+            for (int i = 0; i < 2; i++)
+            {
+                Hyperlink link = (Hyperlink)paragraph.Elements[i];
+                Assert.AreEqual($"#{reference}", link.Name);
+                Assert.AreEqual(1, link.Elements.Count);
+                FormattedText formatted = (FormattedText)link.Elements[0];
+                Text text = (Text)formatted.Elements[0];
+                Assert.AreEqual(inText, text.Content);
+            }
         }
 
         /// <summary>
@@ -154,7 +241,37 @@ namespace APSIM.Tests.Interop.Documentation
         [Test]
         public void TestMultipleReferencesToDifferentPapers()
         {
-            throw new NotImplementedException();
+            string[] references = new string[2]
+            {
+                "reference0",
+                "reference1"
+            };
+            string[] inTexts = new string[2]
+            {
+                "in-txt0",
+                "in-txt1"
+            };
+            for (int i = 0; i < 2; i++)
+                AddCitation(references[i], inTexts[i]);
+
+            builder.AppendReference(references[0], TextStyle.Normal);
+            builder.AppendReference(references[1], TextStyle.Normal);
+
+            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            Assert.AreEqual(2, paragraph.Elements.Count);
+            Assert.AreEqual(typeof(Hyperlink), paragraph.Elements[0].GetType());
+            Assert.AreEqual(typeof(Hyperlink), paragraph.Elements[1].GetType());
+
+            for (int i = 0; i < 2; i++)
+            {
+                Hyperlink link = (Hyperlink)paragraph.Elements[i];
+                Assert.AreEqual($"#{references[i]}", link.Name);
+                Assert.AreEqual(1, link.Elements.Count);
+                FormattedText formatted = (FormattedText)link.Elements[0];
+                Text text = (Text)formatted.Elements[0];
+                Assert.AreEqual(inTexts[i], text.Content);
+            }
         }
 
         /// <summary>
@@ -164,7 +281,27 @@ namespace APSIM.Tests.Interop.Documentation
         [Test]
         public void TestContentAfterReference()
         {
-            throw new NotImplementedException();
+            string reference = "reference name";
+            AddCitation(reference);
+            builder.AppendReference(reference, TextStyle.Normal);
+            builder.AppendText("extra content", TextStyle.Normal);
+            Assert.AreEqual(1, doc.LastSection.Elements.Count);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            Assert.AreEqual(2, paragraph.Elements.Count);
+            Assert.AreEqual(typeof(Hyperlink), paragraph.Elements[0].GetType());
+            Assert.AreEqual(typeof(FormattedText), paragraph.Elements[1].GetType());
+        }
+
+        /// <summary>
+        /// Add a citation to the list of citations accessed by the PdfBuilder.
+        /// </summary>
+        /// <param name="name">Name of the citation.</param>
+        private Mock<ICitation> AddCitation(string name, string inTextCite = "")
+        {
+            Mock<ICitation> citation = new Mock<ICitation>();
+            citation.Setup(c => c.InTextCite).Returns(inTextCite);
+            citationResolver.Setup(r => r.Lookup(name)).Returns(citation.Object);
+            return citation;
         }
     }
 }
