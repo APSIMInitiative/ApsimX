@@ -291,7 +291,7 @@ namespace UserInterface.Presenters
                 // can row be included?
                 if (validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
                 {
-                    var labourRequirement = model.FindAllChildren<LabourRequirement>().FirstOrDefault();
+                    LabourRequirement labourRequirement = model.FindChild<LabourRequirement>();
                     tblstr.Write("<tr" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + "><td" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + ">" + model.Name + "</td>");
 
                     // does activity have a Labour Requirement
