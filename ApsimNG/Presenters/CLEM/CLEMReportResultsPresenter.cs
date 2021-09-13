@@ -43,17 +43,17 @@ namespace UserInterface.Presenters
             try
             {
                 bool parentOfReport = false;
-                Report report = clemPresenter.model as Report;
+                Report report = clemPresenter.Model as Report;
                 if(report is null)
                 {
-                    report = (clemPresenter.model as Model).FindChild<Report>();
+                    report = clemPresenter.Model.FindChild<Report>();
                     parentOfReport = true;
                 }
 
-                ReportView rv = new ReportView(clemPresenter.view as ViewBase);
+                ReportView rv = new ReportView(clemPresenter.View as ViewBase);
                 ViewBase reportView = new ViewBase(rv, "ApsimNG.Resources.Glade.DataStoreView.glade");
 
-                DataStorePresenter dataStorePresenter = new DataStorePresenter(new string[] { (parentOfReport)? (clemPresenter.model as IModel).Name:report.Name });
+                DataStorePresenter dataStorePresenter = new DataStorePresenter(new string[] { (parentOfReport)? (clemPresenter.Model as IModel).Name:report.Name });
 
                 Simulations simulations = report.FindAncestor<Simulations>();
                 if (simulations != null)
@@ -77,16 +77,16 @@ namespace UserInterface.Presenters
                 else if (simulation != null)
                     dataStorePresenter.SimulationFilter = simulation;
 
-                dataStorePresenter.Attach(dataStore, reportView, clemPresenter.explorerPresenter);
+                dataStorePresenter.Attach(dataStore, reportView, clemPresenter.ExplorerPresenter);
 
                 // Attach the view to display data
-                clem = clemPresenter.view as CLEMView;
+                clem = clemPresenter.View as CLEMView;
                 clem.AddTabView("Data", reportView);
-                clemPresenter.presenterList.Add("Data", this);
+                clemPresenter.PresenterList.Add("Data", this);
             }
             catch (Exception err)
             {
-                clemPresenter.explorerPresenter.MainPresenter.ShowError(err);
+                clemPresenter.ExplorerPresenter.MainPresenter.ShowError(err);
             }
         }
 

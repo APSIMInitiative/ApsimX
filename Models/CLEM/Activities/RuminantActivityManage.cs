@@ -1036,7 +1036,7 @@ namespace Models.CLEM.Activities
                             }
                         }
 
-                        // remove any pregnant female from sales even at max age as uoung is valuable this year
+                        // remove any pregnant female from sales even at max age as young is valuable this year
                         if (femaleBreedersRequired > 0)
                         {
                             foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => a.ReadyForSale && a.IsPregnant).ToList())

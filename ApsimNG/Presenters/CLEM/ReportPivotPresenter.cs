@@ -44,21 +44,21 @@ namespace UserInterface.Presenters
             try
             {
                 // Create the grid to display data in
-                gridView = new GridView(clemPresenter.view as ViewBase);
+                gridView = new GridView(clemPresenter.View as ViewBase);
                 GridPresenter gridPresenter = new GridPresenter();
 
                 // Generate the table using the model
-                pivot = clemPresenter.clemModel as ReportPivot;
-                gridPresenter.Attach(null, gridView, clemPresenter.explorerPresenter);
+                pivot = clemPresenter.ClemModel as ReportPivot;
+                gridPresenter.Attach(null, gridView, clemPresenter.ExplorerPresenter);
 
                 // Attach the view to display data
-                clem = clemPresenter.view as CLEMView;
+                clem = clemPresenter.View as CLEMView;
                 clem.AddTabView("Data", gridView);
-                clemPresenter.presenterList.Add("Data", this);
+                clemPresenter.PresenterList.Add("Data", this);
             }
             catch (Exception err)
             {
-                clemPresenter.explorerPresenter.MainPresenter.ShowError(err);
+                clemPresenter.ExplorerPresenter.MainPresenter.ShowError(err);
             }
         }
 

@@ -47,22 +47,14 @@ namespace UserInterface.Presenters
         /// </summary>
         public void AttachExtraPresenters(CLEMPresenter clemPresenter)
         {
-            //Display
-//            try
-//            {
-                object newView = new MarkdownView(clemPresenter.view as ViewBase);
-                IPresenter labourPresenter = new LabourAllocationPresenter();
-                if (newView != null && labourPresenter != null)
-                {
-                    clemPresenter.view.AddTabView("Display", newView);
-                    labourPresenter.Attach(clemPresenter.model, newView, clemPresenter.explorerPresenter);
-                    clemPresenter.presenterList.Add("Display", labourPresenter);
-                }
-//            }
-//            catch (Exception err)
-//            {
-//                this.explorerPresenter.MainPresenter.ShowError(err);
-//            }
+            object newView = new MarkdownView(clemPresenter.View as ViewBase);
+            IPresenter labourPresenter = new LabourAllocationPresenter();
+            if (newView != null && labourPresenter != null)
+            {
+                clemPresenter.View.AddTabView("Display", newView);
+                labourPresenter.Attach(clemPresenter.Model, newView, clemPresenter.ExplorerPresenter);
+                clemPresenter.PresenterList.Add("Display", labourPresenter);
+            }
         }
 
         /// <summary>
@@ -76,13 +68,13 @@ namespace UserInterface.Presenters
             this.model = model as Model;
             this.genericView = view as IMarkdownView;
             this.explorerPresenter = explorerPresenter;
-            System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), (model as ISpecificOutputFilename).HtmlOutputFilename), CreateHTML());
+            File.WriteAllText(Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), (model as ISpecificOutputFilename).HtmlOutputFilename), CreateHTML());
             this.genericView.Text = CreateMarkdown();
         }
 
         public void Refresh()
         {
-            System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), (model as ISpecificOutputFilename).HtmlOutputFilename), CreateHTML());
+            File.WriteAllText(Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), (model as ISpecificOutputFilename).HtmlOutputFilename), CreateHTML());
             this.genericView.Text = CreateMarkdown();
         }
 
@@ -162,9 +154,7 @@ namespace UserInterface.Presenters
             // get CLEM Zone
             IModel clem = model as IModel;
             while (!(clem is ZoneCLEM))
-            {
                 clem = clem.Parent;
-            }
 
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -237,9 +227,8 @@ namespace UserInterface.Presenters
                     tableHtml.WriteLine("<table class=\"main\">");
                     tableHtml.Write("<tr><th>Activity</th>");
                     foreach (LabourType lt in labour.FindAllChildren<LabourType>())
-                    {
                         tableHtml.Write($"<th><span>{lt.Name}</span></th>");
-                    }
+
                     tableHtml.WriteLine("</tr>");
                     tableHtml.WriteLine(TableRowHTML(activities));
                     tableHtml.WriteLine("</table>");
@@ -328,17 +317,15 @@ namespace UserInterface.Presenters
                         }
                     }
                     else
-                    {
                         tblstr.Write(CreateRowHTML("", numberLabourTypes));
-                    }
+
                     tblstr.WriteLine("</tr>");
                 }
 
                 // add all rows for children
                 foreach (Model child in model.Children.Where(a => a.Enabled))
-                {
                     tblstr.WriteLine(TableRowHTML(child));
-                }
+
                 return tblstr.ToString();
             }
         }
@@ -348,9 +335,7 @@ namespace UserInterface.Presenters
             using (StringWriter row = new StringWriter())
             {
                 for (int i = 0; i < columns; i++)
-                {
                     row.Write($"<td>{text}</td>");
-                }
                 return row.ToString();
             }
         }
@@ -494,17 +479,15 @@ namespace UserInterface.Presenters
                         }
                     }
                     else
-                    {
                         tblstr.Write($"| {emph}{model.Name.Replace("_", " ")}{emph} | " + CreateRowMarkdown("", numberLabourTypes));
-                    }
+
                     tblstr.Write("  \n");
                 }
 
                 // add all rows for children
                 foreach (var child in model.Children.Where(a => a.Enabled))
-                {
                     tblstr.Write(TableRowMarkdown(child));
-                }
+
                 return tblstr.ToString(); 
             }
         }
@@ -515,9 +498,8 @@ namespace UserInterface.Presenters
             using (StringWriter row = new StringWriter())
             {
                 for (int i = 0; i < columns; i++)
-                {
                     row.Write($"{text} | ");
-                }
+
                 return row.ToString();
             }
         }
