@@ -19,6 +19,7 @@ namespace APSIM.Interop.Documentation.Helpers
         public Citation(string contents)
         {
             this.contents = contents;
+            BibliographyText = GetBibliographyText();
         }
 
         /// <summary>Gets the name of the citation</summary>
@@ -109,45 +110,47 @@ namespace APSIM.Interop.Documentation.Helpers
             }
         }
 
+        /// <summary>
+        /// The full text of the citation, as it will appear in the bibliography.
+        /// </summary>
+        public string BibliographyText { get; private set; }
+
         /// <summary>Gets the text for the references section.</summary>
-        public string BibliographyText
+        private string GetBibliographyText()
         {
-            get
+            StringBuilder text = new StringBuilder();
+
+            string authors = string.Join(", ", Authors);
+
+            text.Append(string.Format("{0}, {1}. {2}.",
+                                        new object[] {
+                                        authors,
+                                        Year,
+                                        Get("title") }));
+
+            if (Get("series") != string.Empty)
+                text.Append(PrefixString(Get("series"), " ") + PrefixString(Get("publisher"), ", ") +
+                                        PrefixString(Get("address"), ", ") +
+                                        PrefixString(Get("pages"), ", "));
+
+            else if (Get("institution") != string.Empty)
+                text.Append($" {Get("institution")}");
+
+            else if (Get("university") != string.Empty)
+                text.Append(AppendString(Get("type"), ".") + Get("university"));
+            
+            else
             {
-                StringBuilder text = new StringBuilder();
-
-                string authors = string.Join(", ", Authors);
-
-                text.Append(string.Format("{0}, {1}. {2}.",
-                                            new object[] {
-                                            authors,
-                                            Year,
-                                            Get("title") }));
-
-                if (Get("series") != string.Empty)
-                    text.Append(PrefixString(Get("series"), " ") + PrefixString(Get("publisher"), ", ") +
-                                            PrefixString(Get("address"), ", ") +
-                                            PrefixString(Get("pages"), ", "));
-
-                else if (Get("institution") != string.Empty)
-                    text.Append($" {Get("institution")}");
-
-                else if (Get("university") != string.Empty)
-                    text.Append(AppendString(Get("type"), ".") + Get("university"));
-                
-                else
-                {
-                    text.Append(PrefixString(Get("journal") + Get("Booktitle"), " "));
-                    text.Append(PrefixString(Get("Editor"), ", Eds: "));
-                    text.Append(PrefixString(Get("volume"), " "));
-                    text.Append(PrefixString(WrapInBrackets(Get("number")), " "));
-                    text.Append(PrefixString(Get("pages"), ", "));
-                }
-
-                text.Append(".");
-
-                return text.ToString();
+                text.Append(PrefixString(Get("journal") + Get("Booktitle"), " "));
+                text.Append(PrefixString(Get("Editor"), ", Eds: "));
+                text.Append(PrefixString(Get("volume"), " "));
+                text.Append(PrefixString(WrapInBrackets(Get("number")), " "));
+                text.Append(PrefixString(Get("pages"), ", "));
             }
+
+            text.Append(".");
+
+            return text.ToString();
         }
 
         /// <summary>Gets the value of a specified keyword.</summary>
