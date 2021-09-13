@@ -58,6 +58,9 @@ namespace APSIM.Interop.Documentation.Extensions
                 else if (obj is FormattedText formattedText)
                     foreach (string subtext in formattedText.Elements.GetTextElements())
                         yield return subtext;
+                else if (obj is Hyperlink link)
+                    foreach (string subtext in link.Elements.GetTextElements())
+                        yield return subtext;
             }
         }
 

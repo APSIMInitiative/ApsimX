@@ -185,5 +185,25 @@ namespace APSIM.Tests.Interop.PdfRendering
             for (int i = 0; i < elements.Length; i++)
                 Assert.AreEqual(elements[i], textElements[i]);
         }
+
+        /// <summary>
+        /// Ensure that <see cref="ParagraphExtensions.GetTextElements(ParagraphElements)"/>
+        /// returns text elements inside hyperlinks.
+        /// </summary>
+        [Test]
+        public void TestGetHyperlinkTextElements()
+        {
+            string linkName = "hyperlinkName";
+            string linkText = "link text";
+            string linkFormatted = "link formatted text";
+            Paragraph paragraph = document.LastSection.AddParagraph();
+            Hyperlink link = paragraph.AddHyperlink(linkName);
+            link.AddText(linkText);
+            link.AddFormattedText(linkFormatted);
+            List<string> textElements = paragraph.Elements.GetTextElements().ToList();
+            Assert.AreEqual(2, textElements.Count);
+            Assert.AreEqual(linkText, textElements[0]);
+            Assert.AreEqual(linkFormatted, textElements[1]);
+        }
     }
 }
