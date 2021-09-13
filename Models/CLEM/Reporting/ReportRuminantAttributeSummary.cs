@@ -23,7 +23,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [Description("This component will generate statistics relating to an Attribute value from a specified tag .")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Reporting/RuminantAttributeSummaryReport.htm")]
+    [HelpUri(@"Content/Features/Reporting/RuminantAttributeSummary.htm")]
     public class ReportRuminantAttributeSummary : CLEMModel, ICLEMUI, IValidatableObject
     {
         [Link]
