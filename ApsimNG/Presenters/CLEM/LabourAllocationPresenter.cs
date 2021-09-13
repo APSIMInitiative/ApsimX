@@ -48,8 +48,8 @@ namespace UserInterface.Presenters
         public void AttachExtraPresenters(CLEMPresenter clemPresenter)
         {
             //Display
-            try
-            {
+//            try
+//            {
                 object newView = new MarkdownView(clemPresenter.view as ViewBase);
                 IPresenter labourPresenter = new LabourAllocationPresenter();
                 if (newView != null && labourPresenter != null)
@@ -58,11 +58,11 @@ namespace UserInterface.Presenters
                     labourPresenter.Attach(clemPresenter.model, newView, clemPresenter.explorerPresenter);
                     clemPresenter.presenterList.Add("Display", labourPresenter);
                 }
-            }
-            catch (Exception err)
-            {
-                this.explorerPresenter.MainPresenter.ShowError(err);
-            }
+//            }
+//            catch (Exception err)
+//            {
+//                this.explorerPresenter.MainPresenter.ShowError(err);
+//            }
         }
 
         /// <summary>
@@ -105,10 +105,10 @@ namespace UserInterface.Presenters
                 "table.main {[TableBackground] }" +
                 "table.main tr td.disabled {color: [DisabledColour]; }" +
                 ".dot { margin:auto; display:block; height:20px; width:20px; line-height:20px; background-color:black; -moz-border-radius: 10px; border-radius: 10px; }" +
-                ".dot1 { background-color:#62BB35; }" +
-                ".dot2 { background-color:#208EA3; }" +
-                ".dot4 { background-color:#E8384F; }" +
-                ".dot3 { background-color:#FD817D; }" +
+                ".dot1 { background-color:#F5793A; }" +
+                ".dot2 { background-color:#A95AA1; }" +
+                ".dot3 { background-color:#85C0F9; }" +
+                ".dot4 { background-color:#0F2080; }" +
                 ".warningbanner {background-color:orange; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
                 ".warningcontent {background-color:[WarningBackground]; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:orange; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
                 ".messagebanner {background-color:CornflowerBlue; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
@@ -224,7 +224,7 @@ namespace UserInterface.Presenters
 
                 // walk through all activities
                 // check if LabourRequirement can be added
-                ActivitiesHolder activities = clem.FindAllDescendants<ActivitiesHolder>().FirstOrDefault() as ActivitiesHolder;
+                ActivitiesHolder activities = clem.FindDescendant<ActivitiesHolder>();
                 if (activities == null)
                 {
                     htmlWriter.Write("Could not find an Activities Holder");
@@ -307,19 +307,21 @@ namespace UserInterface.Presenters
                                 tblstr.Write("<div>");
                                 int level = 0;
                                 // while nested 
-                                var nested = labourRequirement.FindAllChildren<LabourFilterGroup>().FirstOrDefault();
-
+                                var nested = labourRequirement.FindChild<LabourFilterGroup>();
+                                bool found = false;
                                 while (nested != null)
                                 {
                                     nested.InitialiseFilters();
                                     level++;
                                     if (nested.Filter(lt))
                                     {
-                                        tblstr.Write("<span class=\"dot dot" + ((level < 5) ? level.ToString() : "5") + " \">" + "</span>");
+                                        found = true;
                                         break;
                                     }
                                     nested = nested.FindAllChildren<LabourFilterGroup>().FirstOrDefault();
                                 }
+                                if (found)
+                                    tblstr.Write($"<span class=\"dot dot{((level < 5) ? level.ToString() : "4")}\"></span>");
                                 tblstr.Write("</div>");
                             }
                             tblstr.WriteLine("</td>");
@@ -457,7 +459,7 @@ namespace UserInterface.Presenters
                 // can row be included?
                 if (validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
                 {
-                    var labourRequirement = model.FindAllChildren<LabourRequirement>().FirstOrDefault();
+                    var labourRequirement = model.FindChild<LabourRequirement>();
                     string emph = (labourRequirement == null) ? "_" : "";
 
                     // does activity have a Labour Requirement
@@ -467,24 +469,28 @@ namespace UserInterface.Presenters
                         // for each labour type
                         foreach (LabourType lt in labourList)
                         {
-                            string levelstring = "";
                             // for each filter group
                             foreach (var item in labourRequirement.FindAllChildren<LabourFilterGroup>())
                             {
-                                int level = 0;
+                                string levelstring = "";
+                                bool found = false
+;                                int level = 0;
                                 // while nested 
-                                var nested = labourRequirement.FindAllChildren<LabourFilterGroup>().FirstOrDefault();
-
+                                var nested = item;
                                 while (nested != null)
                                 {
                                     nested.InitialiseFilters();
                                     level++;
-                                    levelstring = (level < 5) ? level.ToString() : "5";
-                                    if (nested.Filter(lt)) break;
-                                    nested = nested.FindAllChildren<LabourFilterGroup>().FirstOrDefault();
+                                    levelstring = (level < 5) ? level.ToString() : "4";
+                                    if (nested.Filter(lt))
+                                    {
+                                        found = true;
+                                        break;
+                                    }
+                                    nested = nested.FindChild<LabourFilterGroup>();
                                 }
+                                tblstr.Write($" {(found?levelstring:"0")} |");
                             }
-                            tblstr.Write($" {levelstring} |");
                         }
                     }
                     else

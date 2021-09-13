@@ -28,6 +28,7 @@ namespace Models.CLEM.Groupings
         [NonSerialized]
         private PropertyInfo propertyInfo;
         private bool useSimpleApporach = false;
+        private bool validOperator = true;
 
         /// <summary>
         /// The property or method to filter by
@@ -64,12 +65,14 @@ namespace Models.CLEM.Groupings
             {
                 propertyInfo = Parent.GetProperty(PropertyOfIndividual);
                 useSimpleApporach = IsSimpleRuminantProperty();
+                validOperator = CheckValidOperator(propertyInfo, out string _);
             }
         }
 
         /// <inheritdoc/>
         public override Func<T, bool> Compile<T>()
         {
+            if (!validOperator) return f => false;
             if (useSimpleApporach)
             {
                 Func<T, bool> simple = t => {
@@ -77,38 +80,33 @@ namespace Models.CLEM.Groupings
                     var thisOperator = Operator;
 
                     // Try convert the Value into the same data type as the property
-                    var simpleCompareVal = Expression.Constant(propertyInfo.PropertyType.IsEnum? Convert.ChangeType(Value.ToString(), typeof(string)) :Convert.ChangeType(Value ?? 0, propertyInfo.PropertyType));
-                    //var simpleCompareVal = Expression.Constant(Convert.ChangeType(Value ?? 0, propertyInfo.PropertyType.IsEnum? typeof(string): propertyInfo.PropertyType));
+                    ConstantExpression simpleCompareVal = null;
+                    if (propertyInfo.PropertyType.IsEnum)
+                    {
+                        try
+                        {
+                            var testEnumOK = Enum.Parse(propertyInfo.PropertyType, Value.ToString(), true) != null;
+                        }
+                        catch
+                        {
+                            return (Operator == ExpressionType.NotEqual || Operator == ExpressionType.IsFalse);
+                        }
+                        simpleCompareVal = Expression.Constant(Enum.Parse(propertyInfo.PropertyType, Value.ToString()), propertyInfo.PropertyType);
+                    }
+                    else
+                        simpleCompareVal = Expression.Constant(Convert.ChangeType(Value ?? 0, propertyInfo.PropertyType));
+
                     bool success = GetSimpleRuminantProperty(t, out ConstantExpression propertyValue);
 
                     if (!success)
                         return false;
 
-                    if (propertyInfo.PropertyType.IsEnum)
-                    {
-                        propertyValue = Expression.Constant(true, typeof(bool));
-                        if(thisOperator != ExpressionType.IsFalse)
-                            thisOperator = ExpressionType.IsTrue;
-                        // convert to boolean match for enum
-                        try
-                        {
-                            var enumOK = Enum.Parse(propertyInfo.PropertyType, Value.ToString(), true);
-                            simpleCompareVal = Expression.Constant(true, typeof(bool));
-                        }
-                        catch
-                        {
-                            simpleCompareVal = Expression.Constant(false, typeof(bool));
-                        }
-                    }
-
-
-
-
                     BinaryExpression simpleBinary;
                     if (thisOperator == ExpressionType.IsTrue | thisOperator == ExpressionType.IsFalse)
                     {
                         // Allow for IsTrue and IsFalse operator
-                        simpleCompareVal = Expression.Constant((thisOperator == ExpressionType.IsTrue), typeof(bool));
+                        if (propertyInfo.PropertyType == typeof(bool))
+                            simpleCompareVal = Expression.Constant((thisOperator == ExpressionType.IsTrue), typeof(bool));
                         simpleBinary = Expression.MakeBinary(ExpressionType.Equal, propertyValue, simpleCompareVal);
                     }
                     else
@@ -393,8 +391,10 @@ namespace Models.CLEM.Groupings
         public bool CheckValidOperator(PropertyInfo property, out string errorMessage)
         {
             errorMessage = "";
-            switch (property.PropertyType.Name)
+            switch (property.PropertyType.IsEnum?"enum":property.PropertyType.Name)
             {
+                case "Boolean":
+                case "enum":
                 case "String":
                     switch (Operator)
                     {
@@ -433,7 +433,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ToString()
         {
-            return filterString(false);
+            return FilterString(false);
         }
 
         /// <summary>
@@ -442,10 +442,10 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public string ToHTMLString()
         {
-            return filterString(true);
+            return FilterString(true);
         }
 
-        private string filterString(bool htmltags)
+        private string FilterString(bool htmltags)
         {
             Initialise();
 
@@ -464,7 +464,14 @@ namespace Models.CLEM.Groupings
                     else
                     {
                         filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(PropertyOfIndividual, "Not set", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                        filterWriter.Write((Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false") ? " not" : " is");
+                        if (validOperator)
+                            filterWriter.Write((Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false") ? " not" : " is");
+                        else
+                        {
+                            string errorlink = (htmltags) ? "<span class=\"errorlink\">" : "";
+                            string spanclose = (htmltags) ? "</span>" : "";
+                            filterWriter.Write($"{errorlink}{OperatorToSymbol()} is invalid for property {propertyInfo.PropertyType.Name}{spanclose}");
+                        }
                         filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
                     }
                 }
@@ -474,19 +481,18 @@ namespace Models.CLEM.Groupings
 
                     if (propertyInfo != null)
                     {
-                        if (CheckValidOperator(propertyInfo, out _))
+                        if (validOperator)
                             filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
                         else
                         {
                             string errorlink = (htmltags) ? "<span class=\"errorlink\">" : "";
                             string spanclose = (htmltags) ? "</span>" : "";
-                            filterWriter.Write($"{errorlink}{OperatorToSymbol()} is invalid for {propertyInfo.PropertyType.Name} properties{spanclose}");
+                            filterWriter.Write($"{errorlink}{OperatorToSymbol()} is invalid for property {propertyInfo.PropertyType.Name}{spanclose}");
                         }
                     }
                     else
-                    {
                         filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
-                    }
+
                     filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
                 }
                 return filterWriter.ToString();
