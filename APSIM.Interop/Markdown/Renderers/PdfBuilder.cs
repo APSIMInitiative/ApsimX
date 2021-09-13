@@ -468,11 +468,10 @@ namespace APSIM.Interop.Markdown.Renderers
                 AppendText($"[{text}]", textStyle);
             else
             {
-                // Use the citation's url if it has one. Otherwise, we will use a link
-                // to the full reference in the bibliography section (which has yet to
-                // be created at this point).
-                string uri = string.IsNullOrWhiteSpace(citation.URL) ? $"#{text}" : citation.URL;
-                SetLinkState(uri);
+                // Don't link to the citation's URL. Always link to the full citation
+                // in the bibliography, which may in turn link to the citation's
+                // external URL (if it has one).
+                SetLinkState($"#{text}");
 
                 // Insert the citation's in-text version.
                 AppendText(citation.InTextCite, textStyle);
