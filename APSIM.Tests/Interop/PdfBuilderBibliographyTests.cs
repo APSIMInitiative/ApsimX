@@ -226,6 +226,29 @@ namespace APSIM.Tests.Interop.Documentation
         }
 
         /// <summary>
+        /// Ensure that citations are inserted with bibliography style.
+        /// </summary>
+        [Test]
+        public void TestBibliographyStyle()
+        {
+            string name = "a citation";
+            string citation = "this is the full citation text";
+            AddCitation(name, citation);
+
+            Mock<PdfBuilder> mockBuilder = new Mock<PdfBuilder>(doc, new PdfOptions("", citationResolver.Object));
+            mockBuilder.Setup(b => b.AppendText(citation, It.IsAny<TextStyle>()))
+                       .Callback<string, TextStyle>((_, style) => Assert.AreEqual(TextStyle.Bibliography, style))
+                       .CallBase();
+            mockBuilder.Setup(b => b.AppendReference(It.IsAny<string>(), It.IsAny<TextStyle>())).CallBase();
+
+            mockBuilder.Object.AppendReference(name, TextStyle.Normal);
+            mockBuilder.Object.WriteBibliography();
+
+            // Sanity check for the above plumbing code.
+            Assert.AreEqual(1, TestContext.CurrentContext.AssertCount);
+        }
+
+        /// <summary>
         /// Add a citation with no details.
         /// </summary>
         /// <param name="name">Citation/reference name.</param>

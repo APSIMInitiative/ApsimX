@@ -17,6 +17,7 @@ namespace APSIM.Interop.Markdown
         Superscript = 16,
         Subscript = 32,
         Quote = 64,
-        Code = 128
+        Code = 128,
+        Bibliography = 256
     }
 }

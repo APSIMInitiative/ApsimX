@@ -214,6 +214,26 @@ namespace APSIM.Tests.Interop
         }
 
         /// <summary>
+        /// Ensure that bibliography elements have the correct style applied.
+        /// </summary>
+        [Test]
+        public void TestBibliographyStyle()
+        {
+            builder.AppendText("bibliography text", TextStyle.Bibliography);
+
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            FormattedText formatted = (FormattedText)paragraph.Elements[0];
+            Style style = doc.Styles[formatted.Style];
+
+            // Should have left indent > 0.
+            Assert.Greater(style.ParagraphFormat.LeftIndent.Point, 0);
+
+            // Should have 1st line indent = -1 * left indent.
+            // This has the effect of indenting all lines except for the first.
+            Assert.AreEqual(style.ParagraphFormat.LeftIndent.Point, -1 * style.ParagraphFormat.FirstLineIndent.Point);
+        }
+
+        /// <summary>
         /// Ensure that style applied via <see cref="PdfBuilder.PushStyle(TextStyle)"/>
         /// is used when inserting text.
         /// </summary>

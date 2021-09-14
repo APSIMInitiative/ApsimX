@@ -760,7 +760,7 @@ namespace APSIM.Interop.Markdown.Renderers
                     SetLinkState(citation.URL);
 
                 // Write the citation text.
-                AppendText(citation.BibliographyText, TextStyle.Normal);
+                AppendText(citation.BibliographyText, TextStyle.Bibliography);
                 GetLastParagraph().AddBookmark(name);
 
                 // Clear link state if a URL was provided.
@@ -1117,6 +1117,13 @@ namespace APSIM.Interop.Markdown.Renderers
                 documentStyle.ParagraphFormat.Borders.DistanceFromTop = padding;
                 documentStyle.ParagraphFormat.Borders.DistanceFromLeft = padding;
                 documentStyle.ParagraphFormat.Borders.DistanceFromRight = padding;
+            }
+            if ( (style & TextStyle.Bibliography) == TextStyle.Bibliography)
+            {
+                // We indent all lines by 1cm, and also indent the first line by -1cm.
+                // This has the effect of indenting all lines except the first line.
+                documentStyle.ParagraphFormat.LeftIndent = Unit.FromCentimeter(1);
+                documentStyle.ParagraphFormat.FirstLineIndent = Unit.FromCentimeter(-1);
             }
             // todo: do we need to set link style here?
             if (linkState != null)
