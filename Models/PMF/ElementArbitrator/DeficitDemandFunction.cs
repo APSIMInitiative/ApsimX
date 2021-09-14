@@ -110,8 +110,7 @@ namespace Models.PMF
 
         private double calcDeficitForCarbonPool(double currentAmount, double poolTargetConc)
         {
-            double potentialStructuralC = parentOrgan.Live.Carbon.Structural + 
-                                          (parentOrgan.totalDMDemand * parentOrgan.Cconc * dCarbon.ConcentrationOrFraction.Structural);
+            double potentialStructuralC = parentOrgan.Live.Carbon.Structural + calcStructuralCarbonDemand();
             double potentialTotalC = potentialStructuralC / dCarbon.ConcentrationOrFraction.Structural;
 
             double targetAmount = potentialTotalC * poolTargetConc;

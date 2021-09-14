@@ -44,9 +44,6 @@
             "[FodderBeet].Leaf.Carbon.Supplies.Fixation",
             "[FodderBeet].Leaf.Photosynthesis",
             "[Fertiliser].NitrogenApplied",
-            "//[FodderBeet].AboveGround.N",
-            "//[FodderBeet].AboveGround.Wt",
-            "[FodderBeet].Arbitrator.TotalDMFixationSupply",
             "[FodderBeet].Leaf.Canopy.CoverDead",
             "[FodderBeet].Leaf.Canopy.CoverGreen",
             "[FodderBeet].Leaf.Canopy.CoverTotal",
@@ -899,6 +896,8 @@
                 "Enabled": true,
                 "ReadOnly": false
               },
+              "Fn": 0.0,
+              "FNmetabolic": 0.0,
               "Name": "StorageRoot",
               "Children": [
                 {
@@ -1521,7 +1520,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
+                  "$type": "Models.Functions.MultiplyFunction, Models",
                   "Name": "TotalDMDemand",
                   "Children": [
                     {
@@ -1610,6 +1609,15 @@
                           "ReadOnly": false
                         }
                       ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Photosynthesis",
+                      "Name": "PotentialPhotosynthesis",
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -1897,11 +1905,13 @@
                 "Enabled": true,
                 "ReadOnly": false
               },
+              "Fn": 0.0,
+              "FNmetabolic": 0.0,
               "Name": "Leaf",
               "Children": [
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 10.0,
+                  "FixedValue": 1.0,
                   "Units": "g/m2",
                   "Name": "InitialWt",
                   "Children": [],
@@ -3809,6 +3819,8 @@
                 "Enabled": true,
                 "ReadOnly": false
               },
+              "Fn": 0.0,
+              "FNmetabolic": 0.0,
               "Name": "Petiole",
               "Children": [
                 {
@@ -4727,6 +4739,8 @@
                 "Enabled": true,
                 "ReadOnly": false
               },
+              "Fn": 0.0,
+              "FNmetabolic": 0.0,
               "Name": "Root",
               "Children": [
                 {
@@ -5434,11 +5448,11 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            0.1,
+                            0.0,
                             1.0
                           ],
                           "Y": [
-                            0.0,
+                            1.0,
                             1.0
                           ],
                           "Name": "XYPairs",

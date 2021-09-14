@@ -39,7 +39,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IPlant))]
-    public class BiomassArbitrator : Model, ICustomDocumentation, ITotalDMFixationSupply
+    public class BiomassArbitrator : Model, ICustomDocumentation
     {
         ///1. Links
         ///------------------------------------------------------------------------------------------------
@@ -81,16 +81,6 @@ namespace Models.PMF
         /// <summary>The variables for N</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         public PlantNutrientsDelta Nitrogen { get; private set; }
-
-        /// <summary>Gets the dry mass supply relative to dry mass demand.</summary>
-        [JsonIgnore]
-        public double FDM { get { return Carbon == null ? 0 : MathUtilities.Divide(Carbon.TotalPlantSupply, Carbon.TotalPlantDemand, 0); } }
-
-        /// <summary>Gets the delta wt.</summary>
-        public double DeltaWt { get { return Carbon == null ? 0 : (Carbon.End - Carbon.Start); } }
-
-        /// <summary>Total DM supply from photosynthesis needed for partitioning fraction function</summary>
-        public double TotalDMFixationSupply { get { return Carbon.TotalFixationSupply; } }
 
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------

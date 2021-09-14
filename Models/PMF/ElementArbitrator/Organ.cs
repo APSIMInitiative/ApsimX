@@ -309,13 +309,13 @@
                     InitialWt.Value() * Cconc * Carbon.ConcentrationOrFraction.Metabolic,
                     InitialWt.Value() * Cconc * Carbon.ConcentrationOrFraction.Storage);
                 Live.Carbon.SetTo(initC);
-                Live.updateAgregateValues();
+                Live.UpdateProperties();
                 NutrientPoolsState initN = new NutrientPoolsState(
                     Live.Weight.Total * Nitrogen.ConcentrationOrFraction.Structural,
                     Live.Weight.Total * (Nitrogen.ConcentrationOrFraction.Metabolic - Nitrogen.ConcentrationOrFraction.Structural),
                     Live.Weight.Total * (Nitrogen.ConcentrationOrFraction.Storage - Nitrogen.ConcentrationOrFraction.Metabolic));
                 Live.Nitrogen.SetTo(initN);
-                Live.updateAgregateValues();
+                Live.UpdateProperties();
 
                 if (RootNetworkObject != null)
                     RootNetworkObject.InitailiseNetwork(Live);

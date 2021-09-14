@@ -294,7 +294,7 @@
         public NutrientPoolsState Potassium { get; private set; }
 
         /// <summary> update variables derived from NutrientPoolsStates </summary>
-        public void updateAgregateValues()
+        public void UpdateProperties()
         {
             Weight = Carbon / CarbonConcentration;
             Wt = Weight.Total;
@@ -314,7 +314,7 @@
             Phosphorus = new NutrientPoolsState(0, 0, 0);
             Potassium = new NutrientPoolsState(0, 0, 0);
             CarbonConcentration = Cconc;
-            updateAgregateValues();
+            UpdateProperties();
         }
 
         /// <summary> Clear the components </summary>
@@ -324,7 +324,7 @@
             Nitrogen.Clear();
             Phosphorus.Clear();
             Potassium.Clear();
-            updateAgregateValues();
+            UpdateProperties();
         }
 
         /// <summary>Add Delta</summary>
@@ -334,7 +334,7 @@
             Nitrogen = newValue.Nitrogen;
             Phosphorus = newValue.Phosphorus;
             Potassium = newValue.Potassium;
-            updateAgregateValues();
+            UpdateProperties();
         }
 
         /// <summary> Multiply components by factor </summary>
@@ -344,7 +344,7 @@
             Nitrogen.MultiplyBy(Multiplier);
             Phosphorus.MultiplyBy(Multiplier);
             Potassium.MultiplyBy(Multiplier);
-            updateAgregateValues();
+            UpdateProperties();
         }
 
         /// <summary> Multiply components by factor </summary>
@@ -354,7 +354,7 @@
             Nitrogen.DivideBy(divisor);
             Phosphorus.DivideBy(divisor);
             Potassium.DivideBy(divisor);
-            updateAgregateValues();
+            UpdateProperties();
         }
 
         /// <summary> Add delta to states </summary>
@@ -364,7 +364,7 @@
             Nitrogen.AddDelta(delta.Nitrogen);
             Phosphorus.AddDelta(delta.Phosphorus);
             Potassium.AddDelta(delta.Potassium);
-            updateAgregateValues();
+            UpdateProperties();
         }
 
         /// <summary> subtract delta to states </summary>
@@ -374,7 +374,7 @@
             Nitrogen.SubtractDelta(delta.Nitrogen);
             Phosphorus.SubtractDelta(delta.Phosphorus);
             Potassium.SubtractDelta(delta.Potassium);
-            updateAgregateValues();
+            UpdateProperties();
         }
 
         /// <summary>return pools divied by value</summary>
