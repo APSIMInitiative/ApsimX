@@ -79,7 +79,7 @@ namespace APSIM.Tests.Interop.Documentation
             Assert.DoesNotThrow(() => builder.AppendReference(reference, TextStyle.Normal));
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
             Hyperlink link = (Hyperlink)paragraph.Elements[0];
-            Assert.AreEqual($"#{reference}", link.Name);
+            Assert.AreEqual(reference, link.Name);
         }
 
         /// <summary>
@@ -97,7 +97,7 @@ namespace APSIM.Tests.Interop.Documentation
             builder.AppendReference(reference, TextStyle.Normal);
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
             Hyperlink link = (Hyperlink)paragraph.Elements[0];
-            Assert.AreEqual($"#{reference}", link.Name);
+            Assert.AreEqual(reference, link.Name);
         }
 
         /// <summary>
@@ -241,7 +241,7 @@ namespace APSIM.Tests.Interop.Documentation
             for (int i = 0; i < 2; i++)
             {
                 Hyperlink link = (Hyperlink)paragraph.Elements[i];
-                Assert.AreEqual($"#{reference}", link.Name);
+                Assert.AreEqual(reference, link.Name);
                 Assert.AreEqual(1, link.Elements.Count);
                 FormattedText formatted = (FormattedText)link.Elements[0];
                 Text text = (Text)formatted.Elements[0];
@@ -281,7 +281,7 @@ namespace APSIM.Tests.Interop.Documentation
             for (int i = 0; i < 2; i++)
             {
                 Hyperlink link = (Hyperlink)paragraph.Elements[i];
-                Assert.AreEqual($"#{references[i]}", link.Name);
+                Assert.AreEqual(references[i], link.Name);
                 Assert.AreEqual(1, link.Elements.Count);
                 FormattedText formatted = (FormattedText)link.Elements[0];
                 Text text = (Text)formatted.Elements[0];
