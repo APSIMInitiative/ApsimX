@@ -195,79 +195,44 @@
         [Units("g/m^2")]
         public double GrowthRespiration { get; set; }
 
-        /// <summary>Gets or sets the n fixation cost.</summary>
-        [JsonIgnore]
-        [Units("g DM/g N")]
-        public virtual double NFixationCost { get { return 0; } }
-
         /// <summary>Gets the maximum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double MaxNconc { get { return Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Storage : 0; } }
+        public double MaxNconc { get; private set; }
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double MinNconc { get { return Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Structural : 0; } }
+        public double MinNconc { get; private set; }
 
         /// <summary>Gets the minimum N concentration.</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double CritNconc { get { return Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Metabolic : 0; } }
+        public double CritNconc { get; private set; }
 
         /// <summary>Gets the total (live + dead) dry matter weight (g/m2)</summary>
         [JsonIgnore]
         [Units("g/m^2")]
-        public double Wt { get { return Live.Wt + Dead.Wt; } }
+        public double Wt { get; private set; }
 
         /// <summary>Gets the total (live + dead) N amount (g/m2)</summary>
         [JsonIgnore]
         [Units("g/m^2")]
-        public double N { get { return Live.Nitrogen.Total + Dead.Nitrogen.Total; } }
-
+        public double N { get; private set; }
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [JsonIgnore]
         [Units("g/g")]
-        public double Nconc
-        {
-            get
-            {
-                if (Wt > 0.0)
-                    return N / Wt;
-                else
-                    return 0.0;
-            }
-        }
+        public double Nconc { get; private set; }
 
         /// <summary>
         /// Gets the nitrogen factor.
         /// </summary>
-        public double Fn
-        {
-            get
-            {
-                if (Live != null)
-                    return MathUtilities.Divide(Live.Nitrogen.Total, Live.Wt * MaxNconc, 1);
-                return 0;
-            }
-        }
+        public double Fn { get; private set; }
 
         /// <summary>
         /// Gets the metabolic N concentration factor.
         /// </summary>
-        public double FNmetabolic
-        {
-            get
-            {
-                double factor = 0.0;
-                if (Live != null)
-                {
-                    double nConcRange = Nitrogen.ConcentrationOrFraction.Metabolic - Nitrogen.ConcentrationOrFraction.Structural;
-                    factor = Math.Min(1.0, MathUtilities.Divide(Nconc - Nitrogen.ConcentrationOrFraction.Structural, nConcRange,0));
-                }
-                return Math.Min(1.0, factor);
-            }
-        }
+        public double FNmetabolic { get; private set; }
 
 
         ///6. Public methods
@@ -423,11 +388,14 @@
                    // Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
                 }
 
+                updateProperties();
                 if (RootNetworkObject != null)
                 {
                     RootNetworkObject.PartitionBiomassThroughSoil(ReAllocated, ReTranslocated, Allocated, Senesced, Detached, LiveRemoved, DeadRemoved);
                     RootNetworkObject.GrowRootDepth();
                 }
+
+                
             }
         }
 
@@ -446,6 +414,19 @@
 
             Clear();
         }
+
+        private void updateProperties()
+        {
+            MaxNconc = Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Storage : 0;
+            MinNconc = Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Structural : 0;
+            CritNconc = Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Metabolic : 0;
+            Wt = Live.Wt + Dead.Wt; 
+            N = Live.Nitrogen.Total + Dead.Nitrogen.Total;
+            Nconc = Wt > 0.0 ? N / Wt : 0.0;
+            Fn = Live != null ? MathUtilities.Divide(Live.Nitrogen.Total, Live.Wt * MaxNconc, 1) : 0;
+            FNmetabolic = (Live != null) ? Math.Min(1.0, MathUtilities.Divide(Nconc - MinNconc, CritNconc - MinNconc, 0)) : 0;
+        }
+    
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>
