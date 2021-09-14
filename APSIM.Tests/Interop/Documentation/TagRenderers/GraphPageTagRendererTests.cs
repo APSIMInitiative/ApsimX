@@ -249,6 +249,35 @@ namespace APSIM.Tests.Interop.Documentation.TagRenderers
         }
 
         /// <summary>
+        /// Ensure that graphs in a page of graphs have their legend removed.
+        /// </summary>
+        [Test]
+        public void EnsureNoLegend()
+        {
+            PlotModel graphModel = new PlotModel();
+            graphModel.Series.Add(new OxyPlot.Series.LineSeries());
+            graphModel.Axes.Add(new OxyPlot.Axes.LinearAxis());
+            graphModel.Legends.Add(new OxyPlot.Legends.Legend());
+
+            Mock<IGraphExporter> mockExporter = new Mock<IGraphExporter>();
+            mockExporter.Setup<IPlotModel>(e => e.ToPlotModel(graph)).Returns(() => graphModel);
+            mockExporter.Setup(e => e.Export(It.IsAny<IPlotModel>(), It.IsAny<double>(), It.IsAny<double>())).Returns((IPlotModel plot, double width, double height) =>
+            {
+                PlotModel model = plot as PlotModel;
+                Assert.AreEqual(0, model.Legends.Count);
+                return image;
+            });
+            IGraphExporter exporter = mockExporter.Object;
+            renderer = new GraphPageTagRenderer(exporter);
+
+            GraphPage page = new GraphPage(new[] { graph });
+            renderer.Render(page, pdfBuilder);
+
+            // (Sanity check, just to make sure that the above plumbing actually worked.)
+            Assert.AreEqual(1, TestContext.CurrentContext.AssertCount);
+        }
+
+        /// <summary>
         /// Get a square image with the specified size.
         /// </summary>
         /// <param name="i">Image size (height and width) in px.</param>

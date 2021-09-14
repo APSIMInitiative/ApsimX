@@ -49,9 +49,17 @@ namespace APSIM.Interop.Documentation.Renderers
             renderer.StartNewParagraph();
             foreach (IGraph graph in page.Graphs)
             {
-                var model = exporter.ToPlotModel(graph);
+                OxyPlot.IPlotModel model = exporter.ToPlotModel(graph);
                 if (model is OxyPlot.PlotModel plot)
+                {
                     FixSizing(ref plot);
+#if NETFRAMEWORK
+                    // .NET Framework builds are not long for this world.
+                    // They can keep their legends.
+#else
+                    plot.Legends.Clear();
+#endif
+                }
 
                 renderer.AppendImage(exporter.Export(model, width, height/*width * 2 / 3*/));
             }
