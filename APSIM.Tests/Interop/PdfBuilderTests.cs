@@ -627,6 +627,25 @@ namespace APSIM.Tests.Interop
 
         /// <summary>
         /// Ensure that <see cref="PdfBuilder.GetPageSize(out double, out double)"/>
+        /// takes the (vertical) space after paragraphs into account.
+        /// </summary>
+        [Test]
+        public void TestGetPageSizeSpaceAfterParagraph()
+        {
+            Section section = doc.AddSection();
+            section.PageSetup.PageWidth = 576;
+            section.PageSetup.PageHeight = 648;
+            section.PageSetup.LeftMargin = 72;
+            doc.Styles.Normal.ParagraphFormat.SpaceAfter = 9;
+
+            builder.GetPageSize(out double width, out double height);
+
+            Assert.AreEqual(672, width);
+            Assert.AreEqual(852, height);
+        }
+
+        /// <summary>
+        /// Ensure that <see cref="PdfBuilder.GetPageSize(out double, out double)"/>
         /// takes the left margin width into account.
         /// </summary>
         [Test]

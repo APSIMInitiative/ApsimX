@@ -928,7 +928,8 @@ namespace APSIM.Interop.Markdown.Renderers
             if (pageSetup.PageWidth.Point == 0 || pageSetup.PageHeight.Point == 0)
                 pageSetup = section.Document.DefaultPageSetup;
             pageWidth = (pageSetup.PageWidth.Point - pageSetup.LeftMargin.Point - pageSetup.RightMargin.Point) * pointsToPixels;
-            pageHeight = (pageSetup.PageHeight.Point - pageSetup.TopMargin.Point - pageSetup.BottomMargin.Point) * pointsToPixels;
+            double spaceBelowParagraph = section.Document.Styles.Normal.ParagraphFormat.SpaceAfter.Point;
+            pageHeight = (pageSetup.PageHeight.Point - pageSetup.TopMargin.Point - pageSetup.BottomMargin.Point - spaceBelowParagraph) * pointsToPixels;
         }
 
         /// <summary>
