@@ -37,9 +37,18 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
             if (link.IsImage)
             {
                 Image image = GetImage(uri);
+                // Technically, the image should be written to the same paragraph as any existing content.
+                // However, if the image is too large, I'm going to add it to its own paragraph.
+                // I'm defining "too large" as "taller than page height * 0.9".
+                renderer.GetPageSize(out _, out double height);
+                if (image.Height > 0.9 * height)
+                    renderer.StartNewParagraph();
+
                 renderer.AppendImage(image);
+
                 // The assumption here is that any children of the image are the image's caption.
                 renderer.StartNewParagraph();
+
                 renderer.WriteChildren(link);
             }
             else

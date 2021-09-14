@@ -262,5 +262,24 @@ namespace APSIM.Tests.Interop.Markdown.Renderers.Inlines
             }
             Assert.AreEqual(1, document.LastSection.Elements.Count);
         }
+
+        /// <summary>
+        /// Ensure that a large image is not inserted into an existing paragraph.
+        /// </summary>
+        [Test]
+        public void EnsureLargeImageNotInExistingParagraph()
+        {
+            pdfBuilder.AppendText("Not be in same paragraph as image", TextStyle.Normal);
+            inline.IsImage = true;
+            int height = (int)(document.DefaultPageSetup.PageHeight.Point * 1.5);
+            using (Image image = new Bitmap(2, height))
+            {
+                Mock<LinkInlineRenderer> renderer = new Mock<LinkInlineRenderer>(null);
+                renderer.CallBase = true;
+                renderer.Setup(r => r.GetImage(It.IsAny<string>())).Returns(image);
+                renderer.Object.Write(pdfBuilder, inline);
+            }
+            Assert.AreEqual(2, document.LastSection.Elements.Count);
+        }
     }
 }
