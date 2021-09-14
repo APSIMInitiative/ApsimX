@@ -17557,7 +17557,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "C:\\GitHubRepos\\ApsimX\\Tests\\Validation\\FodderBeet\\lincoln.met",
+              "FileName": "lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "Children": [],
@@ -19408,7 +19408,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "C:\\GitHubRepos\\ApsimX\\Tests\\Validation\\FodderBeet\\lincoln.met",
+                  "FileName": "lincoln.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "Children": [],
