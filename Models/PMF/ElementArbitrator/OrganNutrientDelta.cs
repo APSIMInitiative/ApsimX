@@ -134,8 +134,8 @@
             return returns;
         }
 
-
-        private void setConcentrationsOrProportions()
+        /// <summary> set concentrationOrFraction property</summary>
+        public void setConcentrationsOrProportions()
         {
             ConcentrationOrFraction = concentrationOrFractionFunction.ConcentrationsOrFractionss;
             if (this.Name == "Carbon")

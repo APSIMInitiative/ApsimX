@@ -335,6 +335,7 @@
             {
                 Clear();
                 ClearBiomassFlows();
+                Nitrogen.setConcentrationsOrProportions();
                 NutrientPoolsState initC = new NutrientPoolsState(
                     InitialWt.Value() * Cconc * Carbon.ConcentrationOrFraction.Structural,
                     InitialWt.Value() * Cconc * Carbon.ConcentrationOrFraction.Metabolic,
