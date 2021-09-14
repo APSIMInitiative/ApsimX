@@ -97,7 +97,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Sex of individual
         /// </summary>
-        public virtual Sex Sex { get { return this.Sex; } }
+        public abstract Sex Sex { get; }
 
         /// <summary>
         /// Marked as a replacement breeder
