@@ -183,6 +183,13 @@ namespace APSIM.Tests.Interop
             Assert.True(h4.Font.Bold);
             Assert.True(h5.Font.Bold);
             Assert.True(h6.Font.Bold);
+
+            Assert.AreEqual(OutlineLevel.Level1, h1.ParagraphFormat.OutlineLevel);
+            Assert.AreEqual(OutlineLevel.Level2, h2.ParagraphFormat.OutlineLevel);
+            Assert.AreEqual(OutlineLevel.Level3, h3.ParagraphFormat.OutlineLevel);
+            Assert.AreEqual(OutlineLevel.Level4, h4.ParagraphFormat.OutlineLevel);
+            Assert.AreEqual(OutlineLevel.Level5, h5.ParagraphFormat.OutlineLevel);
+            Assert.AreEqual(OutlineLevel.Level6, h6.ParagraphFormat.OutlineLevel);
         }
 
         /// <summary>

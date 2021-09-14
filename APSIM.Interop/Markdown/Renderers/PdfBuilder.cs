@@ -1024,6 +1024,33 @@ namespace APSIM.Interop.Markdown.Renderers
         }
 
         /// <summary>
+        /// Return an <see cref="OutlineLevel"/> appropriate for a heading of
+        /// the given heading level (1 - 6). The outline level is used to
+        /// show the heading in the document outline (aka table of contents).
+        /// </summary>
+        /// <param name="headingLevel">Heading level.</param>
+        private OutlineLevel GetHeadingOutlineLevel(uint headingLevel)
+        {
+            switch (headingLevel)
+            {
+                case 1:
+                    return OutlineLevel.Level1;
+                case 2:
+                    return OutlineLevel.Level2;
+                case 3:
+                    return OutlineLevel.Level3;
+                case 4:
+                    return OutlineLevel.Level4;
+                case 5:
+                    return OutlineLevel.Level5;
+                case 6:
+                    return OutlineLevel.Level6;
+                default:
+                    throw new NotImplementedException("Heading levels greater than 6 are not supported");
+            }
+        }
+
+        /// <summary>
         /// Get the aggregated style from the style stack.
         /// </summary>
         private TextStyle GetNestedStyle()
@@ -1101,6 +1128,7 @@ namespace APSIM.Interop.Markdown.Renderers
             {
                 documentStyle.Font.Size = GetFontSizeForHeading((uint)headingLevel);
                 documentStyle.Font.Bold = true;
+                documentStyle.ParagraphFormat.OutlineLevel = GetHeadingOutlineLevel((uint)headingLevel);
             }
 
             return name;
