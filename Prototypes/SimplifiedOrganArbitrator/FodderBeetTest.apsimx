@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 285,
   "Version": 141,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -17487,7 +17487,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "C:\\GitHubRepos\\ApsimX\\Tests\\Validation\\FodderBeet\\lincoln.met",
+              "FileName": "lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "Children": [],
@@ -19338,7 +19338,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "C:\\GitHubRepos\\ApsimX\\Tests\\Validation\\FodderBeet\\lincoln.met",
+                  "FileName": "lincoln.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "Children": [],
