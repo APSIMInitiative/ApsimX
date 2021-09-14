@@ -20,7 +20,7 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Zone))]
-    public class SurfaceOrganicMatter : ModelCollectionFromResource, ISurfaceOrganicMatter, IHaveCanopy, IOrganDamage
+    public class SurfaceOrganicMatter : ModelCollectionFromResource, ISurfaceOrganicMatter, IHaveCanopy, IHasDamageableBiomass
     {
         /// <summary>The water balance model</summary>
         [Link]
@@ -259,43 +259,39 @@
             }
         }
 
-        /// <summary>Gets the live biomass for grazing</summary>
-        public Biomass Live
+        /// <summary>A list of material (biomass) that can be damaged.</summary>
+        public IEnumerable<DamageableBiomass> Material
         {
             get
             {
-                return new Biomass();
-            }
-        }
-
-        /// <summary>Gets the dead biomass for grazing</summary>
-        public Biomass Dead
-        {
-            get
-            {
-                return new Biomass() // Should this be in live i.e. no live SOM
+                foreach (IOrganDamage organ in Children.Where(c => c is IOrganDamage))
                 {
-                    StructuralWt = SurfOM.Sum(som => som.Standing.Sum(om => om.amount)) +
-                                   SurfOM.Sum(som => som.Lying.Sum(om => om.amount)),
-                    StructuralN = SurfOM.Sum(som => som.Standing.Sum(om => om.N)) +
-                                  SurfOM.Sum(som => som.Lying.Sum(om => om.N)),
-                    MetabolicWt = 0.0,
-                    MetabolicN = 0.0,
-                    StorageWt = 0.0,
-                    StorageN = 0.0,
-                };
+                    yield return new DamageableBiomass(organ.Name, new Biomass(), true);
+                    yield return new DamageableBiomass(organ.Name, new Biomass() // Should this be in live i.e. no live SOM
+                    {
+                        StructuralWt = (SurfOM.Sum(som => som.Standing.Sum(om => om.amount)) +
+                                       SurfOM.Sum(som => som.Lying.Sum(om => om.amount))) / 10,  // kg/ha to g/m2
+                        StructuralN = SurfOM.Sum(som => som.Standing.Sum(om => om.N)) +
+                                      SurfOM.Sum(som => som.Lying.Sum(om => om.N)),
+                        MetabolicWt = 0.0,
+                        MetabolicN = 0.0,
+                        StorageWt = 0.0,
+                        StorageN = 0.0,
+                    }, false);
+                }
             }
         }
 
         /// <summary>Gets a value indicating whether the biomass is above ground or not</summary>
         public bool IsAboveGround { get { return true; } }
-        
+
         /// <summary>
         /// Biomass removal logic for this organ.
         /// </summary>
+        /// <param name="materialName">Name of organ.</param>
         /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
         /// <param name="biomassToRemove">Biomass to remove</param>
-        public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
+        public void RemoveBiomass(string materialName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
         {
             for (int i = 0; i < SurfOM.Count; i++)
             {
@@ -317,40 +313,6 @@
                 SurfOM[i].nh4 -= MathUtilities.Divide(nh4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
                 SurfOM[i].po4 -= MathUtilities.Divide(po4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
             }
-        }
-
-        /// <summary>
-        /// Remove an amount of biomass.
-        /// </summary>
-        /// <param name="amount">Amount of biomass to remove.</param>
-        public Biomass RemoveBiomass(double amount)
-        {
-            var returnedBiomass = new Biomass();
-            for (int i = 0; i < SurfOM.Count; i++)
-            {
-                double totalMassRemoved = 0;
-                foreach (var standing in SurfOM[i].Standing)
-                {
-                    double amountToRemove = Math.Min(Math.Min(amount, standing.amount), amount-totalMassRemoved);
-                    standing.amount -= amountToRemove;
-                    totalMassRemoved += amountToRemove;
-                }
-                foreach (var lying in SurfOM[i].Lying)
-                {
-                    double amountToRemove = Math.Min(Math.Min(amount, lying.amount), amount-totalMassRemoved);
-                    lying.amount -= amountToRemove;
-                    totalMassRemoved += amountToRemove;
-                }
-                returnedBiomass.StructuralWt = totalMassRemoved;
-                returnedBiomass.StructuralN = MathUtilities.Divide(no3ppm[i], 1000000.0, 0.0) * totalMassRemoved +
-                                              MathUtilities.Divide(nh4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
-
-                SurfOM[i].no3 -= MathUtilities.Divide(no3ppm[i], 1000000.0, 0.0) * totalMassRemoved;
-                SurfOM[i].nh4 -= MathUtilities.Divide(nh4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
-                SurfOM[i].po4 -= MathUtilities.Divide(po4ppm[i], 1000000.0, 0.0) * totalMassRemoved;
-            }
-
-            return returnedBiomass;
         }
 
         /// <summary>Called when [reset].</summary>

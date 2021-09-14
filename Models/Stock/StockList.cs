@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.ForageDigestibility;
     using Models.Interfaces;
     using Models.PMF.Interfaces;
     using Models.Surface;
@@ -92,10 +93,10 @@
                 Paddocks.Add(newPadd);
 
                 // find all the child crop, pasture components that have removable biomass
-                var forages = stockModel.FindChild<Forages>();
+                var forages = stockModel.FindInScope<Forages>();
                 if (forages != null)
                 {
-                    foreach (var forage in forages.GetForages(zone))
+                    foreach (var forage in forages.ModelsWithDigestibleBiomass.Where(m => m.Zone == zone))
                         ForagesAll.AddProvider(newPadd, zone.Name, zone.Name + "." + forage.Name, 0, 0, forage);
                 }
             }

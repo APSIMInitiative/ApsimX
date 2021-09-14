@@ -77,7 +77,7 @@ namespace UnitTests.Core
             Assert.AreEqual(pre, post, $"{Path.GetFileName(sim.FileName)} simulation failed to zero all variables");
         }
 
-        private static IEnumerable<Simulation> GetSimsToTest()
+        private IEnumerable<Simulation> GetSimsToTest()
         {
             // Lazy loading of simulations. The .apsimx files won't be read in
             // until we're ready to run them. Therefore if we fail in one of

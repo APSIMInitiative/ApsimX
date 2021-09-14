@@ -26,10 +26,12 @@
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="biomass">Biomass.</param>
+        /// <param name="name">Name of biomass.</param>
+        /// <param name="biomass">Biomass (g/m2).</param>
         /// <param name="isLive">Is biomass live.</param>
-        public DamageableBiomass(Biomass biomass, bool isLive)
+        public DamageableBiomass(string name, Biomass biomass, bool isLive)
         {
+            Name = name;
             Biomass = biomass;
             IsLive = isLive;
         }
@@ -37,7 +39,7 @@
         /// <summary>Name of material.</summary>
         public string Name { get; }
 
-        /// <summary>Biomass</summary>
+        /// <summary>Biomass (g/m2)</summary>
         public Biomass Biomass { get; }
 
         /// <summary>Is biomass live.</summary>

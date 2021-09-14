@@ -4114,13 +4114,8 @@
                     {
                         if (forageProvider.ForageObj != null)
                         {
-                            foreach (var biomass in forageProvider.ForageObj.Material)
-                            {
-                                if (biomass.Live.Wt > 0)
-                                {
-                                    pastureGreen += biomass.Live.Wt;   // g/m^2
-                                }
-                            }
+                            pastureGreen = forageProvider.ForageObj.Material.Where(m => m.IsLive)
+                                                                            .Sum(m => m.Biomass.Wt); // g/m^2
                         }
                     }
                 }

@@ -2554,6 +2554,20 @@
             }
         }
 
+
+        /// <summary>A list of material (biomass) that can be damaged.</summary>
+        public IEnumerable<DamageableBiomass> Material
+        {
+            get
+            {
+                foreach (IOrganDamage organ in Children.Where(c => c is IOrganDamage))
+                {
+                    yield return new DamageableBiomass(organ.Name, organ.Live, true);
+                    yield return new DamageableBiomass(organ.Name, organ.Dead, false);
+                }
+            }
+        }
+
         /// <summary>Plant population.</summary>
         public double Population { get { return 0; } }
 
@@ -3871,43 +3885,6 @@
             foreach (PastureBelowGroundOrgan root in roots)
                 root.DoResetOrgan();
             SetInitialState();
-        }
-
-        /// <summary>Removes plant material simulating a graze event.</summary>
-        /// <param name="type">The type of amount being defined (SetResidueAmount or SetRemoveAmount)</param>
-        /// <param name="amount">The DM amount (kg/ha)</param>
-        /// <exception cref="System.Exception"> Type of amount to remove on graze not recognized (use 'SetResidueAmount' or 'SetRemoveAmount'</exception>
-        public void RemoveBiomass(string type, double amount)
-        {
-            if (isAlive && Harvestable.Wt > Epsilon)
-            {
-                // Get the amount required to remove
-                double amountRequired;
-                if (type.ToLower() == "setresidueamount")
-                {
-                    // Remove all DM above given residual amount
-                    amountRequired = Math.Max(0.0, AboveGroundWt - amount);
-                }
-                else if (type.ToLower() == "setremoveamount")
-                {
-                    // Remove a given amount
-                    amountRequired = Math.Max(0.0, amount);
-                }
-                else
-                {
-                    throw new ApsimXException(this, "Type of amount to remove on graze not recognized (use \'SetResidueAmount\' or \'SetRemoveAmount\'");
-                }
-
-                // Get the actual amount to remove
-                double amountToRemove = Math.Max(0.0, Math.Min(amountRequired, Harvestable.Wt));
-
-                // Do the actual removal
-                if (!MathUtilities.FloatsAreEqual(amountToRemove, 0, 0.0001))
-                    RemoveBiomass(amountToRemove);
-
-            }
-            else
-                mySummary.WriteWarning(this, " Could not graze due to lack of DM available");
         }
 
         /// <summary>

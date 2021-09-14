@@ -2,9 +2,8 @@
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.ForageDigestibility;
     using Models.Functions;
-    using Models.GrazPlan;
-    using Models.Interfaces;
     using Models.PMF;
     using Models.PMF.Interfaces;
     using Models.Soils;
@@ -14,8 +13,6 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using static Models.GrazPlan.Forage;
-    using static Models.GrazPlan.Forages;
 
     /// <summary>
     /// 
@@ -29,7 +26,6 @@
         [Link] Clock clock = null;
         [Link] ISummary summary = null;
         [Link] Forages forages = null;
-        [Link] Zone zone = null;
         [Link(ByName = true)] ISolute Urea = null;
         [Link] IPhysical soilPhysical = null;
         [Link] SurfaceOrganicMatter surfaceOrganicMatter = null;
@@ -38,7 +34,7 @@
         private double residualBiomass;
         private CSharpExpressionFunction expressionFunction;
         private int simpleGrazingFrequency;
-        private List<IHasDigestibleBiomass> allForages;
+        private List<ModelWithDigestibleBiomass> allForages;
 
         /// <summary>Average potential ME concentration in herbage material (MJ/kg)</summary>
         private const double PotentialMEOfHerbage = 16.0;
@@ -350,7 +346,7 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            allForages = forages.DamageableBiomasses.ToList();
+            allForages = forages.ModelsWithDigestibleBiomass.ToList();
             ProportionOfTotalDM = new double[allForages.Count()];
 
             if (GrazingRotationType == GrazingRotationTypeEnum.TargetMass)
@@ -635,7 +631,7 @@
                     var harvestableWt = allForages[i].Material.Sum(m => m.Biomass.Wt);  // g/m2
                     var proportion = harvestableWt * SpeciesCutProportions[i] / totalWeightedHarvestableWt;
                     var amountToRemove = removeAmount * proportion;
-                    var grazed = RemoveBiomass(amountToRemove, allForages[i]);
+                    var grazed = allForages[i].RemoveBiomass(amountToRemove);
                     double grazedDigestibility = grazed.Digestibility;
                     var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazedDigestibility;
 
@@ -672,135 +668,5 @@
                 AmountUrineNReturned += returnedToSoilN - dungNReturned;
             }
         }
-
-        /// <summary>Removes a given amount of biomass (and N) from the plant.</summary>
-        /// <param name="amountToRemove">The amount of biomass to remove (kg/ha)</param>
-        /// <param name="forage">The forage model to remove biomass from.</param>
-        private DigestibleBiomass RemoveBiomass(double amountToRemove, IHasDigestibleBiomass forage)
-        {
-            double Epsilon = 0.000000001;
-
-            var allMaterial = forage.Material.ToList();
-
-            // get existing DM and N amounts
-            double preRemovalDMShoot = allMaterial.Sum(m => m.Biomass.Wt);
-            double preRemovalNShoot = allMaterial.Sum(m => m.Biomass.N);
-
-            double HarvestableWt = allMaterial.Sum(m => m.Biomass.Wt);
-            if (amountToRemove > Epsilon)
-            {
-                // Compute the fraction of each tissue to be removed
-                var fracRemoving = new List<FractionDigestibleBiomass>();
-                if (amountToRemove - HarvestableWt > -Epsilon)
-                {
-                    // All existing DM is removed
-                    amountToRemove = HarvestableWt;
-                    foreach (var material in allMaterial)
-                    {
-                        double frac = MathUtilities.Divide(material.Biomass.Wt, HarvestableWt, 0.0);
-                        fracRemoving.Add(new FractionDigestibleBiomass(material, frac));
-                    }
-                }
-                else
-                {
-                    // Initialise the fractions to be removed (these will be normalised later)
-                    foreach (var material in allMaterial)
-                    {
-                        double frac;
-                        if (material.IsLive)
-                        {
-                            if (material.Name == "Leaf")
-                                frac = material.Biomass.Wt * PreferenceForGreenOverDead * PreferenceForLeafOverStems;
-                            else
-                                frac = material.Biomass.Wt * PreferenceForGreenOverDead;
-                        }
-                        else
-                        {
-                            if (material.Name == "Leaf")
-                                frac = material.Biomass.Wt * PreferenceForLeafOverStems;
-                            else
-                                frac = material.Biomass.Wt;
-                        }
-                        fracRemoving.Add(new FractionDigestibleBiomass(material , frac));
-                    }
-
-                    // Normalise the fractions of each tissue to be removed, they should add to one
-                    double totalFrac = fracRemoving.Sum(m => m.Fraction);
-                    foreach (var f in fracRemoving)
-                    {
-                        double fracRemovable = f.Material.Biomass.Wt / amountToRemove;
-                        f.Fraction = Math.Min(fracRemovable, f.Fraction / totalFrac);
-                    }
-
-                    // Iterate until sum of fractions to remove is equal to one
-                    //  The initial normalised fractions are based on preference and existing DM. Because the value of fracRemoving is limited
-                    //   to fracRemovable, the sum of fracRemoving may not be equal to one, as it should be. We need to iterate adjusting the
-                    //   values of fracRemoving until we get a sum close enough to one. The previous values are used as weighting factors for
-                    //   computing new ones at each iteration.
-                    int count = 1;
-                    totalFrac = totalFrac = fracRemoving.Sum(m => m.Fraction);
-                    while (1.0 - totalFrac > Epsilon)
-                    {
-                        count += 1;
-                        foreach (var f in fracRemoving)
-                        {
-                            double fracRemovable = f.Material.Biomass.Wt / amountToRemove;
-                            f.Fraction = Math.Min(fracRemovable, f.Fraction / totalFrac);
-                        }
-                        totalFrac = totalFrac = fracRemoving.Sum(m => m.Fraction);
-                        if (count > 1000)
-                        {
-                            summary.WriteWarning(this, "SimpleGrazing could not remove or graze all the DM required for " + Name);
-                            break;
-                        }
-                    }
-                }
-
-                // Get digestibility of DM being harvested (do this before updating pools)
-                double DefoliatedDigestibility = fracRemoving.Sum(m => m.Material.Digestibility * m.Fraction);
-
-                // Iterate through all live material, find the associated dead material and then
-                // tell the forage model to remove it.
-                foreach (var live in fracRemoving.Where(f => f.Material.IsLive))
-                {
-                    var dead = fracRemoving.Find(frac => frac.Material.Name == live.Material.Name &&
-                                                                 !frac.Material.IsLive);
-                    if (dead == null)
-                        throw new Exception("Cannot find associated dead material while removing biomass in SimpleGrazing");
-
-                    forage.RemoveBiomass(live.Material.Name, "Graze", new OrganBiomassRemovalType()
-                    {
-                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * live.Fraction, live.Material.Biomass.Wt, 0.0)),
-                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * dead.Fraction, dead.Material.Biomass.Wt, 0.0))
-                    });
-                }
-            }
-
-            // Set outputs and check balance
-            var defoliatedDM = preRemovalDMShoot - allMaterial.Sum(m => m.Biomass.Wt);
-            var defoliatedN = preRemovalNShoot - allMaterial.Sum(m => m.Biomass.N); 
-            if (!MathUtilities.FloatsAreEqual(defoliatedDM, amountToRemove))
-                throw new ApsimXException(this, "Removal of DM resulted in loss of mass balance");
-            else
-                summary.WriteMessage(this, "Biomass removed from " + Name + " by grazing: " + defoliatedDM.ToString("#0.0") + "kg/ha");
-
-            return new DigestibleBiomass()
-            {
-                StructuralWt = defoliatedDM,
-                StructuralN = defoliatedN,
-            };
-        }
-
-        private class FractionDigestibleBiomass
-        {
-            public FractionDigestibleBiomass(DigestibleBiomass biomass, double frac)
-            {
-                Material = biomass;
-                Fraction = frac;
-            }
-            public DigestibleBiomass Material;
-            public double Fraction;
-        }
-
     }
 }

@@ -9,56 +9,24 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class MockForage : Model, IPlantDamage
+    public class MockForage : Model, IHasDamageableBiomass
     {
+        
         public MockForage() { }
         public MockForage(double liveWt)
         {
-            Organs.Add(new MockOrgan("", liveWt));
-        }
-        public List<IOrganDamage> Organs { get; set; } = new List<MockOrgan>().Cast<IOrganDamage>().ToList();
-
-        public Biomass AboveGround => throw new NotImplementedException();
-
-        public Biomass AboveGroundHarvestable => throw new NotImplementedException();
-
-        public double Population => throw new NotImplementedException();
-
-        public double LAI => throw new NotImplementedException();
-
-        public double AssimilateAvailable => throw new NotImplementedException();
-
-        public void ReduceCanopy(double deltaLAI)
-        {
-            throw new NotImplementedException();
+            var material = new List<DamageableBiomass>();
+            material.Add(new DamageableBiomass("", new Biomass() { StorageWt = liveWt }, true));
+            Material = material;
         }
 
-        public void ReducePopulation(double newPlantPopulation)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ReduceRootLengthDensity(double deltaRLD)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RemoveAssimilate(double deltaAssimilate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Biomass RemoveBiomass(double amount)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<DamageableBiomass> Material { get; set; }
 
         public void RemoveBiomass(string organName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
         {
             throw new NotImplementedException();
         }
 
-        public bool IsAlive { get; set; } = true;
     }
 
     public class MockOrgan : IOrganDamage
