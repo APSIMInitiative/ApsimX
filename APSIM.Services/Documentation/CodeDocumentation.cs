@@ -93,7 +93,7 @@ namespace APSIM.Services.Documentation
             {
                 string raw = summaryNode.InnerXml.Trim();
                 // Need to fix multiline comments - remove newlines and consecutive spaces.
-                return Regex.Replace(raw, @"\n\s+", "\n");
+                return Regex.Replace(raw, @"\n[ \t]+", "\n");
             }
             return null;
         }
