@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 285,
   "Version": 141,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -2376,7 +2376,7 @@
                         },
                         {
                           "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.025,
+                          "FixedValue": 0.01,
                           "Units": null,
                           "Name": "Minimum",
                           "Children": [],
@@ -2552,8 +2552,46 @@
                               "ReadOnly": false
                             },
                             {
-                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
                               "Name": "Metabolic",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": null,
+                                  "Name": "Multiplier",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "Name": "Storage",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": null,
+                                  "Name": "Multiplier",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.MultiplyFunction, Models",
+                              "Name": "Metabolic1",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -2581,7 +2619,7 @@
                             },
                             {
                               "$type": "Models.Functions.MultiplyFunction, Models",
-                              "Name": "Storage",
+                              "Name": "Storage1",
                               "Children": [
                                 {
                                   "$type": "Models.Functions.Constant, Models",
@@ -2878,7 +2916,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].Live.Weight.Structural + [Leaf].Live.Weight.Metabolic",
+                          "VariableName": "[Leaf].Live.Wt",
                           "Name": "LeafLiveWt",
                           "Children": [],
                           "IncludeInDocumentation": true,

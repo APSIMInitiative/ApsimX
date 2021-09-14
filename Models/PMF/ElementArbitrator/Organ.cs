@@ -261,7 +261,10 @@
             {
                 double factor = 0.0;
                 if (Live != null)
-                    factor = MathUtilities.Divide(Live.Nitrogen.Total - Live.Nitrogen.Structural, Live.Wt * (CritNconc - MinNconc), 1.0);
+                {
+                    double nConcRange = Nitrogen.ConcentrationOrFraction.Metabolic - Nitrogen.ConcentrationOrFraction.Structural;
+                    factor = Math.Min(1.0, MathUtilities.Divide(Nconc - Nitrogen.ConcentrationOrFraction.Structural, nConcRange,0));
+                }
                 return Math.Min(1.0, factor);
             }
         }
