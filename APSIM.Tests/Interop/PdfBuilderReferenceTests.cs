@@ -47,9 +47,9 @@ namespace APSIM.Tests.Interop.Documentation
         /// <see cref="PdfBuilder"/> receives a null citation resolver.
         /// </summary>
         [Test]
-        public void EnsureNullCitationHelperNotAllowed()
+        public void EnsureNullCitationHelperIsAllowed()
         {
-            Assert.Throws<ArgumentNullException>(() => new PdfBuilder(doc, new PdfOptions(null, null)));
+            Assert.DoesNotThrow(() => new PdfBuilder(doc, new PdfOptions(null, null)));
         }
 
         /// <summary>
@@ -84,7 +84,7 @@ namespace APSIM.Tests.Interop.Documentation
 
         /// <summary>
         /// Ensure taht references to citations with a URL are linked to the
-        /// citation's URL.
+        /// full citation in the bibliography, which is linked to the URL.
         /// </summary>
         [Test]
         public void TestAppendReferenceWithUrl()
@@ -97,7 +97,7 @@ namespace APSIM.Tests.Interop.Documentation
             builder.AppendReference(reference, TextStyle.Normal);
             Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
             Hyperlink link = (Hyperlink)paragraph.Elements[0];
-            Assert.AreEqual(url, link.Name);
+            Assert.AreEqual($"#{reference}", link.Name);
         }
 
         /// <summary>
