@@ -68,6 +68,8 @@
         [Units("g/m2")]
         public double Total { get; private set; }
 
+        private double tolerence = 1e-12;
+
         private void updateTotal()
         { Total = Structural + Metabolic + Storage; }
 
@@ -93,12 +95,27 @@
         /// <summary>Pools can not be negative.  Test for negatives each time an opperator is applied</summary>
         private void testPools(NutrientPoolsState p)
         {
-            if (p.Structural < -0.0000000000001)
+            if (p.Structural < 0)
+            {
+                if (p.Structural < -tolerence) //Throw if really negative
                     throw new Exception(this.FullPath + ".Structural was set to negative value");
-            if (p.Metabolic < -0.0000000000001)
-                throw new Exception(this.FullPath + ".Metabolic was set to negative value");
-            if (p.Storage < -0.0000000000001)
-                throw new Exception(this.FullPath + ".Storage was set to negative value");
+                else  // if negative in floating point tollerence, zero the pool
+                    this.Structural = 0.0;
+            }
+            if (p.Metabolic < 0)
+            {
+                if (p.Metabolic < -tolerence) //Throw if really negative
+                    throw new Exception(this.FullPath + ".Metabolic was set to negative value");
+                else  // if negative in floating point tollerence, zero the pool
+                    this.Metabolic = 0.0;
+            }
+            if (p.Storage < 0)
+            {
+                if (p.Storage < -tolerence) //Throw if really negative
+                    throw new Exception(this.FullPath + ".Storage was set to negative value");
+                else  // if negative in floating point tollerence, zero the pool
+                    this.Storage = 0.0;
+            }
             if (Double.IsNaN(p.Structural))
                 throw new Exception(this.FullPath + ".Structural was set to nan");
             if (Double.IsNaN(p.Metabolic))
@@ -110,11 +127,11 @@
         /// <summary>Add Delta</summary>
         public void AddDelta(NutrientPoolsState delta)
         {
-            if (delta.Structural < -0.0000000000001)
+            if (delta.Structural < -tolerence)
                 throw new Exception(this.FullPath + ".Structural trying to add a negative");
-            if (delta.Metabolic < -0.0000000000001)
+            if (delta.Metabolic < -tolerence)
                 throw new Exception(this.FullPath + ".Metabolic trying to add a negative");
-            if (delta.Storage < -0.0000000000001)
+            if (delta.Storage < -tolerence)
                 throw new Exception(this.FullPath + ".Storage trying to add a negative");
 
             Structural += delta.Structural;
@@ -127,11 +144,11 @@
         /// <summary>subtract Delta</summary>
         public void SubtractDelta(NutrientPoolsState delta)
         {
-            if (delta.Structural < -0.0000000000001)
+            if (delta.Structural < -tolerence)
                 throw new Exception(this.FullPath + ".Structural trying to subtract a negative");
-            if (delta.Metabolic < -0.0000000000001)
+            if (delta.Metabolic < -tolerence)
                 throw new Exception(this.FullPath + ".Metabolic trying to subtract a negative");
-            if (delta.Storage < -0.0000000000001)
+            if (delta.Storage < -tolerence)
                 throw new Exception(this.FullPath + ".Storage trying to subtract a negative");
 
             Structural -= delta.Structural;

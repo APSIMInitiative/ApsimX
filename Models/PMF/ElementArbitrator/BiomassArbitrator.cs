@@ -54,6 +54,7 @@ namespace Models.PMF
 
         ///2. Private And Protected Fields
         /// -------------------------------------------------------------------------------------------------
+        private double tolerence = 1e-12;
 
         ///3. The Constructor
         /// -------------------------------------------------------------------------------------------------
@@ -168,7 +169,7 @@ namespace Models.PMF
             double NTotalUptakeAllocated = DoAllocation(TotalPlantUptake, Nitrogen);
 
             double check = NTotalUptakeAllocated - (Nitrogen.TotalPlantDemand - NTotalReAlocationAllocated);
-            if (check > 0.0000000000001)
+            if (check > tolerence)
                 throw new Exception("NUptake exceeds demand");
             //Let uptake organs know what theire uptake
             int count = 0;
@@ -250,13 +251,15 @@ namespace Models.PMF
 
         private double calcAllocated(double totalAllocated, double organSupply, double totalSupply)
         {
-            if (totalAllocated - totalSupply > 0.0000000000001)
+            if (totalAllocated - totalSupply > tolerence)
                 throw new Exception("Allocation greater than supply");
             double relativeShare = organSupply / totalSupply;
             double retVal = totalAllocated * relativeShare;
             if (Double.IsNaN(retVal))
                 throw new Exception("Allocation of supplies gave a Nan");
-            return retVal;
+            if (retVal < -tolerence)
+                throw new Exception("Allocation was negative");
+            return Math.Max(0,retVal); //Constrained to zero to wipe floating point errors
         }
 
         /// <summary>Relatives the allocation.</summary>
@@ -265,7 +268,7 @@ namespace Models.PMF
         public double DoAllocation(double TotalSupply, PlantNutrientsDelta PRS)
         {
             double totalAllocated = 0;
-            if (TotalSupply > 0.00000000001)
+            if (TotalSupply > tolerence)
             {
                 double notAllocated = TotalSupply;
                 

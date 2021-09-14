@@ -89,7 +89,10 @@ namespace Models.PMF
             multiplier = Math.Max(0, Math.Min(1, multiplier));
 
             //sourceAmount ie: Leaf.Carbon.Live.Metabolic
-            return sourceAmount * multiplier * parentOrgan.senescenceRate;
+            double reAllocationsupply = sourceAmount * multiplier * parentOrgan.senescenceRate;
+            if (reAllocationsupply < -1e-12)
+                throw new Exception(this.FullPath + " gave a negative ReAllocation supply");
+            return reAllocationsupply;
         }
         private double CalcAmountToReTranslocate(double sourceAmount, List<IFunction> childFunctions)
         {
@@ -99,7 +102,10 @@ namespace Models.PMF
             multiplier = Math.Max(0, Math.Min(1, multiplier));
 
             //sourceAmount ie: Leaf.Carbon.Live.Metabolic
-            return sourceAmount * multiplier;
+            double reTranslocationSupply = sourceAmount* multiplier;
+            if(reTranslocationSupply<0)
+                throw new Exception(this.FullPath + " gave a negative ReTranslocation supply");
+            return reTranslocationSupply ;
         }
 
         /// <summary>Gets the value.</summary>

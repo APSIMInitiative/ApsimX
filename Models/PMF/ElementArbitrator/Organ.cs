@@ -83,9 +83,9 @@
         /// -------------------------------------------------------------------------------------------------
 
         /// <summary>Tolerance for biomass comparisons</summary>
-        protected double BiomassToleranceValue = 0.0000000001;
+        protected double tolerence = 1e-12;
 
-        
+
         ///3. The Constructor
         /// -------------------------------------------------------------------------------------------------
 
@@ -360,9 +360,12 @@
         [EventSubscribe("DoPotentialPlantGrowth")]
         protected virtual void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            senescenceRate = senescenceRateFunction.Value();
-            dmConversionEfficiency = DMConversionEfficiency.Value();
-            Carbon.SetSuppliesAndDemands();
+            if (parentPlant.IsEmerged)
+            {
+                senescenceRate = senescenceRateFunction.Value();
+                dmConversionEfficiency = DMConversionEfficiency.Value();
+                Carbon.SetSuppliesAndDemands();
+            }
         }
 
         
@@ -397,7 +400,7 @@
 
                 // Do detachment
                 double detachedFrac = detachmentRateFunction.Value();
-                if (Dead.Weight.Total * (1.0 - detachedFrac) < BiomassToleranceValue)
+                if (Dead.Weight.Total * (1.0 - detachedFrac) < tolerence)
                     detachedFrac = 1.0;  // remaining amount too small, detach all
                 Detached = Dead * detachedFrac;
                 Dead.SubtractDelta(Detached);
