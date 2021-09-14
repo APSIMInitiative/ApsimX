@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 300,
   "Version": 141,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -209,6 +209,24 @@
                       "ReadOnly": false
                     }
                   ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.PlantNutrientsDelta, Models",
+                  "Propertys": null,
+                  "Name": "Carbon",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.PlantNutrientsDelta, Models",
+                  "Propertys": null,
+                  "Name": "Nitrogen",
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -729,43 +747,166 @@
               "RootNetworkObject": null,
               "Cconc": 0.4,
               "IsAboveGround": true,
+              "Live": {
+                "$type": "Models.PMF.OrganNutrientsState, Models",
+                "Weight": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Wt": 0.0,
+                "N": 0.0,
+                "P": 0.0,
+                "K": 0.0,
+                "NConc": 0.0,
+                "PConc": 0.0,
+                "KConc": 0.0,
+                "CarbonConcentration": 0.4,
+                "Carbon": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Nitrogen": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Phosphorus": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Potassium": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Name": "OrganNutrientsState",
+                "Children": [],
+                "IncludeInDocumentation": true,
+                "Enabled": true,
+                "ReadOnly": false
+              },
+              "Dead": {
+                "$type": "Models.PMF.OrganNutrientsState, Models",
+                "Weight": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Wt": 0.0,
+                "N": 0.0,
+                "P": 0.0,
+                "K": 0.0,
+                "NConc": 0.0,
+                "PConc": 0.0,
+                "KConc": 0.0,
+                "CarbonConcentration": 0.4,
+                "Carbon": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Nitrogen": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Phosphorus": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Potassium": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Name": "OrganNutrientsState",
+                "Children": [],
+                "IncludeInDocumentation": true,
+                "Enabled": true,
+                "ReadOnly": false
+              },
               "Name": "StorageRoot",
               "Children": [
                 {
-                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
                   "Name": "InitialWt",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": "g/m^2",
-                      "Name": "Structural",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": "g/m^2",
-                      "Name": "Metabolic",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": "g/m^2",
-                      "Name": "Storage",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -776,12 +917,12 @@
                     "$type": "Models.PMF.OrganNutrientSupplies, Models",
                     "Fixation": 0.0,
                     "ReAllocation": {
-                      "$type": "Models.PMF.NutrientPoolStates, Models",
+                      "$type": "Models.PMF.NutrientPoolsState, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
                       "Total": 0.0,
-                      "Name": "NutrientPoolStates",
+                      "Name": "NutrientPoolsState",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -789,301 +930,12 @@
                     },
                     "Uptake": 0.0,
                     "ReTranslocation": {
-                      "$type": "Models.PMF.NutrientPoolStates, Models",
+                      "$type": "Models.PMF.NutrientPoolsState, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
                       "Total": 0.0,
-                      "Name": "NutrientPoolStates",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    "Name": "OrganNutrientSupplies",
-                    "Children": [],
-                    "IncludeInDocumentation": true,
-                    "Enabled": true,
-                    "ReadOnly": false
-                  },
-                  "MaxCDelta": 0.0,
-                  "Name": "Carbon",
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.NutrientDemandFunctions, Models",
-                      "Name": "DemandFunctions",
-                      "Children": [
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Structural",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Metabolic",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Storage",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "QStructuralPriority",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "QMetabolicPriority",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "QStoragePriority",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.NutrientSupplyFunctions, Models",
-                      "Name": "SupplyFunctions",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "Fixation",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
-                          "Name": "Uptake",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                          "Name": "ReAllocation",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0,
-                              "Units": null,
-                              "Name": "Structural",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
-                              "Name": "Metabolic",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
-                              "Name": "Storage",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 1.0,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
-                          "Name": "ReTranslocation",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 0.0,
-                              "Units": null,
-                              "Name": "Structural",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
-                              "Name": "Metabolic",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
-                              "Name": "Storage",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 0.0,
-                                  "Units": null,
-                                  "Name": "Multiplier",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.PMF.NutrientProportionFunctions, Models",
-                      "Name": "PoolFractions",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.1,
-                          "Units": null,
-                          "Name": "Structural",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.1,
-                          "Units": null,
-                          "Name": "Metabolic",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.8,
-                          "Units": null,
-                          "Name": "Storage",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
-                  "Supplies": {
-                    "$type": "Models.PMF.OrganNutrientSupplies, Models",
-                    "Fixation": 0.0,
-                    "ReAllocation": {
-                      "$type": "Models.PMF.NutrientPoolStates, Models",
-                      "Structural": 0.0,
-                      "Storage": 0.0,
-                      "Metabolic": 0.0,
-                      "Total": 0.0,
-                      "Name": "NutrientPoolStates",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    "Uptake": 0.0,
-                    "ReTranslocation": {
-                      "$type": "Models.PMF.NutrientPoolStates, Models",
-                      "Structural": 0.0,
-                      "Storage": 0.0,
-                      "Metabolic": 0.0,
-                      "Total": 0.0,
-                      "Name": "NutrientPoolStates",
+                      "Name": "NutrientPoolsState",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -1386,6 +1238,289 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
+                  "Supplies": {
+                    "$type": "Models.PMF.OrganNutrientSupplies, Models",
+                    "Fixation": 0.0,
+                    "ReAllocation": {
+                      "$type": "Models.PMF.NutrientPoolsState, Models",
+                      "Structural": 0.0,
+                      "Storage": 0.0,
+                      "Metabolic": 0.0,
+                      "Total": 0.0,
+                      "Name": "NutrientPoolsState",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    "Uptake": 0.0,
+                    "ReTranslocation": {
+                      "$type": "Models.PMF.NutrientPoolsState, Models",
+                      "Structural": 0.0,
+                      "Storage": 0.0,
+                      "Metabolic": 0.0,
+                      "Total": 0.0,
+                      "Name": "NutrientPoolsState",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    "Name": "OrganNutrientSupplies",
+                    "Children": [],
+                    "IncludeInDocumentation": true,
+                    "Enabled": true,
+                    "ReadOnly": false
+                  },
+                  "MaxCDelta": 0.0,
+                  "Name": "Carbon",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.NutrientDemandFunctions, Models",
+                      "Name": "DemandFunctions",
+                      "Children": [
+                        {
+                          "$type": "Models.PMF.DeficitDemandFunction, Models",
+                          "Name": "Structural",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.DeficitDemandFunction, Models",
+                          "Name": "Metabolic",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.DeficitDemandFunction, Models",
+                          "Name": "Storage",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "QStructuralPriority",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "QMetabolicPriority",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "QStoragePriority",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.NutrientSupplyFunctions, Models",
+                      "Name": "SupplyFunctions",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Fixation",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 0.0,
+                          "Units": null,
+                          "Name": "Uptake",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                          "Name": "ReAllocation",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Structural",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "Name": "Metabolic",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": null,
+                                  "Name": "Multiplier",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "Name": "Storage",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 1.0,
+                                  "Units": null,
+                                  "Name": "Multiplier",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                          "Name": "ReTranslocation",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.Constant, Models",
+                              "FixedValue": 0.0,
+                              "Units": null,
+                              "Name": "Structural",
+                              "Children": [],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "Name": "Metabolic",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.0,
+                                  "Units": null,
+                                  "Name": "Multiplier",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.PMF.MobilisationSupplyFunction, Models",
+                              "Name": "Storage",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.Constant, Models",
+                                  "FixedValue": 0.0,
+                                  "Units": null,
+                                  "Name": "Multiplier",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "IncludeInDocumentation": true,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PMF.NutrientProportionFunctions, Models",
+                      "Name": "PoolFractions",
+                      "Children": [
+                        {
+                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
+                          "Name": "Structural",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
+                          "Name": "Metabolic",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
+                          "Name": "Storage",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.DemandFunctions.PartitionFractionDemandFunction, Models",
                   "Name": "TotalDMDemand",
                   "Children": [
@@ -1415,9 +1550,9 @@
                                   "Y": [
                                     0.0,
                                     0.0,
-                                    0.06,
-                                    0.07,
-                                    0.08
+                                    0.6,
+                                    0.7,
+                                    0.8
                                   ],
                                   "Name": "XYPairs",
                                   "Children": [],
@@ -1610,43 +1745,166 @@
               "RootNetworkObject": null,
               "Cconc": 0.4,
               "IsAboveGround": true,
+              "Live": {
+                "$type": "Models.PMF.OrganNutrientsState, Models",
+                "Weight": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Wt": 0.0,
+                "N": 0.0,
+                "P": 0.0,
+                "K": 0.0,
+                "NConc": 0.0,
+                "PConc": 0.0,
+                "KConc": 0.0,
+                "CarbonConcentration": 0.4,
+                "Carbon": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Nitrogen": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Phosphorus": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Potassium": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Name": "OrganNutrientsState",
+                "Children": [],
+                "IncludeInDocumentation": true,
+                "Enabled": true,
+                "ReadOnly": false
+              },
+              "Dead": {
+                "$type": "Models.PMF.OrganNutrientsState, Models",
+                "Weight": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Wt": 0.0,
+                "N": 0.0,
+                "P": 0.0,
+                "K": 0.0,
+                "NConc": 0.0,
+                "PConc": 0.0,
+                "KConc": 0.0,
+                "CarbonConcentration": 0.4,
+                "Carbon": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Nitrogen": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Phosphorus": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Potassium": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Name": "OrganNutrientsState",
+                "Children": [],
+                "IncludeInDocumentation": true,
+                "Enabled": true,
+                "ReadOnly": false
+              },
               "Name": "Leaf",
               "Children": [
                 {
-                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": "g/m2",
                   "Name": "InitialWt",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": "g/m^2",
-                      "Name": "Structural",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "Metabolic",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.2,
-                      "Units": null,
-                      "Name": "Storage",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -1816,12 +2074,12 @@
                     "$type": "Models.PMF.OrganNutrientSupplies, Models",
                     "Fixation": 0.0,
                     "ReAllocation": {
-                      "$type": "Models.PMF.NutrientPoolStates, Models",
+                      "$type": "Models.PMF.NutrientPoolsState, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
                       "Total": 0.0,
-                      "Name": "NutrientPoolStates",
+                      "Name": "NutrientPoolsState",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -1829,12 +2087,12 @@
                     },
                     "Uptake": 0.0,
                     "ReTranslocation": {
-                      "$type": "Models.PMF.NutrientPoolStates, Models",
+                      "$type": "Models.PMF.NutrientPoolsState, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
                       "Total": 0.0,
-                      "Name": "NutrientPoolStates",
+                      "Name": "NutrientPoolsState",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -2074,12 +2332,10 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientProportionFunctions, Models",
-                      "Name": "PoolProportions",
+                      "Name": "PoolFractions",
                       "Children": [
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.5,
-                          "Units": null,
+                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
                           "Name": "Structural",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2087,9 +2343,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.5,
-                          "Units": null,
+                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
                           "Name": "Metabolic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2097,9 +2351,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.0,
-                          "Units": null,
+                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
                           "Name": "Storage",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -2122,12 +2374,12 @@
                     "$type": "Models.PMF.OrganNutrientSupplies, Models",
                     "Fixation": 0.0,
                     "ReAllocation": {
-                      "$type": "Models.PMF.NutrientPoolStates, Models",
+                      "$type": "Models.PMF.NutrientPoolsState, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
                       "Total": 0.0,
-                      "Name": "NutrientPoolStates",
+                      "Name": "NutrientPoolsState",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -2135,12 +2387,12 @@
                     },
                     "Uptake": 0.0,
                     "ReTranslocation": {
-                      "$type": "Models.PMF.NutrientPoolStates, Models",
+                      "$type": "Models.PMF.NutrientPoolsState, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
                       "Total": 0.0,
-                      "Name": "NutrientPoolStates",
+                      "Name": "NutrientPoolsState",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -3349,43 +3601,166 @@
               "RootNetworkObject": null,
               "Cconc": 0.4,
               "IsAboveGround": true,
+              "Live": {
+                "$type": "Models.PMF.OrganNutrientsState, Models",
+                "Weight": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Wt": 0.0,
+                "N": 0.0,
+                "P": 0.0,
+                "K": 0.0,
+                "NConc": 0.0,
+                "PConc": 0.0,
+                "KConc": 0.0,
+                "CarbonConcentration": 0.4,
+                "Carbon": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Nitrogen": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Phosphorus": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Potassium": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Name": "OrganNutrientsState",
+                "Children": [],
+                "IncludeInDocumentation": true,
+                "Enabled": true,
+                "ReadOnly": false
+              },
+              "Dead": {
+                "$type": "Models.PMF.OrganNutrientsState, Models",
+                "Weight": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Wt": 0.0,
+                "N": 0.0,
+                "P": 0.0,
+                "K": 0.0,
+                "NConc": 0.0,
+                "PConc": 0.0,
+                "KConc": 0.0,
+                "CarbonConcentration": 0.4,
+                "Carbon": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Nitrogen": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Phosphorus": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Potassium": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Name": "OrganNutrientsState",
+                "Children": [],
+                "IncludeInDocumentation": true,
+                "Enabled": true,
+                "ReadOnly": false
+              },
               "Name": "Petiole",
               "Children": [
                 {
-                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 1.0,
+                  "Units": "g/m2",
                   "Name": "InitialWt",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.5,
-                      "Units": "g/m^2",
-                      "Name": "Structural",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.5,
-                      "Units": null,
-                      "Name": "Metabolic",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.1,
-                      "Units": "0",
-                      "Name": "Storage",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -3396,12 +3771,12 @@
                     "$type": "Models.PMF.OrganNutrientSupplies, Models",
                     "Fixation": 0.0,
                     "ReAllocation": {
-                      "$type": "Models.PMF.NutrientPoolStates, Models",
+                      "$type": "Models.PMF.NutrientPoolsState, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
                       "Total": 0.0,
-                      "Name": "NutrientPoolStates",
+                      "Name": "NutrientPoolsState",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -3409,12 +3784,12 @@
                     },
                     "Uptake": 0.0,
                     "ReTranslocation": {
-                      "$type": "Models.PMF.NutrientPoolStates, Models",
+                      "$type": "Models.PMF.NutrientPoolsState, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
                       "Total": 0.0,
-                      "Name": "NutrientPoolStates",
+                      "Name": "NutrientPoolsState",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -3637,12 +4012,10 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientProportionFunctions, Models",
-                      "Name": "PoolProportions",
+                      "Name": "PoolFractions",
                       "Children": [
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.45,
-                          "Units": null,
+                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
                           "Name": "Structural",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3650,9 +4023,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.1,
-                          "Units": null,
+                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
                           "Name": "Metabolic",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3660,9 +4031,7 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 0.45,
-                          "Units": null,
+                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
                           "Name": "Storage",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -3685,12 +4054,12 @@
                     "$type": "Models.PMF.OrganNutrientSupplies, Models",
                     "Fixation": 0.0,
                     "ReAllocation": {
-                      "$type": "Models.PMF.NutrientPoolStates, Models",
+                      "$type": "Models.PMF.NutrientPoolsState, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
                       "Total": 0.0,
-                      "Name": "NutrientPoolStates",
+                      "Name": "NutrientPoolsState",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -3698,12 +4067,12 @@
                     },
                     "Uptake": 0.0,
                     "ReTranslocation": {
-                      "$type": "Models.PMF.NutrientPoolStates, Models",
+                      "$type": "Models.PMF.NutrientPoolsState, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
                       "Total": 0.0,
-                      "Name": "NutrientPoolStates",
+                      "Name": "NutrientPoolsState",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -4150,43 +4519,166 @@
               "RootNetworkObject": null,
               "Cconc": 0.4,
               "IsAboveGround": false,
+              "Live": {
+                "$type": "Models.PMF.OrganNutrientsState, Models",
+                "Weight": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Wt": 0.0,
+                "N": 0.0,
+                "P": 0.0,
+                "K": 0.0,
+                "NConc": 0.0,
+                "PConc": 0.0,
+                "KConc": 0.0,
+                "CarbonConcentration": 0.4,
+                "Carbon": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Nitrogen": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Phosphorus": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Potassium": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Name": "OrganNutrientsState",
+                "Children": [],
+                "IncludeInDocumentation": true,
+                "Enabled": true,
+                "ReadOnly": false
+              },
+              "Dead": {
+                "$type": "Models.PMF.OrganNutrientsState, Models",
+                "Weight": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Wt": 0.0,
+                "N": 0.0,
+                "P": 0.0,
+                "K": 0.0,
+                "NConc": 0.0,
+                "PConc": 0.0,
+                "KConc": 0.0,
+                "CarbonConcentration": 0.4,
+                "Carbon": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Nitrogen": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Phosphorus": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Potassium": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                "Name": "OrganNutrientsState",
+                "Children": [],
+                "IncludeInDocumentation": true,
+                "Enabled": true,
+                "ReadOnly": false
+              },
               "Name": "Root",
               "Children": [
                 {
-                  "$type": "Models.PMF.NutrientPoolFunctions, Models",
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.5,
+                  "Units": "g/m2",
                   "Name": "InitialWt",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": "g/m^2",
-                      "Name": "Structural",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "Metabolic",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.1,
-                      "Units": null,
-                      "Name": "Storage",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -4197,12 +4689,12 @@
                     "$type": "Models.PMF.OrganNutrientSupplies, Models",
                     "Fixation": 0.0,
                     "ReAllocation": {
-                      "$type": "Models.PMF.NutrientPoolStates, Models",
+                      "$type": "Models.PMF.NutrientPoolsState, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
                       "Total": 0.0,
-                      "Name": "NutrientPoolStates",
+                      "Name": "NutrientPoolsState",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -4210,12 +4702,12 @@
                     },
                     "Uptake": 0.0,
                     "ReTranslocation": {
-                      "$type": "Models.PMF.NutrientPoolStates, Models",
+                      "$type": "Models.PMF.NutrientPoolsState, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
                       "Total": 0.0,
-                      "Name": "NutrientPoolStates",
+                      "Name": "NutrientPoolsState",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -4438,113 +4930,28 @@
                     },
                     {
                       "$type": "Models.PMF.NutrientProportionFunctions, Models",
-                      "Name": "PoolProportions",
+                      "Name": "PoolFractions",
                       "Children": [
                         {
-                          "$type": "Models.Functions.DivideFunction, Models",
+                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
                           "Name": "Structural",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].Nitrogen.ConcFunctions.Minimum",
-                              "Name": "MinNConc",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].Nitrogen.ConcFunctions.Maximum",
-                              "Name": "MaxNConc",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.SubtractFunction, Models",
+                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
                           "Name": "Metabolic",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "Critical",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].Nitrogen.ConcFunctions.Critical",
-                                  "Name": "MinNConc",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Root].Nitrogen.ConcFunctions.Maximum",
-                                  "Name": "MaxNConc",
-                                  "Children": [],
-                                  "IncludeInDocumentation": true,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].Carbon.PoolProportions.Structural",
-                              "Name": "Structural",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.SubtractFunction, Models",
+                          "$type": "Models.PMF.CalculateCarbonFractionFromNConc, Models",
                           "Name": "Storage",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 1.0,
-                              "Units": null,
-                              "Name": "One",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].Carbon.PoolProportions.Structural",
-                              "Name": "Structural",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Root].Carbon.PoolProportions.Metabolic",
-                              "Name": "Metabolic",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
@@ -4565,12 +4972,12 @@
                     "$type": "Models.PMF.OrganNutrientSupplies, Models",
                     "Fixation": 0.0,
                     "ReAllocation": {
-                      "$type": "Models.PMF.NutrientPoolStates, Models",
+                      "$type": "Models.PMF.NutrientPoolsState, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
                       "Total": 0.0,
-                      "Name": "NutrientPoolStates",
+                      "Name": "NutrientPoolsState",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -4578,12 +4985,12 @@
                     },
                     "Uptake": 0.0,
                     "ReTranslocation": {
-                      "$type": "Models.PMF.NutrientPoolStates, Models",
+                      "$type": "Models.PMF.NutrientPoolsState, Models",
                       "Structural": 0.0,
                       "Storage": 0.0,
                       "Metabolic": 0.0,
                       "Total": 0.0,
-                      "Name": "NutrientPoolStates",
+                      "Name": "NutrientPoolsState",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -5220,12 +5627,12 @@
                 "[Petiole].Dead"
               ],
               "Weight": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
@@ -5239,48 +5646,48 @@
               "PConc": 0.0,
               "KConc": 0.0,
               "Carbon": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
                 "ReadOnly": false
               },
               "Nitrogen": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
                 "ReadOnly": false
               },
               "Phosphorus": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
                 "ReadOnly": false
               },
               "Potassium": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
@@ -5300,12 +5707,12 @@
                 "[Root].Dead"
               ],
               "Weight": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
@@ -5319,48 +5726,48 @@
               "PConc": 0.0,
               "KConc": 0.0,
               "Carbon": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
                 "ReadOnly": false
               },
               "Nitrogen": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
                 "ReadOnly": false
               },
               "Phosphorus": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
                 "ReadOnly": false
               },
               "Potassium": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
@@ -5386,12 +5793,12 @@
                 "[Root].Dead"
               ],
               "Weight": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
@@ -5405,48 +5812,48 @@
               "PConc": 0.0,
               "KConc": 0.0,
               "Carbon": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
                 "ReadOnly": false
               },
               "Nitrogen": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
                 "ReadOnly": false
               },
               "Phosphorus": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
                 "ReadOnly": false
               },
               "Potassium": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
@@ -5468,12 +5875,12 @@
                 "[Root].Live"
               ],
               "Weight": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
@@ -5487,48 +5894,48 @@
               "PConc": 0.0,
               "KConc": 0.0,
               "Carbon": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
                 "ReadOnly": false
               },
               "Nitrogen": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
                 "ReadOnly": false
               },
               "Phosphorus": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
                 "ReadOnly": false
               },
               "Potassium": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
@@ -5550,12 +5957,12 @@
                 "[Root].Dead"
               ],
               "Weight": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
@@ -5569,48 +5976,48 @@
               "PConc": 0.0,
               "KConc": 0.0,
               "Carbon": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
                 "ReadOnly": false
               },
               "Nitrogen": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
                 "ReadOnly": false
               },
               "Phosphorus": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
                 "ReadOnly": false
               },
               "Potassium": {
-                "$type": "Models.PMF.NutrientPoolStates, Models",
+                "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
                 "Storage": 0.0,
                 "Metabolic": 0.0,
                 "Total": 0.0,
-                "Name": "NutrientPoolStates",
+                "Name": "NutrientPoolsState",
                 "Children": [],
                 "IncludeInDocumentation": true,
                 "Enabled": true,
