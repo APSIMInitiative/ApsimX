@@ -7,6 +7,15 @@ using System.Reflection;
 namespace APSIM.Services.Documentation
 {
     /// <summary>A tag which displays an image.</summary>
+    /// <remarks>
+    /// todo: implement image captions:
+    /// - Write tests first
+    /// - Add caption property (private setter)
+    /// - Add extra constructor
+    /// - After appending image, if caption not null/empty,
+    ///   bump renderer's figure count, and write figure
+    ///   number and caption to new paragraph
+    /// </remarks>
     public class Image : ITag
     {
         private System.Drawing.Image raster;
@@ -20,7 +29,6 @@ namespace APSIM.Services.Documentation
             if (string.IsNullOrWhiteSpace(resourceName))
                 throw new InvalidOperationException("Unable to load image: resource name not specified");
             return LoadFromResource(resourceName);
-
         }
 
         /// <summary>

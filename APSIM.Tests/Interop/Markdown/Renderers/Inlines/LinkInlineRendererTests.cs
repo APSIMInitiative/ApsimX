@@ -281,5 +281,83 @@ namespace APSIM.Tests.Interop.Markdown.Renderers.Inlines
             }
             Assert.AreEqual(2, document.LastSection.Elements.Count);
         }
+
+        /// <summary>
+        /// Ensure that the figure count is incremeneted by the renderer.
+        /// </summary>
+        [Test]
+        public void EnsureFigureCountIsBumped()
+        {
+            Assert.AreEqual(0, pdfBuilder.FigureNumber);
+            pdfBuilder.AppendText("Not be in same paragraph as image", TextStyle.Normal);
+            inline.IsImage = true;
+            inline.AppendChild(new LiteralInline("Alt text"));
+            using (Image image = new Bitmap(4, 4))
+            {
+                Mock<LinkInlineRenderer> renderer = new Mock<LinkInlineRenderer>(null);
+                renderer.CallBase = true;
+                renderer.Setup(r => r.GetImage(It.IsAny<string>())).Returns(image);
+                renderer.Object.Write(pdfBuilder, inline);
+            }
+            Assert.AreEqual(1, pdfBuilder.FigureNumber);
+        }
+
+        /// <summary>
+        /// Ensure that the figure count is not incremented if the image
+        /// inline doesn't have any children (ie no alt text).
+        /// </summary>
+        [Test]
+        public void EnsureFigureCountNotBumpedIfNoChildren()
+        {
+            Assert.AreEqual(0, pdfBuilder.FigureNumber);
+            pdfBuilder.AppendText("Not be in same paragraph as image", TextStyle.Normal);
+            inline.IsImage = true;
+            using (Image image = new Bitmap(4, 4))
+            {
+                Mock<LinkInlineRenderer> renderer = new Mock<LinkInlineRenderer>(null);
+                renderer.CallBase = true;
+                renderer.Setup(r => r.GetImage(It.IsAny<string>())).Returns(image);
+                renderer.Object.Write(pdfBuilder, inline);
+            }
+            Assert.AreEqual(0, pdfBuilder.FigureNumber);
+        }
+
+        /// <summary>
+        /// Ensure that the figure number is written in bold, and
+        /// that the alt text is written in a normal text style.
+        /// </summary>
+        [Test]
+        public void TestCaption()
+        {
+            pdfBuilder.AppendText("Not be in same paragraph as image", TextStyle.Normal);
+            inline.IsImage = true;
+            string altText = "alt";
+            inline.AppendChild(new LiteralInline(altText));
+
+            Mock<PdfBuilder> builder = new Mock<PdfBuilder>(document, PdfOptions.Default);
+            builder.Setup(b => b.AppendText(altText, It.IsAny<TextStyle>())).Callback<string, TextStyle>((_, style) => Assert.AreEqual(TextStyle.Normal, style)).CallBase();
+            builder.Setup(b => b.AppendText(It.IsNotIn(altText), It.IsAny<TextStyle>())).Callback<string, TextStyle>((_, style) => Assert.AreEqual(TextStyle.Strong, style)).CallBase();
+
+            using (Image image = new Bitmap(4, 4))
+            {
+                Mock<LinkInlineRenderer> renderer = new Mock<LinkInlineRenderer>(null);
+                renderer.CallBase = true;
+                renderer.Setup(r => r.GetImage(It.IsAny<string>())).Returns(image);
+                renderer.Object.Write(builder.Object, inline);
+            }
+            Assert.AreEqual(2, TestContext.CurrentContext.AssertCount, "Plumbing is broken");
+
+            Assert.AreEqual(2, document.LastSection.Elements.Count);
+            Paragraph caption = (Paragraph)document.LastSection.Elements[1];
+            Assert.AreEqual(2, caption.Elements.Count);
+            FormattedText figureNumber = (FormattedText)caption.Elements[0];
+            FormattedText formattedAltText = (FormattedText)caption.Elements[1];
+
+            Text figureText = (Text)figureNumber.Elements[0];
+            Text insertedAltText = (Text)formattedAltText.Elements[0];
+
+            Assert.AreEqual("Figure 1: ", figureText.Content);
+            Assert.AreEqual(altText, insertedAltText.Content);
+        }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Reflection;
 using APSIM.Shared.Utilities;
 using Markdig.Syntax.Inlines;
@@ -49,7 +50,14 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
                 // The assumption here is that any children of the image are the image's caption.
                 renderer.StartNewParagraph();
 
-                renderer.WriteChildren(link);
+                // Increment heading count, iff the link has a caption.
+                if (link.Any())
+                {
+                    renderer.IncrementFigureNumber();
+                    renderer.AppendText($"Figure {renderer.FigureNumber}: ", TextStyle.Strong);
+                    renderer.WriteChildren(link);
+                    renderer.StartNewParagraph();
+                }
             }
             else
             {

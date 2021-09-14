@@ -550,6 +550,18 @@ namespace APSIM.Tests.Interop
         }
 
         /// <summary>
+        /// Ensure that <see cref="PdfBuilder.IncrementFigureNumber()"/>
+        /// works as expected.
+        /// </summary>
+        [Test]
+        public void TestIncrementFigureCount()
+        {
+            Assert.AreEqual(0, builder.FigureNumber);
+            builder.IncrementFigureNumber();
+            Assert.AreEqual(1, builder.FigureNumber);
+        }
+
+        /// <summary>
         /// Ensure that <see cref="PdfBuilder.GetPageSize(out double, out double)"/>
         /// returns the correct width and height in pixels.
         /// </summary>

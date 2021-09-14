@@ -193,6 +193,11 @@ namespace APSIM.Interop.Markdown.Renderers
         private Dictionary<string, ICitation> references = new Dictionary<string, ICitation>();
 
         /// <summary>
+        /// Number of figures in the document.
+        /// </summary>
+        internal uint FigureNumber { get; private set; } = 0;
+
+        /// <summary>
         /// Create a <see cref="PdfBuilder" /> instance.
         /// </summary>
         /// <param name="doc"></param>
@@ -804,6 +809,14 @@ namespace APSIM.Interop.Markdown.Renderers
         {
             ITagRenderer tagRenderer = GetTagRenderer(tag);
             tagRenderer.Render(tag, this);
+        }
+
+        /// <summary>
+        /// Increment the figure count.
+        /// </summary>
+        public void IncrementFigureNumber()
+        {
+            FigureNumber++;
         }
 
         /// <summary>
