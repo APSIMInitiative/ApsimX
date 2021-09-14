@@ -291,14 +291,7 @@ namespace APSIM.Interop.Markdown.Renderers
         /// </remarks>
         public virtual void SetLinkState(string linkUri)
         {
-            if (linkState != null)
-                throw new NotImplementedException("Nested links are not supported.");
-            linkState = new Link()
-            {
-                Uri = linkUri,
-                // todo: Implement other link types (ie local files)
-                LinkObject = GetLastParagraph().AddHyperlink(linkUri, HyperlinkType.Web)
-            };
+            SetLinkState(linkUri, HyperlinkType.Web);
         }
 
         /// <summary>
@@ -396,6 +389,26 @@ namespace APSIM.Interop.Markdown.Renderers
         }
 
         /// <summary>
+        /// Set the current link state. It is an error to call this if the
+        /// link state is already set (ie in the case of nested links).
+        /// Every call to <see cref="SetLinkState"/> *must* have a matching call to
+        /// <see cref="ClearLinkState"/>.
+        /// </summary>
+        /// <param name="linkUri">Link URI.</param>
+        /// <param name="linkType">Type of hyperlink to be created.</param>
+        private void SetLinkState(string linkUri, HyperlinkType linkType)
+        {
+            if (linkState != null)
+                throw new NotImplementedException("Nested links are not supported.");
+            linkState = new Link()
+            {
+                Uri = linkUri,
+                // todo: Implement other link types (ie local files)
+                LinkObject = GetLastParagraph().AddHyperlink(linkUri, linkType)
+            };
+        }
+
+        /// <summary>
         /// Increment the topmost heading index.
         /// </summary>
         private void IncrementHeadingIndex()
@@ -471,7 +484,7 @@ namespace APSIM.Interop.Markdown.Renderers
                 // Don't link to the citation's URL. Always link to the full citation
                 // in the bibliography, which may in turn link to the citation's
                 // external URL (if it has one).
-                SetLinkState($"#{text}");
+                SetLinkState(text, HyperlinkType.Bookmark);
 
                 // Insert the citation's in-text version.
                 AppendText(citation.InTextCite, textStyle);

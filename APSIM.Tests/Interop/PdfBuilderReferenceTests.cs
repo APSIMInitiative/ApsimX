@@ -117,6 +117,21 @@ namespace APSIM.Tests.Interop.Documentation
         }
 
         /// <summary>
+        /// Ensure that <see cref="PdfBuilder.AppendReference(string, TextStyle)"/>
+        /// creates a bookmark link, rather than a web link.
+        /// </summary>
+        [Test]
+        public void TestLinkType()
+        {
+            string name = "reference";
+            AddCitation(name);
+            builder.AppendReference(name, TextStyle.Normal);
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements[0];
+            Hyperlink link = (Hyperlink)paragraph.Elements[0];
+            Assert.AreEqual(HyperlinkType.Bookmark, link.Type);
+        }
+
+        /// <summary>
         /// Ensure that we use the citation's in-text property as the text
         /// for the created hyperlink.
         /// </summary>
