@@ -1,4 +1,4 @@
-﻿namespace Models.PMF.Organs
+﻿namespace Models.PMF
 {
     using Models.Core;
     using Models.Functions;
@@ -7,6 +7,7 @@
     using System;
     using Newtonsoft.Json;
     using APSIM.Shared.Utilities;
+    using Models.PMF.Organs;
 
     /// <summary>
     /// This organ is simulated using a  organ type.  It provides the core functions of intercepting radiation

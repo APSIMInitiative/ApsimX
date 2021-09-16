@@ -1,13 +1,14 @@
-﻿namespace Models.PMF.Organs
+﻿namespace Models.PMF
 {
-    using Core;
-    using Functions;
-    using Interfaces;
+    using APSIM.Shared.Utilities;
+    using Models.Core;
+    using Models.Functions;
+    using Models.PMF.Interfaces;
+    using Models.PMF.Organs;
+    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
-    using PMF;
-    using Newtonsoft.Json;
-
+    using System.Linq;
 
     /// <summary>
     /// This is the basic organ class that contains biomass structures and transfers
@@ -59,9 +60,9 @@
             //thresholds = new NutrientConcentrationFunctions();
             Supplies = new OrganNutrientSupplies();
             SuppliesAllocated = new OrganNutrientSupplies();
-            Demands = new NutrientPoolsState(0, 0, 0);
-            PriorityScaledDemand = new NutrientPoolsState(0, 0, 0);
-            DemandsAllocated = new NutrientPoolsState(0, 0, 0);
+            Demands = new NutrientPoolsState(0, 0, 0, null);
+            PriorityScaledDemand = new NutrientPoolsState(0, 0, 0, null);
+            DemandsAllocated = new NutrientPoolsState(0, 0, 0, null);
         }
 
         ///4. Public Events And Enums
@@ -104,7 +105,8 @@
                 NutrientPoolsState outstanding = new NutrientPoolsState(
                 Demands.Structural - DemandsAllocated.Structural,
                 Demands.Metabolic - DemandsAllocated.Metabolic,
-                Demands.Storage - DemandsAllocated.Storage);
+                Demands.Storage - DemandsAllocated.Storage,
+                null);
                 return outstanding;
             }
         }
@@ -130,7 +132,8 @@
             NutrientPoolsState returns = new NutrientPoolsState(
             ThrowIfNegative(functions.Structural),
             ThrowIfNegative(functions.Metabolic),
-            ThrowIfNegative(functions.Storage));
+            ThrowIfNegative(functions.Storage),
+            null);
             return returns;
         }
 
@@ -159,15 +162,17 @@
                 Demands = new NutrientPoolsState(
                 (ThrowIfNegative(demandFunctions.Structural) / dMCE),
                 (ThrowIfNegative(demandFunctions.Metabolic) / dMCE),
-                (ThrowIfNegative(demandFunctions.Storage) / dMCE));
+                (ThrowIfNegative(demandFunctions.Storage) / dMCE),
+                null);
                 PriorityScaledDemand = new NutrientPoolsState(
                 demandFunctions.Structural.Value() * demandFunctions.QStructuralPriority.Value(),
                 demandFunctions.Metabolic.Value() * demandFunctions.QMetabolicPriority.Value(),
-                demandFunctions.Storage.Value() * demandFunctions.QStoragePriority.Value());
+                demandFunctions.Storage.Value() * demandFunctions.QStoragePriority.Value(),
+                null);
             }
             else
             { // Conversion efficiency is zero!!!!
-                Demands = new NutrientPoolsState(0, 0, 0);
+                Demands = new NutrientPoolsState(0, 0, 0, null);
             }
         }
 
@@ -200,7 +205,7 @@
             // Deltas = new OrganResourceStates();
             // Live = new ResourcePools();
             //  Dead = new ResourcePools();
-            ConcentrationOrFraction = new NutrientPoolsState(0,0,0);
+            ConcentrationOrFraction = new NutrientPoolsState(0, 0, 0, null);
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
@@ -224,4 +229,5 @@
             }
         }
     }
+
 }

@@ -216,7 +216,8 @@
                 NutrientPoolsState concentrationOrProportion = new NutrientPoolsState(
                 Minimum.Value(),
                 Critical.Value(),
-                Maximum.Value());
+                Maximum.Value(),
+                null);
                 return concentrationOrProportion;
             }
         }
@@ -254,7 +255,8 @@
                 NutrientPoolsState concentrationOrProportion = new NutrientPoolsState(
                     Structural.Value(),
                     Metabolic.Value(),
-                    Storage.Value());
+                    Storage.Value(),
+                    null);
                 return concentrationOrProportion;
             }
         }

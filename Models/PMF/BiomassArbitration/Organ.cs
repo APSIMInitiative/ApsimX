@@ -1,4 +1,4 @@
-﻿namespace Models.PMF.Organs
+﻿namespace Models.PMF
 {
     using APSIM.Shared.Utilities;
     using Core;
@@ -10,6 +10,42 @@
     using System.Collections.Generic;
     using Newtonsoft.Json;
     using PMF;
+
+    /// <summary>
+    /// An interface that defines what needs to be implemented by an organ
+    /// </summary>
+    public interface IAmOrganHearMeRoar
+    {
+        //<summary>The Carbon Element</summary>
+        //OrganNutrientDelta Carbon { get; }
+
+        //<summary>The Carbon Element</summary>
+        //OrganNutrientDelta Nitrogen { get; }
+
+        /// <summary>Gets the total biomass</summary>
+        OrganNutrientsState Total { get; }
+
+        /// <summary>Gets the live biomass</summary>
+        OrganNutrientsState Live { get; }
+
+        /// <summary>Gets the live biomass</summary>
+        OrganNutrientsState Dead { get; }
+
+        /// <summary>Gets the senescence rate</summary>
+        double senescenceRate { get; }
+
+        /// <summary>Gets the DMConversion efficiency</summary>
+        double dmConversionEfficiency { get; }
+        /// <summary>Gets the biomass allocated (represented actual growth)</summary>
+        OrganNutrientsState Allocated { get; }
+
+        /// <summary>Gets the biomass allocated (represented actual growth)</summary>
+        OrganNutrientsState Senesced { get; }
+
+        /// <summary> get the organs uptake object if it has one </summary>
+        IWaterNitrogenUptake WaterNitrogenUptakeObject { get; }
+    }
+
     /// <summary>
     /// This is the basic organ class that contains biomass structures and transfers
     /// </summary>
@@ -84,6 +120,9 @@
 
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double tolerence = 1e-12;
+
+        private double startLiveWt { get; set; }
+        private double startLiveN { get; set; }
 
 
         ///3. The Constructor
@@ -307,15 +346,15 @@
                 NutrientPoolsState initC = new NutrientPoolsState(
                     InitialWt.Value() * Cconc * Carbon.ConcentrationOrFraction.Structural,
                     InitialWt.Value() * Cconc * Carbon.ConcentrationOrFraction.Metabolic,
-                    InitialWt.Value() * Cconc * Carbon.ConcentrationOrFraction.Storage);
-                Live.Carbon.SetTo(initC);
-                Live.UpdateProperties();
+                    InitialWt.Value() * Cconc * Carbon.ConcentrationOrFraction.Storage,
+                    null);
+                Live.Carbon.SetTo(initC, Live);
                 NutrientPoolsState initN = new NutrientPoolsState(
                     Live.Weight.Total * Nitrogen.ConcentrationOrFraction.Structural,
                     Live.Weight.Total * (Nitrogen.ConcentrationOrFraction.Metabolic - Nitrogen.ConcentrationOrFraction.Structural),
-                    Live.Weight.Total * (Nitrogen.ConcentrationOrFraction.Storage - Nitrogen.ConcentrationOrFraction.Metabolic));
-                Live.Nitrogen.SetTo(initN);
-                Live.UpdateProperties();
+                    Live.Weight.Total * (Nitrogen.ConcentrationOrFraction.Storage - Nitrogen.ConcentrationOrFraction.Metabolic),
+                    null);
+                Live.Nitrogen.SetTo(initN, Live);
 
                 if (RootNetworkObject != null)
                     RootNetworkObject.InitailiseNetwork(Live);
@@ -331,6 +370,8 @@
         {
             if (parentPlant.IsEmerged)
             {
+                startLiveN = Live.N;
+                startLiveWt = Live.Wt;
                 senescenceRate = senescenceRateFunction.Value();
                 dmConversionEfficiency = DMConversionEfficiency.Value();
                 Carbon.SetSuppliesAndDemands();
@@ -344,27 +385,26 @@
         [EventSubscribe("DoActualPlantGrowth")]
         protected void OnDoActualPlantGrowth(object sender, EventArgs e)
         {
-            if (parentPlant.IsAlive)
+            if (parentPlant.IsEmerged)
             {
                 //Calculate biomass to be lost from senescene
-                Senesced.Carbon.SetTo(Live.Carbon * senescenceRate);
-                Senesced.Nitrogen.SetTo(Live.Nitrogen * senescenceRate);
+                Senesced.SetTo(Live * senescenceRate);
                 Live.SubtractDelta(Senesced);
 
                 //Catch the bits that were reallocated and add the bits that wernt into dead.
-                ReAllocated.Carbon.SetTo(Carbon.SuppliesAllocated.ReAllocation);
-                ReAllocated.Nitrogen.SetTo(Nitrogen.SuppliesAllocated.ReAllocation);
+                ReAllocated.Carbon.SetTo(Carbon.SuppliesAllocated.ReAllocation, ReAllocated);
+                ReAllocated.Nitrogen.SetTo(Nitrogen.SuppliesAllocated.ReAllocation, ReAllocated);
                 Senesced.SubtractDelta(ReAllocated);
                 Dead.AddDelta(Senesced);
 
                 //Retranslocate from live pools
-                ReTranslocated.Carbon.SetTo(Carbon.SuppliesAllocated.ReTranslocation);
-                ReTranslocated.Nitrogen.SetTo(Nitrogen.SuppliesAllocated.ReTranslocation);
+                ReTranslocated.Carbon.SetTo(Carbon.SuppliesAllocated.ReTranslocation,ReTranslocated);
+                ReTranslocated.Nitrogen.SetTo(Nitrogen.SuppliesAllocated.ReTranslocation,ReTranslocated);
                 Live.SubtractDelta(ReTranslocated);
 
                 //Add in todays fresh allocation
-                Allocated.Carbon.SetTo(Carbon.DemandsAllocated);
-                Allocated.Nitrogen.SetTo(Nitrogen.DemandsAllocated);
+                Allocated.Carbon.SetTo(Carbon.DemandsAllocated, Allocated);
+                Allocated.Nitrogen.SetTo(Nitrogen.DemandsAllocated, Allocated);
                 Live.AddDelta(Allocated);
 
                 // Do detachment
@@ -388,14 +428,19 @@
                    // Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
                 }
 
-                updateProperties();
                 if (RootNetworkObject != null)
                 {
                     RootNetworkObject.PartitionBiomassThroughSoil(ReAllocated, ReTranslocated, Allocated, Senesced, Detached, LiveRemoved, DeadRemoved);
                     RootNetworkObject.GrowRootDepth();
                 }
 
-                
+              /*  double nBal = Math.Abs(Live.N - (startLiveN + Allocated.N - Senesced.N - ReAllocated.N - ReTranslocated.N));
+                if (nBal > tolerence)
+                    throw new Exception("N mass balance violation");
+                double cBal = Math.Abs(Live.Wt - (startLiveWt + Allocated.Wt - Senesced.Wt - ReAllocated.Wt - ReTranslocated.Wt));
+                if (cBal > tolerence)
+                    throw new Exception("mass balance violation");*/
+
             }
         }
 
@@ -415,7 +460,8 @@
             Clear();
         }
 
-        private void updateProperties()
+        /// <summary> Update properties </summary>
+        public void UpdateProperties()
         {
             MaxNconc = Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Storage : 0;
             MinNconc = Nitrogen.ConcentrationOrFraction != null ? Nitrogen.ConcentrationOrFraction.Structural : 0;

@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 300,
   "Version": 141,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -96,7 +96,7 @@
             "[FodderBeet].Root.Nconc",
             "[FodderBeet].Root.Network.Depth",
             "[FodderBeet].Root.Network.WaterUptake",
-            "[FodderBeet].SCS",
+            "//[FodderBeet].SCS",
             "[FodderBeet].SowingData.Cultivar",
             "[FodderBeet].StorageRoot.Nitrogen.ConcentrationOrFraction.Metabolic",
             "[FodderBeet].StorageRoot.Live.N",
@@ -740,24 +740,14 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Organs.Organ, Models",
+              "$type": "Models.PMF.Organ, Models",
               "RootNetworkObject": null,
               "Cconc": 0.4,
               "IsAboveGround": true,
               "Live": {
                 "$type": "Models.PMF.OrganNutrientsState, Models",
-                "Weight": {
-                  "$type": "Models.PMF.NutrientPoolsState, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Total": 0.0,
-                  "Name": "NutrientPoolsState",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
+                "parentOrgan": null,
+                "Weight": null,
                 "Wt": 0.0,
                 "N": 0.0,
                 "P": 0.0,
@@ -822,18 +812,8 @@
               },
               "Dead": {
                 "$type": "Models.PMF.OrganNutrientsState, Models",
-                "Weight": {
-                  "$type": "Models.PMF.NutrientPoolsState, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Total": 0.0,
-                  "Name": "NutrientPoolsState",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
+                "parentOrgan": null,
+                "Weight": null,
                 "Wt": 0.0,
                 "N": 0.0,
                 "P": 0.0,
@@ -911,7 +891,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
+                  "$type": "Models.PMF.OrganNutrientDelta, Models",
                   "Supplies": {
                     "$type": "Models.PMF.OrganNutrientSupplies, Models",
                     "Fixation": 0.0,
@@ -1237,7 +1217,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
+                  "$type": "Models.PMF.OrganNutrientDelta, Models",
                   "Supplies": {
                     "$type": "Models.PMF.OrganNutrientSupplies, Models",
                     "Fixation": 0.0,
@@ -1549,9 +1529,9 @@
                                   "Y": [
                                     0.0,
                                     0.0,
-                                    0.6,
-                                    0.7,
-                                    0.8
+                                    1.0,
+                                    1.0,
+                                    1.0
                                   ],
                                   "Name": "XYPairs",
                                   "Children": [],
@@ -1749,24 +1729,14 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Organs.Organ, Models",
+              "$type": "Models.PMF.Organ, Models",
               "RootNetworkObject": null,
               "Cconc": 0.4,
               "IsAboveGround": true,
               "Live": {
                 "$type": "Models.PMF.OrganNutrientsState, Models",
-                "Weight": {
-                  "$type": "Models.PMF.NutrientPoolsState, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Total": 0.0,
-                  "Name": "NutrientPoolsState",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
+                "parentOrgan": null,
+                "Weight": null,
                 "Wt": 0.0,
                 "N": 0.0,
                 "P": 0.0,
@@ -1831,18 +1801,8 @@
               },
               "Dead": {
                 "$type": "Models.PMF.OrganNutrientsState, Models",
-                "Weight": {
-                  "$type": "Models.PMF.NutrientPoolsState, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Total": 0.0,
-                  "Name": "NutrientPoolsState",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
+                "parentOrgan": null,
+                "Weight": null,
                 "Wt": 0.0,
                 "N": 0.0,
                 "P": 0.0,
@@ -2079,7 +2039,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
+                  "$type": "Models.PMF.OrganNutrientDelta, Models",
                   "Supplies": {
                     "$type": "Models.PMF.OrganNutrientSupplies, Models",
                     "Fixation": 0.0,
@@ -2405,7 +2365,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
+                  "$type": "Models.PMF.OrganNutrientDelta, Models",
                   "Supplies": {
                     "$type": "Models.PMF.OrganNutrientSupplies, Models",
                     "Fixation": 0.0,
@@ -2761,7 +2721,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.EnergyBalance, Models",
+                  "$type": "Models.PMF.EnergyBalance, Models",
                   "Albedo": 0.2,
                   "Gsmax350": 0.02,
                   "R50": 150.0,
@@ -3061,16 +3021,6 @@
                       "$type": "Models.Memo, Models",
                       "Text": "DeltaLAI describes the LAI variation over the cycle and is calculated using the Area of Largest Leaf, relative leaf area, plant number, branch number and leaf appearance rate (thermal time/phyllochron).",
                       "Name": "Memo1",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.4,
-                      "Units": null,
-                      "Name": "Constant",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -3543,7 +3493,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.01,
+                  "FixedValue": 0.025,
                   "Units": null,
                   "Name": "AreaLargestLeaf",
                   "Children": [],
@@ -3663,24 +3613,14 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Organs.Organ, Models",
+              "$type": "Models.PMF.Organ, Models",
               "RootNetworkObject": null,
               "Cconc": 0.4,
               "IsAboveGround": true,
               "Live": {
                 "$type": "Models.PMF.OrganNutrientsState, Models",
-                "Weight": {
-                  "$type": "Models.PMF.NutrientPoolsState, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Total": 0.0,
-                  "Name": "NutrientPoolsState",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
+                "parentOrgan": null,
+                "Weight": null,
                 "Wt": 0.0,
                 "N": 0.0,
                 "P": 0.0,
@@ -3745,18 +3685,8 @@
               },
               "Dead": {
                 "$type": "Models.PMF.OrganNutrientsState, Models",
-                "Weight": {
-                  "$type": "Models.PMF.NutrientPoolsState, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Total": 0.0,
-                  "Name": "NutrientPoolsState",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
+                "parentOrgan": null,
+                "Weight": null,
                 "Wt": 0.0,
                 "N": 0.0,
                 "P": 0.0,
@@ -3834,7 +3764,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
+                  "$type": "Models.PMF.OrganNutrientDelta, Models",
                   "Supplies": {
                     "$type": "Models.PMF.OrganNutrientSupplies, Models",
                     "Fixation": 0.0,
@@ -4117,7 +4047,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
+                  "$type": "Models.PMF.OrganNutrientDelta, Models",
                   "Supplies": {
                     "$type": "Models.PMF.OrganNutrientSupplies, Models",
                     "Fixation": 0.0,
@@ -4583,24 +4513,14 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.Organs.Organ, Models",
+              "$type": "Models.PMF.Organ, Models",
               "RootNetworkObject": null,
               "Cconc": 0.4,
               "IsAboveGround": false,
               "Live": {
                 "$type": "Models.PMF.OrganNutrientsState, Models",
-                "Weight": {
-                  "$type": "Models.PMF.NutrientPoolsState, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Total": 0.0,
-                  "Name": "NutrientPoolsState",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
+                "parentOrgan": null,
+                "Weight": null,
                 "Wt": 0.0,
                 "N": 0.0,
                 "P": 0.0,
@@ -4665,18 +4585,8 @@
               },
               "Dead": {
                 "$type": "Models.PMF.OrganNutrientsState, Models",
-                "Weight": {
-                  "$type": "Models.PMF.NutrientPoolsState, Models",
-                  "Structural": 0.0,
-                  "Storage": 0.0,
-                  "Metabolic": 0.0,
-                  "Total": 0.0,
-                  "Name": "NutrientPoolsState",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
+                "parentOrgan": null,
+                "Weight": null,
                 "Wt": 0.0,
                 "N": 0.0,
                 "P": 0.0,
@@ -4754,7 +4664,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
+                  "$type": "Models.PMF.OrganNutrientDelta, Models",
                   "Supplies": {
                     "$type": "Models.PMF.OrganNutrientSupplies, Models",
                     "Fixation": 0.0,
@@ -5037,7 +4947,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.OrganNutrientDelta, Models",
+                  "$type": "Models.PMF.OrganNutrientDelta, Models",
                   "Supplies": {
                     "$type": "Models.PMF.OrganNutrientSupplies, Models",
                     "Fixation": 0.0,
@@ -5326,7 +5236,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.Organs.RootNetwork, Models",
+                  "$type": "Models.PMF.RootNetwork, Models",
                   "Name": "Network",
                   "Children": [
                     {
@@ -5493,12 +5403,10 @@
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
                             0.0,
-                            100.0,
-                            150.0
+                            1000.0
                           ],
                           "Y": [
-                            100.0,
-                            100.0,
+                            0.0,
                             100.0
                           ],
                           "Name": "XYPairs",
@@ -5518,7 +5426,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Root].Network.Depth",
+                          "VariableName": "[Root].Wt",
                           "Name": "XValue",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -5547,7 +5455,7 @@
                 },
                 {
                   "$type": "Models.Functions.DemandFunctions.AllometricDemandFunction, Models",
-                  "Const": 0.5,
+                  "Const": 1.0,
                   "Power": 1.0,
                   "Name": "TotalDMDemand",
                   "Children": [
@@ -5687,6 +5595,7 @@
             },
             {
               "$type": "Models.PMF.CompositeStates, Models",
+              "parentOrgan": null,
               "CarbonConcentration": 0.4,
               "Propertys": [
                 "[Leaf].Live",
@@ -5696,18 +5605,7 @@
                 "[Petiole].Live",
                 "[Petiole].Dead"
               ],
-              "Weight": {
-                "$type": "Models.PMF.NutrientPoolsState, Models",
-                "Structural": 0.0,
-                "Storage": 0.0,
-                "Metabolic": 0.0,
-                "Total": 0.0,
-                "Name": "NutrientPoolsState",
-                "Children": [],
-                "IncludeInDocumentation": true,
-                "Enabled": true,
-                "ReadOnly": false
-              },
+              "Weight": null,
               "Wt": 0.0,
               "N": 0.0,
               "P": 0.0,
@@ -5771,23 +5669,13 @@
             },
             {
               "$type": "Models.PMF.CompositeStates, Models",
+              "parentOrgan": null,
               "CarbonConcentration": 0.4,
               "Propertys": [
                 "[Root].Live",
                 "[Root].Dead"
               ],
-              "Weight": {
-                "$type": "Models.PMF.NutrientPoolsState, Models",
-                "Structural": 0.0,
-                "Storage": 0.0,
-                "Metabolic": 0.0,
-                "Total": 0.0,
-                "Name": "NutrientPoolsState",
-                "Children": [],
-                "IncludeInDocumentation": true,
-                "Enabled": true,
-                "ReadOnly": false
-              },
+              "Weight": null,
               "Wt": 0.0,
               "N": 0.0,
               "P": 0.0,
@@ -5851,6 +5739,7 @@
             },
             {
               "$type": "Models.PMF.CompositeStates, Models",
+              "parentOrgan": null,
               "CarbonConcentration": 0.4,
               "Propertys": [
                 "[Leaf].Live",
@@ -5862,18 +5751,7 @@
                 "[Root].Live",
                 "[Root].Dead"
               ],
-              "Weight": {
-                "$type": "Models.PMF.NutrientPoolsState, Models",
-                "Structural": 0.0,
-                "Storage": 0.0,
-                "Metabolic": 0.0,
-                "Total": 0.0,
-                "Name": "NutrientPoolsState",
-                "Children": [],
-                "IncludeInDocumentation": true,
-                "Enabled": true,
-                "ReadOnly": false
-              },
+              "Weight": null,
               "Wt": 0.0,
               "N": 0.0,
               "P": 0.0,
@@ -5937,6 +5815,7 @@
             },
             {
               "$type": "Models.PMF.CompositeStates, Models",
+              "parentOrgan": null,
               "CarbonConcentration": 0.4,
               "Propertys": [
                 "[Leaf].Live",
@@ -5944,18 +5823,7 @@
                 "[StorageRoot].Live",
                 "[Root].Live"
               ],
-              "Weight": {
-                "$type": "Models.PMF.NutrientPoolsState, Models",
-                "Structural": 0.0,
-                "Storage": 0.0,
-                "Metabolic": 0.0,
-                "Total": 0.0,
-                "Name": "NutrientPoolsState",
-                "Children": [],
-                "IncludeInDocumentation": true,
-                "Enabled": true,
-                "ReadOnly": false
-              },
+              "Weight": null,
               "Wt": 0.0,
               "N": 0.0,
               "P": 0.0,
@@ -6019,6 +5887,7 @@
             },
             {
               "$type": "Models.PMF.CompositeStates, Models",
+              "parentOrgan": null,
               "CarbonConcentration": 0.4,
               "Propertys": [
                 "[Leaf].Dead",
@@ -6026,18 +5895,7 @@
                 "[StorageRoot].Dead",
                 "[Root].Dead"
               ],
-              "Weight": {
-                "$type": "Models.PMF.NutrientPoolsState, Models",
-                "Structural": 0.0,
-                "Storage": 0.0,
-                "Metabolic": 0.0,
-                "Total": 0.0,
-                "Name": "NutrientPoolsState",
-                "Children": [],
-                "IncludeInDocumentation": true,
-                "Enabled": true,
-                "ReadOnly": false
-              },
+              "Weight": null,
               "Wt": 0.0,
               "N": 0.0,
               "P": 0.0,
@@ -6143,7 +6001,7 @@
                   "Name": "Storage",
                   "Children": [],
                   "IncludeInDocumentation": true,
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -6152,7 +6010,7 @@
                   "Name": "Metabolic",
                   "Children": [],
                   "IncludeInDocumentation": true,
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -6161,12 +6019,12 @@
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": true,
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -17557,7 +17415,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "lincoln.met",
+              "FileName": "C:\\GitHubRepos\\ApsimX\\Tests\\Validation\\FodderBeet\\lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "Children": [],
@@ -19408,7 +19266,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "lincoln.met",
+                  "FileName": "C:\\GitHubRepos\\ApsimX\\Tests\\Validation\\FodderBeet\\lincoln.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "Children": [],
