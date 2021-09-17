@@ -110,6 +110,8 @@
                 {
                     if (validParent.DropAnywhere)
                         return true;
+                    if (validParent.Exclude)
+                        return false;
 
                     if (validParent.ParentType.IsAssignableFrom(parent.GetType()))
                         return true;

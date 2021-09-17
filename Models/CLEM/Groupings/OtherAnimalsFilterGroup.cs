@@ -15,6 +15,7 @@ namespace Models.CLEM.Groupings
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Selects specific individuals from the other animals")]
     [Version(1, 0, 1, "")]
+    [ValidParent(Exclude = true)]
     public class OtherAnimalsFilterGroup : FilterGroup<OtherAnimalsTypeCohort>
     {
         /// <summary>

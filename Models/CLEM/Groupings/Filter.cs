@@ -12,6 +12,7 @@ namespace Models.CLEM.Groupings
     /// abstract base filter not used on its own
     ///</summary> 
     [Serializable]
+    [ValidParent(Exclude = true)]
     public abstract class Filter : CLEMModel
     {
         /// <inheritdoc/>

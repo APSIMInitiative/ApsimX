@@ -14,6 +14,7 @@ namespace Models.CLEM
     /// Implements IFilterGroup for a specific set of filter parameters
     /// </summary>
     [Serializable]
+    [ValidParent(Exclude = true)]
     public abstract class FilterGroup<TFilter> : CLEMModel, IFilterGroup
         where TFilter : IFilterable
     {

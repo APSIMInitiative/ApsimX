@@ -18,6 +18,7 @@ namespace Models.CLEM.Activities
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This is the Ruminant specific version of the CLEM Activity Base Class and should not be used directly.")]
+    [ValidParent(Exclude = true)]
     public abstract class CLEMRuminantActivityBase : CLEMActivityBase
     {
         private bool reportedRestrictedBreed = false;

@@ -12,6 +12,9 @@
         /// <summary>Allow the model to be dropped anywhere?</summary>
         public bool DropAnywhere { get; set; }
 
+        /// <summary>Do not allow the model to be used. For base models etc</summary>
+        public bool Exclude { get; set; }
+
         /// <summary>
         /// Default constructor.
         /// </summary>

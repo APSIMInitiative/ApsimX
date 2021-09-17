@@ -14,6 +14,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This is the CLEM Resource Base Class and should not be used directly.")]
     [Version(1, 0, 1, "")]
+    [ValidParent(Exclude = true)]
     public class ResourceBaseWithTransactions: CLEMModel
     {
         /// <summary>

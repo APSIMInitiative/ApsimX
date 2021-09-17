@@ -19,6 +19,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This is the CLEM Activity Base Class and should not be used directly.")]
     [Version(1, 0, 1, "")]
+    [ValidParent(Exclude = true)]
     public abstract class CLEMActivityBase: CLEMModel
     {
         /// <summary>
