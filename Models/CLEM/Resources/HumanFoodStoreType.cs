@@ -17,7 +17,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(HumanFoodStore))]
-    [Description("This resource represents a human food store (e.g. milk, eggs, wheat).")]
+    [Description("This resource represents a human food store (e.g. milk, eggs, wheat)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Human food store/HumanFoodStoreType.htm")]
     public class HumanFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType

@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages the breeding of ruminants based upon the current herd filtering.")]
+    [Description("Manages the breeding of ruminants based on the current herd filtering")]
     [Version(1, 0, 8, "Include passing inherited attributes from mating to newborn")]
     [Version(1, 0, 7, "Removed UseAI to a new ControlledMating add-on activity")]
     [Version(1, 0, 6, "Fixed period considered in infering pre simulation conceptions and spread of uncontrolled matings.")]

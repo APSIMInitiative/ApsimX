@@ -15,7 +15,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Finance))]
-    [Description("This resource represents a finance type (e.g. General bank account).")]
+    [Description("This resource represents a finance store (e.g. general bank account)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Finance/FinanceType.htm")]
     public class FinanceType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType

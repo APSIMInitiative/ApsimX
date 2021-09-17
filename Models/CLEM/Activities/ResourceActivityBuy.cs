@@ -19,7 +19,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages the purchase of a specified resource.")]
+    [Description("Perform the purchase of a specified resource")]
     [HelpUri(@"Content/Features/Activities/All resources/BuyResource.htm")]
     [Version(1, 0, 2, "Automatically handles transactions with Marketplace if present")]
     [Version(1, 0, 1, "")]

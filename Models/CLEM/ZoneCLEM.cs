@@ -20,7 +20,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    [Description("This represents all CLEM farm resources and activities")]
+    [Description("The CLEM farm with all associated resources and activities")]
     [HelpUri(@"Content/Features/CLEMComponent.htm")]
     [Version(1, 0, 4, "Random numbers and iteration property moved from this component to a stand-alone component\r\nChanges will be required to your setup")]
     [Version(1, 0, 3, "Updated filtering logic to improve performance")]
@@ -43,7 +43,6 @@ namespace Models.CLEM
         /// <summary>
         /// Multiplier from single farm to regional number of farms for market transactions
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, GreaterThanValue(0)]
         [Description("Farm multiplier to supply and receive from market")]
         public double FarmMultiplier { get; set; }
@@ -52,6 +51,7 @@ namespace Models.CLEM
         /// Index of the simulation Climate Region
         /// </summary>
         [Description("Region id")]
+        [System.ComponentModel.DataAnnotations.Display(Order = -9)]
         public int ClimateRegion { get; set; }
 
         /// <summary>

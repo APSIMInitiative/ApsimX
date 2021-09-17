@@ -20,7 +20,7 @@ namespace Models.CLEM.Groupings
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [Description("An filter component using properties and methods of the individual")]
+    [Description("Defines a filter rule using properties and methods of the individual")]
     [ValidParent(ParentType = typeof(IFilterGroup))]
     [Version(1, 0, 0, "")]
     public class FilterByProperty : Filter, IValidatableObject

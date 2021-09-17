@@ -24,7 +24,7 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This component specifies a crop data file for the CLEM simulation")]
+    [Description("Access to a crop data file")]
     [Version(1, 0, 5, "Fixed problem with passing soil type filter")]
     [Version(1, 0, 4, "Problem with pasture nitrogen allocation resulting in very poor pasture quality now fixed")]
     [Version(1, 0, 3, "Added ability to use Excel spreadsheets with given worksheet name")]

@@ -11,14 +11,13 @@ using System.IO;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Manage crop product activity</summary>
-    /// <summary>This activity sets aside land for the crop</summary>
+    /// <summary>The child of Manage crop to manage a particular product harvested</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageCrop))]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
-    [Description("This activity is used within a crop management activity to obtain production values from the crop file for crop(s) grown")]
+    [Description("Manage a crop product of the parent ManageCrop and obtain production values from the crop file")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Mixed cropping/multiple products implemented")]
     [Version(1, 0, 3, "Added ability to model multiple harvests from crop using Harvest Tags from input file")]

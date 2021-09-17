@@ -23,7 +23,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
-    [Description("This resource group holds all rumiant types (herds or breeds) for the simulation.")]
+    [Description("Resource group for all rumiant types (herds or breeds) in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantHerd.htm")]
     public class RuminantHerd: ResourceBaseWithTransactions

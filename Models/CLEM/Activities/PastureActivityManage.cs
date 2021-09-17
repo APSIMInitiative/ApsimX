@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages a pasture by allocating land, tracking pasture state and ecological indicators and communicating with a pasture production database.")]
+    [Description("Manages a pasture (GrazeFoodStoreType) by allocating land, tracking pasture state and ecological indicators, communicating with a pasture production database")]
     [Version(1, 0, 2, "Now supports generic pasture production data reader")]
     [Version(1, 0, 2, "Added ecological indicator calculations")]
     [Version(1, 0, 1, "")]

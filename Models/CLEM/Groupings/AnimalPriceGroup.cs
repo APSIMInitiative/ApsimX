@@ -20,7 +20,7 @@ namespace Models.CLEM.Groupings
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(AnimalPricing))]
-    [Description("This ruminant price group sets the sale and purchase price for a set group of individuals.")]
+    [Description("Define the sale and purchase price for a specified group of individuals")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Purchase and sales identifier used")]
     [HelpUri(@"Content/Features/Filters/Groups/AnimalPriceGroup.htm")]

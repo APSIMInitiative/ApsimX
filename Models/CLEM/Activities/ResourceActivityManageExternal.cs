@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages the input and output of resources specified in a file")]
+    [Description("Manage the input and output of external resources specified in a file")]
     [HelpUri(@"Content/Features/Activities/All resources/ManageExternalResource.htm")]
     [Version(1, 0, 1, "")]
     public class ResourceActivityManageExternal: CLEMActivityBase
