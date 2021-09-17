@@ -70,13 +70,9 @@ namespace Models.CLEM.Resources
                 htmlWriter.Write("<div class=\"activityentry\">");
                 htmlWriter.Write("Conception is determined by animal condition measured as the ratio of live weight to normalised weight for age.\r\nNo breeding females will concieve if this ratio is below ");
                 if (ConditionCutOff == 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">No set</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"setvalue\">" + ConditionCutOff.ToString("0.0##") + "</span>");
-                }
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 
             }

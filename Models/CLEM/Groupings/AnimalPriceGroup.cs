@@ -24,7 +24,7 @@ namespace Models.CLEM.Groupings
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Purchase and sales identifier used")]
     [HelpUri(@"Content/Features/Filters/Groups/AnimalPriceGroup.htm")]
-    public class AnimalPriceGroup: CLEMModel, IFilterGroup, IResourcePricing, IReportPricingChange
+    public class AnimalPriceGroup : FilterGroup<Ruminant>, IResourcePricing, IReportPricingChange
     {
         /// <summary>
         /// Style of pricing animals
@@ -78,18 +78,6 @@ namespace Models.CLEM.Groupings
                 throw new NotImplementedException();
             }
         }
-
-        /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
-
-        /// <summary>
-        /// Proportion of group to use
-        /// </summary>
-        [JsonIgnore]
-        public double Proportion { get; set; }
 
         /// <inheritdoc/>
         [JsonIgnore]
@@ -250,7 +238,7 @@ namespace Models.CLEM.Groupings
                 if (formatForParentControl)
                 {
                     htmlWriter.Write("<tr><td>" + this.Name + "</td><td>");
-                    if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
+                    if (!(this.FindAllChildren<Filter>().Count() >= 1))
                     {
                         htmlWriter.Write("<div class=\"filter\">All individuals</div>");
                     }
@@ -258,7 +246,7 @@ namespace Models.CLEM.Groupings
                 else
                 {
                     htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                    if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
+                    if (!(this.FindAllChildren<Filter>().Count() >= 1))
                     {
                         htmlWriter.Write("<div class=\"filter\">All individuals</div>");
                     }

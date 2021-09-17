@@ -84,7 +84,7 @@ namespace Models.CLEM.Activities
             {
                 number = 0;
                 foreach (RuminantGroup item in filterGroups)
-                    number += herd.FilterRuminants(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Count();
+                    number += item.Filter(herd).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Count();
             }
             else
                 number = herd.Count();
@@ -155,7 +155,7 @@ namespace Models.CLEM.Activities
 
                     foreach (RuminantGroup item in filterGroups)
                     {
-                        foreach (Ruminant ind in herd.FilterRuminants(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
+                        foreach (Ruminant ind in item.Filter(herd).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
                         {
                             this.Status = (labourShortfall)?ActivityStatus.Partial:ActivityStatus.Success;
                             ind.SaleFlag = changeReason;

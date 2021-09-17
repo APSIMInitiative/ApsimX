@@ -69,9 +69,8 @@ namespace Models.CLEM.Resources
         {
             string html = "";
             if (this.FindAllChildren<AnimalPriceGroup>().Count() >= 1)
-            {
                 html += "</table></div>";
-            }
+
             return html;
         }
 
@@ -80,13 +79,10 @@ namespace Models.CLEM.Resources
         {
             string html = "";
             if (this.FindAllChildren<AnimalPriceGroup>().Count() >= 1)
-            {
                 html += "<div class=\"topspacing\"><table><tr><th>Name</th><th>Filter</th><th>Value</th><th>Style</th><th>Type</th></tr>";
-            }
             else
-            {
                 html += "<span class=\"errorlink\">No Animal Price Groups defined!</span>";
-            }
+
             return html;
         } 
         #endregion

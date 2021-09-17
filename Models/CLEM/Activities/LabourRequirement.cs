@@ -122,7 +122,7 @@ namespace Models.CLEM.Activities
         {
             var results = new List<ValidationResult>();
             // ensure labour resource added
-            Labour lab = Resources.GetResourceGroupByType(typeof(Labour)) as Labour;
+            Labour lab = Resources.FindResource<Labour>();
             if (lab == null)
                 Summary.WriteWarning(this, "[a=" + this.Parent.Name + "][f=" + this.Name + "] No labour resorces in simulation. Labour requirement will be ignored.");
             else

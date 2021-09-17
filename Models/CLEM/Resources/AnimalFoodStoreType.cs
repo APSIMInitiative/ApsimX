@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
+using Models.CLEM.Interfaces;
 using Models.Core.Attributes;
 using System.IO;
 
@@ -90,9 +88,7 @@ namespace Models.CLEM.Resources
         {
             this.amount = 0;
             if (StartingAmount > 0)
-            {
                 Add(StartingAmount, this, NameWithParent, "Starting value");
-            }
         }
 
         #region Transactions
@@ -122,24 +118,27 @@ namespace Models.CLEM.Resources
                     throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
             }
 
-            // update N based on new input added
-            CurrentStoreNitrogen = ((CurrentStoreNitrogen*Amount) + (nAdded * addAmount)) / (Amount + addAmount);
-
-            this.amount += addAmount;
-
-            ResourceTransaction details = new ResourceTransaction
+            if (addAmount > 0)
             {
-                TransactionType = TransactionType.Gain,
-                Amount = addAmount,
-                Activity = activity,
-                RelatesToResource = relatesToResource,
-                Category = category,
-                ResourceType = this
-            };
-            LastTransaction = details;
-            LastGain = addAmount;
-            TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
-            OnTransactionOccurred(te);
+                // update N based on new input added
+                CurrentStoreNitrogen = ((CurrentStoreNitrogen * Amount) + (nAdded * addAmount)) / (Amount + addAmount);
+
+                this.amount += addAmount;
+
+                ResourceTransaction details = new ResourceTransaction
+                {
+                    TransactionType = TransactionType.Gain,
+                    Amount = addAmount,
+                    Activity = activity,
+                    RelatesToResource = relatesToResource,
+                    Category = category,
+                    ResourceType = this
+                };
+                LastTransaction = details;
+                LastGain = addAmount;
+                TransactionEventArgs te = new TransactionEventArgs() { Transaction = details };
+                OnTransactionOccurred(te);
+            }
         }
 
         /// <summary>
@@ -149,15 +148,11 @@ namespace Models.CLEM.Resources
         public new void Remove(ResourceRequest request)
         {
             if (request.Required == 0)
-            {
                 return;
-            }
 
             // if this request aims to trade with a market see if we need to set up details for the first time
             if (request.MarketTransactionMultiplier > 0)
-            {
                 FindEquivalentMarketStore();
-            }
 
             double amountRemoved = request.Required;
             // avoid taking too much
@@ -245,13 +240,10 @@ namespace Models.CLEM.Resources
                 htmlWriter.Write("<div class=\"activityentry\">");
                 htmlWriter.Write("This food has a nitrogen content of <span class=\"setvalue\">" + this.Nitrogen.ToString("0.###") + "%</span>");
                 if (DMD > 0)
-                {
                     htmlWriter.Write(" and a Dry Matter Digesibility of <span class=\"setvalue\">" + this.DMD.ToString("0.###") + "%</span>");
-                }
                 else
-                {
                     htmlWriter.Write(" and a Dry Matter Digesibility estimated from N%");
-                }
+
                 htmlWriter.Write("</div>");
                 if (StartingAmount > 0)
                 {

@@ -1,11 +1,10 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
@@ -56,9 +55,7 @@ namespace Models.CLEM.Resources
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
             if (Cohorts != null)
-            {
                 Cohorts.Clear();
-            }
             Cohorts = null;
         }
 
@@ -125,9 +122,7 @@ namespace Models.CLEM.Resources
         {
             EventHandler invoker = TransactionOccurred;
             if (invoker != null)
-            {
                 invoker(this, e);
-            }
         }
 
         /// <summary>
@@ -146,17 +141,13 @@ namespace Models.CLEM.Resources
         {
             OtherAnimalsTypeCohort cohortToAdd = addIndividuals as OtherAnimalsTypeCohort;
 
-            OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToAdd.Age && a.Gender == cohortToAdd.Gender).FirstOrDefault();
+            OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToAdd.Age && a.Sex == cohortToAdd.Sex).FirstOrDefault();
 
             if (cohortexists == null)
-            {
                 // add new
                 Cohorts.Add(cohortToAdd);
-            }
             else
-            {
                 cohortexists.Number += cohortToAdd.Number;
-            }
 
             LastCohortChanged = cohortToAdd;
             ResourceTransaction details = new ResourceTransaction
@@ -187,7 +178,7 @@ namespace Models.CLEM.Resources
         public void Remove(object removeIndividuals, CLEMModel activity, string reason)
         {
             OtherAnimalsTypeCohort cohortToRemove = removeIndividuals as OtherAnimalsTypeCohort;
-            OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToRemove.Age && a.Gender == cohortToRemove.Gender).First();
+            OtherAnimalsTypeCohort cohortexists = Cohorts.Where(a => a.Age == cohortToRemove.Age && a.Sex == cohortToRemove.Sex).First();
 
             if (cohortexists == null)
             {

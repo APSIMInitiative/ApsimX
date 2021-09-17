@@ -120,8 +120,6 @@ namespace Models.CLEM.Activities
             // Calculate potential intake and reset stores
             // Order age descending so breeder females calculate milkproduction before suckings grow
 
-            DateTime start = DateTime.Now;
-
             foreach (var ind in herd.GroupBy(a => a.Weaned).OrderByDescending(a => a.Key))
             {
                 foreach (var indi in ind)
@@ -134,8 +132,6 @@ namespace Models.CLEM.Activities
                     CalculatePotentialIntake(indi);
                 }
             }
-
-            var diff = DateTime.Now - start;
         }
 
         private void CalculatePotentialIntake(Ruminant ind)
@@ -187,7 +183,7 @@ namespace Models.CLEM.Activities
                     potentialIntake = ind.BreedParams.IntakeCoefficient * liveWeightForIntake * (ind.BreedParams.IntakeIntercept - liveWeightForIntake / standardReferenceWeight);
                 }
 
-                if (ind.Gender == Sex.Female)
+                if (ind.Sex == Sex.Female)
                 {
                     RuminantFemale femaleind = ind as RuminantFemale;
                     // Increase potential intake for lactating breeder
@@ -375,22 +371,14 @@ namespace Models.CLEM.Activities
                 if (unfed > 0)
                 {
                     string warn = $"individuals of [r={breed}] not fed";
-                    if (!Warnings.Exists(warn))
-                    {
-                        string warnfull = $"Some individuals of [r={breed}] were not fed in some months (e.g. [{unfed}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
-                        Summary.WriteWarning(this, warnfull);
-                        Warnings.Add(warn);
-                    }
+                    string warnfull = $"Some individuals of [r={breed}] were not fed in some months (e.g. [{unfed}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
+                    Warnings.CheckAndWrite(warn, Summary, this, warnfull);
                 }
                 if (unfedcalves > 0)
                 {
                     string warn = $"calves of [r={breed}] not fed";
-                    if (!Warnings.Exists(warn))
-                    {
-                        string warnfull = $"Some calves of [r={breed}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
-                        Summary.WriteWarning(this, warnfull);
-                        Warnings.Add(warn);
-                    }
+                    string warnfull = $"Some calves of [r={breed}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
+                    Warnings.CheckAndWrite(warn, Summary, this, warnfull);
                 }
 
                 if (methaneEmissions != null)
@@ -435,7 +423,7 @@ namespace Models.CLEM.Activities
             // Sme 1 for females and castrates
             double sme = 1;
             // Sme 1.15 for all non-castrated males.
-            if (ind.Weaned && ind.Gender == Sex.Male && (ind as RuminantMale).IsCastrated == false)
+            if (ind.Weaned && ind.Sex == Sex.Male && (ind as RuminantMale).IsCastrated == false)
                 sme = 1.15;
 
             double energyDiet = EnergyGross * ind.DietDryMatterDigestibility / 100.0;
@@ -496,7 +484,7 @@ namespace Models.CLEM.Activities
                 double energyMilk = 0;
                 double energyFetus = 0;
 
-                if (ind.Gender == Sex.Female)
+                if (ind.Sex == Sex.Female)
                 {
                     RuminantFemale femaleind = ind as RuminantFemale;
 

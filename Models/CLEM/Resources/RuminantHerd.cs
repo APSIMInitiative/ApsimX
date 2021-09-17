@@ -12,6 +12,7 @@ using System.Globalization;
 using Models.CLEM.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
+using System.Diagnostics;
 
 namespace Models.CLEM.Resources
 {
@@ -57,19 +58,13 @@ namespace Models.CLEM.Resources
         /// The last individual to be added or removed (for reporting)
         /// </summary>
         [JsonIgnore]
-        public object LastIndividualChanged { get; set; }
+        public Ruminant LastIndividualChanged { get; set; }
 
         /// <summary>
         /// The details of an individual for reporting
         /// </summary>
         [JsonIgnore]
         public RuminantReportItemEventArgs ReportIndividual { get; set; }
-
-        /// <summary>
-        /// Statistical summar of a list of numbers (e.g. attribute values)
-        /// </summary>
-        [JsonIgnore]
-        public ListStatistics LastListStatistics { get; set; }
 
         /// <summary>
         /// Get the next unique individual id number
@@ -88,16 +83,12 @@ namespace Models.CLEM.Resources
 
             // for each Ruminant type 
             foreach (RuminantType rType in this.FindAllChildren<RuminantType>())
-            {
                 foreach (RuminantInitialCohorts ruminantCohorts in rType.FindAllChildren<RuminantInitialCohorts>())
-                {
                     foreach (var ind in ruminantCohorts.CreateIndividuals())
                     {
                         ind.SaleFlag = HerdChangeReason.InitialHerd;
                         AddRuminant(ind, this);
                     }
-                }
-            }
 
             // Assign mothers to suckling calves
             foreach (string herdName in Herd.Select(a => a.HerdName).Distinct())
@@ -112,7 +103,7 @@ namespace Models.CLEM.Resources
                     foreach (var sucklingList in sucklingGroups)
                     {
                         // get list of females of breeding age and condition
-                        List<RuminantFemale> breedFemales = herd.OfType<RuminantFemale>().Where(a => a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength + sucklingList.Key && a.Age <= a.BreedParams.MaximumAgeMating && a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.BreedParams.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.Age).ToList();
+                        List<RuminantFemale> breedFemales = herd.OfType<RuminantFemale>().Where(a => a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength + sucklingList.Key && a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.BreedParams.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.Age).ToList();
 
                         if (!breedFemales.Any())
                         {
@@ -233,7 +224,7 @@ namespace Models.CLEM.Resources
         private void OnEndOfSimulation(object sender, EventArgs e)
         {
             // report all females of breeding age at end of simulation
-            foreach (RuminantFemale female in Herd.Where(a => a.Gender == Sex.Female && a.Age >= a.BreedParams.MinimumAge1stMating))
+            foreach (RuminantFemale female in Herd.Where(a => a.Sex == Sex.Female && a.Age >= a.BreedParams.MinimumAge1stMating))
             {
                 RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
                 {
@@ -286,7 +277,7 @@ namespace Models.CLEM.Resources
         public void RemoveRuminant(Ruminant ind, IModel model)
         {
             // Remove mother ID from any suckling offspring
-            if (ind.Gender == Sex.Female)
+            if (ind.Sex == Sex.Female)
                 foreach (var offspring in (ind as RuminantFemale).SucklingOffspringList)
                     offspring.Mother = null;
 
@@ -314,7 +305,7 @@ namespace Models.CLEM.Resources
             OnTransactionOccurred(te);
 
             // report female breeding stats if needed
-            if(ind.Gender == Sex.Female & ind.Age >= ind.BreedParams.MinimumAge1stMating)
+            if(ind.Sex == Sex.Female & ind.Age >= ind.BreedParams.MinimumAge1stMating)
             {
                 RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
                 {
@@ -326,30 +317,6 @@ namespace Models.CLEM.Resources
 
             // remove change flag
             ind.SaleFlag = HerdChangeReason.None;
-        }
-
-        /// <summary>
-        /// Return the mean and standard deviation of an attribute value
-        /// </summary>
-        public int SummariseAttribute(string tag, bool ignoreNotFound)
-        {
-            LastListStatistics = new ListStatistics();
-            if (Herd is null)
-                return 0;
-
-            var values = Herd.Where( a => (ignoreNotFound & a.Attributes.GetValue(tag) == null) ? false : true).Select(a => Convert.ToDouble(a.Attributes.GetValue(tag)?.storedValue));
-            if (values.Count() == 0)
-                return 0;
-
-            double sd = 0;
-            double mean = values.Average();
-            double sum = values.Sum(d => Math.Pow(d - mean, 2));
-            sd = Math.Sqrt((sum) / values.Count() - 1);
-            LastListStatistics.Average = mean;
-            LastListStatistics.StandardDeviation = sd;
-            LastListStatistics.Count = values.Count();
-            LastListStatistics.Total = Herd.Count();
-            return Herd.Count();
         }
 
         /// <summary>
