@@ -56,10 +56,10 @@
         [Units("/d")]
         private IFunction TotalDMDemand = null;
 
-        /// <summary>The proportion of biomass respired each day</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("/d")]
-        private IFunction maintenanceRespirationFunction = null;
+        // <summary>The proportion of biomass respired each day</summary>
+        //[Link(Type = LinkType.Child, ByName = true)]
+       // [Units("/d")]
+       // private Respiration respiration = null;
 
         /// <summary>The list of nurtients to arbitration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -380,12 +380,12 @@
 
                 
                 // Do maintenance respiration
-                if (maintenanceRespirationFunction.Value() > 0)
-                {
+                //if (maintenanceRespirationFunction.Value() > 0)
+                //{
                     //MaintenanceRespiration = (Live.MetabolicWt + Live.StorageWt) * maintenanceRespirationFunction.Value();
                    // Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
                    // Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
-                }
+                //}
 
                 if (RootNetworkObject != null)
                 {

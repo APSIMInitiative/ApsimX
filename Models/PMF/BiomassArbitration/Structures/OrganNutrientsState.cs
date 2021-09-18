@@ -1,14 +1,33 @@
 ﻿namespace Models.PMF
 {
-    using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.Functions;
-    using Models.PMF.Interfaces;
-    using Models.PMF.Organs;
-    using Newtonsoft.Json;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
+    
+    /// <summary>
+    /// Daily state of flows into and out of each organ
+    /// </summary>
+    [Serializable]
+    public class NutrientsStates : Model
+    { 
+        /// <summary>Carbon</summary>
+        public double C { get; private set; }
+        /// <summary>Nitrogen</summary>
+        public double N { get; private set; }
+        /// <summary>Phospherous</summary>
+        public double P { get; private set; }
+        /// <summary>Potassium</summary>
+        public double K { get; private set; }
+
+        /// <summary>Constructor</summary>
+        public NutrientsStates(double c, double n, double p, double k)
+        {
+            C = c;
+            N = n;
+            P = p;
+            K = k;
+        }
+    }
 
     /// <summary>
     /// Daily state of flows into and out of each organ
