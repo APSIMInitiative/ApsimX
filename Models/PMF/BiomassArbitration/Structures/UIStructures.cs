@@ -237,12 +237,10 @@
         [Units("g Nutrient/g Nutrient")]
         public IFunction Structural = null;
         /// <summary>Critical Nutrient Concentration</summary>
-        /// <summary>Maximum Nutrient Concentration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g Nutrient/g Nutrient")]
         public IFunction Metabolic = null;
         /// <summary>Minimum Nutrient Concentration</summary>
-        /// <summary>Maximum Nutrient Concentration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g Nutrient/g Nutrient")]
         public IFunction Storage = null;

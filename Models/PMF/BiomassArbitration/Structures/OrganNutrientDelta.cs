@@ -157,24 +157,16 @@
             Supplies.Fixation = ThrowIfNegative(supplyFunctions.Fixation);
             Supplies.Uptake = ThrowIfNegative(supplyFunctions.Uptake);
 
-            double dMCE = organ.dmConversionEfficiency;
-            if (dMCE > 0.0)
-            {
-                Demands = new NutrientPoolsState(
-                (ThrowIfNegative(demandFunctions.Structural) / dMCE),
-                (ThrowIfNegative(demandFunctions.Metabolic) / dMCE),
-                (ThrowIfNegative(demandFunctions.Storage) / dMCE),
-                null);
-                PriorityScaledDemand = new NutrientPoolsState(
-                demandFunctions.Structural.Value() * demandFunctions.QStructuralPriority.Value(),
-                demandFunctions.Metabolic.Value() * demandFunctions.QMetabolicPriority.Value(),
-                demandFunctions.Storage.Value() * demandFunctions.QStoragePriority.Value(),
-                null);
-            }
-            else
-            { // Conversion efficiency is zero!!!!
-                Demands = new NutrientPoolsState(0, 0, 0, null);
-            }
+            Demands = new NutrientPoolsState(
+            ThrowIfNegative(demandFunctions.Structural),
+            ThrowIfNegative(demandFunctions.Metabolic),
+            ThrowIfNegative(demandFunctions.Storage),
+            null);
+            PriorityScaledDemand = new NutrientPoolsState(
+            demandFunctions.Structural.Value() * demandFunctions.QStructuralPriority.Value(),
+            demandFunctions.Metabolic.Value() * demandFunctions.QMetabolicPriority.Value(),
+            demandFunctions.Storage.Value() * demandFunctions.QStoragePriority.Value(),
+            null);
         }
 
 

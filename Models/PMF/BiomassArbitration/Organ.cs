@@ -12,41 +12,6 @@
     using PMF;
 
     /// <summary>
-    /// An interface that defines what needs to be implemented by an organ
-    /// </summary>
-    public interface IAmOrganHearMeRoar
-    {
-        //<summary>The Carbon Element</summary>
-        //OrganNutrientDelta Carbon { get; }
-
-        //<summary>The Carbon Element</summary>
-        //OrganNutrientDelta Nitrogen { get; }
-
-        /// <summary>Gets the total biomass</summary>
-        OrganNutrientsState Total { get; }
-
-        /// <summary>Gets the live biomass</summary>
-        OrganNutrientsState Live { get; }
-
-        /// <summary>Gets the live biomass</summary>
-        OrganNutrientsState Dead { get; }
-
-        /// <summary>Gets the senescence rate</summary>
-        double senescenceRate { get; }
-
-        /// <summary>Gets the DMConversion efficiency</summary>
-        double dmConversionEfficiency { get; }
-        /// <summary>Gets the biomass allocated (represented actual growth)</summary>
-        OrganNutrientsState Allocated { get; }
-
-        /// <summary>Gets the biomass allocated (represented actual growth)</summary>
-        OrganNutrientsState Senesced { get; }
-
-        /// <summary> get the organs uptake object if it has one </summary>
-        IWaterNitrogenUptake WaterNitrogenUptakeObject { get; }
-    }
-
-    /// <summary>
     /// This is the basic organ class that contains biomass structures and transfers
     /// </summary>
     [Serializable]
@@ -54,7 +19,7 @@
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
 
-    public class Organ : Model, IAmOrganHearMeRoar, ICustomDocumentation, IOrgan
+    public class Organ : Model, ICustomDocumentation, IOrgan
     {
         ///1. Links
         ///--------------------------------------------------------------------------------------------------
@@ -95,16 +60,6 @@
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
         private IFunction maintenanceRespirationFunction = null;
-
-        /// <summary>Dry matter conversion efficiency</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("/d")]
-        public IFunction DMConversionEfficiency = null;
-
-        /// <summary>remobilisation cost</summary>
-        [Units("g/g")]
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction RemobilisationCost = null;
 
         /// <summary>The list of nurtients to arbitration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -223,10 +178,6 @@
         /// <summary>the detachment rate for the day</summary>
         [JsonIgnore]
         public double detachmentRate { get; private set; }
-
-        /// <summary>efficiency of converting allocated DM to wt</summary>
-        [JsonIgnore]
-        public double dmConversionEfficiency { get; private set; }
 
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
         [JsonIgnore]
@@ -381,7 +332,6 @@
                 startLiveWt = Live.Wt;
                 senescenceRate = senescenceRateFunction.Value();
                 detachmentRate = detachmentRateFunction.Value();
-                dmConversionEfficiency = DMConversionEfficiency.Value();
                 Carbon.SetSuppliesAndDemands();
             }
         }
