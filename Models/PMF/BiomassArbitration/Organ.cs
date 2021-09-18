@@ -220,6 +220,10 @@
         [JsonIgnore]
         public double senescenceRate { get; private set; }
 
+        /// <summary>the detachment rate for the day</summary>
+        [JsonIgnore]
+        public double detachmentRate { get; private set; }
+
         /// <summary>efficiency of converting allocated DM to wt</summary>
         [JsonIgnore]
         public double dmConversionEfficiency { get; private set; }
@@ -288,15 +292,15 @@
         /// <summary>Clears this instance.</summary>
         protected virtual void Clear()
         {
-            Live = new OrganNutrientsState(Cconc);
-            Dead = new OrganNutrientsState(Cconc);
-            ReAllocated = new OrganNutrientsState(Cconc);
-            ReTranslocated = new OrganNutrientsState(Cconc);
-            Allocated = new OrganNutrientsState(Cconc);
-            Senesced = new OrganNutrientsState(Cconc);
-            Detached = new OrganNutrientsState(Cconc);
-            LiveRemoved = new OrganNutrientsState(Cconc);
-            DeadRemoved = new OrganNutrientsState(Cconc);
+            Live = new OrganNutrientsState(Cconc, this);
+            Dead = new OrganNutrientsState(Cconc, this);
+            ReAllocated = new OrganNutrientsState(Cconc, null);
+            ReTranslocated = new OrganNutrientsState(Cconc, null);
+            Allocated = new OrganNutrientsState(Cconc, null);
+            Senesced = new OrganNutrientsState(Cconc, null);
+            Detached = new OrganNutrientsState(Cconc, null);
+            LiveRemoved = new OrganNutrientsState(Cconc, null);
+            DeadRemoved = new OrganNutrientsState(Cconc, null);
         }
 
         /// <summary>Clears the transferring biomass amounts.</summary>
@@ -343,22 +347,25 @@
                 Clear();
                 ClearBiomassFlows();
                 Nitrogen.setConcentrationsOrProportions();
+                
                 NutrientPoolsState initC = new NutrientPoolsState(
                     InitialWt.Value() * Cconc * Carbon.ConcentrationOrFraction.Structural,
                     InitialWt.Value() * Cconc * Carbon.ConcentrationOrFraction.Metabolic,
                     InitialWt.Value() * Cconc * Carbon.ConcentrationOrFraction.Storage,
                     null);
                 Live.Carbon.SetTo(initC, Live);
+                Dead.Carbon.SetTo(new NutrientPoolsState(0, 0, 0, null), Dead);
+                
                 NutrientPoolsState initN = new NutrientPoolsState(
                     Live.Weight.Total * Nitrogen.ConcentrationOrFraction.Structural,
                     Live.Weight.Total * (Nitrogen.ConcentrationOrFraction.Metabolic - Nitrogen.ConcentrationOrFraction.Structural),
                     Live.Weight.Total * (Nitrogen.ConcentrationOrFraction.Storage - Nitrogen.ConcentrationOrFraction.Metabolic),
                     null);
                 Live.Nitrogen.SetTo(initN, Live);
-
+                Dead.Nitrogen.SetTo(new NutrientPoolsState(0, 0, 0,null),Dead);
+                
                 if (RootNetworkObject != null)
                     RootNetworkObject.InitailiseNetwork(Live);
-
             }
         }
 
@@ -373,6 +380,7 @@
                 startLiveN = Live.N;
                 startLiveWt = Live.Wt;
                 senescenceRate = senescenceRateFunction.Value();
+                detachmentRate = detachmentRateFunction.Value();
                 dmConversionEfficiency = DMConversionEfficiency.Value();
                 Carbon.SetSuppliesAndDemands();
             }
@@ -388,14 +396,17 @@
             if (parentPlant.IsEmerged)
             {
                 //Calculate biomass to be lost from senescene
-                Senesced.SetTo(Live * senescenceRate);
-                Live.SubtractDelta(Senesced);
+                if (senescenceRate > 0)
+                {
+                    Senesced.SetTo(Live * senescenceRate);
+                    Live.SubtractDelta(Senesced);
 
-                //Catch the bits that were reallocated and add the bits that wernt into dead.
-                ReAllocated.Carbon.SetTo(Carbon.SuppliesAllocated.ReAllocation, ReAllocated);
-                ReAllocated.Nitrogen.SetTo(Nitrogen.SuppliesAllocated.ReAllocation, ReAllocated);
-                Senesced.SubtractDelta(ReAllocated);
-                Dead.AddDelta(Senesced);
+                    //Catch the bits that were reallocated and add the bits that wernt into dead.
+                    ReAllocated.Carbon.SetTo(Carbon.SuppliesAllocated.ReAllocation, ReAllocated);
+                    ReAllocated.Nitrogen.SetTo(Nitrogen.SuppliesAllocated.ReAllocation, ReAllocated);
+                    Senesced.SubtractDelta(ReAllocated);
+                    Dead.AddDelta(Senesced);
+                }
 
                 //Retranslocate from live pools
                 ReTranslocated.Carbon.SetTo(Carbon.SuppliesAllocated.ReTranslocation,ReTranslocated);
@@ -408,14 +419,12 @@
                 Live.AddDelta(Allocated);
 
                 // Do detachment
-                double detachedFrac = detachmentRateFunction.Value();
-                if (Dead.Weight.Total * (1.0 - detachedFrac) < tolerence)
-                    detachedFrac = 1.0;  // remaining amount too small, detach all
-                Detached = Dead * detachedFrac;
-                Dead.SubtractDelta(Detached);
-
-                if (Detached.Wt > 0.0)
+                if ((detachmentRate > 0) && (Dead.Wt > 0))
                 {
+                    if (Dead.Weight.Total * (1.0 - detachmentRate) < 0.00000001)
+                        detachmentRate = 1.0;  // remaining amount too small, detach all
+                    Detached = Dead * detachmentRate;
+                    Dead.SubtractDelta(Detached);
                     surfaceOrganicMatter.Add(Detached.Wt * 10, Detached.N * 10, 0, parentPlant.PlantType, Name);
                 }
 

@@ -78,14 +78,14 @@
         }
 
         /// <summary>Constructor </summary>
-        public OrganNutrientsState(double Cconc)
+        public OrganNutrientsState(double Cconc, Organ parentCaller)
         {
             Carbon = new NutrientPoolsState(0, 0, 0, null);
             Nitrogen = new NutrientPoolsState(0, 0, 0, null);
             Phosphorus = new NutrientPoolsState(0, 0, 0, null);
             Potassium = new NutrientPoolsState(0, 0, 0, null);
             CarbonConcentration = Cconc;
-            parentOrgan = this.FindAllAncestors<Organ>().FirstOrDefault();
+            parentOrgan = parentCaller;
         }
 
         /// <summary> Clear the components </summary>
@@ -151,7 +151,7 @@
         /// <summary>return pools divied by value</summary>
         public static OrganNutrientsState operator /(OrganNutrientsState a, double b)
         {
-            return new OrganNutrientsState(1)
+            return new OrganNutrientsState(1, null)
             {
                 Carbon = a.Carbon / b,
                 Nitrogen = a.Nitrogen / b,
@@ -163,7 +163,7 @@
         /// <summary>return pools divied by value</summary>
         public static OrganNutrientsState operator /(OrganNutrientsState a, OrganNutrientsState b)
         {
-            return new OrganNutrientsState(1)
+            return new OrganNutrientsState(1, null)
             {
                 Carbon = a.Carbon / b.Carbon,
                 Nitrogen = a.Nitrogen / b.Nitrogen,
@@ -174,7 +174,7 @@
         /// <summary>return pools multiplied by value</summary>
         public static OrganNutrientsState operator *(OrganNutrientsState a, double b)
         {
-            return new OrganNutrientsState(1)
+            return new OrganNutrientsState(1, null)
             {
                 Carbon = a.Carbon * b,
                 Nitrogen = a.Nitrogen * b,
@@ -186,7 +186,7 @@
         /// <summary>return pools divied by value</summary>
         public static OrganNutrientsState operator *(OrganNutrientsState a, OrganNutrientsState b)
         {
-            return new OrganNutrientsState(1)
+            return new OrganNutrientsState(1, null)
             {
                 Carbon = a.Carbon * b.Carbon,
                 Nitrogen = a.Nitrogen * b.Nitrogen,
@@ -198,7 +198,7 @@
         /// <summary>return sum or two pools</summary>
         public static OrganNutrientsState operator +(OrganNutrientsState a, OrganNutrientsState b)
         {
-            return new OrganNutrientsState(1)
+            return new OrganNutrientsState(1, null)
             {
                 Carbon = a.Carbon + b.Carbon,
                 Nitrogen = a.Nitrogen + b.Carbon,
@@ -210,7 +210,7 @@
         /// <summary>return sum or two pools</summary>
         public static OrganNutrientsState operator -(OrganNutrientsState a, OrganNutrientsState b)
         {
-            return new OrganNutrientsState(1)
+            return new OrganNutrientsState(1, null)
             {
                 Carbon = a.Carbon - b.Carbon,
                 Nitrogen = a.Nitrogen - b.Carbon,
@@ -267,7 +267,7 @@
         }
 
         /// <summary>/// The constructor </summary>
-        public CompositeStates() : base(0.4) { }
+        public CompositeStates() : base(0.4, null) { }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
         /// <param name="tags">The list of tags to add to.</param>

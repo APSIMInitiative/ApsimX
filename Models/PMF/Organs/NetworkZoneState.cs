@@ -232,10 +232,10 @@ namespace Models.PMF.Organs
                 double rootCconc = parentNetwork.parentOrgan.Cconc;
                 for (int i = 0; i < Physical.Thickness.Length; i++)
                 {
-                    LayerLive[i] = new OrganNutrientsState(rootCconc);
-                    LayerDead[i]  = new OrganNutrientsState(rootCconc);
-                    LayerLiveProportion[i] = new OrganNutrientsState(1);
-                    LayerDeadProportion[i] = new OrganNutrientsState(1);
+                    LayerLive[i] = new OrganNutrientsState(rootCconc, null);
+                    LayerDead[i]  = new OrganNutrientsState(rootCconc, null);
+                    LayerLiveProportion[i] = new OrganNutrientsState(1, null);
+                    LayerDeadProportion[i] = new OrganNutrientsState(1, null);
                 }
             }
             else
