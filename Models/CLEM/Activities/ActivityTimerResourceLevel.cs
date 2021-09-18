@@ -1,4 +1,4 @@
-﻿using Models.CLEM.Groupings;
+﻿using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -6,10 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
+using System.Linq.Expressions;
+using Display = Models.Core.DisplayAttribute;
 
 namespace Models.CLEM.Activities
 {
@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
     [Description("This activity timer is used to determine whether a resource level meets a set criteria.")]
     [HelpUri(@"Content/Features/Timers/ResourceLevel.htm")]
     [Version(1, 0, 1, "")]
-    public class ActivityTimerResourceLevel: CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
+    public class ActivityTimerResourceLevel: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
         private ResourcesHolder resources = null;
@@ -50,7 +50,17 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Operator to use for filtering")]
         [Required]
-        public FilterOperators Operator { get; set; }
+        [Display(Type = DisplayType.DropDown, Values = nameof(GetOperators))]
+        public ExpressionType Operator { get; set; }
+        private object[] GetOperators() => new object[]
+        {
+            ExpressionType.Equal,
+            ExpressionType.NotEqual,
+            ExpressionType.LessThan,
+            ExpressionType.LessThanOrEqual,
+            ExpressionType.GreaterThan,
+            ExpressionType.GreaterThanOrEqual
+        };
 
         /// <summary>
         /// Amount
@@ -71,17 +81,6 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
         }
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            return results;
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -99,22 +98,22 @@ namespace Models.CLEM.Activities
                 bool due = false;
                 switch (Operator)
                 {
-                    case FilterOperators.Equal:
+                    case ExpressionType.Equal:
                         due = (ResourceTypeModel.Amount == Amount);
                         break;
-                    case FilterOperators.NotEqual:
+                    case ExpressionType.NotEqual:
                         due = (ResourceTypeModel.Amount != Amount);
                         break;
-                    case FilterOperators.LessThan:
+                    case ExpressionType.LessThan:
                         due = (ResourceTypeModel.Amount < Amount);
                         break;
-                    case FilterOperators.LessThanOrEqual:
+                    case ExpressionType.LessThanOrEqual:
                         due = (ResourceTypeModel.Amount <= Amount);
                         break;
-                    case FilterOperators.GreaterThan:
+                    case ExpressionType.GreaterThan:
                         due = (ResourceTypeModel.Amount > Amount);
                         break;
-                    case FilterOperators.GreaterThanOrEqual:
+                    case ExpressionType.GreaterThanOrEqual:
                         due = (ResourceTypeModel.Amount >= Amount);
                         break;
                     default:
@@ -165,22 +164,22 @@ namespace Models.CLEM.Activities
                 string str = "";
                 switch (Operator)
                 {
-                    case FilterOperators.Equal:
+                    case ExpressionType.Equal:
                         str += "equals";
                         break;
-                    case FilterOperators.NotEqual:
+                    case ExpressionType.NotEqual:
                         str += "does not equal";
                         break;
-                    case FilterOperators.LessThan:
+                    case ExpressionType.LessThan:
                         str += "is less than";
                         break;
-                    case FilterOperators.LessThanOrEqual:
+                    case ExpressionType.LessThanOrEqual:
                         str += "is less than or equal to";
                         break;
-                    case FilterOperators.GreaterThan:
+                    case ExpressionType.GreaterThan:
                         str += "is greater than";
                         break;
-                    case FilterOperators.GreaterThanOrEqual:
+                    case ExpressionType.GreaterThanOrEqual:
                         str += "is greater than or equal to";
                         break;
                     default:

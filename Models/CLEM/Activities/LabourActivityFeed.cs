@@ -79,11 +79,11 @@ namespace Models.CLEM.Activities
             feedRequired = 0;
 
             // get list from filters
-            foreach (LabourFeedGroup child in this.FindAllChildren<LabourFeedGroup>())
+            foreach (LabourFeedGroup child in FindAllChildren<LabourFeedGroup>())
             {
                 double value = child.Value;
-
-                foreach (LabourType ind in labour?.Items.Filter(child))
+                
+                foreach (LabourType ind in child.Filter(labour?.Items))
                 {
                     // feed limited to the daily intake per ae set in HumanFoodStoreType
                     switch (FeedStyle)
@@ -125,12 +125,12 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            IEnumerable<LabourType> group = labour?.Items.Where(a => a.Hired != true);
+            IEnumerable<LabourType> labourers = labour?.Items.Where(a => a.Hired != true);
             int head = 0;
             double adultEquivalents = 0;
-            foreach (Model child in this.FindAllChildren<LabourFeedGroup>())
+            foreach (var group in FindAllChildren<LabourFeedGroup>())
             {
-                var subgroup = group.Filter(child);
+                var subgroup = group.Filter(labourers);
                 head += subgroup.Count();
                 adultEquivalents += subgroup.Sum(a => a.AdultEquivalent);
             }
@@ -208,7 +208,7 @@ namespace Models.CLEM.Activities
                 {
                     double value = child.Value;
 
-                    foreach (LabourType ind in labour?.Items.Filter(child))
+                    foreach (LabourType ind in child.Filter(labour?.Items))
                     {
                         switch (FeedStyle)
                         {

@@ -218,7 +218,12 @@
                         throw new Exception($"Unable to locate model {namePath}");
 
                     // Check property info
-                    PropertyInfo propertyInfo = relativeToObject.GetType().GetProperty(namePathBits[j]);
+                    Type declaringType;
+                    if (properties.Any())
+                        declaringType = properties.Last().DataType;
+                    else
+                        declaringType = relativeToObject.GetType();
+                    PropertyInfo propertyInfo = declaringType.GetProperty(namePathBits[j]);
                     if (propertyInfo == null && ignoreCase) // If not found, try using a case-insensitive search
                     {
                         propertyInfo = relativeToObject.GetType().GetProperty(namePathBits[j], BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.IgnoreCase);

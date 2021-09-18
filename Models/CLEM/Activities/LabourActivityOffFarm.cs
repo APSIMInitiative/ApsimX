@@ -89,7 +89,7 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (bankType == null && Resources.GetResourceGroupByType(typeof(Finance)) != null)
+            if (bankType == null && Resources.FindResource<Finance>() != null)
                 Summary.WriteWarning(this, "No bank account has been specified for [a=" + this.Name + "]. No funds will be earned!");
 
             // get check labour required

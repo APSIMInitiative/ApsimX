@@ -42,51 +42,51 @@ namespace UserInterface.Presenters
         {
             try
             {
-                Report report = clemPresenter.model as Report;
+                bool parentOfReport = false;
+                Report report = clemPresenter.Model as Report;
+                if(report is null)
+                {
+                    report = clemPresenter.Model.FindChild<Report>();
+                    parentOfReport = true;
+                }
 
-                ReportView rv = new ReportView(clemPresenter.view as ViewBase);
+                ReportView rv = new ReportView(clemPresenter.View as ViewBase);
                 ViewBase reportView = new ViewBase(rv, "ApsimNG.Resources.Glade.DataStoreView.glade");
 
-                DataStorePresenter dataStorePresenter = new DataStorePresenter(new string[] { report.Name });
+                DataStorePresenter dataStorePresenter = new DataStorePresenter(new string[] { (parentOfReport)? (clemPresenter.Model as IModel).Name:report.Name });
 
                 Simulations simulations = report.FindAncestor<Simulations>();
                 if (simulations != null)
-                {
                     dataStore = simulations.FindChild<IDataStore>();
-                }
 
                 Simulation simulation = report.FindAncestor<Simulation>();
                 Experiment experiment = report.FindAncestor<Experiment>();
                 Zone paddock = report.FindAncestor<Zone>();
 
+                IModel zoneAnscestor = report.FindAncestor<Zone>();
+
                 // Only show data which is in scope of this report.
                 // E.g. data from this zone and either experiment (if applicable) or simulation.
                 if (paddock != null)
-                {
                     dataStorePresenter.ZoneFilter = paddock;
-                }
-
-                if (experiment != null)
-                {
+                if (zoneAnscestor is null & experiment != null)
+                    // allows the inner reports of the base simulation to be displayed
+                    // when an experiment is being undertaken
+                    // otherwise reports are considered child of experiment and will only display experiment results.
                     dataStorePresenter.ExperimentFilter = experiment;
-                }
                 else if (simulation != null)
-                {
                     dataStorePresenter.SimulationFilter = simulation;
-                }
 
-                dataStorePresenter.Attach(dataStore, reportView, clemPresenter.explorerPresenter);
+                dataStorePresenter.Attach(dataStore, reportView, clemPresenter.ExplorerPresenter);
 
                 // Attach the view to display data
-                clem = clemPresenter.view as CLEMView;
+                clem = clemPresenter.View as CLEMView;
                 clem.AddTabView("Data", reportView);
-                clemPresenter.presenterList.Add("Data", this);
-
-                //clem.TabSelected += Refresh;
+                clemPresenter.PresenterList.Add("Data", this);
             }
             catch (Exception err)
             {
-                clemPresenter.explorerPresenter.MainPresenter.ShowError(err);
+                clemPresenter.ExplorerPresenter.MainPresenter.ShowError(err);
             }
         }
 
@@ -95,6 +95,6 @@ namespace UserInterface.Presenters
         { }
 
         /// <inheritdoc/>
-        public void Refresh() { } // => gridView.DataSource = pivot.GenerateTable();
+        public void Refresh() { } 
     }
 }

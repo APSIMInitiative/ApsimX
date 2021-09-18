@@ -392,12 +392,12 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<LabourType> group = people?.Items.Where(a => a.Hired != true).ToList();
+            var group = people?.Items.Where(a => a.Hired != true);
             int head = 0;
             double adultEquivalents = 0;
             foreach (var child in FindAllChildren<LabourFeedGroup>())
             {
-                var subgroup = group.Filter(child).ToList();
+                var subgroup = child.Filter(group);
                 head += subgroup.Count();
                 adultEquivalents += subgroup.Sum(a => a.AdultEquivalent);
             }
@@ -597,7 +597,7 @@ namespace Models.CLEM.Activities
             var results = new List<ValidationResult>();
 
             // if finances and not account provided throw error
-            if (SellExcess && Resources.GetResourceGroupByType(typeof(Finance)) != null)
+            if (SellExcess && Resources.FindResource<Finance>() != null)
             {
                 if (bankAccount is null)
                 {

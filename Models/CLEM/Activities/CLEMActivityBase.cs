@@ -1,10 +1,9 @@
 ﻿using Models.Core;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
@@ -452,7 +451,7 @@ namespace Models.CLEM.Activities
                         int numberOfPpl = 1;
                         if (item.ApplyToAll)
                             // how many matches
-                            numberOfPpl = Resources.FindResourceGroup<Labour>().Items.Filter(fg).Count();
+                            numberOfPpl = fg.Filter(Resources.FindResourceGroup<Labour>().Items).Count();
                         for (int i = 0; i < numberOfPpl; i++)
                         {
                             labourResourceRequestList.Add(new ResourceRequest()
@@ -593,9 +592,9 @@ namespace Models.CLEM.Activities
             // start with top most LabourFilterGroup
             while (current != null && amountProvided < amountNeeded)
             {
-                List<LabourType> items = (resourceHolder.GetResourceGroupByType(request.ResourceType) as Labour).Items;
-                items = items.Where(a => (a.LastActivityRequestID != request.ActivityID) || (a.LastActivityRequestID == request.ActivityID && a.LastActivityRequestAmount < lr.MaximumPerPerson)).ToList();
-                items = items.Filter(current).ToList();
+                IEnumerable<LabourType> items = resourceHolder.FindResource<Labour>().Items;
+                items = items.Where(a => (a.LastActivityRequestID != request.ActivityID) || (a.LastActivityRequestID == request.ActivityID && a.LastActivityRequestAmount < lr.MaximumPerPerson));
+                items = current.Filter(items);
 
                 // search for people who can do whole task first
                 while (amountProvided < amountNeeded && items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson) >= request.Required).Count() > 0)
@@ -717,7 +716,7 @@ namespace Models.CLEM.Activities
 
                 // If resource group does not exist then provide required.
                 // This means when resource is not added to model it will not limit simulations
-                if (request.ResourceType == null || Resources.GetResourceGroupByType(request.ResourceType) == null)
+                if (request.ResourceType == null || Resources.FindResource(request.ResourceType) == null)
                 {
                     request.Available = request.Required;
                     request.Provided = request.Required;
@@ -818,7 +817,7 @@ namespace Models.CLEM.Activities
                     // get resource
                     request.Provided = 0;
                     // do not take if the resource does not exist
-                    if (request.ResourceType != null && Resources.GetResourceGroupByType(request.ResourceType) != null)
+                    if (request.ResourceType != null && Resources.FindResource(request.ResourceType) != null)
                     { 
                         if (request.ResourceType == typeof(Labour))
                             // get available labour based on rules.

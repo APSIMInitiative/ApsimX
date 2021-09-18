@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Collections;  //enumerator
 using Newtonsoft.Json;
-using System.Runtime.Serialization;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
@@ -84,9 +81,7 @@ namespace Models.CLEM.Resources
                     {
                         ReportedLandAllocation = item;
                         if (changeOccurred)
-                        {
                             OnAllocationReported(new EventArgs());
-                        }
                     }
                     total = childModel.AllocatedActivitiesList.Sum(a => a.LandAllocated);
                 }

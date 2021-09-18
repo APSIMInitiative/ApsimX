@@ -1,16 +1,13 @@
-﻿using Models.CLEM.Groupings;
+﻿using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Activities
 {
@@ -37,7 +34,6 @@ namespace Models.CLEM.Activities
         private RuminantType breedParams; 
         private RuminantActivityBreed breedParent = null;
         private RuminantActivityControlledMating controlledMatingParent = null;
-        private RuminantGroup breederGroup;
 
         /// <summary>
         /// Months to rest after lactation
@@ -78,11 +74,6 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            breederGroup = new RuminantGroup();
-            breederGroup.Children.Add(new RuminantFilter() { Name = "sex", Parameter = RuminantFilterParameters.Gender, Operator = FilterOperators.Equal, Value = "Female" });
-            breederGroup.Children.Add(new RuminantFilter() { Name = "breedtype", Parameter = RuminantFilterParameters.IsBreeder, Operator = FilterOperators.Equal, Value = "True" });
-            // TODO: add sort by condition
-
             // get details from parent breeding activity
             controlledMatingParent = this.Parent as RuminantActivityControlledMating;
             if (controlledMatingParent is null)
@@ -126,10 +117,15 @@ namespace Models.CLEM.Activities
 
             // get all breeders currently in the population
             // TODO: remove oftype when sex determination fixed
+            var females = controlledMatingParent.CurrentHerd(true).OfType<RuminantFemale>();
 
-            var breedersList = controlledMatingParent.CurrentHerd(true).FilterRuminants(breederGroup).OfType<RuminantFemale>();
+            var breedersList = females.Where(r => r.IsBreeder);
 
-            var breedersNotTooOldToMate = breedersList.Where(a => a.Age <= breedParams.MaximumAgeMating);
+            double tooOldToMate = double.PositiveInfinity;
+            if (controlledMatingParent != null)
+                tooOldToMate = controlledMatingParent.MaximumAgeMating;
+
+            var breedersNotTooOldToMate = breedersList.Where(a => a.Age <= tooOldToMate);
             if (!breedersNotTooOldToMate.Any())
             {
                 return;
@@ -139,9 +135,8 @@ namespace Models.CLEM.Activities
             // this count excludes those too old to be mated from breed param settings
             int maxBreedersPerCycle = Math.Max(1, Convert.ToInt32(Math.Ceiling((double)breedersNotTooOldToMate.Count() / milkingsPerConceptionsCycle)));
 
-            // get females currently lactating
-            breederGroup.FindChild<RuminantFilter>("breedtype").Parameter = RuminantFilterParameters.IsLactating;
-            var lactatingList = breedersList.Filter(breederGroup);
+            // get females currently lactating            
+            var lactatingList = females.Where(f => f.IsLactating);
             if (lactatingList.Any() && lactatingList.Max(a => a.Age - a.AgeAtLastBirth) < startBreedCycleGestationOffsett)
             {
                 // the max lactation period of lactating females is less than the time to start breeding for future cycle
@@ -150,8 +145,7 @@ namespace Models.CLEM.Activities
             }
 
             // get breeders currently pregnant
-            breederGroup.FindChild<RuminantFilter>("breedtype").Parameter = RuminantFilterParameters.IsPregnant;
-            var pregnantList = breedersList.Filter(breederGroup);
+            var pregnantList = females.Where(f => f.IsPregnant);
 
             // get individuals in first lactation cycle of gestation
             double lactationCyclesInGestation = Math.Round((double)ShortenLactationMonths / pregnancyDuration, 2);

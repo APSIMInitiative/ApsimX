@@ -59,9 +59,8 @@ namespace Models.CLEM.Resources
         {
             double rate = 0;
             if (female.StandardReferenceWeight > 0)
-            {
                 rate = ConceptionRateAsymptote / (1 + Math.Exp(ConceptionRateCoefficent * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept));
-            }
+
             rate = Math.Max(0,Math.Min(rate, 100));
             return rate / 100;
         }
