@@ -441,7 +441,7 @@ namespace Models.CLEM.Reporting
         }
 
         ///<inheritdoc/>
-        public string GetFullSummary(IModel model, bool formatForParentControl, string htmlString)
+        public string GetFullSummary(IModel model, bool formatForParentControl, string htmlString, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -458,7 +458,7 @@ namespace Models.CLEM.Reporting
 
                     foreach (var item in (model as IModel).Children)
                     {
-                        htmlWriter.Write(GetFullSummary(item, true, htmlString));
+                        htmlWriter.Write(GetFullSummary(item, true, htmlString, markdown2Html));
                     }
                     htmlWriter.Write(cm.ModelSummaryInnerClosingTags(formatForParentControl));
 

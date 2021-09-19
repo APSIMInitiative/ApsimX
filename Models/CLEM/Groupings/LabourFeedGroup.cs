@@ -19,10 +19,10 @@ namespace Models.CLEM.Groupings
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourActivityFeed))]
-    [Description("This labour filter group selects specific individuals from the labour pool using any number of Labour Filters. This filter group includes feeding rules. No filters will apply rules to all individuals. Multiple feeding groups will select groups of individuals required.")]
+    [Description("Defines specific individuals from the labour pool including feeding rules. No filters will apply rules to all individuals. Multiple feeding groups will select groups of individuals required.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/LabourFeedGroup.htm")]
-    public class LabourFeedGroup: CLEMModel, IFilterGroup
+    public class LabourFeedGroup : FilterGroup<LabourType>
     {
         /// <summary>
         /// Value to supply for each month
@@ -30,18 +30,6 @@ namespace Models.CLEM.Groupings
         [Description("Value to supply")]
         [GreaterThanValue(0)]
         public double Value { get; set; }
-
-        /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
-
-        /// <summary>
-        /// Proportion of group to use
-        /// </summary>
-        [JsonIgnore]
-        public double Proportion { get; set; }
 
         /// <summary>
         /// Constructor
@@ -109,31 +97,6 @@ namespace Models.CLEM.Groupings
                 htmlWriter.Write(" that matches the following conditions:");
 
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
-            }
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
-        {
-            return "\r\n</div>";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                if (this.FindAllChildren<LabourFilter>().Count() == 0)
-                    htmlWriter.Write("<div class=\"filter\">All individuals</div>");
-
                 return htmlWriter.ToString(); 
             }
         }

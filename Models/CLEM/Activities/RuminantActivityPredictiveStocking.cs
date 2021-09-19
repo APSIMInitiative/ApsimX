@@ -223,9 +223,8 @@ namespace Models.CLEM.Activities
             foreach (var item in FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock))
             {
                 // works with current filtered herd to obey filtering.
-                var herd = CurrentHerd(false)
-                    .Where(a => a.Location == paddockName && !a.ReadyForSale)
-                    .FilterRuminants(item);
+                var herd = item.Filter(CurrentHerd(false))
+                    .Where(a => a.Location == paddockName && !a.ReadyForSale);
 
                 foreach (Ruminant ruminant in herd)
                 {

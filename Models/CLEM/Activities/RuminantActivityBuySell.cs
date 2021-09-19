@@ -273,7 +273,7 @@ namespace Models.CLEM.Activities
                     double value = 0;
                     AnimalPriceGroup pricing = null;
                     if (newind.SaleFlag == HerdChangeReason.SirePurchase)
-                        pricing = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase, RuminantFilterParameters.IsSire, "true");
+                        pricing = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase, "Male.IsSire", "true");
                     else
                         pricing = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase);
 
@@ -389,7 +389,7 @@ namespace Models.CLEM.Activities
                                 double value = 0;
                                 AnimalPriceGroup pricing = null;
                                 if (ind.SaleFlag == HerdChangeReason.SirePurchase)
-                                    pricing = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase, RuminantFilterParameters.IsSire, "true");
+                                    pricing = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase, "IsSire", "true");
                                 else
                                     pricing = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase);
 

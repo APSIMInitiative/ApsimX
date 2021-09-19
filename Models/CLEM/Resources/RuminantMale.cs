@@ -11,6 +11,11 @@ namespace Models.CLEM.Resources
     public class RuminantMale: Ruminant
     {
         /// <summary>
+        /// Sex of individual
+        /// </summary>
+        public override Sex Sex { get { return Sex.Male; } }
+
+        /// <summary>
         /// Indicates if individual is breeding sire
         /// Represents any uncastrated male of breeding age
         /// </summary>
@@ -19,13 +24,11 @@ namespace Models.CLEM.Resources
             get
             {
                 if(Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
-                {
                     if (Age >= BreedParams.MinimumAge1stMating)
                     {
                         ReplacementBreeder = false;
                         return true;
                     }
-                }
                 return false;
             }
         }
@@ -39,12 +42,8 @@ namespace Models.CLEM.Resources
             get
             {
                 if (!Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
-                {
                     if (Age >= BreedParams.MinimumAge1stMating)
-                    {
                         return true;
-                    }
-                }
                 return false;
             }
         }
@@ -74,7 +73,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantMale(double setAge, Sex setGender, double setWeight, RuminantType setParams): base(setAge, setGender, setWeight, setParams)
+        public RuminantMale(RuminantType setParams, double setAge, double setWeight)
+            : base(setParams, setAge, setWeight)
         {
         }
 

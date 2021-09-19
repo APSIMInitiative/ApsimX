@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 137,
+  "Version": 141,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -23,7 +23,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "This is a simple simulation demonstrating how an individual animal is fed from an animal store and the resources and activities required to feed and grow the animal. \n\n###Resources\nRuminant Herd defines the individual animals at the start of the simulation, this holds the three models that define the ruminant herd. Firstly, 'ruminant type' determines the ruminant parameters for the breed being used in the simulation. Under this, 'ruminant initial cohorts' and 'ruminant type cohort' define the herd with inputs including gender, age, number of individuals and weight. \n\nIn this case, animals are being fed from an 'animal food store', which is similar to having a barn or shed full of fodder on the farm. A 'food store type' is added for each different type of fodder, in this case it is just rice straw. The fodder's dry matter digestability, nitrogen content and the starting amount is defined by the user. In this example, if their is insufficient fodder then a 'transmutation' is used to purchase more rice straw (i.e. the transmutation converts money to fodder). In this transmutation, 10,000kg of fodder is purchased for $100 every time fodder levels are low.\n\nIn this example, finances are required to purchase fodder. Under finances, the user can define the currency, this is a reference for the user and has no impact on the simulation. Under finance type, the bank balance and banking rules are defined. \n\n###Activities\n'Ruminant activity feed' defines how the livestock are fed including the fodder source and the feeding style used, in this case fodder was supplied as a proportion of potential intake. The 'ruminant feed group' then defined that the animal was fed 100% of their potential intake. \n\nThe only other essential activity is 'rumninant activity grow' which performs the growth and aging of the ruminants and defines the gross energy content of the forage. \n\nThere are also two ruminant activities that generate reports called 'summarise ruminant herd' and 'report ruminant herd'. The outputs of these activities can be read in the reports and graphs section in the 'herd summary' and 'herd report' reports. \n \n###Reports & Graphs\nReports & graphs are stored in a 'CLEM Folder' to make it easier to select CLEM (rather than APSIM) functions. In this case, three blank reports are used to write herd reports, while pre-formed resource ledgers, balances and activity reports are also used. \n",
+          "Text": "This is a simple simulation demonstrating how an individual animal is fed from an animal store and the resources and activities required to feed and grow the animal. \n\n## Resources\nRuminant Herd defines the individual animals at the start of the simulation, this holds the three models that define the ruminant herd. Firstly, 'ruminant type' determines the ruminant parameters for the breed being used in the simulation. Under this, 'ruminant initial cohorts' and 'ruminant type cohort' define the herd with inputs including gender, age, number of individuals and weight. \n\nIn this case, animals are being fed from an 'animal food store', which is similar to having a barn or shed full of fodder on the farm. A 'food store type' is added for each different type of fodder, in this case it is just rice straw. The fodder's dry matter digestability, nitrogen content and the starting amount is defined by the user. In this example, if their is insufficient fodder then a 'transmutation' is used to purchase more rice straw (i.e. the transmutation converts money to fodder). In this transmutation, 10,000kg of fodder is purchased for $100 every time fodder levels are low.\n\nIn this example, finances are required to purchase fodder. Under finances, the user can define the currency, this is a reference for the user and has no impact on the simulation. Under finance type, the bank balance and banking rules are defined. \n\n## Activities\n'Ruminant activity feed' defines how the livestock are fed including the fodder source and the feeding style used, in this case fodder was supplied as a proportion of potential intake. The 'ruminant feed group' then defined that the animal was fed 100% of their potential intake. \n\nThe only other essential activity is 'rumninant activity grow' which performs the growth and aging of the ruminants and defines the gross energy content of the forage. \n\nThere are also two ruminant activities that generate reports called 'summarise ruminant herd' and 'report ruminant herd'. The outputs of these activities can be read in the reports and graphs section in the 'herd summary' and 'herd report' reports. \n \n## Reports & Graphs\nReports & graphs are stored in a 'CLEM Folder' to make it easier to select CLEM (rather than APSIM) functions. In this case, three blank reports are used to write herd reports, while pre-formed resource ledgers, balances and activity reports are also used. \n",
           "Name": "Individual Animal",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -65,6 +65,7 @@
           "$type": "Models.CLEM.ZoneCLEM, Models",
           "FarmMultiplier": 1.0,
           "ClimateRegion": 0,
+          "EcologicalIndicatorsCalculationInterval": 12,
           "EcologicalIndicatorsCalculationMonth": 12,
           "AutoCreateDescriptiveSummary": false,
           "Area": 0.0,
@@ -76,11 +77,13 @@
           "Children": [
             {
               "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
+              "SelectedTab": null,
               "Name": "Resources",
               "Children": [
                 {
                   "$type": "Models.CLEM.Resources.RuminantHerd, Models",
                   "TransactionStyle": 0,
+                  "SelectedTab": null,
                   "Name": "Ruminants",
                   "Children": [
                     {
@@ -148,7 +151,6 @@
                       "InterParturitionIntervalCoefficient": -0.7994,
                       "GestationLength": 9.0,
                       "MinimumAge1stMating": 24.0,
-                      "MaximumAgeMating": 120.0,
                       "MinimumSize1stMating": 0.5,
                       "MinimumDaysBirthToConception": 61.0,
                       "MultipleBirthRate": null,
@@ -156,22 +158,25 @@
                       "MaximumMaleMatingsPerDay": 30.0,
                       "PrenatalMortality": 0.079,
                       "MethaneProductionCoefficient": 35.16,
+                      "SelectedTab": null,
                       "Name": "Bos indicus",
                       "Children": [
                         {
                           "$type": "Models.CLEM.Resources.RuminantInitialCohorts, Models",
                           "WeightWarningOccurred": false,
+                          "SelectedTab": null,
                           "Name": "Initial cohorts",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                              "Gender": 1,
+                              "Sex": 0,
                               "Age": 8,
                               "Number": 1.0,
                               "Weight": 180.0,
                               "WeightSD": 0.0,
                               "Suckling": false,
                               "Sire": false,
+                              "SelectedTab": null,
                               "Name": "WeanerF",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -195,6 +200,7 @@
                 },
                 {
                   "$type": "Models.CLEM.Resources.AnimalFoodStore, Models",
+                  "SelectedTab": null,
                   "Name": "AnimalFoodStore",
                   "Children": [
                     {
@@ -203,6 +209,7 @@
                       "DMD": 45.0,
                       "Nitrogen": 0.75,
                       "StartingAmount": 10000.0,
+                      "SelectedTab": null,
                       "Name": "RiceStraw",
                       "Children": [
                         {
@@ -211,6 +218,7 @@
                           "TransmutationPacketSize": 10000.0,
                           "UseWholePackets": false,
                           "TransactionCategory": "Transmutation",
+                          "SelectedTab": null,
                           "Name": "Purchase",
                           "Children": [
                             {
@@ -220,6 +228,7 @@
                               "TransmuteStyle": 0,
                               "ResourceGroup": null,
                               "FinanceTypeForTransactionsName": "No transactions",
+                              "SelectedTab": null,
                               "Name": "Money",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -244,6 +253,7 @@
                 {
                   "$type": "Models.CLEM.Resources.Finance, Models",
                   "CurrencyName": "Dollars",
+                  "SelectedTab": null,
                   "Name": "Finances",
                   "Children": [
                     {
@@ -253,6 +263,7 @@
                       "WithdrawalLimit": 0.0,
                       "InterestRateCharged": 7.5,
                       "InterestRatePaid": 2.0,
+                      "SelectedTab": null,
                       "Name": "General account",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -271,12 +282,14 @@
             },
             {
               "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
+              "SelectedTab": null,
               "Name": "Activities",
               "Children": [
                 {
                   "$type": "Models.CLEM.Activities.ActivityFolder, Models",
                   "TransactionCategory": null,
                   "OnPartialResourcesAvailableAction": 0,
+                  "SelectedTab": null,
                   "Name": "Manage herd",
                   "Children": [
                     {
@@ -287,11 +300,13 @@
                       "StopFeedingWhenSatisfied": false,
                       "TransactionCategory": "Livestock.Feed",
                       "OnPartialResourcesAvailableAction": 2,
+                      "SelectedTab": null,
                       "Name": "Feed rice straw",
                       "Children": [
                         {
                           "$type": "Models.CLEM.Groupings.RuminantFeedGroup, Models",
                           "Value": 1.0,
+                          "SelectedTab": null,
                           "Name": "Feed all",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -309,6 +324,7 @@
                       "MethaneStoreName": "Use store named Methane if present",
                       "OnPartialResourcesAvailableAction": 0,
                       "TransactionCategory": "Livestock.Manage",
+                      "SelectedTab": null,
                       "Name": "Grow all ruminants",
                       "Children": [],
                       "IncludeInDocumentation": true,
@@ -322,7 +338,9 @@
                 },
                 {
                   "$type": "Models.CLEM.SummariseRuminantHerd, Models",
+                  "GroupStyle": 0,
                   "HerdFilters": null,
+                  "SelectedTab": null,
                   "Name": "SummariseHerd",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -331,8 +349,21 @@
                 },
                 {
                   "$type": "Models.CLEM.Reporting.ReportRuminantHerd, Models",
-                  "Name": "ReportHerd",
-                  "Children": [],
+                  "ReportAtStart": true,
+                  "SelectedTab": null,
+                  "Name": "HerdReport",
+                  "Children": [
+                    {
+                      "$type": "Models.CLEM.Groupings.RuminantGroup, Models",
+                      "Reason": 0,
+                      "SelectedTab": null,
+                      "Name": "RuminantGroup",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -377,39 +408,16 @@
                   "$type": "Models.Report, Models",
                   "VariableNames": [
                     "[Clock].Today",
-                    "[Activities].ReportHerd.ReportDetails.Individual.ID as UID",
-                    "[Activities].ReportHerd.ReportDetails.Individual.Weight as Weight"
+                    "[Activities].HerdReport.ReportDetails.Individual.ID as UID",
+                    "[Activities].HerdReport.ReportDetails.Individual.Weight as Weight"
                   ],
                   "EventNames": [
-                    "[Activities].ReportHerd.OnReportItemGenerated"
+                    "[Activities].HerdReport.OnReportItemGenerated"
                   ],
                   "GroupByVariableName": null,
                   "Name": "HerdReport",
                   "Children": [],
                   "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Report, Models",
-                  "VariableNames": [
-                    "[Clock].Today as Date",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.ID as UId",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.Breed as Breed",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.HerdName as Herd",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.Gender as Sex",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.Age as Age",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.Weight as Weight",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.SaleFlag as Reason",
-                    "[Resources].Ruminants.LastTransaction.ExtraInformation.PopulationChangeDirection as Change"
-                  ],
-                  "EventNames": [
-                    "[Resources].Ruminants.TransactionOccurred"
-                  ],
-                  "GroupByVariableName": null,
-                  "Name": "HerdLedger",
-                  "Children": [],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -432,6 +440,22 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                  "ReportStyle": 0,
+                  "ResourceGroupsToReport": "Ruminants",
+                  "ReportLossesAsNegative": true,
+                  "IncludePrice": false,
+                  "IncludeConversions": false,
+                  "VariableNames": null,
+                  "EventNames": null,
+                  "GroupByVariableName": null,
+                  "Name": "HerdLedger",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.CLEM.Reporting.ReportResourceBalances, Models",
                   "ResourceGroupsToReport": [
                     "AnimalFoodStore",
@@ -443,7 +467,7 @@
                   "ReportAnimalWeight": false,
                   "ReportLandEntire": false,
                   "ReportLabourIndividuals": false,
-                  "SelectedTab": "Data",
+                  "SelectedTab": "Properties",
                   "VariableNames": [
                     "[Clock].Today",
                     "AnimalFoodStore",
@@ -465,7 +489,7 @@
                   "CreateHTML": false,
                   "RotateReport": false,
                   "AutoCreateHTML": false,
-                  "SelectedTab": null,
+                  "SelectedTab": "Display",
                   "ModelSummaryStyle": 0,
                   "VariableNames": null,
                   "EventNames": null,
@@ -524,8 +548,8 @@
                       "Line": 0,
                       "LineThickness": 0,
                       "TableName": "ReportResourceBalances",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "RiceStraw",
+                      "XFieldName": "Date",
+                      "YFieldName": "RiceStraw_Amount",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,
@@ -728,8 +752,8 @@
                       "Line": 0,
                       "LineThickness": 0,
                       "TableName": "ReportResourceBalances",
-                      "XFieldName": "Clock.Today",
-                      "YFieldName": "General account",
+                      "XFieldName": "Date",
+                      "YFieldName": "General_account_Amount",
                       "X2FieldName": "",
                       "Y2FieldName": "",
                       "ShowInLegend": true,

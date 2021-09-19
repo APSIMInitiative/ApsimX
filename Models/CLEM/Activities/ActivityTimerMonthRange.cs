@@ -1,14 +1,13 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Activities
 {
@@ -23,6 +22,8 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [ValidParent(ParentType = typeof(GrazeFoodStoreFertilityLimiter))]
+    [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
+    [ValidParent(ParentType = typeof(ReportRuminantHerd))]
     [Description("This activity timer defines a range between months upon which to perform activities.")]
     [HelpUri(@"Content/Features/Timers/MonthRange.htm")]
     [Version(1, 0, 1, "")]
