@@ -63,6 +63,14 @@
         public double Mobilisation { get; private set; }
        
 
+        /// <summary>Calculate todays respiration losses</summary>
+        public NutrientPoolsState CalculateLosses()
+        {
+            double storageLoss = 0;
+            double metabolisloss = 0;
+            return new NutrientPoolsState(0,metabolisloss,storageLoss,null);
+        }
+
         /// <summary>Called when [do daily initialisation].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

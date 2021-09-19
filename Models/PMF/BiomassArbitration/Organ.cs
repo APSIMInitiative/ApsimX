@@ -19,7 +19,7 @@
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
 
-    public class Organ : Model, ICustomDocumentation, IOrgan
+    public class Organ : Model, ICustomDocumentation
     {
         ///1. Links
         ///--------------------------------------------------------------------------------------------------
@@ -56,10 +56,10 @@
         [Units("/d")]
         private IFunction TotalDMDemand = null;
 
-        // <summary>The proportion of biomass respired each day</summary>
-        //[Link(Type = LinkType.Child, ByName = true)]
-       // [Units("/d")]
-       // private Respiration respiration = null;
+        ///<summary>The proportion of biomass respired each day</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("/d")]
+        private Respiration respiration = null;
 
         /// <summary>The list of nurtients to arbitration</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -86,8 +86,6 @@
         /// <summary>Organ constructor</summary>
         public Organ()
         {
-            //Carbon = new OrganNutrientDelta();
-            //Nitrogen = new OrganNutrientDelta();
             Clear();
         }
 
@@ -163,9 +161,14 @@
         /// <summary>Gets the biomass removed from the system (harvested, grazed, etc.)</summary>
         [JsonIgnore]
         public OrganNutrientsState LiveRemoved { get; private set; }
+        
         /// <summary>Gets the biomass removed from the system (harvested, grazed, etc.)</summary>
         [JsonIgnore]
         public OrganNutrientsState DeadRemoved { get; private set; }
+        
+        /// <summary>The amount of carbon respired</summary>
+        [JsonIgnore]
+        public NutrientPoolsState Respired { get; private set; }
 
         /// <summary>Rate of senescence for the day</summary>
         [JsonIgnore]
@@ -178,16 +181,6 @@
         /// <summary>the detachment rate for the day</summary>
         [JsonIgnore]
         public double detachmentRate { get; private set; }
-
-        /// <summary>The amount of mass lost each day from maintenance respiration</summary>
-        [JsonIgnore]
-        [Units("g/m^2")]
-        public double MaintenanceRespiration { get; private set; }
-
-        /// <summary>Growth Respiration</summary>
-        [JsonIgnore]
-        [Units("g/m^2")]
-        public double GrowthRespiration { get; set; }
 
         /// <summary>Gets the maximum N concentration.</summary>
         [JsonIgnore]
@@ -378,14 +371,8 @@
                     surfaceOrganicMatter.Add(Detached.Wt * 10, Detached.N * 10, 0, parentPlant.PlantType, Name);
                 }
 
-                
-                // Do maintenance respiration
-                //if (maintenanceRespirationFunction.Value() > 0)
-                //{
-                    //MaintenanceRespiration = (Live.MetabolicWt + Live.StorageWt) * maintenanceRespirationFunction.Value();
-                   // Live.MetabolicWt *= (1 - maintenanceRespirationFunction.Value());
-                   // Live.StorageWt *= (1 - maintenanceRespirationFunction.Value());
-                //}
+                Respired = respiration.CalculateLosses();
+                Live.Carbon.SubtractDelta(Respired,Live);
 
                 if (RootNetworkObject != null)
                 {

@@ -33,7 +33,7 @@
 
         /// <summary>The parent organ</summary>
         [Link(Type = LinkType.Ancestor)]
-        private IOrgan parentOrgan= null;
+        private Organ parentOrgan= null;
  
         /// <summary>The FRGR function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
