@@ -52,23 +52,24 @@ namespace Models.PMF
         {
             parentOrgan = FindParentOrgan(this.Parent);
             dCarbon = FindNutrientDelta("Carbon", parentOrgan);
-            
 
             //setup a function pointer (delegate) at simulation commencing so it isn't performing multiple if statements every day
-            //cleaner method would probably be to use classes
-            var nutrientName = this.Parent.Parent.Name;
-            switch (this.Name)
+            if (Name.Equals("Structural", StringComparison.InvariantCultureIgnoreCase))
             {
-                case "Structural":
-                    CalcDeficit = calcStructuralCarbonDemand;
-                    break;
-                case "Metabolic":
-                    CalcDeficit = () => calcDeficitForCarbonPool(parentOrgan.Live.Carbon.Metabolic, dCarbon.ConcentrationOrFraction.Metabolic);
-                    break;
-                case "Storage":
-                    CalcDeficit = () => calcDeficitForCarbonPool(parentOrgan.Live.Carbon.Storage, dCarbon.ConcentrationOrFraction.Storage);
-                    break;
-            };
+                CalcDeficit = calcStructuralCarbonDemand;
+            }
+            else if(Name.Equals("Metabolic", StringComparison.InvariantCultureIgnoreCase))
+            {
+                CalcDeficit = () => calcDeficitForCarbonPool(parentOrgan.Live.Carbon.Metabolic, dCarbon.ConcentrationOrFraction.Metabolic);
+            }
+            else if (Name.Equals("Storage", StringComparison.InvariantCultureIgnoreCase))
+            {
+                CalcDeficit = () => calcDeficitForCarbonPool(parentOrgan.Live.Carbon.Storage, dCarbon.ConcentrationOrFraction.Storage);
+            }
+            else
+            {
+                throw new Exception("Unexpected name encountered while processing CarbonDeficitFunction - expected Structural, Metabolic or Storage. Encountered: " + Name);
+            }
         }
 
         private double calcStructuralCarbonDemand()
