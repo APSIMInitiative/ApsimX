@@ -60,22 +60,21 @@ namespace Models.PMF
             dNitrogen = FindNutrientDelta("Nitrogen", parentOrgan);
 
             //setup a function pointer (delegate) at simulation commencing so it isn't performing multiple if statements every day
-            //cleaner method would probably be to use classes
-            var nutrientName = this.Parent.Parent.Name;
-            if (nutrientName == "Nitrogen")
+            if(Name.Equals("Structural",StringComparison.InvariantCultureIgnoreCase))
             {
-                switch (this.Name)
-                {
-                    case "Structural":
-                        CalcDeficit = calcStructuralNitrogenDemand;
-                        break;
-                    case "Metabolic":
-                        CalcDeficit = () => calcDeficitForNitrogenPool(parentOrgan.Live.Nitrogen.Metabolic, dNitrogen.ConcentrationOrFraction.Metabolic, dNitrogen.ConcentrationOrFraction.Structural);
-                        break;
-                    case "Storage":
-                        CalcDeficit = () => calcDeficitForNitrogenPool(parentOrgan.Live.Nitrogen.Storage, dNitrogen.ConcentrationOrFraction.Storage, dNitrogen.ConcentrationOrFraction.Metabolic);
-                        break;
-                };
+                CalcDeficit = calcStructuralNitrogenDemand;
+            }
+            else if(Name.Equals("Metabolic", StringComparison.InvariantCultureIgnoreCase))
+            {
+                CalcDeficit = () => calcDeficitForNitrogenPool(parentOrgan.Live.Nitrogen.Metabolic, dNitrogen.ConcentrationOrFraction.Metabolic, dNitrogen.ConcentrationOrFraction.Structural);
+            }
+            else if (Name.Equals("Storage", StringComparison.InvariantCultureIgnoreCase))
+            {
+                CalcDeficit = () => calcDeficitForNitrogenPool(parentOrgan.Live.Nitrogen.Storage, dNitrogen.ConcentrationOrFraction.Storage, dNitrogen.ConcentrationOrFraction.Metabolic);
+            }
+            else
+            {
+                throw new Exception("Unexpected name encountered while processing CarbonDeficitFunction - expected Structural, Metabolic or Storage. Encountered: " + Name);
             }
         }
 
