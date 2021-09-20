@@ -6,15 +6,6 @@
   "Name": "Simulations",
   "Children": [
     {
-      "$type": "Models.Memo, Models",
-      "Text": "# The APSIM Soil Nutrient Model\r\n \r\nThe APSIM Soil Nutrient model has been developed using approaches similar to those employed in the APSIM Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. \r\n\r\nThe soil nutrient model consists of:\r\n\r\n* a collection of soil organic matter pools\r\n* a collection of soil mineral N pools\r\n* a series of carbon flows that capture the flow of C from one pool to another, with associated CO2 losses and movement of N between pools and associated mineralisation or immobilisation of mineral N to facilitiate this flow.\r\n* a series of nitrogen flows that capture the movement of N between mineral N pools, or losses of N to the atmosphere.\r\n\r\nThis work builds upon earlier APSIM soil organic matter models such as SoilN ([probert_apsims_1998]).",
-      "Name": "TitlePage",
-      "Children": [],
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
       "$type": "Models.Core.Replacements, Models",
       "Name": "Replacements",
       "Children": [
