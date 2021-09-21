@@ -1149,7 +1149,13 @@ namespace APSIM.Interop.Markdown.Renderers
             {
                 documentStyle.Font.Size = GetFontSizeForHeading((uint)headingLevel);
                 documentStyle.Font.Bold = true;
-                documentStyle.ParagraphFormat.OutlineLevel = GetHeadingOutlineLevel((uint)headingLevel);
+
+                // Because some of the existing autodocs use >6 levels of nested headings,
+                // I'm going to allow this practice to continue, with the caveat that any
+                // such headings won't appear in the document outline. It would be better
+                // to yield a warning or error in such cases.
+                if (headingLevel <= 6)
+                    documentStyle.ParagraphFormat.OutlineLevel = GetHeadingOutlineLevel((uint)headingIndices.Count);
             }
 
             return name;
