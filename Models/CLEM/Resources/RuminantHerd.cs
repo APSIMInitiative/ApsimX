@@ -214,7 +214,8 @@ namespace Models.CLEM.Resources
                 }
             }
             // group herd ready for reporting
-            groupedHerdForReporting = SummarizeIndividualsByGroups(Herd, PurchaseOrSalePricingStyleType.Purchase);
+            string warnMessage = $"Some ruminants did not have a [PriceGroup] of style [Purchase] for reporting value in a [Herd Summary].{System.Environment.NewLine}The values reported will not include these individuals. Ensure all individuals have a purchase price in order to provide ruminant value in summary reports.";
+            groupedHerdForReporting = SummarizeIndividualsByGroups(Herd, PurchaseOrSalePricingStyleType.Purchase, warnMessage);
         }
 
         /// <summary>An event handler to allow us to peform atsks at the end of the simulation</summary>
@@ -364,7 +365,8 @@ namespace Models.CLEM.Resources
         {
             // group herd ready for reporting
             // performed at herd summary to avoid end of step aging purchases etc
-            groupedHerdForReporting = SummarizeIndividualsByGroups(Herd, PurchaseOrSalePricingStyleType.Purchase);
+            string warnMessage = $"Some ruminants did not have a [PriceGroup] of style [Purchase] for reporting value in a [Herd Summary].{System.Environment.NewLine}The values reported will not include these individuals. Ensure all individuals have a purchase price in order to provide ruminant value in summary reports.";
+            groupedHerdForReporting = SummarizeIndividualsByGroups(Herd, PurchaseOrSalePricingStyleType.Purchase, warnMessage);
         }
 
         /// <summary>
@@ -436,8 +438,9 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="individuals">Individuals to summarize</param>
         /// <param name="priceStyle">Price style to use</param>
+        /// <param name="warningMessage">A custom warning message used if prices cannot be found otherwise the stand messge will be reported for each unique missing price</param>
         /// <returns>A grouped summary of individuals</returns>
-        public IEnumerable<RuminantReportTypeDetails> SummarizeIndividualsByGroups(IEnumerable<Ruminant> individuals, PurchaseOrSalePricingStyleType priceStyle)
+        public IEnumerable<RuminantReportTypeDetails> SummarizeIndividualsByGroups(IEnumerable<Ruminant> individuals, PurchaseOrSalePricingStyleType priceStyle, string warningMessage = "")
         {
             var groupedInd = from ind in individuals
                                     group ind by ind.BreedParams.Name into breedGroup
@@ -452,7 +455,7 @@ namespace Models.CLEM.Resources
                                                      Count = catind.Count(),
                                                      TotalAdultEquivalent = catind.Sum(a => a.AdultEquivalent),
                                                      TotalWeight = catind.Sum(a => a.Weight),
-                                                     TotalPrice = catind.Sum(a => a.BreedParams.ValueofIndividual(a, priceStyle)?.CalculateValue(a))
+                                                     TotalPrice = catind.Sum(a => a.BreedParams.ValueofIndividual(a, priceStyle, warningMessage)?.CalculateValue(a))
                                                  }
                                     };
             return groupedInd;

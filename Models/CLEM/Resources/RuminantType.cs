@@ -144,7 +144,7 @@ namespace Models.CLEM.Resources
         /// Get value of a specific individual
         /// </summary>
         /// <returns>value</returns>
-        public AnimalPriceGroup ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle)
+        public AnimalPriceGroup ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle, string warningMessage = "")
         {
             if (PricingAvailable())
             {
@@ -159,7 +159,9 @@ namespace Models.CLEM.Resources
                         }
 
                     // no price match found.
-                    string warningString = $"No [{purchaseStyle}] price entry was found for [r={ind.Breed}] meeting the required criteria [f=age: {ind.Age}] [f=sex: {ind.Sex}] [f=weight: {ind.Weight:##0}]";
+                    string warningString = warningMessage;
+                    if(warningString == "")
+                        warningString = $"No [{purchaseStyle}] price entry was found for [r={ind.Breed}] meeting the required criteria [f=age: {ind.Age}] [f=sex: {ind.Sex}] [f=weight: {ind.Weight:##0}]";
                     Warnings.CheckAndWrite(warningString, Summary, this);
                 }
                 return ind.CurrentPrice;
@@ -171,7 +173,7 @@ namespace Models.CLEM.Resources
         /// Get value of a specific individual with special requirements check (e.g. breeding sire or draught purchase)
         /// </summary>
         /// <returns>value</returns>
-        public AnimalPriceGroup ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle, string property, string value)
+        public AnimalPriceGroup ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle, string property, string value, string warningMessage = "")
         {
             double price = 0;
             if (PricingAvailable())
@@ -217,17 +219,23 @@ namespace Models.CLEM.Resources
 
                     if (matchCriteria == null)
                     {
-                        // report specific criteria not found in price list
-                        string warningString = "No [" + purchaseStyle.ToString() + "] price entry was found for [r=" + ind.Breed + "] meeting the required criteria [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".");
-
-                        if (matchIndividual != null)
+                        string warningString = warningMessage;
+                        if (warningString != "")
                         {
-                            // add using the best pricing available for [][] purchases of xx per head
-                            warningString += "\r\nThe best available price [" + matchIndividual.Value.ToString("#,##0.##") + "] [" + matchIndividual.PricingStyle.ToString() + "] will be used.";
-                            price = matchIndividual.Value * ((matchIndividual.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
-                        }
-                        else
-                            warningString += "\r\nNo alternate price for individuals could be found for the individuals. Add a new [r=AnimalPriceGroup] entry in the [r=AnimalPricing] for [" + ind.Breed + "]";
+                            // no warning string passed to method so calculate one
+                            // report specific criteria not found in price list
+                            warningString = "No [" + purchaseStyle.ToString() + "] price entry was found for [r=" + ind.Breed + "] meeting the required criteria [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".");
+
+                            if (matchIndividual != null)
+                            {
+                                // add using the best pricing available for [][] purchases of xx per head
+                                warningString += "\r\nThe best available price [" + matchIndividual.Value.ToString("#,##0.##") + "] [" + matchIndividual.PricingStyle.ToString() + "] will be used.";
+                                price = matchIndividual.Value * ((matchIndividual.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
+                            }
+                            else
+                                warningString += "\r\nNo alternate price for individuals could be found for the individuals. Add a new [r=AnimalPriceGroup] entry in the [r=AnimalPricing] for [" + ind.Breed + "]";
+                        }                        
+                            
                         if (!warningsNotFound.Contains(criteria))
                         {
                             warningsNotFound.Add(criteria);
