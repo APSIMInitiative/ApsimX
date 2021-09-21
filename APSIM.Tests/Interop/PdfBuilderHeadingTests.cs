@@ -8,6 +8,7 @@ using Document = MigraDocCore.DocumentObjectModel.Document;
 using Paragraph = MigraDocCore.DocumentObjectModel.Paragraph;
 using FormattedText = MigraDocCore.DocumentObjectModel.FormattedText;
 using Text = MigraDocCore.DocumentObjectModel.Text;
+using OutlineLevel = MigraDocCore.DocumentObjectModel.OutlineLevel;
 
 namespace APSIM.Tests.Interop.Documentation
 {
@@ -326,6 +327,93 @@ namespace APSIM.Tests.Interop.Documentation
 
             ValidateHeading(elements[0] as Paragraph,  "2 ", "section 2");
             ValidateHeading(elements[1] as Paragraph,  "3 ", "section 3");
+        }
+
+        /// <summary>
+        /// Ensure that outline level matches heading level.
+        /// </summary>
+        [Test]
+        public void TestOutlineLevelNormalHeading()
+        {
+            builder.AppendHeading("Heading level 1");
+            Paragraph paragraph = (Paragraph)doc.LastSection.Elements.LastObject;
+            Assert.AreEqual(OutlineLevel.Level1, paragraph.Format.OutlineLevel);
+
+            builder.PushSubHeading();
+
+            builder.AppendHeading("Heading level 2");
+            paragraph = (Paragraph)doc.LastSection.Elements.LastObject;
+            Assert.AreEqual(OutlineLevel.Level2, paragraph.Format.OutlineLevel);
+
+            builder.PushSubHeading();
+
+            builder.AppendHeading("Heading level 3");
+            paragraph = (Paragraph)doc.LastSection.Elements.LastObject;
+            Assert.AreEqual(OutlineLevel.Level3, paragraph.Format.OutlineLevel);
+
+            builder.PushSubHeading();
+
+            builder.AppendHeading("Heading level 4");
+            paragraph = (Paragraph)doc.LastSection.Elements.LastObject;
+            Assert.AreEqual(OutlineLevel.Level4, paragraph.Format.OutlineLevel);
+
+            builder.PushSubHeading();
+
+            builder.AppendHeading("Heading level 5");
+            paragraph = (Paragraph)doc.LastSection.Elements.LastObject;
+            Assert.AreEqual(OutlineLevel.Level5, paragraph.Format.OutlineLevel);
+
+            builder.PushSubHeading();
+
+            builder.AppendHeading("Heading level 6");
+            paragraph = (Paragraph)doc.LastSection.Elements.LastObject;
+            Assert.AreEqual(OutlineLevel.Level6, paragraph.Format.OutlineLevel);
+        }
+
+        /// <summary>
+        /// Ensure that the outline level is set correctly when mixing calls to
+        /// <see cref="PdfBuilder.PushSubHeading()"/> with calls to
+        /// <see cref="PdfBuilder.SetHeadingLevel(uint)"/>.
+        /// </summary>
+        [Test]
+        public void TestOutlineLevelMixedHeadings()
+        {
+            builder.AppendHeading("Toplevel heading");
+
+            builder.PushSubHeading();
+            builder.SetHeadingLevel(2);
+            builder.AppendText("Nested heading", TextStyle.Normal);
+            builder.ClearHeadingLevel();
+            builder.PopSubHeading();
+
+            Assert.AreEqual(2, doc.LastSection.Elements.Count, "Section has incorrect # paragraphs");
+            Paragraph paragraph0 = (Paragraph)doc.LastSection.Elements[0];
+            Paragraph paragraph1 = (Paragraph)doc.LastSection.Elements[1];
+            Assert.AreEqual(OutlineLevel.Level1, paragraph0.Format.OutlineLevel);
+            Assert.AreEqual(OutlineLevel.Level2, paragraph1.Format.OutlineLevel);
+        }
+
+        /// <summary>
+        /// Ensure that the outline level is set correctly when mixing calls to
+        /// <see cref="PdfBuilder.PushSubHeading()"/> with calls to
+        /// <see cref="PdfBuilder.SetHeadingLevel(uint)"/>.
+        /// </summary>
+        [Test]
+        public void TestOutlineLevelRelativeHeadings()
+        {
+            builder.AppendHeading("Toplevel heading");
+
+            builder.PushSubHeading();
+            builder.SetHeadingLevel(1);
+            builder.AppendText("Nested heading", TextStyle.Normal);
+            builder.ClearHeadingLevel();
+            builder.PopSubHeading();
+
+            Assert.AreEqual(2, doc.LastSection.Elements.Count, "Section has incorrect # paragraphs");
+            Paragraph paragraph0 = (Paragraph)doc.LastSection.Elements[0];
+            Paragraph paragraph1 = (Paragraph)doc.LastSection.Elements[1];
+            Assert.AreEqual(OutlineLevel.Level1, paragraph0.Format.OutlineLevel);
+            Assert.AreEqual(OutlineLevel.Level2, paragraph1.Format.OutlineLevel);
         }
 
         /// <summary>
