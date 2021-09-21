@@ -203,13 +203,6 @@ namespace Models.CLEM.Resources
                         int numberOfBirths = Convert.ToInt32((female.Age - ageFirstBirth) / ((currentIPI + minsizeIPI) / 2), CultureInfo.InvariantCulture) - 1;
                         female.AgeAtLastBirth = ageFirstBirth + (currentIPI * numberOfBirths);
                         female.AgeAtLastConception = female.AgeAtLastBirth - female.BreedParams.GestationLength;
-
-                        // no longer needed as only work with stats during the simulation.
-                        // fill breeding stats prior to simulation start
-                        // assumes all previous births successful
-                        //female.NumberOfConceptions = female.NumberOfBirths;
-                        //female.NumberOfOffspring = female.NumberOfBirths;
-                        //female.NumberOfWeaned = female.NumberOfBirths;
                     }
                 }
             }

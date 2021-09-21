@@ -67,13 +67,6 @@ namespace Models.CLEM.Activities
         public string PastureDataReader { get; set; }
 
         /// <summary>
-        /// Starting amount (kg)
-        /// </summary>
-        [Description("Starting Amount (kg/ha)")]
-        [Required, GreaterThanEqualValue(0)]
-        public double StartingAmount { get; set; }
-
-        /// <summary>
         /// Starting stocking rate (Adult Equivalents/square km)
         /// </summary>
         [Description("Starting stocking rate (Adult Equivalents/sqkm)")]
@@ -468,10 +461,6 @@ namespace Models.CLEM.Activities
                         htmlWriter.Write("<span class=\"setvalue\">" + AreaRequested.ToString("#,##0.###") + "</span> " + parentLand.UnitsOfArea + " of ");
                 }
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(LandTypeNameToUse, "Land not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write("</div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("The simulation starts with <span class=\"setvalue\">" + StartingAmount.ToString("#,##0.##") + "</span> kg/ha");
                 htmlWriter.Write("</div>");
 
                 return htmlWriter.ToString(); 
