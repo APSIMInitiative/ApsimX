@@ -313,7 +313,8 @@ namespace Models.CLEM.Activities
 
                         // add attributes inherited from mother
                         foreach (var attribute in female.Attributes.Items)
-                            newCalfRuminant.Attributes.Add(attribute.Key, attribute.Value.GetInheritedAttribute() as IIndividualAttribute);
+                            if (attribute.Value != null)
+                                newCalfRuminant.Attributes.Add(attribute.Key, attribute.Value.GetInheritedAttribute() as IIndividualAttribute);
 
                         HerdResource.AddRuminant(newCalfRuminant, this);
 
