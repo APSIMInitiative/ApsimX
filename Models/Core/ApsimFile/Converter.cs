@@ -3568,7 +3568,30 @@
             }
 
             foreach (JObject folder in JsonUtilities.ChildrenRecursively(root, "Folder"))
-                folder["ShowInDocs"] = folder["IncludeInDocumentation"];
+            {
+                JToken showInDocs = folder["ShowPageOfGraphs"];
+                bool show = showInDocs != null && showInDocs.Value<bool>();
+                folder["ShowInDocs"] = show && ShouldShowInDocs(folder);
+            }
+
+            bool ShouldShowInDocs(JObject folder)
+            {
+                JToken includeInDocumentation = folder["IncludeInDocumentation"];
+                if (includeInDocumentation == null || !includeInDocumentation.Value<bool>())
+                    return false;
+                // bool isFolder = JsonUtilities.Type(folder) == "Folder";
+                // if (isFolder)
+                // {
+                //     JToken showPageOfGraphs = folder["ShowPageOfGraphs"];
+                //     if (showPageOfGraphs == null || !showPageOfGraphs.Value<bool>())
+                //         return false;
+                // }
+                JObject parent = (JObject)JsonUtilities.Parent(folder);
+                if (parent == null)
+                    return true;
+                else
+                    return ShouldShowInDocs(parent);
+            }
         }
 
         /// <summary>
