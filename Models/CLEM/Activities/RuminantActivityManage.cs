@@ -173,7 +173,7 @@ namespace Models.CLEM.Activities
         /// Male selling age (months)
         /// </summary>
         [Category("Grow out herd", "Males")]
-        [Description("Male selling age (months)")]
+        [Description("Grow out male selling age (months)")]
         [System.ComponentModel.DefaultValueAttribute(24)]
         [Required, GreaterThanEqualValue(0)]
         public double MaleSellingAge { get; set; }
@@ -182,7 +182,7 @@ namespace Models.CLEM.Activities
         /// Male selling weight (kg)
         /// </summary>
         [Category("Grow out herd", "Males")]
-        [Description("Male selling weight (kg)")]
+        [Description("Grow out male selling weight (kg)")]
         [Required, GreaterThanEqualValue(0)]
         public double MaleSellingWeight { get; set; }
 
@@ -198,7 +198,7 @@ namespace Models.CLEM.Activities
         /// Female selling age (months)
         /// </summary>
         [Category("Grow out herd", "Females")]
-        [Description("Female grow out selling age (months)")]
+        [Description("Grow out female selling age (months)")]
         [System.ComponentModel.DefaultValueAttribute(24)]
         [Required, GreaterThanEqualValue(0)]
         public double FemaleSellingAge { get; set; }
@@ -207,7 +207,7 @@ namespace Models.CLEM.Activities
         /// Female selling weight (kg)
         /// </summary>
         [Category("Grow out herd", "Females")]
-        [Description("Female grow out selling weight (kg)")]
+        [Description("Grow out female selling weight (kg)")]
         [Required, GreaterThanEqualValue(0)]
         public double FemaleSellingWeight { get; set; }
 
@@ -919,6 +919,7 @@ namespace Models.CLEM.Activities
                             foreach (RuminantFemale female in saleherd.Where(a => (a.Age - a.BreedParams.MinimumAge1stMating > -11)).OrderByDescending(a => a.Weight * a.Age).Take(femaleBreedersRequired))
                             {
                                 // keep by removing any tag for sale.
+                                female.Attributes.Remove("GrowOut"); // in case grow out heifer
                                 female.SaleFlag = HerdChangeReason.None;
                                 female.Location = grazeStoreBreeders;
                                 femaleBreedersRequired--;
@@ -1013,6 +1014,7 @@ namespace Models.CLEM.Activities
                             List<RuminantFemale> saleherd = herd.OfType<RuminantFemale>().Where(a => a.ReadyForSale && a.SaleFlag != HerdChangeReason.MaxAgeSale).ToList();
                             foreach (RuminantFemale female in saleherd.OrderByDescending(a => a.Weight * a.Age).Take(femaleBreedersRequired))
                             {
+                                female.Attributes.Remove("GrowOut");
                                 // keep by removing any tag for sale.
                                 female.SaleFlag = HerdChangeReason.None;
                                 female.Location = grazeStoreBreeders;
