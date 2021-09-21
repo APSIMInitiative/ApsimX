@@ -58,17 +58,32 @@ namespace APSIM.Interop.Documentation
             Document pdf = CreateStandardDocument();
             PdfBuilder pdfRenderer = new PdfBuilder(pdf, options);
 
-            foreach (ITag tag in tags)
-                pdfRenderer.Write(tag);
+            Write(tags, pdfRenderer);
             pdfRenderer.WriteBibliography();
 
+            Save(pdf, fileName);
+        }
+
+        public static void Save(Document document, string fileName)
+        {
             PdfDocumentRenderer renderer = new PdfDocumentRenderer(false);
-            renderer.Document = pdf;
+            renderer.Document = document;
             renderer.RenderDocument();
             renderer.Save(fileName);
         }
 
-        private static Document CreateStandardDocument()
+        /// <summary>
+        /// Write the tags to the given pdf document.
+        /// </summary>
+        /// <param name="tags"></param>
+        /// <param name="document"></param>
+        public void Write(IEnumerable<ITag> tags, PdfBuilder document)
+        {
+            foreach (ITag tag in tags)
+                document.Write(tag);
+        }
+
+        public static Document CreateStandardDocument()
         {
             Document document = new Document();
 
