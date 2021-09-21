@@ -60,9 +60,9 @@
             //thresholds = new NutrientConcentrationFunctions();
             Supplies = new OrganNutrientSupplies();
             SuppliesAllocated = new OrganNutrientSupplies();
-            Demands = new NutrientPoolsState(0, 0, 0, null);
-            PriorityScaledDemand = new NutrientPoolsState(0, 0, 0, null);
-            DemandsAllocated = new NutrientPoolsState(0, 0, 0, null);
+            Demands = new NutrientPoolsState(0, 0, 0);
+            PriorityScaledDemand = new NutrientPoolsState(0, 0, 0);
+            DemandsAllocated = new NutrientPoolsState(0, 0, 0);
         }
 
         ///4. Public Events And Enums
@@ -102,11 +102,7 @@
         {
             get
             {
-                NutrientPoolsState outstanding = new NutrientPoolsState(
-                Demands.Structural - DemandsAllocated.Structural,
-                Demands.Metabolic - DemandsAllocated.Metabolic,
-                Demands.Storage - DemandsAllocated.Storage,
-                null);
+                NutrientPoolsState outstanding = new NutrientPoolsState(Demands - DemandsAllocated);
                 return outstanding;
             }
         }
@@ -133,8 +129,7 @@
             NutrientPoolsState returns = new NutrientPoolsState(
             ThrowIfNegative(functions.Structural),
             ThrowIfNegative(functions.Metabolic),
-            ThrowIfNegative(functions.Storage),
-            null);
+            ThrowIfNegative(functions.Storage));
             return returns;
         }
 
@@ -160,13 +155,11 @@
             Demands = new NutrientPoolsState(
             ThrowIfNegative(demandFunctions.Structural),
             ThrowIfNegative(demandFunctions.Metabolic),
-            ThrowIfNegative(demandFunctions.Storage),
-            null);
+            ThrowIfNegative(demandFunctions.Storage));
             PriorityScaledDemand = new NutrientPoolsState(
             demandFunctions.Structural.Value() * demandFunctions.QStructuralPriority.Value(),
             demandFunctions.Metabolic.Value() * demandFunctions.QMetabolicPriority.Value(),
-            demandFunctions.Storage.Value() * demandFunctions.QStoragePriority.Value(),
-            null);
+            demandFunctions.Storage.Value() * demandFunctions.QStoragePriority.Value());
         }
 
 
@@ -175,9 +168,9 @@
         {
             Supplies.Clear();
             SuppliesAllocated.Clear();
-            Demands.Clear();
-            PriorityScaledDemand.Clear();
-            DemandsAllocated.Clear();
+            Demands = new NutrientPoolsState(0,0,0);
+            PriorityScaledDemand = new NutrientPoolsState(0, 0, 0);
+            DemandsAllocated = new NutrientPoolsState(0, 0, 0);
         }
 
         /// <summary>Called when [Sowing] is broadcast</summary>
@@ -198,7 +191,7 @@
             // Deltas = new OrganResourceStates();
             // Live = new ResourcePools();
             //  Dead = new ResourcePools();
-            ConcentrationOrFraction = new NutrientPoolsState(0, 0, 0, null);
+            ConcentrationOrFraction = new NutrientPoolsState(0, 0, 0);
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>

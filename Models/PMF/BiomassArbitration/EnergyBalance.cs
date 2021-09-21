@@ -143,9 +143,18 @@
         [JsonIgnore]
         public double WaterDemand { get; set; }
 
+        private double waterAllocation = 0;
         /// <summary>Gets or sets the water allocation.</summary>
         [JsonIgnore]
-        public double WaterAllocation { get; set; }
+        public double WaterAllocation {
+            get { return waterAllocation; }
+            set { waterAllocation = value; allocationMade(); }
+        }
+
+        private void allocationMade()
+        {
+            Fw = MathUtilities.Divide(WaterAllocation, PotentialEP, 1);
+        }
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         [JsonIgnore]
@@ -210,14 +219,8 @@
         /// <summary>
         /// Water stress factor.
         /// </summary>
-        public double Fw
-        {
-            get
-            {
-                return MathUtilities.Divide(WaterAllocation, PotentialEP, 1);
-            }
-        }
-       
+        public double Fw { get; private set; }
+        
 
         /// <summary>Clears this instance.</summary>
         private void Clear()

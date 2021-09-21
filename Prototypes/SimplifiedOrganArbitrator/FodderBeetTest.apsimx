@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 300,
   "Version": 141,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -746,8 +746,18 @@
               "IsAboveGround": true,
               "Live": {
                 "$type": "Models.PMF.OrganNutrientsState, Models",
-                "parentOrgan": null,
-                "Weight": null,
+                "Weight": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 "Wt": 0.0,
                 "N": 0.0,
                 "P": 0.0,
@@ -755,7 +765,7 @@
                 "NConc": 0.0,
                 "PConc": 0.0,
                 "KConc": 0.0,
-                "CarbonConcentration": 0.4,
+                "Cconc": 1.0,
                 "Carbon": {
                   "$type": "Models.PMF.NutrientPoolsState, Models",
                   "Structural": 0.0,
@@ -812,8 +822,18 @@
               },
               "Dead": {
                 "$type": "Models.PMF.OrganNutrientsState, Models",
-                "parentOrgan": null,
-                "Weight": null,
+                "Weight": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 "Wt": 0.0,
                 "N": 0.0,
                 "P": 0.0,
@@ -821,7 +841,7 @@
                 "NConc": 0.0,
                 "PConc": 0.0,
                 "KConc": 0.0,
-                "CarbonConcentration": 0.4,
+                "Cconc": 1.0,
                 "Carbon": {
                   "$type": "Models.PMF.NutrientPoolsState, Models",
                   "Structural": 0.0,
@@ -1822,8 +1842,18 @@
               "IsAboveGround": true,
               "Live": {
                 "$type": "Models.PMF.OrganNutrientsState, Models",
-                "parentOrgan": null,
-                "Weight": null,
+                "Weight": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 "Wt": 0.0,
                 "N": 0.0,
                 "P": 0.0,
@@ -1831,7 +1861,7 @@
                 "NConc": 0.0,
                 "PConc": 0.0,
                 "KConc": 0.0,
-                "CarbonConcentration": 0.4,
+                "Cconc": 1.0,
                 "Carbon": {
                   "$type": "Models.PMF.NutrientPoolsState, Models",
                   "Structural": 0.0,
@@ -1888,8 +1918,18 @@
               },
               "Dead": {
                 "$type": "Models.PMF.OrganNutrientsState, Models",
-                "parentOrgan": null,
-                "Weight": null,
+                "Weight": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 "Wt": 0.0,
                 "N": 0.0,
                 "P": 0.0,
@@ -1897,7 +1937,7 @@
                 "NConc": 0.0,
                 "PConc": 0.0,
                 "KConc": 0.0,
-                "CarbonConcentration": 0.4,
+                "Cconc": 1.0,
                 "Carbon": {
                   "$type": "Models.PMF.NutrientPoolsState, Models",
                   "Structural": 0.0,
@@ -2881,6 +2921,7 @@
                   "R50": 150.0,
                   "KDead": 0.0,
                   "LAIDead": 0.0,
+                  "Fw": 0.0,
                   "Name": "Canopy",
                   "Children": [
                     {
@@ -3793,8 +3834,18 @@
               "IsAboveGround": true,
               "Live": {
                 "$type": "Models.PMF.OrganNutrientsState, Models",
-                "parentOrgan": null,
-                "Weight": null,
+                "Weight": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 "Wt": 0.0,
                 "N": 0.0,
                 "P": 0.0,
@@ -3802,7 +3853,7 @@
                 "NConc": 0.0,
                 "PConc": 0.0,
                 "KConc": 0.0,
-                "CarbonConcentration": 0.4,
+                "Cconc": 1.0,
                 "Carbon": {
                   "$type": "Models.PMF.NutrientPoolsState, Models",
                   "Structural": 0.0,
@@ -3859,8 +3910,18 @@
               },
               "Dead": {
                 "$type": "Models.PMF.OrganNutrientsState, Models",
-                "parentOrgan": null,
-                "Weight": null,
+                "Weight": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 "Wt": 0.0,
                 "N": 0.0,
                 "P": 0.0,
@@ -3868,7 +3929,7 @@
                 "NConc": 0.0,
                 "PConc": 0.0,
                 "KConc": 0.0,
-                "CarbonConcentration": 0.4,
+                "Cconc": 1.0,
                 "Carbon": {
                   "$type": "Models.PMF.NutrientPoolsState, Models",
                   "Structural": 0.0,
@@ -4780,8 +4841,18 @@
               "IsAboveGround": false,
               "Live": {
                 "$type": "Models.PMF.OrganNutrientsState, Models",
-                "parentOrgan": null,
-                "Weight": null,
+                "Weight": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 "Wt": 0.0,
                 "N": 0.0,
                 "P": 0.0,
@@ -4789,7 +4860,7 @@
                 "NConc": 0.0,
                 "PConc": 0.0,
                 "KConc": 0.0,
-                "CarbonConcentration": 0.4,
+                "Cconc": 1.0,
                 "Carbon": {
                   "$type": "Models.PMF.NutrientPoolsState, Models",
                   "Structural": 0.0,
@@ -4846,8 +4917,18 @@
               },
               "Dead": {
                 "$type": "Models.PMF.OrganNutrientsState, Models",
-                "parentOrgan": null,
-                "Weight": null,
+                "Weight": {
+                  "$type": "Models.PMF.NutrientPoolsState, Models",
+                  "Structural": 0.0,
+                  "Storage": 0.0,
+                  "Metabolic": 0.0,
+                  "Total": 0.0,
+                  "Name": "NutrientPoolsState",
+                  "Children": [],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
                 "Wt": 0.0,
                 "N": 0.0,
                 "P": 0.0,
@@ -4855,7 +4936,7 @@
                 "NConc": 0.0,
                 "PConc": 0.0,
                 "KConc": 0.0,
-                "CarbonConcentration": 0.4,
+                "Cconc": 1.0,
                 "Carbon": {
                   "$type": "Models.PMF.NutrientPoolsState, Models",
                   "Structural": 0.0,
@@ -5943,8 +6024,6 @@
             },
             {
               "$type": "Models.PMF.CompositeStates, Models",
-              "parentOrgan": null,
-              "CarbonConcentration": 0.4,
               "Propertys": [
                 "[Leaf].Live",
                 "[Leaf].Dead",
@@ -5953,7 +6032,18 @@
                 "[Petiole].Live",
                 "[Petiole].Dead"
               ],
-              "Weight": null,
+              "Weight": {
+                "$type": "Models.PMF.NutrientPoolsState, Models",
+                "Structural": 0.0,
+                "Storage": 0.0,
+                "Metabolic": 0.0,
+                "Total": 0.0,
+                "Name": "NutrientPoolsState",
+                "Children": [],
+                "IncludeInDocumentation": true,
+                "Enabled": true,
+                "ReadOnly": false
+              },
               "Wt": 0.0,
               "N": 0.0,
               "P": 0.0,
@@ -5961,6 +6051,7 @@
               "NConc": 0.0,
               "PConc": 0.0,
               "KConc": 0.0,
+              "Cconc": 1.0,
               "Carbon": {
                 "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
@@ -6017,13 +6108,22 @@
             },
             {
               "$type": "Models.PMF.CompositeStates, Models",
-              "parentOrgan": null,
-              "CarbonConcentration": 0.4,
               "Propertys": [
                 "[Root].Live",
                 "[Root].Dead"
               ],
-              "Weight": null,
+              "Weight": {
+                "$type": "Models.PMF.NutrientPoolsState, Models",
+                "Structural": 0.0,
+                "Storage": 0.0,
+                "Metabolic": 0.0,
+                "Total": 0.0,
+                "Name": "NutrientPoolsState",
+                "Children": [],
+                "IncludeInDocumentation": true,
+                "Enabled": true,
+                "ReadOnly": false
+              },
               "Wt": 0.0,
               "N": 0.0,
               "P": 0.0,
@@ -6031,6 +6131,7 @@
               "NConc": 0.0,
               "PConc": 0.0,
               "KConc": 0.0,
+              "Cconc": 1.0,
               "Carbon": {
                 "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
@@ -6087,8 +6188,6 @@
             },
             {
               "$type": "Models.PMF.CompositeStates, Models",
-              "parentOrgan": null,
-              "CarbonConcentration": 0.4,
               "Propertys": [
                 "[Leaf].Live",
                 "[Leaf].Dead",
@@ -6099,7 +6198,18 @@
                 "[Root].Live",
                 "[Root].Dead"
               ],
-              "Weight": null,
+              "Weight": {
+                "$type": "Models.PMF.NutrientPoolsState, Models",
+                "Structural": 0.0,
+                "Storage": 0.0,
+                "Metabolic": 0.0,
+                "Total": 0.0,
+                "Name": "NutrientPoolsState",
+                "Children": [],
+                "IncludeInDocumentation": true,
+                "Enabled": true,
+                "ReadOnly": false
+              },
               "Wt": 0.0,
               "N": 0.0,
               "P": 0.0,
@@ -6107,6 +6217,7 @@
               "NConc": 0.0,
               "PConc": 0.0,
               "KConc": 0.0,
+              "Cconc": 1.0,
               "Carbon": {
                 "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
@@ -6163,15 +6274,24 @@
             },
             {
               "$type": "Models.PMF.CompositeStates, Models",
-              "parentOrgan": null,
-              "CarbonConcentration": 0.4,
               "Propertys": [
                 "[Leaf].Live",
                 "[Petiole].Live",
                 "[StorageRoot].Live",
                 "[Root].Live"
               ],
-              "Weight": null,
+              "Weight": {
+                "$type": "Models.PMF.NutrientPoolsState, Models",
+                "Structural": 0.0,
+                "Storage": 0.0,
+                "Metabolic": 0.0,
+                "Total": 0.0,
+                "Name": "NutrientPoolsState",
+                "Children": [],
+                "IncludeInDocumentation": true,
+                "Enabled": true,
+                "ReadOnly": false
+              },
               "Wt": 0.0,
               "N": 0.0,
               "P": 0.0,
@@ -6179,6 +6299,7 @@
               "NConc": 0.0,
               "PConc": 0.0,
               "KConc": 0.0,
+              "Cconc": 1.0,
               "Carbon": {
                 "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,
@@ -6235,15 +6356,24 @@
             },
             {
               "$type": "Models.PMF.CompositeStates, Models",
-              "parentOrgan": null,
-              "CarbonConcentration": 0.4,
               "Propertys": [
                 "[Leaf].Dead",
                 "[Petiole].Dead",
                 "[StorageRoot].Dead",
                 "[Root].Dead"
               ],
-              "Weight": null,
+              "Weight": {
+                "$type": "Models.PMF.NutrientPoolsState, Models",
+                "Structural": 0.0,
+                "Storage": 0.0,
+                "Metabolic": 0.0,
+                "Total": 0.0,
+                "Name": "NutrientPoolsState",
+                "Children": [],
+                "IncludeInDocumentation": true,
+                "Enabled": true,
+                "ReadOnly": false
+              },
               "Wt": 0.0,
               "N": 0.0,
               "P": 0.0,
@@ -6251,6 +6381,7 @@
               "NConc": 0.0,
               "PConc": 0.0,
               "KConc": 0.0,
+              "Cconc": 1.0,
               "Carbon": {
                 "$type": "Models.PMF.NutrientPoolsState, Models",
                 "Structural": 0.0,

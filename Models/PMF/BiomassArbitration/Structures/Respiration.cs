@@ -68,7 +68,7 @@
         {
             double storageLoss = 0;
             double metabolisloss = 0;
-            return new NutrientPoolsState(0,metabolisloss,storageLoss,null);
+            return new NutrientPoolsState(0,metabolisloss,storageLoss);
         }
 
         /// <summary>Called when [do daily initialisation].</summary>

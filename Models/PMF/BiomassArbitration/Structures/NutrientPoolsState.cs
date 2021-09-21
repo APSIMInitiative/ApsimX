@@ -45,36 +45,30 @@
 
         private double tolerence = 1e-12;
 
-        /// <summary>Update own properties and tell parent class to update its properties that are derived from this</summary>
-        private void updateProperties(IParentOfNutrientsPoolState ponps)
-        {
-            Total = Structural + Metabolic + Storage;
-            if (ponps != null)
-                ponps.UpdateProperties();
-        }
-
         /// <summary>parameterless constructor.</summary>
         public NutrientPoolsState()
-        { }
+        { 
+        }
 
 
         /// <summary>the constructor.</summary>
-        public NutrientPoolsState(double structural, double metabolic, double storage, IParentOfNutrientsPoolState ponps)
+        public NutrientPoolsState(double structural, double metabolic, double storage)
         {
             Structural = structural;
             Metabolic = metabolic;
             Storage = storage;
-            updateProperties(ponps);
+            Total = structural + metabolic + storage;
             testPools(this);
         }
 
-        /// <summary>Clear</summary>
-        public void Clear()
+        /// <summary>the constructor.</summary>
+        public NutrientPoolsState(NutrientPoolsState values)
         {
-            Structural = 0;
-            Storage = 0;
-            Metabolic = 0;
-            Total = 0;
+            Structural = values.Structural;
+            Metabolic = values.Metabolic;
+            Storage = values.Storage;
+            Total = Structural + Metabolic + Storage;
+            testPools(this);
         }
 
         /// <summary>Pools can not be negative.  Test for negatives each time an opperator is applied</summary>
@@ -109,69 +103,7 @@
                 throw new Exception(this.FullPath + ".Storage was set to nan");
         }
 
-        /// <summary>Add Delta</summary>
-        public void AddDelta(NutrientPoolsState delta, IParentOfNutrientsPoolState ponps)
-        {
-            if (delta.Structural < -tolerence)
-                throw new Exception(this.FullPath + ".Structural trying to add a negative");
-            if (delta.Metabolic < -tolerence)
-                throw new Exception(this.FullPath + ".Metabolic trying to add a negative");
-            if (delta.Storage < -tolerence)
-                throw new Exception(this.FullPath + ".Storage trying to add a negative");
 
-            Structural += delta.Structural;
-            Metabolic += delta.Metabolic;
-            Storage += delta.Storage;
-            updateProperties(ponps);
-            testPools(this);
-        }
-
-        /// <summary>subtract Delta</summary>
-        public void SubtractDelta(NutrientPoolsState delta, IParentOfNutrientsPoolState ponps)
-        {
-            if (delta.Structural < -tolerence)
-                throw new Exception(this.FullPath + ".Structural trying to subtract a negative");
-            if (delta.Metabolic < -tolerence)
-                throw new Exception(this.FullPath + ".Metabolic trying to subtract a negative");
-            if (delta.Storage < -tolerence)
-                throw new Exception(this.FullPath + ".Storage trying to subtract a negative");
-
-            Structural -= delta.Structural;
-            Metabolic -= delta.Metabolic;
-            Storage -= delta.Storage;
-            updateProperties(ponps);
-            testPools(this);
-        }
-
-        /// <summary>Set to new value</summary>
-        public void SetTo(NutrientPoolsState newValue, IParentOfNutrientsPoolState ponps)
-        {
-            Structural = newValue.Structural;
-            Metabolic = newValue.Metabolic;
-            Storage = newValue.Storage;
-            updateProperties(ponps);
-            testPools(this);
-        }
-
-        /// <summary>multiply by value</summary>
-        public void MultiplyBy(double multiplier, IParentOfNutrientsPoolState ponps)
-        {
-            Structural *= multiplier;
-            Metabolic *= multiplier;
-            Storage *= multiplier;
-            updateProperties(ponps);
-            testPools(this);
-        }
-
-        /// <summary>divide by value</summary>
-        public void DivideBy(double divisor, IParentOfNutrientsPoolState ponps)
-        {
-            Structural /= divisor;
-            Metabolic /= divisor;
-            Storage /= divisor;
-            updateProperties(ponps);
-            testPools(this);
-        }
 
         /// <summary>return pools divied by value</summary>
         public static NutrientPoolsState operator /(NutrientPoolsState a, double b)
@@ -179,8 +111,7 @@
             return new NutrientPoolsState(
             MathUtilities.Divide(a.Structural, b, 0),
             MathUtilities.Divide(a.Metabolic, b, 0),
-            MathUtilities.Divide(a.Storage, b, 0),
-            null);
+            MathUtilities.Divide(a.Storage, b, 0));
         }
 
         /// <summary>return pools divied by value</summary>
@@ -189,8 +120,7 @@
             return new NutrientPoolsState(
             MathUtilities.Divide(a.Structural, b.Structural, 0),
             MathUtilities.Divide(a.Metabolic, b.Metabolic, 0),
-            MathUtilities.Divide(a.Storage, b.Storage, 0),
-            null);
+            MathUtilities.Divide(a.Storage, b.Storage, 0));
         }
 
         /// <summary>return pools multiplied by value</summary>
@@ -199,8 +129,7 @@
             return new NutrientPoolsState(
                 a.Structural * b,
                 a.Metabolic * b,
-                a.Storage * b,
-                null);
+                a.Storage * b);
         }
 
         /// <summary>return pools divied by value</summary>
@@ -209,8 +138,7 @@
             return new NutrientPoolsState(
                 a.Structural * b.Structural,
                 a.Metabolic * b.Metabolic,
-                a.Storage * b.Storage,
-                null);
+                a.Storage * b.Storage);
         }
 
         /// <summary>return sum or two pools</summary>
@@ -218,9 +146,8 @@
         {
             return new NutrientPoolsState(
                 a.Structural + b.Structural,
-                a.Storage + b.Storage,
                 a.Metabolic + b.Metabolic,
-                null);
+                a.Storage + b.Storage);
         }
 
         /// <summary>return pool a - pool b</summary>
@@ -228,9 +155,8 @@
         {
             return new NutrientPoolsState(
                 a.Structural - b.Structural,
-                a.Storage - b.Storage,
                 a.Metabolic - b.Metabolic,
-                null);
+                a.Storage - b.Storage);
         }
 
     }

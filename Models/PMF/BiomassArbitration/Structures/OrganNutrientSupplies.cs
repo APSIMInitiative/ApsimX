@@ -33,17 +33,17 @@
         public OrganNutrientSupplies()
         {
             Fixation = new double();
-            ReAllocation = new NutrientPoolsState(0, 0, 0, null);
+            ReAllocation = new NutrientPoolsState(0, 0, 0);
             Uptake = new double();
-            ReTranslocation = new NutrientPoolsState(0, 0, 0, null);
+            ReTranslocation = new NutrientPoolsState(0, 0, 0);
         }
 
         internal void Clear()
         {
             Fixation = 0;
-            ReAllocation.Clear();
+            ReAllocation = new NutrientPoolsState(0, 0, 0);
             Uptake = 0;
-            ReTranslocation.Clear();
+            ReTranslocation = new NutrientPoolsState(0, 0, 0);
         }
     }
 }

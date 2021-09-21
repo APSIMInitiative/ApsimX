@@ -620,7 +620,7 @@
             InitialiseZones();
             foreach (NetworkZoneState Z in Zones)
             {
-                Z.LayerLive[0].SetTo(Initial);
+                Z.LayerLive[0] = Initial;
             }
         }
 
@@ -652,16 +652,16 @@
                     {
                         for (int layer = 0; layer < Z.Physical.Thickness.Length; layer++)
                         {
-                            Z.LayerLive[layer].SubtractDelta(reAllocated * Z.LayerLiveProportion[layer]);
-                            Z.LayerLive[layer].SubtractDelta(reTranslocated * Z.LayerLiveProportion[layer]);
-                            Z.LayerLive[layer].SubtractDelta(senesced * Z.LayerLiveProportion[layer]);
-                            Z.LayerLive[layer].SubtractDelta(liveRemoved * Z.LayerLiveProportion[layer]);
+                            Z.LayerLive[layer] = new OrganNutrientsState(Z.LayerLive[layer] - (reAllocated * Z.LayerLiveProportion[layer]), parentOrgan.Cconc);
+                            Z.LayerLive[layer] = new OrganNutrientsState(Z.LayerLive[layer] - (reTranslocated * Z.LayerLiveProportion[layer]), parentOrgan.Cconc);
+                            Z.LayerLive[layer] = new OrganNutrientsState(Z.LayerLive[layer] - (senesced * Z.LayerLiveProportion[layer]), parentOrgan.Cconc);
+                            Z.LayerLive[layer] = new OrganNutrientsState(Z.LayerLive[layer] - (liveRemoved * Z.LayerLiveProportion[layer]), parentOrgan.Cconc);
 
-                            Z.LayerLive[layer].AddDelta(allocated * Z.RAw[layer] / TotalRAw);
+                            Z.LayerLive[layer] = new OrganNutrientsState(Z.LayerLive[layer] + (allocated * Z.RAw[layer] / TotalRAw), parentOrgan.Cconc);
 
-                            Z.LayerDead[layer].AddDelta(senesced * Z.LayerDeadProportion[layer]);
-                            Z.LayerDead[layer].SubtractDelta(detached * Z.LayerDeadProportion[layer]);
-                            Z.LayerDead[layer].SubtractDelta(deadRemoved * Z.LayerDeadProportion[layer]);
+                            Z.LayerDead[layer] = new OrganNutrientsState(Z.LayerLive[layer] + (senesced * Z.LayerDeadProportion[layer]), parentOrgan.Cconc);
+                            Z.LayerDead[layer] = new OrganNutrientsState(Z.LayerLive[layer] - (detached * Z.LayerDeadProportion[layer]), parentOrgan.Cconc);
+                            Z.LayerDead[layer] = new OrganNutrientsState(Z.LayerLive[layer] - (deadRemoved * Z.LayerDeadProportion[layer]), parentOrgan.Cconc);
                         }
                     }
                 }
