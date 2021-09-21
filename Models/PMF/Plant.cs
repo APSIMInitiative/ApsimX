@@ -462,6 +462,20 @@
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
+            yield return new Section($"The APSIM {Name} Model", GetTags());
+        }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        private IEnumerable<ITag> GetTags()
+        {
+            // If first child is a memo, document it first.
+            Memo introduction = Children?.FirstOrDefault() as Memo;
+            if (introduction != null)
+                foreach (ITag tag in introduction.Document())
+                    yield return tag;
+
             foreach (var tag in GetModelDescription())
                 yield return tag;
 
@@ -486,7 +500,8 @@
 
             // Document children.
             foreach (IModel child in Children)
-                yield return new Section(child.Name, child.Document());
+                if (child != introduction)
+                    yield return new Section(child.Name, child.Document());
         }
 
         /// <summary>Removes a given amount of biomass (and N) from the plant.</summary>
