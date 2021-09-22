@@ -1091,30 +1091,6 @@
                       "Name": "DemandFunctions",
                       "Children": [
                         {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Structural",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Metabolic",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Storage",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 0.0,
                           "Units": null,
@@ -1139,6 +1115,30 @@
                           "FixedValue": 0.0,
                           "Units": null,
                           "Name": "QStoragePriority",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.CarbonDeficitFunction, Models",
+                          "Name": "Structural",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.CarbonDeficitFunction, Models",
+                          "Name": "Metabolic",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.CarbonDeficitFunction, Models",
+                          "Name": "Storage",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -1374,30 +1374,6 @@
                       "Name": "DemandFunctions",
                       "Children": [
                         {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Structural",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Metabolic",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Storage",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 0.0,
                           "Units": null,
@@ -1422,6 +1398,30 @@
                           "FixedValue": 0.0,
                           "Units": null,
                           "Name": "QStoragePriority",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.NitrogenDeficitFunction, Models",
+                          "Name": "Structural",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.NitrogenDeficitFunction, Models",
+                          "Name": "Metabolic",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.NitrogenDeficitFunction, Models",
+                          "Name": "Storage",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -2276,30 +2276,6 @@
                       "Name": "DemandFunctions",
                       "Children": [
                         {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Structural",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Metabolic",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Storage",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 1.0,
                           "Units": null,
@@ -2324,6 +2300,30 @@
                           "FixedValue": 1.0,
                           "Units": null,
                           "Name": "QStoragePriority",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.CarbonDeficitFunction, Models",
+                          "Name": "Structural",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.CarbonDeficitFunction, Models",
+                          "Name": "Metabolic",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.CarbonDeficitFunction, Models",
+                          "Name": "Storage",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -2632,30 +2632,6 @@
                       "Name": "DemandFunctions",
                       "Children": [
                         {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Structural",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Metabolic",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Storage",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 0.0,
                           "Units": null,
@@ -2680,6 +2656,30 @@
                           "FixedValue": 0.0,
                           "Units": null,
                           "Name": "QStoragePriority",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.NitrogenDeficitFunction, Models",
+                          "Name": "Structural",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.NitrogenDeficitFunction, Models",
+                          "Name": "Metabolic",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.NitrogenDeficitFunction, Models",
+                          "Name": "Storage",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -4178,30 +4178,6 @@
                       "Name": "DemandFunctions",
                       "Children": [
                         {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Structural",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Metabolic",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Storage",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 0.0,
                           "Units": null,
@@ -4226,6 +4202,30 @@
                           "FixedValue": 0.0,
                           "Units": null,
                           "Name": "QStoragePriority",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.CarbonDeficitFunction, Models",
+                          "Name": "Structural",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.CarbonDeficitFunction, Models",
+                          "Name": "Metabolic",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.CarbonDeficitFunction, Models",
+                          "Name": "Storage",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -4461,30 +4461,6 @@
                       "Name": "DemandFunctions",
                       "Children": [
                         {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Structural",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Metabolic",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Storage",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 0.0,
                           "Units": null,
@@ -4509,6 +4485,30 @@
                           "FixedValue": 0.0,
                           "Units": null,
                           "Name": "QStoragePriority",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.NitrogenDeficitFunction, Models",
+                          "Name": "Structural",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.NitrogenDeficitFunction, Models",
+                          "Name": "Metabolic",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.NitrogenDeficitFunction, Models",
+                          "Name": "Storage",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -5185,30 +5185,6 @@
                       "Name": "DemandFunctions",
                       "Children": [
                         {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Structural",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Metabolic",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Storage",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 0.0,
                           "Units": null,
@@ -5233,6 +5209,30 @@
                           "FixedValue": 0.0,
                           "Units": null,
                           "Name": "QStoragePriority",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.CarbonDeficitFunction, Models",
+                          "Name": "Structural",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.CarbonDeficitFunction, Models",
+                          "Name": "Metabolic",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.CarbonDeficitFunction, Models",
+                          "Name": "Storage",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -5468,30 +5468,6 @@
                       "Name": "DemandFunctions",
                       "Children": [
                         {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Structural",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Storage",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.DeficitDemandFunction, Models",
-                          "Name": "Metabolic",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 0.0,
                           "Units": null,
@@ -5516,6 +5492,30 @@
                           "FixedValue": 0.0,
                           "Units": null,
                           "Name": "QStoragePriority",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.NitrogenDeficitFunction, Models",
+                          "Name": "Structural",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.NitrogenDeficitFunction, Models",
+                          "Name": "Metabolic",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.PMF.NitrogenDeficitFunction, Models",
+                          "Name": "Storage",
                           "Children": [],
                           "IncludeInDocumentation": true,
                           "Enabled": true,
@@ -17894,7 +17894,7 @@
             {
               "$type": "Models.Climate.Weather, Models",
               "ConstantsFile": null,
-              "FileName": "C:\\GitHubRepos\\ApsimX\\Tests\\Validation\\FodderBeet\\lincoln.met",
+              "FileName": "lincoln.met",
               "ExcelWorkSheetName": "",
               "Name": "Weather",
               "Children": [],
@@ -19745,7 +19745,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "C:\\GitHubRepos\\ApsimX\\Tests\\Validation\\FodderBeet\\lincoln.met",
+                  "FileName": "lincoln.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "Children": [],
