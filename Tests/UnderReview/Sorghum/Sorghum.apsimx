@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 285,
-  "Version": 137,
+  "Version": 141,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -2128,7 +2128,6 @@
               "GrowthRespiration": 0.0,
               "MaintenanceRespiration": 0.0,
               "DMDemand": null,
-              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "DMSupply": null,
               "NSupply": null,
@@ -3120,6 +3119,84 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "DMDemandPriorityFactors",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "Name": "NDemandPriorityFactors",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Structural",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Metabolic",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -3131,7 +3208,6 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
-              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "GrowthRespiration": 0.0,
@@ -3592,7 +3668,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
                   "Name": "DMDemands",
                   "Children": [
                     {
@@ -3734,6 +3810,36 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QStructuralPriority",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QMetabolicPriority",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QStoragePriority",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -3741,7 +3847,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
                   "Name": "NDemands",
                   "Children": [
                     {
@@ -3841,6 +3947,36 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QStructuralPriority",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QMetabolicPriority",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QStoragePriority",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -4306,7 +4442,6 @@
               "SowingDensity": 0.0,
               "StartLive": null,
               "DMSupply": null,
-              "DMDemandPriorityFactor": null,
               "NSupply": null,
               "DMDemand": null,
               "NDemand": null,
@@ -6095,7 +6230,6 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
-              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": true,
@@ -6781,7 +6915,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
                   "Name": "DMDemands",
                   "Children": [
                     {
@@ -6907,6 +7041,36 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QStructuralPriority",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QMetabolicPriority",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QStoragePriority",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -6914,7 +7078,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
                   "Name": "NDemands",
                   "Children": [
                     {
@@ -7125,6 +7289,36 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QStructuralPriority",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QMetabolicPriority",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QStoragePriority",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -7230,45 +7424,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.BiomassDemand, Models",
-                  "Name": "dmDemandPriorityFactors",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "Structural",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "Metabolic",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "Storage",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -7281,7 +7436,6 @@
               "DMSupply": null,
               "NSupply": null,
               "DMDemand": null,
-              "DMDemandPriorityFactor": null,
               "NDemand": null,
               "potentialDMAllocation": null,
               "IsAboveGround": true,
@@ -8378,7 +8532,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
                   "Name": "DMDemands",
                   "Children": [
                     {
@@ -8483,6 +8637,36 @@
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QStructuralPriority",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QMetabolicPriority",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QStoragePriority",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "IncludeInDocumentation": true,
@@ -8490,7 +8674,7 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.PMF.BiomassDemand, Models",
+                  "$type": "Models.PMF.BiomassDemandAndPriority, Models",
                   "Name": "NDemands",
                   "Children": [
                     {
@@ -8680,6 +8864,36 @@
                       "FixedValue": 0.0,
                       "Units": null,
                       "Name": "Storage",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QStructuralPriority",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QMetabolicPriority",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "QStoragePriority",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -8907,45 +9121,6 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.BiomassDemand, Models",
-                  "Name": "dmDemandPriorityFactors",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "Structural",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "Metabolic",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "Storage",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "IncludeInDocumentation": true,
-                  "Enabled": true,
-                  "ReadOnly": false
                 }
               ],
               "IncludeInDocumentation": true,
@@ -8999,17 +9174,14 @@
             },
             {
               "$type": "Models.PMF.CompositeBiomass, Models",
-              "Propertys": [
-                "[Leaf].Live",
-                "[Leaf].Dead",
-                "[Stem].Live",
-                "[Stem].Dead",
-                "[Rachis].Live",
-                "[Rachis].Dead",
-                "[Grain].Live",
-                "[Grain].Dead"
+              "OrganNames": [
+                "Leaf",
+                "Stem",
+                "Rachis",
+                "Grain"
               ],
-              "DMDOfStructural": 0.6,
+              "IncludeLive": true,
+              "IncludeDead": true,
               "Name": "AboveGround",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -9018,13 +9190,14 @@
             },
             {
               "$type": "Models.PMF.CompositeBiomass, Models",
-              "Propertys": [
-                "[Leaf].Live",
-                "[Stem].Live",
-                "[Grain].Live",
-                "[Rachis].Live"
+              "OrganNames": [
+                "Leaf",
+                "Stem",
+                "Grain",
+                "Rachis"
               ],
-              "DMDOfStructural": 0.6,
+              "IncludeLive": true,
+              "IncludeDead": false,
               "Name": "AboveGroundLive",
               "Children": [
                 {
@@ -9043,13 +9216,14 @@
             },
             {
               "$type": "Models.PMF.CompositeBiomass, Models",
-              "Propertys": [
-                "[Leaf].Dead",
-                "[Stem].Dead",
-                "[Grain].Dead",
-                "[Rachis].Dead"
+              "OrganNames": [
+                "Leaf",
+                "Stem",
+                "Grain",
+                "Rachis"
               ],
-              "DMDOfStructural": 0.6,
+              "IncludeLive": false,
+              "IncludeDead": true,
               "Name": "AboveGroundDead",
               "Children": [
                 {
@@ -9068,11 +9242,11 @@
             },
             {
               "$type": "Models.PMF.CompositeBiomass, Models",
-              "Propertys": [
-                "[Root].Live",
-                "[Root].Dead"
+              "OrganNames": [
+                "Root"
               ],
-              "DMDOfStructural": 0.6,
+              "IncludeLive": true,
+              "IncludeDead": true,
               "Name": "BelowGround",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -9081,19 +9255,15 @@
             },
             {
               "$type": "Models.PMF.CompositeBiomass, Models",
-              "Propertys": [
-                "[Leaf].Live",
-                "[Leaf].Dead",
-                "[Stem].Live",
-                "[Stem].Dead",
-                "[Root].Live",
-                "[Root].Dead",
-                "[Rachis].Live",
-                "[Rachis].Dead",
-                "[Grain].Live",
-                "[Grain].Dead"
+              "OrganNames": [
+                "Leaf",
+                "Stem",
+                "Root",
+                "Rachis",
+                "Grain"
               ],
-              "DMDOfStructural": 0.6,
+              "IncludeLive": true,
+              "IncludeDead": true,
               "Name": "Total",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -9102,14 +9272,15 @@
             },
             {
               "$type": "Models.PMF.CompositeBiomass, Models",
-              "Propertys": [
-                "[Leaf].Live",
-                "[Stem].Live",
-                "[Root].Live",
-                "[Rachis].Live",
-                "[Grain].Live"
+              "OrganNames": [
+                "Leaf",
+                "Stem",
+                "Root",
+                "Rachis",
+                "Grain"
               ],
-              "DMDOfStructural": 0.6,
+              "IncludeLive": true,
+              "IncludeDead": false,
               "Name": "TotalLive",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -9118,14 +9289,15 @@
             },
             {
               "$type": "Models.PMF.CompositeBiomass, Models",
-              "Propertys": [
-                "[Leaf].Dead",
-                "[Stem].Dead",
-                "[Root].Dead",
-                "[Rachis].Dead",
-                "[Grain].Dead"
+              "OrganNames": [
+                "Leaf",
+                "Stem",
+                "Root",
+                "Rachis",
+                "Grain"
               ],
-              "DMDOfStructural": 0.6,
+              "IncludeLive": false,
+              "IncludeDead": true,
               "Name": "TotalDead",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -11083,22 +11255,6 @@
                                 {
                                   "$type": "Models.Soils.SoilNitrogenUrea, Models",
                                   "Name": "Urea",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                  "Name": "PlantAvailableNO3",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                  "Name": "PlantAvailableNH4",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
@@ -19092,22 +19248,6 @@
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                  "Name": "PlantAvailableNO3",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                  "Name": "PlantAvailableNH4",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
                                 }
                               ],
                               "IncludeInDocumentation": false,
@@ -19944,22 +20084,6 @@
                                 {
                                   "$type": "Models.Soils.SoilNitrogenUrea, Models",
                                   "Name": "Urea",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                  "Name": "PlantAvailableNO3",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                  "Name": "PlantAvailableNH4",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
@@ -20858,22 +20982,6 @@
                                 {
                                   "$type": "Models.Soils.SoilNitrogenUrea, Models",
                                   "Name": "Urea",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                  "Name": "PlantAvailableNO3",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                  "Name": "PlantAvailableNH4",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
@@ -21806,22 +21914,6 @@
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                  "Name": "PlantAvailableNO3",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                  "Name": "PlantAvailableNH4",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
                                 }
                               ],
                               "IncludeInDocumentation": false,
@@ -22688,22 +22780,6 @@
                                 {
                                   "$type": "Models.Soils.SoilNitrogenUrea, Models",
                                   "Name": "Urea",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                  "Name": "PlantAvailableNO3",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                  "Name": "PlantAvailableNH4",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
@@ -23591,22 +23667,6 @@
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                  "Name": "PlantAvailableNO3",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                  "Name": "PlantAvailableNH4",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
                                 }
                               ],
                               "IncludeInDocumentation": false,
@@ -24486,22 +24546,6 @@
                                 {
                                   "$type": "Models.Soils.SoilNitrogenUrea, Models",
                                   "Name": "Urea",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                  "Name": "PlantAvailableNO3",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                  "Name": "PlantAvailableNH4",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
@@ -25526,22 +25570,6 @@
                                 {
                                   "$type": "Models.Soils.SoilNitrogenUrea, Models",
                                   "Name": "Urea",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                  "Name": "PlantAvailableNO3",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                  "Name": "PlantAvailableNH4",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
@@ -26578,22 +26606,6 @@
                                 {
                                   "$type": "Models.Soils.SoilNitrogenUrea, Models",
                                   "Name": "Urea",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                  "Name": "PlantAvailableNO3",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                  "Name": "PlantAvailableNH4",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
@@ -27872,22 +27884,6 @@
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                  "Name": "PlantAvailableNO3",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                  "Name": "PlantAvailableNH4",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
                                 }
                               ],
                               "IncludeInDocumentation": false,
@@ -28685,22 +28681,6 @@
                                 {
                                   "$type": "Models.Soils.SoilNitrogenUrea, Models",
                                   "Name": "Urea",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                  "Name": "PlantAvailableNO3",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                  "Name": "PlantAvailableNH4",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
@@ -29592,22 +29572,6 @@
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                  "Name": "PlantAvailableNO3",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                  "Name": "PlantAvailableNH4",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
                                 }
                               ],
                               "IncludeInDocumentation": false,
@@ -30427,22 +30391,6 @@
                                 {
                                   "$type": "Models.Soils.SoilNitrogenUrea, Models",
                                   "Name": "Urea",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                  "Name": "PlantAvailableNO3",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                  "Name": "PlantAvailableNH4",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
@@ -31487,22 +31435,6 @@
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                  "Name": "PlantAvailableNO3",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                  "Name": "PlantAvailableNH4",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
                                 }
                               ],
                               "IncludeInDocumentation": false,
@@ -32348,22 +32280,6 @@
                                 {
                                   "$type": "Models.Soils.SoilNitrogenUrea, Models",
                                   "Name": "Urea",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                  "Name": "PlantAvailableNO3",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                  "Name": "PlantAvailableNH4",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
@@ -36136,22 +36052,6 @@
                         {
                           "$type": "Models.Soils.SoilNitrogenUrea, Models",
                           "Name": "Urea",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                          "Name": "PlantAvailableNO3",
-                          "Children": [],
-                          "IncludeInDocumentation": false,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                          "Name": "PlantAvailableNH4",
                           "Children": [],
                           "IncludeInDocumentation": false,
                           "Enabled": true,
@@ -44148,22 +44048,6 @@
                                   "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                                  "Name": "PlantAvailableNO3",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                                  "Name": "PlantAvailableNH4",
-                                  "Children": [],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
                                 }
                               ],
                               "IncludeInDocumentation": false,
@@ -45185,22 +45069,6 @@
                               "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                              "Name": "PlantAvailableNO3",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                              "Name": "PlantAvailableNH4",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
                             }
                           ],
                           "IncludeInDocumentation": false,
@@ -46063,22 +45931,6 @@
                             {
                               "$type": "Models.Soils.SoilNitrogenUrea, Models",
                               "Name": "Urea",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.SoilNitrogenPlantAvailableNO3, Models",
-                              "Name": "PlantAvailableNO3",
-                              "Children": [],
-                              "IncludeInDocumentation": false,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.SoilNitrogenPlantAvailableNH4, Models",
-                              "Name": "PlantAvailableNH4",
                               "Children": [],
                               "IncludeInDocumentation": false,
                               "Enabled": true,
