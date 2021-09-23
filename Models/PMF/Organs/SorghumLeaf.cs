@@ -46,8 +46,9 @@ namespace Models.PMF.Organs
         [Link]
         private LeafCulms culms = null;
 
+        /// <summary>Phenology</summary>
         [Link]
-        private Phenology phenology = null;
+        public Phenology phenology = null; //forst senescence
 
         /// <summary>
         /// Linke to weather, used for frost senescence calcs.
@@ -163,9 +164,13 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction LightSenescence = null;
 
-        /// <summary>Light Senescence function</summary>
+        /// <summary>Water Senescence function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction WaterSenescence = null;
+
+        /// <summary>Water Senescence function</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction FrostSenescence = null;
 
         private double potentialEP = 0;
         private bool leafInitialised = false;
@@ -872,7 +877,8 @@ namespace Models.PMF.Organs
             DltSenescedLaiWater = WaterSenescence.Value(); //CalcLaiSenescenceWater();
             DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiWater);
 
-            DltSenescedLaiFrost = CalcLaiSenescenceFrost();
+            DltSenescedLaiFrost = FrostSenescence.Value();
+            DltSenescedLaiFrost = //CalcLaiSenescenceFrost();
             DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiFrost);
 
             DltSenescedLai = Math.Min(DltSenescedLai, LAI);
