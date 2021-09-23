@@ -69,8 +69,9 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction SDRatioFunction = null;
 
+        /// <summary>SupplyDemand Ratio</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction SDRatio = null;
+        public IFunction SDRatio = null; //waterSenescence
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction frgr = null;
@@ -85,7 +86,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The photosynthesis</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction photosynthesis = null;
+        public IFunction photosynthesis = null; //waterSenescence
 
         /// <summary>The height function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -101,7 +102,7 @@ namespace Models.PMF.Organs
 
         /// <summary>DM Fixation Demand Function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction potentialBiomassTEFunction = null;
+        public IFunction potentialBiomassTEFunction = null; //waterSenescence
 
         /// <summary>Input for TargetSLN</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -124,11 +125,11 @@ namespace Models.PMF.Organs
 
         /// <summary>Delay factor for water senescence.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction senWaterTimeConst = null;
+        public IFunction senWaterTimeConst = null; //waterSenescence
 
         /// <summary>supply:demand ratio for onset of water senescence.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction senThreshold = null;
+        public IFunction senThreshold = null;  //waterSenescence
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction nPhotoStressFunction = null;
@@ -161,6 +162,10 @@ namespace Models.PMF.Organs
         /// <summary>Light Senescence function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction LightSenescence = null;
+
+        /// <summary>Light Senescence function</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction WaterSenescence = null;
 
         private double potentialEP = 0;
         private bool leafInitialised = false;
@@ -863,8 +868,8 @@ namespace Models.PMF.Organs
 
             DltSenescedLaiLight = LightSenescence.Value();// CalcLaiSenescenceLight();
             DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiLight);
-
-            DltSenescedLaiWater = CalcLaiSenescenceWater();
+            
+            DltSenescedLaiWater = WaterSenescence.Value(); //CalcLaiSenescenceWater();
             DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiWater);
 
             DltSenescedLaiFrost = CalcLaiSenescenceFrost();
