@@ -34,7 +34,7 @@ namespace Models.CLEM.Groupings
         /// The property or method to filter by
         /// </summary>
         [Description("Property or method")]
-        [Required]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Property or method required")]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetParameters))]
         public string PropertyOfIndividual { get; set; }
         private IEnumerable<string> GetParameters() => Parent.Parameters.OrderBy(k => k);
@@ -451,6 +451,16 @@ namespace Models.CLEM.Groupings
 
             using (StringWriter filterWriter = new StringWriter())
             {
+                if (propertyInfo is null)
+                {
+                    filterWriter.Write($"Filter:");
+                    string errorlink = (htmltags) ? "<span class=\"errorlink\">" : "";
+                    string spanclose = (htmltags) ? "</span>" : "";
+                    string message = (PropertyOfIndividual == null || PropertyOfIndividual == "") ? "Not Set" : $"Unknown: {PropertyOfIndividual}";
+                    filterWriter.Write($"{errorlink}{message}{spanclose}");
+                    return filterWriter.ToString();
+                }
+
                 filterWriter.Write($"Filter:");
                 bool truefalse = IsOperatorTrueFalseTest();
                 if (truefalse | (propertyInfo != null && propertyInfo.PropertyType.IsEnum))
@@ -508,6 +518,46 @@ namespace Models.CLEM.Groupings
             {
                 string[] memberNames = new string[] { "Missing filter compare value" };
                 results.Add(new ValidationResult($"A value to compare with the Property is required for [f={Name}] in [f={Parent.Name}]", memberNames));
+            }
+
+            // check valid operator
+            if(!CheckValidOperator(propertyInfo, out _))
+            {
+                string[] memberNames = new string[] { "Invalid operator" };
+                results.Add(new ValidationResult($"The operator provided for [f={Name}] in [f={Parent.Name}] is not valid for the property type [{propertyInfo.Name}]", memberNames));
+            }
+
+            // check valid property value.
+            // valid for enum
+            if (propertyInfo.PropertyType.IsEnum)
+            {
+                try
+                {
+                    Enum.Parse(propertyInfo.DeclaringType, Value.ToString());
+                }
+                catch
+                {
+                    string[] memberNames = new string[] { "Invalid compare value" };
+                    results.Add(new ValidationResult($"The value to compare [{Value}] provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [{propertyInfo.Name}]{System.Environment.NewLine}Valid entries are [{String.Join(",", Enum.GetNames(propertyInfo.PropertyType))}]", memberNames));
+                }
+            }
+
+            // valid for true / false bool
+            if (propertyInfo.PropertyType == typeof(bool))
+            {
+                // blank entry is permitted if using isTrue or isFalse otherwise check value
+                if (!(Value is null & (Operator == ExpressionType.IsTrue || Operator == ExpressionType.IsFalse)))
+                {
+                    try
+                    {
+                        Boolean.Parse(Value.ToString());
+                    }
+                    catch
+                    {
+                        string[] memberNames = new string[] { "Invalid compare value" };
+                        results.Add(new ValidationResult($"The value to compare [{Value}] provided for [f={Name}] in [f={Parent.Name}] is not valid for the property type [Boolean]{System.Environment.NewLine}Valid entries are [True, true, False, false, 1, 0]", memberNames));
+                    }
+                }
             }
             return results;
         }
