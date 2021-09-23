@@ -97,7 +97,14 @@
             {
                 // Read bytes for object.
                 var buffer = new byte[numBytes];
-                pipeReader.Read(buffer, 0, numBytes);
+                int totalRead = 0;
+                int read = 0;
+                do
+                {
+                    read = pipeReader.Read(buffer, totalRead, numBytes - totalRead);
+                    totalRead += read;
+                }
+                while (totalRead < numBytes && read > 0);
 
                 Console.WriteLine($"RECV {string.Join("-", buffer.Select(b => $"{b:X2}"))}");
 
