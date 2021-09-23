@@ -81,7 +81,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The extinction coefficient function</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        private IFunction extinctionCoefficientFunction = null;
+        public IFunction extinctionCoefficientFunction = null; //access lvl changed for LightSenescenceFunction
 
         /// <summary>The photosynthesis</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -1265,6 +1265,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetNSupply")]
         private void SetNSupply(object sender, EventArgs e)
         {
+            UpdateArea();
             var availableLaiN = DltLAI * NewLeafSLN;
 
             double laiToday = CalcLAI();

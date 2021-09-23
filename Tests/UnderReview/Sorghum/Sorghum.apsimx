@@ -212,14 +212,6 @@
                           "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.PMF.Arbitrator.UpdateLeafAreaMethod, Models",
-                          "Name": "UpdateLeafAreaMethod",
-                          "Children": [],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
                         }
                       ],
                       "IncludeInDocumentation": true,
