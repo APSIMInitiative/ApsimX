@@ -158,6 +158,10 @@ namespace Models.PMF.Organs
         [Units("g/m2/d")]
         private BiomassDemand nDemands = null;
 
+        /// <summary>Light Senescence function</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction LightSenescence = null;
+
         private double potentialEP = 0;
         private bool leafInitialised = false;
         private double nDeadLeaves;
@@ -857,7 +861,7 @@ namespace Models.PMF.Organs
             LossFromExpansionStress += (DltPotentialLAI - DltStressedLAI);
             var maxLaiPossible = LAI + SenescedLai - LossFromExpansionStress;
 
-            DltSenescedLaiLight = CalcLaiSenescenceLight();
+            DltSenescedLaiLight = LightSenescence.Value();// CalcLaiSenescenceLight();
             DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiLight);
 
             DltSenescedLaiWater = CalcLaiSenescenceWater();
