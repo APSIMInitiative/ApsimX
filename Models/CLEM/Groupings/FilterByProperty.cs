@@ -533,7 +533,7 @@ namespace Models.CLEM.Groupings
             {
                 try
                 {
-                    Enum.Parse(propertyInfo.DeclaringType, Value.ToString());
+                    Enum.Parse(propertyInfo.PropertyType, Value.ToString());
                 }
                 catch
                 {
