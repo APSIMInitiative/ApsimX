@@ -130,31 +130,39 @@ namespace APSIM.Server
         /// <param name="connection">Connection on which we received the command.</param>
         protected override void RunCommand(ICommand command, IConnectionManager connection)
         {
-            WriteToLog("Relaying command to workers in parallel mode...");
-
-            // Relay the command to all workers.
-            if (command is ReadCommand readCommand)
+            var masterTimer = Stopwatch.StartNew();
+            try
             {
-                DoReadCommand(readCommand, connection);
-                return;
+                WriteToLog("Relaying command to workers in parallel mode...");
+
+                // Relay the command to all workers.
+                if (command is ReadCommand readCommand)
+                {
+                    DoReadCommand(readCommand, connection);
+                    return;
+                }
+
+                var timer = Stopwatch.StartNew();
+
+                List<Task> tasks = new List<Task>();
+                foreach (string podName in workers)
+                    tasks.Add(RelayCommand(podName, command, connection));
+                foreach (Task task in tasks)
+                    task.Wait();
+                timer.Stop();
+
+                WriteToLog($"Successfully relayed {command} to {workers.Count()} workers in {timer.ElapsedMilliseconds}ms");
+
+                timer.Restart();
+                connection.OnCommandFinished(command);
+                timer.Stop();
+                WriteToLog($"OnCommandFinished took {timer.ElapsedMilliseconds}ms");
             }
-
-            var timer = Stopwatch.StartNew();
-
-            List<Task> tasks = new List<Task>();
-            foreach (string podName in workers)
-                tasks.Add(RelayCommand(podName, command, connection));
-            foreach (Task task in tasks)
-                task.Wait();
-            timer.Stop();
-
-            WriteToLog($"Successfully relayed {command} to {workers.Count()} workers in {timer.ElapsedMilliseconds}ms");
-
-            timer.Restart();
-            connection.OnCommandFinished(command);
-            timer.Stop();
-            WriteToLog($"OnCommandFinished took {timer.ElapsedMilliseconds}ms");
-
+            finally
+            {
+                masterTimer.Stop();
+                WriteToLog($"Total time to execute command: {masterTimer.ElapsedMilliseconds}ms");
+            }
         }
 
         private Task RelayCommand(string podName, ICommand command, IConnectionManager connection)
