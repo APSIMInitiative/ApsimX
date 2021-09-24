@@ -130,6 +130,8 @@ namespace APSIM.Server
         /// <param name="connection">Connection on which we received the command.</param>
         protected override void RunCommand(ICommand command, IConnectionManager connection)
         {
+            WriteToLog("Relaying command to workers in parallel mode...");
+
             // Relay the command to all workers.
             if (command is ReadCommand readCommand)
             {
