@@ -137,7 +137,18 @@ namespace APSIM.Server
                 return;
             }
 
+            List<Task> tasks = new List<Task>();
             foreach (string podName in workers)
+                tasks.Add(RelayCommand(podName, command, connection));
+            foreach (Task task in tasks)
+                task.Wait();
+
+            connection.OnCommandFinished(command);
+        }
+
+        private Task RelayCommand(string podName, ICommand command, IConnectionManager connection)
+        {
+            return Task.Run(() =>
             {
                 V1Pod pod = GetWorkerPod(podName);
                 if (string.IsNullOrEmpty(pod.Status.PodIP))
@@ -155,14 +166,29 @@ namespace APSIM.Server
 
                     WriteToLog($"Closing connection to {podName}...");
                 }
-            }
-            connection.OnCommandFinished(command);
+            });
         }
 
         private void DoReadCommand(ReadCommand command, IConnectionManager connection)
         {
-            List<DataTable> tables = new List<DataTable>();
+            List<Task<DataTable>> tasks = new List<Task<DataTable>>();
             foreach (string podName in workers)
+                tasks.Add(RelayReadCommand(podName, command, connection));
+            List<DataTable> tables = new List<DataTable>();
+            foreach (Task<DataTable> task in tasks)
+            {
+                task.Wait();
+                if (task.Result != null)
+                    tables.Add(task.Result);
+            }
+            WriteToLog($"Merging {tables.Count} DataTables (from {workers.Count()} pods)...");
+            command.Result = DataTableUtilities.Merge(tables);
+            connection.OnCommandFinished(command);
+        }
+
+        private Task<DataTable> RelayReadCommand(string podName, ReadCommand command, IConnectionManager connection)
+        {
+            return Task.Run<DataTable>(() =>
             {
                 V1Pod pod = GetWorkerPod(podName);
                 if (string.IsNullOrEmpty(pod.Status.PodIP))
@@ -178,7 +204,7 @@ namespace APSIM.Server
                     // Relay the command to the pod.
                     try
                     {
-                        tables.Add(conn.ReadOutput(command));
+                        return conn.ReadOutput(command);
                     }
                     catch (Exception err)
                     {
@@ -188,10 +214,8 @@ namespace APSIM.Server
 
                     WriteToLog($"Closing connection to {podName}...");
                 }
-            }
-            WriteToLog($"Merging {tables.Count} DataTables (from {workers.Count()} pods)...");
-            command.Result = DataTableUtilities.Merge(tables);
-            connection.OnCommandFinished(command);
+                return null;
+            });
         }
 
         /// <summary>
