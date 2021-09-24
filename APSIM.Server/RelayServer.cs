@@ -139,13 +139,22 @@ namespace APSIM.Server
                 return;
             }
 
+            var timer = Stopwatch.StartNew();
+
             List<Task> tasks = new List<Task>();
             foreach (string podName in workers)
                 tasks.Add(RelayCommand(podName, command, connection));
             foreach (Task task in tasks)
                 task.Wait();
+            timer.Stop();
 
+            WriteToLog($"Successfully relayed {command} to {workers.Count()} workers in {timer.ElapsedMilliseconds}ms");
+
+            timer.Restart();
             connection.OnCommandFinished(command);
+            timer.Stop();
+            WriteToLog($"OnCommandFinished took {timer.ElapsedMilliseconds}ms");
+
         }
 
         private Task RelayCommand(string podName, ICommand command, IConnectionManager connection)
@@ -173,6 +182,7 @@ namespace APSIM.Server
 
         private void DoReadCommand(ReadCommand command, IConnectionManager connection)
         {
+            var timer = Stopwatch.StartNew();
             List<Task<DataTable>> tasks = new List<Task<DataTable>>();
             foreach (string podName in workers)
                 tasks.Add(RelayReadCommand(podName, command, connection));
@@ -183,9 +193,16 @@ namespace APSIM.Server
                 if (task.Result != null)
                     tables.Add(task.Result);
             }
-            WriteToLog($"Merging {tables.Count} DataTables (from {workers.Count()} pods)...");
+            timer.Stop();
+            WriteToLog($"Read all results from workers in {timer.ElapsedMilliseconds}ms. Merging {tables.Count} DataTables (from {workers.Count()} pods)...");
+            timer.Restart();
             command.Result = DataTableUtilities.Merge(tables);
+            timer.Stop();
+            WriteToLog($"Merged tables in {timer.ElapsedMilliseconds}ms");
+            timer.Restart();
             connection.OnCommandFinished(command);
+            timer.Stop();
+            WriteToLog($"OnCommandFinished took {timer.ElapsedMilliseconds}ms");
         }
 
         private Task<DataTable> RelayReadCommand(string podName, ReadCommand command, IConnectionManager connection)
