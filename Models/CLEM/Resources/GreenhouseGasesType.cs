@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(GreenhouseGases))]
-    [Description("This resource represents a greenhouse gas (e.g. CO2).")]
+    [Description("This resource represents a greenhouse gas (e.g. CO2)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Greenhouse gases/GreenhouseGasType.htm")]
     public class GreenhouseGasesType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType

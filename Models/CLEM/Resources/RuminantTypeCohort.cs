@@ -25,7 +25,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantInitialCohorts))]
     [ValidParent(ParentType = typeof(RuminantActivityTrade))]
     [ValidParent(ParentType = typeof(SpecifyRuminant))]
-    [Description("This specifies a ruminant cohort for sprecifying an inidivual or initalising the herd at the start of the simulation.")]
+    [Description("Cohort component for specifying an individual during simulation or initalising the herd at the start")]
     [Version(1, 0, 2, "Includes attribute specification")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohort.htm")]

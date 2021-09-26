@@ -26,7 +26,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(Market))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This component specifies a resource input file for the CLEM simulation")]
+    [Description("Access to a resource input file")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/ResourceDataReader.htm")]
     public class FileResource : CLEMModel, IValidatableObject

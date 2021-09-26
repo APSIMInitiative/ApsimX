@@ -19,7 +19,7 @@ namespace Models.CLEM.Groupings
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityFeed))]
-    [Description("Selects specific individual ruminants with feeding values")]
+    [Description("Set feeding value for specified individual ruminants")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantFeedGroup.htm")]
     public class RuminantFeedGroup : FilterGroup<Ruminant>

@@ -21,7 +21,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantFeedGroup))]
     [ValidParent(ParentType = typeof(RuminantGroup))]
     [ValidParent(ParentType = typeof(AnimalPriceGroup))]
-    [Description("Defines a sort rule using the value of a property or method of the individual")]
+    [Description("Defines a sort order using the value of a property or method of the individual")]
     [Version(1, 0, 0, "")]
     public class SortByProperty : CLEMModel, ISort
     {

@@ -18,7 +18,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages the feeding of a specified type of other animal based on a feeding style.")]
+    [Description("Manages the feeding of a specified type of other animal based on a feeding style")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivityFeed.htm")]
     public class OtherAnimalsActivityFeed : CLEMActivityBase

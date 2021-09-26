@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("Activity to perform cut and carry from a specified graze food store (i.e. native pasture paddock).")]
+    [Description("Perform cut and carry from a specified graze food store (i.e. native pasture paddock)")]
     [Version(1, 0, 1, "Included new ProportionOfAvailable option for moving pasture")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Pasture/CutAndCarry.htm")]

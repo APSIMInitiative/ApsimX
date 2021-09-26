@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs ruminant shearing based upon the current herd filtering and places clip in a specified store.")]
+    [Description("Perform ruminant shearing and place clip in a specified store")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantShear.htm")]
     public class RuminantActivityShear : CLEMRuminantActivityBase

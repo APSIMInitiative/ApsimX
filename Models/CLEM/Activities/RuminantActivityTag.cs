@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity adds or removes a specified tag to/from the specified individuals for customised filtering.")]
+    [Description("Add or remove a specified tag to/from the specified individuals for customised filtering")]
     [Version(1, 0, 2, "Uses the Attribute feature of Ruminants")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantTag.htm")]

@@ -16,7 +16,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourAvailabilityList))]
-    [Description("An individual labour availability item with monthly days available")]
+    [Description("Set the labour availability of specified individuals with monthly days available")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourAvailabilityItemMonthly.htm")]
     public class LabourAvailabilityItemMonthly : FilterGroup<LabourType>, ILabourSpecificationItem

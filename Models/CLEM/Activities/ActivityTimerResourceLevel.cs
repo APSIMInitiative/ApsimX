@@ -14,7 +14,7 @@ using Display = Models.Core.DisplayAttribute;
 namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Activity timer based on crop harvest
+    /// Activity timer based on resource
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
-    [Description("This activity timer is used to determine whether a resource level meets a set criteria.")]
+    [Description("This timer is based on whether a resource level meets a set criteria.")]
     [HelpUri(@"Content/Features/Timers/ResourceLevel.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerResourceLevel: CLEMModel, IActivityTimer, IActivityPerformedNotifier

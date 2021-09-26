@@ -12,13 +12,13 @@ using System.Linq;
 namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Activity timer sequence
+    /// Activity timer for breeding to maintain best milk production
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityControlledMating))]
-    [Description("Time breeding and female selection for best continuous milk production")]
+    [Description("This timer controls breeding and female selection for best continuous milk production")]
     [HelpUri(@"Content/Features/Timers/ActivityTimerBreedForMilking.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerBreedForMilking : CLEMModel, IActivityTimer, IActivityPerformedNotifier

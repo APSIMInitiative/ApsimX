@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity will arange payment for a task based on the labour specified in the labour requirement.")]
+    [Description("Arrange payment for a task based on the labour specified in the labour requirement")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourTask.htm")]
     [Version(1, 0, 1, "")]
     public class LabourActivityTask : CLEMActivityBase
