@@ -11,6 +11,28 @@ namespace APSIM.Interop.Documentation.Renderers
     internal class ImageTagRenderer : TagRendererBase<Image>
     {
         /// <summary>
+        /// Path on which to search for images.
+        /// </summary>
+        private string searchPath = null;
+
+        /// <summary>
+        /// Create a new <see cref="ImageTagRenderer"/> instance for the given
+        /// search path.
+        /// </summary>
+        /// <param name="searchPath">Image search path. If image names are provided as filename only, will search on this path.</param>
+        public ImageTagRenderer(string searchPath)
+        {
+            this.searchPath = searchPath;
+        }
+
+        /// <summary>
+        /// Create a new <see cref="ImageTagRenderer"/> instance which does not search for images on disk.
+        /// </summary>
+        public ImageTagRenderer()
+        {
+        }
+
+        /// <summary>
         /// Render the given image tag to the PDF document.
         /// </summary>
         /// <param name="image">Image tag to be rendered.</param>
@@ -19,7 +41,7 @@ namespace APSIM.Interop.Documentation.Renderers
         {
             // Add the image to a new paragraph.
             renderer.StartNewParagraph();
-            renderer.AppendImage(image.GetRaster());
+            renderer.AppendImage(image.GetRaster(searchPath));
             renderer.StartNewParagraph();
         }
     }

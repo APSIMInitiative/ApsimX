@@ -183,7 +183,7 @@ namespace APSIM.Interop.Markdown.Renderers
         /// <summary>
         /// Renderers which this PDF writer will use to write the tags to the PDF document.
         /// </summary>
-        private IEnumerable<ITagRenderer> renderers = DefaultRenderers();
+        private IEnumerable<ITagRenderer> renderers;
 
         /// <summary>
         /// References which will be used to create the bibliography.
@@ -232,6 +232,8 @@ namespace APSIM.Interop.Markdown.Renderers
             ObjectRenderers.Add(new TableCellRenderer());
             ObjectRenderers.Add(new TableRowRenderer());
             ObjectRenderers.Add(new TableRenderer());
+
+            renderers = DefaultRenderers(options);
         }
 
         /// <summary>
@@ -848,10 +850,10 @@ namespace APSIM.Interop.Markdown.Renderers
         /// <summary>
         /// Get the default tag renderers.
         /// </summary>
-        private static IEnumerable<ITagRenderer> DefaultRenderers()
+        private static IEnumerable<ITagRenderer> DefaultRenderers(PdfOptions options)
         {
             List<ITagRenderer> result = new List<ITagRenderer>(7);
-            result.Add(new ImageTagRenderer());
+            result.Add(new ImageTagRenderer(options.ImagePath));
             result.Add(new ParagraphTagRenderer());
             result.Add(new TableTagRenderer());
             result.Add(new GraphTagRenderer());

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Bitmap = System.Drawing.Bitmap;
 
 namespace APSIM.Services.Documentation
 {
@@ -22,13 +23,47 @@ namespace APSIM.Services.Documentation
         private string resourceName;
 
         /// <summary>The image to put into the doc.</summary>
-        public System.Drawing.Image GetRaster()
+        public System.Drawing.Image GetRaster(string relativePath)
         {
             if (raster != null)
                 return raster;
-            if (string.IsNullOrWhiteSpace(resourceName))
+            return LoadImage(resourceName, relativePath);
+        }
+
+        /// <summary>
+        /// Attempt to load an image from the given URI. This can be a file path
+        /// or a resource name (or part of a resource name).
+        /// </summary>
+        /// <param name="uri">Image URI.</param>
+        public static System.Drawing.Image LoadImage(string uri, string imageSearchPath)
+        {
+            if (string.IsNullOrWhiteSpace(uri))
                 throw new InvalidOperationException("Unable to load image: resource name not specified");
-            return LoadFromResource(resourceName);
+
+            // Check if URI is an absolute path to an image.
+            if (File.Exists(uri))
+                return LoadFromFile(uri);
+
+            // URI might be a relative path or just a filename without a path.
+            // If so, search on the provided search path.
+            string absolute = Path.Combine(imageSearchPath ?? "", uri);
+            if (File.Exists(absolute))
+                return LoadFromFile(absolute);
+
+            // Otherwise try to find a resource file which matches the given URI.
+            return LoadFromResource(uri);   
+        }
+
+        /// <summary>
+        /// Read an image from disk.
+        /// </summary>
+        /// <param name="fileName">Absolute path to the file on disk.</param>
+        public static System.Drawing.Image LoadFromFile(string fileName)
+        {
+            // Image.FromFile() will cause the file to be locked until the image is disposed of. 
+            // This workaround allows us to immediately release the lock on the file.
+            using (Bitmap bmp = new Bitmap(fileName))
+                return new Bitmap(bmp);
         }
 
         /// <summary>
