@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity applies controlled burning to a specified graze food store (i.e. native pasture paddock).")]
+    [Description("Apply controlled burning to a specified graze food store (i.e. native pasture paddock)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Pasture/BurnPasture.htm")]
     public class PastureActivityBurn: CLEMActivityBase
@@ -157,7 +157,7 @@ namespace Models.CLEM.Activities
                     daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHa:
-                    numberUnits = (pasture.Manager.Area * (Resources.GetResourceGroupByType(typeof(Land)) as Land).UnitsOfAreaToHaConversion) / requirement.UnitSize;
+                    numberUnits = (pasture.Manager.Area * Resources.FindResource<Land>().UnitsOfAreaToHaConversion) / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
                         numberUnits = Math.Ceiling(numberUnits);
 

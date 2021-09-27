@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-
 using Newtonsoft.Json;
 using Models.Core;
 using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Reporting;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
@@ -17,17 +16,22 @@ namespace Models.CLEM.Resources
     /// This stores the parameters for a GrazeFoodType and holds values in the store
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.PropertyCategorisedView")]
+    [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
-    [Description("This resource represents a graze food store of native pasture (e.g. a specific paddock).")]
+    [Description("This resource represents a graze food store of native pasture (e.g. a specific paddock)")]
     [Version(1, 0, 2, "Grazing from pasture pools is fixed to reflect NABSA approach.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStoreType.htm")]
-    public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
+    public class GrazeFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IValidatableObject
     {
         [Link]
         private ZoneCLEM zoneCLEM = null;
+        [Link]
+        private Clock clock = null;
+
+        private IPastureManager manager;
+        private GrazeFoodStoreFertilityLimiter grazeFoodStoreFertilityLimiter;
 
         /// <summary>
         /// Unit type
@@ -68,27 +72,19 @@ namespace Models.CLEM.Resources
                     return average;
                 }
                 else
-                {
                     return res.FirstOrDefault();
-                }
             }
             else
-            {
                 if (index < Pools.Count())
-                {
                     return Pools[index];
-                }
                 else
-                {
                     return null;
-                }
-
-            }
-        } 
+        }
 
         /// <summary>
         /// Coefficient to convert initial N% to DMD%
         /// </summary>
+        [Category("Advanced", "Quality")]
         [Description("Coefficient to convert initial N% to DMD%")]
         [Required]
         public double NToDMDCoefficient { get; set; }
@@ -96,20 +92,15 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Intercept to convert initial N% to DMD%
         /// </summary>
+        [Category("Advanced", "Quality")]
         [Description("Intercept to convert initial N% to DMD%")]
         [Required]
         public double NToDMDIntercept { get; set; }
 
         /// <summary>
-        /// Crude protein denominator to convert initial N% to DMD%
-        /// </summary>
-        [Description("Crude protein denominator to convert initial N% to DMD%")]
-        [Required]
-        public double NToDMDCrudeProteinDenominator { get; set; }
-
-        /// <summary>
         /// Nitrogen of new growth (%)
         /// </summary>
+        [Category("Basic", "Quality")]
         [Description("Nitrogen of new growth (%)")]
         [Required, Percentage]
         public double GreenNitrogen { get; set; }
@@ -117,6 +108,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Proportion Nitrogen loss each month from pools
         /// </summary>
+        [Category("Basic", "Decay")]
         [Description("%Nitrogen loss each month from pools (note: amount not proportion)")]
         [Required, GreaterThanEqualValue(0)]
         public double DecayNitrogen { get; set; }
@@ -124,6 +116,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Minimum Nitrogen %
         /// </summary>
+        [Category("Basic", "Decay")]
         [Description("Minimum nitrogen %")]
         [Required, Percentage]
         public double MinimumNitrogen { get; set; }
@@ -131,6 +124,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Proportion Dry Matter Digestibility loss each month from pools
         /// </summary>
+        [Category("Basic", "Decay")]
         [Description("Proportion DMD loss each month from pools")]
         [Required, Proportion]
         public double DecayDMD { get; set; }
@@ -138,6 +132,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Minimum Dry Matter Digestibility
         /// </summary>
+        [Category("Basic", "Decay")]
         [Description("Minimum Dry Matter Digestibility")]
         [Required, Percentage]
         public double MinimumDMD { get; set; }
@@ -145,6 +140,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Monthly detachment rate
         /// </summary>
+        [Category("Basic", "Decay")]
         [Description("Detachment rate")]
         [Required, Proportion]
         public double DetachRate { get; set; }
@@ -152,6 +148,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Detachment rate of 12 month or older plants
         /// </summary>
+        [Category("Basic", "Decay")]
         [Description("Carryover detachment rate")]
         [Required, Proportion]
         public double CarryoverDetachRate { get; set; }
@@ -159,6 +156,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Coefficient to adjust intake for tropical herbage quality
         /// </summary>
+        [Category("Advanced", "Quality")]
         [Description("Coefficient to adjust intake for tropical herbage quality")]
         [Required]
         public double IntakeTropicalQualityCoefficient { get; set; }
@@ -166,12 +164,43 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Coefficient to adjust intake for herbage quality
         /// </summary>
+        [Category("Advanced", "Quality")]
         [Description("Coefficient to adjust intake for herbage quality")]
         [Required]
         public double IntakeQualityCoefficient { get; set; }
 
-        private IPastureManager manager;
-        private GrazeFoodStoreFertilityLimiter grazeFoodStoreFertilityLimiter;
+        /// <summary>
+        /// Initial pasture biomass
+        /// </summary>
+        [Category("Basic", "Initial biomass")]
+        [Description("Initial biomass (kg per ha)")]
+        public double InitialBiomass { get; set; }
+
+        /// <summary>
+        /// First month of seasonal growth
+        /// </summary>
+        [Category("Basic", "Initial biomass")]
+        [Description("First month of seasonal growth")]
+        [System.ComponentModel.DefaultValueAttribute(11)]
+        [Required, Month]
+        public MonthsOfYear FirstMonthOfGrowSeason { get; set; }
+
+        /// <summary>
+        /// Last month of seasonal growth
+        /// </summary>
+        [Category("Basic", "Initial biomass")]
+        [Description("Last month of seasonal growth")]
+        [System.ComponentModel.DefaultValueAttribute(3)]
+        [Required, Month]
+        public MonthsOfYear LastMonthOfGrowSeason { get; set; }
+
+        /// <summary>
+        /// Number of months for initial biomass
+        /// </summary>
+        [Category("Basic", "Initial biomass")]
+        [Description("Number of months for initial biomass")]
+        [System.ComponentModel.DefaultValueAttribute(5)]
+        public int NumberMonthsForInitialBiomass { get; set; }
 
         /// <summary>
         /// A link to the Activity managing this Graze Food Store
@@ -184,9 +213,7 @@ namespace Models.CLEM.Resources
             set
             {
                 if(manager!=null)
-                {
                     throw new ApsimXException(this, String.Format("Each [r=GrazeStoreType] can only be managed by a single activity./nTwo managing activities ([a={0}] and [a={1}]) are trying to manage [r={2}]", manager.Name, value.Name, this.Name));
-                }
                 manager = value;
             }
         }
@@ -210,13 +237,9 @@ namespace Models.CLEM.Resources
             get
             {
                 if (Manager != null)
-                {
                     return Amount / Manager.Area;
-                }
                 else
-                {
                     return 0;
-                }
             }
         }
 
@@ -231,9 +254,8 @@ namespace Models.CLEM.Resources
             get
             {
                 if (biomassAddedThisYear == 0)
-                {
                     return (biomassConsumed > 0) ? 100: 0;
-                }
+
                 return biomassConsumed == 0 ? 0 : Math.Min(biomassConsumed / biomassAddedThisYear * 100,100);
             }
         }
@@ -247,9 +269,8 @@ namespace Models.CLEM.Resources
             {
                 double dmd = 0;
                 if (this.Amount > 0)
-                {
                     dmd = Pools.Sum(a => a.Amount * a.DMD) / this.Amount;
-                }
+
                 return Math.Max(MinimumDMD, dmd);
             }
         }
@@ -263,9 +284,8 @@ namespace Models.CLEM.Resources
             {
                 double n = 0;
                 if (this.Amount > 0)
-                {
                     n = Pools.Sum(a => a.Amount * a.Nitrogen) / this.Amount;
-                }
+
                 return Math.Max(MinimumNitrogen, n);
             }
         }
@@ -302,14 +322,18 @@ namespace Models.CLEM.Resources
             get
             {
                 if (Manager != null)
-                {
                     return Pools.Sum(a => a.Amount) / 1000 / Manager.Area;
-                }
                 else
-                {
                     return 0;
-                }
             }
+        }
+
+        /// <summary>
+        /// Constructor 
+        /// </summary>
+        public GrazeFoodStoreType()
+        {
+            SetDefaults();
         }
 
         /// <summary>
@@ -320,13 +344,10 @@ namespace Models.CLEM.Resources
             IEnumerable<GrazeFoodStorePool> pools;
             // group all pools >12 months old.
             if (age < 12)
-            {
                 pools = Pools.Where(a => a.Age == age);
-            }
             else
-            {
                 pools = Pools.Where(a => a.Age >= 12);
-            }
+
             switch (property)
             {
                 case "Detached":
@@ -381,9 +402,7 @@ namespace Models.CLEM.Resources
         private void OnCLEMFinalSetupBeforeSimulation(object sender, EventArgs e)
         {
             if(Manager == null)
-            {
                 Summary.WriteWarning(this, String.Format("There is no activity managing [r={0}]. This resource cannot be used and will have no growth.\r\nTo manage [r={0}] include a [a=CropActivityManage]+[a=CropActivityManageProduct] or a [a=PastureActivityManage] depending on your external data type.", this.Name));
-            }
         }
 
         /// <summary>
@@ -393,9 +412,7 @@ namespace Models.CLEM.Resources
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
             if (Pools != null)
-            {
                 Pools.Clear();
-            }
             Pools = null;
         }
 
@@ -407,9 +424,7 @@ namespace Models.CLEM.Resources
         {
             // reset pool counters
             foreach (var pool in Pools)
-            {
                 pool.Reset();
-            }
         }
 
         /// <summary>
@@ -426,9 +441,7 @@ namespace Models.CLEM.Resources
                 {
                     double detach = CarryoverDetachRate;
                     if (pool.Age < 12)
-                    {
                         detach = DetachRate;
-                    }
                     double detachedAmount = pool.Amount * (1 - detach);
                     pool.Detached = pool.Amount * detach;
                     pool.Set(detachedAmount);
@@ -455,9 +468,7 @@ namespace Models.CLEM.Resources
                     pool.DMD = Math.Max(pool.DMD * (1 - DecayDMD), MinimumDMD);
 
                     if (pool.Age < 12)
-                    {
                         pool.Age++;
-                    }
                 }
                 // remove all pools with less than 10g of food
                 Pools.RemoveAll(a => a.Amount < 0.01);
@@ -504,6 +515,105 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public EcologicalIndicators CurrentEcologicalIndicators { get; set; }
 
+        /// <summary>
+        /// A method to initialise initial pasture  biomass across pools 
+        /// </summary>
+        /// <param name="area">Area of pasture (ha)</param>
+        /// <param name="firstMonthsGrowth">The growth (kg per ha) expected in the first month for accuracy</param>
+        public void SetupStartingPasturePools(double area, double firstMonthsGrowth)
+        {
+
+            if (area <= 0) return;
+            if (NumberMonthsForInitialBiomass <= 0) return;
+
+            // Initial biomass
+            double amountToAdd = area * InitialBiomass;
+            if (amountToAdd <= 0)
+                return;
+
+            // Set up pasture pools to start run based on month and user defined pasture properties
+            // Locates the previous five months where growth occurred (Nov-Mar) and applies decomposition to current month
+            // This months growth will not be included.
+
+            int month = clock.Today.Month;
+            int monthCount = 0;
+            int includedMonthCount = 0;
+            double propBiomass = 1.0;
+            double currentN = GreenNitrogen;
+            // NABSA changes N by 0.8 for particular months. Not needed here as decay included.
+            double currentDMD = currentN * NToDMDCoefficient + NToDMDIntercept;
+            currentDMD = Math.Max(MinimumDMD, currentDMD);
+            Pools.Clear();
+
+            List<GrazeFoodStorePool> newPools = new List<GrazeFoodStorePool>();
+
+            // number of previous growth months to consider. default should be 5 
+            int growMonthHistory = NumberMonthsForInitialBiomass;
+
+            while (includedMonthCount < growMonthHistory)
+            {
+                // start month before start of simulation.
+                monthCount++;
+                month--;
+                currentN -= DecayNitrogen;
+                currentN = Math.Max(currentN, MinimumNitrogen);
+                currentDMD *= 1 - DecayDMD;
+                currentDMD = Math.Max(currentDMD, MinimumDMD);
+
+                if (month == 0)
+                    month = 12;
+
+                bool insideGrowthWindow = false;
+                int first = (int)FirstMonthOfGrowSeason;
+                int last = (int)LastMonthOfGrowSeason;
+
+                if (first < last)
+                    insideGrowthWindow = (month >= first & month <= last);
+                else
+                    insideGrowthWindow = (month >= first | month <= last);
+
+                if (insideGrowthWindow) // (month <= 3 | month >= 11)
+                {
+                    // add new pool
+                    newPools.Add(new GrazeFoodStorePool()
+                    {
+                        Age = monthCount,
+                        Nitrogen = currentN,
+                        DMD = currentDMD,
+                        StartingAmount = propBiomass
+                    });
+                    includedMonthCount++;
+                }
+                propBiomass *= 1 - DetachRate;
+            }
+
+            // assign pasture biomass to pools based on proportion of total
+            double total = newPools.Sum(a => a.StartingAmount);
+            foreach (var pool in newPools)
+                pool.Set(amountToAdd * (pool.StartingAmount / total));
+
+            // Previously: remove this months growth from pool age 0 to keep biomass at approximately setup.
+            // But as updates happen at the end of the month, the first month's biomass is never added so stay with 0 or delete following section
+            // Get this months growth
+            // Get this months pasture data from the pasture data list
+            if (firstMonthsGrowth > 0)
+            {
+                double thisMonthsGrowth = firstMonthsGrowth * area;
+                if (thisMonthsGrowth > 0)
+                    if (newPools.Where(a => a.Age == 0).FirstOrDefault() is GrazeFoodStorePool thisMonth)
+                        thisMonth.Set(Math.Max(0, thisMonth.Amount - thisMonthsGrowth));
+            }
+
+            // Add to pasture. This will add pool to pasture available store.
+            foreach (var pool in newPools)
+            {
+                string reason = "Initialise";
+                if (newPools.Count() > 1)
+                    reason = "Initialise pool " + pool.Age.ToString();
+
+                Add(pool, this, "", reason);
+            }
+        }
 
         #region transactions
 
@@ -518,9 +628,9 @@ namespace Models.CLEM.Resources
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             GrazeFoodStorePool pool;
-            switch (resourceAmount.GetType().Name)
+            switch (resourceAmount)
             {
-                case "GrazeFoodStorePool":
+                case GrazeFoodStorePool _:
                     pool = resourceAmount as GrazeFoodStorePool;
                     // adjust N content only if new growth (age = 0) based on yield limits and month range defined in GrazeFoodStoreFertilityLimiter if present
                     if (pool.Age == 0 && !(grazeFoodStoreFertilityLimiter is null))
@@ -529,40 +639,35 @@ namespace Models.CLEM.Resources
                         pool.Nitrogen = Math.Max(MinimumNitrogen, pool.Nitrogen * reduction);
                     }
                     break;
-                case "FoodResourcePacket":
+                case FoodResourcePacket _:
                     pool = new GrazeFoodStorePool();
                     FoodResourcePacket packet = resourceAmount as FoodResourcePacket;
                     pool.Set(packet.Amount);
                     pool.Nitrogen = packet.PercentN;
                     pool.DMD = packet.DMD;
                     break;
-                case "Double":
+                case double _:
                     pool = new GrazeFoodStorePool();
                     pool.Set((double)resourceAmount);
                     pool.Nitrogen = this.Nitrogen;
                     pool.DMD = this.EstimateDMD(this.Nitrogen);
                     break;
                 default:
-                    // expecting a GrazeFoodStoreResource (PastureManage) or FoodResourcePacket (CropManage) or Double from G-Range
-                    throw new Exception(String.Format("ResourceAmount object of type {0} is not supported in Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
+                    throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]");
             }
+
             if (pool.Amount > 0)
             {
                 // allow decaying or no pools currently available
                 if (PastureDecays || Pools.Count() == 0)
-                {
                     Pools.Insert(0, pool);
-                }
                 else
-                {
                     Pools[0].Add(pool);
-                }
+
                 // update biomass available
                 if (!category.StartsWith("Initialise"))
-                {
                     // do not update if this is ian initialisation pool
                     biomassAddedThisYear += pool.Amount;
-                }
 
                 ResourceTransaction details = new ResourceTransaction
                 {
@@ -623,9 +728,7 @@ namespace Models.CLEM.Resources
                     pool.Pool.Remove(amountToRemove, thisBreed, "Graze");
 
                     if (amountRequired <= 0)
-                    {
                         break;
-                    }
                 }
 
                 // if forage still limiting and second take allowed (enforce strict limits is false)
@@ -641,14 +744,11 @@ namespace Models.CLEM.Resources
                         //if still not enough take all
                         double amountToRemove = 0;
                         if (amountRequired >= forage)
-                        {
                             // take as a proportion of the pool to total forage remaining
                             amountToRemove = pool.Pool.Amount / forage * amountRequired;
-                        }
                         else
-                        {
                             amountToRemove = pool.Pool.Amount;
-                        }
+
                         // update DMD and N based on pool utilised
                         thisBreed.DMD += pool.Pool.DMD * amountToRemove;
                         thisBreed.N += pool.Pool.Nitrogen * amountToRemove;
@@ -759,6 +859,34 @@ namespace Models.CLEM.Resources
 
         #endregion
 
+        #region validation
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            bool noGrowSeason = false;
+            int first = (int)FirstMonthOfGrowSeason;
+            int last = (int)LastMonthOfGrowSeason;
+            if (first < last)
+                noGrowSeason = (last - first <= 1);
+            else
+                noGrowSeason = ((12 - first) + last <= 1);
+
+            if (InitialBiomass > 0 & noGrowSeason)
+            {
+                string[] memberNames = new string[] { "Invalid initial biomass growth season" };
+                results.Add(new ValidationResult($"There must be at least one month differnece between the first month [{FirstMonthOfGrowSeason}] and the last month [{LastMonthOfGrowSeason}] of the growth season specified to calculate the initial biomass in [r={this.NameWithParent}]", memberNames));
+            }
+            return results;
+        }
+        #endregion
+
         #region descriptive summary
 
         /// <summary>
@@ -773,18 +901,13 @@ namespace Models.CLEM.Resources
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("This pasture has an initial green nitrogen content of ");
                 if (this.GreenNitrogen == 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">Not set</span>%");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"setvalue\">" + this.GreenNitrogen.ToString("0.###") + "%</span>");
-                }
 
                 if (DecayNitrogen > 0)
-                {
                     htmlWriter.Write(" and will decline by <span class=\"setvalue\">" + this.DecayNitrogen.ToString("0.###") + "%</span> per month to a minimum nitrogen of <span class=\"setvalue\">" + this.MinimumNitrogen.ToString("0.###") + "%</span>");
-                }
+
                 htmlWriter.Write("\r\n</div>");
                 if (DecayDMD > 0)
                 {
@@ -797,9 +920,8 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("Pasture is lost through detachment at a rate of <span class=\"setvalue\">" + this.DetachRate.ToString("0.###") + "</span> per month");
                     if (CarryoverDetachRate > 0)
-                    {
                         htmlWriter.Write(" and <span class=\"setvalue\">" + this.CarryoverDetachRate.ToString("0.###") + "</span> per month after 12 months");
-                    }
+
                     htmlWriter.Write("\r\n</div>");
                 }
                 else

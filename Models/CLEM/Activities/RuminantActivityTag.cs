@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity adds or removes a specified tag to/from the specified individuals for customised filtering.")]
+    [Description("Add or remove a specified tag to/from the specified individuals for customised filtering")]
     [Version(1, 0, 2, "Uses the Attribute feature of Ruminants")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantTag.htm")]
@@ -76,9 +76,9 @@ namespace Models.CLEM.Activities
                 foreach (RuminantGroup item in filterGroups)
                 {
                     if (ApplicationStyle == TagApplicationStyle.Add)
-                        numberToTag += herd.FilterRuminants(item).Where(a => !a.Attributes.Exists(TagLabel)).Count();
+                        numberToTag += item.Filter(herd).Where(a => !a.Attributes.Exists(TagLabel)).Count();
                     else
-                        numberToTag += herd.FilterRuminants(item).Where(a => a.Attributes.Exists(TagLabel)).Count();
+                        numberToTag += item.Filter(herd).Where(a => a.Attributes.Exists(TagLabel)).Count();
                 }
             }
             else
@@ -135,7 +135,7 @@ namespace Models.CLEM.Activities
                 {
                     foreach (RuminantGroup item in filterGroups)
                     {
-                        foreach (Ruminant ind in herd.FilterRuminants(item).Where(a => (ApplicationStyle == TagApplicationStyle.Add)? !a.Attributes.Exists(TagLabel): a.Attributes.Exists(TagLabel)).Take(numberToTag))
+                        foreach (Ruminant ind in item.Filter(herd).Where(a => (ApplicationStyle == TagApplicationStyle.Add)? !a.Attributes.Exists(TagLabel): a.Attributes.Exists(TagLabel)).Take(numberToTag))
                         {
                             if(this.Status != ActivityStatus.Partial)
                                 this.Status = ActivityStatus.Success;

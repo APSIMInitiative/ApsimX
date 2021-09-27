@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using Newtonsoft.Json;
@@ -9,8 +10,6 @@ using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.CLEM.Activities
 {
@@ -23,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages the input and output of resources specified in a file")]
+    [Description("Manage the input and output of external resources specified in a file")]
     [HelpUri(@"Content/Features/Activities/All resources/ManageExternalResource.htm")]
     [Version(1, 0, 1, "")]
     public class ResourceActivityManageExternal: CLEMActivityBase
@@ -139,11 +138,7 @@ namespace Models.CLEM.Activities
                                 case "Models.CLEM.Resources.GrazeFoodStoreType":
                                 case "Models.CLEM.Resources.OtherAnimalsType":
                                     string warn = $"[a={this.Name}] does not support [r={resource.GetType()}]\r\nThis resource will be ignored. Contact developers for more information";
-                                    if (!Warnings.Exists(warn))
-                                    {
-                                        Summary.WriteWarning(this, warn);
-                                        Warnings.Add(warn);
-                                    }
+                                    Warnings.CheckAndWrite(warn, Summary, this);
                                     resource = null;
                                     break;
                             default:
@@ -245,10 +240,10 @@ namespace Models.CLEM.Activities
                     switch (OnPartialResourcesAvailableAction)
                     {
                         case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-                                Summary.WriteWarning(this, $"Insufficient [r={AccountName}] resource of type [r=FinanceType] for activity [a={this.Name}]");
-                                Summary.WriteWarning(this, $"Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity [a={this.Name}]");
+                                Summary.WriteWarning(this, $"Insufficient [r={AccountName}] resource of type [r=FinanceType] for activity [a={this.NameWithParent}]");
+                                Summary.WriteWarning(this, $"Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity [a={this.NameWithParent}]");
                                 Status = ActivityStatus.Critical;
-                                throw new ApsimXException(this, $"@i:Insufficient resources [r={AccountName}] for activity [a={this.Name}]");
+                                throw new ApsimXException(this, $"@i:Insufficient resources [r={AccountName}] for activity [a={this.NameWithParent}]");
                         case OnPartialResourcesAvailableActionTypes.SkipActivity:
                             this.Status = ActivityStatus.Ignored;
                             return;

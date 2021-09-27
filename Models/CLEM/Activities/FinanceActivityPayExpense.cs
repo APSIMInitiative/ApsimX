@@ -13,7 +13,6 @@ using System.IO;
 namespace Models.CLEM.Activities
 {
     /// <summary>Activity to arrange and pay an enterprise expenses
-    /// Expenses can be flagged as overheads for accounting
     /// </summary>
     /// <version>1.0</version>
     [Serializable]
@@ -22,7 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs payment of a specified expense.")]
+    [Description("Perform payment of a specified expense")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Finances/PayExpenses.htm")]
     public class FinanceActivityPayExpense : CLEMActivityBase

@@ -26,9 +26,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (attributes is null)
-                {
                     attributes = new Dictionary<string, IIndividualAttribute>();
-                }
                 return attributes;
             }
         }
@@ -51,18 +49,12 @@ namespace Models.CLEM.Resources
         public void Add(string tag, IIndividualAttribute value = null)
         {
             if (attributes is null)
-            {
                 attributes = new Dictionary<string, IIndividualAttribute>();
-            }
 
             if (!attributes.ContainsKey(tag))
-            {
                 attributes.Add(tag, value);
-            }
             else
-            {
                 attributes[tag] = value;
-            }
         }
 
         /// <summary>
@@ -73,13 +65,9 @@ namespace Models.CLEM.Resources
         public IIndividualAttribute GetValue(string tag)
         {
             if (attributes is null || !attributes.ContainsKey(tag))
-            {
                 return null;
-            }
             else
-            {
                 return attributes[tag];
-            }
         }
 
         /// <summary>
@@ -89,9 +77,7 @@ namespace Models.CLEM.Resources
         public void Remove(string tag)
         {
             if (attributes is null || attributes.ContainsKey(tag))
-            {
                 attributes.Remove(tag);
-            }
         }
 
     }

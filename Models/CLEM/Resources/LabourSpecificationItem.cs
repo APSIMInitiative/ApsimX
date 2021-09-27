@@ -12,12 +12,11 @@ namespace Models.CLEM.Resources
     /// <summary>
     /// An individual labour specification item with monthly values
     /// </summary>
-    [Serializable]
-    public abstract class LabourSpecificationItem: CLEMModel
+    public interface ILabourSpecificationItem : IModel
     {
         /// <summary>
         /// Provide availability for the specified month 
         /// </summary>
-        public abstract double GetAvailability(int month);
+        double GetAvailability(int month);
     }
 }

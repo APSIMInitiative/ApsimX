@@ -23,6 +23,16 @@ namespace Models.CLEM
         public double StandardDeviation { get; set; }
 
         /// <summary>
+        /// Average of list
+        /// </summary>
+        public double AverageMate { get; set; }
+
+        /// <summary>
+        /// Standard deviation
+        /// </summary>
+        public double StandardDeviationMate { get; set; }
+
+        /// <summary>
         /// number of individuals with attribute
         /// </summary>
         public int Count { get; set; }

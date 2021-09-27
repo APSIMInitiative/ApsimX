@@ -67,10 +67,8 @@ namespace Models.CLEM.Resources
                         // first mating
                         //if (female.BreedParams.MinimumAge1stMating >= 24)
                         if (female.Age >= 24)
-                        {
                             // 1st mated at 24 months or older
                             rate = ConceptionRateAsymptote[1] / (1 + Math.Exp(ConceptionRateCoefficent[1] * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept[1]));
-                        }
                         //else if (female.BreedParams.MinimumAge1stMating >= 12)
                         else if (female.Age >= 12)
                         {
@@ -82,10 +80,8 @@ namespace Models.CLEM.Resources
                             rate = rate12 + ((rate24 - rate12) * propOfYear);
                         }
                         else
-                        {
                             // first mating < 12 months old
                             rate = ConceptionRateAsymptote[0] / (1 + Math.Exp(ConceptionRateCoefficent[0] * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept[0]));
-                        }
                         break;
                     case 1:
                         // second offspring mother
@@ -94,9 +90,7 @@ namespace Models.CLEM.Resources
                     default:
                         // females who have had more than two births (twins should count as one birth)
                         if (female.WeightAtConception > female.BreedParams.CriticalCowWeight * female.StandardReferenceWeight)
-                        {
                             rate = ConceptionRateAsymptote[3] / (1 + Math.Exp(ConceptionRateCoefficent[3] * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept[3]));
-                        }
                         break;
                 }
             }

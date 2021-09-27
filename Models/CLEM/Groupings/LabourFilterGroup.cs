@@ -20,23 +20,11 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(LabourRequirementNoUnitSize))]
     [ValidParent(ParentType = typeof(LabourFilterGroup))]
     [ValidParent(ParentType = typeof(TransmuteLabour))]
-    [Description("Contains a group of filters to identify individuals able to undertake labour. Multiple filter groups will select groups of individuals required. Nested filter groups will determine others in order who can perform the task if insufficient labour.")]
+    [Description("Defines specific individuals from the labour pool to undertake labour")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/LabourFilterGroup.htm")]
-    public class LabourFilterGroup: CLEMModel, IFilterGroup
+    public class LabourFilterGroup : FilterGroup<LabourType>
     {
-        /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
-
-        /// <summary>
-        /// Proportion of group to use
-        /// </summary>
-        [JsonIgnore]
-        public double Proportion { get; set; }
-
         #region descriptive summary
 
         /// <summary>
@@ -86,18 +74,16 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            if (this.Parent.GetType() == typeof(LabourFilterGroup))
-            {
+            if (Parent.GetType() == typeof(LabourFilterGroup))            
                 html += "<div class=\"labournote\" style=\"clear: both;\">If insufficient labour use the specifications below</div>";
-            }
+            
             html += "\r\n<div class=\"filterborder clearfix\">";
-            if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
-            {
+
+            if (FindAllChildren<Filter>().Count() < 1)            
                 html += "<div class=\"filter\">Any labour</div>";
-            }
+            
             return html;
         } 
         #endregion
-
     }
 }

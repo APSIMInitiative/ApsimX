@@ -27,17 +27,12 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityMove))]
     [ValidParent(ParentType = typeof(RuminantActivityMarkForSale))]
     [ValidParent(ParentType = typeof(TransmuteRuminant))]
-    [Description("This group selects specific individuals from the ruminant herd using any number of filters and sorts.")]
+    [ValidParent(ParentType = typeof(ReportRuminantAttributeSummary))]
+    [Description("Selects specific individuals ruminants from the herd")]
     [Version(1, 0, 1, "Added ability to select random proportion of the group to use")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantGroup.htm")]
-    public class RuminantGroup : CLEMModel, IFilterGroup
+    public class RuminantGroup : FilterGroup<Ruminant>
     {
-        /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
-
         /// <summary>
         /// The reason for this filter group
         /// </summary>
@@ -47,18 +42,11 @@ namespace Models.CLEM.Groupings
         public RuminantStockGroupStyle Reason { get; set; }
 
         /// <summary>
-        /// Proportion of group to use
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(1)]
-        [Description("Proportion of group to use")]
-        [Required, GreaterThanValue(0), Proportion]
-        public double Proportion { get; set; }
-
-        /// <summary>
         /// Constructor to apply defaults
         /// </summary>
         public RuminantGroup()
         {
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
             this.SetDefaults();
         }
 
@@ -83,63 +71,6 @@ namespace Models.CLEM.Groupings
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
-        {
-            return "";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
-        {
-            return "";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
-        {
-            return "\r\n</div>";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-
-                if (Proportion < 1)
-                {
-                    htmlWriter.Write("<div class=\"filter\">");
-                    if (Proportion <= 0)
-                    {
-                        htmlWriter.Write("<span class=\"errorlink\">[NOT SET%]</span>");
-                    }
-                    else
-                    {
-                        htmlWriter.Write($"{Proportion.ToString("P0")} of");
-                    }
-                    htmlWriter.Write("</div>");
-                }
-                if (FindAllChildren<RuminantFilter>().Count() < 1)
-                {
-                    htmlWriter.Write("<div class=\"filter\">All individuals</div>");
-                }
-                return htmlWriter.ToString(); 
-            }
-        } 
         #endregion
 
     }

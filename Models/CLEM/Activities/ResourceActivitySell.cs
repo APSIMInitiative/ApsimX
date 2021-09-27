@@ -1,12 +1,9 @@
 ﻿using Models.Core;
-using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Models.Core.Attributes;
 using System.IO;
 
@@ -21,7 +18,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages the sale of a specified resource.")]
+    [Description("Manages the sale of a specified resource")]
     [HelpUri(@"Content/Features/Activities/All resources/SellResource.htm")]
     [Version(1, 0, 3, "Added Proportion of last gain as selling style. Allows you to sell a proportion of the harvest")]
     [Version(1, 0, 2, "Automatically handles transactions with Marketplace if present")]

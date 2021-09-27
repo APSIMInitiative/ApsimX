@@ -1,25 +1,23 @@
 ﻿using Models.Core;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Manage crop product activity</summary>
-    /// <summary>This activity sets aside land for the crop</summary>
+    /// <summary>The child of Manage crop to manage a particular product harvested</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageCrop))]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
-    [Description("This activity is used within a crop management activity to obtain production values from the crop file for crop(s) grown")]
+    [Description("Manage a crop product of the parent ManageCrop and obtain production values from the crop file")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Mixed cropping/multiple products implemented")]
     [Version(1, 0, 3, "Added ability to model multiple harvests from crop using Harvest Tags from input file")]
@@ -62,7 +60,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Percentage of the crop growth that is kept
         /// </summary>
-        [Description("Proportion of product kept")]
+        [Description("Proportion of harvest achieved")]
         [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, Proportion]
         public double ProportionKept { get; set; }
@@ -191,8 +189,9 @@ namespace Models.CLEM.Activities
                 throw new ApsimXException(this, String.Format("Unable to locate crop data reader [x={0}] requested by [a={1}]", this.ModelNameFileCrop??"Unknown", this.Name));
 
             LinkedResourceItem = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-            if((LinkedResourceItem as Model).Parent.GetType() == typeof(GrazeFoodStore))
+            if((LinkedResourceItem as Model).Parent is GrazeFoodStore)
             {
+                // set manager of graze food store if linked
                 (LinkedResourceItem as GrazeFoodStoreType).Manager = (Parent as IPastureManager);
                 addReason = "Growth";
             }
@@ -217,7 +216,16 @@ namespace Models.CLEM.Activities
             // check if harvest type tags have been provided
             HarvestTagsUsed = HarvestData.Where(a => a.HarvestType != "").Count() > 0;
 
-            // set manager of graze food store if linked
+            if (LinkedResourceItem is GrazeFoodStoreType)
+            {
+                double firstMonthsGrowth = 0;
+                CropDataType cropData = HarvestData.Where(a => a.Year == clock.StartDate.Year && a.Month == clock.StartDate.Month).FirstOrDefault();
+                if (cropData != null)
+                    firstMonthsGrowth = cropData.AmtKg;
+
+                (LinkedResourceItem as GrazeFoodStoreType).SetupStartingPasturePools(UnitsToHaConverter*(Parent as CropActivityManageCrop).Area * UnitsToHaConverter, firstMonthsGrowth);
+                addReason = "Growth";
+            }
         }
 
         /// <summary>
@@ -246,11 +254,7 @@ namespace Models.CLEM.Activities
                         if (previousTag == HarvestData.FirstOrDefault().HarvestType)
                         {
                             string warn = $"Invalid sequence of HarvetTags detected in [a={this.Name}]\r\nEnsure tags are ordered first, last in sequence.";
-                            if (!Warnings.Exists(warn))
-                            {
-                                Summary.WriteWarning(this, warn);
-                                Warnings.Add(warn);
-                            }
+                            Warnings.CheckAndWrite(warn, Summary, this);
                         }
                         previousTag = HarvestData.FirstOrDefault().HarvestType;
                     }

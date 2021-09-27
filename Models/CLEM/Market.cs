@@ -1,15 +1,13 @@
 ﻿using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
-using Models.Storage;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
 
@@ -22,7 +20,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    [Description("This represents a shared market place for CLEM farms")]
+    [Description("A shared market place for CLEM farms")]
     [HelpUri(@"Content/Features/Market.htm")]
     [Version(1, 0, 2, "Tested and functioning for targeted feeding including transmutations but still needs movement of goods to market.")]
     [Version(1, 0, 1, "Early implementation of market place for multi-farm simulations. This is a major addition and is not checked for full functionality.")]
@@ -103,13 +101,10 @@ namespace Models.CLEM
 
                 // get all validations 
                 if (summary.Messages() != null)
-                {
                     foreach (DataRow item in summary.Messages().Rows)
-                    {
                         if (item[3].ToString().StartsWith("Invalid"))
                             error += "\r\n" + item[3].ToString();
-                    }
-                }
+
                 throw new ApsimXException(this, error.Replace("&shy;", "."));
             }
         }
@@ -154,20 +149,14 @@ namespace Models.CLEM
         #endregion
 
         #region descriptive summary
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="useFullDescription">Use full verbose description</param>
-        /// <param name="htmlString"></param>
-        /// <returns></returns>
-        public string GetFullSummary(object model, bool useFullDescription, string htmlString)
+        /// <inheritdoc/>
+        public string GetFullSummary(object model, bool useFullDescription, string htmlString, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write($"\r\n<div class=\"holdermain\" style=\"opacity: {((!this.Enabled) ? "0.4" : "1")}\">");
                 foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
-                    htmlWriter.Write(cm.GetFullSummary(cm, true, ""));
+                    htmlWriter.Write(cm.GetFullSummary(cm, true, "", markdown2Html));
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString();
             }
