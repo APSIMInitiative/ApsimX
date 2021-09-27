@@ -56,14 +56,14 @@ namespace Models
     /// The sugar model uses six different stages to define crop growth and status. 
     ///
     /// 
-    /// |Stage     |Description                                   |
-    /// |----------|:---------------------------------------------|
-    /// |sowing    |From sowing to sprouting                      |
-    /// |sprouting |From sprouting to emergence                   |
-    /// |emergence |From emergence to the beginning of cane growth|
-    /// |begin_cane|From the beginning of cane growth to flowering|
-    /// |flowering |From flowering to the end of the crop         |
-    /// |end_crop  |Crop is not currently in the simulated system.|
+    /// |Stage     |Description                                   
+    /// |----------|:---------------------------------------------
+    /// |sowing    |From sowing to sprouting                      
+    /// |sprouting |From sprouting to emergence                   
+    /// |emergence |From emergence to the beginning of cane growth
+    /// |begin_cane|From the beginning of cane growth to flowering
+    /// |flowering |From flowering to the end of the crop         
+    /// |end_crop  |Crop is not currently in the simulated system.
     /// 
     /// Sprouting occurs after a lag period, set to 350 oCdays for plant crops and 100 oCdays for ratoon crops. 
     ///
@@ -124,13 +124,13 @@ namespace Models
     ///
     /// The sugar model partitions dry matter to **five different plant pools**. These are as follows: 
     ///
-    /// |Plant Part |Description                              |
-    /// |-----------|:----------------------------------------|
-    /// |Root       |Below-ground biomass                     |
-    /// |Leaf       |Leaf                                     |
-    /// |Sstem      |Structural component of millable stalk   |
-    /// |Cabbage    |Leaf sheath and tip of growing stalks etc|
-    /// |Sucrose    |Sucrose content of millable stalk        |
+    /// |Plant Part |Description                              
+    /// |-----------|:----------------------------------------
+    /// |Root       |Below-ground biomass                     
+    /// |Leaf       |Leaf                                     
+    /// |Sstem      |Structural component of millable stalk   
+    /// |Cabbage    |Leaf sheath and tip of growing stalks etc
+    /// |Sucrose    |Sucrose content of millable stalk        
     ///
     /// In addition to the five live biomass pools outlined above, senescent leaf and cabbage is maintained as trash on the plant or progressively detached to become residues on the soil surface. 
     /// In APSIM, the RESIDUE module [probert_apsim_1996] takes on the role of decomposition of crop residues. 
@@ -294,50 +294,50 @@ namespace Models
     /// **Sugar Module Outputs**
     ///
     ///
-    /// |Variable Name  | Units      | Description                                                               |
-    /// |---------------|:-----------|:--------------------------------------------------------------------------| 
-    /// |Stage_name     |            | Name of the current crop growth stage                                     |
-    /// |Stage          |            | Current growth stage number                                               |
-    /// |Crop_status    |            | Status of the current crop (alive,dead,out)                               |
-    /// |ratoon_no      |            | Ratoon number (0 for plant crop, 1 for 1st ratoon, 2 for 2nd ratoon, …etc)|
-    /// |das            | Days       | Days after sowing (ie. crop duration)                                     |
-    /// |Ep             | mm         | Crop evapotranspiration (extraction) for each soil layer                  |
-    /// |cep            | mm         | Cumulative plant evapotranspiration                                       |
-    /// |rlv            | mm/mm^3    | root length per volume of soil in each soil layer                         |
-    /// |esw            | mm         | Extractable Soil water in each soil layer                                 |
-    /// |root_depth     | mm         | Root depth                                                                |
-    /// |sw_demand      | mm         | Daily demand for soil water                                               |
-    /// |biomass        | g/m^2      | Total crop above-ground biomass (Green + Trash)                           |
-    /// |green_biomass  | g/m^2      | Total green crop above-ground biomass                                     |
-    /// |biomass_n      | g/m^2      | Total Nitrogen in above-ground biomass (Green + Trash)                    |
-    /// |green_biomass_n| g/m^2      | Amount of Nitrogen in green above-ground biomass                          |
-    /// |dlt_dm         | g/m^2      | Daily increase in plant dry matter (photosynthesis)                       |
-    /// |dm_senesced    | g/m^2      | Senesced dry matter in each plant pool                                    |
-    /// |n_senesced     | g/m^2      | Amount of Nitrogen in senesced material for each plant pool               |
-    /// |Canefw         | t/ha       | Fresh Cane weight                                                         |
-    /// |ccs            | %          | Commercial Cane Sugar                                                     |
-    /// |Cane_wt        | g/m^2      | Weight of cane dry matter                                                 |
-    /// |leaf_wt        | g/m^2      | Weight of plant green leaf                                                |
-    /// |root_wt        | g/m^2      | Weight of plant roots                                                     |
-    /// |sstem_wt       | g/m^2      | Weight of plant structural stem                                           |
-    /// |sucrose_wt     | g/m^2      | Weight of plant sucrose                                                   |
-    /// |cabbage_wt     | g/m^2      | Weight of plant cabbage                                                   |
-    /// |n_conc_cane    | g/g        | Nitrogen concentration in cane                                            |
-    /// |n_conc_leaf    | g/g        | Nitrogen concentration in green leaf                                      |
-    /// |n_conc_cabbage | g/g        | Nitrogen concentration in green cabbage                                   |
-    /// |n_demand       | g/m^2      | Daily demand for Nitrogen                                                 |
-    /// |cover_green    | 0-1        | Fractional cover by green plant material                                  |
-    /// |cover_tot      | 0-1        | Fractional cover by total plant material (Green + Trash)                  |
-    /// |lai            | mm^2/mm^2  | Leaf area index of green leaves                                           |
-    /// |tlai           | mm^2/mm^2  | Total plant leaf area index (green + senesced)                            |
-    /// |slai           | mm^2/mm^2  | Senesced leaf area index                                                  |
-    /// |n_leaf_crit    | g/m^2      | Critical Nitrogen level for the current crop                              |
-    /// |n_leaf_min     | g/m^2      | Minimum Nitrogen level for the current crop                               |
-    /// |nfact_photo    | 0-1        | Nitrogen stress factor for photosynthesis                                 |
-    /// |nfact_expan    | 0-1        | Nitrogen stress factor for cell expansion                                 |
-    /// |swdef_photo    | 0-1        | Soil water stress factor for photosynthesis                               |
-    /// |swdef_expan    | 0-1        | Soil water stress factor for cell expansion                               |
-    /// |swdef_phen     | 0-1        | Soil water stress factor for phenology                                    |
+    /// |Variable Name  | Units      | Description                                                               
+    /// |---------------|:-----------|:-------------------------------------------------------------------------- 
+    /// |Stage_name     |            | Name of the current crop growth stage                                     
+    /// |Stage          |            | Current growth stage number                                               
+    /// |Crop_status    |            | Status of the current crop (alive,dead,out)                               
+    /// |ratoon_no      |            | Ratoon number (0 for plant crop, 1 for 1st ratoon, 2 for 2nd ratoon, …etc)
+    /// |das            | Days       | Days after sowing (ie. crop duration)                                     
+    /// |Ep             | mm         | Crop evapotranspiration (extraction) for each soil layer                  
+    /// |cep            | mm         | Cumulative plant evapotranspiration                                       
+    /// |rlv            | mm/mm^3    | root length per volume of soil in each soil layer                         
+    /// |esw            | mm         | Extractable Soil water in each soil layer                                 
+    /// |root_depth     | mm         | Root depth                                                                
+    /// |sw_demand      | mm         | Daily demand for soil water                                               
+    /// |biomass        | g/m^2      | Total crop above-ground biomass (Green + Trash)                           
+    /// |green_biomass  | g/m^2      | Total green crop above-ground biomass                                     
+    /// |biomass_n      | g/m^2      | Total Nitrogen in above-ground biomass (Green + Trash)                    
+    /// |green_biomass_n| g/m^2      | Amount of Nitrogen in green above-ground biomass                          
+    /// |dlt_dm         | g/m^2      | Daily increase in plant dry matter (photosynthesis)                       
+    /// |dm_senesced    | g/m^2      | Senesced dry matter in each plant pool                                    
+    /// |n_senesced     | g/m^2      | Amount of Nitrogen in senesced material for each plant pool               
+    /// |Canefw         | t/ha       | Fresh Cane weight                                                         
+    /// |ccs            | %          | Commercial Cane Sugar                                                     
+    /// |Cane_wt        | g/m^2      | Weight of cane dry matter                                                 
+    /// |leaf_wt        | g/m^2      | Weight of plant green leaf                                                
+    /// |root_wt        | g/m^2      | Weight of plant roots                                                     
+    /// |sstem_wt       | g/m^2      | Weight of plant structural stem                                           
+    /// |sucrose_wt     | g/m^2      | Weight of plant sucrose                                                   
+    /// |cabbage_wt     | g/m^2      | Weight of plant cabbage                                                   
+    /// |n_conc_cane    | g/g        | Nitrogen concentration in cane                                            
+    /// |n_conc_leaf    | g/g        | Nitrogen concentration in green leaf                                      
+    /// |n_conc_cabbage | g/g        | Nitrogen concentration in green cabbage                                   
+    /// |n_demand       | g/m^2      | Daily demand for Nitrogen                                                 
+    /// |cover_green    | 0-1        | Fractional cover by green plant material                                  
+    /// |cover_tot      | 0-1        | Fractional cover by total plant material (Green + Trash)                  
+    /// |lai            | mm^2/mm^2  | Leaf area index of green leaves                                           
+    /// |tlai           | mm^2/mm^2  | Total plant leaf area index (green + senesced)                            
+    /// |slai           | mm^2/mm^2  | Senesced leaf area index                                                  
+    /// |n_leaf_crit    | g/m^2      | Critical Nitrogen level for the current crop                              
+    /// |n_leaf_min     | g/m^2      | Minimum Nitrogen level for the current crop                               
+    /// |nfact_photo    | 0-1        | Nitrogen stress factor for photosynthesis                                 
+    /// |nfact_expan    | 0-1        | Nitrogen stress factor for cell expansion                                 
+    /// |swdef_photo    | 0-1        | Soil water stress factor for photosynthesis                               
+    /// |swdef_expan    | 0-1        | Soil water stress factor for cell expansion                               
+    /// |swdef_phen     | 0-1        | Soil water stress factor for phenology                                    
     ///
     /// </remarks>
     [Serializable]
