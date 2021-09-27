@@ -4,6 +4,7 @@ using OxyPlot;
 using MarkerType = APSIM.Services.Graphing.MarkerType;
 using LegendOrientation = APSIM.Services.Graphing.LegendOrientation;
 using LegendPosition = APSIM.Services.Graphing.LegendPosition;
+using OxyAxisPosition = OxyPlot.Axes.AxisPosition;
 #if NETCOREAPP
 using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
 using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
@@ -176,6 +177,27 @@ namespace APSIM.Interop.Graphing
         public static OxyColor ToOxyColour(this System.Drawing.Color colour)
         {
             return OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
+        }
+
+        /// <summary>
+        /// Convert an apsim AxisPosition to an OxyPlot AxisPosition.
+        /// </summary>
+        /// <param name="position">The axis position to be converted.</param>
+        public static OxyAxisPosition ToOxyAxisPosition(this AxisPosition position)
+        {
+            switch (position)
+            {
+                case AxisPosition.Bottom:
+                    return OxyAxisPosition.Bottom;
+                case AxisPosition.Left:
+                    return OxyAxisPosition.Left;
+                case AxisPosition.Top:
+                    return OxyAxisPosition.Top;
+                case AxisPosition.Right:
+                    return OxyAxisPosition.Right;
+                default:
+                    throw new NotImplementedException($"Unknown axis type: '{position}'");
+            }
         }
     }
 }

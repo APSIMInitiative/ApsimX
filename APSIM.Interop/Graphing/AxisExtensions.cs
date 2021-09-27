@@ -69,26 +69,5 @@ namespace APSIM.Interop.Graphing
 
             return result;
         }
-
-        /// <summary>
-        /// Convert an apsim AxisPosition to an OxyPlot AxisPosition.
-        /// </summary>
-        /// <param name="position">The axis position to be converted.</param>
-        public static AxisPosition ToOxyAxisPosition(this APSIM.Services.Graphing.AxisPosition position)
-        {
-            switch (position)
-            {
-                case Services.Graphing.AxisPosition.Bottom:
-                    return AxisPosition.Bottom;
-                case Services.Graphing.AxisPosition.Left:
-                    return AxisPosition.Left;
-                case Services.Graphing.AxisPosition.Top:
-                    return AxisPosition.Top;
-                case Services.Graphing.AxisPosition.Right:
-                    return AxisPosition.Right;
-                default:
-                    throw new NotImplementedException($"Unknown axis type: '{position}'");
-            }
-        }
     }
 }

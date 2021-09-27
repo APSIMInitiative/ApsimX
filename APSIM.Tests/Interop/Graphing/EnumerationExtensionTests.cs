@@ -5,6 +5,7 @@ using OxyPlot;
 using LegendOrientation = APSIM.Services.Graphing.LegendOrientation;
 using LegendPosition = APSIM.Services.Graphing.LegendPosition;
 using MarkerType = APSIM.Services.Graphing.MarkerType;
+using OxyAxisPosition = OxyPlot.Axes.AxisPosition;
 using System.Drawing;
 
 namespace APSIM.Tests.Graphing.SeriesExporters
@@ -117,6 +118,21 @@ namespace APSIM.Tests.Graphing.SeriesExporters
         public void TestLegendPositionConversion(LegendPosition input, OxyPlot.Legends.LegendPosition expectedOutput)
         {
             Assert.AreEqual(expectedOutput, input.ToOxyPlotLegendPosition());
+        }
+
+        /// <summary>
+        /// Ensure that <see cref="EnumerationExtensions.ToOxyAxisPosition(AxisPosition)"/>
+        /// works correctly for all possible input values.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="expectedOutput"></param>
+        [TestCase(AxisPosition.Bottom, OxyAxisPosition.Bottom)]
+        [TestCase(AxisPosition.Left, OxyAxisPosition.Left)]
+        [TestCase(AxisPosition.Top, OxyAxisPosition.Top)]
+        [TestCase(AxisPosition.Right, OxyAxisPosition.Right)]
+        public void TestAxisPositionConversion(AxisPosition position, OxyAxisPosition expectedOutput)
+        {
+            Assert.AreEqual(expectedOutput, position.ToOxyAxisPosition());
         }
 
         /// <summary>
