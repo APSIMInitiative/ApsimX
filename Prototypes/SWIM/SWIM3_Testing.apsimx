@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 282,
+  "ExplorerWidth": 455,
   "Version": 141,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -183,7 +183,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        //[Link] private PastureSpecies ryegrass;\r\n        //[Link] private SimpleGrazing grazing;\r\n\r\n        [Description(\"What lower BC? Current options gradient/seepage/potential\")] public string LowerBCType { get; set; }\r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n        \tif (clock.Today == clock.StartDate)\r\n        \t{\r\n        \t\tsummary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType);\r\n        \t\tif (LowerBCType.ToLower() == \"seepage\")\r\n        \t\t\tswim.bbc_seepage_potential = 0.0;\r\n        \t\telse if (LowerBCType.ToLower() == \"gradient\")\r\n        \t\t\tswim.bbc_gradient = 0.0;\r\n        \t\telse if (LowerBCType.ToLower() == \"potential50\")\r\n        \t\t\tswim.bbc_potential = -10.0;\r\n        \t}\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        //[Link] private PastureSpecies ryegrass;\r\n        //[Link] private SimpleGrazing grazing;\r\n\r\n        [Description(\"What lower BC? Current options gradient/seepage/potential\")] public string LowerBCType { get; set; }\r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n        \tif (clock.Today == clock.StartDate)\r\n        \t{\r\n        \t\tsummary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType);\r\n        \t\tif (LowerBCType.ToLower() == \"seepage\")\r\n        \t\t\tswim.SetLowerBCForSeepage(0.0);\r\n        \t\telse if (LowerBCType.ToLower() == \"gradient\")\r\n        \t\t\tswim.SetLowerBCForGradient(0.0);\r\n        \t\telse if (LowerBCType.ToLower() == \"potential50\")\r\n        \t\t\tswim.SetLowerBCForGivenPotential(-10.0);\r\n        \t}\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "LowerBCType",
@@ -2621,7 +2621,7 @@
               ],
               "ParticleSizeSand": [
                 33.77,
-                33.909999999999989,
+                33.90999999999999,
                 35.91,
                 46.26,
                 53.54
@@ -2918,8 +2918,8 @@
                 0.99
               ],
               "FOM": [
-                92.873299897582086,
-                57.963159411187881,
+                92.87329989758209,
+                57.96315941118788,
                 31.810856349632882,
                 11.372932585525932,
                 5.9797517560712565
