@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 336,
+  "ExplorerWidth": 282,
   "Version": 141,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -62,7 +62,7 @@
                   "Name": "Potential",
                   "Children": [],
                   "IncludeInDocumentation": true,
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
@@ -174,7 +174,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] ControlledEnvironment weather;\r\n        [Link] Irrigation irrigation;\r\n        [Link] private Swim3 swim;\r\n        //[Link] private PastureSpecies ryegrass;\r\n\r\n        //Dean - what is a way to find out what plants are in the simulation and then get their uptake?\r\n\r\n        public double SoilWaterAtInitialisation  { get; set; }\r\n        public double SoilWaterNow  { get; set; }\r\n        public double WaterAdded  { get; set; }\r\n        public double WaterRemoved  { get; set; }\r\n        public double WaterBalance  { get; set; }\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        \tif (clock.Today == clock.StartDate) \r\n        \t// capture the water in and on the soil as a starting point\r\n        \t// doing this here as need the models to have intialised\r\n        \t{\r\n\t        \tSoilWaterAtInitialisation = 0.0;\r\n    \t    \tfor (int i = 0; i < swim.SWmm.Length; i++)\r\n        \t\t\tSoilWaterAtInitialisation += swim.SWmm[i] + swim.pond;\r\n\r\n        \t\tWaterAdded = 0.0;\r\n        \t\tWaterRemoved = 0.0;\r\n        \t}\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        \tSoilWaterNow = 0.0;\r\n        \tfor (int i = 0; i < swim.SWmm.Length; i++)\r\n        \t\tSoilWaterNow += swim.SWmm[i]  + swim.pond; // so all the water stored in or on the soil\r\n\r\n        \tWaterAdded += weather.Rain + irrigation.IrrigationApplied;   // Can there be runon? Probably not but this will throw an error if that ever happens\r\n        \tWaterRemoved += swim.Drainage + swim.Es + swim.Runoff; // Need to add subsurface drainage here\r\n        \t// Need to add uptake by plants into WaterRemoved as well but need an automated way of capturing\r\n\r\n        \tWaterBalance = WaterAdded - WaterRemoved - (SoilWaterNow - SoilWaterAtInitialisation);\r\n        \t// need to add a warning value and a crash value and make a crash\r\n\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] IWeather weather;\r\n        [Link] Irrigation irrigation;\r\n        [Link] private Swim3 swim;\r\n        //[Link] private PastureSpecies ryegrass;\r\n\r\n        //Dean - what is a way to find out what plants are in the simulation and then get their uptake?\r\n        // add water uptake and (no3+nh4) uptake as N uptake to IPlant\r\n\r\n        public double SoilWaterAtInitialisation  { get; set; }\r\n        public double SoilWaterNow  { get; set; }\r\n        public double WaterAdded  { get; set; }\r\n        public double WaterRemoved  { get; set; }\r\n        public double WaterBalance  { get; set; }\r\n        public double WaterBalanceDaily  { get; set; }\r\n        public double WaterBalanceYesterday  { get; set; }\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        \tif (clock.Today == clock.StartDate) \r\n        \t// capture the water in and on the soil as a starting point\r\n        \t// doing this here as need the models to have intialised\r\n        \t{\r\n\t        \tSoilWaterAtInitialisation = swim.pond;\r\n    \t    \tfor (int i = 0; i < swim.SWmm.Length; i++)\r\n        \t\t\tSoilWaterAtInitialisation += swim.SWmm[i];\r\n\r\n        \t\tWaterAdded = 0.0;\r\n        \t\tWaterRemoved = 0.0;\r\n        \t}\r\n        \tWaterBalanceYesterday = WaterBalance;\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        \tSoilWaterNow = swim.pond;\r\n        \tfor (int i = 0; i < swim.SWmm.Length; i++)\r\n        \t\tSoilWaterNow += swim.SWmm[i]; // so all the water stored in or on the soil\r\n\r\n        \tWaterAdded += weather.Rain + irrigation.IrrigationApplied;   // Can there be runon? Probably not but this will throw an error if that ever happens\r\n        \tWaterRemoved += swim.Drainage + swim.Es + swim.Runoff; // Need to add subsurface drainage here\r\n        \t// Need to add uptake by plants into WaterRemoved as well but need an automated way of capturing\r\n\r\n        \tWaterBalance = WaterAdded - WaterRemoved - (SoilWaterNow - SoilWaterAtInitialisation);\r\n        \t// need to add a warning value and a crash value and make a crash\r\n\r\n        \tWaterBalanceDaily = WaterBalance - WaterBalanceYesterday;\r\n\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [],
                       "Name": "CalculateRollingWaterBalance",
                       "IncludeInDocumentation": true,
@@ -183,7 +183,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        //[Link] private PastureSpecies ryegrass;\r\n        //[Link] private SimpleGrazing grazing;\r\n\r\n        [Description(\"What lower BC? Current options gradient/seepage/potential\")] public string LowerBCType { get; set; }\r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n        \tif (clock.Today == clock.StartDate)\r\n        \t{\r\n        \t\tsummary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType);\r\n        \t\tif (LowerBCType.ToLower() == \"seepage\")\r\n        \t\t\tswim.bbc_seepage_potential = 0.0;\r\n        \t\telse if (LowerBCType.ToLower() == \"gradient\")\r\n        \t\t\tswim.bbc_gradient = 1.0;\r\n        \t\telse if (LowerBCType.ToLower() == \"potential50\")\r\n        \t\t\tswim.bbc_potential = -10.0;\r\n        \t}\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        //[Link] private PastureSpecies ryegrass;\r\n        //[Link] private SimpleGrazing grazing;\r\n\r\n        [Description(\"What lower BC? Current options gradient/seepage/potential\")] public string LowerBCType { get; set; }\r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n        \tif (clock.Today == clock.StartDate)\r\n        \t{\r\n        \t\tsummary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType);\r\n        \t\tif (LowerBCType.ToLower() == \"seepage\")\r\n        \t\t\tswim.bbc_seepage_potential = 0.0;\r\n        \t\telse if (LowerBCType.ToLower() == \"gradient\")\r\n        \t\t\tswim.bbc_gradient = 0.0;\r\n        \t\telse if (LowerBCType.ToLower() == \"potential50\")\r\n        \t\t\tswim.bbc_potential = -10.0;\r\n        \t}\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "LowerBCType",
@@ -226,7 +226,7 @@
                       "Name": "IrrigationSchedule",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -605,11 +605,11 @@
                           "LabileP": null,
                           "UnavailableP": null,
                           "SW": [
-                            0.58,
-                            0.606,
-                            0.617,
-                            0.62,
-                            0.625
+                            0.231,
+                            0.231,
+                            0.231,
+                            0.231,
+                            0.231
                           ],
                           "OC": null,
                           "EC": null,
@@ -639,7 +639,7 @@
                           "theta": null,
                           "psi": null,
                           "Salb": 0.13,
-                          "CN2Bare": 0.0,
+                          "CN2Bare": 50.0,
                           "CNRed": 20.0,
                           "CNCov": 0.8,
                           "KDul": 1.0,
@@ -949,7 +949,7 @@
                           "Name": "LayerStructure",
                           "Children": [],
                           "IncludeInDocumentation": true,
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -993,7 +993,7 @@
                           "Name": "LayerStructureDetailed",
                           "Children": [],
                           "IncludeInDocumentation": true,
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
@@ -1059,7 +1059,7 @@
                       "Name": "SimpleGrazing",
                       "Children": [],
                       "IncludeInDocumentation": true,
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1092,7 +1092,8 @@
                         "[Soil].Swim3.psi",
                         "[Soil].Swim3.SW",
                         "[Soil].Swim3.Drainage",
-                        "[CalculateRollingWaterBalance].Script.WaterBalance"
+                        "[CalculateRollingWaterBalance].Script.WaterBalance",
+                        "[CalculateRollingWaterBalance].Script.WaterBalanceDaily"
                       ],
                       "EventNames": [
                         "[Clock].EndOfDay"
@@ -2475,6 +2476,74 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Cumulative",
+                      "Children": [],
+                      "IncludeInDocumentation": true,
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 3,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": true,
+                      "CrossesAtZero": false
+                    },
+                    {
+                      "$type": "Models.Axis, Models",
+                      "Type": 0,
+                      "Title": null,
+                      "Inverted": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": "NaN",
+                      "DateTimeAxis": false,
+                      "CrossesAtZero": false
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationPosition": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "WaterBalance1",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 1,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Date",
+                      "YFieldName": "CalculateRollingWaterBalance.Script.WaterBalanceDaily",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "WaterBal",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
