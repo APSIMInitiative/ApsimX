@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using APSIM.Services.Documentation;
 using Models.Core;
 using Models.Interfaces;
 
 namespace Models.Functions
 {
     /// <summary>
-    /// [Name] is calculated using a Wang and Engel beta function which has a value of zero
+    /// Calculated using a Wang and Engel beta function which has a value of zero
     /// below [MinTemp] [Units] increasing to a maximum value at [OptTemp] [Units] and 
     /// decreasing to zero again at [MaxTemp] [Units] [WangEngel1998].
     /// </summary>
@@ -14,10 +16,8 @@ namespace Models.Functions
     [Description("Calculates relative temperature response")]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-
-    public class 
-        WangEngelTempFunction: Model, IFunction, IIndexedFunction
-        {
+    public class WangEngelTempFunction: Model, IFunction, IIndexedFunction
+    {
         
         /// <summary>Minimum Temperature.</summary>
         [Description("Minimum Temperature")]
@@ -77,6 +77,17 @@ namespace Models.Functions
 
             return RelEff / RelEffRefTemp;
         }
-    }
 
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            StringBuilder text = new StringBuilder();
+            text.Append($"{Name} is calculated using a Wang and Engel beta function which has a value of zero ");
+            text.Append($"below {MinTemp} {Units} increasing to a maximum value at {OptTemp} {Units} and ");
+            text.Append($"decreasing to zero again at {MaxTemp} {Units} ([WangEngel1998]).");
+            yield return new Paragraph(text.ToString());
+        }
+    }
 }

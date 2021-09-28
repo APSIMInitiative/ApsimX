@@ -9,9 +9,8 @@ using APSIM.Services.Documentation;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// # [Name] Phase
-    /// The [Name] phase goes from [Start] stage to [End] stage and 
-    /// It continues until the final main-stem leaf has finished expansion.  
+    /// This phase goes from the specified start stage to the specified end stage and 
+    /// it continues until the final main-stem leaf has finished expansion.
     /// The duration of this phase is determined by leaf appearance rate (Structure.Phyllochron)
     /// and the number of leaves produced on the mainstem (Structure.FinalLeafNumber). 
     /// </summary>
@@ -124,7 +123,3 @@ namespace Models.PMF.Phen
         private void OnSimulationCommencing(object sender, EventArgs e) { ResetPhase(); } 
     }
 }
-
-
-
-

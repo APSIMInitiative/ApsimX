@@ -11,7 +11,7 @@ using Newtonsoft.Json;
 namespace Models.Functions
 {
     /// <summary>
-    /// [Name] is calculated from an XY matrix (graphed below) which returns a value for Y 
+    /// This function is calculated from an XY matrix which returns a value for Y 
     /// interpolated from the Xvalue provided.
     /// </summary>
     [Serializable]

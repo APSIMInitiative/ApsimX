@@ -9,9 +9,8 @@ using System.Text;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// # [Name] Phase
-    /// The [Name] phase goes from [Start] stage to [End] stage and reaches 
-    /// [End] when [PPType] photo period passes a critical value of [CriticalPhotoperiod] 
+    /// This phase goes from the specified start stage to the specified end stage and reaches
+    /// the end stage when the photo period passes a user-defined critical value.
     ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]

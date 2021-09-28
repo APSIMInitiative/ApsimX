@@ -11,7 +11,7 @@ using APSIM.Services.Documentation;
 namespace Models.Functions
 {
     /// <summary>
-    /// [Name] has a value between [Start] and [End] calculated as:
+    /// This function has a value between the specified start and end phases.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
