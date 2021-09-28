@@ -9,8 +9,9 @@ namespace Models.Functions
 {
     /// <summary>
     /// Calculated using a Wang and Engel beta function which has a value of zero
-    /// below [MinTemp] [Units] increasing to a maximum value at [OptTemp] [Units] and 
-    /// decreasing to zero again at [MaxTemp] [Units] [WangEngel1998].
+    /// below the specified minimum temperature, increasing to a maximum value at
+    /// a given optimum temperature, and  decreasing to zero again at a given
+    /// maximum temperature ([WangEngel1998]).
     /// </summary>
     [Serializable]
     [Description("Calculates relative temperature response")]

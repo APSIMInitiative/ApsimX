@@ -7,11 +7,12 @@ using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 using Models.Climate;
 using System.Linq;
+using APSIM.Services.Documentation;
 
 namespace Models
 {
     /// <summary>
-    /// [DocumentView]
+    /// This component shows a map in the UI.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.MapView")]
@@ -122,5 +123,13 @@ namespace Models
         /// Zoom level
         /// </summary>
         private Double _Zoom = 360;
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            return base.Document();
+        }
     }
 }

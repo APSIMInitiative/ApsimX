@@ -7,14 +7,13 @@ namespace Models.Soils.NutrientPatching
     using System;
     using APSIM.Shared.Utilities;
     using Models.Soils.Nutrients;
+    using System.Collections.Generic;
+    using APSIM.Services.Documentation;
 
     /// <summary>
-    /// [DocumentType Memo]
-    /// 
-    /// This class used for this nutrient encapsulates the nitrogen within a mineral N pool.  Child functions provide information on flows of N from it to other mineral N pools, or losses from the system.
-    /// 
-    /// ## Mineral N Flows
-    /// [DocumentType NFlow]
+    /// This class used for this nutrient encapsulates the nitrogen within a mineral
+    /// N pool. Child functions provide information on flows of N from it to other
+    /// mineral N pools, or losses from the system.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(NutrientPatchManager))]
@@ -92,6 +91,18 @@ namespace Models.Soils.NutrientPatching
             for (int i = 0; i < delta.Length; i++)
                 kgha[i] += delta[i];
             SetKgHa(callingModelType, values);
+        }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            foreach (ITag tag in DocumentChildren<Memo>())
+                yield return tag;
+
+            yield return new Paragraph("This class used for this nutrient encapsulates the nitrogen within a mineral N pool.  Child functions provide information on flows of N from it to other mineral N pools, or losses from the system.");
+            yield return new Section("Mineral N Flows", DocumentChildren<NFlow>());
         }
     }
 }

@@ -53,6 +53,9 @@ namespace Models.Functions
             }
         }
 
+        /// <summary>
+        /// Document the model.
+        /// </summary>
         public override IEnumerable<ITag> Document()
         {
             yield return new Paragraph($"{Name} is calcualted using a sigmoid function of the form y = Ymax * 1 / 1 + e^-(Xvalue - Xo) / b^.");

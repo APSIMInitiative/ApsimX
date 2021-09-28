@@ -540,6 +540,9 @@
         /// Get a description of the model from the summary and remarks
         /// xml documentation comments in the source code.
         /// </summary>
+        /// <remarks>
+        /// Note that the returned tags are not inside a section.
+        /// </remarks>
         protected IEnumerable<ITag> GetModelDescription()
         {
             yield return new Paragraph(CodeDocumentation.GetSummary(GetType()));
