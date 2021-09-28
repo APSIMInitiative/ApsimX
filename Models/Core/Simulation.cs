@@ -13,7 +13,6 @@ using System.Threading;
 namespace Models.Core
 {
     /// <summary>
-    /// # [Name]
     /// A simulation model
     /// </summary>
     [ValidParent(ParentType = typeof(Simulations))]

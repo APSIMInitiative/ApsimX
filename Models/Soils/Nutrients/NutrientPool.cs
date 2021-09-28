@@ -4,7 +4,6 @@
     using Functions;
     using System;
     /// <summary>
-    /// # [Name]
     /// [DocumentType Memo]
     /// 
     /// ## Initialisation

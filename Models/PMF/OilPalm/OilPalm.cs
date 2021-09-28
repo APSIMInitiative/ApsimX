@@ -19,7 +19,6 @@ using Models.Soils.Nutrients;
 namespace Models.PMF.OilPalm
 {
     /// <summary>
-    /// # [Name]
     /// An oil palm model
     /// </summary>
     [Serializable]

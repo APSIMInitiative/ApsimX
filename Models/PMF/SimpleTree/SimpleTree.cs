@@ -13,7 +13,6 @@ using Models.Soils.Nutrients;
 namespace Models.PMF
 {
     /// <summary>
-    /// # [Name]
     /// A model of a simple tree
     /// </summary>
     [Serializable]

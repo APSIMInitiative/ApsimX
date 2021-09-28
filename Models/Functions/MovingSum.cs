@@ -11,7 +11,6 @@ using System.Linq;
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
     /// A function that accumulates values from child functions
     /// </summary>
     [Serializable]

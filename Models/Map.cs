@@ -11,7 +11,6 @@ using System.Linq;
 namespace Models
 {
     /// <summary>
-    /// # [Name]
     /// [DocumentView]
     /// </summary>
     [Serializable]

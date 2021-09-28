@@ -15,7 +15,6 @@
     using System.Threading.Tasks;
 
     /// <summary>
-    /// # [Name]
     /// A storage service for reading and writing to/from a database.
     /// </summary>
     [Serializable]

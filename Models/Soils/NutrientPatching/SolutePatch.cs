@@ -9,7 +9,6 @@ namespace Models.Soils.NutrientPatching
     using Models.Soils.Nutrients;
 
     /// <summary>
-    /// # [Name]
     /// [DocumentType Memo]
     /// 
     /// This class used for this nutrient encapsulates the nitrogen within a mineral N pool.  Child functions provide information on flows of N from it to other mineral N pools, or losses from the system.

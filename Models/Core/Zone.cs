@@ -7,7 +7,6 @@
     using Newtonsoft.Json;
 
     /// <summary>
-    /// # [Name]
     /// A generic system that can have children
     /// </summary>
     [ViewName("UserInterface.Views.PropertyView")]

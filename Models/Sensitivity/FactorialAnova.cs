@@ -13,7 +13,6 @@
     using Models.Core.Run;
 
     /// <summary>
-    /// # [Name]
     /// Encapsulates a factorial ANOVA parameter sensitivity analysis.
     /// </summary>
     [Serializable]

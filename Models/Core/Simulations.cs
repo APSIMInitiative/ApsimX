@@ -18,7 +18,6 @@ using APSIM.Services.Documentation;
 namespace Models.Core
 {
     /// <summary>
-    /// # [Name]
     /// Encapsulates a collection of simulations. It is responsible for creating this collection, changing the structure of the components within the simulations, renaming components, adding new ones, deleting components. The user interface talks to an instance of this class.
     /// </summary>
     [Serializable]

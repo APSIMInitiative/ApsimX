@@ -7,7 +7,6 @@ using APSIM.Shared.Utilities;
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
     /// Return the value of a nominated internal \ref Models.PMF.Plant "Plant" numerical variable
     /// </summary>
     /// \warning You have to specify the full path of numerical variable, which starts from the child of \ref Models.PMF.Plant "Plant".

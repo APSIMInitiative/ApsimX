@@ -11,7 +11,6 @@
     using System.Text;
 
     /// <summary>
-    /// # [Name]
     /// Encapsulates a factorial experiment.
     /// </summary>
     [Serializable]

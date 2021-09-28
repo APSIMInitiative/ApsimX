@@ -13,7 +13,6 @@
     using System.Linq;
 
     /// <summary>
-    /// # [Name]
     /// Reads the contents of a specific sheet from an EXCEL file and stores into the DataStore. 
     /// </summary>
     [Serializable]
