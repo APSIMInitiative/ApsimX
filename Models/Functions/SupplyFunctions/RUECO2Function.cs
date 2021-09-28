@@ -19,7 +19,7 @@ namespace Models.Functions.SupplyFunctions
     /// 
     /// For C4 plants,
     /// 
-    ///     _F<sub>CO~2~</sub> = 0.000143 * CO~2~ + 0.95_
+    ///     _F~CO2~ = 0.000143 * CO~2~ + 0.95_
     /// 
     /// </summary>
     [Serializable]
