@@ -278,7 +278,7 @@
 
             // Build SQL statement
             var sql = $"SELECT {distinctKeyword} {firebirdFirstStatement} {fieldNames.Join(",")}" +
-                      $" FROM {tableName}";
+                      $" FROM \"{tableName}\"";
             if (!string.IsNullOrEmpty(filter))
                 sql += $" WHERE {filter}";
             if (orderByFields.Count > 0)
