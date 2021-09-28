@@ -112,7 +112,7 @@
             // initialisationTags.AddRange(InitialPhosphorus.Document());
             yield return new Section("Initialisation", initialisationTags);
 
-            yield return new Section("Organic Matter Flows", DocumentChildren<CarbonFlow>());
+            yield return new Section("Organic Matter Flows", DocumentChildren<CarbonFlow>(true));
         }
     }
 }

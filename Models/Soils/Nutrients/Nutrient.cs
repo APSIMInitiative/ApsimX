@@ -595,6 +595,11 @@
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
+            yield return new Section("The APSIM Nutrient Model", DocumentNutrient());
+        }
+
+        private IEnumerable<ITag> DocumentNutrient()
+        {
             // Basic model description.
             yield return new Paragraph(CodeDocumentation.GetSummary(GetType()));
 
@@ -606,13 +611,13 @@
             // Document nutrient pools.
             List<ITag> poolTags = new List<ITag>();
             poolTags.Add(new Paragraph(CodeDocumentation.GetCustomTag(GetType(), "pools")));
-            poolTags.AddRange(DocumentChildren<NutrientPool>());
+            poolTags.AddRange(DocumentChildren<NutrientPool>(true));
             yield return new Section("Pools", poolTags);
 
             // Document solutes.
             List<ITag> soluteTags = new List<ITag>();
             soluteTags.Add(new Paragraph(CodeDocumentation.GetCustomTag(GetType(), "solutes")));
-            soluteTags.AddRange(DocumentChildren<Solute>());
+            soluteTags.AddRange(DocumentChildren<Solute>(true));
             yield return new Section("Solutes", soluteTags);
         }
     }
