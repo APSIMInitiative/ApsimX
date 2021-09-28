@@ -14,6 +14,9 @@ namespace APSIM.Services.Documentation
     /// </summary>
     public static class CodeDocumentation
     {
+        private const string summaryTagName = "summary";
+        private const string remarksTagName = "remarks";
+
         private static Dictionary<Assembly, XmlDocument> documentCache = new Dictionary<Assembly, XmlDocument>();
 
         /// <summary>
@@ -22,8 +25,7 @@ namespace APSIM.Services.Documentation
         /// <param name="t">The type to get the summary for.</param>
         public static string GetSummary(Type t)
         {
-            XmlDocument document = LoadDocument(t.Assembly);
-            return GetDocumentationElement(document, t.FullName, "summary", 'T');
+            return GetCustomTag(t, summaryTagName);
         }
 
         /// <summary>
@@ -32,7 +34,16 @@ namespace APSIM.Services.Documentation
         /// <param name="t">The type.</param>
         public static string GetRemarks(Type t)
         {
-            return GetDocumentationElement(LoadDocument(t.Assembly), t.FullName, "remarks", 'T');
+            return GetCustomTag(t, remarksTagName);
+        }
+
+        /// <summary>
+        /// Get the remarks tag of a type (if it exists).
+        /// </summary>
+        /// <param name="t">The type.</param>
+        public static string GetCustomTag(Type t, string tagName)
+        {
+            return GetDocumentationElement(LoadDocument(t.Assembly), t.FullName, tagName, 'T');
         }
 
         /// <summary>
@@ -41,22 +52,7 @@ namespace APSIM.Services.Documentation
         /// <param name="member">The member to get the summary for.</param>
         public static string GetSummary(MemberInfo member)
         {
-            var fullName = member.ReflectedType + "." + member.Name;
-            XmlDocument document = LoadDocument(member.DeclaringType.Assembly);
-            if (member is PropertyInfo)
-                return GetDocumentationElement(document, fullName, "summary", 'P');
-            else if (member is FieldInfo)
-                return GetDocumentationElement(document, fullName, "summary", 'F');
-            else if (member is EventInfo)
-                return GetDocumentationElement(document, fullName, "summary", 'E');
-            else if (member is MethodInfo method)
-            {
-                string args = string.Join(",", method.GetParameters().Select(p => p.ParameterType.FullName));
-                args = args.Replace("+", ".");
-                return GetDocumentationElement(document, $"{fullName}({args})", "summary", 'M');
-            }
-            else
-                throw new ArgumentException($"Unknown argument type {member.GetType().Name}");
+            return GetCustomTag(member, summaryTagName);
         }
 
         /// <summary>
@@ -65,19 +61,28 @@ namespace APSIM.Services.Documentation
         /// <param name="member">The member.</param>
         public static string GetRemarks(MemberInfo member)
         {
+            return GetCustomTag(member, remarksTagName);
+        }
+
+        /// <summary>
+        /// Get the remarks of a member (field, property) if it exists.
+        /// </summary>
+        /// <param name="member">The member.</param>
+        public static string GetCustomTag(MemberInfo member, string tagName)
+        {
             var fullName = member.ReflectedType + "." + member.Name;
             XmlDocument document = LoadDocument(member.DeclaringType.Assembly);
             if (member is PropertyInfo)
-                return GetDocumentationElement(document, fullName, "remarks", 'P');
+                return GetDocumentationElement(document, fullName, tagName, 'P');
             else if (member is FieldInfo)
-                return GetDocumentationElement(document, fullName, "remarks", 'F');
+                return GetDocumentationElement(document, fullName, tagName, 'F');
             else if (member is EventInfo)
-                return GetDocumentationElement(document, fullName, "remarks", 'E');
+                return GetDocumentationElement(document, fullName, tagName, 'E');
             else if (member is MethodInfo method)
             {
                 string args = string.Join(",", method.GetParameters().Select(p => p.ParameterType.FullName));
                 args = args.Replace("+", ".");
-                return GetDocumentationElement(document, $"{fullName}({args})", "remarks", 'M');
+                return GetDocumentationElement(document, $"{fullName}({args})", tagName, 'M');
             }
             else
                 throw new ArgumentException($"Unknown argument type {member.GetType().Name}");
