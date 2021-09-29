@@ -143,9 +143,12 @@
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
-            yield return new Paragraph($"{Name} overrides the following properties:");
-            foreach (string command in Command)
-                yield return new Paragraph(command);
+            if (Command != null && Command.Any())
+            {
+                yield return new Paragraph($"{Name} overrides the following properties:");
+                foreach (string command in Command)
+                    yield return new Paragraph(command);
+            }
         }
     }
 }
