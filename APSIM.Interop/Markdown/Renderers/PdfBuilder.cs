@@ -204,10 +204,6 @@ namespace APSIM.Interop.Markdown.Renderers
         public PdfBuilder(Document doc, PdfOptions options)
         {
             document = doc;
-            citationHelper = options.CitationResolver;
-
-            if (citationHelper == null)
-                throw new ArgumentNullException(nameof(citationHelper));
 
             headingIndices.Push(0);
 
@@ -218,7 +214,7 @@ namespace APSIM.Interop.Markdown.Renderers
             ObjectRenderers.Add(new HtmlEntityInlineRenderer());
             ObjectRenderers.Add(new HtmlInlineRenderer());
             ObjectRenderers.Add(new LineBreakInlineRenderer());
-            ObjectRenderers.Add(new LinkInlineRenderer(options.ImagePath));
+            ObjectRenderers.Add(new LinkInlineRenderer(string.Empty));
             ObjectRenderers.Add(new LiteralInlineRenderer());
 
             ObjectRenderers.Add(new CodeBlockRenderer());
@@ -233,7 +229,9 @@ namespace APSIM.Interop.Markdown.Renderers
             ObjectRenderers.Add(new TableRowRenderer());
             ObjectRenderers.Add(new TableRenderer());
 
-            renderers = DefaultRenderers(options);
+            renderers = DefaultRenderers();
+
+            ChangeOptions(options);
         }
 
         /// <summary>
@@ -245,6 +243,16 @@ namespace APSIM.Interop.Markdown.Renderers
             if (tagRenderer == null)
                 throw new ArgumentNullException(nameof(tagRenderer));
             renderers = renderers.Append(tagRenderer);
+        }
+
+        public void ChangeOptions(PdfOptions options)
+        {
+            if (options.CitationResolver == null)
+                throw new ArgumentNullException(nameof(options.CitationResolver));
+
+            citationHelper = options.CitationResolver;
+            ObjectRenderers.Replace<LinkInlineRenderer>(new LinkInlineRenderer(options.ImagePath));
+            renderers = renderers.Where(r => !(r is ImageTagRenderer)).Append(new ImageTagRenderer(options.ImagePath)).ToList();
         }
 
         /// <summary>
@@ -850,10 +858,10 @@ namespace APSIM.Interop.Markdown.Renderers
         /// <summary>
         /// Get the default tag renderers.
         /// </summary>
-        private static IEnumerable<ITagRenderer> DefaultRenderers(PdfOptions options)
+        private static IEnumerable<ITagRenderer> DefaultRenderers()
         {
             List<ITagRenderer> result = new List<ITagRenderer>(7);
-            result.Add(new ImageTagRenderer(options.ImagePath));
+            result.Add(new ImageTagRenderer());
             result.Add(new ParagraphTagRenderer());
             result.Add(new TableTagRenderer());
             result.Add(new GraphTagRenderer());

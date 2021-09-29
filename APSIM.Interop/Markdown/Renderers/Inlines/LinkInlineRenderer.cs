@@ -73,15 +73,7 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
         /// <param name="uri">Image URI.</param>
         public virtual Image GetImage(string uri)
         {
-            string path = PathUtilities.GetAbsolutePath(uri, imageRelativePath);
-            if (File.Exists(path))
-            {
-                // Image.FromFile() will cause the file to be locked until the image is disposed of. 
-                // This workaround allows us to immediately release the lock on the file.
-                using (Bitmap bmp = new Bitmap(path))
-                    return new Bitmap(bmp);
-            }
-            return APSIM.Services.Documentation.Image.LoadFromResource(uri);
+            return APSIM.Services.Documentation.Image.LoadImage(uri, imageRelativePath);
         }
     }
 }
