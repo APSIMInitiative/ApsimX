@@ -6,6 +6,8 @@ using APSIM.Interop.Utility;
 using System;
 using APSIM.Services.Graphing;
 using APSIM.Interop.Graphing.Extensions;
+using System.Collections.Generic;
+using System.Linq;
 #if NETCOREAPP
 using Legend = OxyPlot.Legends.Legend;
 using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
@@ -86,8 +88,10 @@ namespace APSIM.Interop.Graphing
         /// <param name="graph">The graph to be converted.</param>
         public IPlotModel ToPlotModel(IGraph graph)
         {
-            if (graph.Axes == null)
-                throw new NullReferenceException("Graph has no axes");
+            if (graph.XAxis == null)
+                throw new NullReferenceException("Graph has no x-axis");
+            if (graph.YAxis == null)
+                throw new NullReferenceException("Graph has no y-axis");
             if (graph.Legend == null)
                 throw new NullReferenceException("Graph has no legend configuration");
             if (graph.Series == null)
@@ -95,13 +99,29 @@ namespace APSIM.Interop.Graphing
 
             PlotModel plot = new PlotModel();
 
-            // Axes
-            foreach (Axis axis in graph.Axes)
-                plot.Axes.Add(axis.ToOxyPlotAxis());
+            // Add series to graph.
+            AxisLabelCollection labels = AxisLabelCollection.Empty();
+            ExportedSeries previous = null;
+            foreach (Series graphSeries in graph.Series)
+            {
+                ExportedSeries series = graphSeries.ToOxyPlotSeries(labels);
+                labels = series.AxisLabels;
+                plot.Series.Add(series.Result);
+                if (previous == null)
+                    previous = series;
+                else
+                {
+                    previous.ThrowIfIncompatibleWith(series);
+                    previous = series;
+                }
+            }
 
-            // Series
-            foreach (Series series in graph.Series)
-                plot.Series.Add(series.ToOxyPlotSeries());
+            // Axes (don't add them if there are no series to display on the graph).
+            if (previous != null)
+            {
+                plot.Axes.Add(graph.XAxis.ToOxyPlotAxis(previous.XAxisRequirements, labels.XLabels));
+                plot.Axes.Add(graph.YAxis.ToOxyPlotAxis(previous.YAxisRequirements, labels.YLabels));
+            }
 
             // Legend
 #if NETFRAMEWORK

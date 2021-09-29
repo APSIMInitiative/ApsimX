@@ -22,6 +22,7 @@
     using Extensions;
     using APSIM.Services.Graphing;
     using APSIM.Interop.Graphing.Extensions;
+    using APSIM.Interop.Graphing.CustomSeries;
 #if NETFRAMEWORK
     using OxyLegendPosition = OxyPlot.LegendPosition;
     using OxyLegendOrientation = OxyPlot.LegendOrientation;
@@ -555,7 +556,7 @@
         {
             if (x != null && y != null)
             {
-                var series = new Utility.ColumnXYSeries();
+                var series = new ColumnXYSeries();
                 if (showOnLegend)
                     series.Title = title;
                 series.FillColor = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);

@@ -1,4 +1,7 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using APSIM.Interop.Graphing.CustomSeries;
 using APSIM.Services.Graphing;
 using Series = OxyPlot.Series.Series;
 
@@ -13,9 +16,21 @@ namespace APSIM.Interop.Graphing
         /// Export the bar series to an oxyplot series.
         /// </summary>
         /// <param name="series">The bar series to be exported.</param>
-        protected override Series Export(BarSeries series)
+        /// <param name="labels">Existing axis labels.</param>
+        protected override (Series, AxisLabelCollection) Export(BarSeries series, AxisLabelCollection labels)
         {
-            throw new NotImplementedException();
+            ColumnXYSeries result = new ColumnXYSeries();
+
+            if (series.ShowOnLegend)
+                result.Title = series.Title;
+
+            result.FillColor = series.FillColour.ToOxyColour();
+            result.StrokeColor = series.Colour.ToOxyColour();
+
+            DataPointCollection data = GetDataPoints(series.X, series.Y, labels);
+            result.ItemsSource = data.Points;
+
+            return (result, data.Labels);
         }
     }
 }

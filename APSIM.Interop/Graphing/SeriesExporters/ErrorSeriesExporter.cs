@@ -16,10 +16,11 @@ namespace APSIM.Interop.Graphing
         /// Export the error series to an oxyplot series.
         /// </summary>
         /// <param name="series">The error series to be exported.</param>
-        protected override Series Export(ErrorSeries series)
+        /// <param name="labels">Existing axis labels on the graph.</param>
+        protected override (Series, AxisLabelCollection) Export(ErrorSeries series, AxisLabelCollection labels)
         {
             var result = new OxyPlot.Series.ScatterErrorSeries();
-            result.ItemsSource = GetErrorDataPoints(series.X, series.Y, series.XError, series.YError);
+            (result.ItemsSource, labels) = GetErrorDataPoints(series.X, series.Y, series.XError, series.YError, labels);
             if (series.ShowOnLegend)
                 result.Title = series.Title;
 
@@ -39,7 +40,8 @@ namespace APSIM.Interop.Graphing
 
             // Colour
             result.ErrorBarColor = series.Colour.ToOxyColour();
-            return result;
+
+            return (result, labels);
         }
 
         /// <summary>
@@ -49,12 +51,19 @@ namespace APSIM.Interop.Graphing
         /// <param name="y">Y data.</param>
         /// <param name="xError">X error data.</param>
         /// <param name="yError">Y error data.</param>
-        private IEnumerable<ScatterErrorPoint> GetErrorDataPoints(IEnumerable<object> x, IEnumerable<object> y, IEnumerable<object> xError, IEnumerable<object> yError)
+        /// <param name="labels">Existing axis labels on the graph.</param>
+        private (IEnumerable<ScatterErrorPoint>, AxisLabelCollection) GetErrorDataPoints(IEnumerable<object> x, IEnumerable<object> y, IEnumerable<object> xError, IEnumerable<object> yError, AxisLabelCollection labels)
         {
-            List<double> xValues = x.Select(GetDataPointValue).ToList();
-            List<double> yValues = y.Select(GetDataPointValue).ToList();
-            List<double> xErrorValues = xError.Select(GetDataPointValue).ToList();
-            List<double> yErrorValues = yError.Select(GetDataPointValue).ToList();
+            List<string> xLabels = labels.XLabels.ToList();
+            List<string> yLabels = labels.YLabels.ToList();
+
+            List<double> xValues = x.Select(xi => GetDataPointValue(xi, xLabels)).ToList();
+            List<double> yValues = y.Select(yi => GetDataPointValue(yi, yLabels)).ToList();
+            List<double> xErrorValues = xError.Select(xi => GetDataPointValue(xi, xLabels)).ToList();
+            List<double> yErrorValues = yError.Select(yi => GetDataPointValue(yi, yLabels)).ToList();
+
+            labels = new AxisLabelCollection(xLabels, yLabels);
+
             if (xValues.Count == yValues.Count)
             {
                 if (xValues.Count == xErrorValues.Count && xValues.Count == yErrorValues.Count)
@@ -64,7 +73,7 @@ namespace APSIM.Interop.Graphing
                     for (int i = 0; i < xValues.Count; i++)
                         if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]) && !double.IsNaN(xErrorValues[i]) && !double.IsNaN(yErrorValues[i]))
                             points.Add(new ScatterErrorPoint(xValues[i], yValues[i], xErrorValues[i], yErrorValues[i], 0));
-                    return points;
+                    return (points, labels);
                 }
                 else if (xValues.Count == xErrorValues.Count)
                 {
@@ -75,7 +84,7 @@ namespace APSIM.Interop.Graphing
                     for (int i = 0; i < xValues.Count; i++)
                         if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]) && !double.IsNaN(xErrorValues[i]))
                             points.Add(new ScatterErrorPoint(xValues[i], yValues[i], xErrorValues[i], 0, 0));
-                    return points;
+                    return (points, labels);
                 }
                 else if (yValues.Count == yErrorValues.Count)
                 {
@@ -86,7 +95,7 @@ namespace APSIM.Interop.Graphing
                     for (int i = 0; i < xValues.Count; i++)
                         if (!double.IsNaN(xValues[i]) && !double.IsNaN(yValues[i]) && !double.IsNaN(yErrorValues[i]))
                             points.Add(new ScatterErrorPoint(xValues[i], yValues[i], 0, yErrorValues[i], 0));
-                    return points;
+                    return (points, labels);
                 }
                 else
                 {
@@ -106,7 +115,8 @@ namespace APSIM.Interop.Graphing
                     // given that there's no error data. The most likely cause is a
                     // programming error. However, we might as well just treat it as a
                     // normal series and plot the x/y data anyway.
-                    return xValues.Zip(yValues, (xi, yi) => new ScatterErrorPoint(xi, yi, 0, 0));
+                    IEnumerable<ScatterErrorPoint> points = xValues.Zip(yValues, (xi, yi) => new ScatterErrorPoint(xi, yi, 0, 0));
+                    return (points, labels);
                 }
             }
             else

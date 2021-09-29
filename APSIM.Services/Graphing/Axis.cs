@@ -44,12 +44,8 @@ namespace APSIM.Services.Graphing
         public double? Interval { get; set; }
 
         /// <summary>
-        /// tbi
-        /// </summary>
-        public bool DateTimeAxis { get; set; }
-
-        /// <summary>
         /// Default constructor provided for json deserialization.
+        /// Please don't use this.
         /// </summary>
         [Obsolete]
         public Axis() { }

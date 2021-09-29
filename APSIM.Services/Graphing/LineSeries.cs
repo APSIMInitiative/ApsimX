@@ -27,13 +27,17 @@ namespace APSIM.Services.Graphing
         /// <param name="showLegend">Should this series appear in the legend?</param>
         /// <param name="x">X-axis data.</param>
         /// <param name="y">Y-axis data.</param>
+        /// <param name="xName">Name of the x-axis field displayed by this series.</param>
+        /// <param name="yName">Name of the y-axis field displayed by this series.</param>
         public LineSeries(string title,
                           Color colour,
                           bool showLegend,
                           IEnumerable<object> x,
                           IEnumerable<object> y,
                           Line line,
-                          Marker marker) : base(title, colour, showLegend, x, y)
+                          Marker marker,
+                          string xName,
+                          string yName) : base(title, colour, showLegend, x, y, xName, yName)
         {
             LineConfig = line;
             MarkerConfig = marker;
@@ -47,13 +51,17 @@ namespace APSIM.Services.Graphing
         /// <param name="showLegend">Should this series appear in the legend?</param>
         /// <param name="x">X-axis data.</param>
         /// <param name="y">Y-axis data.</param>
+        /// <param name="xName">Name of the x-axis field displayed by this series.</param>
+        /// <param name="yName">Name of the y-axis field displayed by this series.</param>
         public LineSeries(string title,
                           Color colour,
                           bool showLegend,
                           IEnumerable<double> x,
                           IEnumerable<double> y,
                           Line line,
-                          Marker marker) : base(title, colour, showLegend, x, y)
+                          Marker marker,
+                          string xName,
+                          string yName) : base(title, colour, showLegend, x, y, xName, yName)
         {
             LineConfig = line;
             MarkerConfig = marker;

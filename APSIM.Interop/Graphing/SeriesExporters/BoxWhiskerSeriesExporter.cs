@@ -18,10 +18,12 @@ namespace APSIM.Interop.Graphing
         /// Export the box and whisker series to an oxyplot series.
         /// </summary>
         /// <param name="series">The box and whisker series to be exported.</param>
-        protected override Series Export(BoxWhiskerSeries series)
+        /// <param name="labels">Existing axis labels.</param>
+        /// <param name="labels">Existing axis labels.</param>
+        protected override (Series, AxisLabelCollection) Export(BoxWhiskerSeries series, AxisLabelCollection labels)
         {
             BoxPlotSeries result = new BoxPlotSeries();
-            result.Items = GetBoxPlotItems(series);
+            (result.Items, labels) = GetBoxPlotItems(series, labels);
             if (series.ShowOnLegend)
                 result.Title = series.Title;
 
@@ -38,12 +40,17 @@ namespace APSIM.Interop.Graphing
             // Colour
             result.Stroke = OxyColors.Transparent;
             result.Fill = series.Colour.ToOxyColour();
-            return result;
+
+            // todo: need to account for the possibility of string datatypes here.
+            return (result, labels);
         }
 
-        private IList<BoxPlotItem> GetBoxPlotItems(BoxWhiskerSeries series)
+        private (IList<BoxPlotItem>, AxisLabelCollection) GetBoxPlotItems(BoxWhiskerSeries series, AxisLabelCollection labels)
         {
-            IEnumerable<double> y = series.Y.Select(GetDataPointValue);
+            List<string> yLabels = labels.YLabels.ToList();
+            IEnumerable<double> y = series.Y.Select(yi => GetDataPointValue(yi, yLabels));
+            labels = new AxisLabelCollection(labels.XLabels, yLabels);
+
             double[] fiveNumberSummary = y.FiveNumberSummary();
             double min = fiveNumberSummary[0];
             double lowerQuartile = fiveNumberSummary[1];
@@ -54,10 +61,11 @@ namespace APSIM.Interop.Graphing
             // fixme - this won't work with multiple box plot series on the same graph.
             double x = 0;
 
-            return new List<BoxPlotItem>()
+            IList<BoxPlotItem> items = new List<BoxPlotItem>()
             {
                 new BoxPlotItem(x, min, lowerQuartile, median, upperQuartile, max)
             };
+            return (items, labels);
         }
     }
 }

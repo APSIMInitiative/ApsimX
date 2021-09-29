@@ -27,8 +27,8 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             object[] y = new object[7] { 0d, 1d, 1d, 2d, 3d, 3d, 4d };
             Line line = new Line(LineType.Solid, LineThickness.Normal);
             Marker marker = new Marker(MarkerType.FilledSquare, MarkerSize.Normal, 1);
-            BoxWhiskerSeries series = new BoxWhiskerSeries("Title", Color.Red, true, x, y, line, marker);
-            var oxySeries = exporter.Export(series);
+            BoxWhiskerSeries series = new BoxWhiskerSeries("Title", Color.Red, true, x, y, line, marker, "", "");
+            var oxySeries = exporter.Export(series, AxisLabelCollection.Empty()).Result;
 
             Assert.NotNull(oxySeries);
             Assert.True(oxySeries is BoxPlotSeries);
@@ -96,8 +96,8 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             foreach (MarkerType markerType in filledMarkers)
             {
                 Marker marker = new Marker(markerType, MarkerSize.Normal, 1);
-                BoxWhiskerSeries series = new BoxWhiskerSeries("Title", Color.Green, true, x, y, line, marker);
-                BoxPlotSeries oxySeries = (BoxPlotSeries)exporter.Export(series);
+                BoxWhiskerSeries series = new BoxWhiskerSeries("Title", Color.Green, true, x, y, line, marker, "", "");
+                BoxPlotSeries oxySeries = (BoxPlotSeries)exporter.Export(series, AxisLabelCollection.Empty()).Result;
 
                 // Because marker type is "filled", series should be filled with colour.
                 Assert.AreEqual(OxyColors.Green, oxySeries.Fill);
@@ -106,8 +106,8 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             foreach (MarkerType markerType in nonFilledMarkers)
             {
                 Marker marker = new Marker(markerType, MarkerSize.Normal, 1);
-                BoxWhiskerSeries series = new BoxWhiskerSeries("Title", Color.Green, true, x, y, line, marker);
-                BoxPlotSeries oxySeries = (BoxPlotSeries)exporter.Export(series);
+                BoxWhiskerSeries series = new BoxWhiskerSeries("Title", Color.Green, true, x, y, line, marker, "", "");
+                BoxPlotSeries oxySeries = (BoxPlotSeries)exporter.Export(series, AxisLabelCollection.Empty()).Result;
 
                 // Because marker type is "filled", series should be filled with colour.
                 // todo

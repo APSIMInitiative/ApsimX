@@ -37,6 +37,8 @@ namespace APSIM.Services.Graphing
         /// <param name="showLegend">Should this series appear in the legend?</param>
         /// <param name="x">X-axis data.</param>
         /// <param name="y">Y-axis data.</param>
+        /// <param name="xName">Name of the x-axis field displayed by this series.</param>
+        /// <param name="yName">Name of the y-axis field displayed by this series.</param>
         public ErrorSeries(string title,
                            Color colour,
                            bool showLegend,
@@ -47,7 +49,9 @@ namespace APSIM.Services.Graphing
                            LineThickness barThickness,
                            LineThickness stopperThickness,
                            IEnumerable<object> xError,
-                           IEnumerable<object> yError) : base(title, colour, showLegend, x, y, line, marker)
+                           IEnumerable<object> yError,
+                           string xName,
+                           string yName) : base(title, colour, showLegend, x, y, line, marker, xName, yName)
         {
             BarThickness = barThickness;
             StopperThickness = stopperThickness;
@@ -63,6 +67,8 @@ namespace APSIM.Services.Graphing
         /// <param name="showLegend">Should this series appear in the legend?</param>
         /// <param name="x">X-axis data.</param>
         /// <param name="y">Y-axis data.</param>
+        /// <param name="xName">Name of the x-axis field displayed by this series.</param>
+        /// <param name="yName">Name of the y-axis field displayed by this series.</param>
         public ErrorSeries(string title,
                            Color colour,
                            bool showLegend,
@@ -73,7 +79,9 @@ namespace APSIM.Services.Graphing
                            LineThickness barThickness,
                            LineThickness stopperThickness,
                            IEnumerable<double> xError,
-                           IEnumerable<double> yError) : base(title, colour, showLegend, x, y, line, marker)
+                           IEnumerable<double> yError,
+                           string xName,
+                           string yName) : base(title, colour, showLegend, x, y, line, marker, xName, yName)
         {
             BarThickness = barThickness;
             StopperThickness = stopperThickness;

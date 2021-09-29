@@ -197,7 +197,9 @@
                                              definition.Colour,
                                              definition.ShowInLegend,
                                              definition.X.Cast<object>().ToArray(),
-                                             definition.Y.Cast<object>().ToArray()));
+                                             definition.Y.Cast<object>().ToArray(),
+                                             definition.XFieldName,
+                                             definition.YFieldName));
                 }
                 else if (definition.Type == SeriesType.Scatter)
                 {
@@ -211,7 +213,9 @@
                                                   definition.X.Cast<object>().ToList(),
                                                   definition.Y.Cast<object>().ToList(),
                                                   line,
-                                                  marker));
+                                                  marker,
+                                                  definition.XFieldName,
+                                                  definition.YFieldName));
                     else
                         series.Add(new ErrorSeries($"{definition.Title} Error",
                                                    definition.Colour,
@@ -223,7 +227,9 @@
                                                    LineThickness.Normal,
                                                    LineThickness.Normal,
                                                    definition.XError?.Cast<object>()?.ToList(),
-                                                   definition.YError?.Cast<object>()?.ToList()));
+                                                   definition.YError?.Cast<object>()?.ToList(),
+                                                   definition.XFieldName,
+                                                   definition.YFieldName));
                 }
                 else if (definition.Type == SeriesType.Region)
                 {
@@ -234,7 +240,9 @@
                                                 definition.X.Cast<object>().ToList(),
                                                 definition.Y.Cast<object>().ToList(),
                                                 definition.X2.Cast<object>().ToList(),
-                                                definition.Y2.Cast<object>().ToList()));
+                                                definition.Y2.Cast<object>().ToList(),
+                                                definition.XFieldName,
+                                                definition.YFieldName));
                 }
                 else if (definition.Type == SeriesType.Area)
                 {
@@ -247,7 +255,9 @@
                                                 x,
                                                 definition.Y.Cast<object>().ToList(),
                                                 x,
-                                                y2));
+                                                y2,
+                                                definition.XFieldName,
+                                                definition.YFieldName));
                 }
                 else if (definition.Type == SeriesType.StackedArea)
                 {
@@ -273,7 +283,9 @@
                                                         x,
                                                         y1,
                                                         x,
-                                                        definition.Y.Cast<object>().ToList()));
+                                                        definition.Y.Cast<object>().ToList(),
+                                                        definition.XFieldName,
+                                                        definition.YFieldName));
                         }
                         else
                         {
@@ -298,7 +310,9 @@
                                                         x1,
                                                         y1.Cast<object>().ToArray(),
                                                         x2,
-                                                        CalculateStackedArea(x1, y1, x2, y).Cast<object>().ToArray()));
+                                                        CalculateStackedArea(x1, y1, x2, y).Cast<object>().ToArray(),
+                                                        definition.XFieldName,
+                                                        definition.YFieldName));
                         }
                     }
                     catch (Exception err)
@@ -315,7 +329,9 @@
                                                     definition.X.Cast<object>().ToArray(),
                                                     definition.Y.Cast<object>().ToArray(),
                                                     new Line(definition.Line, definition.LineThickness),
-                                                    new Marker(definition.Marker, definition.MarkerSize, definition.MarkerModifier)));
+                                                    new Marker(definition.Marker, definition.MarkerSize, definition.MarkerModifier),
+                                                    definition.XFieldName,
+                                                    definition.YFieldName));
                 }
                 else
                     throw new NotImplementedException($"Unknown series type {definition.Type}");
@@ -405,7 +421,9 @@
             try
             {
                 LegendConfiguration legend = new LegendConfiguration(LegendOrientation, LegendPosition, !LegendOutsideGraph);
-                return new APSIM.Services.Documentation.Graph(Name, GetSeries(definitions), Axis, legend);
+                var xAxis = Axis.FirstOrDefault(a => a.Position == AxisPosition.Bottom || a.Position == AxisPosition.Top);
+                var yAxis = Axis.FirstOrDefault(a => a.Position == AxisPosition.Left || a.Position == AxisPosition.Right);
+                return new APSIM.Services.Documentation.Graph(Name, GetSeries(definitions), xAxis, yAxis, legend);
             }
             catch (Exception err)
             {

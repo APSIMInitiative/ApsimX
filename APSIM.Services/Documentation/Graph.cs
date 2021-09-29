@@ -21,9 +21,14 @@ namespace APSIM.Services.Documentation
         public IEnumerable<Series> Series { get; private set; }
 
         /// <summary>
-        /// The axes on the graph.
+        /// The x axis.
         /// </summary>
-        public IEnumerable<Axis> Axes { get; private set; }
+        public Axis XAxis { get; private set; }
+
+        /// <summary>
+        /// The y axis.
+        /// </summary>
+        public Axis YAxis { get; private set; }
 
         /// <summary>
         /// Legend configuration.
@@ -40,21 +45,16 @@ namespace APSIM.Services.Documentation
         /// </summary>
         /// <param name="title">Title of the graph.</param>
         /// <param name="series">The series to be shown on the graph.</param>
-        /// <param name="axes">The axes on the graph.</param>
+        /// <param name="xAxis">The x axis.</param>
+        /// <param name="yAxis">The y axis.</param>
         /// <param name="legend">Legend configuration.</param>
-        public Graph(string title, IEnumerable<Series> series, IEnumerable<Axis> axes, LegendConfiguration legend)
+        public Graph(string title, IEnumerable<Series> series, Axis xAxis, Axis yAxis, LegendConfiguration legend)
         {
             Title = title;
             Series = series;
             Legend = legend;
-            Axes = axes;
-
-            foreach (Axis axis in Axes)
-            {
-                IEnumerable<IEnumerable<object>> axisData = GetSeries(axis.Position);
-                if (axisData?.FirstOrDefault()?.FirstOrDefault()?.GetType() == typeof(DateTime))
-                    axis.DateTimeAxis = true;
-            }
+            XAxis = xAxis;
+            YAxis = yAxis;
         }
 
         /// <summary>

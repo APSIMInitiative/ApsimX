@@ -30,7 +30,8 @@ namespace APSIM.Tests.Interop.Graphing
         // Do NOT assign to these properties. They should really be readonly,
         // but we need to assign to them in the setup method.
         private List<Series> series = new List<Series>();
-        private List<Axis> axes = new List<Axis>();
+        private Axis xAxis = null;
+        private Axis yAxis = null;
         private LegendOrientation legendOrientation = LegendOrientation.Vertical;
         private LegendPosition legendPos = LegendPosition.TopLeft;
         private bool legendInsideGraphArea = true;
@@ -46,7 +47,8 @@ namespace APSIM.Tests.Interop.Graphing
 
             Mock<IGraph> mockGraph = new Mock<IGraph>();
             mockGraph.Setup(g => g.Series).Returns(series);
-            mockGraph.Setup(g => g.Axes).Returns(axes);
+            mockGraph.Setup(g => g.XAxis).Returns(xAxis);
+            mockGraph.Setup(g => g.YAxis).Returns(yAxis);
             mockGraph.Setup(g => g.Legend).Returns(legend);
             graph = mockGraph.Object;
 
@@ -106,7 +108,9 @@ namespace APSIM.Tests.Interop.Graphing
                 x,
                 y,
                 new Line(LineType.Solid, LineThickness.Normal),
-                new Marker(MarkerType.Circle, MarkerSize.Normal, 1));
+                new Marker(MarkerType.Circle, MarkerSize.Normal, 1),
+                "",
+                "");
         }
     }
 }

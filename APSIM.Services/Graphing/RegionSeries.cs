@@ -30,7 +30,17 @@ namespace APSIM.Services.Graphing
         /// <param name="showLegend">Should this series appear in the legend?</param>
         /// <param name="x">X-axis data.</param>
         /// <param name="y">Y-axis data.</param>
-        public RegionSeries(string title, Color colour, bool showLegend, IEnumerable<object> x, IEnumerable<object> y, IEnumerable<object> x2, IEnumerable<object> y2) : base(title, colour, showLegend, x, y)
+        /// <param name="xName">Name of the x-axis field displayed by this series.</param>
+        /// <param name="yName">Name of the y-axis field displayed by this series.</param>
+        public RegionSeries(string title,
+                            Color colour,
+                            bool showLegend,
+                            IEnumerable<object> x,
+                            IEnumerable<object> y,
+                            IEnumerable<object> x2,
+                            IEnumerable<object> y2,
+                            string xName,
+                            string yName) : base(title, colour, showLegend, x, y, xName, yName)
         {if (x == null)
                 throw new ArgumentNullException(nameof(x));
             if (y == null)

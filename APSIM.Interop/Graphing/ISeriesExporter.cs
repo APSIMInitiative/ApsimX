@@ -1,5 +1,4 @@
 using APSIM.Services.Graphing;
-using Series = OxyPlot.Series.Series;
 
 namespace APSIM.Interop.Graphing
 {
@@ -18,7 +17,13 @@ namespace APSIM.Interop.Graphing
         /// <summary>
         /// Export the series to an oxyplot series.
         /// </summary>
+        /// <remarks>
+        /// When dealing with string data, the returned data points are ints
+        /// which are indices into the axis labels list. Therefore we
+        /// need to know about any existing axis labels.
+        /// </remarks>
         /// <param name="series">The series to be exported.</param>
-        Series Export(ISeries series);
+        /// <param name="existingAxisLabels">Existing axis labels on the graph.</param>
+        ExportedSeries Export(ISeries series, AxisLabelCollection existingAxisLabels);
     }
 }

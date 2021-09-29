@@ -747,14 +747,11 @@ namespace APSIM.Tests.Interop
             Line line = new Line(LineType.Solid, LineThickness.Normal);
             IEnumerable<object> x = new object[] { 0, 1 };
             IEnumerable<object> y = new object[] { 1, 2 };
-            IEnumerable<Series> series = new Series[1] { new LineSeries("s0", Color.Red, true, x, y, line, marker) };
-            IEnumerable<Axis> axes = new Axis[2]
-            {
-                new Axis("x", AxisPosition.Bottom, false, false),
-                new Axis("Y", AxisPosition.Left, false, false),
-            };
+            IEnumerable<Series> series = new Series[1] { new LineSeries("s0", Color.Red, true, x, y, line, marker, "", "") };
+            Axis xAxis = new Axis("x", AxisPosition.Bottom, false, false);
+            Axis yAxis = new Axis("Y", AxisPosition.Left, false, false);
             LegendConfiguration legend = new LegendConfiguration(LegendOrientation.Horizontal, LegendPosition.BottomCenter, true);
-            GraphTag graph = new GraphTag("title", series, axes, legend);
+            GraphTag graph = new GraphTag("title", series, xAxis, yAxis, legend);
             return graph;
         }
 

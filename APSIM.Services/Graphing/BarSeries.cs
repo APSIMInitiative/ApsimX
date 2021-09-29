@@ -27,11 +27,15 @@ namespace APSIM.Services.Graphing
         /// <param name="showLegend">Should this series appear in the legend?</param>
         /// <param name="x">X-axis data.</param>
         /// <param name="y">Y-axis data.</param>
+        /// <param name="xName">Name of the x-axis field displayed by this series.</param>
+        /// <param name="yName">Name of the y-axis field displayed by this series.</param>
         public BarSeries(string title,
                           Color colour,
                           bool showLegend,
                           IEnumerable<object> x,
-                          IEnumerable<object> y) : base(title, colour, showLegend, x, y)
+                          IEnumerable<object> y,
+                          string xName,
+                          string yName) : base(title, colour, showLegend, x, y, xName, yName)
         {
         }
 
@@ -44,12 +48,16 @@ namespace APSIM.Services.Graphing
         /// <param name="x">X-axis data.</param>
         /// <param name="y">Y-axis data.</param>
         /// <param name="fillColour">Colour used to fill in the rectangular area.</param>
+        /// <param name="xName">Name of the x-axis field displayed by this series.</param>
+        /// <param name="yName">Name of the y-axis field displayed by this series.</param>
         public BarSeries(string title,
                           Color colour,
                           bool showLegend,
                           IEnumerable<object> x,
                           IEnumerable<object> y,
-                          Color fillColour) : base(title, colour, showLegend, x, y)
+                          Color fillColour,
+                          string xName,
+                          string yName) : base(title, colour, showLegend, x, y, xName, yName)
         {
             this.fillColour = fillColour;
         }

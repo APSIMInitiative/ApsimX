@@ -45,8 +45,8 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             Marker marker = new Marker(MarkerType.Square, MarkerSize.Normal, 1);
 
             string title = "asdf";
-            LineSeries input = new LineSeries(title, Color.Blue, true, x, y, line, marker);
-            Series output = exporter.Export(input);
+            LineSeries input = new LineSeries(title, Color.Blue, true, x, y, line, marker, "", "");
+            Series output = exporter.Export(input, AxisLabelCollection.Empty()).Result;
             Assert.NotNull(output);
             Assert.True(output is OxyLineSeries);
             OxyLineSeries series = (OxyLineSeries)output;
@@ -77,8 +77,8 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             Line line = new Line(LineType.Solid, LineThickness.Thin);
             Marker marker = new Marker(MarkerType.Square, MarkerSize.Normal, 1);
 
-            LineSeries input = new LineSeries("", Color.Blue, true, x, y, line, marker);
-            Series output = exporter.Export(input);
+            LineSeries input = new LineSeries("", Color.Blue, true, x, y, line, marker, "", "");
+            Series output = exporter.Export(input, AxisLabelCollection.Empty()).Result;
             Assert.NotNull(output);
             Assert.True(output is OxyLineSeries);
             OxyLineSeries series = (OxyLineSeries)output;
@@ -94,9 +94,9 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             Line line = new Line(LineType.Solid, LineThickness.Thin);
             Marker marker = new Marker(MarkerType.Square, MarkerSize.Normal, 1);
 
-            Assert.Throws<ArgumentNullException>(() => new LineSeries("", Color.Blue, true, null, new double[0], line, marker));
-            Assert.Throws<ArgumentNullException>(() => new LineSeries("", Color.Blue, true, new double[0], null, line, marker));
-            Assert.Throws<ArgumentNullException>(() => new LineSeries("", Color.Blue, true, (double[])null, null, line, marker));
+            Assert.Throws<ArgumentNullException>(() => new LineSeries("", Color.Blue, true, null, new double[0], line, marker, "", ""));
+            Assert.Throws<ArgumentNullException>(() => new LineSeries("", Color.Blue, true, new double[0], null, line, marker, "", ""));
+            Assert.Throws<ArgumentNullException>(() => new LineSeries("", Color.Blue, true, (double[])null, null, line, marker, "", ""));
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace APSIM.Tests.Graphing.SeriesExporters
         {
             Line line = new Line(LineType.Solid, LineThickness.Thin);
             Marker marker = new Marker(MarkerType.Square, MarkerSize.Normal, 1);
-            Assert.Throws<ArgumentException>(() => new LineSeries("", Color.Blue, true, new double[1], new double[2], line, marker));
+            Assert.Throws<ArgumentException>(() => new LineSeries("", Color.Blue, true, new double[1], new double[2], line, marker, "", ""));
         }
 
         /// <summary>
@@ -139,10 +139,10 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             IEnumerable<object> y = Enumerable.Empty<object>();
             Line line = new Line(input, LineThickness.Thin);
             Marker marker = new Marker(MarkerType.None, MarkerSize.Normal, 1);
-            LineSeries inputSeries = new LineSeries("", Color.Black, true, x, y, line, marker);
+            LineSeries inputSeries = new LineSeries("", Color.Black, true, x, y, line, marker, "", "");
 
             // Convert the series to an oxyplot series.
-            Series output = exporter.Export(inputSeries);
+            Series output = exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result;
             Assert.NotNull(output);
             Assert.True(output is OxyLineSeries);
             OxyLineSeries series = (OxyLineSeries)output;
@@ -175,10 +175,10 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             IEnumerable<object> y = Enumerable.Empty<object>();
             Line line = new Line(LineType.Solid, lineThickness);
             Marker marker = new Marker(MarkerType.FilledCircle, MarkerSize.Normal, 1);
-            LineSeries inputSeries = new LineSeries("", Color.Black, true, x, y, line, marker);
+            LineSeries inputSeries = new LineSeries("", Color.Black, true, x, y, line, marker, "", "");
 
             // Convert the series to an oxyplot series.
-            Series output = exporter.Export(inputSeries);
+            Series output = exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result;
             Assert.NotNull(output);
             Assert.True(output is OxyLineSeries);
             OxyLineSeries series = (OxyLineSeries)output;
@@ -226,10 +226,10 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             IEnumerable<object> y = Enumerable.Empty<object>();
             Line line = new Line(LineType.None, LineThickness.Thin);
             Marker marker = new Marker(input, MarkerSize.Normal, 1);
-            LineSeries inputSeries = new LineSeries("", inputColour, true, x, y, line, marker);
+            LineSeries inputSeries = new LineSeries("", inputColour, true, x, y, line, marker, "", "");
 
             // Convert the series to an oxyplot series.
-            Series output = exporter.Export(inputSeries);
+            Series output = exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result;
             Assert.NotNull(output);
             Assert.True(output is OxyLineSeries);
             OxyLineSeries series = (OxyLineSeries)output;
@@ -267,10 +267,10 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             IEnumerable<object> y = Enumerable.Empty<object>();
             Line line = new Line(LineType.Solid, LineThickness.Normal);
             Marker marker = new Marker(MarkerType.FilledCircle, markerSize, 1);
-            LineSeries inputSeries = new LineSeries("", Color.Black, true, x, y, line, marker);
+            LineSeries inputSeries = new LineSeries("", Color.Black, true, x, y, line, marker, "", "");
 
             // Convert the series to an oxyplot series.
-            Series output = exporter.Export(inputSeries);
+            Series output = exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result;
             Assert.NotNull(output);
             Assert.True(output is OxyLineSeries);
             OxyLineSeries series = (OxyLineSeries)output;
@@ -297,8 +297,8 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             };
             foreach (string title in titles)
             {
-                LineSeries inputSeries = new LineSeries(title, Color.Black, true, x, y, line, marker);
-                Assert.AreEqual(title, exporter.Export(inputSeries).Title);
+                LineSeries inputSeries = new LineSeries(title, Color.Black, true, x, y, line, marker, "", "");
+                Assert.AreEqual(title, exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result.Title);
             }
         }
 
@@ -346,10 +346,10 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             IEnumerable<object> y = Enumerable.Empty<object>();
             Line line = new Line(LineType.None, LineThickness.Thin);
             Marker marker = new Marker(MarkerType.FilledCircle, MarkerSize.Normal, 1);
-            LineSeries inputSeries = new LineSeries("", inputColour, true, x, y, line, marker);
+            LineSeries inputSeries = new LineSeries("", inputColour, true, x, y, line, marker, "", "");
 
             // Convert the series to an oxyplot series.
-            Series output = exporter.Export(inputSeries);
+            Series output = exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result;
             Assert.NotNull(output);
             Assert.True(output is OxyLineSeries);
             OxyLineSeries series = (OxyLineSeries)output;
@@ -407,10 +407,10 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             IEnumerable<object> y = Enumerable.Empty<object>();
             Line line = new Line(LineType.None, LineThickness.Thin);
             Marker marker = new Marker(markerType, MarkerSize.Normal, 1);
-            LineSeries inputSeries = new LineSeries("", inputColour, true, x, y, line, marker);
+            LineSeries inputSeries = new LineSeries("", inputColour, true, x, y, line, marker, "", "");
 
             // Convert the series to an oxyplot series.
-            Series output = exporter.Export(inputSeries);
+            Series output = exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result;
             Assert.NotNull(output);
             Assert.True(output is OxyLineSeries);
             OxyLineSeries series = (OxyLineSeries)output;
@@ -455,10 +455,10 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             IEnumerable<object> y = Enumerable.Empty<object>();
             Line line = new Line(LineType.None, LineThickness.Thin);
             Marker marker = new Marker(MarkerType.FilledCircle, MarkerSize.Normal, 1);
-            LineSeries inputSeries = new LineSeries(title, Color.Black, false, x, y, line, marker);
+            LineSeries inputSeries = new LineSeries(title, Color.Black, false, x, y, line, marker, "", "");
 
             // Convert the series to an oxyplot series.
-            Series output = exporter.Export(inputSeries);
+            Series output = exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result;
             Assert.NotNull(output);
             Assert.True(output is OxyLineSeries);
             OxyLineSeries series = (OxyLineSeries)output;
@@ -479,10 +479,10 @@ namespace APSIM.Tests.Graphing.SeriesExporters
 
             Line line = new Line(LineType.None, LineThickness.Thin);
             Marker marker = new Marker(MarkerType.FilledCircle, MarkerSize.Normal, 1);
-            LineSeries inputSeries = new LineSeries("", Color.Black, false, x.Cast<object>(), y.Cast<object>(), line, marker);
+            LineSeries inputSeries = new LineSeries("", Color.Black, false, x.Cast<object>(), y.Cast<object>(), line, marker, "", "");
 
             // Convert the series to an oxyplot series.
-            Series output = exporter.Export(inputSeries);
+            Series output = exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result;
             Assert.NotNull(output);
             Assert.True(output is OxyLineSeries);
             OxyLineSeries series = (OxyLineSeries)output;
@@ -512,10 +512,10 @@ namespace APSIM.Tests.Graphing.SeriesExporters
 
             Line line = new Line(LineType.None, LineThickness.Thin);
             Marker marker = new Marker(MarkerType.FilledCircle, MarkerSize.Normal, 1);
-            LineSeries inputSeries = new LineSeries("", Color.Black, false, x.Cast<object>(), y.Cast<object>(), line, marker);
+            LineSeries inputSeries = new LineSeries("", Color.Black, false, x.Cast<object>(), y.Cast<object>(), line, marker, "", "");
 
             // Convert the series to an oxyplot series.
-            Series output = exporter.Export(inputSeries);
+            Series output = exporter.Export(inputSeries, AxisLabelCollection.Empty()).Result;
             Assert.NotNull(output);
             Assert.True(output is OxyLineSeries);
             OxyLineSeries series = (OxyLineSeries)output;
@@ -579,7 +579,7 @@ namespace APSIM.Tests.Graphing.SeriesExporters
 
             IEnumerable<object> x = null;
             IEnumerable<object> y = null;
-            TestDelegate createDefaultSeries = () => exporter.Export(new LineSeries("", Color.Black, false, x, y, line, marker));
+            TestDelegate createDefaultSeries = () => exporter.Export(new LineSeries("", Color.Black, false, x, y, line, marker, "", ""), AxisLabelCollection.Empty());
 
             string errorHelper = $"DataType = {typeof(T)}";
 

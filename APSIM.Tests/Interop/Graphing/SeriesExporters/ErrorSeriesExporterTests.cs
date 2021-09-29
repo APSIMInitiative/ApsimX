@@ -37,8 +37,8 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             LineThickness stopper = LineThickness.Normal;
             Marker marker = new Marker(MarkerType.Cross, MarkerSize.Normal, 1);
 
-            ErrorSeries input = new ErrorSeries("asdf", Color.Blue, true, x, y, line, marker, bar, stopper, xerr, yerr);
-            var output = exporter.Export(input);
+            ErrorSeries input = new ErrorSeries("asdf", Color.Blue, true, x, y, line, marker, bar, stopper, xerr, yerr, "", "");
+            var output = exporter.Export(input, AxisLabelCollection.Empty()).Result;
 
             Assert.NotNull(output);
             Assert.True(output is ScatterErrorSeries);
@@ -209,8 +209,8 @@ namespace APSIM.Tests.Graphing.SeriesExporters
             LineThickness stopper = LineThickness.Normal;
             Marker marker = new Marker(MarkerType.Cross, MarkerSize.Normal, 1);
 
-            ErrorSeries input = new ErrorSeries("asdf", Color.Blue, true, x, y, line, marker, bar, stopper, xerr, yerr);
-            var output = exporter.Export(input);
+            ErrorSeries input = new ErrorSeries("asdf", Color.Blue, true, x, y, line, marker, bar, stopper, xerr, yerr, "", "");
+            var output = exporter.Export(input, AxisLabelCollection.Empty()).Result;
 
             Assert.NotNull(output);
             Assert.True(output is ScatterErrorSeries);

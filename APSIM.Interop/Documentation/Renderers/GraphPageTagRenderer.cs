@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using APSIM.Interop.Graphing;
 using APSIM.Interop.Markdown.Renderers;

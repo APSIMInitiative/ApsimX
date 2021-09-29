@@ -14,10 +14,13 @@ namespace APSIM.Interop.Graphing
         /// Export the line series to an oxyplot series.
         /// </summary>
         /// <param name="series">The line series to be exported.</param>
-        protected override Series Export(LineSeries series)
+        /// <param name="labels">Existing axis labels.</param>
+        protected override (Series, AxisLabelCollection) Export(LineSeries series, AxisLabelCollection labels)
         {
             LineSeriesWithTracker result = new LineSeriesWithTracker();
-            result.ItemsSource = GetDataPoints(series.X, series.Y);
+            DataPointCollection data = GetDataPoints(series.X, series.Y, labels);
+            result.ItemsSource = data.Points;
+
             if (series.ShowOnLegend)
                 result.Title = series.Title;
 
@@ -37,7 +40,7 @@ namespace APSIM.Interop.Graphing
 
             // Colour
             result.Color = series.Colour.ToOxyColour();
-            return result;
+            return (result, data.Labels);
         }
     }
 }

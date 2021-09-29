@@ -27,5 +27,11 @@ namespace APSIM.Services.Graphing
 
         /// <summary>Y-axis data.</summary>
         IEnumerable<object> Y { get; }
+
+        /// <summary>Name of the x-axis field displayed by this series.</summary>
+        string XFieldName { get; }
+
+        /// <summary>Name of the y-axis field displayed by this series.</summary>
+        string YFieldName { get; }
     }
 }

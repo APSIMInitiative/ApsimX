@@ -16,9 +16,14 @@ namespace APSIM.Services.Documentation
         IEnumerable<Series> Series { get; }
 
         /// <summary>
-        /// The axes on the graph.
+        /// The x axis.
         /// </summary>
-        IEnumerable<Axis> Axes { get; }
+        Axis XAxis { get; }
+
+        /// <summary>
+        /// The y axis.
+        /// </summary>
+        Axis YAxis { get; }
 
         /// <summary>
         /// Legend configuration.

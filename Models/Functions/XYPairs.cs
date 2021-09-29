@@ -7,6 +7,10 @@ using APSIM.Shared.Utilities;
 using System.Data;
 using APSIM.Services.Documentation;
 using Newtonsoft.Json;
+using APSIM.Services.Graphing;
+using Graph = APSIM.Services.Documentation.Graph;
+using StandardSeries = APSIM.Services.Graphing.Series;
+using Table = APSIM.Services.Documentation.Table;
 
 namespace Models.Functions
 {
@@ -66,16 +70,18 @@ namespace Models.Functions
                 row[1] = i <= Y.Length - 1 ? Y[i].ToString("F1") : "";
                 table.Rows.Add(row);
             }
-            yield return new APSIM.Services.Documentation.Table(table);
+            yield return new Table(table);
 
             var series = new APSIM.Services.Graphing.Series[1];
+
             // fixme: colour
-            series[0] = new APSIM.Services.Graphing.LineSeries(Parent.Name, ColourUtilities.ChooseColour(4), false, X, Y, new APSIM.Services.Graphing.Line(APSIM.Services.Graphing.LineType.Solid, APSIM.Services.Graphing.LineThickness.Normal), new APSIM.Services.Graphing.Marker(APSIM.Services.Graphing.MarkerType.None, APSIM.Services.Graphing.MarkerSize.Normal, 1));
-            var axes = new APSIM.Services.Graphing.Axis[2];
-            axes[0] = new APSIM.Services.Graphing.Axis(XVariableName, APSIM.Services.Graphing.AxisPosition.Bottom, false, false);
-            axes[1] = new APSIM.Services.Graphing.Axis(Parent.Name, APSIM.Services.Graphing.AxisPosition.Left, false, false);
-            var legend = new APSIM.Services.Graphing.LegendConfiguration(APSIM.Services.Graphing.LegendOrientation.Vertical, APSIM.Services.Graphing.LegendPosition.TopLeft, true);
-            yield return new APSIM.Services.Documentation.Graph(Parent.Name, series, axes, legend);
+            series[0] = new LineSeries(Parent.Name, ColourUtilities.ChooseColour(4), false, X, Y, new Line(LineType.Solid, LineThickness.Normal), new Marker(MarkerType.None, MarkerSize.Normal, 1), XVariableName, Name);
+
+            Axis xAxis = new Axis(XVariableName, AxisPosition.Bottom, false, false);
+            Axis yAxis = new Axis(Parent.Name, AxisPosition.Left, false, false);
+
+            var legend = new LegendConfiguration(LegendOrientation.Vertical, LegendPosition.TopLeft, true);
+            yield return new APSIM.Services.Documentation.Graph(Parent.Name, series, xAxis, yAxis, legend);
         }
     }
 }

@@ -13,7 +13,8 @@ namespace APSIM.Interop.Graphing
         /// Export the region series to an oxyplot series.
         /// </summary>
         /// <param name="series">The region series to be exported.</param>
-        protected override Series Export(RegionSeries series)
+        /// <param name="labels">Existing axis labels.</param>
+        protected override (Series, AxisLabelCollection) Export(RegionSeries series, AxisLabelCollection labels)
         {
             throw new NotImplementedException();
         }

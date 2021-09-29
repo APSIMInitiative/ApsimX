@@ -30,13 +30,17 @@ namespace APSIM.Services.Graphing
         /// <param name="y">Y-axis data.</param>
         /// <param name="lineConfig">Line type/thickness.</param>
         /// <param name="markerConfig">Marker configuration for outliers.</param>
+        /// <param name="xName">Name of the x-axis field displayed by this series.</param>
+        /// <param name="yName">Name of the y-axis field displayed by this series.</param>
         public BoxWhiskerSeries(string title,
                                 Color colour,
                                 bool showLegend,
                                 IEnumerable<object> x,
                                 IEnumerable<object> y,
                                 Line lineConfig,
-                                Marker markerConfig) : base(title, colour, showLegend, x, y)
+                                Marker markerConfig,
+                                string xName,
+                                string yName) : base(title, colour, showLegend, x, y, xName, yName)
         {
             LineConfig = lineConfig;
             MarkerConfig = markerConfig;

@@ -38,6 +38,16 @@ namespace APSIM.Services.Graphing
         public IEnumerable<object> Y { get; private set; }
 
         /// <summary>
+        /// Name of the x-axis field displayed by this series.
+        /// </summary>
+        public string XFieldName { get; private set; }
+
+        /// <summary>
+        /// Name of the y-axis field displayed by this series.
+        /// </summary>
+        public string YFieldName { get; private set; }
+
+        /// <summary>
         /// Initialise a series instance.
         /// </summary>
         /// <param name="title">Name of the series.</param>
@@ -45,7 +55,9 @@ namespace APSIM.Services.Graphing
         /// <param name="showLegend">Should this series appear in the legend?</param>
         /// <param name="x">X-axis data.</param>
         /// <param name="y">Y-axis data.</param>
-        public Series(string title, Color colour, bool showLegend, IEnumerable<double> x, IEnumerable<double> y) : this(title, colour, showLegend, x.Cast<object>(), y.Cast<object>())
+        /// <param name="xName">Name of the x-axis field displayed by this series.</param>
+        /// <param name="yName">Name of the y-axis field displayed by this series.</param>
+        public Series(string title, Color colour, bool showLegend, IEnumerable<double> x, IEnumerable<double> y, string xName, string yName) : this(title, colour, showLegend, x.Cast<object>(), y.Cast<object>(), xName, yName)
         {
         }
 
@@ -57,7 +69,9 @@ namespace APSIM.Services.Graphing
         /// <param name="showLegend">Should this series appear in the legend?</param>
         /// <param name="x">X-axis data.</param>
         /// <param name="y">Y-axis data.</param>
-        public Series(string title, Color colour, bool showLegend, IEnumerable<object> x, IEnumerable<object> y)
+        /// <param name="xName">Name of the x-axis field displayed by this series.</param>
+        /// <param name="yName">Name of the y-axis field displayed by this series.</param>
+        public Series(string title, Color colour, bool showLegend, IEnumerable<object> x, IEnumerable<object> y, string xName, string yName)
         {
             if (x == null)
                 throw new ArgumentNullException(nameof(x));
@@ -72,6 +86,8 @@ namespace APSIM.Services.Graphing
             ShowOnLegend = showLegend;
             X = x;
             Y = y;
+            XFieldName = xName;
+            YFieldName = yName;
         }
     }
 }

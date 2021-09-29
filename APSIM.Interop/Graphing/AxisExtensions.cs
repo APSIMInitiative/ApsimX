@@ -6,25 +6,22 @@ using APSIM.Interop.Graphing.Axes;
 using OxyPlot.Axes;
 using Axis = OxyPlot.Axes.Axis;
 using AxisPosition = OxyPlot.Axes.AxisPosition;
+using AxisType = APSIM.Services.Graphing.AxisType;
 
 namespace APSIM.Interop.Graphing
 {
+    /// <summary>
+    /// Extension methods for the <see cref="APSIM.Services.Graphing.Axis"/> type.
+    /// </summary>
     public static class AxisExtensions
     {
         /// <summary>
         /// Convert the given apsim axis to an oxyplot <see cref="Axis"/>.
         /// </summary>
         /// <param name="graph">The graph to be converted.</param>
-        public static Axis ToOxyPlotAxis(this APSIM.Services.Graphing.Axis axis)
+        public static Axis ToOxyPlotAxis(this APSIM.Services.Graphing.Axis axis, AxisRequirements requirements, IEnumerable<string> labels)
         {
-            Axis result;
-            if (axis.DateTimeAxis)
-            {
-                result = new SmartDateTimeAxis();
-            }
-            else
-                result = new LinearAxis();
-            // tbi: CategoryAxis (ie for bar graphs)
+            Axis result = CreateAxis(requirements.AxisKind);
 
             result.Position = axis.Position.ToOxyAxisPosition();
             result.Title = axis.Title;
@@ -50,7 +47,7 @@ namespace APSIM.Interop.Graphing
                     Debug.WriteLine("Axis interval is NaN");
                 else
                 {
-                    if (axis.DateTimeAxis)
+                    if (requirements.AxisKind == AxisType.DateTime)
                         Debug.WriteLine("WARNING: Axis interval is set manually on a date axis - need to double check the implementation.");
                     result.MajorStep = interval;
                 }
@@ -67,7 +64,32 @@ namespace APSIM.Interop.Graphing
             result.AxisTitleDistance = 10;
             result.AxislineStyle = OxyPlot.LineStyle.Solid;
 
+            if (requirements.AxisKind == AxisType.Category && result is CategoryAxis categoryAxis)
+            {
+                categoryAxis.LabelField = "Label";
+                categoryAxis.Labels.AddRange(labels);
+            }
+
             return result;
+        }
+
+        /// <summary>
+        /// Create an axis for the given axis type.
+        /// </summary>
+        /// <param name="axisType">The type of axis to create.</param>
+        private static Axis CreateAxis(AxisType axisType)
+        {
+            switch (axisType)
+            {
+                case AxisType.Category:
+                    return new CategoryAxis();
+                case AxisType.DateTime:
+                    return new SmartDateTimeAxis();
+                case AxisType.Numeric:
+                    return new LinearAxis();
+                default:
+                    throw new NotImplementedException($"Unknown axis type {axisType}");
+            }
         }
     }
 }
