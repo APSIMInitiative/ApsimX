@@ -17,9 +17,8 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
         {
             // Html version of this class has an option to render soft line breaks
             // as a hard line break. We could implement something similar.
-            if (obj.IsHard)
-                // todo: should we just start a new paragraph?
-                renderer.AppendText(Environment.NewLine, TextStyle.Normal);
+            string textToInsert = obj.IsHard ? Environment.NewLine : " ";
+            renderer.AppendText(textToInsert, TextStyle.Normal);
         }
     }
 }

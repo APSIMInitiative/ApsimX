@@ -65,21 +65,22 @@ namespace APSIM.Tests.Interop.Markdown.Renderers.Inlines
             builder.Setup(b => b.AppendText(It.IsAny<string>(), It.IsAny<TextStyle>()))
                    .Callback<string, TextStyle>((text, _) => Assert.AreEqual(Environment.NewLine, text));
             inline.IsHard = true;
-            renderer.Write(pdfBuilder, inline);
+            renderer.Write(builder.Object, inline);
+            Assert.AreEqual(1, TestContext.CurrentContext.AssertCount);
         }
 
         /// <summary>
-        /// Ensure that no newline character is inserted if the linebreak
-        /// is a soft line break.
+        /// Ensure that soft line breaks are rendered as a space character.
         /// </summary>
         [Test]
         public void TestSoftLineBreak()
         {
             Mock<PdfBuilder> builder = new Mock<PdfBuilder>(document, PdfOptions.Default);
             builder.Setup(b => b.AppendText(It.IsAny<string>(), It.IsAny<TextStyle>()))
-                   .Callback<string, TextStyle>((_, __) => Assert.Fail("AppendText() should never be called for a soft line break. I think."));
+                   .Callback<string, TextStyle>((text, __) => Assert.AreEqual(" ", text));
             inline.IsHard = false;
-            renderer.Write(pdfBuilder, inline);
+            renderer.Write(builder.Object, inline);
+            Assert.AreEqual(1, TestContext.CurrentContext.AssertCount);
         }
 
         /// <summary>
