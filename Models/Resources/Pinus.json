@@ -2262,51 +2262,6 @@
             },
             {
               "$type": "Models.Functions.LinearInterpolationFunction, Models",
-              "Name": "SenescenceRate2",
-              "Children": [
-                {
-                  "$type": "Models.Functions.XYPairs, Models",
-                  "X": [
-                    0.0,
-                    10.0,
-                    20.0
-                  ],
-                  "Y": [
-                    0.1,
-                    0.1,
-                    0.0
-                  ],
-                  "Name": "XYPairs",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Memo, Models",
-                  "Text": "This function specifies that lead residence time increases with age. Values are based on [laclau2009influence].\r\n\r\n\r\n    \r\n",
-                  "Name": "Memo",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[MicroClimate].SurfaceRS",
-                  "Name": "XValue",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": false,
-                  "ReadOnly": false
-                }
-              ],
-              "IncludeInDocumentation": true,
-              "Enabled": false,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Functions.LinearInterpolationFunction, Models",
               "Name": "FLAI",
               "Children": [
                 {
@@ -2354,33 +2309,6 @@
               "$type": "Models.Functions.MinimumFunction, Models",
               "Name": "LeafKillFractionFactor",
               "Children": [
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Photosynthesis.FT",
-                  "Name": "FT",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Photosynthesis.FN",
-                  "Name": "FN",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Photosynthesis.FW",
-                  "Name": "FW",
-                  "Children": [],
-                  "IncludeInDocumentation": true,
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
                   "VariableName": "[Leaf].FLAI",
