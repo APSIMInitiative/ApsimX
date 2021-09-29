@@ -59,7 +59,7 @@
 
             // Add banner and version.
             tags.Add(new AutoDocumentation.Image() { image = banner, name = "AIBanner" });
-            tags.Add(new AutoDocumentation.Paragraph(explorerPresenter.ApsimXFile.ApsimVersion, 0));
+            tags.Add(new AutoDocumentation.Paragraph(Simulations.ApsimVersion, 0));
 
             foreach (IModel child in explorerPresenter.ApsimXFile.Children)
             {

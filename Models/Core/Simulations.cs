@@ -100,7 +100,7 @@ namespace Models.Core
         /// <summary>
         /// Return the current APSIM version number.
         /// </summary>
-        public string ApsimVersion
+        public static string ApsimVersion
         {
             get
             {
@@ -252,20 +252,6 @@ namespace Models.Core
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
-            return Document(true);
-        }
-
-        /// <summary>
-        /// Get a list of tags which describe the model.
-        /// </summary>
-        /// <param name="withBanner">Should the banner and version number be written?</param>
-        public IEnumerable<ITag> Document(bool withBanner)
-        {
-            if (withBanner)
-            {
-                yield return new Image("AIBanner.png");
-                yield return new Paragraph(ApsimVersion);
-            }
             foreach (ITag tag in Children.SelectMany(c => c.Document()))
                 yield return tag;
         }
