@@ -83,8 +83,10 @@ namespace APSIM.Server.IO
         {
             if (error == null)
             {
+                SendMessage(fin);
                 if (command is ReadCommand reader)
                 {
+                    ValidateResponse(ReadString(), ack);
                     foreach (string param in reader.Parameters)
                     {
                         if (reader.Result.Columns[param] == null)
@@ -94,8 +96,6 @@ namespace APSIM.Server.IO
                         ValidateResponse(ReadString(), ack);
                     }
                 }
-                else
-                    SendMessage(fin);
             }
             else
                 SendMessage(error.ToString());
