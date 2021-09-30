@@ -130,39 +130,20 @@ namespace APSIM.Server
         /// <param name="connection">Connection on which we received the command.</param>
         protected override void RunCommand(ICommand command, IConnectionManager connection)
         {
-            var masterTimer = Stopwatch.StartNew();
-            try
+            // Relay the command to all workers.
+            if (command is ReadCommand readCommand)
             {
-                WriteToLog("Relaying command to workers in parallel mode...");
-
-                // Relay the command to all workers.
-                if (command is ReadCommand readCommand)
-                {
-                    DoReadCommand(readCommand, connection);
-                    return;
-                }
-
-                var timer = Stopwatch.StartNew();
-
-                List<Task> tasks = new List<Task>();
-                foreach (string podName in workers)
-                    tasks.Add(RelayCommand(podName, command, connection));
-                foreach (Task task in tasks)
-                    task.Wait();
-                timer.Stop();
-
-                WriteToLog($"Successfully relayed {command} to {workers.Count()} workers in {timer.ElapsedMilliseconds}ms");
-
-                timer.Restart();
-                connection.OnCommandFinished(command);
-                timer.Stop();
-                WriteToLog($"OnCommandFinished took {timer.ElapsedMilliseconds}ms");
+                DoReadCommand(readCommand, connection);
+                return;
             }
-            finally
-            {
-                masterTimer.Stop();
-                WriteToLog($"Total time to execute command: {masterTimer.ElapsedMilliseconds}ms");
-            }
+
+            List<Task> tasks = new List<Task>();
+            foreach (string podName in workers)
+                tasks.Add(RelayCommand(podName, command, connection));
+            foreach (Task task in tasks)
+                task.Wait();
+
+            connection.OnCommandFinished(command);
         }
 
         private Task RelayCommand(string podName, ICommand command, IConnectionManager connection)
@@ -190,7 +171,6 @@ namespace APSIM.Server
 
         private void DoReadCommand(ReadCommand command, IConnectionManager connection)
         {
-            var timer = Stopwatch.StartNew();
             List<Task<DataTable>> tasks = new List<Task<DataTable>>();
             foreach (string podName in workers)
                 tasks.Add(RelayReadCommand(podName, command, connection));
@@ -201,16 +181,8 @@ namespace APSIM.Server
                 if (task.Result != null)
                     tables.Add(task.Result);
             }
-            timer.Stop();
-            WriteToLog($"Read all results from workers in {timer.ElapsedMilliseconds}ms. Merging {tables.Count} DataTables (from {workers.Count()} pods)...");
-            timer.Restart();
             command.Result = DataTableUtilities.Merge(tables);
-            timer.Stop();
-            WriteToLog($"Merged tables in {timer.ElapsedMilliseconds}ms");
-            timer.Restart();
             connection.OnCommandFinished(command);
-            timer.Stop();
-            WriteToLog($"OnCommandFinished took {timer.ElapsedMilliseconds}ms");
         }
 
         private Task<DataTable> RelayReadCommand(string podName, ReadCommand command, IConnectionManager connection)
