@@ -130,20 +130,37 @@ namespace APSIM.Server
         /// <param name="connection">Connection on which we received the command.</param>
         protected override void RunCommand(ICommand command, IConnectionManager connection)
         {
-            // Relay the command to all workers.
-            if (command is ReadCommand readCommand)
+            Exception error = null;
+            try
             {
-                DoReadCommand(readCommand, connection);
-                return;
+                // Relay the command to all workers.
+                if (command is ReadCommand readCommand)
+                    // Read commands need to be handled slightly differently;
+                    // each pod will return a DataTable, which need to be merged.
+                    DoReadCommand(readCommand, connection);
+                else
+                    DoGenericCommand(command, connection);
+            }
+            catch (Exception err)
+            {
+                error = err;
+                WriteToLog(err.ToString());
             }
 
+            connection.OnCommandFinished(command, error);
+        }
+
+        private void DoGenericCommand(ICommand command, IConnectionManager connection)
+        {
             List<Task> tasks = new List<Task>();
             foreach (string podName in workers)
                 tasks.Add(RelayCommand(podName, command, connection));
             foreach (Task task in tasks)
+            {
                 task.Wait();
-
-            connection.OnCommandFinished(command);
+                if (task.Status == TaskStatus.Faulted || task.Exception != null)
+                    throw new Exception($"{command} failed", task.Exception);
+            }
         }
 
         private Task RelayCommand(string podName, ICommand command, IConnectionManager connection)
@@ -178,11 +195,12 @@ namespace APSIM.Server
             foreach (Task<DataTable> task in tasks)
             {
                 task.Wait();
+                if (task.Status == TaskStatus.Faulted || task.Exception != null)
+                    throw new Exception($"{command} failed", task.Exception);
                 if (task.Result != null)
                     tables.Add(task.Result);
             }
             command.Result = DataTableUtilities.Merge(tables);
-            connection.OnCommandFinished(command);
         }
 
         private Task<DataTable> RelayReadCommand(string podName, ReadCommand command, IConnectionManager connection)
@@ -207,13 +225,9 @@ namespace APSIM.Server
                     }
                     catch (Exception err)
                     {
-                        WriteToLog($"Unable to read output from pod {podName}:");
-                        WriteToLog(err.ToString());
+                        throw new Exception($"Unable to read output from pod {podName}", err);
                     }
-
-                    WriteToLog($"Closing connection to {podName}...");
                 }
-                return null;
             });
         }
 
