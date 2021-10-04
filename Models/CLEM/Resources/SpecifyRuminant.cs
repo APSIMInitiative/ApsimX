@@ -24,7 +24,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
     [ValidParent(ParentType = typeof(RuminantActivityTrade))]
     [ValidParent(ParentType = typeof(RuminantActivityManage))]
-    [Description("This component allows the details of a individual ruminant to be defined")]
+    [Description("Specify the details of a individual ruminant to be used by an activity")]
     [HelpUri(@"Content/Resources/Ruminanta/SpecifyRuminant.htm")]
     [Version(1, 0, 1, "Includes attribute specification")]
     public class SpecifyRuminant : CLEMModel, IValidatableObject

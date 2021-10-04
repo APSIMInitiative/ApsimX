@@ -21,7 +21,7 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantInitialCohorts))]
     [ValidParent(ParentType = typeof(RuminantTypeCohort))]
     [ValidParent(ParentType = typeof(RuminantActivityControlledMating))]
-    [Description("This component defines an attribute for the individual")]
+    [Description("Specify an attribute for the individual with associated value")]
     [HelpUri(@"Content/Features/Resources/SetAttributeWithValue.htm")]
     [Version(1, 0, 1, "")]
     public class SetAttributeWithValue : CLEMModel, IValidatableObject, ISetAttribute

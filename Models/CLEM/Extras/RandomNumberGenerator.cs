@@ -19,7 +19,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    [Description("This component provides the random number sequence to be used for all stochastic processes in CLEM")]
+    [Description("Provide the random number sequence to be used for all stochastic processes in CLEM")]
     [Version(1, 0, 1, "Moved this functionality from the CLEM component to an individual component placed under the simulation to allow sharing between multiple farms in a simulation")]
     [HelpUri(@"Content/Features/Random numbers generator.htm")]
     public class RandomNumberGenerator: Model

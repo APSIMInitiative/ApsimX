@@ -13,12 +13,12 @@ using System.Globalization;
 namespace Models.CLEM
 {
     ///<summary>
-    /// Reads in pasture production datacube and makes it available to other models.
+    /// Reads in pasture production and makes it available to other models.
     ///</summary>
     [Serializable]
     [ViewName("UserInterface.Views.GridView")] 
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
-    [Description("This component specifies a pasture database file for native pasture used in the CLEM simulation")]
+    [Description("Specifies a pasture database file for native pasture used in the CLEM simulation")]
     [Version(1, 0, 2, "This component is no longer supported.\r\nUse the FileSQLitePasture reader for best performance.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/PastureDataReader.htm")]

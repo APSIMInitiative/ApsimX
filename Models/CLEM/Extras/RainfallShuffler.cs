@@ -20,7 +20,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.GridView")] 
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
     [ValidParent(ParentType = typeof(FileSQLitePasture))]
-    [Description("This component shuffles rainfall years for reading pasture data as proxy for randomised rainfall")]
+    [Description("Shuffle rainfall years for reading pasture data as proxy for randomised rainfall")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/RainfallShuffler.htm")]
 

@@ -30,7 +30,7 @@ namespace Models.CLEM
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This component specifies a crop data file as a table in an SQLite database for the CLEM simulation")]
+    [Description("Access to a crop data file as a table in an SQLite database")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Added ability to define table and columns to use")]
     [HelpUri(@"Content/Features/DataReaders/CropDataReaderSQLite.htm")]
