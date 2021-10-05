@@ -12,6 +12,7 @@
     using System.Drawing;
     using System.IO;
     using System.Linq;
+    using Color = System.Drawing.Color;
 
 #if NETCOREAPP
     using ExposeEventArgs = Gtk.DrawnArgs;
@@ -122,13 +123,13 @@
             drawable.SizeAllocated += OnRealized;
             if (owner == null)
             {
-                DGObject.DefaultOutlineColour = OxyPlot.OxyColors.Black;
+                DGObject.DefaultOutlineColour = Color.Black;
             }
             else
             {
                 // Needs to be reimplemented for gtk3.
-                DGObject.DefaultOutlineColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.GetForegroundColour(StateType.Normal));
-                DGObject.DefaultBackgroundColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.GetBackgroundColour(StateType.Normal));
+                DGObject.DefaultOutlineColour = Utility.Colour.FromGtk(owner.MainWidget.GetForegroundColour(StateType.Normal));
+                DGObject.DefaultBackgroundColour = Utility.Colour.FromGtk(owner.MainWidget.GetBackgroundColour(StateType.Normal));
             }
             mainWidget.Destroyed += OnDestroyed;
         }

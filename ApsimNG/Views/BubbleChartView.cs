@@ -502,7 +502,7 @@ namespace UserInterface.Views
 #else
                     var colour = colourChooser.Rgba.ToColour().ToGdk();
 #endif
-                    graphView.SelectedObject.Colour = Utility.Colour.GtkToOxyColor(colour);
+                    graphView.SelectedObject.Colour = Utility.Colour.FromGtk(colour);
                     OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
                 }
             }

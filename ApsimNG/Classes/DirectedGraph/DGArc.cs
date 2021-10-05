@@ -2,13 +2,12 @@
 {
     using Cairo;
     using Models;
-    using OxyPlot;
-    using OxyPlot.GtkSharp;
     using System;
     using System.Collections.Generic;
     using UserInterface.Views;
     using Utility;
     using APSIM.Interop.Drawing;
+    using Color = System.Drawing.Color;
 
     /// <summary>
     /// An arc on a directed graph.
@@ -30,7 +29,7 @@
             Location = new PointD(directedGraphArc.Location.X, directedGraphArc.Location.Y);
             Source = allNodes.Find(node => node.Name == directedGraphArc.SourceName);
             Target = allNodes.Find(node => node.Name == directedGraphArc.DestinationName);
-            Colour = OxyColor.FromRgb(directedGraphArc.Colour.R, directedGraphArc.Colour.G, directedGraphArc.Colour.B);
+            Colour = directedGraphArc.Colour;
             Name = directedGraphArc.Name;
         }
 
@@ -59,9 +58,9 @@
                 // Create point for upper-left corner of drawing.
                 context.NewPath();
                 if (Selected)
-                    context.SetColour(OxyColors.Blue.FromOxy());
+                    context.SetColour(Color.Blue);
                 else
-                    context.SetColour(DefaultOutlineColour.FromOxy());
+                    context.SetColour(DefaultOutlineColour);
 
                 // Draw text if necessary
                 if (Name != null)

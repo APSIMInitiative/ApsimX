@@ -1,7 +1,7 @@
 ﻿namespace ApsimNG.Classes.DirectedGraph
 {
     using Cairo;
-    using OxyPlot;
+    using Color = System.Drawing.Color;
     using System;
     using APSIM.Interop.Drawing;
 
@@ -26,22 +26,22 @@
         /// <summary>
         /// Background colour.
         /// </summary>
-        public OxyColor Colour { get; set; }
+        public Color Colour { get; set; }
 
         /// <summary>
         /// Default outline colour if none is specified.
         /// </summary>
-        public static OxyColor DefaultOutlineColour { get; set; }
+        public static Color DefaultOutlineColour { get; set; }
 
         /// <summary>
         /// Default background colour if none is specified.
         /// </summary>
-        public static OxyColor DefaultBackgroundColour { get; set; }
+        public static Color DefaultBackgroundColour { get; set; }
 
         /// <summary>Constructor</summary>
         public DGObject()
         {
-            Colour = OxyColors.Black;
+            Colour = Color.Black;
         }
 
         /// <summary>Paint on the graphics context</summary>

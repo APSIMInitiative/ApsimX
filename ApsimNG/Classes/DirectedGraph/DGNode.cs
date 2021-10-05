@@ -2,12 +2,11 @@
 {
     using Cairo;
     using Models;
-    using OxyPlot;
-    using OxyPlot.GtkSharp;
     using System;
     using UserInterface.Views;
     using Utility;
     using APSIM.Interop.Drawing;
+    using Color = System.Drawing.Color;
 
     /// <summary>
     /// Encapsulates a node on a directed graph. The 'Location' property in the
@@ -18,7 +17,7 @@
         /// <summary>
         /// Foreground colour.
         /// </summary>
-        public OxyColor ForegroundColour = OxyColors.Black;
+        public Color ForegroundColour = Color.Black;
 
         /// <summary>
         /// Description. Unsure if this is actually used.
@@ -40,8 +39,8 @@
         {
             Name = directedGraphNode.Name;
             Location = new PointD(directedGraphNode.Location.X, directedGraphNode.Location.Y);
-            Colour = OxyPlot.OxyColor.FromRgb(directedGraphNode.Colour.R, directedGraphNode.Colour.G, directedGraphNode.Colour.B);
-            ForegroundColour = OxyPlot.OxyColor.FromRgb(directedGraphNode.OutlineColour.R, directedGraphNode.OutlineColour.G, directedGraphNode.OutlineColour.B);
+            Colour = directedGraphNode.Colour;
+            ForegroundColour = directedGraphNode.OutlineColour;
             transparent = directedGraphNode.Transparent;
         }
 
@@ -61,29 +60,29 @@
         /// <param name="context">The graphics context to draw on</param>
         public override void Paint(IDrawContext context)
         {
-            OxyColor outlineColour;
+            Color outlineColour;
             if (Selected)
-                outlineColour = OxyColors.Blue;
+                outlineColour = Color.Blue;
             else if (transparent)
                 outlineColour = DefaultBackgroundColour;
             else
                 outlineColour = DefaultOutlineColour;
 
-            OxyColor backgroundColour = transparent ? DefaultBackgroundColour : Colour;
-            OxyColor textColour = DefaultOutlineColour;
+            Color backgroundColour = transparent ? DefaultBackgroundColour : Colour;
+            Color textColour = DefaultOutlineColour;
 
             // Draw circle
-            context.SetColour(outlineColour.FromOxy());
+            context.SetColour(outlineColour);
             context.SetLineWidth(3);
             context.NewPath();
             context.Arc(Location.X, Location.Y, Width/2, 0, 2 * Math.PI);
             context.StrokePreserve();
-            context.SetColour(backgroundColour.FromOxy());
+            context.SetColour(backgroundColour);
             context.Fill();
 
             // Write text
             context.SetLineWidth(1);
-            context.SetColour(textColour.FromOxy());
+            context.SetColour(textColour);
             context.SetFontSize(13);
 
 
