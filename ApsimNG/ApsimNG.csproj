@@ -71,6 +71,7 @@
     <PackageReference Include="PdfSharpCore" Version="1.2.11" />
     <PackageReference Include="HtmlAgilityPack" Version="1.11.23" />
     <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.1" />
+    <PackageReference Include="System.Drawing.Common" Version="5.0.0" />
     <!-- Remove ICSharpCode.NRefactory intellisense implementation -->
     <Compile Remove="Classes\Intellisense\*" />
   </ItemGroup>
