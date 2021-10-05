@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(RuminantHerd))]
-    [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd). It can be used to define different breeds in the sumulation or different herds (e.g. breeding and trade herd) within a breed that will be managed differently.")]
+    [Description("This resource represents a ruminant type (e.g. Bos indicus breeding herd)")]
     [Version(1, 0, 4, "Added parameter for overfeeed potential intake multiplier")]
     [Version(1, 0, 3, "Added parameter for proportion offspring that are male")]
     [Version(1, 0, 2, "All conception parameters moved to associated conception components")]
@@ -28,6 +28,10 @@ namespace Models.CLEM.Resources
     public class RuminantType : CLEMResourceTypeBase, IValidatableObject, IResourceType
     {
         private RuminantHerd parentHerd = null;
+        private List<AnimalPriceGroup> priceGroups = new List<AnimalPriceGroup>();
+        private List<string> mandatoryAttributes = new List<string>();
+        private readonly List<string> warningsMultipleEntry = new List<string>();
+        private readonly List<string> warningsNotFound = new List<string>();
 
         /// <summary>
         /// Unit type
@@ -95,15 +99,10 @@ namespace Models.CLEM.Resources
         /// <returns>boolean</returns>
         public bool PricingAvailable() {  return (PriceList != null); }
 
-        private List<AnimalPriceGroup> priceGroups = new List<AnimalPriceGroup>();
-        private List<string> mandatoryAttributes = new List<string>();
-        private readonly List<string> WarningsMultipleEntry = new List<string>();
-        private readonly List<string> WarningsNotFound = new List<string>();
-
         /// <summary>
         /// Property indicates whether to include attribute inheritance when mating
         /// </summary>
-        public bool IncludedAttributeInheritanceWhenMating { get { return (mandatoryAttributes.Count() > 0); } }
+        public bool IncludedAttributeInheritanceWhenMating { get { return (mandatoryAttributes.Any()); } }
 
         /// <summary>
         /// Add a attribute name to the list of mandatory attributes for the type
@@ -111,10 +110,8 @@ namespace Models.CLEM.Resources
         /// <param name="name">name of attribute</param>
         public void AddMandatoryAttribute(string name)
         {
-            if(!mandatoryAttributes.Contains(name.ToLower()))
-            {
-                mandatoryAttributes.Add(name.ToLower());
-            }
+            if(!mandatoryAttributes.Contains(name))
+               mandatoryAttributes.Add(name);
         }
 
         /// <summary>
@@ -138,11 +135,7 @@ namespace Models.CLEM.Resources
                 if(!ind.Attributes.Exists(attribute))
                 {
                     string warningString = $"No mandatory attribute [{attribute.ToUpper()}] present for individual added by [a={model.Name}]";
-                    if (!Warnings.Exists(warningString))
-                    {
-                        Warnings.Add(warningString);
-                        Summary.WriteWarning(this, warningString);
-                    }
+                    Warnings.CheckAndWrite(warningString, Summary, this);
                 }
             }
         }
@@ -151,31 +144,27 @@ namespace Models.CLEM.Resources
         /// Get value of a specific individual
         /// </summary>
         /// <returns>value</returns>
-        public AnimalPriceGroup ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle)
+        public AnimalPriceGroup ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle, string warningMessage = "")
         {
             if (PricingAvailable())
             {
-                List<Ruminant> animalList = new List<Ruminant>() { ind };
-
-                // search through RuminantPriceGroups for first match with desired purchase or sale flag
-
-                foreach (AnimalPriceGroup item in priceGroups.Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
+                if(ind.CurrentPrice == null || !ind.CurrentPrice.Filter(ind))
                 {
-                    if (animalList.FilterRuminants(item).Count() == 1)
-                    {
-                        //priceOfIndividual = item.Value * ((item.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
-                        return item;
-                    }
-                }
+                    // search through RuminantPriceGroups for first match with desired purchase or sale flag
+                    foreach (AnimalPriceGroup priceGroup in priceGroups.Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
+                        if (priceGroup.Filter(ind))
+                        {
+                            ind.CurrentPrice = priceGroup;
+                            return priceGroup;
+                        }
 
-                // no price match found.
-                string warningString = $"No [{purchaseStyle.ToString()}] price entry was found for [r={ind.Breed}] meeting the required criteria [f=age: {ind.Age}] [f=gender: {ind.GenderAsString}] [f=weight: {ind.Weight.ToString("##0")}]";
-
-                if (!Warnings.Exists(warningString))
-                {
-                    Warnings.Add(warningString);
-                    Summary.WriteWarning(this, warningString);
+                    // no price match found.
+                    string warningString = warningMessage;
+                    if(warningString == "")
+                        warningString = $"No [{purchaseStyle}] price entry was found for [r={ind.Breed}] meeting the required criteria [f=age: {ind.Age}] [f=sex: {ind.Sex}] [f=weight: {ind.Weight:##0}]";
+                    Warnings.CheckAndWrite(warningString, Summary, this);
                 }
+                return ind.CurrentPrice;
             }
             return null;
         }
@@ -184,70 +173,79 @@ namespace Models.CLEM.Resources
         /// Get value of a specific individual with special requirements check (e.g. breeding sire or draught purchase)
         /// </summary>
         /// <returns>value</returns>
-        public AnimalPriceGroup ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle, RuminantFilterParameters property, string value)
+        public AnimalPriceGroup ValueofIndividual(Ruminant ind, PurchaseOrSalePricingStyleType purchaseStyle, string property, string value, string warningMessage = "")
         {
             double price = 0;
             if (PricingAvailable())
             {
-                string criteria = property.ToString().ToUpper() + ":" + value.ToUpper();
-                List<Ruminant> animalList = new List<Ruminant>() { ind };
-
-                //find first pricing entry matching specific criteria
-                AnimalPriceGroup matchIndividual = null;
-                AnimalPriceGroup matchCriteria = null;
-                foreach (AnimalPriceGroup item in PriceList.FindAllChildren<AnimalPriceGroup>().Cast<AnimalPriceGroup>().Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both))
+                if (ind.CurrentPrice == null || !ind.CurrentPrice.Filter(ind))
                 {
-                    if (animalList.FilterRuminants(item).Count() == 1 && matchIndividual == null)
-                    {
-                        matchIndividual = item;
-                    }
+                    string criteria = property.ToUpper() + ":" + value.ToUpper();
 
-                    // check that pricing item meets the specified criteria.
-                    if (item.FindAllChildren<RuminantFilter>().Cast<RuminantFilter>().Where(a => (a.Parameter.ToString().ToUpper() == property.ToString().ToUpper() && a.Value.ToUpper() == value.ToUpper())).Count() > 0)
+                    //find first pricing entry matching specific criteria
+                    AnimalPriceGroup matchIndividual = null;
+                    AnimalPriceGroup matchCriteria = null;
+
+                    var priceGroups = PriceList.FindAllChildren<AnimalPriceGroup>()
+                        .Where(a => a.PurchaseOrSale == purchaseStyle || a.PurchaseOrSale == PurchaseOrSalePricingStyleType.Both);
+
+                    foreach (AnimalPriceGroup priceGroup in priceGroups)
                     {
-                        if (matchCriteria == null)
-                        {
-                            matchCriteria = item;
-                        }
-                        else
-                        {
-                            // multiple price entries were found. using first. value = xxx.
-                            if (!WarningsMultipleEntry.Contains(criteria))
+                        if (priceGroup.Filter(ind) && matchIndividual == null)
+                            matchIndividual = priceGroup;
+
+                        var suitableFilters = priceGroup.FindAllChildren<FilterByProperty>()
+                            .Where(a => (a.PropertyOfIndividual == property) &
+                            (
+                                (a.Operator == System.Linq.Expressions.ExpressionType.Equal && a.Value.ToString().ToUpper() == value.ToUpper()) |
+                                (a.Operator == System.Linq.Expressions.ExpressionType.NotEqual && a.Value.ToString().ToUpper() != value.ToUpper()) |
+                                (a.Operator == System.Linq.Expressions.ExpressionType.IsTrue && value.ToUpper() == "TRUE") |
+                                (a.Operator == System.Linq.Expressions.ExpressionType.IsFalse && value.ToUpper() == "FALSE")
+                            )
+                            ).Any();
+
+                        // check that pricing item meets the specified criteria.
+                        if (suitableFilters)
+                            if (matchCriteria == null)
+                                matchCriteria = priceGroup;
+                            else
+                                // multiple price entries were found. using first. value = xxx.
+                                if (!warningsMultipleEntry.Contains(criteria))
                             {
-                                WarningsMultipleEntry.Add(criteria);
-                                Summary.WriteWarning(this, "Multiple specific [" + purchaseStyle.ToString() + "] price entries were found for [r=" + ind.Breed + "] where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")+"\r\nOnly the first entry will be used. Price [" + matchCriteria.Value.ToString("#,##0.##") + "] [" + matchCriteria.PricingStyle.ToString() + "].");
+                                warningsMultipleEntry.Add(criteria);
+                                Summary.WriteWarning(this, "Multiple specific [" + purchaseStyle.ToString() + "] price entries were found for [r=" + ind.Breed + "] where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".") + "\r\nOnly the first entry will be used. Price [" + matchCriteria.Value.ToString("#,##0.##") + "] [" + matchCriteria.PricingStyle.ToString() + "].");
                             }
+                    }
+
+                    if (matchCriteria == null)
+                    {
+                        string warningString = warningMessage;
+                        if (warningString != "")
+                        {
+                            // no warning string passed to method so calculate one
+                            // report specific criteria not found in price list
+                            warningString = "No [" + purchaseStyle.ToString() + "] price entry was found for [r=" + ind.Breed + "] meeting the required criteria [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".");
+
+                            if (matchIndividual != null)
+                            {
+                                // add using the best pricing available for [][] purchases of xx per head
+                                warningString += "\r\nThe best available price [" + matchIndividual.Value.ToString("#,##0.##") + "] [" + matchIndividual.PricingStyle.ToString() + "] will be used.";
+                                price = matchIndividual.Value * ((matchIndividual.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
+                            }
+                            else
+                                warningString += "\r\nNo alternate price for individuals could be found for the individuals. Add a new [r=AnimalPriceGroup] entry in the [r=AnimalPricing] for [" + ind.Breed + "]";
+                        }                        
+                            
+                        if (!warningsNotFound.Contains(criteria))
+                        {
+                            warningsNotFound.Add(criteria);
+                            Summary.WriteWarning(this, warningString);
                         }
                     }
-                }
-
-                if(matchCriteria == null)
-                {
-                    // report specific criteria not found in price list
-                    string warningString = "No [" + purchaseStyle.ToString() + "] price entry was found for [r=" + ind.Breed + "] meeting the required criteria [" + property + "]"+ (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".");
-
-                    if(matchIndividual != null)
-                    {
-                        // add using the best pricing available for [][] purchases of xx per head
-                        warningString += "\r\nThe best available price [" + matchIndividual.Value.ToString("#,##0.##") + "] ["+matchIndividual.PricingStyle.ToString()+ "] will be used.";
-                        price = matchIndividual.Value * ((matchIndividual.PricingStyle == PricingStyleType.perKg) ? ind.Weight : 1.0);
-                    }
-                    else
-                    {
-                        warningString += "\r\nNo alternate price for individuals could be found for the individuals. Add a new [r=AnimalPriceGroup] entry in the [r=AnimalPricing] for [" +ind.Breed+"]";
-                    }
-                    if (!WarningsNotFound.Contains(criteria))
-                    {
-                        WarningsNotFound.Add(criteria);
-                        Summary.WriteWarning(this, warningString);
-                    }
-                }
-                else
-                {
-                    return matchCriteria;
+                    ind.CurrentPrice = matchCriteria;
                 }
             }
-            return null;
+            return ind.CurrentPrice;
         }
 
         #region validation
@@ -339,9 +337,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (parentHerd != null)
-                {
                     return parentHerd.Herd.Where(a => a.HerdName == this.Name).Count();
-                }
                 return 0;
             }
         }
@@ -354,9 +350,7 @@ namespace Models.CLEM.Resources
             get
             {
                 if (parentHerd != null)
-                {
                     return parentHerd.Herd.Where(a => a.HerdName == this.Name).Sum(a => a.AdultEquivalent);
-                }
                 return 0;
             }
         }
@@ -837,14 +831,6 @@ namespace Models.CLEM.Resources
         [Description("Minimum age for 1st mating (months)")]
         [Required, GreaterThanValue(0)]
         public double MinimumAge1stMating { get; set; }
-        /// <summary>
-        /// Maximum age for mating (months)
-        /// </summary>
-        [Category("Basic", "Breeding")]
-        [Description("Maximum female age for mating")]
-        [Required, GreaterThanValue(0)]
-        [System.ComponentModel.DefaultValue(120)]
-        public double MaximumAgeMating { get; set; }
         /// <summary>
         /// Minimum size for 1st mating, proportion of SRW
         /// </summary>

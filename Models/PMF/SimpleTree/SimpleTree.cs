@@ -138,7 +138,7 @@ namespace Models.PMF
         public double NDemand { get; set; }
 
         /// <summary>Aboveground mass</summary>
-        public Biomass AboveGround { get { return new Biomass(); } }
+        public IBiomass AboveGround { get { return new Biomass(); } }
 
         /// <summary>The plant_status</summary>
         [JsonIgnore]

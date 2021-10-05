@@ -1,10 +1,8 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
 using System.IO;
 
@@ -17,7 +15,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Finance))]
-    [Description("This resource represents a finance type (e.g. General bank account).")]
+    [Description("This resource represents a finance store (e.g. general bank account)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Finance/FinanceType.htm")]
     public class FinanceType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
@@ -71,13 +69,9 @@ namespace Models.CLEM.Resources
             get
             {
                 if(!EnforceWithdrawalLimit)
-                {
                     return double.PositiveInfinity;
-                }
                 else
-                {
                     return amount - WithdrawalLimit;
-                }
             }
         }
 
@@ -117,9 +111,7 @@ namespace Models.CLEM.Resources
         {
             this.amount = 0;
             if (OpeningBalance > 0)
-            {
                 Add(OpeningBalance, this, "", "Opening balance");
-            }
         }
 
         #region Transactions
@@ -155,17 +147,17 @@ namespace Models.CLEM.Resources
         {
             double multiplier = 0;
             double addAmount;
-            switch (resourceAmount.GetType().Name)
+            switch (resourceAmount)
             {
-                case "Double":
-                    addAmount = (double)resourceAmount;
-                    break;
-                case "ResourceRequest":
+                case ResourceRequest _:
                     addAmount = (resourceAmount as ResourceRequest).Required;
                     multiplier = (resourceAmount as ResourceRequest).MarketTransactionMultiplier;
                     break;
+                case double _:
+                    addAmount = (double)resourceAmount;
+                    break;
                 default:
-                    throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
+                    throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]");
             }
 
             if (addAmount > 0)
@@ -210,36 +202,26 @@ namespace Models.CLEM.Resources
         public new void Remove(ResourceRequest request)
         {
             if (request.Required == 0)
-            {
                 return;
-            }
 
             // if this request aims to trade with a market see if we need to set up details for the first time
             if (request.MarketTransactionMultiplier > 0)
-            {
                 FindEquivalentMarketStore();
-            }
 
             double amountRemoved = Math.Round(request.Required, 2, MidpointRounding.ToEven); 
             
             // more than positive balance can be taken if withdrawal limit set to false
             if(this.EnforceWithdrawalLimit)
-            {
                 amountRemoved = Math.Min(amountRemoved, FundsAvailable);
-            }
 
             if (amountRemoved == 0)
-            {
                 return;
-            }
 
             this.amount -= amountRemoved;
 
             // send to market if needed
             if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
-            {
                 (EquivalentMarketStore as FinanceType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, this.NameWithParent,  "Farm purchases");
-            }
 
             request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction
@@ -281,19 +263,15 @@ namespace Models.CLEM.Resources
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("Opening balance of <span class=\"setvalue\">" + this.OpeningBalance.ToString("#,##0.00") + "</span>");
                 if (this.EnforceWithdrawalLimit)
-                {
                     htmlWriter.Write(" that can be withdrawn to <span class=\"setvalue\">" + this.WithdrawalLimit.ToString("#,##0.00") + "</span>");
-                }
                 else
-                {
                     htmlWriter.Write(" with no withdrawal limit");
-                }
+
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (this.InterestRateCharged + this.InterestRatePaid == 0)
-                {
                     htmlWriter.Write("No interest rates included");
-                }
+
                 else
                 {
                     htmlWriter.Write("Interest rate of ");
@@ -302,9 +280,7 @@ namespace Models.CLEM.Resources
                         htmlWriter.Write("<span class=\"setvalue\">");
                         htmlWriter.Write(this.InterestRateCharged.ToString("0.##") + "</span>% charged ");
                         if (this.InterestRatePaid > 0)
-                        {
                             htmlWriter.Write("and ");
-                        }
                     }
                     if (this.InterestRatePaid > 0)
                     {

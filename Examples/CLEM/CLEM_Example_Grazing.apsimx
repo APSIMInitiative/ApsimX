@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 285,
-  "Version": 137,
+  "Version": 141,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
   "Children": [
@@ -37,7 +37,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "#Grazing Enterprise - simulated for 14 years - with 10 ruminants on native pasture and feeding hay\n#### EACH MONTH:\n#### Native Pasture  \n- Native Pasture yield data - from an external dataset (from a Grass growth model) in an SQLite Database\n- Native Pasture is managed - land assigned, tracking pasture state, and calculate ecological factors\n####Hay purchased\n - 100kg Hay purchased as needed\n#### Ruminants\n- 10 Ruminants (different Starting Ages and Weights) - Mustered to Native Pasture\n- Ruminants grazed on Pasture for the maximum 8 hours each day\n- Fed purchase hay to potential intake\n- Breeding by Artificial Insemination - every 12 months from March\n- Weaning - Individuals are weaned at 8 months or 100 kg - every 6 months from April\n- Manage numbers: every August\n - Breeding females: maintained between 2 and 10 - sold when over 180 months old - A maximum of 100% of the Maximum Breeders Kept can be purchased in a single transaction\n - Breeding males (sires/rams etc): A maximum of 2 will be kept - sold when over 96 months old\n - General herd: Males will be sold when 18 months old or 150 kg - Animals will be sold only when activity is due - Purchased individuals will be placed on Native Pasture\n- Buy and sell\n - Finances goes in and out of the General account\n\n\n",
+              "Text": "# Grazing Enterprise - simulated for 14 years - with 10 ruminants on native pasture and feeding hay\n\n### Native Pasture  \n- Native Pasture yield data - from an external dataset (from a Grass growth model) in an SQLite Database\n- Native Pasture is managed - land assigned, tracking pasture state, and calculate ecological factors\n### Hay purchased\n - 100kg Hay purchased as needed\n### Ruminants\n- 10 Ruminants (different Starting Ages and Weights) - Mustered to Native Pasture\n- Ruminants grazed on Pasture for the maximum 8 hours each day\n- Fed purchase hay to potential intake\n- Breeding by Artificial Insemination - every 12 months from March\n- Weaning - Individuals are weaned at 8 months or 100 kg - every 6 months from April\n- Manage numbers: every August\n - Breeding females: maintained between 2 and 10 - sold when over 180 months old - A maximum of 100% of the Maximum Breeders Kept can be purchased in a single transaction\n - Breeding males (sires/rams etc): A maximum of 2 will be kept - sold when over 96 months old\n - General herd: Males will be sold when 18 months old or 150 kg - Animals will be sold only when activity is due - Purchased individuals will be placed on Native Pasture\n- Buy and sell\n - Finances goes in and out of the General account\n\n\n",
               "Name": "Grazing 10Animals_PastureHay",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -79,6 +79,7 @@
               "$type": "Models.CLEM.ZoneCLEM, Models",
               "FarmMultiplier": 1.0,
               "ClimateRegion": 0,
+              "EcologicalIndicatorsCalculationInterval": 12,
               "EcologicalIndicatorsCalculationMonth": 12,
               "AutoCreateDescriptiveSummary": false,
               "Area": 0.0,
@@ -99,6 +100,7 @@
                   "AmountColumnName": "AmtKg",
                   "PercentNitrogenColumnName": null,
                   "HarvestTypeColumnName": null,
+                  "SelectedTab": null,
                   "Name": "FileForage",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -107,12 +109,14 @@
                 },
                 {
                   "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
+                  "SelectedTab": null,
                   "Name": "Resources",
                   "Children": [
                     {
                       "$type": "Models.CLEM.Resources.Land, Models",
                       "UnitsOfArea": "hectares",
                       "UnitsOfAreaToHaConversion": 1.0,
+                      "SelectedTab": null,
                       "Name": "Land",
                       "Children": [
                         {
@@ -121,6 +125,7 @@
                           "PortionBuildings": 0.0,
                           "ProportionOfTotalArea": 1.0,
                           "SoilType": "2",
+                          "SelectedTab": null,
                           "Name": "Paddock1",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -135,6 +140,7 @@
                     {
                       "$type": "Models.CLEM.Resources.Finance, Models",
                       "CurrencyName": null,
+                      "SelectedTab": null,
                       "Name": "Finances",
                       "Children": [
                         {
@@ -144,6 +150,7 @@
                           "WithdrawalLimit": 0.0,
                           "InterestRateCharged": 7.5,
                           "InterestRatePaid": 2.0,
+                          "SelectedTab": null,
                           "Name": "General account",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -158,6 +165,7 @@
                     {
                       "$type": "Models.CLEM.Resources.RuminantHerd, Models",
                       "TransactionStyle": 0,
+                      "SelectedTab": null,
                       "Name": "Ruminants",
                       "Children": [
                         {
@@ -225,7 +233,6 @@
                           "InterParturitionIntervalCoefficient": -0.7994,
                           "GestationLength": 9.0,
                           "MinimumAge1stMating": 24.0,
-                          "MaximumAgeMating": 120.0,
                           "MinimumSize1stMating": 0.5,
                           "MinimumDaysBirthToConception": 61.0,
                           "MultipleBirthRate": null,
@@ -233,22 +240,25 @@
                           "MaximumMaleMatingsPerDay": 30.0,
                           "PrenatalMortality": 0.079,
                           "MethaneProductionCoefficient": 20.7,
+                          "SelectedTab": null,
                           "Name": "Bos indicus",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Resources.RuminantInitialCohorts, Models",
                               "WeightWarningOccurred": false,
+                              "SelectedTab": null,
                               "Name": "Initial cohorts",
                               "Children": [
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 1,
+                                  "Sex": 0,
                                   "Age": 8,
                                   "Number": 2.0,
                                   "Weight": 180.0,
                                   "WeightSD": 0.0,
                                   "Suckling": false,
                                   "Sire": false,
+                                  "SelectedTab": null,
                                   "Name": "WeanerF",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -257,13 +267,14 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 0,
+                                  "Sex": 1,
                                   "Age": 8,
                                   "Number": 2.0,
                                   "Weight": 180.0,
                                   "WeightSD": 0.0,
                                   "Suckling": false,
                                   "Sire": false,
+                                  "SelectedTab": null,
                                   "Name": "WeanerM",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -272,13 +283,14 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 1,
+                                  "Sex": 0,
                                   "Age": 37,
                                   "Number": 4.0,
                                   "Weight": 400.0,
                                   "WeightSD": 0.0,
                                   "Suckling": false,
                                   "Sire": false,
+                                  "SelectedTab": null,
                                   "Name": "Female3_4",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -287,13 +299,14 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 0,
+                                  "Sex": 1,
                                   "Age": 30,
                                   "Number": 1.0,
                                   "Weight": 520.0,
                                   "WeightSD": 0.0,
                                   "Suckling": false,
                                   "Sire": false,
+                                  "SelectedTab": null,
                                   "Name": "Male2_3",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -302,13 +315,14 @@
                                 },
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 0,
+                                  "Sex": 1,
                                   "Age": 42,
                                   "Number": 1.0,
                                   "Weight": 610.0,
                                   "WeightSD": 0.0,
                                   "Suckling": false,
                                   "Sire": true,
+                                  "SelectedTab": null,
                                   "Name": "Male3_4",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -322,6 +336,7 @@
                             },
                             {
                               "$type": "Models.CLEM.Resources.AnimalPricing, Models",
+                              "SelectedTab": "Summary",
                               "Name": "Prices",
                               "Children": [
                                 {
@@ -329,13 +344,15 @@
                                   "PricingStyle": 1,
                                   "Value": 2.5,
                                   "PurchaseOrSale": 0,
+                                  "SelectedTab": null,
                                   "Name": "Weaners_LT_12m",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 3,
-                                      "Operator": 2,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Age",
+                                      "Operator": 20,
                                       "Value": "12",
+                                      "SelectedTab": null,
                                       "Name": "LT_12m",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -352,13 +369,15 @@
                                   "PricingStyle": 1,
                                   "Value": 2.3,
                                   "PurchaseOrSale": 1,
+                                  "SelectedTab": null,
                                   "Name": "Female1_3_Buy",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 2,
-                                      "Operator": 0,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Sex",
+                                      "Operator": 13,
                                       "Value": "Female",
+                                      "SelectedTab": null,
                                       "Name": "Female",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -366,10 +385,11 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 3,
-                                      "Operator": 2,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Age",
+                                      "Operator": 20,
                                       "Value": "36",
+                                      "SelectedTab": null,
                                       "Name": "less36months",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -386,13 +406,15 @@
                                   "PricingStyle": 1,
                                   "Value": 2.5,
                                   "PurchaseOrSale": 2,
+                                  "SelectedTab": null,
                                   "Name": "Female1_3_Sell",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 2,
-                                      "Operator": 0,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Sex",
+                                      "Operator": 13,
                                       "Value": "Female",
+                                      "SelectedTab": null,
                                       "Name": "Female",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -400,10 +422,11 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 3,
-                                      "Operator": 2,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Age",
+                                      "Operator": 20,
                                       "Value": "36",
+                                      "SelectedTab": null,
                                       "Name": "less36months",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -420,13 +443,15 @@
                                   "PricingStyle": 1,
                                   "Value": 2.2,
                                   "PurchaseOrSale": 0,
+                                  "SelectedTab": null,
                                   "Name": "Female 3plus",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 2,
-                                      "Operator": 0,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Sex",
+                                      "Operator": 13,
                                       "Value": "Female",
+                                      "SelectedTab": null,
                                       "Name": "Female",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -434,11 +459,37 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 3,
-                                      "Operator": 5,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Age",
+                                      "Operator": 16,
                                       "Value": "36",
+                                      "SelectedTab": null,
                                       "Name": "36months",
+                                      "Children": [],
+                                      "IncludeInDocumentation": false,
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
+                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.CLEM.Groupings.AnimalPriceGroup, Models",
+                                  "PricingStyle": 1,
+                                  "Value": 2.2,
+                                  "PurchaseOrSale": 0,
+                                  "SelectedTab": null,
+                                  "Name": "Breeding Sires",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Male.IsSire",
+                                      "Operator": 83,
+                                      "Value": null,
+                                      "SelectedTab": null,
+                                      "Name": "isSire",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -454,13 +505,15 @@
                                   "PricingStyle": 1,
                                   "Value": 2.5,
                                   "PurchaseOrSale": 0,
+                                  "SelectedTab": null,
                                   "Name": "Male1_3",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 2,
-                                      "Operator": 0,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Sex",
+                                      "Operator": 13,
                                       "Value": "Male",
+                                      "SelectedTab": null,
                                       "Name": "Male",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -468,10 +521,11 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 3,
-                                      "Operator": 2,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Age",
+                                      "Operator": 20,
                                       "Value": "36",
+                                      "SelectedTab": null,
                                       "Name": "less36months",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -488,13 +542,15 @@
                                   "PricingStyle": 1,
                                   "Value": 2.4,
                                   "PurchaseOrSale": 0,
+                                  "SelectedTab": null,
                                   "Name": "Male 3plus",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 2,
-                                      "Operator": 0,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Sex",
+                                      "Operator": 13,
                                       "Value": "Male",
+                                      "SelectedTab": null,
                                       "Name": "Male",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
@@ -502,45 +558,12 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 3,
-                                      "Operator": 5,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Age",
+                                      "Operator": 16,
                                       "Value": "36",
+                                      "SelectedTab": null,
                                       "Name": "36months",
-                                      "Children": [],
-                                      "IncludeInDocumentation": false,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.CLEM.Groupings.AnimalPriceGroup, Models",
-                                  "PricingStyle": 1,
-                                  "Value": 2.2,
-                                  "PurchaseOrSale": 0,
-                                  "Name": "Breeding Sires",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 2,
-                                      "Operator": 0,
-                                      "Value": "Male",
-                                      "Name": "Male",
-                                      "Children": [],
-                                      "IncludeInDocumentation": false,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 15,
-                                      "Operator": 0,
-                                      "Value": "True",
-                                      "Name": "isSire",
                                       "Children": [],
                                       "IncludeInDocumentation": false,
                                       "Enabled": true,
@@ -561,6 +584,7 @@
                               "ConceptionRateCoefficent": -14.247,
                               "ConceptionRateIntercept": 5.182,
                               "ConceptionRateAsymptote": 90.0,
+                              "SelectedTab": null,
                               "Name": "RuminantConceptionCurve",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -579,6 +603,7 @@
                     },
                     {
                       "$type": "Models.CLEM.Resources.GrazeFoodStore, Models",
+                      "SelectedTab": null,
                       "Name": "GrazeFoodStore",
                       "Children": [
                         {
@@ -586,7 +611,6 @@
                           "Units": null,
                           "NToDMDCoefficient": 11.03,
                           "NToDMDIntercept": 41.4,
-                          "NToDMDCrudeProteinDenominator": 0.0,
                           "GreenNitrogen": 2.0,
                           "DecayNitrogen": 0.35,
                           "MinimumNitrogen": 0.4,
@@ -596,6 +620,11 @@
                           "CarryoverDetachRate": 0.12,
                           "IntakeTropicalQualityCoefficient": 0.16,
                           "IntakeQualityCoefficient": 1.7,
+                          "InitialBiomass": 2000.0,
+                          "FirstMonthOfGrowSeason": 11,
+                          "LastMonthOfGrowSeason": 3,
+                          "NumberMonthsForInitialBiomass": 5,
+                          "SelectedTab": null,
                           "Name": "NativePasture",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -609,6 +638,7 @@
                     },
                     {
                       "$type": "Models.CLEM.Resources.AnimalFoodStore, Models",
+                      "SelectedTab": null,
                       "Name": "AnimalFoodStore",
                       "Children": [
                         {
@@ -617,6 +647,7 @@
                           "DMD": 49.0,
                           "Nitrogen": 3.4,
                           "StartingAmount": 100.0,
+                          "SelectedTab": null,
                           "Name": "Hay",
                           "Children": [
                             {
@@ -625,6 +656,7 @@
                               "TransmutationPacketSize": 1000.0,
                               "UseWholePackets": false,
                               "TransactionCategory": "Transmutation",
+                              "SelectedTab": null,
                               "Name": "Purchase",
                               "Children": [
                                 {
@@ -634,6 +666,7 @@
                                   "TransmuteStyle": 0,
                                   "ResourceGroup": null,
                                   "FinanceTypeForTransactionsName": "No transactions",
+                                  "SelectedTab": null,
                                   "Name": "Transmute",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -662,6 +695,7 @@
                 },
                 {
                   "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
+                  "SelectedTab": null,
                   "Name": "Activities",
                   "Children": [
                     {
@@ -671,6 +705,7 @@
                       "UseAreaAvailable": true,
                       "TransactionCategory": "Crop",
                       "OnPartialResourcesAvailableAction": 0,
+                      "SelectedTab": null,
                       "Name": "Native Pasture on farm",
                       "Children": [
                         {
@@ -682,6 +717,7 @@
                           "TreesPerHa": 0.0,
                           "TransactionCategory": "Crop.[Product]",
                           "OnPartialResourcesAvailableAction": 0,
+                          "SelectedTab": null,
                           "Name": "Native Pasture to GrazeFoodStore",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -697,6 +733,7 @@
                       "$type": "Models.CLEM.Activities.ActivityFolder, Models",
                       "TransactionCategory": null,
                       "OnPartialResourcesAvailableAction": 0,
+                      "SelectedTab": null,
                       "Name": "Manage herd",
                       "Children": [
                         {
@@ -705,6 +742,7 @@
                           "MethaneStoreName": "Use store named Methane if present",
                           "OnPartialResourcesAvailableAction": 0,
                           "TransactionCategory": "Livestock.Manage",
+                          "SelectedTab": null,
                           "Name": "Grow all ruminants",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -718,12 +756,13 @@
                           "MoveSucklings": false,
                           "TransactionCategory": "Livestock.Manage",
                           "OnPartialResourcesAvailableAction": 0,
+                          "SelectedTab": null,
                           "Name": "Move to pasture",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Groupings.RuminantGroup, Models",
                               "Reason": 0,
-                              "Proportion": 1.0,
+                              "SelectedTab": null,
                               "Name": "All",
                               "Children": [],
                               "IncludeInDocumentation": true,
@@ -740,6 +779,7 @@
                           "HoursGrazed": 8.0,
                           "TransactionCategory": "Livestock.Grazing",
                           "OnPartialResourcesAvailableAction": 2,
+                          "SelectedTab": null,
                           "Name": "Graze all",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -754,11 +794,13 @@
                           "StopFeedingWhenSatisfied": false,
                           "TransactionCategory": "Livestock.Feed",
                           "OnPartialResourcesAvailableAction": 2,
+                          "SelectedTab": null,
                           "Name": "Feed hay",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Groupings.RuminantFeedGroup, Models",
                               "Value": 1.0,
+                              "SelectedTab": null,
                               "Name": "Feed all",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -776,18 +818,23 @@
                           "InferStartupPregnancy": false,
                           "TransactionCategory": "Livestock.Manage",
                           "OnPartialResourcesAvailableAction": 0,
+                          "SelectedTab": null,
                           "Name": "Breed",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Activities.RuminantActivityControlledMating, Models",
+                              "MaximumAgeMating": 120.0,
+                              "JoiningsPerMale": 1,
                               "TransactionCategory": "Livestock.Manage",
                               "OnPartialResourcesAvailableAction": 0,
+                              "SelectedTab": null,
                               "Name": "ControlledMating",
                               "Children": [
                                 {
                                   "$type": "Models.CLEM.Activities.ActivityTimerInterval, Models",
                                   "Interval": 12,
                                   "MonthDue": 3,
+                                  "SelectedTab": null,
                                   "Name": "Controlled mating",
                                   "Children": [],
                                   "IncludeInDocumentation": false,
@@ -812,12 +859,14 @@
                           "GrazeFoodStoreName": "GrazeFoodStore.NativePasture",
                           "TransactionCategory": "Livestock.Manage",
                           "OnPartialResourcesAvailableAction": 0,
+                          "SelectedTab": null,
                           "Name": "Wean",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Activities.ActivityTimerInterval, Models",
                               "Interval": 12,
                               "MonthDue": 4,
+                              "SelectedTab": null,
                               "Name": "Weaning",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -833,6 +882,7 @@
                           "$type": "Models.CLEM.Activities.RuminantActivityManage, Models",
                           "MaximumBreedersKept": 10,
                           "MinimumBreedersKept": 2,
+                          "MaxBreedersMultiplierToStop": 2.0,
                           "MarkOldBreedersForSale": true,
                           "MaximumBreederAge": 120.0,
                           "MaximumProportionBreedersPerPurchase": 1.0,
@@ -849,22 +899,24 @@
                           "MaleSellingWeight": 350.0,
                           "SellFemalesLikeMales": true,
                           "FemaleSellingAge": 24.0,
-                          "FemaleSellingWeight": 0.0,
+                          "FemaleSellingWeight": 300.0,
                           "GrazeFoodStoreNameSires": "GrazeFoodStore.NativePasture",
                           "GrazeFoodStoreNameBreeders": "GrazeFoodStore.NativePasture",
-                          "GrazeFoodStoreNameGrowOutFemales": null,
-                          "GrazeFoodStoreNameGrowOutMales": null,
+                          "GrazeFoodStoreNameGrowOutFemales": "GrazeFoodStore.NativePasture",
+                          "GrazeFoodStoreNameGrowOutMales": "GrazeFoodStore.NativePasture",
                           "MinimumPastureBeforeRestock": 1500.0,
                           "AdjustBreedingFemalesAtStartup": false,
                           "AdjustBreedingMalesAtStartup": false,
                           "TransactionCategory": "Livestock.Manage",
                           "OnPartialResourcesAvailableAction": 0,
+                          "SelectedTab": null,
                           "Name": "Manage numbers",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Activities.ActivityTimerInterval, Models",
                               "Interval": 12,
                               "MonthDue": 8,
+                              "SelectedTab": null,
                               "Name": "every August",
                               "Children": [],
                               "IncludeInDocumentation": false,
@@ -875,17 +927,19 @@
                               "$type": "Models.CLEM.Resources.SpecifyRuminant, Models",
                               "RuminantTypeName": "Ruminants.Bos indicus",
                               "Proportion": 1.0,
+                              "SelectedTab": null,
                               "Name": "Breeders",
                               "Children": [
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 1,
+                                  "Sex": 0,
                                   "Age": 24,
                                   "Number": 0.0,
                                   "Weight": 0.0,
                                   "WeightSD": 0.0,
                                   "Suckling": false,
                                   "Sire": false,
+                                  "SelectedTab": null,
                                   "Name": "24mth breeder",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -901,17 +955,19 @@
                               "$type": "Models.CLEM.Resources.SpecifyRuminant, Models",
                               "RuminantTypeName": "Ruminants.Bos indicus",
                               "Proportion": 1.0,
+                              "SelectedTab": null,
                               "Name": "Sires",
                               "Children": [
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 0,
+                                  "Sex": 1,
                                   "Age": 36,
                                   "Number": 0.0,
                                   "Weight": 0.0,
                                   "WeightSD": 0.0,
                                   "Suckling": false,
                                   "Sire": true,
+                                  "SelectedTab": null,
                                   "Name": "36mth sire",
                                   "Children": [],
                                   "IncludeInDocumentation": true,
@@ -933,6 +989,7 @@
                           "BankAccountName": "Finances.General account",
                           "TransactionCategory": "Livestock.Manage",
                           "OnPartialResourcesAvailableAction": 0,
+                          "SelectedTab": null,
                           "Name": "Buy and sell",
                           "Children": [],
                           "IncludeInDocumentation": false,
@@ -946,7 +1003,9 @@
                     },
                     {
                       "$type": "Models.CLEM.SummariseRuminantHerd, Models",
+                      "GroupStyle": 0,
                       "HerdFilters": null,
+                      "SelectedTab": null,
                       "Name": "SummariseHerd",
                       "Children": [],
                       "IncludeInDocumentation": false,
@@ -955,8 +1014,21 @@
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportRuminantHerd, Models",
+                      "ReportAtStart": true,
+                      "SelectedTab": "Summary",
                       "Name": "ReportHerd",
-                      "Children": [],
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Groupings.RuminantGroup, Models",
+                          "Reason": 0,
+                          "SelectedTab": null,
+                          "Name": "RuminantGroup",
+                          "Children": [],
+                          "IncludeInDocumentation": true,
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
@@ -991,7 +1063,8 @@
                       "$type": "Models.CLEM.Reporting.ReportResourceBalances, Models",
                       "ResourceGroupsToReport": [
                         "GrazeFoodStore",
-                        "AnimalFoodStore"
+                        "AnimalFoodStore",
+                        "Ruminants"
                       ],
                       "ReportAmount": true,
                       "ReportValue": false,
@@ -1200,7 +1273,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "Category = \"Sales\"",
+                          "Filter": "Category = \"Livestock.Manage.All\"",
                           "Name": "Income _ Bos Indicus Sales",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1229,7 +1302,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "Category = \"Purchases\"",
+                          "Filter": "Category = \"Livestock.Manage.All\"",
                           "Name": "Expenses _ Bos Indicus Purchases",
                           "Children": [],
                           "IncludeInDocumentation": true,
@@ -1330,7 +1403,7 @@
                           "LineThickness": 0,
                           "TableName": "ReportResourceBalances",
                           "XFieldName": "Date",
-                          "YFieldName": "NativePasture",
+                          "YFieldName": "NativePasture_Amount",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -1359,7 +1432,7 @@
                           "LineThickness": 0,
                           "TableName": "ReportResourceBalances",
                           "XFieldName": "Date",
-                          "YFieldName": "Hay",
+                          "YFieldName": "Hay_Amount",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -1388,7 +1461,7 @@
                           "LineThickness": 0,
                           "TableName": "ReportResourceBalances",
                           "XFieldName": "Date",
-                          "YFieldName": "Bos_indicus",
+                          "YFieldName": "Bos_indicus.Count",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -1503,7 +1576,7 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "Category = \"Grazing\"",
+                          "Filter": "Category = \"Livestock.Grazing\"",
                           "Name": "Native Pasture Grazed",
                           "Children": [],
                           "IncludeInDocumentation": true,

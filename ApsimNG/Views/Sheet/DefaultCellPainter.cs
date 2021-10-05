@@ -7,7 +7,10 @@
     public class DefaultCellPainter : ISheetCellPainter
     {
         /// <summary>The sheet to paint.</summary>
-        SheetWidget sheet;
+        Sheet sheet;
+
+        /// <summary>The sheet widget to paint.</summary>
+        SheetWidget sheetWidget;
 
         /// <summary>The optional cell editor instance.</summary>
         ISheetEditor editor;
@@ -17,12 +20,14 @@
 
 
         /// <summary>Constructor.</summary>
-        /// <param name="sheetView">The sheet to paint.</param>
+        /// <param name="sheet">The sheet to paint.</param>
+        /// <param name="sheetWidget">The sheet widget.</param>
         /// <param name="sheetEditor">The optional cell editor instance.</param>
         /// <param name="sheetSelection">The optional cell selection instance.</param>
-        public DefaultCellPainter(SheetWidget sheetView, ISheetEditor sheetEditor = null, ISheetSelection sheetSelection = null)
+        public DefaultCellPainter(Sheet sheet, SheetWidget sheetWidget, ISheetEditor sheetEditor = null, ISheetSelection sheetSelection = null)
         {
-            sheet = sheetView;
+            this.sheet = sheet;
+            this.sheetWidget = sheetWidget;
             editor = sheetEditor;
             selection = sheetSelection;
         }
@@ -36,24 +41,25 @@
             return !(cellBeingEdited);
         }
 
-#if NETCOREAPP
         /// <summary>Paint a cell in the sheet.</summary>
         /// <param name="columnIndex">The column index of the cell.</param>
         /// <param name="rowIndex">The row index of the cell.</param>
-        public Gtk.StateFlags GetCellState(int columnIndex, int rowIndex)
+        public States GetCellState(int columnIndex, int rowIndex)
         {
             if (selection != null && selection.IsSelected(columnIndex, rowIndex))
-                return Gtk.StateFlags.Selected;
+                return States.Selected;
             else if (rowIndex < sheet.NumberFrozenRows)
-                return Gtk.StateFlags.Insensitive;
+                return States.Insensitive;
             else
-                return Gtk.StateFlags.Normal;
+                return States.Normal;
         }
+#if NETCOREAPP
+
 #else
         /// <summary>Gets the foreground colour of a cell.</summary>
         /// <param name="columnIndex">The column index of the cell.</param>
         /// <param name="rowIndex">The row index of the cell.</param>
-        public Cairo.Color GetForegroundColour(int columnIndex, int rowIndex)
+        public (int Red, int Green, int Blue) GetForegroundColour(int columnIndex, int rowIndex)
         {
 
             if (Utility.Configuration.Settings.DarkTheme)
@@ -61,41 +67,41 @@
 
 
                 if (rowIndex < sheet.NumberFrozenRows)
-                    return new Cairo.Color(1, 1, 1); // white
+                    return (255, 255, 255); // white
                 else
-                    return new Cairo.Color(1, 1, 1); // white
+                    return (255, 255, 255); // white
             }
             else
             {
                 if (rowIndex < sheet.NumberFrozenRows)
-                    return new Cairo.Color(1, 1, 1); // white
+                    return (255, 255, 255); // white
                 else
-                    return new Cairo.Color(0, 0, 0); // black
+                    return (0, 0, 0); // black
             }
         }
 
         /// <summary>Gets the background colour of a cell.</summary>
         /// <param name="columnIndex">The column index of the cell.</param>
         /// <param name="rowIndex">The row index of the cell.</param>
-        public Cairo.Color GetBackgroundColour(int columnIndex, int rowIndex)
+        public (int Red, int Green, int Blue) GetBackgroundColour(int columnIndex, int rowIndex)
         {
             if (Utility.Configuration.Settings.DarkTheme)
             {
                 if (selection != null && selection.IsSelected(columnIndex, rowIndex))
-                    return new Cairo.Color(150 / 255.0, 150 / 255.0, 150 / 255.0);  // light grey
+                    return (150, 150, 150);  // light grey
                 else if (rowIndex < sheet.NumberFrozenRows)
-                    return new Cairo.Color(102 / 255.0, 102 / 255.0, 102 / 255.0);  // dark grey
+                    return (102, 102, 102);  // dark grey
                 else
-                    return Utility.Colour.ToCairo(sheet.Style.Background(Gtk.StateType.Normal));
+                    return Utility.Colour.ToCairo(sheetWidget.Style.Background(Gtk.StateType.Normal));
             }
             else
             {
                 if (selection != null && selection.IsSelected(columnIndex, rowIndex))
-                    return new Cairo.Color(198 / 255.0, 198 / 255.0, 198 / 255.0);  // light grey
+                    return (198, 198, 198);  // light grey
                 else if (rowIndex < sheet.NumberFrozenRows)
-                    return new Cairo.Color(102 / 255.0, 102 / 255.0, 102 / 255.0);  // dark grey
+                    return (102, 102, 102);  // dark grey
                 else
-                    return new Cairo.Color(1, 1, 1); // white
+                    return (255, 255, 255); // white
             }
         }
 #endif

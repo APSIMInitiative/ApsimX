@@ -7,7 +7,10 @@ namespace UserInterface.Views
     public class SheetScrollBars
     {
         /// <summary>The sheet widget.</summary>
-        private SheetWidget sheet;
+        private Sheet sheet;
+
+        /// <summary>The sheet widget.</summary>
+        private SheetWidget sheetWidget;
 
         /// <summary>The horizontal scroll bar</summary>
         private HScrollbar horizontalScrollbar;
@@ -16,10 +19,12 @@ namespace UserInterface.Views
         private VScrollbar verticalScrollbar;
 
         /// <summary>Constructor.</summary>
-        /// <param name="sheetView">The sheet widget.</param>
-        public SheetScrollBars(SheetWidget sheetView)
+        /// <param name="sheet">The sheet.</param>
+        /// <param name="sheetWidget">The sheet widget.</param>
+        public SheetScrollBars(Sheet sheet, SheetWidget sheetWidget)
         {
-            sheet = sheetView;
+            this.sheet = sheet;
+            this.sheetWidget = sheetWidget;
             sheet.Initialised += OnSheetInitialised;
             sheet.ScrolledHorizontally += OnSheetScrolled;
             sheet.ScrolledVertically += OnSheetScrolled;
@@ -74,7 +79,7 @@ namespace UserInterface.Views
             var vbox = new VBox();
 
             hbox.PackEnd(verticalScrollbar, false, true, 0);
-            hbox.PackStart(sheet, true, true, 0);
+            hbox.PackStart(sheetWidget, true, true, 0);
 
             vbox.PackEnd(horizontalScrollbar, false, true, 0);
             vbox.PackStart(hbox, true, true, 0);

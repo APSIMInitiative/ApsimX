@@ -168,7 +168,7 @@ namespace Models.PMF.OilPalm
 
 
         /// <summary>Aboveground mass</summary>
-        public Biomass AboveGround { get { return new Biomass(); } }
+        public IBiomass AboveGround { get { return new Biomass(); } }
 
         /// <summary>The soil crop</summary>
         private SoilCrop soilCrop;

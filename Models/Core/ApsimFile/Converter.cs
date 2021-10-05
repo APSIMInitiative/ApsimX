@@ -6,6 +6,7 @@
     using Models.Functions;
     using Models.LifeCycle;
     using Models.PMF;
+    using Models.PMF.Interfaces;
     using Models.Soils;
     using Newtonsoft.Json.Linq;
     using System;
@@ -23,7 +24,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 138; } }
+        public static int LatestVersion { get { return 142; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3537,6 +3538,169 @@
         }
 
         /// <summary>
+        /// Remove all parameters from sugarcane and change it to use the sugarcane resource.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion138(JObject root, string fileName)
+        {
+            foreach (JObject sugar in JsonUtilities.ChildrenRecursively(root, "Sugarcane"))
+            {
+                if (sugar["ResourceName"] == null || sugar["ResourceName"].ToString() != "Sugarcane")
+                {
+                    sugar.RemoveAll();
+                    sugar["$type"] = "Models.Sugarcane, Models";
+                    sugar["Name"] = "Sugarcane";
+                    sugar["ResourceName"] = "Sugarcane";
+                    sugar["IncludeInDocumentation"] = true;
+                    sugar["Enabled"] = true;
+                    sugar["ReadOnly"] = false;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Add priority factor functions into each demand function 
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion139(JObject root, string fileName)
+        {
+            foreach (JObject organ in JsonUtilities.ChildrenInNameSpace(root, "Models.PMF.Organs"))
+            {
+                // Add priority factors to leaf and reproductive organ where they are currently optional
+                if ((JsonUtilities.Type(organ) == "Leaf") || (JsonUtilities.Type(organ) == "ReproductiveOrgan"))
+                {
+                    JObject PriorityFactors = JsonUtilities.ChildWithName(organ, "dmDemandPriorityFactors");
+                    if (PriorityFactors == null)
+                    {
+                        PriorityFactors = JsonUtilities.ChildWithName(organ, "DMDemandPriorityFactors");
+                    }
+                    if (PriorityFactors == null)
+                    {
+                        JObject PFactors = new JObject();
+                        PFactors["$type"] = "Models.PMF.BiomassDemand, Models";
+                        PFactors["Name"] = "DMDemandPriorityFactors";
+                        JsonUtilities.AddConstantFunctionIfNotExists(PFactors, "Structural", "1");
+                        JsonUtilities.AddConstantFunctionIfNotExists(PFactors, "Metabolic", "1");
+                        JsonUtilities.AddConstantFunctionIfNotExists(PFactors, "Storage", "1");
+                        (organ["Children"] as JArray).Add(PFactors);
+                    }
+
+                    JObject NPFactors = new JObject();
+                    NPFactors["$type"] = "Models.PMF.BiomassDemand, Models";
+                    NPFactors["Name"] = "NDemandPriorityFactors";
+                    JsonUtilities.AddConstantFunctionIfNotExists(NPFactors, "Structural", "1");
+                    JsonUtilities.AddConstantFunctionIfNotExists(NPFactors, "Metabolic", "1");
+                    JsonUtilities.AddConstantFunctionIfNotExists(NPFactors, "Storage", "1");
+                    (organ["Children"] as JArray).Add(NPFactors);
+                }
+                else if ((JsonUtilities.Type(organ) == "SimpleLeaf") || (JsonUtilities.Type(organ) == "GenericOrgan")
+                    || (JsonUtilities.Type(organ) == "Root"))
+                // Move proority factors into Demand node and add if not currently there
+                {
+                    JObject PriorityFactors = JsonUtilities.ChildWithName(organ, "DMDemandPriorityFactors");
+                    if (PriorityFactors != null)
+                    {
+                        JsonUtilities.RemoveChild(organ, "DMDemandPriorityFactors");
+                    }
+                    if (PriorityFactors == null)
+                    {
+                        PriorityFactors = JsonUtilities.ChildWithName(organ, "dmDemandPriorityFactors");
+
+                        if (PriorityFactors != null)
+                        {
+                            JsonUtilities.RemoveChild(organ, "dmDemandPriorityFactors");
+                        }
+                    }
+                    JObject DMDemands = JsonUtilities.ChildWithName(organ, "DMDemands");
+                    if (DMDemands != null)
+                    {
+                        DMDemands["$type"] = "Models.PMF.BiomassDemandAndPriority, Models";
+                        if (PriorityFactors != null)
+                        {
+                            JObject Structural = JsonUtilities.ChildWithName(PriorityFactors, "Structural");
+                            Structural["Name"] = "QStructuralPriority";
+                            (DMDemands["Children"] as JArray).Add(Structural);
+                            JObject Metabolic = JsonUtilities.ChildWithName(PriorityFactors, "Metabolic");
+                            Metabolic["Name"] = "QMetabolicPriority";
+                            (DMDemands["Children"] as JArray).Add(Metabolic);
+                            JObject Storage = JsonUtilities.ChildWithName(PriorityFactors, "Storage");
+                            Storage["Name"] = "QStoragePriority";
+                            (DMDemands["Children"] as JArray).Add(Storage);
+                        }
+                        else
+                        {
+                            JsonUtilities.AddConstantFunctionIfNotExists(DMDemands, "QStructuralPriority", "1");
+                            JsonUtilities.AddConstantFunctionIfNotExists(DMDemands, "QMetabolicPriority", "1");
+                            JsonUtilities.AddConstantFunctionIfNotExists(DMDemands, "QStoragePriority", "1");
+                        }
+                    }
+                    JObject NDemands = JsonUtilities.ChildWithName(organ, "NDemands");
+                    if (NDemands != null)
+                    {
+                        NDemands["$type"] = "Models.PMF.BiomassDemandAndPriority, Models";
+                        JsonUtilities.AddConstantFunctionIfNotExists(NDemands, "QStructuralPriority", "1");
+                        JsonUtilities.AddConstantFunctionIfNotExists(NDemands, "QMetabolicPriority", "1");
+                        JsonUtilities.AddConstantFunctionIfNotExists(NDemands, "QStoragePriority", "1");
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Remove all occurences of SoilNitrogenPlantAvailable NO3 and NH4 types.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion140(JObject root, string fileName)
+        {
+            
+            foreach (var PAN in JsonUtilities.ChildrenOfType(root, "SoilNitrogenPlantAvailableNO3"))
+                PAN.Remove();
+            foreach (var PAN in JsonUtilities.ChildrenOfType(root, "SoilNitrogenPlantAvailableNH4"))
+                PAN.Remove();
+
+        }
+
+
+        /// <summary>
+        /// Convert CompositeBiomass from a Propertys property to OrganNames.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion141(JObject root, string fileName)
+        {
+            foreach (var compositeBiomass in JsonUtilities.ChildrenRecursively(root, "CompositeBiomass"))
+            {
+                var properties = compositeBiomass["Propertys"] as JArray;
+                if (properties != null)
+                {
+                    bool includeLive = false;
+                    bool includeDead = false;
+                    var organNames = new List<string>();
+
+                    foreach (var property in properties.Values<string>())
+                    {
+                        var match = Regex.Match(property, @"\[(\w+)\]\.(\w+)");
+                        if (match.Success)
+                        {
+                            organNames.Add(match.Groups[1].Value);
+                            if (match.Groups[2].Value.Equals("Live", StringComparison.InvariantCultureIgnoreCase))
+                                includeLive = true;
+                            else
+                                includeDead = true;
+                        }
+                    }
+                    compositeBiomass["Propertys"] = null;
+                    compositeBiomass["OrganNames"] = new JArray(organNames.Distinct());
+                    compositeBiomass["IncludeLive"] = includeLive;
+                    compositeBiomass["IncludeDead"] = includeDead;
+                }
+            }
+        }
+
+        /// <summary>
         /// Changes to facilitate the autodocs refactor:
         /// - Rename Models.Axis to APSIM.Services.Graphing.Axis.
         /// - Copy the value of all folders' IncludeInDocumentation property
@@ -3544,7 +3708,7 @@
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion138(JObject root, string fileName)
+        private static void UpgradeToVersion142(JObject root, string fileName)
         {
             foreach (JObject graph in JsonUtilities.ChildrenRecursively(root, "Graph"))
             {

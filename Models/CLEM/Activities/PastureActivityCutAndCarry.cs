@@ -20,14 +20,18 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("Activity to perform cut and carry from a specified graze food store (i.e. native pasture paddock).")]
+    [Description("Perform cut and carry from a specified graze food store (i.e. native pasture paddock)")]
     [Version(1, 0, 1, "Included new ProportionOfAvailable option for moving pasture")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Pasture/CutAndCarry.htm")]
     public class PastureActivityCutAndCarry : CLEMRuminantActivityBase
     {
         [Link]
-        Clock Clock = null;
+        private Clock clock = null;
+
+        private GrazeFoodStoreType pasture;
+        private AnimalFoodStoreType foodstore;
+        private ActivityCutAndCarryLimiter limiter;
 
         /// <summary>
         /// Name of graze food store/paddock to cut and carry from
@@ -72,10 +76,6 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public double AmountAvailableForHarvest { get; set; }
 
-        private GrazeFoodStoreType pasture { get; set; }
-        private AnimalFoodStoreType foodstore { get; set; }
-        private ActivityCutAndCarryLimiter limiter;
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -94,10 +94,10 @@ namespace Models.CLEM.Activities
             this.AllocationStyle = ResourceAllocationStyle.Manual;
             
             // get pasture
-            pasture = Resources.GetResourceItem(this, PaddockName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+            pasture = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, PaddockName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // get food store
-            foodstore = Resources.GetResourceItem(this, AnimalFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as AnimalFoodStoreType;
+            foodstore = Resources.FindResourceType<AnimalFoodStore, AnimalFoodStoreType>(this, AnimalFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // locate a cut and carry limiter associarted with this event.
             limiter = LocateCutAndCarryLimiter(this);
@@ -160,7 +160,7 @@ namespace Models.CLEM.Activities
                 // reduce amount by limiter if present.
                 if (limiter != null)
                 {
-                    double canBeCarried = limiter.GetAmountAvailable(Clock.Today.Month);
+                    double canBeCarried = limiter.GetAmountAvailable(clock.Today.Month);
                     AmountHarvested = Math.Max(AmountHarvested, canBeCarried);
                     limiter.AddWeightCarried(AmountHarvested);
                 }
@@ -184,7 +184,7 @@ namespace Models.CLEM.Activities
                         AdditionalDetails = this,
                         Category = TransactionCategory,
                         Required = AmountHarvested,
-                        Resource = pasture,
+                        Resource = pasture
                     }
                 };
             }
@@ -278,30 +278,6 @@ namespace Models.CLEM.Activities
             return limiterFound;
         }
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
         #region descriptive summary
 
         /// <inheritdoc/>
@@ -330,25 +306,10 @@ namespace Models.CLEM.Activities
                 }
 
                 htmlWriter.Write("from ");
-                if (PaddockName == null || PaddockName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[PASTURE NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + PaddockName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(PaddockName, "Pasture not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write(" and carry to ");
-                if (AnimalFoodStoreName == null || AnimalFoodStoreName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[ANIMAL FOOD STORE NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + AnimalFoodStoreName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AnimalFoodStoreName, "Fodd store not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
-
                 return htmlWriter.ToString(); 
             }
         } 

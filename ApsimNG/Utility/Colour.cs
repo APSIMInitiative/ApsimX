@@ -79,9 +79,10 @@ namespace Utility
             return Color.FromArgb(colour.R, colour.G, colour.B);
         }
 
-        internal static Cairo.Color ToCairo(Gdk.Color colour)
+        internal static (int Red, int Green, int Blue) ToCairo(Gdk.Color colour)
         {
-            return ToCairo(FromGtk(colour));
+            var c = FromGtk(colour);
+            return (c.R, c.G, c.B);
         }
 
         internal static OxyColor ToOxy(Gdk.Color colour)

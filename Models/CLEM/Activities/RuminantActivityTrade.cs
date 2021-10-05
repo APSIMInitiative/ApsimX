@@ -12,8 +12,7 @@ using System.IO;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant herd management activity</summary>
-    /// <summary>This activity will maintain a breeding herd at the desired levels of age/breeders etc</summary>
+    /// <summary>Manage trade herd activity</summary>
     /// <version>1.0</version>
     /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
@@ -22,12 +21,17 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages trade individuals. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
+    [Description("Manage a herd of individuals as trade herd")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Includes improvements such as a relationship to define numbers purchased based on pasture biomass and allows placement of purchased individuals in a specified paddock")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantTrade.htm")]
     public class RuminantActivityTrade : CLEMRuminantActivityBase, IValidatableObject
     {
+        private string grazeStore = "";
+        private RuminantType herdToUse;
+        private Relationship numberToStock;
+        private GrazeFoodStoreType foodStore;
+
         /// <summary>
         /// Months kept before sale
         /// </summary>
@@ -51,12 +55,7 @@ namespace Models.CLEM.Activities
         [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string GrazeFoodStoreName { get; set; }
 
-        private string grazeStore = "";
-        private RuminantType herdToUse;
-        private Relationship numberToStock;
-        private GrazeFoodStoreType foodStore;
-
-        //TODO: decide how many to stock.
+        // TODO: decide how many to stock.
         // stocking rate for paddock
         // fixed number
 
@@ -124,37 +123,29 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(false, false);
 
             // get herd to add to 
-            herdToUse = Resources.GetResourceItem(this, typeof(RuminantHerd), this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
+            herdToUse = Resources.FindResourceType<RuminantHerd, RuminantType>(this, this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             if(!herdToUse.PricingAvailable())
-            {
                 Summary.WriteWarning(this, "No pricing is supplied for herd ["+PredictedHerdName+"] and so no pricing will be included with ["+this.Name+"]");
-            }
 
             // check GrazeFoodStoreExists
             grazeStore = "";
             if (GrazeFoodStoreName != null && !GrazeFoodStoreName.StartsWith("Not specified"))
-            {
                 grazeStore = GrazeFoodStoreName.Split('.').Last();
-            }
 
             // check for managed paddocks and warn if animals placed in yards.
             if (grazeStore == "")
             {
                 var ah = this.FindInScope<ActivitiesHolder>();
                 if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
-                {
                     Summary.WriteWarning(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
-                }
             }
 
             numberToStock = this.FindAllChildren<Relationship>().FirstOrDefault() as Relationship;
             if(numberToStock != null)
             {
                 if (grazeStore != "")
-                {
-                    foodStore = Resources.GetResourceItem(this, GrazeFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
-                }
+                    foodStore = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             }
         }
 
@@ -176,16 +167,14 @@ namespace Models.CLEM.Activities
                     RuminantTypeCohort purchasetype = purchaseSpecific.FindChild<RuminantTypeCohort>();
                     double number = purchasetype.Number;
                     if(numberToStock != null && foodStore != null)
-                    {
                         //NOTE: ensure calculation method in relationship is fixed values
                         number = Convert.ToInt32(numberToStock.SolveY(foodStore.TonnesPerHectare), CultureInfo.InvariantCulture);
-                    }
 
                     number *= purchaseSpecific.Proportion;
 
                     for (int i = 0; i < Math.Ceiling(number); i++)
                     {
-                        object ruminantBase = null;
+                        
 
                         double u1 = RandomNumberGenerator.Generator.NextDouble();
                         double u2 = RandomNumberGenerator.Generator.NextDouble();
@@ -193,16 +182,8 @@ namespace Models.CLEM.Activities
                                      Math.Sin(2.0 * Math.PI * u2);
                         double weight = purchasetype.Weight + purchasetype.WeightSD * randStdNormal;
 
-                        if (purchasetype.Gender == Sex.Male)
-                        {
-                            ruminantBase = new RuminantMale(purchasetype.Age, purchasetype.Gender, weight, herdToUse);
-                        }
-                        else
-                        {
-                            ruminantBase = new RuminantFemale(purchasetype.Age, purchasetype.Gender, weight, herdToUse);
-                        }
+                        var ruminant = Ruminant.Create(purchasetype.Sex, herdToUse, purchasetype.Age, weight);
 
-                        Ruminant ruminant = ruminantBase as Ruminant;
                         ruminant.ID = 0;
                         ruminant.Breed = purchaseSpecific.BreedParams.Name;
                         ruminant.HerdName = purchaseSpecific.BreedParams.Breed;
@@ -211,21 +192,13 @@ namespace Models.CLEM.Activities
                         ruminant.Location = grazeStore;
                         ruminant.PreviousWeight = ruminant.Weight;
 
-                        switch (purchasetype.Gender)
+                        if (ruminant is RuminantFemale female)
                         {
-                            case Sex.Male:
-                                RuminantMale ruminantMale = ruminantBase as RuminantMale;
-                                break;
-                            case Sex.Female:
-                                RuminantFemale ruminantFemale = ruminantBase as RuminantFemale;
-                                ruminantFemale.WeightAtConception = ruminant.Weight;
-                                ruminantFemale.NumberOfBirths = 0;
-                                break;
-                            default:
-                                break;
+                            female.WeightAtConception = ruminant.Weight;
+                            female.NumberOfBirths = 0;
                         }
 
-                        HerdResource.PurchaseIndividuals.Add(ruminantBase as Ruminant);
+                        HerdResource.PurchaseIndividuals.Add(ruminant);
                         this.Status = ActivityStatus.Success;
                     }
                 }
@@ -244,54 +217,6 @@ namespace Models.CLEM.Activities
                     this.Status = ActivityStatus.Success;
                 }
             }
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
         }
 
         #region descriptive summary
@@ -313,13 +238,10 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("Purchased individuals will be placed in ");
                 if (GrazeFoodStoreName == null || GrazeFoodStoreName == "")
-                {
                     htmlWriter.Write("<span class=\"resourcelink\">General yards</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreName + "</span>");
-                }
+
                 htmlWriter.Write("</div>");
 
                 Relationship numberRelationship = this.FindAllChildren<Relationship>().FirstOrDefault() as Relationship;
@@ -327,13 +249,10 @@ namespace Models.CLEM.Activities
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     if (GrazeFoodStoreName != null && !GrazeFoodStoreName.StartsWith("Not specified"))
-                    {
                         htmlWriter.Write("The relationship <span class=\"activitylink\">" + numberRelationship.Name + "</span> will be used to calculate numbers purchased based on pasture biomass (t\\ha)");
-                    }
                     else
-                    {
                         htmlWriter.Write("The number of individuals in the Ruminant Cohort supplied will be used as no paddock has been supplied for the relationship <span class=\"resourcelink\">" + numberRelationship.Name + "</span> will be used to calulate numbers purchased based on pasture biomass (t//ha)");
-                    }
+
                     htmlWriter.Write("</div>");
                 }
                 return htmlWriter.ToString(); 

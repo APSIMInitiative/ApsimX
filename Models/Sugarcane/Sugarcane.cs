@@ -344,7 +344,7 @@ namespace Models
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Zone))]
-    public class Sugarcane : Model, IPlant, ICanopy, IUptake
+    public class Sugarcane : ModelCollectionFromResource, IPlant, ICanopy, IUptake
     {
 
         #region Canopy interface
@@ -493,7 +493,7 @@ namespace Models
         public bool IsC4 { get { return true; } }
 
         /// <summary>Aboveground mass</summary>
-        public Biomass AboveGround { get { return new Biomass(); } }
+        public IBiomass AboveGround { get { return new Biomass(); } }
 
         //CONSTANTS
 

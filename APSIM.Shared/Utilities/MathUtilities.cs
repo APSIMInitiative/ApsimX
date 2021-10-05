@@ -194,9 +194,9 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Divide value1 by value2. On error, the value errVal will be returned.
         /// </summary>
-        public static double Divide(double value1, double value2, double errVal)
+        public static double Divide(double value1, double value2, double errVal, double tol = tolerance)
         {
-            return MathUtilities.FloatsAreEqual(value2, 0.0) ? errVal : value1 / value2;
+            return MathUtilities.FloatsAreEqual(value2, 0.0, tol) ? errVal : value1 / value2;
         }
 
         /// <summary>

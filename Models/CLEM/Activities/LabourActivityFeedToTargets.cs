@@ -13,17 +13,16 @@ using System.Threading.Tasks;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant feed activity</summary>
+    /// <summary>Labour feed to specified targets activity</summary>
     /// <summary>This activity provides food to people from the whole available human food store based on defined nutritional targets</summary>
     /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs human feeding based on nutritional quality and desired daily targets. It also includes sales of excess food.")]
+    [Description("Perform human (labour) feeding based on nutritional quality and desired daily targets. This also includes sales of excess food.")]
     [Version(1, 0, 2, "This version implements the latest approach as outlines in the help system. Suitable for Ethiopian food security project")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeedToTargets.htm")]
@@ -34,7 +33,7 @@ namespace Models.CLEM.Activities
         private FinanceType bankAccount;
 
         [Link]
-        Clock Clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Feed hired labour as well as household
@@ -101,7 +100,7 @@ namespace Models.CLEM.Activities
         {
             people = Resources.FindResourceGroup<Labour>();
             food = Resources.FindResourceGroup<HumanFoodStore>();
-            bankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as FinanceType;
+            bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
         }
 
         /// <inheritdoc/>
@@ -123,7 +122,7 @@ namespace Models.CLEM.Activities
                 return null;
             }
 
-            int daysInMonth = DateTime.DaysInMonth(Clock.Today.Year, Clock.Today.Month);
+            int daysInMonth = DateTime.DaysInMonth(clock.Today.Year, clock.Today.Month);
 
             // determine feed limits (max kg per AE per day * AEs * days)
             double intakeLimit = DailyIntakeLimit * aE * daysInMonth;
@@ -278,9 +277,7 @@ namespace Models.CLEM.Activities
                     intake += newIntake;
                     // update metrics
                     foreach (LabourActivityFeedTarget target in labourActivityFeedTargets)
-                    {
                         target.CurrentAchieved += newIntake * foodParcels[parcelIndex].FoodStore.ConversionFactor(target.Metric);
-                    }
                 }
                 else if (intake >= intakeLimit && labourActivityFeedTargets.Where(a => !a.TargetMet).Count() > 1)
                 {
@@ -291,9 +288,7 @@ namespace Models.CLEM.Activities
 
                 }
                 else
-                {
                     break;
-                }
                 parcelIndex++;
             }
 
@@ -340,18 +335,16 @@ namespace Models.CLEM.Activities
             // this means that other than a purchase from market (above) this activity doesn't need to worry about financial tranactions.
             if (intake < intakeLimit && (labourActivityFeedTargets.Where(a => !a.TargetMet).Count() > 0) && fundsAvailable > 0)
             {
-                ResourcesHolder resourcesHolder = Resources;
+                ResourcesHolder resourcesHolder = base.Resources;
                 // if market is present point to market to find the resource
                 if (Market != null)
-                {
                     resourcesHolder = Market.FindChild<ResourcesHolder>();
-                }
 
                 // don't worry about money anymore. The over request will be handled by the transmutation.
                 // move through specified purchase list
                 foreach (LabourActivityFeedTargetPurchase purchase in this.FindAllChildren<LabourActivityFeedTargetPurchase>())
                 {
-                    HumanFoodStoreType foodtype = resourcesHolder.GetResourceItem(this, purchase.FoodStoreName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as HumanFoodStoreType;
+                    HumanFoodStoreType foodtype = resourcesHolder.FindResourceType<HumanFoodStore, HumanFoodStoreType>(this, purchase.FoodStoreName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                     if (foodtype != null && (foodtype.TransmutationDefined & intake < intakeLimit))
                     {
                         LabourActivityFeedTarget targetUnfilled = labourActivityFeedTargets.Where(a => !a.TargetMet).FirstOrDefault();
@@ -362,9 +355,8 @@ namespace Models.CLEM.Activities
                             double amountneeded = metricneeded / foodtype.ConversionFactor(targetUnfilled.Metric);
 
                             if(intake + amountneeded > intakeLimit)
-                            {
                                 amountneeded = intakeLimit - intake;
-                            }
+
                             double amountfood = amountneeded / foodtype.EdibleProportion;
 
                             // update intake
@@ -373,7 +365,6 @@ namespace Models.CLEM.Activities
                             // find in requests or create a new one
                             ResourceRequest foodRequestFound = requests.Find(a => a.Resource == foodtype);
                             if (foodRequestFound is null)
-                            {
                                 requests.Add(new ResourceRequest()
                                 {
                                     Resource = foodtype,
@@ -384,7 +375,6 @@ namespace Models.CLEM.Activities
                                     ActivityModel = this,
                                     Category = TransactionCategory
                                 });
-                            }
                             else
                             {
                                 foodRequestFound.Required += amountneeded;
@@ -395,19 +385,18 @@ namespace Models.CLEM.Activities
                 }
                 // NOTE: proportions of purchased food are not modified if the sum does not add up to 1 or some of the food types are not available. 
             }
-
             return requests;
         }
 
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<LabourType> group = people?.Items.Where(a => a.Hired != true).ToList();
+            var group = people?.Items.Where(a => a.Hired != true);
             int head = 0;
             double adultEquivalents = 0;
             foreach (var child in FindAllChildren<LabourFeedGroup>())
             {
-                var subgroup = group.Filter(child).ToList();
+                var subgroup = child.Filter(group);
                 head += subgroup.Count();
                 adultEquivalents += subgroup.Sum(a => a.AdultEquivalent);
             }
@@ -422,18 +411,14 @@ namespace Models.CLEM.Activities
                 case LabourUnitType.perHead:
                     numberUnits = head / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
 
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perAE:
                     numberUnits = adultEquivalents / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
 
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
@@ -447,15 +432,9 @@ namespace Models.CLEM.Activities
         public override void AdjustResourcesNeededForActivity()
         {
             if(LabourLimitProportion < 1)
-            {
                 foreach (ResourceRequest item in ResourceRequestList)
-                {
                     if(item.ResourceType != typeof(LabourType))
-                    {
                         item.Provided *= LabourLimitProportion;
-                    }
-                }
-            }
 
             return;
         }
@@ -474,20 +453,14 @@ namespace Models.CLEM.Activities
                 if (requests.Any())
                 {
                     foreach (ResourceRequest request in requests)
-                    {
                         if (request.Provided > 0)
-                        {
                             // add to individual intake
                             foreach (LabourType labour in group)
-                            {
                                 labour.AddIntake(new LabourDietComponent()
                                 {
                                     AmountConsumed = request.Provided * (labour.AdultEquivalent / aE),
                                     FoodStore = request.Resource as HumanFoodStoreType
                                 });
-                            }
-                        }
-                    }
                 }
                 if (this.FindAllChildren<LabourActivityFeedTarget>().Where(a => !a.TargetMet).Any())
                     this.Status = ActivityStatus.Partial;
@@ -520,7 +493,7 @@ namespace Models.CLEM.Activities
 
                 for (int i = 1; i <= MonthsStorage; i++)
                 {
-                    DateTime month = Clock.Today.AddMonths(i);
+                    DateTime month = clock.Today.AddMonths(i);
                     daysInMonth[i] = DateTime.DaysInMonth(month.Year, month.Month);
                     target[i] = daysInMonth[i] * aE * feedTarget.TargetValue;
                 }
@@ -535,10 +508,8 @@ namespace Models.CLEM.Activities
                         foreach (HumanFoodStorePool pool in foodStore.Pools.OrderBy(a => ((foodStore.UseByAge == 0) ? MonthsStorage : a.Age)))
                         {
                             if (foodStore.UseByAge != 0 && pool.Age == foodStore.UseByAge)
-                            {
                                 // don't sell food expiring this month as spoiled
                                 amountStored += pool.Amount;
-                            }
                             else
                             {
                                 int currentMonth = ((foodStore.UseByAge == 0) ? MonthsStorage : foodStore.UseByAge - pool.Age + 1);
@@ -575,15 +546,12 @@ namespace Models.CLEM.Activities
                                 PacketSize = 1
                             }; 
                             if(foodStore.PricingExists(PurchaseOrSalePricingStyleType.Purchase))
-                            {
                                 priceToUse = foodStore.Price(PurchaseOrSalePricingStyleType.Purchase);
-                            }
 
                             double units = amountSold / priceToUse.PacketSize;
                             if (priceToUse.UseWholePackets)
-                            {
                                 units = Math.Truncate(units);
-                            }
+
                             // remove resource
                             ResourceRequest purchaseRequest = new ResourceRequest
                             {
@@ -616,30 +584,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
         #region validation
 
         /// <summary>
@@ -652,7 +596,7 @@ namespace Models.CLEM.Activities
             var results = new List<ValidationResult>();
 
             // if finances and not account provided throw error
-            if (SellExcess && Resources.GetResourceGroupByType(typeof(Finance)) != null)
+            if (SellExcess && Resources.FindResource<Finance>() != null)
             {
                 if (bankAccount is null)
                 {
@@ -700,9 +644,8 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write(DailyIntakeLimit.ToString("#,##0.##"));
                 }
                 else
-                {
                     htmlWriter.Write("<span class=\"errorlink\">NOT SET");
-                }
+
                 htmlWriter.Write("</span> kg per day");
                 if (DailyIntakeOtherSources > 0)
                 {

@@ -21,11 +21,13 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity will arange payment of a ruminant herd expense such as dips and drenches based on the current herd filtering.")]
+    [Description("Arrange payment of a ruminant herd expense with specified style")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantHerdCost.htm")]
     public class RuminantActivityHerdCost : CLEMRuminantActivityBase, IValidatableObject
     {
+        private FinanceType bankAccount;
+
         /// <summary>
         /// Amount payable
         /// </summary>
@@ -96,6 +98,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(true, true);
+            bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning);
         }
 
         /// <summary>
@@ -140,6 +143,7 @@ namespace Models.CLEM.Activities
                     {
                         AllowTransmutation = false,
                         Required = amountNeeded,
+                        Resource = bankAccount,
                         ResourceType = typeof(Finance),
                         ResourceTypeName = this.AccountName.Split('.').Last(),
                         ActivityModel = this,
@@ -149,12 +153,6 @@ namespace Models.CLEM.Activities
                 };
             }
             return resourcesNeeded;
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            return;
         }
 
         /// <inheritdoc/>
@@ -176,17 +174,14 @@ namespace Models.CLEM.Activities
                     case LabourUnitType.perHead:
                         numberUnits = head / requirement.UnitSize;
                         if (requirement.WholeUnitBlocks)
-                        {
                             numberUnits = Math.Ceiling(numberUnits);
-                        }
+
                         daysNeeded = numberUnits * requirement.LabourPerUnit;
                         break;
                     case LabourUnitType.perAE:
                         numberUnits = animalEquivalents / requirement.UnitSize;
                         if (requirement.WholeUnitBlocks)
-                        {
                             numberUnits = Math.Ceiling(numberUnits);
-                        }
 
                         daysNeeded = numberUnits * requirement.LabourPerUnit;
                         break;
@@ -195,36 +190,6 @@ namespace Models.CLEM.Activities
                 } 
             }
             return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
         }
 
         #region descriptive summary
@@ -237,24 +202,10 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Pay ");
                 htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> ");
                 htmlWriter.Write("<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> from ");
-                if (AccountName == null || AccountName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[ACCOUNT NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + AccountName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
-                if (Category != null && Category != "")
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">" + Category + "</span> ");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span> ");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not set"));
                 htmlWriter.Write(" for all transactions</div>");
                 return htmlWriter.ToString(); 
             }

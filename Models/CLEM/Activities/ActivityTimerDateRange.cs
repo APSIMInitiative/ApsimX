@@ -1,19 +1,18 @@
 ﻿using Models.Core;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core.Attributes;
 using System.IO;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Activity timer based on monthly interval
+    /// Activity timer based on date range
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -22,15 +21,15 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
-    [Description("This activity timer defines a date range in which to perform activities")]
+    [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
+    [ValidParent(ParentType = typeof(ReportRuminantHerd))]
+    [Description("This timer defines a date range in which to perform activities")]
     [HelpUri(@"Content/Features/Timers/DateRange.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerDateRange : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
-        [JsonIgnore]
         [Link]
-        [NonSerialized]
-        Clock Clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Start date of period to perform activities
@@ -76,11 +75,11 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                if (Clock is null)
+                if (clock is null)
                 {
                     return true;
                 }
-                bool inrange = IsMonthInRange(Clock.Today);
+                bool inrange = IsMonthInRange(clock.Today);
                 if(inrange)
                 {
                     // report activity performed.
@@ -112,9 +111,7 @@ namespace Models.CLEM.Activities
 
             bool inrange = ((date >= startDate) && (date <= endDate));
             if (Invert)
-            {
                 inrange = !inrange;
-            }
             return inrange;
         }
 
@@ -137,14 +134,11 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"filter\">");
                 string invertString = "";
                 if (Invert)
-                {
                     invertString = "when <b>NOT</b> ";
-                }
+
                 htmlWriter.Write("Perform " + invertString + "between ");
                 if (startDate.Year == 1)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                }
                 else
                 {
                     htmlWriter.Write("<span class=\"setvalueextra\">");
@@ -153,9 +147,7 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write(" and ");
                 if (EndDate <= StartDate)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">[must be > StartDate]");
-                }
                 else
                 {
                     htmlWriter.Write("<span class=\"setvalueextra\">");
@@ -163,14 +155,10 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write("</span>");
                 if (StartDate != startDate || EndDate != endDate)
-                {
                     htmlWriter.Write(" (modified for monthly timestep)");
-                }
                 htmlWriter.Write("</div>");
                 if (!this.Enabled)
-                {
                     htmlWriter.Write(" - DISABLED!");
-                }
                 return htmlWriter.ToString(); 
             }
         }
@@ -188,9 +176,7 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("<div class=\"filtername\">");
                 if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                {
                     htmlWriter.Write(this.Name);
-                }
                 htmlWriter.Write($"</div>");
                 htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
                 return htmlWriter.ToString(); 

@@ -21,13 +21,6 @@ namespace Models.CLEM.Resources
     [HelpUri(@"Content/Features/Resources/Ruminant/RuminantAdvancedConception.htm")]
     public class RuminantConceptionAdvanced: CLEMModel, IConceptionModel
     {
-        /// <summary>
-        /// constructor
-        /// </summary>
-        public RuminantConceptionAdvanced()
-        {
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
-        }
 
         /// <summary>
         /// Conception rate coefficient of breeder
@@ -49,6 +42,14 @@ namespace Models.CLEM.Resources
         public double[] ConceptionRateAsymptote { get; set; }
 
         /// <summary>
+        /// constructor
+        /// </summary>
+        public RuminantConceptionAdvanced()
+        {
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubResourceLevel2;
+        }
+
+        /// <summary>
         /// Calculate conception rate for a female
         /// </summary>
         /// <param name="female">Female to calculate conception rate for</param>
@@ -66,10 +67,8 @@ namespace Models.CLEM.Resources
                         // first mating
                         //if (female.BreedParams.MinimumAge1stMating >= 24)
                         if (female.Age >= 24)
-                        {
                             // 1st mated at 24 months or older
                             rate = ConceptionRateAsymptote[1] / (1 + Math.Exp(ConceptionRateCoefficent[1] * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept[1]));
-                        }
                         //else if (female.BreedParams.MinimumAge1stMating >= 12)
                         else if (female.Age >= 12)
                         {
@@ -81,10 +80,8 @@ namespace Models.CLEM.Resources
                             rate = rate12 + ((rate24 - rate12) * propOfYear);
                         }
                         else
-                        {
                             // first mating < 12 months old
                             rate = ConceptionRateAsymptote[0] / (1 + Math.Exp(ConceptionRateCoefficent[0] * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept[0]));
-                        }
                         break;
                     case 1:
                         // second offspring mother
@@ -93,9 +90,7 @@ namespace Models.CLEM.Resources
                     default:
                         // females who have had more than two births (twins should count as one birth)
                         if (female.WeightAtConception > female.BreedParams.CriticalCowWeight * female.StandardReferenceWeight)
-                        {
                             rate = ConceptionRateAsymptote[3] / (1 + Math.Exp(ConceptionRateCoefficent[3] * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept[3]));
-                        }
                         break;
                 }
             }

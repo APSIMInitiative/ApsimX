@@ -8,8 +8,7 @@ using System.Collections.Generic;
 namespace Models.PMF
 {
     /// <summary>
-    /// This is the collection of functions for calculating the demands for
-    /// each of the biomass pools (Structural, Metabolic, and Storage).
+    /// This class holds the functions for calculating the absolute demands for each biomass fraction. 
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IOrgan))]

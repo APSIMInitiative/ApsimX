@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs the growth and aging of all ruminants. Only one instance of this activity is permitted.")]
+    [Description("Performs growth and aging of all ruminants. Only one instance of this activity is permitted")]
     [Version(1, 0, 3, "Allows selection of methane store for emissions")]
     [Version(1, 0, 2, "Improved reporting of milk status")]
     [Version(1, 0, 1, "")]
@@ -32,7 +32,7 @@ namespace Models.CLEM.Activities
     public class RuminantActivityGrow : CLEMActivityBase
     {
         [Link]
-        private readonly Clock Clock = null;
+        private Clock clock = null;
 
         private GreenhouseGasesType methaneEmissions;
         private ProductStoreTypeManure manureStore;
@@ -77,14 +77,10 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             if(MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
-            {
-                methaneEmissions = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
-            }
+                methaneEmissions = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
             else
-            {
-                methaneEmissions = Resources.GetResourceItem(this, MethaneStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
-            }
-            manureStore = Resources.GetResourceItem(this, typeof(ProductStore), "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as ProductStoreTypeManure;
+                methaneEmissions = Resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, MethaneStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
             ruminantHerd = Resources.FindResourceGroup<RuminantHerd>();
         }
 
@@ -101,18 +97,14 @@ namespace Models.CLEM.Activities
             {
                 double weaningAge = ind.BreedParams.NaturalWeaningAge;
                 if(weaningAge == 0)
-                {
                     weaningAge = ind.BreedParams.GestationLength;
-                }
 
                 if (ind.Age >= weaningAge)
                 {
                     ind.Wean(true, "Natural");
                     if (ind.Mother != null)
-                    {
                         // report conception status changed when offspring weans.
-                        ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, Clock.Today));
-                    }
+                        ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, clock.Today));
                 }
             }
         }
@@ -128,8 +120,6 @@ namespace Models.CLEM.Activities
             // Calculate potential intake and reset stores
             // Order age descending so breeder females calculate milkproduction before suckings grow
 
-            DateTime start = DateTime.Now;
-
             foreach (var ind in herd.GroupBy(a => a.Weaned).OrderByDescending(a => a.Key))
             {
                 foreach (var indi in ind)
@@ -142,8 +132,6 @@ namespace Models.CLEM.Activities
                     CalculatePotentialIntake(indi);
                 }
             }
-
-            var diff = DateTime.Now - start;
         }
 
         private void CalculatePotentialIntake(Ruminant ind)
@@ -156,9 +144,7 @@ namespace Models.CLEM.Activities
             double liveWeightForIntake = ind.NormalisedAnimalWeight;
             // now performed at allocation of weight in Ruminant
             if (ind.HighWeight < ind.NormalisedAnimalWeight)
-            {
                 liveWeightForIntake = ind.HighWeight;
-            }
 
             // Calculate potential intake based on current weight compared to SRW and previous highest weight
             double potentialIntake = 0;
@@ -177,9 +163,7 @@ namespace Models.CLEM.Activities
 
                 // if milk supply low, calf will subsitute forage up to a specified % of bodyweight (R_C60)
                 if (ind.MilkIntake < ind.Weight * ind.BreedParams.MilkLWTFodderSubstitutionProportion)
-                {
                     potentialIntake = Math.Max(0.0, ind.Weight * ind.BreedParams.MaxJuvenileIntake - ind.MilkIntake * ind.BreedParams.ProportionalDiscountDueToMilk);
-                }
 
                 ind.MilkIntake *= 30.4;
             }
@@ -199,7 +183,7 @@ namespace Models.CLEM.Activities
                     potentialIntake = ind.BreedParams.IntakeCoefficient * liveWeightForIntake * (ind.BreedParams.IntakeIntercept - liveWeightForIntake / standardReferenceWeight);
                 }
 
-                if (ind.Gender == Sex.Female)
+                if (ind.Sex == Sex.Female)
                 {
                     RuminantFemale femaleind = ind as RuminantFemale;
                     // Increase potential intake for lactating breeder
@@ -262,13 +246,9 @@ namespace Models.CLEM.Activities
             // if milking is taking place use the non-suckling curve for duration of lactation
             // otherwise use the suckling curve where there is a larger drop off in milk production
             if (ind.SucklingOffspringList.Count() == 0)
-            {
                 milkCurve = ind.BreedParams.MilkCurveNonSuckling;
-            }
             else // no milking
-            {
                 milkCurve = ind.BreedParams.MilkCurveSuckling;
-            }
             ind.MilkProductionPotential = ind.BreedParams.MilkPeakYield * ind.Weight / ind.NormalisedAnimalWeight * (Math.Pow(((milkTime + ind.BreedParams.MilkOffsetDay) / ind.BreedParams.MilkPeakDay), milkCurve)) * Math.Exp(milkCurve * (1 - (milkTime + ind.BreedParams.MilkOffsetDay) / ind.BreedParams.MilkPeakDay));
             ind.MilkProductionPotential = Math.Max(ind.MilkProductionPotential, 0.0);
             // Reference: Potential milk prodn, 3.2 MJ/kg milk - Jouven et al 2008
@@ -276,9 +256,7 @@ namespace Models.CLEM.Activities
             // adjust last time step's energy balance
             double adjustedEnergyBalance = ind.EnergyBalance;
             if (adjustedEnergyBalance < (-0.5936 / 0.322 * energyMilk))
-            {
                 adjustedEnergyBalance = (-0.5936 / 0.322 * energyMilk);
-            }
 
             // set milk production in lactating females for consumption.
             ind.MilkProduction = Math.Max(0.0, ind.MilkProductionPotential * (0.5936 + 0.322 * adjustedEnergyBalance / energyMilk));
@@ -297,7 +275,7 @@ namespace Models.CLEM.Activities
         {
             List<Ruminant> herd = ruminantHerd.Herd;
 
-            int cmonth = Clock.Today.Month;
+            int cmonth = clock.Today.Month;
 
             // grow individuals
 
@@ -317,9 +295,7 @@ namespace Models.CLEM.Activities
                     {
                         // check that they had some food
                         if(ind.Intake == 0)
-                        {
                             unfed++;
-                        }
 
                         // calculate protein concentration
 
@@ -343,9 +319,7 @@ namespace Models.CLEM.Activities
 
                         // prevent future divide by zero issues.
                         if (crudeProteinSupply == 0.0)
-                        {
                             crudeProteinSupply = 0.001;
-                        }
 
                         if (crudeProteinSupply < crudeProteinRequired)
                         {
@@ -376,9 +350,7 @@ namespace Models.CLEM.Activities
                         // no potential * 1.2 as potential has been fixed based on suckling individuals.
 
                         if (ind.MilkIntake + ind.Intake  <= 0)
-                        {
                             unfedcalves++;
-                        }
                     }
 
                     // TODO: nabsa adjusts potential intake for digestability of fodder here.
@@ -399,22 +371,14 @@ namespace Models.CLEM.Activities
                 if (unfed > 0)
                 {
                     string warn = $"individuals of [r={breed}] not fed";
-                    if (!Warnings.Exists(warn))
-                    {
-                        string warnfull = $"Some individuals of [r={breed}] were not fed in some months (e.g. [{unfed}] individuals in [{Clock.Today.Month}/{Clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
-                        Summary.WriteWarning(this, warnfull);
-                        Warnings.Add(warn);
-                    }
+                    string warnfull = $"Some individuals of [r={breed}] were not fed in some months (e.g. [{unfed}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
+                    Warnings.CheckAndWrite(warn, Summary, this, warnfull);
                 }
                 if (unfedcalves > 0)
                 {
                     string warn = $"calves of [r={breed}] not fed";
-                    if (!Warnings.Exists(warn))
-                    {
-                        string warnfull = $"Some calves of [r={breed}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{Clock.Today.Month}/{Clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
-                        Summary.WriteWarning(this, warnfull);
-                        Warnings.Add(warn);
-                    }
+                    string warnfull = $"Some calves of [r={breed}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
+                    Warnings.CheckAndWrite(warn, Summary, this, warnfull);
                 }
 
                 if (methaneEmissions != null)
@@ -457,13 +421,10 @@ namespace Models.CLEM.Activities
             double intakeDaily = ind.Intake / 30.4;
 
             // Sme 1 for females and castrates
-            // TODO: castrates available but not implemented
             double sme = 1;
             // Sme 1.15 for all non-castrated males.
-            if (ind.Weaned && ind.Gender == Sex.Male && (ind as RuminantMale).IsCastrated == false)
-            {
+            if (ind.Weaned && ind.Sex == Sex.Male && (ind as RuminantMale).IsCastrated == false)
                 sme = 1.15;
-            }
 
             double energyDiet = EnergyGross * ind.DietDryMatterDigestibility / 100.0;
             // Reference: Nutrient Requirements of domesticated ruminants (p7)
@@ -484,9 +445,7 @@ namespace Models.CLEM.Activities
                 ind.MilkIntake = Math.Min(potentialMilkIntake, ind.MothersMilkProductionAvailable);
 
                 if (ind.Mother != null)
-                {
                     ind.Mother.TakeMilk(ind.MilkIntake * 30.4, MilkUseReason.Suckling);
-                }
 
                 // Below now uses actual intake received rather than assume all potential intake is eaten
                 double kml = 1;
@@ -511,14 +470,11 @@ namespace Models.CLEM.Activities
 
                 double feedingValue;
                 if (ind.EnergyBalance > 0)
-                {
                     feedingValue = 2 * 0.7 * ind.EnergyBalance / (kgl * energyMaintenance) - 1;
-                }
                 else
-                {
                     //(from Hirata model)
                     feedingValue = 2 * ind.EnergyBalance / (0.85 * energyMaintenance) - 1;
-                }
+
                 double energyEmptyBodyGain = ind.BreedParams.GrowthEnergyIntercept1 + feedingValue + (ind.BreedParams.GrowthEnergyIntercept2 - feedingValue) / (1 + Math.Exp(-6 * (ind.Weight / ind.NormalisedAnimalWeight - 0.4)));
 
                 energyPredictedBodyMassChange = ind.BreedParams.GrowthEfficiency * 0.7 * ind.EnergyBalance / energyEmptyBodyGain;
@@ -528,7 +484,7 @@ namespace Models.CLEM.Activities
                 double energyMilk = 0;
                 double energyFetus = 0;
 
-                if (ind.Gender == Sex.Female)
+                if (ind.Sex == Sex.Female)
                 {
                     RuminantFemale femaleind = ind as RuminantFemale;
 
@@ -574,27 +530,20 @@ namespace Models.CLEM.Activities
 
                 // Reference: Feeding_value = Ajustment for rate of loss or gain (SCA p.43, ? different from Hirata model)
                 if (ind.EnergyBalance > 0)
-                {
                     feedingValue = 2 * ((kg * ind.EnergyBalance) / (km * energyMaintenance) - 1);
-                }
                 else
-                {
                     feedingValue = 2 * (ind.EnergyBalance / (0.8 * energyMaintenance) - 1);  //(from Hirata model)
-                }
+
                 double weightToReferenceRatio = Math.Min(1.0, ind.Weight / ind.StandardReferenceWeight);
 
                 // Reference:  MJ of Energy required per kg Empty body gain (SCA p.43)
                 double energyEmptyBodyGain = ind.BreedParams.GrowthEnergyIntercept1 + feedingValue + (ind.BreedParams.GrowthEnergyIntercept1 - feedingValue) / (1 + Math.Exp(-6 * (weightToReferenceRatio - 0.4)));
                 // Determine Empty body change from Eebg and Ebal, and increase by 9% for LW change
                 if (ind.EnergyBalance > 0)
-                {
                     energyPredictedBodyMassChange = ind.BreedParams.GrowthEfficiency * kg * ind.EnergyBalance / energyEmptyBodyGain;
-                }
                 else
-                {
                     // Reference: from Hirata model
                     energyPredictedBodyMassChange = ind.BreedParams.GrowthEfficiency * km * ind.EnergyBalance / (0.8 * energyEmptyBodyGain);
-                }
             }
             energyPredictedBodyMassChange *= 30.4;  // Convert to monthly
 
@@ -630,9 +579,7 @@ namespace Models.CLEM.Activities
         {
             // grow all individuals
             foreach (Ruminant ind in ruminantHerd.Herd)
-            {
                 ind.IncrementAge();
-            }
         }
 
         /// <summary>Function to determine which animlas have died and remove from the population</summary>
@@ -666,27 +613,21 @@ namespace Models.CLEM.Activities
                 {
                     mortalityRate = 0;
                     if((ind.Mother == null) || (ind.Mother.Weight < ind.BreedParams.CriticalCowWeight * ind.StandardReferenceWeight))
-                    {
                         // if no mother assigned or mother's weight is < CriticalCowWeight * SFR
                         mortalityRate = ind.BreedParams.JuvenileMortalityMaximum;
-                    }
                     else
-                    {
                         // if mother's weight >= criticalCowWeight * SFR
                         mortalityRate = Math.Exp(-Math.Pow(ind.BreedParams.JuvenileMortalityCoefficient * (ind.Mother.Weight / ind.Mother.NormalisedAnimalWeight), ind.BreedParams.JuvenileMortalityExponent));
-                    }
+
                     mortalityRate += ind.BreedParams.MortalityBase;
                     mortalityRate = Math.Min(mortalityRate, ind.BreedParams.JuvenileMortalityMaximum);
                 }
                 else
-                {
                     mortalityRate = 1 - (1 - ind.BreedParams.MortalityBase) * (1 - Math.Exp(Math.Pow(-(ind.BreedParams.MortalityCoefficient * (ind.Weight / ind.NormalisedAnimalWeight - ind.BreedParams.MortalityIntercept)), ind.BreedParams.MortalityExponent)));
-                }
+
                 // convert mortality from annual (calculated) to monthly (applied).
                 if (RandomNumberGenerator.Generator.NextDouble() <= (mortalityRate/12))
-                {
                     ind.Died = true;
-                }
             }
 
             died = herd.Where(a => a.Died).ToList();
@@ -711,9 +652,7 @@ namespace Models.CLEM.Activities
                                 wetMothersAssigned++;
                             }
                             else
-                            {
                                 break;
-                            }
                         }
 
                     }
@@ -721,54 +660,6 @@ namespace Models.CLEM.Activities
             }
 
             ruminantHerd.RemoveRuminant(died, this);
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            return; ;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
         }
 
         #region descriptive summary
@@ -781,25 +672,16 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\">The gross energy content of forage is ");
 
                 if (EnergyGross == 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"setvalue\">" + EnergyGross.ToString() + "</span>");
-                }
                 htmlWriter.Write(" MJ/kg dry matter</div>");
-
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");
                 if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
-                {
                     htmlWriter.Write("<span class=\"resourcelink\">GreenhouseGases.Methane</span> if present");
-                }
                 else
-                {
                     htmlWriter.Write($"<span class=\"resourcelink\">{MethaneStoreName}</span>");
-                }
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 
             }
