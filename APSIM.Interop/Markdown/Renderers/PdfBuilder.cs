@@ -867,6 +867,7 @@ namespace APSIM.Interop.Markdown.Renderers
             result.Add(new GraphTagRenderer());
             result.Add(new GraphPageTagRenderer());
             result.Add(new SectionTagRenderer());
+            result.Add(new MapTagRenderer());
             return result;
         }
 
