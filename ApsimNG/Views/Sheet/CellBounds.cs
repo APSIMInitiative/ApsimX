@@ -67,7 +67,7 @@ namespace UserInterface.Views
         /// <returns></returns>
         public Rectangle ToRectangle()
         {
-            return new Rectangle(Left, Right, Width, Height);
+            return new Rectangle(Left, Top, Width, Height);
         }
 
         /// <summary>
