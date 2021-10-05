@@ -3759,7 +3759,8 @@
         }
 
         /// <summary>
-        /// Update the SoilNitrogen component to be a Nutrient
+        /// Change the namespace of the Coordinate type.
+        /// Change the namespace of the DirectedGraph type.
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
@@ -3770,6 +3771,22 @@
                 JObject center = map["Center"] as JObject;
                 if (center != null)
                     center["$type"] = "Models.Mapping.Coordinate, Models";
+            }
+            foreach (JObject nutrient in JsonUtilities.ChildrenRecursively(root, "Nutrient"))
+            {
+                JToken graph = nutrient["DirectedGraphInfo"];
+                if (graph != null)
+                {
+                    graph["$type"] = "APSIM.Services.Graphing.DirectedGraph, APSIM.Services";
+                    JArray nodes = graph["Nodes"] as JArray;
+                    if (nodes != null)
+                        foreach (JToken node in nodes)
+                            node["$type"] = "APSIM.Services.Graphing.Node, APSIM.Services";
+                    JArray arcs = graph["Arcs"] as JArray;
+                    if (arcs != null)
+                        foreach (JToken arc in arcs)
+                            arc["$type"] = "APSIM.Services.Graphing.Arc, APSIM.Services";
+                }
             }
         }
 

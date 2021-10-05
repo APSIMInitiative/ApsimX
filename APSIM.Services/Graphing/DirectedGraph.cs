@@ -1,7 +1,5 @@
-﻿namespace Models
+﻿namespace APSIM.Services.Graphing
 {
-    using Models.Core;
-    using Models.Interfaces;
     using System.Collections.Generic;
     using System.Drawing;
     using System;
@@ -117,7 +115,7 @@
 
     /// <summary>Encapsulates a directed graph</summary>
     [Serializable]
-    public class DirectedGraph : AutoDocumentation.ITag
+    public class DirectedGraph
     {
         private Point nextNodePosition = new Point(50, 50);
         private List<Node> nodesToKeep = new List<Node>();

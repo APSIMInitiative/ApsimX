@@ -1,4 +1,4 @@
-﻿using Models;
+﻿using APSIM.Services.Graphing;
 
 namespace Models.Interfaces
 {

@@ -5,7 +5,6 @@
     using EventArguments;
     using EventArguments.DirectedGraph;
     using Gtk;
-    using Models;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
@@ -14,6 +13,7 @@
     using Color = System.Drawing.Color;
     using Point = System.Drawing.Point;
     using APSIM.Interop.Visualisation;
+    using APSIM.Services.Graphing;
 
 #if NETCOREAPP
     using ExposeEventArgs = Gtk.DrawnArgs;

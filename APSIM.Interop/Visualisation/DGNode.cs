@@ -1,9 +1,9 @@
 ﻿namespace APSIM.Interop.Visualisation
 {
-    using Models;
     using System;
     using APSIM.Interop.Drawing;
     using System.Drawing;
+    using APSIM.Services.Graphing;
 
     /// <summary>
     /// Encapsulates a node on a directed graph. The 'Location' property in the
