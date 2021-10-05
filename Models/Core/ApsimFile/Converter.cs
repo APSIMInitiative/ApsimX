@@ -24,7 +24,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 142; } }
+        public static int LatestVersion { get { return 143; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3755,6 +3755,21 @@
                     return true;
                 else
                     return ShouldShowInDocs(parent);
+            }
+        }
+
+        /// <summary>
+        /// Update the SoilNitrogen component to be a Nutrient
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion143(JObject root, string fileName)
+        {
+            foreach (JObject map in JsonUtilities.ChildrenRecursively(root, "Map"))
+            {
+                JObject center = map["Center"] as JObject;
+                if (center != null)
+                    center["$type"] = "Models.Mapping.Coordinate, Models";
             }
         }
 
