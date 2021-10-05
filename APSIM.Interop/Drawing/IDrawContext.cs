@@ -105,7 +105,7 @@ namespace APSIM.Interop.Drawing
         /// </summary>
         void ResetClip();
 
-        void DrawFilledRectangle(int left, int top, int v1, int v2);
+        void DrawFilledRectangle(int left, int top, int width, int height);
         void DrawFilledRectangle();
 
         /// <summary>

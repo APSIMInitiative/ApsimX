@@ -18,6 +18,7 @@
     <PackageReference Include="SharpMap.Layers.BruTile" Version="1.2.0" />
     <PackageReference Include="ProjNET4GeoAPI" Version="1.4.1" />
     <EmbeddedResource Include="Resources\**" />
+    <PackageReference Include="SkiaSharp" Version="2.88.0-preview.145" />
   </ItemGroup>
 
   <!-- .NET Core-specific references -->
