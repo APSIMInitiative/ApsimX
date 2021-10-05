@@ -25,9 +25,7 @@ namespace APSIM.Interop.Documentation.Renderers
             int resolution = (int)Math.Min(width, height);
 
             document.StartNewParagraph();
-            var image = map.ToImage(resolution);
-            image.Save("/home/drew/code/ApsimX/map.png");
-            document.AppendImage(image);
+            document.AppendImage(map.ToImage(resolution));
             document.StartNewParagraph();
         }
     }
