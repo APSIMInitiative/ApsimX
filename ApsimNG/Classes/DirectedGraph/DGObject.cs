@@ -2,6 +2,7 @@
 {
     using Cairo;
     using Color = System.Drawing.Color;
+    using Point = System.Drawing.Point;
     using System;
     using APSIM.Interop.Drawing;
 
@@ -26,7 +27,7 @@
         /// <summary>
         /// Background colour.
         /// </summary>
-        public Color Colour { get; set; }
+        public Color Colour { get; set; } = Color.Black;
 
         /// <summary>
         /// Default outline colour if none is specified.
@@ -39,9 +40,11 @@
         public static Color DefaultBackgroundColour { get; set; }
 
         /// <summary>Constructor</summary>
-        public DGObject()
+        public DGObject(string name, Color colour, Point location)
         {
-            Colour = Color.Black;
+            Name = name;
+            Colour = colour;
+            Location = new PointD(location.X, location.Y);
         }
 
         /// <summary>Paint on the graphics context</summary>

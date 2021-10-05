@@ -35,11 +35,8 @@
         private bool transparent;
 
         /// <summary>Constructor</summary>
-        public DGNode(Node directedGraphNode)
+        public DGNode(Node directedGraphNode) : base(directedGraphNode.Name, directedGraphNode.Colour, directedGraphNode.Location)
         {
-            Name = directedGraphNode.Name;
-            Location = new PointD(directedGraphNode.Location.X, directedGraphNode.Location.Y);
-            Colour = directedGraphNode.Colour;
             ForegroundColour = directedGraphNode.OutlineColour;
             transparent = directedGraphNode.Transparent;
         }

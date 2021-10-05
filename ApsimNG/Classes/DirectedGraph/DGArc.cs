@@ -24,13 +24,10 @@
         /// <summary>Constrcutor</summary>
         /// <param name="directedGraphArc">The arc information to use</param>
         /// <param name="allNodes">A list of all nodes</param>
-        public DGArc(Arc directedGraphArc, List<DGNode> allNodes)
+        public DGArc(Arc directedGraphArc, List<DGNode> allNodes) : base(directedGraphArc.Name, directedGraphArc.Colour, directedGraphArc.Location)
         {
-            Location = new PointD(directedGraphArc.Location.X, directedGraphArc.Location.Y);
             Source = allNodes.Find(node => node.Name == directedGraphArc.SourceName);
             Target = allNodes.Find(node => node.Name == directedGraphArc.DestinationName);
-            Colour = directedGraphArc.Colour;
-            Name = directedGraphArc.Name;
         }
 
         /// <summary>Get a DirectedGraph arc from this instance.</summary>
