@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ApsimNG.Classes.DirectedGraph
+namespace APSIM.Interop.Visualisation
 {
     class BezierCurve
     {

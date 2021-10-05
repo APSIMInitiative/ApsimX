@@ -1,13 +1,11 @@
-﻿namespace ApsimNG.Classes.DirectedGraph
+﻿namespace APSIM.Interop.Visualisation
 {
-    using Cairo;
     using Models;
     using System;
     using System.Collections.Generic;
-    using UserInterface.Views;
-    using Utility;
     using APSIM.Interop.Drawing;
-    using Color = System.Drawing.Color;
+    using System.Drawing;
+    using System.Linq;
 
     /// <summary>
     /// An arc on a directed graph.
@@ -18,16 +16,16 @@
         public DGNode Source { get; private set; }= null;
         public DGNode Target { get; private set; }= null;
         private BezierCurve bezCurve = new BezierCurve();
-        private List<PointD> bezPoints = new List<PointD>();
+        private List<Point> bezPoints = new List<Point>();
         private double[] bezParameters = new double[8];
 
         /// <summary>Constrcutor</summary>
         /// <param name="directedGraphArc">The arc information to use</param>
         /// <param name="allNodes">A list of all nodes</param>
-        public DGArc(Arc directedGraphArc, List<DGNode> allNodes) : base(directedGraphArc.Name, directedGraphArc.Colour, directedGraphArc.Location)
+        public DGArc(Arc directedGraphArc, IEnumerable<DGNode> allNodes) : base(directedGraphArc.Name, directedGraphArc.Colour, directedGraphArc.Location)
         {
-            Source = allNodes.Find(node => node.Name == directedGraphArc.SourceName);
-            Target = allNodes.Find(node => node.Name == directedGraphArc.DestinationName);
+            Source = allNodes.FirstOrDefault(node => node.Name == directedGraphArc.SourceName);
+            Target = allNodes.FirstOrDefault(node => node.Name == directedGraphArc.DestinationName);
         }
 
         /// <summary>Get a DirectedGraph arc from this instance.</summary>
@@ -64,8 +62,8 @@
                     DrawCentredText(context, Name, Location);
 
                 context.MoveTo(bezPoints[0].X, bezPoints[0].Y);
-                PointD controlPoint = new PointD(Location.X, Location.Y);
-                PointD bezPoint = bezPoints[bezPoints.Count - 1];
+                Point controlPoint = new Point(Location.X, Location.Y);
+                Point bezPoint = bezPoints[bezPoints.Count - 1];
                 context.CurveTo(controlPoint.X, controlPoint.Y, controlPoint.X, controlPoint.Y, bezPoint.X, bezPoint.Y);
                 context.Stroke();
 
@@ -73,7 +71,7 @@
                 // work backwards through BezPoints array and use the first one that is outside the target
                 for (int i = bezPoints.Count - 1; i >= 0; i--)
                 {
-                    PointD arrowHead;
+                    Point arrowHead;
                     if (!Target.HitTest(bezPoints[i]))
                     {
                         arrowHead = bezPoints[i];
@@ -101,7 +99,7 @@
         /// <param name="context">The graphics context to draw on</param>
         /// <param name="start">The start point of the arrow</param>
         /// <param name="end">The end point of the arrow</param>
-        private static void DrawArrow(IDrawContext context, PointD start, PointD end)
+        private static void DrawArrow(IDrawContext context, Point start, Point end)
         {
             double angle = Math.Atan2(end.Y - start.Y, end.X - start.X) + Math.PI;
 
@@ -122,9 +120,9 @@
 
         /// <summary>Return true if the clickPoint is on this object</summary>
         /// <param name="clickPoint"></param>
-        public override bool HitTest(PointD clickPoint)
+        public override bool HitTest(Point clickPoint)
         {
-            foreach (PointD p in bezPoints)
+            foreach (Point p in bezPoints)
             {
                 if (p.X > clickPoint.X - clickTolerence && p.X < clickPoint.X + clickTolerence)
                 {
@@ -140,8 +138,8 @@
         {
             bezPoints.Clear();
             if (Source == null || Target == null) return;
-            PointD ep1 = new PointD();
-            PointD ep2 = new PointD();
+            Point ep1 = new Point();
+            Point ep2 = new Point();
             if (Source != Target)
             {
                 ep1 = Source.Location;
@@ -188,10 +186,8 @@
             bezCurve.Bezier2D(bezParameters, (points) / 2, output);
             for (int i = 0; i < points - 2; i += 2)
             {
-                bezPoints.Add(new PointD((int)output[i], (int)output[i + 1]));
+                bezPoints.Add(new Point((int)output[i], (int)output[i + 1]));
             }
         }
-
     }
-
 }

@@ -1,8 +1,6 @@
-﻿namespace ApsimNG.Classes.DirectedGraph
+﻿namespace APSIM.Interop.Visualisation
 {
-    using Cairo;
-    using Color = System.Drawing.Color;
-    using Point = System.Drawing.Point;
+    using System.Drawing;
     using System;
     using APSIM.Interop.Drawing;
 
@@ -17,7 +15,7 @@
         /// <summary>
         /// Cartesian location.
         /// </summary>
-        public PointD Location { get; set; }
+        public Point Location { get; set; }
 
         /// <summary>
         /// Name of the object.
@@ -44,7 +42,7 @@
         {
             Name = name;
             Colour = colour;
-            Location = new PointD(location.X, location.Y);
+            Location = new Point(location.X, location.Y);
         }
 
         /// <summary>Paint on the graphics context</summary>
@@ -53,13 +51,13 @@
 
         /// <summary>Return true if the clickPoint is on this object</summary>
         /// <param name="clickPoint"></param>
-        public abstract bool HitTest(PointD clickPoint);
+        public abstract bool HitTest(Point clickPoint);
 
         /// <summary>Return a distance between the two points</summary>
         /// <param name="point1">The first point.</param>
         /// <param name="point2">The second point.</param>
         /// <remarks>This doesn't belong here.</remarks>
-        public static double GetDistance(PointD point1, PointD point2)
+        public static double GetDistance(Point point1, Point point2)
         {
             // Pythagoras theorem c^2 = a^2 + b^2
             // thus c = square root(a^2 + b^2)
@@ -75,7 +73,7 @@
         /// <param name="context">The graphics context to draw on</param>
         /// <param name="text">The text to draw</param>
         /// <param name="point">The point to centre the text around</param>
-        protected void DrawCentredText(IDrawContext context, string text, PointD point)
+        protected void DrawCentredText(IDrawContext context, string text, Point point)
         {
             var extents = context.GetTextExtents(text);
             double x = point.X - (extents.Width / 2 + extents.X);

@@ -1,12 +1,9 @@
-﻿namespace ApsimNG.Classes.DirectedGraph
+﻿namespace APSIM.Interop.Visualisation
 {
-    using Cairo;
     using Models;
     using System;
-    using UserInterface.Views;
-    using Utility;
     using APSIM.Interop.Drawing;
-    using Color = System.Drawing.Color;
+    using System.Drawing;
 
     /// <summary>
     /// Encapsulates a node on a directed graph. The 'Location' property in the
@@ -88,7 +85,7 @@
 
         /// <summary>Return true if the clickPoint is on this object</summary>
         /// <param name="clickPoint"></param>
-        public override bool HitTest(PointD clickPoint)
+        public override bool HitTest(Point clickPoint)
         {
             double dist = GetDistance(Location, clickPoint);
             return dist < (Width / 2);

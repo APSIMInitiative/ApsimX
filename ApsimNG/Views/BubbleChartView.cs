@@ -6,7 +6,7 @@ namespace UserInterface.Views
     using Interfaces;
     using EventArguments;
     using EventArguments.DirectedGraph;
-    using ApsimNG.Classes.DirectedGraph;
+    using APSIM.Interop.Visualisation;
     using Gtk;
     using Models.Management;
     using Models;
