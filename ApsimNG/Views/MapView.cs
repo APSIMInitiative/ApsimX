@@ -162,6 +162,10 @@
             VPaned box = new VPaned();
             PropertiesView = new PropertyView(this);
             box.Pack1(((ViewBase)PropertiesView).MainWidget, true, false);
+#if NETCOREAPP
+            if ( ((ViewBase)PropertiesView).MainWidget is ScrolledWindow scroller)
+                scroller.VscrollbarPolicy = PolicyType.Never;
+#endif
             box.Pack2(container, true, true);
             
             container.AddEvents(
