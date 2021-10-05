@@ -3,6 +3,7 @@
     using Cairo;
     using OxyPlot;
     using System;
+    using UserInterface.Views;
 
     /// <summary>A base object for all directed graph view objects</summary>
     public abstract class DGObject
@@ -45,7 +46,7 @@
 
         /// <summary>Paint on the graphics context</summary>
         /// <param name="graphicsObject">The graphics context to draw on</param>
-        public abstract void Paint(Context graphicsObject);
+        public abstract void Paint(IDrawContext graphicsObject);
 
         /// <summary>Return true if the clickPoint is on this object</summary>
         /// <param name="clickPoint"></param>
@@ -65,5 +66,19 @@
             return Math.Sqrt(a * a + b * b);
         }
 
+        /// <summary>
+        /// Draw centred text
+        /// </summary>
+        /// <param name="context">The graphics context to draw on</param>
+        /// <param name="text">The text to draw</param>
+        /// <param name="point">The point to centre the text around</param>
+        protected void DrawCentredText(IDrawContext context, string text, PointD point)
+        {
+            var extents = context.GetTextExtents(text);
+            double x = point.X - (extents.Width / 2 + extents.X);
+            double y = point.Y - (extents.Height / 2 + extents.Y);
+            context.MoveTo(x, y);
+            context.ShowText(text);
+        }
     }
 }

@@ -5,6 +5,8 @@
     using OxyPlot;
     using OxyPlot.GtkSharp;
     using System;
+    using UserInterface.Views;
+    using Utility;
 
     /// <summary>
     /// Encapsulates a node on a directed graph. The 'Location' property in the
@@ -56,7 +58,7 @@
 
         /// <summary>Paint on the graphics context</summary>
         /// <param name="context">The graphics context to draw on</param>
-        public override void Paint(Cairo.Context context)
+        public override void Paint(IDrawContext context)
         {
             OxyColor outlineColour;
             if (Selected)
@@ -70,36 +72,21 @@
             OxyColor textColour = DefaultOutlineColour;
 
             // Draw circle
-            context.SetSourceColor(outlineColour);
-            context.LineWidth = 3;
+            context.SetColour(outlineColour.FromOxy());
+            context.SetLineWidth(3);
             context.NewPath();
             context.Arc(Location.X, Location.Y, Width/2, 0, 2 * Math.PI);
             context.StrokePreserve();
-            context.SetSourceColor(backgroundColour);
+            context.SetColour(backgroundColour.FromOxy());
             context.Fill();
 
             // Write text
-            context.LineWidth = 1;
-            context.SetSourceColor(textColour);
+            context.SetLineWidth(1);
+            context.SetColour(textColour.FromOxy());
             context.SetFontSize(13);
 
 
             DrawCentredText(context, Name, Location);
-        }
-
-        /// <summary>
-        /// Draw centred text
-        /// </summary>
-        /// <param name="context">The graphics context to draw on</param>
-        /// <param name="text">The text to draw</param>
-        /// <param name="point">The point to centre the text around</param>
-        public static void DrawCentredText(Context context, string text, PointD point)
-        {
-            TextExtents extents = context.TextExtents(text);
-            double x = point.X - (extents.Width / 2 + extents.XBearing);
-            double y = point.Y - (extents.Height / 2 + extents.YBearing);
-            context.MoveTo(x, y);
-            context.ShowText(text);
         }
 
         /// <summary>Return true if the clickPoint is on this object</summary>

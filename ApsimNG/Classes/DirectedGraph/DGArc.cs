@@ -6,6 +6,8 @@
     using OxyPlot.GtkSharp;
     using System;
     using System.Collections.Generic;
+    using UserInterface.Views;
+    using Utility;
 
     /// <summary>
     /// An arc on a directed graph.
@@ -47,7 +49,7 @@
 
         /// <summary>Paint on the graphics context</summary>
         /// <param name="context">The graphics context to draw on</param>
-        public override void Paint(Cairo.Context context)
+        public override void Paint(IDrawContext context)
         {
             CalcBezPoints();
 
@@ -56,17 +58,18 @@
                 // Create point for upper-left corner of drawing.
                 context.NewPath();
                 if (Selected)
-                    context.SetSourceColor(OxyColors.Blue);
+                    context.SetColour(OxyColors.Blue.FromOxy());
                 else
-                    context.SetSourceColor(DefaultOutlineColour);
+                    context.SetColour(DefaultOutlineColour.FromOxy());
 
                 // Draw text if necessary
                 if (Name != null)
-                    DGNode.DrawCentredText(context, Name, Location);
+                    DrawCentredText(context, Name, Location);
 
-                context.MoveTo(bezPoints[0]);
+                context.MoveTo(bezPoints[0].X, bezPoints[0].Y);
                 PointD controlPoint = new PointD(Location.X, Location.Y);
-                context.CurveTo(controlPoint, controlPoint, bezPoints[bezPoints.Count - 1]);
+                PointD bezPoint = bezPoints[bezPoints.Count - 1];
+                context.CurveTo(controlPoint.X, controlPoint.Y, controlPoint.X, controlPoint.Y, bezPoint.X, bezPoint.Y);
                 context.Stroke();
 
                 // find closest point in the bezPoints to the intersection point that is outside the target
@@ -101,7 +104,7 @@
         /// <param name="context">The graphics context to draw on</param>
         /// <param name="start">The start point of the arrow</param>
         /// <param name="end">The end point of the arrow</param>
-        private static void DrawArrow(Context context, PointD start, PointD end)
+        private static void DrawArrow(IDrawContext context, PointD start, PointD end)
         {
             double angle = Math.Atan2(end.Y - start.Y, end.X - start.X) + Math.PI;
 
@@ -114,7 +117,7 @@
             context.NewPath();
             context.MoveTo(x1, y1);
             context.LineTo(x2, y2);
-            context.LineTo(end);
+            context.LineTo(end.X, end.Y);
             context.LineTo(x1, y1);
             context.StrokePreserve();
             context.Fill();

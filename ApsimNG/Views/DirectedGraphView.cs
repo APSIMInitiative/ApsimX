@@ -226,10 +226,11 @@
 #else
                 Cairo.Context context = args.Cr;
 #endif
+                CairoContext drawingContext = new CairoContext(context, MainWidget);
                 foreach (DGArc tmpArc in arcs)
-                    tmpArc.Paint(context);
+                    tmpArc.Paint(drawingContext);
                 foreach (DGNode tmpNode in nodes)
-                    tmpNode.Paint(context);
+                    tmpNode.Paint(drawingContext);
 
                 ((IDisposable)context.GetTarget()).Dispose();
                 ((IDisposable)context).Dispose();
