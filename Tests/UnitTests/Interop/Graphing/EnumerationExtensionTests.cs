@@ -11,7 +11,7 @@ using System.Drawing;
 namespace APSIM.Tests.Graphing.SeriesExporters
 {
     /// <summary>
-    /// Tests for <see cref="EnumerationExtension"/>, to ensure that apsim
+    /// Tests for <see cref="EnumerationExtensions"/>, to ensure that apsim
     /// graphing enumerations are converted into the correct oxyplot equivalents.
     /// </summary>
     [TestFixture]

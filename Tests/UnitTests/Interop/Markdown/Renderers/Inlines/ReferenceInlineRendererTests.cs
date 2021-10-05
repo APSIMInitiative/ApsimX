@@ -94,7 +94,7 @@ namespace APSIM.Tests.Interop.Markdown.Renderers.Inlines
         }
 
         /// <summary>
-        /// Test the name of the reference passed into <see cref="AppendReference"/>.
+        /// Test the name of the reference passed into <see cref="PdfBuilder.AppendReference"/>.
         /// </summary>
         [Test]
         public void TestReferenceName()

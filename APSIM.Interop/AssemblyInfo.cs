@@ -1,4 +1,4 @@
 using System.Runtime.CompilerServices;
 
-// Make internal types accessible from APSIM.Tests assembly.
-[assembly: InternalsVisibleTo("APSIM.Tests")]
+// Make internal types accessible from UnitTests assembly.
+[assembly: InternalsVisibleTo("UnitTests")]
