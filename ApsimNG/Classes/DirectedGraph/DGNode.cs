@@ -7,6 +7,7 @@
     using System;
     using UserInterface.Views;
     using Utility;
+    using APSIM.Interop.Drawing;
 
     /// <summary>
     /// Encapsulates a node on a directed graph. The 'Location' property in the

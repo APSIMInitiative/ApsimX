@@ -8,6 +8,7 @@
     using System.Collections.Generic;
     using UserInterface.Views;
     using Utility;
+    using APSIM.Interop.Drawing;
 
     /// <summary>
     /// An arc on a directed graph.

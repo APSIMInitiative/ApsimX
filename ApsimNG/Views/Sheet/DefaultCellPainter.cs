@@ -1,5 +1,6 @@
 ﻿using System.Drawing;
 using Utility;
+using APSIM.Interop.Drawing;
 
 namespace UserInterface.Views
 {

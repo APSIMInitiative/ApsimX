@@ -1,7 +1,6 @@
 ﻿using System.Drawing;
-using Rectangle = UserInterface.Classes.Shapes.Rectangle;
 
-namespace UserInterface.Views
+namespace APSIM.Interop.Drawing
 {
     public enum States
     {
@@ -43,7 +42,7 @@ namespace UserInterface.Views
         /// (x, y) in user-space coordinates.
         /// </summary>
         /// <param name="rectangle">The rectangle dimensions.</param>
-        void Rectangle(CellBounds rectangle);
+        void Rectangle(Rectangle rectangle);
 
         /// <summary>
         /// Establishes a new clip region by intersecting the current clip region with the

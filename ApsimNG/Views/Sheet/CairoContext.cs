@@ -1,7 +1,8 @@
 ﻿using Cairo;
 using Gtk;
 using Utility;
-using Rectangle = UserInterface.Classes.Shapes.Rectangle;
+using APSIM.Interop.Drawing;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace UserInterface.Views
 {
@@ -83,9 +84,9 @@ namespace UserInterface.Views
             cr.MoveTo(x, y);
         }
 
-        public void Rectangle(CellBounds rectangle)
+        public void Rectangle(Rectangle rectangle)
         {
-            cr.Rectangle(rectangle.Left, rectangle.Top, rectangle.Width, rectangle.Height);
+            cr.Rectangle(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
         }
 
         public void ResetClip()
@@ -152,7 +153,7 @@ namespace UserInterface.Views
         public Rectangle GetTextExtents(string text)
         {
             TextExtents extents = cr.TextExtents(text);
-            return new Rectangle(extents.XBearing, extents.YBearing, extents.Width, extents.Height);
+            return new Rectangle((int)extents.XBearing, (int)extents.YBearing, (int)extents.Width, (int)extents.Height);
         }
 
         public void ShowText(string text)

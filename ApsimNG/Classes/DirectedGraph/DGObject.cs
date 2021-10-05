@@ -3,7 +3,7 @@
     using Cairo;
     using OxyPlot;
     using System;
-    using UserInterface.Views;
+    using APSIM.Interop.Drawing;
 
     /// <summary>A base object for all directed graph view objects</summary>
     public abstract class DGObject
