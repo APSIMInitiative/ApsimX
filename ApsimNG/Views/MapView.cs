@@ -47,6 +47,26 @@
     /// </remarks>
     public class MapView : ViewBase, IMapView
     {
+        /// <summary>
+        /// Width of the map as shown in the GUI. I'm setting
+        /// this to 718 to match the default page width of the autodocs
+        /// documents.
+        /// </summary>
+        /// <remarks>
+        /// todo: should really check the default page size dynamically.
+        /// </remarks>
+        private const int defaultWidth = 718;
+
+        /// <summary>
+        /// Height of the map as shown in the GUI. I'm setting
+        /// this to 718 to match the default page width of the autodocs
+        /// documents.
+        /// </summary>
+        /// <remarks>
+        /// todo: should really check the default page size dynamically.
+        /// </remarks>
+        private const int defaultHeight = 718;
+
         private SharpMap.Map map;
         private Gtk.Image image;
 
@@ -132,6 +152,10 @@
         public MapView(ViewBase owner) : base(owner)
         {
             image = new Gtk.Image();
+#if NETCOREAPP
+            image.Halign = Align.Start;
+            image.Valign = Align.Start;
+#endif
             var container = new Gtk.EventBox();
             container.Add(image);
 
@@ -146,7 +170,6 @@
             | (int)Gdk.EventMask.ScrollMask);
             container.ButtonPressEvent += OnButtonPress;
             container.ButtonReleaseEvent += OnButtonRelease;
-            image.SizeAllocated += OnSizeAllocated;
 #if NETFRAMEWORK
             image.ExposeEvent += OnImageExposed;
 #else
@@ -190,7 +213,7 @@
                 map.Dispose();
 
             map = new MapTag(center, zoom, coordinates).ToSharpMap();
-
+            map.Size = new Size(defaultWidth, defaultHeight);
             if (image.Allocation.Width > 1 && image.Allocation.Height > 1)
                 RefreshMap();
         }
@@ -204,7 +227,7 @@
         private void RefreshMap()
         {
             if (map != null)
-                image.Pixbuf = ImageToPixbuf(map.GetMap());
+                image.Pixbuf = ImageToPixbuf(map.GetMap(defaultWidth));
         }
 
         /// <summary>
@@ -354,36 +377,6 @@
         }
 
         /// <summary>
-        /// Called when the image widget is allocated space.
-        /// Changes the map's size to match allocated size.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event data.</param>
-        private void OnSizeAllocated(object sender, EventArgs args)
-        {
-            try
-            {
-                // Update the map size iff the allocated width and height are both > 0,
-                // and width or height have changed.
-                if (image != null && map != null &&
-                    image.Allocation.Width > 0 && image.Allocation.Height > 0
-                 && (image.Allocation.Width != map.Size.Width || image.Allocation.Height != map.Size.Height) )
-                {
-                    image.SizeAllocated -= OnSizeAllocated;
-                    map.Size = new Size(image.Allocation.Width, image.Allocation.Height);
-                    RefreshMap();
-                    image.WidthRequest = image.Allocation.Width;
-                    image.HeightRequest = image.Allocation.Height;
-                    image.SizeAllocated += OnSizeAllocated;
-                }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
         /// Called when the main widget is destroyed.
         /// Detaches event handlers.
         /// </summary>
@@ -396,7 +389,6 @@
                 mainWidget.ButtonPressEvent -= OnButtonPress;
                 mainWidget.ButtonReleaseEvent -= OnButtonRelease;
                 mainWidget.ScrollEvent -= OnMouseScroll;
-                image.SizeAllocated -= OnSizeAllocated;
                 mainWidget.Destroyed -= OnMainWidgetDestroyed;
             }
             catch (Exception err)
