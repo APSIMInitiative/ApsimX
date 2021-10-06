@@ -1,6 +1,7 @@
 using System;
 using System.Diagnostics;
 using System.Drawing;
+using System.IO;
 using System.Linq;
 using System.Text;
 using SkiaSharp;
@@ -29,17 +30,26 @@ namespace APSIM.Interop.Drawing.Skia
         /// <summary>
         /// The current path (a rectangle).
         /// </summary>
-        private SKRect currentRectangle = SKRect.Empty;
+        private SKRect? currentRectangle = null;
 
         /// <summary>
         /// The current drawing location (as set by <see cref="MoveTo()"/>).
         /// </summary>
-        private SKPoint currentPoint = SKPoint.Empty;
+        private SKPoint? currentPoint = null;
 
         /// <summary>
         /// The current drawing path.
         /// </summary>
         private SKPath currentPath = null;
+
+        /// <summary>
+        /// This is a stand-in for the current path when an action
+        /// can't necessarily be represented by an SKPath, but we
+        /// also don't want to immediately perform the action because
+        /// we don't necessarily know if we should be stroking or
+        /// filling the path.
+        /// </summary>
+        private Action<SKPaint> currentAction = null;
 
         /// <summary>
         /// Create a new <see cref="SkiaContext"/> instance of the given width and height.
@@ -58,6 +68,11 @@ namespace APSIM.Interop.Drawing.Skia
         /// <inheritdoc />
         public void Arc(double xc, double yc, double radius, double angle1, double angle2)
         {
+            // The angles coming in are in radians, but skia expects angles in degrees.
+            const double rad2Deg = 180.0 / Math.PI;
+            angle1 *= rad2Deg;
+            angle2 *= rad2Deg;
+
             float left = (float)(xc - radius);
             float right = (float)(xc + radius);
             float top = (float)(yc - radius);
@@ -71,7 +86,7 @@ namespace APSIM.Interop.Drawing.Skia
 
             // The useCenter argument will draw straight lines to the center point,
             // resulting in a wedge being drawn. This should always be false here.
-            canvas.DrawArc(oval, startAngle, sweepAngle, false, paint);
+            currentAction = p => canvas.DrawArc(oval, startAngle, sweepAngle, false, p);
         }
 
         /// <inheritdoc />
@@ -80,8 +95,8 @@ namespace APSIM.Interop.Drawing.Skia
             canvas.Save();
             if (currentPath != null)
                 canvas.ClipPath(currentPath);
-            else if (!currentRectangle.Equals(SKRect.Empty))
-                canvas.ClipRect(currentRectangle);
+            else if (currentRectangle != null)
+                canvas.ClipRect((SKRect)currentRectangle);
             else
                 throw new NotImplementedException();
         }
@@ -89,14 +104,15 @@ namespace APSIM.Interop.Drawing.Skia
         /// <inheritdoc />
         public void CurveTo(double x0, double y0, double x1, double y1, double x2, double y2)
         {
-            if (currentPoint == SKPoint.Empty)
+            if (currentPoint == null)
                 // This may be a little harsh. We could instead use (0, 0) as the start point.
                 throw new InvalidOperationException("Cannot draw bezier curve - start point has not been set (e.g. via MoveTo())");
             SKPath path = new SKPath();
-            path.MoveTo(currentPoint);
+            path.MoveTo((SKPoint)currentPoint);
             path.CubicTo((float)x0, (float)y0, (float)x1, (float)y1, (float)x2, (float)y2);
 
-            DrawPath(path, false);
+            currentPoint = new SKPoint((float)x2, (float)y2);
+            currentPath = path;
         }
 
         /// <inheritdoc />
@@ -116,14 +132,16 @@ namespace APSIM.Interop.Drawing.Skia
         /// <inheritdoc />
         public void DrawFilledRectangle()
         {
-            if (currentRectangle.Equals(SKRect.Empty))
+            if (currentRectangle == null)
                 throw new InvalidOperationException("Unable to draw filled rectangle - programmer is missing a call to Rectangle()");
 
-            float left = (float)currentRectangle.Left;
-            float top = (float)currentRectangle.Top;
-            float right = (float)(currentRectangle.Left + currentRectangle.Width);
-            float bottom = (float)(currentRectangle.Top + currentRectangle.Height);
-            SKRect rect = new SKRect(left, top, right, bottom);
+            SKRect rect = (SKRect)currentRectangle;
+
+            float left = (float)rect.Left;
+            float top = (float)rect.Top;
+            float right = (float)(rect.Left + rect.Width);
+            float bottom = (float)(rect.Top + rect.Height);
+            rect = new SKRect(left, top, right, bottom);
 
             DrawRectangle(rect, true);
         }
@@ -131,7 +149,7 @@ namespace APSIM.Interop.Drawing.Skia
         /// <inheritdoc />
         public void DrawText(string text, bool bold, bool italics)
         {
-            if (currentPoint == SKPoint.Empty)
+            if (currentPoint == null)
                 throw new InvalidOperationException("Unable to draw text - programmer is missing a call to MoveTo()");
                 
             if (bold || italics)
@@ -149,9 +167,14 @@ namespace APSIM.Interop.Drawing.Skia
         /// <inheritdoc />
         public void FillPreserve()
         {
-            if (currentPath == null)
-                throw new InvalidOperationException("Unable to fill current path: current path is null");
-            DrawPath(currentPath, true);
+            if (currentAction != null)
+                Draw(currentAction, true);
+            else
+            {
+                if (currentPath == null)
+                    throw new InvalidOperationException("Unable to fill current path: current path is null");
+                DrawPath(currentPath, true);
+            }
         }
 
         /// <inheritdoc />
@@ -169,21 +192,21 @@ namespace APSIM.Interop.Drawing.Skia
             ReadOnlySpan<ushort> glyphs = Encoding.UTF8.GetBytes(text).Select(b => (ushort)b).ToArray();
             SKFont font = new SKFont();
             float numGlyphs = font.MeasureText(glyphs, out SKRect bounds, paint);
-            Rectangle rect = new Rectangle((int)bounds.Left, (int)bounds.Right, (int)bounds.Width, (int)bounds.Height);
+            Rectangle rect = new Rectangle((int)bounds.Left, (int)bounds.Top, (int)bounds.Width, (int)bounds.Height);
             return rect;
         }
 
         /// <inheritdoc />
         public void LineTo(double x, double y)
         {
-            if (currentPoint.Equals(SKPoint.Empty))
+            if (currentPoint == null)
                 MoveTo(x, y);
             else
             {
                 if (currentPath == null)
                     currentPath = new SKPath();
                 currentPoint = new SKPoint((float)x, (float)y);
-                currentPath.LineTo(currentPoint);
+                currentPath.LineTo((SKPoint)currentPoint);
             }
         }
 
@@ -201,6 +224,9 @@ namespace APSIM.Interop.Drawing.Skia
                 currentPath.Dispose();
                 currentPath = null;
             }
+            currentAction = null;
+            currentPoint = null;
+            currentRectangle = null;
         }
 
         /// <inheritdoc />
@@ -215,10 +241,26 @@ namespace APSIM.Interop.Drawing.Skia
             canvas.Restore();
         }
 
+        /// <summary>
+        /// Save the current state of the drawing context to an image.
+        /// </summary>
+        public Image Save()
+        {
+            using (SKImage image = SKImage.FromBitmap(bitmap))
+            using (SKData data = image.Encode(SKEncodedImageFormat.Png, 100))
+            using (MemoryStream stream = new MemoryStream())
+            {
+                data.SaveTo(stream);
+                stream.Seek(0, SeekOrigin.Begin);
+                return Image.FromStream(stream);
+            }
+        }
+
         /// <inheritdoc />
         public void SetColour(Color color)
         {
-            paint.Color = new SKColor(color.R, color.G, color.B);
+            // todo: improve handling of alpha channel here
+            paint.Color = new SKColor(color.R, color.G, color.B, 0xff);
         }
 
         /// <inheritdoc />
@@ -236,7 +278,7 @@ namespace APSIM.Interop.Drawing.Skia
         /// <inheritdoc />
         public void ShowText(string text)
         {
-            canvas.DrawText(text, currentPoint, paint);
+            canvas.DrawText(text, (SKPoint)currentPoint, paint);
         }
 
         /// <inheritdoc />
@@ -249,9 +291,14 @@ namespace APSIM.Interop.Drawing.Skia
         /// <inheritdoc />
         public void StrokePreserve()
         {
-            if (currentPath == null)
-                throw new InvalidOperationException("Unable to draw stroke - current path is null");
-            DrawPath(currentPath, false);
+            if (currentAction != null)
+                Draw(currentAction, false);
+            else
+            {
+                if (currentPath == null)
+                    throw new InvalidOperationException("Unable to draw stroke - current path is null");
+                DrawPath(currentPath, false);
+            }
         }
 
         /// <summary>
@@ -261,10 +308,7 @@ namespace APSIM.Interop.Drawing.Skia
         /// <param name="fill">Should we fill the path (ie with colour)?</param>
         private void DrawPath(SKPath path, bool fill)
         {
-            SKPaintStyle style = paint.Style;
-            paint.Style = SKPaintStyle.Stroke;
-            canvas.DrawPath(currentPath, paint);
-            paint.Style = style;
+            Draw(p => canvas.DrawPath(path, p), fill);
         }
 
         /// <summary>
@@ -274,9 +318,20 @@ namespace APSIM.Interop.Drawing.Skia
         /// <param name="fill">Should we fill the rectangle (ie with colour)?</param>
         private void DrawRectangle(SKRect rect, bool fill)
         {
+            Draw(p => canvas.DrawRect(rect, p), fill);
+        }
+
+        /// <summary>
+        /// Perform the given drawing action with or without fill,
+        /// using the current paint settings.
+        /// </summary>
+        /// <param name="action">The drawing action to be performed.</param>
+        /// <param name="fill">Should we fill the area (ie with colour)?</param>
+        private void Draw(Action<SKPaint> action, bool fill)
+        {
             SKPaintStyle style = paint.Style;
-            paint.Style = SKPaintStyle.Fill;
-            canvas.DrawRect(rect, paint);
+            paint.Style = fill ? SKPaintStyle.Fill : SKPaintStyle.Stroke;
+            action(paint);
             paint.Style = style;
         }
     }

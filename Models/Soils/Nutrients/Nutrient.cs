@@ -12,6 +12,7 @@
     using System.Linq;
     using APSIM.Services.Documentation;
     using APSIM.Services.Graphing;
+    using APSIM.Services.Documentation.Tags;
 
     /// <summary>
     /// The soil nutrient model includes functionality for simulating pools of organmic matter and mineral nitrogen.  The processes for each are described below.
@@ -603,6 +604,9 @@
         {
             // Basic model description.
             yield return new Paragraph(CodeDocumentation.GetSummary(GetType()));
+
+            // Directed graph.
+            yield return new DirectedGraphTag(DirectedGraphInfo);
 
             // Document model structure.
             // todo: implement directed graph tag
