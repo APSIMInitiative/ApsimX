@@ -21,13 +21,11 @@ namespace Models.PMF
         /// </summary>
         public override IEnumerable<ITag> Document()
         {
-            // Write a sorted list of cultivar names.
-            List<string> cultivarNames = FindAllChildren<Cultivar>().SelectMany(c => c.GetNames()).ToList();
-            cultivarNames.Sort();
+            foreach (ITag tag in DocumentChildren<Cultivar>(true))
+                yield return tag;
 
-            string text = string.Join(", ", cultivarNames);
-            if (!string.IsNullOrEmpty(text))
-                yield return new Paragraph(text);
+            foreach (ITag tag in DocumentChildren<CultivarFolder>(true))
+                yield return tag;
         }
     }
 }
