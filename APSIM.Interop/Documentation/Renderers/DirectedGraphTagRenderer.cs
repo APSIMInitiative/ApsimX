@@ -23,7 +23,7 @@ namespace APSIM.Interop.Documentation.Renderers
         {
             renderer.GetPageSize(out double width, out double height);
             renderer.StartNewParagraph();
-            renderer.AppendImage(WriteToImage(tag.Graph, (int)width, (int)height));
+            renderer.AppendImage(WriteToImage(tag.Graph, (int)width, (int)width));
             renderer.StartNewParagraph();
         }
 

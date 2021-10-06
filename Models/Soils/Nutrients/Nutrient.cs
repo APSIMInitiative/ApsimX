@@ -605,13 +605,11 @@
             // Basic model description.
             yield return new Paragraph(CodeDocumentation.GetSummary(GetType()));
 
-            // Directed graph.
-            yield return new DirectedGraphTag(DirectedGraphInfo);
-
             // Document model structure.
-            // todo: implement directed graph tag
-            // structureTags.Add(new DirectedGraphTag(DirectedGraphInfo));
-            yield return new Section("Soil Nutrient Model Structure", new Paragraph(CodeDocumentation.GetCustomTag(GetType(), "structure")));
+            List<ITag> structureTags = new List<ITag>();
+            structureTags.Add(new DirectedGraphTag(DirectedGraphInfo));
+            structureTags.Add(new Paragraph(CodeDocumentation.GetCustomTag(GetType(), "structure")));
+            yield return new Section("Soil Nutrient Model Structure", structureTags);
 
             // Document nutrient pools.
             List<ITag> poolTags = new List<ITag>();
