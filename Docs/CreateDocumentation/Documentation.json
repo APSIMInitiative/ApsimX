@@ -242,15 +242,15 @@
                     ]
                 },
                 {
-                    "Name": "Pinus (Under Review)",
+                    "Name": "Pinus",
                     "Documents": [
                         {
                             "Name": "PDF",
-                            "FileName": "Tests/UnderReview/Pinus/Pinus.apsimx"
+                            "FileName": "Tests/Validation/Pinus/Pinus.apsimx"
                         },
                         {
                             "Name": "PDF",
-                            "FileName": "Tests/UnderReview/Pinus/Pinus.apsimx",
+                            "FileName": "Tests/Validation/Pinus/Pinus.apsimx",
                             "ModelNameToDocument": "Pinus"
                         }
                     ]
