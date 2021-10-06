@@ -1,3 +1,4 @@
+using System.Linq;
 using APSIM.Interop.Graphing;
 using APSIM.Interop.Markdown.Renderers;
 using APSIM.Services.Documentation;
@@ -51,7 +52,14 @@ namespace APSIM.Interop.Documentation.Renderers
             renderer.GetPageSize(out double width, out _);
 
             renderer.StartNewParagraph();
-            renderer.AppendImage(exporter.Export(graph, width, width / aspectRatio));
+            var plot = exporter.ToPlotModel(graph);
+
+            // Temp hack - set marker size to 5. We need to review
+            // appropriate sizing for graphs in autodocs.
+            foreach (var series in ((OxyPlot.PlotModel)plot).Series.OfType<OxyPlot.Series.LineSeries>())
+                series.MarkerSize = 5;
+
+            renderer.AppendImage(exporter.Export(plot, width, width / aspectRatio));
             renderer.StartNewParagraph();
         }
     }
