@@ -60,6 +60,7 @@ namespace APSIM.Interop.Drawing.Skia
         {
             bitmap = new SKBitmap(width, height);
             canvas = new SKCanvas(bitmap);
+            paint.IsAntialias = true;
         }
 
         /// <inheritdoc />
@@ -205,6 +206,8 @@ namespace APSIM.Interop.Drawing.Skia
             {
                 if (currentPath == null)
                     currentPath = new SKPath();
+                if (!currentPath.LastPoint.Equals(currentPoint))
+                    currentPath.MoveTo((SKPoint)currentPoint);
                 currentPoint = new SKPoint((float)x, (float)y);
                 currentPath.LineTo((SKPoint)currentPoint);
             }
@@ -260,7 +263,7 @@ namespace APSIM.Interop.Drawing.Skia
         public void SetColour(Color color)
         {
             // todo: improve handling of alpha channel here
-            paint.Color = new SKColor(color.R, color.G, color.B, 0xff);
+            paint.Color = new SKColor(color.R, color.G, color.B, color.A);
         }
 
         /// <inheritdoc />

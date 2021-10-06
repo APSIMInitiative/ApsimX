@@ -30,12 +30,12 @@
         /// <summary>
         /// Default outline colour if none is specified.
         /// </summary>
-        public static Color DefaultOutlineColour { get; set; }
+        public static Color DefaultOutlineColour { get; set; } = Color.Black;
 
         /// <summary>
         /// Default background colour if none is specified.
         /// </summary>
-        public static Color DefaultBackgroundColour { get; set; }
+        public static Color DefaultBackgroundColour { get; set; } = Color.White;
 
         /// <summary>Constructor</summary>
         public DGObject(string name, Color colour, Point location)
