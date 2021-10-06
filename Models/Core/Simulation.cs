@@ -348,7 +348,15 @@ namespace Models.Core
         /// </remarks>
         public override IEnumerable<ITag> Document()
         {
-            yield return new Section(Name, DocumentChildren<Graph>());
+            yield return new Section(Name, DocumentChildren());
+        }
+
+        private IEnumerable<ITag> DocumentChildren()
+        {
+            foreach (ITag tag in DocumentChildren<Memo>())
+                yield return tag;
+            foreach (ITag tag in DocumentChildren<Graph>())
+                yield return tag;
         }
     }
 }
