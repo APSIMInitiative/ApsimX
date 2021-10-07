@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 300,
   "Version": 141,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -749,7 +749,7 @@
                       "CreateHTML": true,
                       "RotateReport": false,
                       "AutoCreateHTML": true,
-                      "SelectedTab": "Display",
+                      "SelectedTab": "Properties",
                       "ModelSummaryStyle": 0,
                       "VariableNames": null,
                       "EventNames": null,
