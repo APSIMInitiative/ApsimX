@@ -24,7 +24,19 @@ sed -i -e "s/0\.0\.0\.0/$version/g" "$apsimx/Models/Properties/AssemblyVersion.c
 cp "$apsimx/Models/Properties/AssemblyVersion.cs" "$apsimx/ApsimNG/Properties/"
 
 # Publish the build.
-dotnet publish --nologo -f netcoreapp3.1 -c Release -r osx-x64 "$apsimx/ApsimX.sln"
+
+# fixme - this is a hack to workaround problems caused by building all
+# proejcts to the same output dir. Basically if we build ApsimNG after
+# Models, an ELF Models binary will be copied in as a dependency for ApsimNG,
+# which will overwrite the previously-built Mach-O binary. Therefore we
+# need to build Models last. The problem also occurs if we just publish
+# the solution file, as Models will be one of the first proejcts to be
+# built/copied, as it's a dependency for several others.
+projects=(ApsimNG APSIM.Server Models)
+for project in ${projects[@]}
+do
+    dotnet publish --nologo -f netcoreapp3.1 -c Release -r osx-x64 $project
+done
 
 # Now generate the installer.
 
