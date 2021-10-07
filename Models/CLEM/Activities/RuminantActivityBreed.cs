@@ -392,21 +392,21 @@ namespace Models.CLEM.Activities
 
                                     if (useControlledMating)
                                         female.LastMatingStyle = MatingStyle.Controlled;
-                                    else
-                                    {
-                                        male = maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count() - 1)];
-                                        female.LastMatingStyle = ((male as RuminantMale).IsWildBreeder ? MatingStyle.WildBreeder : MatingStyle.Natural);
-                                    }
 
                                     // if mandatory attributes are present in the herd, save male value with female details.
                                     if(female.BreedParams.IncludedAttributeInheritanceWhenMating)
                                     {
-                                        if(useControlledMating)
+                                        if (useControlledMating)
                                             // save all male attributes
                                             AddMalesAttributeDetails(female, controlledMating.SireAttributes, needsNewJoiningMale(controlledMating.JoiningsPerMale, numberServiced));
                                         else
+                                        {
+                                            male = maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count() - 1)];
+                                            female.LastMatingStyle = ((male as RuminantMale).IsWildBreeder ? MatingStyle.WildBreeder : MatingStyle.Natural);
+
                                             // randomly select male
                                             AddMalesAttributeDetails(female, male as Ruminant);
+                                        }
                                     }
                                     status = Reporting.ConceptionStatus.Conceived;
                                     NumberConceived++;
