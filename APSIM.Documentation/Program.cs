@@ -32,8 +32,11 @@ namespace APSIM.Documentation
                 };
                 StringBuilder html = new StringBuilder();
                 html.AppendLine("<html>");
-                html.AppendLine("<head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\"></head>");
-                html.AppendLine("<body>");
+                html.AppendLine("  <head>");
+                html.AppendLine("    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">");
+                html.AppendLine("    <link rel=\"stylesheet\" media=\"screen\" href=\"/index.css\" type=\"text/css\" />");
+                html.AppendLine("  </head>");
+                html.AppendLine("  <body>");
 
                 // Create new working directory, into which all docs will be generated.
                 string outputPath = Path.Combine("/home/drew/code/ApsimX/autodocs");
@@ -52,9 +55,15 @@ namespace APSIM.Documentation
                 }
 
                 // Built index.html file.
-                html.AppendLine("</body></html>");
+                html.AppendLine("  </body>");
+                html.AppendLine("</html>");
                 string index = Path.Combine(outputPath, "index.html");
                 File.WriteAllText(index, html.ToString());
+
+                // Put index.css next to index.html.
+                string css = ReflectionUtilities.GetResourceAsString("APSIM.Documentation.index.css");
+                string cssFile = Path.Combine(outputPath, "index.css");
+                File.WriteAllText(cssFile, css);
 
                 Console.WriteLine($"Successfully generated files at {outputPath}");
             }
