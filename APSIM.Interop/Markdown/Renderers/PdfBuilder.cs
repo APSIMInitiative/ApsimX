@@ -715,9 +715,15 @@ namespace APSIM.Interop.Markdown.Renderers
             // Add the data.
             foreach (DataRow dataRow in data.Rows)
             {
-                row = table.AddRow();
+                StartTableRow(false);
                 for (int i = 0; i < data.Columns.Count; i++)
-                    row[i].AddParagraph(dataRow[i]?.ToString() ?? "");
+                {
+                    string text = dataRow[i]?.ToString() ?? "";
+                    var paragraph = new APSIM.Services.Documentation.Paragraph(text);
+                    StartTableCell();
+                    Write(paragraph);
+                    FinishTableCell();
+                }
             }
 
             // This will fix the column width partitioning.
