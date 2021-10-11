@@ -987,6 +987,12 @@ namespace APSIM.Interop.Markdown.Renderers
             pageWidth = (pageSetup.PageWidth.Point - pageSetup.LeftMargin.Point - pageSetup.RightMargin.Point) * pointsToPixels;
             double spaceBelowParagraph = section.Document.Styles.Normal.ParagraphFormat.SpaceAfter.Point;
             pageHeight = (pageSetup.PageHeight.Point - pageSetup.TopMargin.Point - pageSetup.BottomMargin.Point - spaceBelowParagraph) * pointsToPixels;
+            if (pageSetup.Orientation == Orientation.Landscape)
+            {
+                double tmp = pageWidth;
+                pageWidth = pageHeight;
+                pageHeight = tmp;
+            }
         }
 
         /// <summary>
