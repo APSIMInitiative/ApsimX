@@ -27,8 +27,8 @@ namespace APSIM.Documentation
                 IEnumerable<IDocumentationTable> tables = new[]
                 {
                     GetAutodocsConfig(),
-                    // GetTutorialsTable(),
-                    // GetClemTable(),
+                    GetTutorialsTable(),
+                    GetClemTable(),
                 };
                 StringBuilder html = new StringBuilder();
                 html.AppendLine("<html>");
@@ -94,35 +94,35 @@ namespace APSIM.Documentation
             IEnumerable<string> cols = new[] { "Name", "Documentation", "Params/Inputs/Outputs", "Detailed" };
             IEnumerable<IDocumentationRow> rows = new[]
             {
-                // StandardDocsRow("AGPRyegrass (AgPasture)", "AGPRyegrass.json", "AgPasture.apsimx", "AgpRyegrass.pdf"),
-                // StandardDocsRow("AGPWhiteClover (AgPasture)", "AGPWhiteClover.json", "AgPasture.apsimx", "AgpWhiteClover.pdf"),
+                StandardDocsRow("AGPRyegrass (AgPasture)", "AGPRyegrass.json", "AgPasture.apsimx", "AgpRyegrass.pdf"),
+                StandardDocsRow("AGPWhiteClover (AgPasture)", "AGPWhiteClover.json", "AgPasture.apsimx", "AgpWhiteClover.pdf"),
                 // todo: agroforestry
                 StandardPmfPlantRow("Barley"),
-                // StandardPmfPlantRow("Chicory"),
-                // StandardPmfPlantRow("Chickpea"),
-                // StandardPmfPlantRow("Eucalyptus"),
-                // StandardPmfPlantRow("FodderBeet"),
-                // StandardPmfPlantRow("Gliricidia"),
-                // StandardPmfPlantRow("Maize"),
-                // ModelWithNoResourceRow("MicroClimate"),
-                // StandardPmfPlantRow("Nutrient"),
-                // StandardPmfPlantRow("Oats"),
-                // StandardPmfPlantRow("OilPalm"),
-                // StandardPmfPlantRow("Peanut"),
-                // StandardPmfPlantRow("Pinus"),
-                // StandardPmfPlantRow("Plantain"),
-                // StandardPmfPlantRow("Potato"),
-                // StandardPmfPlantRow("RedClover"),
-                // StandardPmfPlantRow("SCRUM"),
-                // StandardPmfPlantRow("Slurp"),
-                // ModelWithNoResourceRow("SoilArbitrator"),
-                // SoilWaterDocs(),
-                // CreateUnderReviewPlantRow("Sorghum"),
-                // StandardPmfPlantRow("Soybean"),
-                // SugarcaneRow(),
-                // ModelWithNoResourceRow("Stock"),
-                // StandardPmfPlantRow("Wheat"),
-                // StandardPmfPlantRow("WhiteClover"),
+                StandardPmfPlantRow("Chicory"),
+                StandardPmfPlantRow("Chickpea"),
+                StandardPmfPlantRow("Eucalyptus"),
+                StandardPmfPlantRow("FodderBeet"),
+                StandardPmfPlantRow("Gliricidia"),
+                StandardPmfPlantRow("Maize"),
+                ModelWithNoResourceRow("MicroClimate"),
+                StandardPmfPlantRow("Nutrient"),
+                StandardPmfPlantRow("Oats"),
+                StandardPmfPlantRow("OilPalm"),
+                StandardPmfPlantRow("Peanut"),
+                StandardPmfPlantRow("Pinus"),
+                StandardPmfPlantRow("Plantain"),
+                StandardPmfPlantRow("Potato"),
+                StandardPmfPlantRow("RedClover"),
+                StandardPmfPlantRow("SCRUM"),
+                StandardPmfPlantRow("Slurp"),
+                ModelWithNoResourceRow("SoilArbitrator"),
+                SoilWaterDocs(),
+                CreateUnderReviewPlantRow("Sorghum"),
+                StandardPmfPlantRow("Soybean"),
+                SugarcaneRow(),
+                ModelWithNoResourceRow("Stock"),
+                StandardPmfPlantRow("Wheat"),
+                StandardPmfPlantRow("WhiteClover"),
             };
             return new DocumentationTable(cols, rows);
         }
@@ -210,7 +210,7 @@ namespace APSIM.Documentation
 
             IEnumerable<IDocumentationCell> cells = new[]
             {
-                // new DocumentationCell(autodoc),
+                new DocumentationCell(autodoc),
                 new DocumentationCell(param),
             };
 
