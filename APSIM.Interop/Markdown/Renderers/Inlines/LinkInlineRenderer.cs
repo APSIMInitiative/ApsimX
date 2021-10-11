@@ -61,7 +61,11 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
             }
             else
             {
-                renderer.SetLinkState(uri);
+                // Clunky bookmark detection. This could be improved.
+                if (uri.StartsWith("#"))
+                    renderer.StartBookmark(uri);
+                else
+                    renderer.SetLinkState(uri);
                 renderer.WriteChildren(link);
                 renderer.ClearLinkState();
             }

@@ -310,6 +310,19 @@ namespace APSIM.Interop.Markdown.Renderers
         }
 
         /// <summary>
+        /// Start a bookmark with the given URI. It is an error to call this if the
+        /// link state is already set. Every call to <see cref="StartBookmark(string)"/>
+        /// *must* have a matching call to <see crf="ClearLinkState()"/>.
+        /// </summary>
+        /// <param name="uri">Bookmark URI (should start with a hash(#)).</param>
+        public void StartBookmark(string uri)
+        {
+            if (!uri.StartsWith("#"))
+                Debug.WriteLine($"WARNING: creating bookmark with uri {uri}, but URI doesn't start with a bookmark - this is probably a mistake.");
+            SetLinkState(uri, HyperlinkType.Bookmark);
+        }
+
+        /// <summary>
         /// Clear the current link state. This should be called after rendering
         /// all children of a link.
         /// </summary>
@@ -375,7 +388,9 @@ namespace APSIM.Interop.Markdown.Renderers
                 throw new InvalidOperationException("Programmer is missing a call to ClearHeadingLevel()");
 
             SetHeadingLevel((uint)headingIndices.Count);
-            AppendText(text, TextStyle.Normal);
+            Paragraph paragraph = GetLastParagraph();
+            AppendText(text, TextStyle.Normal, paragraph);
+            paragraph.AddBookmark($"#{text}");
             ClearHeadingLevel();
             StartNewParagraph();
         }
