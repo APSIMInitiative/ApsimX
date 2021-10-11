@@ -83,17 +83,22 @@ namespace APSIM.Interop.Documentation
                 document.Write(tag);
         }
 
-        public static Document CreateStandardDocument()
+        public static Document CreateStandardDocument(bool vertical = true)
         {
             Document document = new Document();
+            var section = document.AddSection();
 
-            document.DefaultPageSetup.LeftMargin = Unit.FromCentimeter(1);
-            document.DefaultPageSetup.RightMargin = Unit.FromCentimeter(1);
-            document.DefaultPageSetup.TopMargin = Unit.FromCentimeter(1);
-            document.DefaultPageSetup.BottomMargin = Unit.FromCentimeter(1);
+            PageSetup pageSetup = document.DefaultPageSetup.Clone();
+            pageSetup.LeftMargin = Unit.FromCentimeter(1);
+            pageSetup.RightMargin = Unit.FromCentimeter(1);
+            pageSetup.TopMargin = Unit.FromCentimeter(1);
+            pageSetup.BottomMargin = Unit.FromCentimeter(1);
+            pageSetup.Orientation = vertical ? Orientation.Portrait : Orientation.Landscape;
+            section.PageSetup = pageSetup;
+
             document.Styles.Normal.ParagraphFormat.SpaceAfter = Unit.FromPoint(10);
 
-            document.AddSection().AddParagraph();
+            section.AddParagraph();
 
             PdfBuilder builder = new PdfBuilder(document, PdfOptions.Default);
             builder.AppendImage(Image.LoadFromResource("AIBanner.png"));
