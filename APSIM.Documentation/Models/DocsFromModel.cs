@@ -51,16 +51,33 @@ namespace APSIM.Documentation.Models
         {
             // This document instance will be used to write all of the input files'
             // documentation to a single document.
-            Document document = PdfWriter.CreateStandardDocument();
+            Document document = CreateDocument();
             PdfBuilder builder = new PdfBuilder(document, options);
 
             T model = Activator.CreateInstance<T>();
-            foreach (ITag tag in model.Document())
+            foreach (ITag tag in DocumentModel(model))
                 builder.Write(tag);
             builder.WriteBibliography();
 
             string outFile = Path.Combine(path, OutputFileName);
             PdfWriter.Save(document, outFile);
+        }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        /// <param name="model">Model to be documented.</param>
+        protected virtual IEnumerable<ITag> DocumentModel(IModel model)
+        {
+            return model.Document();
+        }
+
+        /// <summary>
+        /// Create a standard document.
+        /// </summary>
+        protected virtual Document CreateDocument()
+        {
+            return PdfWriter.CreateStandardDocument();
         }
     }
 }

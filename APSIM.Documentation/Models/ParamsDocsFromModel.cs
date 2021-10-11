@@ -11,26 +11,30 @@ namespace APSIM.Documentation.Models
     /// <summary>
     /// A params/inputs/outputs pdf file.
     /// </summary>
-    internal class ParamsDocs : DocsFromFile
+    internal class ParamsDocsFromModel<T> : DocsFromModel<T> where T : IModel
     {
         /// <summary>
-        /// Create a new <see cref="ParamsDocs"/> instance for the given input file.
+        /// Create a new <see cref="ParamsDocsFromFile"/> instance for the given input file.
         /// </summary>
-        /// <param name="input">The input file.</param>
         /// <param name="output">Name of the file which will be generated.</param>
         /// <param name="options">Pdf generation options.</param>
-        public ParamsDocs(string input, string output, PdfOptions options) : base(input, output, options)
+        public ParamsDocsFromModel(string output, PdfOptions options) : base(output, options)
         {
         }
 
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        /// <param name="model">Model to be documented.</param>
         protected override IEnumerable<ITag> DocumentModel(IModel model)
         {
-            if (model is Simulations && model.Children.Any())
-                model = model.Children[0];
             ParamsInputsOutputs doco = new ParamsInputsOutputs(model);
             return doco.Document();
         }
 
+        /// <summary>
+        /// Create a standard document (overriding to make it landscape).
+        /// </summary>
         protected override Document CreateDocument()
         {
             return PdfWriter.CreateStandardDocument(false);
