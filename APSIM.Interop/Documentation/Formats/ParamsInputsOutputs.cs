@@ -1,19 +1,20 @@
-﻿namespace UserInterface.Commands
+﻿namespace APSIM.Interop.Documentation.Formats
 {
+    using APSIM.Services.Documentation;
     using APSIM.Shared.Utilities;
-    using ApsimNG.Classes;
     using Models.Core;
-    using Presenters;
     using System;
     using System.Collections.Generic;
     using System.Data;
-    using System.IO;
+    using System.Linq;
     using System.Reflection;
+    using System.Text;
+    using APSIM.Shared.Extensions;
 
     /// <summary>
-    /// This command exports the specified node and all child nodes as HTML.
+    /// This class documents a model's parameters, inputs, and outputs.
     /// </summary>
-    public class CreateParamsInputsOutputsDocCommand
+    public class ParamsInputsOutputs
     {
         /// <summary>The maximum length of a description.</summary>
         private const int maxDescriptionLength = 50;
@@ -21,146 +22,122 @@
         /// <summary>The maximum length of a type name.</summary>
         private const int maxTypeLength = 30;
 
-        /// <summary>The main form.</summary>
-        private ExplorerPresenter explorerPresenter;
-
         /// <summary>The model to document.</summary>
         private IModel modelToDocument;
 
         /// <summary>A list of types to document.</summary>
-        private List<Type> typesToDocument = new List<Type>();
+        private IEnumerable<Type> typesToDocument = Enumerable.Empty<Type>();
 
         /// <summary>Only document types in this namespace.</summary>
         private string namespaceToDocument;
 
         /// <summary>List of parameter names for the model being documented.</summary>
-        private List<string> parameterNames;
+        private IEnumerable<string> parameterNames = Enumerable.Empty<string>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CreateFileDocumentationCommand"/> class.
         /// </summary>
-        /// <param name="explorerPresenter">The explorer presenter.</param>
         /// <param name="model">The model to document.</param>
-        /// <param name="destinationFolder">Name of directory to put pdf file into.</param>
-        /// <param name="outputFileName">Output file name. Can be null.</param>
-        public CreateParamsInputsOutputsDocCommand(ExplorerPresenter explorerPresenter, IModel model, string destinationFolder, string outputFileName)
+        public ParamsInputsOutputs(IModel model)
         {
-            this.explorerPresenter = explorerPresenter;
-            this.modelToDocument = model;
-
-            namespaceToDocument = modelToDocument.GetType().Namespace;
-            var modelNameToDocument = Path.GetFileNameWithoutExtension(explorerPresenter.ApsimXFile.FileName.Replace("Validation", string.Empty));
-            if (outputFileName == null)
-                FileNameWritten = Path.Combine(destinationFolder, modelNameToDocument + ".description.pdf");
-            else
-                FileNameWritten = Path.Combine(destinationFolder, outputFileName);
+            if (model == null)
+                throw new ArgumentNullException(nameof(model));
+            modelToDocument = model;
+            namespaceToDocument = model.GetType().Namespace;
         }
-
-        /// <summary>The name of the file written.</summary>
-        public string FileNameWritten { get; }
 
         /// <summary>
         /// Perform the command
         /// </summary>
-        public void Do()
+        public IEnumerable<ITag> Document()
         {
-            if (modelToDocument is ModelCollectionFromResource)
-                parameterNames = (modelToDocument as ModelCollectionFromResource).GetModelParameterNames();
+            if (modelToDocument is ModelCollectionFromResource resourceModel)
+                parameterNames = resourceModel.GetModelParameterNames();
 
             // Get a list of tags for each type.
-            var tags = new List<AutoDocumentation.ITag>();
+            var tags = new List<ITag>();
 
             // Document the model.
             tags.AddRange(DocumentObject(modelToDocument));
 
             // Document any other referenced types.
-            for (int i = 0; i < typesToDocument.Count; i++)
-                tags.AddRange(DocumentType(typesToDocument[i]));
+            foreach (Type type in typesToDocument)
+                tags.AddRange(DocumentType(type));
 
-            // Convert the list of models into a list of tags.
-            var pdfWriter = new PDFWriter(explorerPresenter, portraitOrientation:false);
-            pdfWriter.CreatePDF(tags, FileNameWritten);
+            return tags;
         }
 
         /// <summary>Document the specified model.</summary>
         /// <param name="objectToDocument">The type to document.</param>
-        private List<AutoDocumentation.ITag> DocumentObject(IModel objectToDocument)
+        private IEnumerable<ITag> DocumentObject(IModel objectToDocument)
         {
-            var tags = new List<AutoDocumentation.ITag>();
-
-            tags.Add(new AutoDocumentation.Heading((objectToDocument as IModel).Name, 1));
-            explorerPresenter.ApsimXFile.DocumentModel(objectToDocument.Name, tags, 1);
+            List<ITag> tags = new List<ITag>();
 
             // If there are parameters then write them to the tags.
             if (parameterNames != null && !(objectToDocument is Models.PMF.Plant))
             {
                 var parameters = GetParameters(objectToDocument);
                 var parameterTable = PropertiesToTable(parameters, objectToDocument);
-                tags.Add(new AutoDocumentation.Paragraph("**Parameters (Inputs)**", 0));
-                tags.Add(new AutoDocumentation.Table(new DataView(parameterTable) { Sort = "Name asc" }, 2, width:30));
+                tags.Add(new Paragraph("**Parameters (Inputs)**"));
+                tags.Add(new Table(new DataView(parameterTable) { Sort = "Name asc" }));
             }
 
-            var outputs = GetOutputs(objectToDocument.GetType());
+            IEnumerable<IVariable> outputs = GetOutputs(objectToDocument.GetType());
 
-            if (outputs != null && outputs.Count > 0)
+            if (outputs != null && outputs.Any())
             {
                 var outputTable = PropertiesToTable(outputs);
-                tags.Add(new AutoDocumentation.Paragraph("**Properties (Outputs)**", 0));
-                tags.Add(new AutoDocumentation.Table(new DataView(outputTable) { Sort = "Name asc" }, 2, width: 30));
+                tags.Add(new Paragraph("**Properties (Outputs)**"));
+                tags.Add(new Table(new DataView(outputTable) { Sort = "Name asc" }));
             }
 
-            DocumentLinksEventsMethods(objectToDocument.GetType(), tags);
+            tags.AddRange(DocumentLinksEventsMethods(objectToDocument.GetType()));
 
-            // Clear the parameter names as we've used them.
-            parameterNames?.Clear();
-
-            return tags;
+            yield return new Section(objectToDocument.Name, tags);
         }
 
         /// <summary>Document the specified model.</summary>
         /// <param name="typeToDocument">The type to document.</param>
-        private List<AutoDocumentation.ITag> DocumentType(Type typeToDocument)
+        private IEnumerable<ITag> DocumentType(Type typeToDocument)
         {
-            var tags = new List<AutoDocumentation.ITag>();
+            List<ITag> tags = new List<ITag>();
+            tags.Add(new Paragraph(CodeDocumentation.GetSummary(typeToDocument)));
+            tags.Add(new Paragraph(CodeDocumentation.GetRemarks(typeToDocument)));
 
-            tags.Add(new AutoDocumentation.Heading(typeToDocument.Name, 1));
-
-            AutoDocumentation.ParseTextForTags(AutoDocumentation.GetSummaryRaw(typeToDocument), modelToDocument, tags, 1, 0, false);
-
-            var outputs = GetOutputs(typeToDocument);
-            if (outputs != null && outputs.Count > 0)
+            IEnumerable<IVariable> outputs = GetOutputs(typeToDocument);
+            if (outputs != null && outputs.Any())
             {
-                var outputTable = PropertiesToTable(outputs);
-                tags.Add(new AutoDocumentation.Paragraph("**Properties (Outputs)**", 0));
-                tags.Add(new AutoDocumentation.Table(new DataView(outputTable) { Sort = "Name asc" }, 2));
+                DataTable outputTable = PropertiesToTable(outputs);
+                tags.Add(new Paragraph("**Properties (Outputs)**"));
+                tags.Add(new Table(new DataView(outputTable) { Sort = "Name asc" }));
             }
 
-            DocumentLinksEventsMethods(typeToDocument, tags);
+            tags.AddRange(DocumentLinksEventsMethods(typeToDocument));
 
-            return tags;
+            yield return new Section(typeToDocument.GetFriendlyName(), tags);
         }
 
-        private void DocumentLinksEventsMethods(Type typeToDocument, List<AutoDocumentation.ITag> tags)
+        private IEnumerable<ITag> DocumentLinksEventsMethods(Type typeToDocument)
         {
             var links = GetLinks(typeToDocument);
             if (links != null)
             {
-                tags.Add(new AutoDocumentation.Paragraph("**Links (Dependencies)**", 0));
-                tags.Add(new AutoDocumentation.Table(new DataView(links) { Sort = "Name asc" }, 1));
+                yield return new Paragraph("**Links (Dependencies)**");
+                yield return new Table(new DataView(links) { Sort = "Name asc" });
             }
 
             var events = GetEvents(typeToDocument);
             if (events != null)
             {
-                tags.Add(new AutoDocumentation.Paragraph("**Events published**", 0));
-                tags.Add(new AutoDocumentation.Table(new DataView(events) { Sort = "Name asc" }, 1));
+                yield return new Paragraph("**Events published**");
+                yield return new Table(new DataView(events) { Sort = "Name asc" });
             }
 
             var methods = GetMethods(typeToDocument);
             if (methods != null)
             {
-                tags.Add(new AutoDocumentation.Paragraph("**Methods (callable from manager)**", 0));
-                tags.Add(new AutoDocumentation.Table(new DataView(methods) { Sort = "Name asc" }, 1));
+                yield return new Paragraph("**Methods (callable from manager)**");
+                yield return new Table(new DataView(methods) { Sort = "Name asc" });
             }
         }
 
@@ -169,7 +146,7 @@
         /// </summary>
         /// <param name="properties">The list of properties to put into table.</param>
         /// <param name="objectToDocument">The object to use for getting property values. If null, then no value column will be added.</param>
-        private DataTable PropertiesToTable(List<IVariable> properties, object objectToDocument = null)
+        private DataTable PropertiesToTable(IEnumerable<IVariable> properties, object objectToDocument = null)
         {
             var outputs = new DataTable("Properties");
             outputs.Columns.Add("Name", typeof(string));
@@ -217,7 +194,7 @@
         /// Create and return a new Output object for member
         /// </summary>
         /// <param name="objectToDocument">Object to be documented.</param>
-        private List<IVariable> GetParameters(object objectToDocument)
+        private IEnumerable<IVariable> GetParameters(object objectToDocument)
         {
             var parameters = new List<IVariable>();
 
@@ -236,7 +213,7 @@
         /// </summary>
         /// <param name="typeToDocument">The type of object to inspect.</param>
         /// <param name="typeofProperties">The type of properties to include in the return table.</param>
-        private List<IVariable> GetOutputs(Type typeToDocument)
+        private IEnumerable<IVariable> GetOutputs(Type typeToDocument)
         {
             var outputs = new List<IVariable>();
             foreach (var property in typeToDocument.GetProperties(BindingFlags.Public |
@@ -259,6 +236,12 @@
 
         /// <summary>Get a type name for the specified class member.</summary>
         /// <param name="memberType">The type to get a name for.</param>
+        /// <remarks>
+        /// todo: consider a way to phase out this function by making use of
+        /// <see cref="TypeExtensions.GetFriendlyName(Type)"/>. The problem is
+        /// we need some way of keeping track of which user-defiend (aka apsim-)
+        /// types are referenced by this type.
+        /// </remarks>
         private string GetTypeName(Type memberType)
         {
             Type type = null;
@@ -307,8 +290,8 @@
             if (type.IsClass && type.Namespace != null && type.Namespace.StartsWith(namespaceToDocument))
             {
                 if (type != modelToDocument.GetType() && !typesToDocument.Contains(type))
-                    typesToDocument.Add(type);
-                typeName = string.Format("<a href=\"#{0}\">{1}</a>", type.Name, typeName);
+                    typesToDocument = typesToDocument.Append(type);
+                typeName = $"[{typeName}](#{type.Name})";
 
                 if (isList)
                     typeName = $"List&lt;{typeName}&gt;";
@@ -414,22 +397,27 @@
                             parameters += ", ";
                         parameters += GetTypeName(argument.ParameterType) + " " + argument.Name;
                     }
-                    string description = AutoDocumentation.GetSummary(method);
-                    string remarks = AutoDocumentation.GetRemarks(method);
+                    string description = CodeDocumentation.GetSummary(method);
+                    string remarks = CodeDocumentation.GetRemarks(method);
                     if (!string.IsNullOrEmpty(remarks))
                         description += Environment.NewLine + Environment.NewLine + remarks;
                     string methodName = method.Name;
-                    if (description != null)
-                        description = "<i>" + description + "</i>"; // italics
-                    var st = string.Format("<p>{0} {1}({2})</p>{3}",
-                                           GetTypeName(method.ReturnType), 
-                                           method.Name, 
-                                           parameters, 
-                                           description);
-
+                    // Italicise the method description.
+                    if (!string.IsNullOrEmpty(description))
+                        description = $"*{description}*";
+                    StringBuilder st = new StringBuilder();
+                    string returnType = GetTypeName(method.ReturnType);
+                    st.Append(returnType);
+                    st.Append(" ");
+                    st.Append(method.Name);
+                    st.Append("(");
+                    st.Append(parameters);
+                    st.AppendLine(")");
+                    st.AppendLine();
+                    st.Append(description);
 
                     row["Name"] = method.Name;
-                    row["Description"] = st.Replace("\r\n", " ");
+                    row["Description"] = st.ToString();//.Replace("\r\n", " ");
 
                     methods.Rows.Add(row);
                 }
@@ -442,4 +430,3 @@
         }
     }
 }
-
