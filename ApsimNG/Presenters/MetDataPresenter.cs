@@ -7,7 +7,7 @@
     using System.Globalization;
     using System.IO;
     using System.Text;
-    using APSIM.Services.Graphing;
+    using APSIM.Shared.Graphing;
     using APSIM.Shared.Utilities;
     using Commands;
     using Models;

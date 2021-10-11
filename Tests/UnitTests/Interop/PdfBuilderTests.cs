@@ -7,18 +7,18 @@ using MigraDocCore.DocumentObjectModel;
 using Moq;
 using System;
 using System.Drawing;
-using ITag = APSIM.Services.Documentation.ITag;
+using ITag = APSIM.Shared.Documentation.ITag;
 using Color = System.Drawing.Color;
-using SectionTag = APSIM.Services.Documentation.Section;
-using ParagraphTag = APSIM.Services.Documentation.Paragraph;
-using ImageTag = APSIM.Services.Documentation.Image;
-using TableTag = APSIM.Services.Documentation.Table;
-using GraphTag = APSIM.Services.Documentation.Graph;
-using GraphPageTag = APSIM.Services.Documentation.GraphPage;
+using SectionTag = APSIM.Shared.Documentation.Section;
+using ParagraphTag = APSIM.Shared.Documentation.Paragraph;
+using ImageTag = APSIM.Shared.Documentation.Image;
+using TableTag = APSIM.Shared.Documentation.Table;
+using GraphTag = APSIM.Shared.Documentation.Graph;
+using GraphPageTag = APSIM.Shared.Documentation.GraphPage;
 using MigraDocImage = MigraDocCore.DocumentObjectModel.Shapes.Image;
 using System.Data;
 using System.Collections.Generic;
-using APSIM.Services.Graphing;
+using APSIM.Shared.Graphing;
 
 namespace APSIM.Tests.Interop
 {

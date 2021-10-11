@@ -77,7 +77,7 @@ namespace APSIM.Interop.Markdown.Renderers.Inlines
         /// <param name="uri">Image URI.</param>
         public virtual Image GetImage(string uri)
         {
-            return APSIM.Services.Documentation.Image.LoadImage(uri, imageRelativePath);
+            return APSIM.Shared.Documentation.Image.LoadImage(uri, imageRelativePath);
         }
     }
 }

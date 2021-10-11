@@ -1,7 +1,7 @@
 using NUnit.Framework;
 using APSIM.Interop.Documentation;
 using APSIM.Interop.Markdown.Renderers;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 using APSIM.Interop.Documentation.Renderers;
 using Document = MigraDocCore.DocumentObjectModel.Document;
 using Paragraph = MigraDocCore.DocumentObjectModel.Paragraph;

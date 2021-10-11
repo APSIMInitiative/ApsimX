@@ -8,7 +8,7 @@ namespace Models.PMF.Organs
     using Models.PMF.Interfaces;
     using Models.PMF.Library;
     using System;
-    using APSIM.Services.Documentation;
+    using APSIM.Shared.Documentation;
     using System.Collections.Generic;
     using Newtonsoft.Json;
 

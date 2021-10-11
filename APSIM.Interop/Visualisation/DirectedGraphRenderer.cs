@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using APSIM.Interop.Drawing;
-using APSIM.Services.Graphing;
+using APSIM.Shared.Graphing;
 
 namespace APSIM.Interop.Visualisation
 {

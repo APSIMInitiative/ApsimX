@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using APSIM.Services.Graphing;
+using APSIM.Shared.Graphing;
 
 namespace APSIM.Interop.Graphing
 {

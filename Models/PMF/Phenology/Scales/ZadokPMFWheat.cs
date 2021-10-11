@@ -8,7 +8,7 @@ using APSIM.Shared.Utilities;
 using Models.PMF.Organs;
 using Newtonsoft.Json;
 using Models.PMF.Struct;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 using System.Data;
 
 namespace Models.PMF.Phen

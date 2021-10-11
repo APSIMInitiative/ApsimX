@@ -13,7 +13,7 @@ using Models.Storage;
 using Newtonsoft.Json.Serialization;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace Models.Core
 {

@@ -1,5 +1,5 @@
 ﻿using System;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
@@ -55,27 +55,27 @@ namespace Models.Functions
             // yield return new GraphAndTable(XYPairs, string.Empty, "Average temperature (oC)", Name, indent));
         }
 
-        private APSIM.Services.Documentation.Graph CreateGraph(uint indent = 0)
+        private APSIM.Shared.Documentation.Graph CreateGraph(uint indent = 0)
         {
             // fixme - this is basically identical to what we've got in the linear interp code.
-            var series = new APSIM.Services.Graphing.Series[1];
+            var series = new APSIM.Shared.Graphing.Series[1];
             string xName = "Average Temperature (°C)";
             string yName = Name;
 
-            series[0] = new APSIM.Services.Graphing.LineSeries("Weighted temperature value",
+            series[0] = new APSIM.Shared.Graphing.LineSeries("Weighted temperature value",
                 ColourUtilities.ChooseColour(4),
                 false,
                 XYPairs.X,
                 XYPairs.Y,
-                new APSIM.Services.Graphing.Line(APSIM.Services.Graphing.LineType.Solid, APSIM.Services.Graphing.LineThickness.Normal),
-                new APSIM.Services.Graphing.Marker(APSIM.Services.Graphing.MarkerType.None, APSIM.Services.Graphing.MarkerSize.Normal, 1),
+                new APSIM.Shared.Graphing.Line(APSIM.Shared.Graphing.LineType.Solid, APSIM.Shared.Graphing.LineThickness.Normal),
+                new APSIM.Shared.Graphing.Marker(APSIM.Shared.Graphing.MarkerType.None, APSIM.Shared.Graphing.MarkerSize.Normal, 1),
                 xName,
                 yName
             );
-            var xAxis = new APSIM.Services.Graphing.Axis(xName, APSIM.Services.Graphing.AxisPosition.Bottom, false, false);
-            var yAxis = new APSIM.Services.Graphing.Axis(yName, APSIM.Services.Graphing.AxisPosition.Left, false, false);
-            var legend = new APSIM.Services.Graphing.LegendConfiguration(APSIM.Services.Graphing.LegendOrientation.Vertical, APSIM.Services.Graphing.LegendPosition.TopLeft, true);
-            return new APSIM.Services.Documentation.Graph(Name, series, xAxis, yAxis, legend);
+            var xAxis = new APSIM.Shared.Graphing.Axis(xName, APSIM.Shared.Graphing.AxisPosition.Bottom, false, false);
+            var yAxis = new APSIM.Shared.Graphing.Axis(yName, APSIM.Shared.Graphing.AxisPosition.Left, false, false);
+            var legend = new APSIM.Shared.Graphing.LegendConfiguration(APSIM.Shared.Graphing.LegendOrientation.Vertical, APSIM.Shared.Graphing.LegendPosition.TopLeft, true);
+            return new APSIM.Shared.Documentation.Graph(Name, series, xAxis, yAxis, legend);
         }
     }
 }

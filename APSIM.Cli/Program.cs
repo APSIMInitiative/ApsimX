@@ -1,6 +1,6 @@
 ﻿using APSIM.Cli.Options;
 using APSIM.Interop.Documentation;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using CommandLine;
 using Models.Core;

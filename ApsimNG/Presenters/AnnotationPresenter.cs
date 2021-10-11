@@ -3,7 +3,7 @@
     using Models;
     using System;
     using Views;
-    using APSIM.Services.Graphing;
+    using APSIM.Shared.Graphing;
 
     /// <summary>This presenter lets the set properties of a graph annotation.</summary>
     public class AnnotationPresenter : IPresenter

@@ -7,7 +7,7 @@
     using Interfaces;
     using Library;
     using System;
-    using APSIM.Services.Documentation;
+    using APSIM.Shared.Documentation;
     using System.Collections.Generic;
     using Newtonsoft.Json;
     using PMF;

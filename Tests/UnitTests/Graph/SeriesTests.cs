@@ -8,7 +8,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using static UnitTests.Graph.MockSimulationDescriptionGenerator;
-    using APSIM.Services.Graphing;
+    using APSIM.Shared.Graphing;
     using Series = Models.Series;
 
     [TestFixture]

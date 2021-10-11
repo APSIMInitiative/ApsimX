@@ -21,7 +21,7 @@ namespace UserInterface.Presenters
     using Models.Management;
     using Views;
     using Interfaces;
-    using APSIM.Services.Graphing;
+    using APSIM.Shared.Graphing;
 
     /// <summary>
     /// Presenter for the rotation bubble chart component

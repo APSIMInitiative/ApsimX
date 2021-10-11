@@ -1,6 +1,6 @@
 using APSIM.Interop.Markdown.Parsers.Inlines;
 using APSIM.Interop.Markdown.Renderers;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 using Markdig;
 using Markdig.Parsers;
 using Markdig.Syntax;

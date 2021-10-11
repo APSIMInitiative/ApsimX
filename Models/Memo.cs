@@ -2,7 +2,7 @@
 {
     using Models.Core;
     using System;
-    using APSIM.Services.Documentation;
+    using APSIM.Shared.Documentation;
     using System.Collections.Generic;
 
     /// <summary>This is a memo/text component that stores user entered text information.</summary>

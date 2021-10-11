@@ -15,7 +15,7 @@ using Models.Core;
 using System.Reflection;
 using Newtonsoft.Json.Linq;
 using Models.PMF;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace APSIM.Tests.Interop.Documentation
 {

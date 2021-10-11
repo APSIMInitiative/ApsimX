@@ -4,7 +4,7 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 using Newtonsoft.Json;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions
 {

@@ -10,7 +10,7 @@
     using System.Data;
     using System.Drawing;
     using System.Linq;
-    using APSIM.Services.Graphing;
+    using APSIM.Shared.Graphing;
 
     /// <summary>The class represents a single series on a graph</summary>
     [ValidParent(ParentType = typeof(Graph))]

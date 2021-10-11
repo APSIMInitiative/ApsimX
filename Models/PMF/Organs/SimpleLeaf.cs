@@ -10,7 +10,7 @@
     using System.Collections.Generic;
     using Models.PMF.Phen;
     using Newtonsoft.Json;
-    using APSIM.Services.Documentation;
+    using APSIM.Shared.Documentation;
 
     /// <summary>
     /// This organ is simulated using a SimpleLeaf organ type.  It provides the core functions of intercepting radiation, producing biomass

@@ -20,7 +20,7 @@
     using System.Globalization;
     using MathNet.Numerics.Statistics;
     using Extensions;
-    using APSIM.Services.Graphing;
+    using APSIM.Shared.Graphing;
     using APSIM.Interop.Graphing.Extensions;
     using APSIM.Interop.Graphing.CustomSeries;
 #if NETFRAMEWORK
@@ -429,13 +429,13 @@
              string yFieldName,
              IEnumerable xError,
              IEnumerable yError,
-             APSIM.Services.Graphing.AxisPosition xAxisType,
-             APSIM.Services.Graphing.AxisPosition yAxisType,
+             APSIM.Shared.Graphing.AxisPosition xAxisType,
+             APSIM.Shared.Graphing.AxisPosition yAxisType,
              Color colour,
              LineType lineType,
-             APSIM.Services.Graphing.MarkerType markerType,
-             APSIM.Services.Graphing.LineThickness lineThickness,
-             APSIM.Services.Graphing.MarkerSize markerSize,
+             APSIM.Shared.Graphing.MarkerType markerType,
+             APSIM.Shared.Graphing.LineThickness lineThickness,
+             APSIM.Shared.Graphing.MarkerSize markerSize,
              double markerModifier,
              bool showOnLegend)
         {
@@ -483,7 +483,7 @@
                 }
 
                 // Line thickness
-                if (lineThickness == APSIM.Services.Graphing.LineThickness.Thin)
+                if (lineThickness == APSIM.Shared.Graphing.LineThickness.Thin)
                     series.StrokeThickness = 0.5;
 
                 // Marker type.
@@ -549,8 +549,8 @@
             string title,
             IEnumerable x,
             IEnumerable y,
-            APSIM.Services.Graphing.AxisPosition xAxisType,
-            APSIM.Services.Graphing.AxisPosition yAxisType,
+            APSIM.Shared.Graphing.AxisPosition xAxisType,
+            APSIM.Shared.Graphing.AxisPosition yAxisType,
             Color colour,
             bool showOnLegend)
         {
@@ -596,8 +596,8 @@
             IEnumerable y1,
             IEnumerable x2,
             IEnumerable y2,
-            APSIM.Services.Graphing.AxisPosition xAxisType,
-            APSIM.Services.Graphing.AxisPosition yAxisType,
+            APSIM.Shared.Graphing.AxisPosition xAxisType,
+            APSIM.Shared.Graphing.AxisPosition yAxisType,
             Color colour,
             bool showOnLegend)
         {
@@ -658,8 +658,8 @@
             string title,
             IEnumerable x,
             IEnumerable y,
-            APSIM.Services.Graphing.AxisPosition xAxisType,
-            APSIM.Services.Graphing.AxisPosition yAxisType,
+            APSIM.Shared.Graphing.AxisPosition xAxisType,
+            APSIM.Shared.Graphing.AxisPosition yAxisType,
             Color colour,
             bool showOnLegend)
         {
@@ -688,8 +688,8 @@
             string title,
             object[] x,
             double[] y,
-            APSIM.Services.Graphing.AxisPosition xAxisType,
-            APSIM.Services.Graphing.AxisPosition yAxisType,
+            APSIM.Shared.Graphing.AxisPosition xAxisType,
+            APSIM.Shared.Graphing.AxisPosition yAxisType,
             Color colour,
             bool showOnLegend)
         {
@@ -786,13 +786,13 @@
             string title,
             object[] x,
             double[] y,
-            APSIM.Services.Graphing.AxisPosition xAxisType,
-            APSIM.Services.Graphing.AxisPosition yAxisType,
+            APSIM.Shared.Graphing.AxisPosition xAxisType,
+            APSIM.Shared.Graphing.AxisPosition yAxisType,
             Color colour,
             bool showOnLegend,
             LineType lineType,
-            APSIM.Services.Graphing.MarkerType markerType,
-            APSIM.Services.Graphing.LineThickness lineThickness)
+            APSIM.Shared.Graphing.MarkerType markerType,
+            APSIM.Shared.Graphing.LineThickness lineThickness)
         {
             if (x?.Length > 0 && y?.Length > 0)
             {
@@ -819,7 +819,7 @@
                     series.OutlierType = oxyMarkerType;
 
                 // Line thickness
-                if (lineThickness == APSIM.Services.Graphing.LineThickness.Thin)
+                if (lineThickness == APSIM.Shared.Graphing.LineThickness.Thin)
                 {
                     double thickness = 0.5;
                     series.StrokeThickness = thickness;
@@ -854,8 +854,8 @@
         }
 
         private List<BoxPlotItem> GetBoxPlotItems(object[] x, double[] data, 
-                                                  APSIM.Services.Graphing.AxisPosition xAxisType,
-                                                  APSIM.Services.Graphing.AxisPosition yAxisType)
+                                                  APSIM.Shared.Graphing.AxisPosition xAxisType,
+                                                  APSIM.Shared.Graphing.AxisPosition yAxisType)
         {
             data = data.Where(d => !double.IsNaN(d)).ToArray();
             double[] fiveNumberSummary = data.FiveNumberSummary();
@@ -913,8 +913,8 @@
             bool leftAlign,
             bool topAlign,
             double textRotation,
-            APSIM.Services.Graphing.AxisPosition xAxisType,
-            APSIM.Services.Graphing.AxisPosition yAxisType,
+            APSIM.Shared.Graphing.AxisPosition xAxisType,
+            APSIM.Shared.Graphing.AxisPosition yAxisType,
             Color colour)
         {
             OxyPlot.Annotations.TextAnnotation annotation = new OxyPlot.Annotations.TextAnnotation();
@@ -978,7 +978,7 @@
             object x2,
             object y2,
             LineType type,
-            APSIM.Services.Graphing.LineThickness thickness,
+            APSIM.Shared.Graphing.LineThickness thickness,
             Color colour,
             bool inFrontOfSeries,
             string toolTip)
@@ -990,9 +990,9 @@
                 x1Position = Convert.ToDouble(x1, System.Globalization.CultureInfo.InvariantCulture);
             double y1Position = 0.0;
             if ((double)y1 == double.MinValue)
-                y1Position = AxisMinimum(APSIM.Services.Graphing.AxisPosition.Left);
+                y1Position = AxisMinimum(APSIM.Shared.Graphing.AxisPosition.Left);
             else if ((double)y1 == double.MaxValue)
-                y1Position = AxisMaximum(APSIM.Services.Graphing.AxisPosition.Left);
+                y1Position = AxisMaximum(APSIM.Shared.Graphing.AxisPosition.Left);
             else
                 y1Position = (double)y1;
             double x2Position = 0.0;
@@ -1002,9 +1002,9 @@
                 x2Position = Convert.ToDouble(x2, System.Globalization.CultureInfo.InvariantCulture);
             double y2Position = 0.0;
             if ((double)y2 == double.MinValue)
-                y2Position = AxisMinimum(APSIM.Services.Graphing.AxisPosition.Left);
+                y2Position = AxisMinimum(APSIM.Shared.Graphing.AxisPosition.Left);
             else if ((double)y2 == double.MaxValue)
-                y2Position = AxisMaximum(APSIM.Services.Graphing.AxisPosition.Left);
+                y2Position = AxisMaximum(APSIM.Shared.Graphing.AxisPosition.Left);
             else
                 y2Position = (double)y2;
 
@@ -1021,7 +1021,7 @@
                 lineAnnotation.MaximumY = y2Position;
                 lineAnnotation.Type = LineAnnotationType.Vertical;
                 lineAnnotation.Color = OxyColor.FromArgb(colour.A, colour.R, colour.G, colour.B);
-                if (thickness == APSIM.Services.Graphing.LineThickness.Thin)
+                if (thickness == APSIM.Shared.Graphing.LineThickness.Thin)
                     lineAnnotation.StrokeThickness = 0.5;
                 annotation = lineAnnotation;
             }
@@ -1054,7 +1054,7 @@
         /// <param name="interval">Axis scale interval</param>
         /// <param name="crossAtZero">Axis crosses at zero?</param>
         public void FormatAxis(
-            APSIM.Services.Graphing.AxisPosition axisType,
+            APSIM.Shared.Graphing.AxisPosition axisType,
             string title,
             bool inverted,
             double minimum,
@@ -1113,7 +1113,7 @@
         /// </summary>
         /// <param name="legendPositionType">Position of the legend</param>
         /// <param name="orientation">Orientation of items in the legend.</param>
-        public void FormatLegend(APSIM.Services.Graphing.LegendPosition legendPositionType, APSIM.Services.Graphing.LegendOrientation orientation)
+        public void FormatLegend(APSIM.Shared.Graphing.LegendPosition legendPositionType, APSIM.Shared.Graphing.LegendOrientation orientation)
         {
             OxyLegendPosition oxyLegendPosition;
             if (Enum.TryParse(legendPositionType.ToString(), out oxyLegendPosition))
@@ -1435,8 +1435,8 @@
         private List<DataPoint> PopulateDataPointSeries(
             IEnumerable x,
             IEnumerable y,
-            APSIM.Services.Graphing.AxisPosition xAxisType,
-            APSIM.Services.Graphing.AxisPosition yAxisType)
+            APSIM.Shared.Graphing.AxisPosition xAxisType,
+            APSIM.Shared.Graphing.AxisPosition yAxisType)
         {
             List<DataPoint> points = new List<DataPoint>();
             if (x != null && y != null && ((ICollection)x).Count > 0 && ((ICollection)y).Count > 0)
@@ -1472,8 +1472,8 @@
             IEnumerable y,
             IEnumerable xError,
             IEnumerable yError,
-            APSIM.Services.Graphing.AxisPosition xAxisType,
-            APSIM.Services.Graphing.AxisPosition yAxisType)
+            APSIM.Shared.Graphing.AxisPosition xAxisType,
+            APSIM.Shared.Graphing.AxisPosition yAxisType)
         {
             List<ScatterErrorPoint> points = new List<ScatterErrorPoint>();
             if (x != null && y != null && (yError != null || xError != null))
@@ -1522,7 +1522,7 @@
         /// <param name="enumerator">The enumumerator</param>
         /// <param name="axisType">Type of the axis.</param>
         /// <returns></returns>
-        private double[] GetDataPointValues(IEnumerator enumerator, APSIM.Services.Graphing.AxisPosition axisType)
+        private double[] GetDataPointValues(IEnumerator enumerator, APSIM.Shared.Graphing.AxisPosition axisType)
         {
             List<double> dataPointValues = new List<double>();
             double x; // Used only as an out parameter, to maintain backward
@@ -1581,7 +1581,7 @@
         /// </summary>
         /// <param name="axisType">The axis type to check</param>
         /// <param name="dataType">The data type of the axis</param>
-        private void EnsureAxisExists(APSIM.Services.Graphing.AxisPosition axisType, Type dataType)
+        private void EnsureAxisExists(APSIM.Shared.Graphing.AxisPosition axisType, Type dataType)
         {
             // Make sure we have an x axis at the correct position.
             if (this.GetAxis(axisType) == null)
@@ -1612,7 +1612,7 @@
         /// </summary>
         /// <param name="axisType">The axis type to retrieve </param>
         /// <returns>The axis</returns>
-        public OxyPlot.Axes.Axis GetAxis(APSIM.Services.Graphing.AxisPosition axisType)
+        public OxyPlot.Axes.Axis GetAxis(APSIM.Shared.Graphing.AxisPosition axisType)
         {
             int i = this.GetAxisIndex(axisType);
             if (i == -1)
@@ -1626,7 +1626,7 @@
         /// </summary>
         /// <param name="axisType">The axis type to retrieve </param>
         /// <returns>The axis</returns>
-        private int GetAxisIndex(APSIM.Services.Graphing.AxisPosition axisType)
+        private int GetAxisIndex(APSIM.Shared.Graphing.AxisPosition axisType)
         {
             OxyPlot.Axes.AxisPosition position = this.AxisTypeToPosition(axisType);
             for (int i = 0; i < this.plot1.Model.Axes.Count; i++)
@@ -1645,17 +1645,17 @@
         /// </summary>
         /// <param name="type">The axis type</param>
         /// <returns>The position of the axis.</returns>
-        private OxyPlot.Axes.AxisPosition AxisTypeToPosition(APSIM.Services.Graphing.AxisPosition type)
+        private OxyPlot.Axes.AxisPosition AxisTypeToPosition(APSIM.Shared.Graphing.AxisPosition type)
         {
-            if (type == APSIM.Services.Graphing.AxisPosition.Bottom)
+            if (type == APSIM.Shared.Graphing.AxisPosition.Bottom)
             {
                 return OxyPlot.Axes.AxisPosition.Bottom;
             }
-            else if (type == APSIM.Services.Graphing.AxisPosition.Left)
+            else if (type == APSIM.Shared.Graphing.AxisPosition.Left)
             {
                 return OxyPlot.Axes.AxisPosition.Left;
             }
-            else if (type == APSIM.Services.Graphing.AxisPosition.Top)
+            else if (type == APSIM.Shared.Graphing.AxisPosition.Top)
             {
                 return OxyPlot.Axes.AxisPosition.Top;
             }
@@ -1668,16 +1668,16 @@
         /// </summary>
         /// <param name="type">The axis type</param>
         /// <returns>The position of the axis.</returns>
-        private APSIM.Services.Graphing.AxisPosition AxisPositionToType(OxyPlot.Axes.AxisPosition type)
+        private APSIM.Shared.Graphing.AxisPosition AxisPositionToType(OxyPlot.Axes.AxisPosition type)
         {
             if (type == OxyPlot.Axes.AxisPosition.Bottom)
-                return APSIM.Services.Graphing.AxisPosition.Bottom;
+                return APSIM.Shared.Graphing.AxisPosition.Bottom;
             else if (type == OxyPlot.Axes.AxisPosition.Left)
-                return APSIM.Services.Graphing.AxisPosition.Left;
+                return APSIM.Shared.Graphing.AxisPosition.Left;
             else if (type == OxyPlot.Axes.AxisPosition.Top)
-                return APSIM.Services.Graphing.AxisPosition.Top;
+                return APSIM.Shared.Graphing.AxisPosition.Top;
 
-            return APSIM.Services.Graphing.AxisPosition.Right;
+            return APSIM.Shared.Graphing.AxisPosition.Right;
         }
 
         /// <summary>
@@ -1690,7 +1690,7 @@
             try
             {
                 OnPlotClick?.Invoke(this, EventArgs.Empty);
-                OnAxisClick?.Invoke(APSIM.Services.Graphing.AxisPosition.Bottom);
+                OnAxisClick?.Invoke(APSIM.Shared.Graphing.AxisPosition.Bottom);
                 OnLegendClick?.Invoke(this, new LegendClickArgs());
                 OnTitleClick?.Invoke(this, EventArgs.Empty);
                 OnAnnotationClick?.Invoke(this, EventArgs.Empty);
@@ -1742,7 +1742,7 @@
                         Rectangle titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y);
                         Rectangle topAxisArea = new Rectangle(plotArea.X, 0, plotArea.Width, 0);
 
-                        if (this.GetAxis(APSIM.Services.Graphing.AxisPosition.Top) != null)
+                        if (this.GetAxis(APSIM.Shared.Graphing.AxisPosition.Top) != null)
                         {
                             titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y / 2);
                             topAxisArea = new Rectangle(plotArea.X, plotArea.Y / 2, plotArea.Width, plotArea.Y / 2);
@@ -1760,21 +1760,21 @@
 
                         if (this.OnAxisClick != null)
                         {
-                            if (leftAxisArea.Contains(location) && GetAxis(APSIM.Services.Graphing.AxisPosition.Left) != null)
+                            if (leftAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Left) != null)
                             {
-                                this.OnAxisClick.Invoke(APSIM.Services.Graphing.AxisPosition.Left);
+                                this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Left);
                             }
-                            else if (topAxisArea.Contains(location) && GetAxis(APSIM.Services.Graphing.AxisPosition.Top) != null)
+                            else if (topAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Top) != null)
                             {
-                                this.OnAxisClick.Invoke(APSIM.Services.Graphing.AxisPosition.Top);
+                                this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Top);
                             }
-                            else if (rightAxisArea.Contains(location) && GetAxis(APSIM.Services.Graphing.AxisPosition.Right) != null)
+                            else if (rightAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Right) != null)
                             {
-                                this.OnAxisClick.Invoke(APSIM.Services.Graphing.AxisPosition.Right);
+                                this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Right);
                             }
-                            else if (bottomAxisArea.Contains(location) && GetAxis(APSIM.Services.Graphing.AxisPosition.Bottom) != null)
+                            else if (bottomAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Bottom) != null)
                             {
-                                this.OnAxisClick.Invoke(APSIM.Services.Graphing.AxisPosition.Bottom);
+                                this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Bottom);
                             }
                         }
                     }
@@ -1804,11 +1804,11 @@
             }
         }
 
-        public IEnumerable<APSIM.Services.Graphing.Axis> Axes
+        public IEnumerable<APSIM.Shared.Graphing.Axis> Axes
         {
             get
             {
-                return plot1.Model.Axes.Select(axis => new APSIM.Services.Graphing.Axis(
+                return plot1.Model.Axes.Select(axis => new APSIM.Shared.Graphing.Axis(
                     axis.Title,
                     AxisPositionToType(axis.Position),
                     MathUtilities.FloatsAreEqual(axis.StartPosition, 1),
@@ -1823,7 +1823,7 @@
         /// <summary>
         /// Gets the maximum scale of the specified axis.
         /// </summary>
-        public double AxisMaximum(APSIM.Services.Graphing.AxisPosition axisType)
+        public double AxisMaximum(APSIM.Shared.Graphing.AxisPosition axisType)
         {
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
             if (axis != null)
@@ -1840,7 +1840,7 @@
         /// <summary>
         /// Gets the minimum scale of the specified axis.
         /// </summary>
-        public double AxisMinimum(APSIM.Services.Graphing.AxisPosition axisType)
+        public double AxisMinimum(APSIM.Shared.Graphing.AxisPosition axisType)
         {
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
 
@@ -1858,7 +1858,7 @@
         /// <summary>
         /// Gets the interval (major step) of the specified axis.
         /// </summary>
-        public string AxisTitle(APSIM.Services.Graphing.AxisPosition axisType)
+        public string AxisTitle(APSIM.Shared.Graphing.AxisPosition axisType)
         {
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
 
@@ -1871,7 +1871,7 @@
         /// <summary>
         /// Gets the interval (major step) of the specified axis.
         /// </summary>
-        public double AxisMajorStep(APSIM.Services.Graphing.AxisPosition axisType)
+        public double AxisMajorStep(APSIM.Shared.Graphing.AxisPosition axisType)
         {
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
 

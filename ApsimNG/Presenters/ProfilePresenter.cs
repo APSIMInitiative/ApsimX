@@ -13,7 +13,7 @@
     using System.Linq;
     using System.Reflection;
     using Views;
-    using APSIM.Services.Graphing;
+    using APSIM.Shared.Graphing;
     using Series = Models.Series;
 
     /// <summary>

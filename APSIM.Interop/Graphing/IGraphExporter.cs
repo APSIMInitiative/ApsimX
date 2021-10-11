@@ -1,5 +1,5 @@
 using Image = System.Drawing.Image;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 using OxyPlot;
 
 namespace APSIM.Interop.Graphing

@@ -4,7 +4,7 @@ using Models.Core;
 using Newtonsoft.Json;
 using APSIM.Shared.Utilities;
 using Models.Functions;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {

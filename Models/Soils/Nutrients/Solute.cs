@@ -8,7 +8,7 @@ namespace Models.Soils.Nutrients
     using APSIM.Shared.Utilities;
     using Newtonsoft.Json;
     using System.Collections.Generic;
-    using APSIM.Services.Documentation;
+    using APSIM.Shared.Documentation;
 
     /// <summary>
     /// This class used for this nutrient encapsulates the nitrogen within a mineral N pool.

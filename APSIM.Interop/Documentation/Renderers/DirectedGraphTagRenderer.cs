@@ -1,8 +1,8 @@
 using APSIM.Interop.Drawing.Skia;
 using APSIM.Interop.Markdown.Renderers;
 using APSIM.Interop.Visualisation;
-using APSIM.Services.Documentation.Tags;
-using APSIM.Services.Graphing;
+using APSIM.Shared.Documentation.Tags;
+using APSIM.Shared.Graphing;
 using System.Drawing;
 
 namespace APSIM.Interop.Documentation.Renderers

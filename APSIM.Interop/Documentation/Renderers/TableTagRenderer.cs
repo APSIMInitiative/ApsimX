@@ -1,5 +1,5 @@
 using APSIM.Interop.Markdown.Renderers;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace APSIM.Interop.Documentation.Renderers
 {

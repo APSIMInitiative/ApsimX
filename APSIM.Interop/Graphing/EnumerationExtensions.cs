@@ -1,9 +1,9 @@
 using System;
-using APSIM.Services.Graphing;
+using APSIM.Shared.Graphing;
 using OxyPlot;
-using MarkerType = APSIM.Services.Graphing.MarkerType;
-using LegendOrientation = APSIM.Services.Graphing.LegendOrientation;
-using LegendPosition = APSIM.Services.Graphing.LegendPosition;
+using MarkerType = APSIM.Shared.Graphing.MarkerType;
+using LegendOrientation = APSIM.Shared.Graphing.LegendOrientation;
+using LegendPosition = APSIM.Shared.Graphing.LegendPosition;
 using OxyAxisPosition = OxyPlot.Axes.AxisPosition;
 #if NETCOREAPP
 using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;

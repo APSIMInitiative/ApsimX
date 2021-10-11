@@ -13,7 +13,7 @@
     using Newtonsoft.Json;
     using Models.Soils.Nutrients;
     using System.Linq;
-    using APSIM.Services.Documentation;
+    using APSIM.Shared.Documentation;
 
     ///<summary>
     /// The root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each soil layer. 

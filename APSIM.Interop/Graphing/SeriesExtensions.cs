@@ -1,7 +1,7 @@
 using System;
 using System.Diagnostics;
 using Series = OxyPlot.Series.Series;
-using APSIM.Services.Graphing;
+using APSIM.Shared.Graphing;
 using System.Collections.Generic;
 
 namespace APSIM.Interop.Graphing
@@ -52,7 +52,7 @@ namespace APSIM.Interop.Graphing
         /// </remarks>
         /// <param name="series">The series to be converted.</param>
         /// <param name="labels">Existing axis labels on the graph.</param>
-        public static ExportedSeries ToOxyPlotSeries(this APSIM.Services.Graphing.Series series, AxisLabelCollection labels)
+        public static ExportedSeries ToOxyPlotSeries(this APSIM.Shared.Graphing.Series series, AxisLabelCollection labels)
         {
             ISeriesExporter exporter = FindSeriesExporter(series);
             return exporter.Export(series, labels);
@@ -62,7 +62,7 @@ namespace APSIM.Interop.Graphing
         /// Find an <see cref="ISeriesExporter"/> instance capable of exporting the given series.
         /// </summary>
         /// <param name="series">The series to be exported.</param>
-        private static ISeriesExporter FindSeriesExporter(APSIM.Services.Graphing.Series series)
+        private static ISeriesExporter FindSeriesExporter(APSIM.Shared.Graphing.Series series)
         {
             Type seriesType = series.GetType();
 

@@ -11,7 +11,7 @@ using System;
 using System.Collections.Generic;
 using Newtonsoft.Json;
 using System.Linq;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Organs
 {

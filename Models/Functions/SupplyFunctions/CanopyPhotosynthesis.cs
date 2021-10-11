@@ -7,7 +7,7 @@ using APSIM.Shared.Utilities;
 using Models.Interfaces;
 using Models.PMF;
 using Models.Climate;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions.SupplyFunctions
 {

@@ -5,7 +5,7 @@
     using APSIM.Interop.Drawing;
     using System.Drawing;
     using System.Linq;
-    using APSIM.Services.Graphing;
+    using APSIM.Shared.Graphing;
 
     /// <summary>
     /// An arc on a directed graph.

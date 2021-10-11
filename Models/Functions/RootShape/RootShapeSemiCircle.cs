@@ -4,7 +4,7 @@ using Models.Core;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.PMF.Organs;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions.RootShape
 {

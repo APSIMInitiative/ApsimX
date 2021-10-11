@@ -1,6 +1,6 @@
 ﻿namespace Models.Factorial
 {
-    using APSIM.Services.Documentation;
+    using APSIM.Shared.Documentation;
     using APSIM.Shared.Extensions.Collections;
     using APSIM.Shared.Utilities;
     using Models.Core;

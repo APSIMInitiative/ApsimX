@@ -1,5 +1,5 @@
 ﻿using System;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 using System.Collections;
 using Models.Core;
 using Newtonsoft.Json;

@@ -3,7 +3,7 @@
     using Core;
     using Models.Functions;
     using System;
-    using APSIM.Services.Documentation;
+    using APSIM.Shared.Documentation;
     using APSIM.Shared.Utilities;
     using System.Collections.Generic;
     using System.Data;

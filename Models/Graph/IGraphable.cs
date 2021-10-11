@@ -7,7 +7,7 @@
     using System.Drawing;
     using Newtonsoft.Json;
     using Models.Core;
-    using APSIM.Services.Graphing;
+    using APSIM.Shared.Graphing;
     using Models.Core.Run;
 
     /// <summary>

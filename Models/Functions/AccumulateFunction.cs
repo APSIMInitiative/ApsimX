@@ -5,7 +5,7 @@ using System.Reflection;
 using Models.Core;
 using Models.PMF.Phen;
 using System.Linq;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions
 {

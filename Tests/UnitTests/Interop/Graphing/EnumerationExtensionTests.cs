@@ -1,10 +1,10 @@
 using NUnit.Framework;
-using APSIM.Services.Graphing;
+using APSIM.Shared.Graphing;
 using APSIM.Interop.Graphing;
 using OxyPlot;
-using LegendOrientation = APSIM.Services.Graphing.LegendOrientation;
-using LegendPosition = APSIM.Services.Graphing.LegendPosition;
-using MarkerType = APSIM.Services.Graphing.MarkerType;
+using LegendOrientation = APSIM.Shared.Graphing.LegendOrientation;
+using LegendPosition = APSIM.Shared.Graphing.LegendPosition;
+using MarkerType = APSIM.Shared.Graphing.MarkerType;
 using OxyAxisPosition = OxyPlot.Axes.AxisPosition;
 using System.Drawing;
 

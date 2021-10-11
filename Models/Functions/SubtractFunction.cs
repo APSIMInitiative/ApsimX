@@ -6,7 +6,7 @@ using Models.Core;
 using APSIM.Shared.Utilities;
 using System.Globalization;
 using System.Linq;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions
 {

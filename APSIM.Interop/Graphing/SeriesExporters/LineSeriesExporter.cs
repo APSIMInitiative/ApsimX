@@ -1,5 +1,5 @@
 using System;
-using APSIM.Services.Graphing;
+using APSIM.Shared.Graphing;
 using OxyPlot;
 using Series = OxyPlot.Series.Series;
 

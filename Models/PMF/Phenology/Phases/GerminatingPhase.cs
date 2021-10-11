@@ -7,7 +7,7 @@ using Models.Soils;
 using Models.Functions;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {

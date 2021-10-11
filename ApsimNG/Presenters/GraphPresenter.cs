@@ -14,7 +14,7 @@
     using Models;
     using Models.Storage;
     using Views;
-    using APSIM.Services.Graphing;
+    using APSIM.Shared.Graphing;
 
     /// <summary>
     /// A presenter for a graph.
@@ -134,7 +134,7 @@
                 graphView.UpdateView();
 
                 // Format the axes.
-                foreach (APSIM.Services.Graphing.Axis a in graph.Axis)
+                foreach (APSIM.Shared.Graphing.Axis a in graph.Axis)
                     FormatAxis(a);
 
                 // Get a list of series annotations.
@@ -409,7 +409,7 @@
 
         /// <summary>Format the specified axis.</summary>
         /// <param name="axis">The axis to format</param>
-        private void FormatAxis(APSIM.Services.Graphing.Axis axis)
+        private void FormatAxis(APSIM.Shared.Graphing.Axis axis)
         {
             string title = axis.Title;
             if (axis.Title == null || axis.Title == string.Empty)

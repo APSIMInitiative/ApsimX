@@ -4,13 +4,13 @@ using System.Linq;
 using System.Text;
 using APSIM.Interop.Documentation;
 using APSIM.Interop.Markdown.Renderers;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 using System.Collections.Generic;
 using APSIM.Interop.Documentation.Renderers;
 using TextStyle = APSIM.Interop.Markdown.TextStyle;
 using Document = MigraDocCore.DocumentObjectModel.Document;
 using Paragraph = MigraDocCore.DocumentObjectModel.Paragraph;
-using Section = APSIM.Services.Documentation.Section;
+using Section = APSIM.Shared.Documentation.Section;
 using APSIM.Interop.Documentation.Extensions;
 
 namespace APSIM.Tests.Interop.Documentation.TagRenderers

@@ -3,7 +3,7 @@ using System.Linq;
 using APSIM.Interop.Graphing;
 using APSIM.Interop.Markdown.Renderers;
 using APSIM.Interop.Utility;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace APSIM.Interop.Documentation.Renderers
 {

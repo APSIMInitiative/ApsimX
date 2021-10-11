@@ -1,4 +1,4 @@
-using APSIM.Services.Documentation.Extensions;
+using APSIM.Shared.Documentation.Extensions;
 using System;
 using System.Collections.Generic;
 using APSIM.Interop.Markdown.Renderers;
@@ -7,7 +7,7 @@ using MigraDocCore.DocumentObjectModel;
 using Models.Core;
 using Models.Core.ApsimFile;
 using System.IO;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace APSIM.Documentation.Models
 {

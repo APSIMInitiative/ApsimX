@@ -13,7 +13,7 @@
     using Views;
     using Commands;
     using Models.Storage;
-    using APSIM.Services.Graphing;
+    using APSIM.Shared.Graphing;
     using Series = Models.Series;
 
     /// <summary>

@@ -3,7 +3,7 @@
     using System;
     using Views;
     using Interfaces;
-    using APSIM.Services.Graphing;
+    using APSIM.Shared.Graphing;
 
     /// <summary>
     /// This presenter connects an instance of a Model.Graph.Axis with a 

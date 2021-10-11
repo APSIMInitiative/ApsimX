@@ -8,8 +8,8 @@
     using Models.Core;
     using Views;
 
-    using Orientation = APSIM.Services.Graphing.LegendOrientation;
-    using Position = APSIM.Services.Graphing.LegendPosition;
+    using Orientation = APSIM.Shared.Graphing.LegendOrientation;
+    using Position = APSIM.Shared.Graphing.LegendPosition;
 
     /// <summary>
     /// This presenter connects an instance of a Model.Graph.Axis with a 

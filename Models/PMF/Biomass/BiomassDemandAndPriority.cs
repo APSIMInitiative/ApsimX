@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Models.Functions;
 using Models.PMF.Interfaces;
 using System;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF
 {

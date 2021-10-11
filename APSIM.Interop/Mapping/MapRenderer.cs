@@ -116,7 +116,7 @@ namespace APSIM.Interop.Mapping
             GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 4326);
             List<IGeometry> locations = map.Markers.Select(c => gf.CreatePoint(new Coordinate(c.Longitude, c.Latitude))).ToList<IGeometry>();
             VectorLayer markerLayer = new VectorLayer("Markers");
-            markerLayer.Style.Symbol = APSIM.Services.Documentation.Image.LoadFromResource("Marker.png");
+            markerLayer.Style.Symbol = APSIM.Shared.Documentation.Image.LoadFromResource("Marker.png");
             markerLayer.Style.SymbolOffset = new PointF(0, -16); // Offset so the point is marked by the tip of the symbol, not its center
             markerLayer.DataSource = new GeometryProvider(locations);
             markerLayer.CoordinateTransformation = latLonToMetres;

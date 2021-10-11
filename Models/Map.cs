@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using APSIM.Shared.Utilities;
 using Models.Climate;
 using System.Linq;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 using Models.Mapping;
 
 namespace Models

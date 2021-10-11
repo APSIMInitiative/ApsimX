@@ -8,7 +8,7 @@ using System.Xml.Serialization;
 using System.Linq;
 using Models.PMF;
 using Models.PMF.Interfaces;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions.SupplyFunctions
 {

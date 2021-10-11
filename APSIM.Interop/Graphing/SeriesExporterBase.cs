@@ -1,12 +1,12 @@
 using APSIM.Shared.Utilities;
 using System.Collections.Generic;
-using APSIM.Services.Graphing;
+using APSIM.Shared.Graphing;
 using Series = OxyPlot.Series.Series;
 using OxyPlot;
 using System;
 using System.Linq;
 using OxyPlot.Axes;
-using ApsimSeries = APSIM.Services.Graphing.Series;
+using ApsimSeries = APSIM.Shared.Graphing.Series;
 
 namespace APSIM.Interop.Graphing
 {

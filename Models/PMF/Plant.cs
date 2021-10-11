@@ -7,7 +7,7 @@
     using Models.PMF.Organs;
     using Models.PMF.Phen;
     using System;
-    using APSIM.Services.Documentation;
+    using APSIM.Shared.Documentation;
     using System.Linq;
     using System.Collections.Generic;
     using System.Data;

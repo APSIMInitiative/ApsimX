@@ -1,5 +1,5 @@
 using System.Collections.Generic;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace Models.Mapping
 {

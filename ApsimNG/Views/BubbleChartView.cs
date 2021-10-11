@@ -12,8 +12,8 @@ namespace UserInterface.Views
     using Models;
     using Extensions;
     using Utility;
-    using APSIM.Services.Graphing;
-    using Node = APSIM.Services.Graphing.Node;
+    using APSIM.Shared.Graphing;
+    using Node = APSIM.Shared.Graphing.Node;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow

@@ -2,13 +2,13 @@ using NUnit.Framework;
 using System.Linq;
 using APSIM.Interop.Documentation;
 using APSIM.Interop.Markdown.Renderers;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 using System.Collections.Generic;
 using APSIM.Interop.Documentation.Renderers;
 using Document = MigraDocCore.DocumentObjectModel.Document;
 using Paragraph = MigraDocCore.DocumentObjectModel.Paragraph;
 using Image = System.Drawing.Image;
-using ImageTag = APSIM.Services.Documentation.Image;
+using ImageTag = APSIM.Shared.Documentation.Image;
 using MigraDocImage = MigraDocCore.DocumentObjectModel.Shapes.Image;
 using System.Drawing;
 

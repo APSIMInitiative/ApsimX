@@ -5,7 +5,7 @@
     using System.Drawing;
     using Models;
     using EventArguments;
-    using APSIM.Services.Graphing;
+    using APSIM.Shared.Graphing;
 
     /// <summary>
     /// Event arguments for a Axis click

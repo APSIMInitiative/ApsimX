@@ -13,7 +13,7 @@
     using Color = System.Drawing.Color;
     using Point = System.Drawing.Point;
     using APSIM.Interop.Visualisation;
-    using APSIM.Services.Graphing;
+    using APSIM.Shared.Graphing;
 
 #if NETCOREAPP
     using ExposeEventArgs = Gtk.DrawnArgs;

@@ -10,7 +10,6 @@
 
   <ItemGroup>
     <ProjectReference Include="../APSIM.Interop/APSIM.Interop.csproj" />
-    <ProjectReference Include="../APSIM.Services/APSIM.Services.csproj" />
     <ProjectReference Include="../Models/Models.csproj" />
 
     <EmbeddedResource Include="index.css" />

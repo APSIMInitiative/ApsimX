@@ -1,10 +1,10 @@
 using Image = System.Drawing.Image;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 using OxyPlot;
 using System.IO;
 using APSIM.Interop.Utility;
 using System;
-using APSIM.Services.Graphing;
+using APSIM.Shared.Graphing;
 using APSIM.Interop.Graphing.Extensions;
 using System.Collections.Generic;
 using System.Linq;

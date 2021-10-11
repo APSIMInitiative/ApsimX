@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using APSIM.Interop.Documentation;
 using Models.Core;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 using APSIM.Interop.Documentation.Formats;
 using System.Linq;
 using MigraDocCore.DocumentObjectModel;

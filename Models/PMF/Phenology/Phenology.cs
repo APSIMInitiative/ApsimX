@@ -8,7 +8,7 @@ using System.Linq;
 using Models.PMF.Struct;
 using System.Globalization;
 using Models.PMF.Interfaces;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {

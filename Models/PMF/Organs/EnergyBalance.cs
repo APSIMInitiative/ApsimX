@@ -7,7 +7,7 @@
     using System;
     using Newtonsoft.Json;
     using System.Collections.Generic;
-    using APSIM.Services.Documentation;
+    using APSIM.Shared.Documentation;
 
     /// <summary>
     /// This organ is simulated using a  organ type.  It provides the core functions of intercepting radiation

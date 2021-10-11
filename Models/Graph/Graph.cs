@@ -8,8 +8,8 @@
     using System.Data;
     using System.Linq;
     using Newtonsoft.Json;
-    using APSIM.Services.Graphing;
-    using APSIM.Services.Documentation;
+    using APSIM.Shared.Graphing;
+    using APSIM.Shared.Documentation;
     using Models.Core.Run;
     using Models.CLEM;
     using APSIM.Shared.Utilities;
@@ -176,7 +176,7 @@
         /// <summary>
         /// Get a list of 'standardised' series objects which are to be shown on the graph.
         /// </summary>
-        public IEnumerable<APSIM.Services.Graphing.Series> GetSeries()
+        public IEnumerable<APSIM.Shared.Graphing.Series> GetSeries()
         {
             return GetSeries(GetSeriesDefinitions());
         }
@@ -185,9 +185,9 @@
         /// Get a list of 'standardised' series objects which are to be shown on the graph.
         /// </summary>
         /// <param name="definitions"></param>
-        public IEnumerable<APSIM.Services.Graphing.Series> GetSeries(IEnumerable<SeriesDefinition> definitions)
+        public IEnumerable<APSIM.Shared.Graphing.Series> GetSeries(IEnumerable<SeriesDefinition> definitions)
         {
-            List<APSIM.Services.Graphing.Series> series = new List<APSIM.Services.Graphing.Series>();
+            List<APSIM.Shared.Graphing.Series> series = new List<APSIM.Shared.Graphing.Series>();
             foreach (SeriesDefinition definition in definitions)
             {
                 if (definition.Type == SeriesType.Bar)
@@ -406,7 +406,7 @@
         /// <summary>
         /// Generated a 'standardised' graph.
         /// </summary>
-        public APSIM.Services.Documentation.Graph ToGraph()
+        public APSIM.Shared.Documentation.Graph ToGraph()
         {
             return ToGraph(GetSeriesDefinitions());
         }
@@ -416,14 +416,14 @@
         /// This is used to speed up the loading of pages of graphs - where we
         /// will load data for all series definitions in parallel ahead of time.
         /// </summary>
-        public APSIM.Services.Documentation.Graph ToGraph(IEnumerable<SeriesDefinition> definitions)
+        public APSIM.Shared.Documentation.Graph ToGraph(IEnumerable<SeriesDefinition> definitions)
         {
             try
             {
                 LegendConfiguration legend = new LegendConfiguration(LegendOrientation, LegendPosition, !LegendOutsideGraph);
                 var xAxis = Axis.FirstOrDefault(a => a.Position == AxisPosition.Bottom || a.Position == AxisPosition.Top);
                 var yAxis = Axis.FirstOrDefault(a => a.Position == AxisPosition.Left || a.Position == AxisPosition.Right);
-                return new APSIM.Services.Documentation.Graph(Name, GetSeries(definitions), xAxis, yAxis, legend);
+                return new APSIM.Shared.Documentation.Graph(Name, GetSeries(definitions), xAxis, yAxis, legend);
             }
             catch (Exception err)
             {

@@ -1,6 +1,6 @@
 ﻿namespace APSIM.Interop.Documentation.Formats
 {
-    using APSIM.Services.Documentation;
+    using APSIM.Shared.Documentation;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using System;

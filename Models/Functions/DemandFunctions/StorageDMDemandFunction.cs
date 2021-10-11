@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Models.Core;
 using Models.PMF.Interfaces;
 using APSIM.Shared.Utilities;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions.DemandFunctions
 {

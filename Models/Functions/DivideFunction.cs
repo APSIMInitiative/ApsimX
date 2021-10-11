@@ -4,7 +4,7 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 using System.Linq;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions
 {

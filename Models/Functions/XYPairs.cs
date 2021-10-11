@@ -5,12 +5,12 @@ using Models.Core;
 using System.Xml;
 using APSIM.Shared.Utilities;
 using System.Data;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 using Newtonsoft.Json;
-using APSIM.Services.Graphing;
-using Graph = APSIM.Services.Documentation.Graph;
-using StandardSeries = APSIM.Services.Graphing.Series;
-using Table = APSIM.Services.Documentation.Table;
+using APSIM.Shared.Graphing;
+using Graph = APSIM.Shared.Documentation.Graph;
+using StandardSeries = APSIM.Shared.Graphing.Series;
+using Table = APSIM.Shared.Documentation.Table;
 
 namespace Models.Functions
 {
@@ -72,7 +72,7 @@ namespace Models.Functions
             }
             yield return new Table(table);
 
-            var series = new APSIM.Services.Graphing.Series[1];
+            var series = new APSIM.Shared.Graphing.Series[1];
 
             // fixme: colour
             series[0] = new LineSeries(Parent.Name, ColourUtilities.ChooseColour(4), false, X, Y, new Line(LineType.Solid, LineThickness.Normal), new Marker(MarkerType.None, MarkerSize.Normal, 1), XVariableName, Name);
@@ -81,7 +81,7 @@ namespace Models.Functions
             Axis yAxis = new Axis(Parent.Name, AxisPosition.Left, false, false);
 
             var legend = new LegendConfiguration(LegendOrientation.Vertical, LegendPosition.TopLeft, true);
-            yield return new APSIM.Services.Documentation.Graph(Parent.Name, series, xAxis, yAxis, legend);
+            yield return new APSIM.Shared.Documentation.Graph(Parent.Name, series, xAxis, yAxis, legend);
         }
     }
 }

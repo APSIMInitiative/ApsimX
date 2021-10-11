@@ -6,7 +6,7 @@ using Newtonsoft.Json;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using System.Collections.Generic;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 using System.Linq;
 
 namespace Models.PMF.Struct

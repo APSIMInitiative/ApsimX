@@ -6,7 +6,7 @@ using Models.PMF.Library;
 using Models.Interfaces;
 using Newtonsoft.Json;
 using System.Collections.Generic;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 using System.Linq;
 
 namespace Models.PMF.Organs

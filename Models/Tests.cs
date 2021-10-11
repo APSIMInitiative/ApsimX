@@ -10,7 +10,7 @@ using APSIM.Shared.Utilities;
 using System.ComponentModel;
 using Models.Storage;
 using Models.Interfaces;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace Models
 {

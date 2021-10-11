@@ -6,12 +6,12 @@ using APSIM.Interop.Graphing.Axes;
 using OxyPlot.Axes;
 using Axis = OxyPlot.Axes.Axis;
 using AxisPosition = OxyPlot.Axes.AxisPosition;
-using AxisType = APSIM.Services.Graphing.AxisType;
+using AxisType = APSIM.Shared.Graphing.AxisType;
 
 namespace APSIM.Interop.Graphing
 {
     /// <summary>
-    /// Extension methods for the <see cref="APSIM.Services.Graphing.Axis"/> type.
+    /// Extension methods for the <see cref="APSIM.Shared.Graphing.Axis"/> type.
     /// </summary>
     public static class AxisExtensions
     {
@@ -19,7 +19,7 @@ namespace APSIM.Interop.Graphing
         /// Convert the given apsim axis to an oxyplot <see cref="Axis"/>.
         /// </summary>
         /// <param name="graph">The graph to be converted.</param>
-        public static Axis ToOxyPlotAxis(this APSIM.Services.Graphing.Axis axis, AxisRequirements requirements, IEnumerable<string> labels)
+        public static Axis ToOxyPlotAxis(this APSIM.Shared.Graphing.Axis axis, AxisRequirements requirements, IEnumerable<string> labels)
         {
             Axis result = CreateAxis(requirements.AxisKind);
 

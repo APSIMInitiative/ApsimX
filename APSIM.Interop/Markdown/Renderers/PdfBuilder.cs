@@ -719,7 +719,7 @@ namespace APSIM.Interop.Markdown.Renderers
                 for (int i = 0; i < data.Columns.Count; i++)
                 {
                     string text = dataRow[i]?.ToString() ?? "";
-                    var paragraph = new APSIM.Services.Documentation.Paragraph(text);
+                    var paragraph = new APSIM.Shared.Documentation.Paragraph(text);
                     StartTableCell();
                     Write(paragraph);
                     FinishTableCell();
@@ -847,7 +847,7 @@ namespace APSIM.Interop.Markdown.Renderers
         /// given tag to the PDF document.
         /// </summary>
         /// <param name="tag">Tag to be rendered.</param>
-        public void Write(APSIM.Services.Documentation.ITag tag)
+        public void Write(APSIM.Shared.Documentation.ITag tag)
         {
             ITagRenderer tagRenderer = GetTagRenderer(tag);
             tagRenderer.Render(tag, this);
@@ -874,7 +874,7 @@ namespace APSIM.Interop.Markdown.Renderers
         /// Throws if no suitable renderer is found.
         /// </summary>
         /// <param name="tag">The tag to be rendered.</param>
-        private ITagRenderer GetTagRenderer(APSIM.Services.Documentation.ITag tag)
+        private ITagRenderer GetTagRenderer(APSIM.Shared.Documentation.ITag tag)
         {
             Type tagType = tag.GetType();
             if (!renderersLookup.TryGetValue(tagType, out ITagRenderer tagRenderer))

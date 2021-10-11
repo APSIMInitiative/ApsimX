@@ -2,7 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
-    using APSIM.Services.Documentation;
+    using APSIM.Shared.Documentation;
 
     /// <summary>
     /// A replacements model

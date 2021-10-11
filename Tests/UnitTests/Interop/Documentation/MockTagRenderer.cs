@@ -1,7 +1,7 @@
 using System;
 using APSIM.Interop.Documentation;
 using APSIM.Interop.Markdown.Renderers;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace APSIM.Tests.Interop.Documentation
 {

@@ -1,4 +1,4 @@
-using APSIM.Services.Graphing;
+using APSIM.Shared.Graphing;
 using NUnit.Framework;
 using System;
 

@@ -5,7 +5,7 @@
     using Models.PMF;
     using Models.PMF.Interfaces;
     using System;
-    using APSIM.Services.Documentation;
+    using APSIM.Shared.Documentation;
     using System.Collections.Generic;
     using System.Data;
     using System.Linq;
@@ -89,7 +89,7 @@
                 var childGraphs = GetChildGraphs();
                 while (childGraphs.Any())
                 {
-                    yield return new APSIM.Services.Documentation.GraphPage(childGraphs.Take(GraphsPerPage));
+                    yield return new APSIM.Shared.Documentation.GraphPage(childGraphs.Take(GraphsPerPage));
                     childGraphs = childGraphs.Skip(GraphsPerPage);
                 }
             }
@@ -105,9 +105,9 @@
                     yield return tag;
         }
 
-        private IEnumerable<APSIM.Services.Documentation.Graph> GetChildGraphs()
+        private IEnumerable<APSIM.Shared.Documentation.Graph> GetChildGraphs()
         {
-            var graphs = new List<APSIM.Services.Documentation.Graph>();
+            var graphs = new List<APSIM.Shared.Documentation.Graph>();
             var page = new Models.GraphPage();
             page.Graphs.AddRange(FindAllChildren<Models.Graph>().Where(g => g.Enabled));
             var storage = FindInScope<Models.Storage.IDataStore>();

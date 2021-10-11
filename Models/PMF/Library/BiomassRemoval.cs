@@ -5,7 +5,7 @@
     using Interfaces;
     using Soils;
     using System;
-    using APSIM.Services.Documentation;
+    using APSIM.Shared.Documentation;
     using System.Collections.Generic;
     using System.Data;
 

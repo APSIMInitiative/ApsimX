@@ -3702,7 +3702,7 @@
 
         /// <summary>
         /// Changes to facilitate the autodocs refactor:
-        /// - Rename Models.Axis to APSIM.Services.Graphing.Axis.
+        /// - Rename Models.Axis to APSIM.Shared.Graphing.Axis.
         /// - Copy the value of all folders' IncludeInDocumentation property
         ///   into their new ShowInDocs property.
         /// </summary>
@@ -3714,8 +3714,8 @@
             {
                 foreach (JObject axis in graph["Axis"])
                 {
-                    // Class moved into APSIM.Services.Graphing namespace.
-                    axis["$type"] = "APSIM.Services.Graphing.Axis, APSIM.Services";
+                    // Class moved into APSIM.Shared.Graphing namespace.
+                    axis["$type"] = "APSIM.Shared.Graphing.Axis, APSIM.Shared";
 
                     // Type property renamed to Position.
                     JsonUtilities.RenameProperty(axis, "Type", "Position");
@@ -3777,15 +3777,15 @@
                 JToken graph = nutrient["DirectedGraphInfo"];
                 if (graph != null)
                 {
-                    graph["$type"] = "APSIM.Services.Graphing.DirectedGraph, APSIM.Services";
+                    graph["$type"] = "APSIM.Shared.Graphing.DirectedGraph, APSIM.Shared";
                     JArray nodes = graph["Nodes"] as JArray;
                     if (nodes != null)
                         foreach (JToken node in nodes)
-                            node["$type"] = "APSIM.Services.Graphing.Node, APSIM.Services";
+                            node["$type"] = "APSIM.Shared.Graphing.Node, APSIM.Shared";
                     JArray arcs = graph["Arcs"] as JArray;
                     if (arcs != null)
                         foreach (JToken arc in arcs)
-                            arc["$type"] = "APSIM.Services.Graphing.Arc, APSIM.Services";
+                            arc["$type"] = "APSIM.Shared.Graphing.Arc, APSIM.Shared";
                 }
             }
         }

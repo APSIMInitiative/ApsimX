@@ -26,7 +26,6 @@
     <ProjectReference Include="..\..\ApsimNG\ApsimNG.csproj" />
     <ProjectReference Include="..\..\Models\Models.csproj" />
     <ProjectReference Include="..\..\APSIM.Server\APSIM.Server.csproj" />
-    <ProjectReference Include="..\..\APSIM.Services\APSIM.Services.csproj" />
     <ProjectReference Include="..\..\APSIM.Interop\APSIM.Interop.csproj" />
 
     <!-- nuget -->

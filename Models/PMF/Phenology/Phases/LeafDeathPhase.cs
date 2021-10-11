@@ -6,7 +6,7 @@ using Models.PMF.Struct;
 using System.IO;
 using Models.Functions;
 using System.Collections.Generic;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {

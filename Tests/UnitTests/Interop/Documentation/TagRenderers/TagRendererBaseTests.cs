@@ -1,6 +1,6 @@
 using APSIM.Interop.Documentation;
 using APSIM.Interop.Markdown.Renderers;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 using Document = MigraDocCore.DocumentObjectModel.Document;
 using NUnit.Framework;
 using System;

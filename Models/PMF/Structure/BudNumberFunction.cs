@@ -3,7 +3,7 @@ using Models.Core;
 using Models.PMF.Phen;
 using Models.Functions;
 using System.Collections.Generic;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Struct
 {

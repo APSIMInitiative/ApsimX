@@ -4,7 +4,7 @@ using Models.PMF.Organs;
 using Models.Functions;
 using Models.PMF.Phen;
 using System.Collections.Generic;
-using APSIM.Services.Documentation;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Organs
 {

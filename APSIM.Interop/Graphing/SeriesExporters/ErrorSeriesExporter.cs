@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using APSIM.Services.Graphing;
+using APSIM.Shared.Graphing;
 using Series = OxyPlot.Series.Series;
 using ScatterErrorPoint = OxyPlot.Series.ScatterErrorPoint;
 

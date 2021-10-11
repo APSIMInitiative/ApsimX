@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 using UserInterface.Interfaces;
 using UserInterface.Views;
 using ApsimNG.EventArguments;
-using APSIM.Services.Graphing;
+using APSIM.Shared.Graphing;
 using Models.Core.Run;
 
 namespace UserInterface.Presenters

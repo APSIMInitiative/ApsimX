@@ -1,6 +1,6 @@
 ﻿namespace Models.Storage
 {
-    using APSIM.Services.Documentation;
+    using APSIM.Shared.Documentation;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Newtonsoft.Json;

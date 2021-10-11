@@ -5,7 +5,7 @@
     using System;
     using System.Collections.Generic;
     using Views;
-    using APSIM.Services.Graphing;
+    using APSIM.Shared.Graphing;
 
     /// <summary>
     /// Presenter for the <see cref="LinearAfterThresholdFunction"/> class.
