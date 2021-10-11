@@ -584,13 +584,14 @@ namespace APSIM.Interop.Markdown.Renderers
                     // style such as heading/bold which can theoretically affect font
                     // size. For now though, this is good enough.
                     IEnumerable<Paragraph> paragraphs = cell.Elements.OfType<Paragraph>();
-                    string text = string.Join("", paragraphs.Select(p => p.GetRawText()));
+                    foreach (string text in paragraphs.Select(p => p.GetRawText()))
+                    {
+                        // Allow an extra 20pt for column/cell padding.
+                        Unit width = Measure(text, gdiFont);
 
-                    // Allow an extra 20pt for column/cell padding.
-                    Unit width = Unit.FromPoint(20 + graphics.MeasureString(text, gdiFont).Width);
-
-                    if (width > maxWidths[j])
-                        maxWidths[j] = width;
+                        if (width > maxWidths[j])
+                            maxWidths[j] = width;
+                    }
                 }
             }
 
@@ -601,6 +602,16 @@ namespace APSIM.Interop.Markdown.Renderers
                 maxWidths = maxWidths.Select(w => pageWidth * w / totalWidth).ToList();
             for (int i = 0; i < maxWidths.Count; i++)
                 table.Columns[i].Width = maxWidths[i];
+        }
+
+        /// <summary>
+        /// Measure the width of a string as it would appear in the given font.
+        /// </summary>
+        /// <param name="text">A string to be measured.</param>
+        /// <param name="gdiFont">Font used for measuring.</param>
+        private Unit Measure(string text, XFont gdiFont)
+        {
+            return Unit.FromPoint(20 + graphics.MeasureString(text, gdiFont).Width);
         }
 
         /// <summary>
