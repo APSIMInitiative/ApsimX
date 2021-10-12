@@ -37,13 +37,18 @@ namespace APSIM.Documentation.Models
         /// <param name="path">Output path for the generated documents.</param>
         public void BuildDocuments(string path)
         {
-            // todo - parallelise this
             CancellationTokenSource cts = new CancellationTokenSource();
-            DocumentRows(rows, path, cts.Token).Wait();
-            // foreach (IDocumentationRow row in rows)
-            //     foreach (IDocumentationCell cell in row.Cells)
-            //         foreach (IDocumentationFile file in cell.Files)
-            //             file.Generate(path);
+
+            // To document rows serially, uncomment this line, then comment out the
+            // remainder of this function. This is useful when running in debug mode,
+            // because attempting to document all rows in parallel uses a lot of memory.
+
+            // DocumentRows(rows, path, cts.Token).Wait();
+
+            foreach (IDocumentationRow row in rows)
+                foreach (IDocumentationCell cell in row.Cells)
+                    foreach (IDocumentationFile file in cell.Files)
+                        file.Generate(path);
         }
 
         private static async Task DocumentRows(IEnumerable<IDocumentationRow> rows, string path, CancellationToken cancelToken)
