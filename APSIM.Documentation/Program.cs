@@ -45,7 +45,12 @@ namespace APSIM.Documentation
                 html.AppendLine("  <body>");
 
                 // Create new working directory, into which all docs will be generated.
-                string outputPath = Path.Combine(Path.GetTempPath(), $"autodocs-{Guid.NewGuid()}");
+                string outputPath;
+                if (args.Length > 0)
+                    outputPath = args[0];
+                else
+                    outputPath = Path.Combine(Path.GetTempPath(), $"autodocs-{Guid.NewGuid()}");
+
                 if (!Directory.Exists(outputPath))
                     Directory.CreateDirectory(outputPath);
 
