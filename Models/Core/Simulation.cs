@@ -357,6 +357,8 @@ namespace Models.Core
                 yield return tag;
             foreach (ITag tag in DocumentChildren<Graph>())
                 yield return tag;
+            foreach (ITag tag in FindAllDescendants<Manager>().SelectMany(m => m.Document()))
+                yield return tag;
         }
     }
 }

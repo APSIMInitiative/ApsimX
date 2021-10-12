@@ -9,6 +9,7 @@
     using System.Drawing;
     using System.Reflection;
     using Newtonsoft.Json;
+    using APSIM.Shared.Documentation;
 
     /// <summary>
     /// The manager model
@@ -228,6 +229,22 @@
                     }
                 }
             }
+        }
+
+        /// <summary>
+        /// Document the script iff it overrides its Document() method.
+        /// Otherwise, return nothing.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Nasty!
+            IModel script = Children[0];
+
+            BindingFlags flags = BindingFlags.Instance | BindingFlags.Public;
+            MethodInfo document = script.GetType().GetMethod(nameof(Document), flags);
+            if (document != null)
+                foreach (ITag tag in script.Document())
+                    yield return tag;
         }
     }
 }
