@@ -65,9 +65,22 @@ namespace APSIM.Cli
                 files = options.Files;
             foreach (string file in files)
             {
-                Simulations model = FileFormat.ReadFromFile<Simulations>(file, e => throw e, false);
+                Simulations sims = FileFormat.ReadFromFile<Simulations>(file, e => throw e, false);
+                IModel model = sims;
                 if (Path.GetExtension(file) == ".json")
-                    model.Links.Resolve(model, true, true, false);
+                    sims.Links.Resolve(sims, true, true, false);
+                if (!string.IsNullOrEmpty(options.Path))
+                {
+                    IVariable variable = model.FindByPath(options.Path);
+                    if (variable == null)
+                        throw new Exception($"Unable to resolve path {options.Path}");
+                    object value = variable.Value;
+                    if (value is IModel modelAtPath)
+                        model = modelAtPath;
+                    else
+                        throw new Exception($"{options.Path} resolved to {value}, which is not a model");
+                }
+
                 string pdfFile = Path.ChangeExtension(file, ".pdf");
                 string directory = Path.GetDirectoryName(file);
                 PdfWriter writer = new PdfWriter(new PdfOptions(directory, null));

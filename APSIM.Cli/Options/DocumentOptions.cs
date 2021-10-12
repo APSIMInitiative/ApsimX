@@ -28,6 +28,13 @@ namespace APSIM.Cli.Options
         public bool ParamsDocs { get; set; }
 
         /// <summary>
+        /// Generate documentation for a model at the given path inside the file.
+        /// </summary>
+        /// <value></value>
+        [Option('p', "path", HelpText = "Generate documentation for a model at the given path inside the file")]
+        public string Path { get; set; }
+
+        /// <summary>
         /// Concrete examples shown in help text.
         /// </summary>
         [Usage]
