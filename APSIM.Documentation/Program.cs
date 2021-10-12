@@ -176,8 +176,9 @@ namespace APSIM.Documentation
 
         private static IDocumentationRow ClemDocsRow()
         {
-            string croppingFile = Path.Combine(examples, "CLEM_Example_Cropping.apsimx");
-            string grazingFile = Path.Combine(examples, "CLEM_Example_Grazing.apsimx");
+            string clem = Path.Combine(examples, "CLEM");
+            string croppingFile = Path.Combine(clem, "CLEM_Example_Cropping.apsimx");
+            string grazingFile = Path.Combine(clem, "CLEM_Example_Grazing.apsimx");
             IDocumentationFile scienceDocs = new ExternalDocument("Science Documentation", "https://www.apsim.info/clem");
             IDocumentationFile croppingExample = new DocsFromFile(croppingFile, "CLEM_Example_Cropping.pdf", options);
             IDocumentationFile grazingExample = new DocsFromFile(grazingFile, "CLEM_Example_Grazing.pdf", options);
