@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 141,
+  "Version": 143,
   "Name": "Simulations",
   "Children": [
     {
@@ -7356,7 +7356,8 @@
               ],
               "IncludeInDocumentation": true,
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "ShowInDocs": false
             },
             {
               "$type": "Models.Core.Folder, Models",
@@ -7940,26 +7941,26 @@
                                               "Caption": null,
                                               "Axis": [
                                                 {
-                                                  "$type": "Models.Axis, Models",
-                                                  "Type": 0,
+                                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                                   "Title": "Y",
                                                   "Inverted": false,
-                                                  "Minimum": "NaN",
-                                                  "Maximum": "NaN",
-                                                  "Interval": "NaN",
+                                                  "Minimum": null,
+                                                  "Maximum": null,
+                                                  "Interval": null,
                                                   "DateTimeAxis": false,
-                                                  "CrossesAtZero": false
+                                                  "CrossesAtZero": false,
+                                                  "Position": 0
                                                 },
                                                 {
-                                                  "$type": "Models.Axis, Models",
-                                                  "Type": 3,
+                                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                                   "Title": "X",
                                                   "Inverted": false,
-                                                  "Minimum": "NaN",
-                                                  "Maximum": "NaN",
-                                                  "Interval": "NaN",
+                                                  "Minimum": null,
+                                                  "Maximum": null,
+                                                  "Interval": null,
                                                   "DateTimeAxis": false,
-                                                  "CrossesAtZero": false
+                                                  "CrossesAtZero": false,
+                                                  "Position": 3
                                                 }
                                               ],
                                               "LegendPosition": 5,
@@ -8495,7 +8496,8 @@
               ],
               "IncludeInDocumentation": true,
               "Enabled": true,
-              "ReadOnly": false
+              "ReadOnly": false,
+              "ShowInDocs": false
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
@@ -10553,7 +10555,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -10579,7 +10582,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.QPrioritythenRelativeAllocation, Models",
@@ -10614,7 +10618,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -10640,7 +10645,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -10658,7 +10664,8 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false
+                  "ReadOnly": false,
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
