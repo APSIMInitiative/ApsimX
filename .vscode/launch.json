@@ -15,6 +15,16 @@
             "stopAtEntry": false,
         },
         {
+            "name": "Autodocs",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/bin/Debug/netcoreapp3.1/APSIM.Documentation.dll",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "stopAtEntry": false,
+        },
+        {
             "name": ".NET Core Launch (APSIM.Cli)",
             "type": "coreclr",
             "request": "launch",
@@ -23,7 +33,6 @@
             "args": [
                 "document",
                 "${workspaceFolder}/Examples/Wheat.apsimx"
-                // "${workspaceFolder}/Tests/Validation/Wheat/Wheat.apsimx"
             ],
             "cwd": "${workspaceFolder}",
             "console": "internalConsole",
