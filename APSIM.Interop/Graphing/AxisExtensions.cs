@@ -21,7 +21,9 @@ namespace APSIM.Interop.Graphing
         /// <param name="graph">The graph to be converted.</param>
         public static Axis ToOxyPlotAxis(this APSIM.Shared.Graphing.Axis axis, AxisRequirements requirements, IEnumerable<string> labels)
         {
-            Axis result = CreateAxis(requirements.AxisKind);
+            if (requirements.AxisKind == null)
+                throw new InvalidOperationException("Unable to create series - axis requirements unknown, possibly because no series have any data");
+            Axis result = CreateAxis((AxisType)requirements.AxisKind);
 
             result.Position = axis.Position.ToOxyAxisPosition();
             result.Title = axis.Title;

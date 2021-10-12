@@ -18,16 +18,18 @@ namespace APSIM.Interop.Graphing
         public string FieldName { get; private set; }
 
         /// <summary>
-        /// Type of axis required by the series.
+        /// Type of axis required by the series. If null, the series doesn't
+        /// have any particular required axis type (possibly because it contains
+        /// no data).
         /// </summary>
-        public AxisType AxisKind { get; private set; }
+        public AxisType? AxisKind { get; private set; }
 
         /// <summary>
         /// Create a new <see cref="AxisRequirements"/> instance.
         /// </summary>
         /// <param name="type">Required axis type.</param>
         /// <param name="type">Field name for the axis, used for error reporting purposes.</param>
-        public AxisRequirements(AxisType type, string field)
+        public AxisRequirements(AxisType? type, string field)
         {
             AxisKind = type;
             FieldName = field;
@@ -42,7 +44,7 @@ namespace APSIM.Interop.Graphing
         {
             try
             {
-                if (AxisKind != other.AxisKind)
+                if (AxisKind != other.AxisKind && AxisKind != null && other.AxisKind != null)
                     throw new Exception($"Axis type {AxisKind} is incompatible with {other.AxisKind}");
             }
             catch (Exception err)

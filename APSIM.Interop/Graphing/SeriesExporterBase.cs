@@ -66,8 +66,8 @@ namespace APSIM.Interop.Graphing
         {
             (Series oxyPlotSeries, AxisLabelCollection labels) = Export((T)series, existingAxisLabels);
 
-            AxisType xAxisType = GetRequiredAxisType(series.X.FirstOrDefault());
-            AxisType yAxisType = GetRequiredAxisType(series.Y.FirstOrDefault());
+            AxisType? xAxisType = GetRequiredAxisType(series.X.FirstOrDefault());
+            AxisType? yAxisType = GetRequiredAxisType(series.Y.FirstOrDefault());
 
             AxisRequirements xAxisRequirements = new AxisRequirements(xAxisType, series.XFieldName);
             AxisRequirements yAxisRequirements = new AxisRequirements(yAxisType, series.YFieldName);
@@ -149,8 +149,11 @@ namespace APSIM.Interop.Graphing
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        protected AxisType GetRequiredAxisType(object value)
+        protected AxisType? GetRequiredAxisType(object value)
         {
+            if (value == null)
+                return null;
+
             Type type = value.GetType();
             if (type == typeof(DateTime))
                 return AxisType.DateTime;

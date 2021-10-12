@@ -102,6 +102,8 @@ namespace APSIM.Interop.Graphing
             // Add series to graph.
             AxisLabelCollection labels = AxisLabelCollection.Empty();
             ExportedSeries previous = null;
+            AxisRequirements xAxisRequirements = null;
+            AxisRequirements yAxisRequirements = null;
             foreach (Series graphSeries in graph.Series)
             {
                 ExportedSeries series = graphSeries.ToOxyPlotSeries(labels);
@@ -114,14 +116,17 @@ namespace APSIM.Interop.Graphing
                     previous.ThrowIfIncompatibleWith(series);
                     previous = series;
                 }
+                if (series.XAxisRequirements.AxisKind != null)
+                    xAxisRequirements = series.XAxisRequirements;
+                if (series.YAxisRequirements.AxisKind != null)
+                    yAxisRequirements = series.YAxisRequirements;
             }
 
             // Axes (don't add them if there are no series to display on the graph).
-            if (previous != null)
-            {
-                plot.Axes.Add(graph.XAxis.ToOxyPlotAxis(previous.XAxisRequirements, labels.XLabels));
-                plot.Axes.Add(graph.YAxis.ToOxyPlotAxis(previous.YAxisRequirements, labels.YLabels));
-            }
+            if (xAxisRequirements.AxisKind != null)
+                plot.Axes.Add(graph.XAxis.ToOxyPlotAxis(xAxisRequirements, labels.XLabels));
+            if (yAxisRequirements.AxisKind != null)
+                plot.Axes.Add(graph.YAxis.ToOxyPlotAxis(yAxisRequirements, labels.YLabels));
 
             // Legend
 #if NETFRAMEWORK
