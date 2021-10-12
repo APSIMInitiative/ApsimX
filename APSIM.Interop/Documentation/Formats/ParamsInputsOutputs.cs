@@ -55,7 +55,7 @@
                 parameterNames = resourceModel.GetModelParameterNames();
 
             // Get a list of tags for each type.
-            var tags = new List<ITag>();
+            List<ITag> tags = new List<ITag>();
 
             // Document the model.
             tags.AddRange(DocumentObject(modelToDocument));
@@ -76,24 +76,31 @@
             // If there are parameters then write them to the tags.
             if (parameterNames != null && !(objectToDocument is Models.PMF.Plant))
             {
-                var parameters = GetParameters(objectToDocument);
-                var parameterTable = PropertiesToTable(parameters, objectToDocument);
-                tags.Add(new Paragraph("**Parameters (Inputs)**"));
-                tags.Add(new Table(new DataView(parameterTable) { Sort = "Name asc" }));
+                IEnumerable<IVariable> parameters = GetParameters(objectToDocument);
+                DataTable parameterTable = PropertiesToTable(parameters, objectToDocument);
+                tags.AddRange(DocumentTable("**Parameters (Inputs)**", parameterTable));
             }
 
             IEnumerable<IVariable> outputs = GetOutputs(objectToDocument.GetType());
 
             if (outputs != null && outputs.Any())
             {
-                var outputTable = PropertiesToTable(outputs);
-                tags.Add(new Paragraph("**Properties (Outputs)**"));
-                tags.Add(new Table(new DataView(outputTable) { Sort = "Name asc" }));
+                DataTable outputTable = PropertiesToTable(outputs);
+                tags.AddRange(DocumentTable("**Properties (Outputs)**", outputTable));
             }
 
             tags.AddRange(DocumentLinksEventsMethods(objectToDocument.GetType()));
 
             yield return new Section(objectToDocument.Name, tags);
+        }
+
+        private IEnumerable<ITag> DocumentTable(string sectionName, DataTable parameterTable)
+        {
+            if (parameterTable != null && parameterTable.Rows.Count > 0)
+            {
+                yield return new Paragraph(sectionName);
+                yield return new Table(new DataView(parameterTable) { Sort = "Name asc" });
+            }
         }
 
         /// <summary>Document the specified model.</summary>
@@ -108,8 +115,7 @@
             if (outputs != null && outputs.Any())
             {
                 DataTable outputTable = PropertiesToTable(outputs);
-                tags.Add(new Paragraph("**Properties (Outputs)**"));
-                tags.Add(new Table(new DataView(outputTable) { Sort = "Name asc" }));
+                tags.AddRange(DocumentTable("**Properties (Outputs)**", outputTable));
             }
 
             tags.AddRange(DocumentLinksEventsMethods(typeToDocument));
@@ -119,26 +125,17 @@
 
         private IEnumerable<ITag> DocumentLinksEventsMethods(Type typeToDocument)
         {
-            var links = GetLinks(typeToDocument);
-            if (links != null)
-            {
-                yield return new Paragraph("**Links (Dependencies)**");
-                yield return new Table(new DataView(links) { Sort = "Name asc" });
-            }
+            DataTable links = GetLinks(typeToDocument);
+            foreach (ITag tag in DocumentTable("**Links (Dependencies)**", links))
+                yield return tag;
 
-            var events = GetEvents(typeToDocument);
-            if (events != null)
-            {
-                yield return new Paragraph("**Events published**");
-                yield return new Table(new DataView(events) { Sort = "Name asc" });
-            }
+            DataTable events = GetEvents(typeToDocument);
+            foreach (ITag tag in DocumentTable("**Events published**", events))
+                yield return tag;
 
-            var methods = GetMethods(typeToDocument);
-            if (methods != null)
-            {
-                yield return new Paragraph("**Methods (callable from manager)**");
-                yield return new Table(new DataView(methods) { Sort = "Name asc" });
-            }
+            DataTable methods = GetMethods(typeToDocument);
+            foreach (ITag tag in DocumentTable("**Methods (callable from manager)**", methods))
+                yield return tag;
         }
 
         /// <summary>
@@ -148,7 +145,7 @@
         /// <param name="objectToDocument">The object to use for getting property values. If null, then no value column will be added.</param>
         private DataTable PropertiesToTable(IEnumerable<IVariable> properties, object objectToDocument = null)
         {
-            var outputs = new DataTable("Properties");
+            DataTable outputs = new DataTable("Properties");
             outputs.Columns.Add("Name", typeof(string));
             outputs.Columns.Add("Description", typeof(string));
             outputs.Columns.Add("Units", typeof(string));
@@ -157,12 +154,12 @@
                 outputs.Columns.Add("Settable?", typeof(bool));
             else
                 outputs.Columns.Add("Value", typeof(string));
-            foreach (var property in properties)
+            foreach (IVariable property in properties)
             {
-                var row = outputs.NewRow();
+                DataRow row = outputs.NewRow();
 
                 string typeName = GetTypeName(property.DataType);
-                var summary = property.Summary;
+                string summary = property.Summary;
                 string remarks = property.Remarks;
                 if (!string.IsNullOrEmpty(remarks))
                     summary += Environment.NewLine + Environment.NewLine + remarks;
@@ -196,11 +193,11 @@
         /// <param name="objectToDocument">Object to be documented.</param>
         private IEnumerable<IVariable> GetParameters(object objectToDocument)
         {
-            var parameters = new List<IVariable>();
+            List<IVariable> parameters = new List<IVariable>();
 
-            foreach (var parameterName in parameterNames)
+            foreach (string parameterName in parameterNames)
             {
-                var parameter = (objectToDocument as IModel).FindByPath(parameterName);
+                IVariable parameter = (objectToDocument as IModel).FindByPath(parameterName);
                 if (parameter != null)
                     parameters.Add(parameter);
             }
@@ -215,8 +212,8 @@
         /// <param name="typeofProperties">The type of properties to include in the return table.</param>
         private IEnumerable<IVariable> GetOutputs(Type typeToDocument)
         {
-            var outputs = new List<IVariable>();
-            foreach (var property in typeToDocument.GetProperties(BindingFlags.Public |
+            List<IVariable> outputs = new List<IVariable>();
+            foreach (PropertyInfo property in typeToDocument.GetProperties(BindingFlags.Public |
                                                                   BindingFlags.Instance |
                                                                   BindingFlags.FlattenHierarchy |
                                                                   BindingFlags.DeclaredOnly))
@@ -276,7 +273,7 @@
                 type = memberType;
 
             // Truncate descriptions so they fit onto the page.
-            var typeName = type.Name;
+            string typeName = type.Name;
             if (typeName?.Length > maxTypeLength)
                 typeName = typeName.Remove(maxTypeLength) + "...";
 
@@ -306,19 +303,19 @@
         /// <param name="type">The type to document.</param>
         private DataTable GetLinks(Type type)
         {
-            var links = new DataTable("Links");
+            DataTable links = new DataTable("Links");
             links.Columns.Add("Name", typeof(string));
             links.Columns.Add("Type", typeof(string));
             links.Columns.Add("IsOptional?", typeof(bool));
-            foreach (var field in type.GetFields(System.Reflection.BindingFlags.Public |
+            foreach (FieldInfo field in type.GetFields(System.Reflection.BindingFlags.Public |
                                                     System.Reflection.BindingFlags.NonPublic |
                                                     System.Reflection.BindingFlags.Instance |
                                                     System.Reflection.BindingFlags.FlattenHierarchy))
             {
-                var linkAttribute = field.GetCustomAttribute<LinkAttribute>();
+                LinkAttribute linkAttribute = field.GetCustomAttribute<LinkAttribute>();
                 if (linkAttribute != null)
                 {
-                    var row = links.NewRow();
+                    DataRow row = links.NewRow();
 
                     row["Name"] = field.Name;
                     row["IsOptional?"] = linkAttribute.IsOptional;
@@ -338,15 +335,15 @@
         /// <param name="type">The type to document.</param>
         private DataTable GetEvents(Type type)
         {
-            var events = new DataTable("Links");
+            DataTable events = new DataTable("Links");
             events.Columns.Add("Name", typeof(string));
             events.Columns.Add("Type", typeof(string));
 
-            foreach (var eventMember in type.GetEvents(System.Reflection.BindingFlags.Public |
+            foreach (EventInfo eventMember in type.GetEvents(System.Reflection.BindingFlags.Public |
                                                        System.Reflection.BindingFlags.Instance |
                                                        System.Reflection.BindingFlags.FlattenHierarchy))
             {
-                var row = events.NewRow();
+                DataRow row = events.NewRow();
 
                 row["Name"] = eventMember.Name;
 
@@ -379,19 +376,19 @@
         /// <param name="type">The type to document.</param>
         private DataTable GetMethods(Type type)
         {
-            var methods = new DataTable("Methods");
+            DataTable methods = new DataTable("Methods");
             methods.Columns.Add("Name", typeof(string));
             methods.Columns.Add("Description", typeof(string));
 
-            foreach (var method in type.GetMethods(System.Reflection.BindingFlags.Public |
+            foreach (MethodInfo method in type.GetMethods(System.Reflection.BindingFlags.Public |
                                                    System.Reflection.BindingFlags.Instance |
                                                    System.Reflection.BindingFlags.DeclaredOnly))
             {
                 if (!method.IsSpecialName)
                 {
-                    var row = methods.NewRow();
+                    DataRow row = methods.NewRow();
                     string parameters = null;
-                    foreach (var argument in method.GetParameters())
+                    foreach (ParameterInfo argument in method.GetParameters())
                     {
                         if (parameters != null)
                             parameters += ", ";
