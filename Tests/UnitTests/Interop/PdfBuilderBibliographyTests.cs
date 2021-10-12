@@ -10,7 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace APSIM.Tests.Interop.Documentation
+namespace UnitTests.Interop.Documentation
 {
     /// <summary>
     /// Unit tests for <see cref="PdfBuilder.AppendReference(string, TextStyle)"/>.

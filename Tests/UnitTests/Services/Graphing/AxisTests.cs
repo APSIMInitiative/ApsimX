@@ -2,7 +2,7 @@ using APSIM.Shared.Graphing;
 using NUnit.Framework;
 using System;
 
-namespace APSIM.Tests.Services.Graphing
+namespace UnitTests.Services.Graphing
 {
     /// <summary>
     /// Simple unit test for <see cref="Axis"/> type.

@@ -7,7 +7,7 @@ using APSIM.Interop.Documentation.Extensions;
 using MigraDocCore.DocumentObjectModel;
 using System;
 
-namespace APSIM.Tests.Interop.PdfRendering
+namespace UnitTests.Interop.PdfRendering
 {
     /// <summary>
     /// Tests for <see cref="ParagraphExtensions" /> class.

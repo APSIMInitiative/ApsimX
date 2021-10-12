@@ -16,7 +16,7 @@ using APSIM.Interop.Documentation.Helpers;
 using System.Collections.Generic;
 using APSIM.Interop.Markdown;
 
-namespace APSIM.Tests.Interop.Markdown.Renderers.Inlines
+namespace UnitTests.Interop.Markdown.Renderers.Inlines
 {
     /// <summary>
     /// Tests for <see cref="ReferenceInlineRenderer"/>.

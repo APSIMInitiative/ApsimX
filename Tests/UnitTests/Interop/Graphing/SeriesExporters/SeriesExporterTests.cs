@@ -12,7 +12,7 @@ using LegendPosition = APSIM.Shared.Graphing.LegendPosition;
 using MarkerType = APSIM.Shared.Graphing.MarkerType;
 using System.Linq;
 
-namespace APSIM.Tests.Graphing.SeriesExporters
+namespace UnitTests.Graphing.SeriesExporters
 {
     [TestFixture]
     public class SeriesExporterTests

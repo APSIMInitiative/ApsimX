@@ -17,7 +17,7 @@ using Newtonsoft.Json.Linq;
 using Models.PMF;
 using APSIM.Shared.Documentation;
 
-namespace APSIM.Tests.Interop.Documentation
+namespace UnitTests.Interop.Documentation
 {
     /// <summary>
     /// Tests for generating a model pdf.

@@ -5,7 +5,7 @@ using APSIM.Interop.Documentation.Extensions;
 using MigraDocCore.DocumentObjectModel;
 using MigraDocCore.DocumentObjectModel.Tables;
 
-namespace APSIM.Tests.Interop.PdfRendering
+namespace UnitTests.Interop.PdfRendering
 {
     /// <summary>
     /// Tests for <see cref="SectionExtensions" /> class.

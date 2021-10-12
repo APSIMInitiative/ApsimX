@@ -16,7 +16,7 @@ using APSIM.Interop.Documentation.Extensions;
 using APSIM.Interop.Markdown;
 using Markdig.Helpers;
 
-namespace APSIM.Tests.Interop.Markdown.Renderers.Blocks
+namespace UnitTests.Interop.Markdown.Renderers.Blocks
 {
     /// <summary>
     /// Tests for <see cref="HtmlBlockRenderer"/>.

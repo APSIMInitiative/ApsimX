@@ -5,7 +5,7 @@ using APSIM.Interop.Markdown;
 using MigraDocCore.DocumentObjectModel;
 using System;
 
-namespace APSIM.Tests.Interop
+namespace UnitTests.Interop
 {
     /// <summary>
     /// Unit tests for text styles supported by <see cref="PdfBuilder"/>.

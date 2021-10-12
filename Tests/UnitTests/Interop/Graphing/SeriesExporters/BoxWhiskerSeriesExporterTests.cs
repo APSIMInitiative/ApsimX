@@ -13,7 +13,7 @@ using MarkerType = APSIM.Shared.Graphing.MarkerType;
 using System.Linq;
 using OxyPlot.Series;
 
-namespace APSIM.Tests.Graphing.SeriesExporters
+namespace UnitTests.Graphing.SeriesExporters
 {
     [TestFixture]
     public class BoxWhiskerSeriesExporterTests

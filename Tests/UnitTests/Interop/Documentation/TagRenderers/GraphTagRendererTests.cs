@@ -13,7 +13,7 @@ using APSIM.Interop.Graphing;
 using Moq;
 using System.Drawing;
 
-namespace APSIM.Tests.Interop.Documentation.TagRenderers
+namespace UnitTests.Interop.Documentation.TagRenderers
 {
     /// <summary>
     /// Tests for <see cref="GraphTagRenderer"/>.

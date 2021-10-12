@@ -16,7 +16,7 @@ using System;
 using OxyPlot;
 using TextStyle = APSIM.Interop.Markdown.TextStyle;
 
-namespace APSIM.Tests.Interop.Documentation.TagRenderers
+namespace UnitTests.Interop.Documentation.TagRenderers
 {
     /// <summary>
     /// Tests for <see cref="GraphPageTagRenderer"/>.

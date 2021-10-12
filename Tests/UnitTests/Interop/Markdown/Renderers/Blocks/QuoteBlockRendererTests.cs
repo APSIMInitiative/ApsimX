@@ -9,7 +9,7 @@ using APSIM.Interop.Markdown;
 using MigraDocCore.DocumentObjectModel;
 using Markdig.Parsers;
 
-namespace APSIM.Tests.Interop.Markdown.Renderers.Blocks
+namespace UnitTests.Interop.Markdown.Renderers.Blocks
 {
     /// <summary>
     /// Tests for <see cref="QuoteBlockRenderer"/>.

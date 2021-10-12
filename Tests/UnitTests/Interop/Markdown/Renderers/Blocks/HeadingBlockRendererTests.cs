@@ -13,7 +13,7 @@ using APSIM.Interop.Documentation.Extensions;
 using APSIM.Interop.Markdown;
 using APSIM.Interop.Markdown.Renderers.Inlines;
 
-namespace APSIM.Tests.Interop.Markdown.Renderers.Blocks
+namespace UnitTests.Interop.Markdown.Renderers.Blocks
 {
     /// <summary>
     /// Tests for <see cref="HeadingBlockRenderer"/>.

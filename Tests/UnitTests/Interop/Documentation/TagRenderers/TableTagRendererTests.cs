@@ -7,7 +7,7 @@ using Document = MigraDocCore.DocumentObjectModel.Document;
 using MigraDocTable = MigraDocCore.DocumentObjectModel.Tables.Table;
 using System.Data;
 
-namespace APSIM.Tests.Interop.Documentation.TagRenderers
+namespace UnitTests.Interop.Documentation.TagRenderers
 {
     /// <summary>
     /// Tests for the <see cref="Table"/> class.

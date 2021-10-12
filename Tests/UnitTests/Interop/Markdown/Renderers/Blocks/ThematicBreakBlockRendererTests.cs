@@ -10,7 +10,7 @@ using MigraDocCore.DocumentObjectModel;
 using Markdig.Parsers;
 using Moq;
 
-namespace APSIM.Tests.Interop.Markdown.Renderers.Blocks
+namespace UnitTests.Interop.Markdown.Renderers.Blocks
 {
     /// <summary>
     /// Tests for <see cref="ThematicBreakBlockRenderer"/>.

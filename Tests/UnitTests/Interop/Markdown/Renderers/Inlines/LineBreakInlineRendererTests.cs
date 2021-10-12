@@ -11,7 +11,7 @@ using APSIM.Interop.Markdown.Renderers.Inlines;
 using Moq;
 using System;
 
-namespace APSIM.Tests.Interop.Markdown.Renderers.Inlines
+namespace UnitTests.Interop.Markdown.Renderers.Inlines
 {
     /// <summary>
     /// Tests for <see cref="LineBreakInlineRenderer"/>.

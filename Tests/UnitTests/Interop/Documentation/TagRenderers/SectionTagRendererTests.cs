@@ -13,7 +13,7 @@ using Paragraph = MigraDocCore.DocumentObjectModel.Paragraph;
 using Section = APSIM.Shared.Documentation.Section;
 using APSIM.Interop.Documentation.Extensions;
 
-namespace APSIM.Tests.Interop.Documentation.TagRenderers
+namespace UnitTests.Interop.Documentation.TagRenderers
 {
     /// <summary>
     /// Tests for the <see cref="Section"/> class.

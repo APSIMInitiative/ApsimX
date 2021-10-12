@@ -8,7 +8,7 @@ using System;
 using MigraDocCore.DocumentObjectModel.Tables;
 using System.Data;
 
-namespace APSIM.Tests.Interop
+namespace UnitTests.Interop
 {
     [TestFixture]
     public class PdfBuilderTableTests

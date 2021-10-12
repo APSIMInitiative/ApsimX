@@ -18,7 +18,7 @@ using LineSeries = APSIM.Shared.Graphing.LineSeries;
 using OxyLineSeries = OxyPlot.Series.LineSeries;
 using Series = OxyPlot.Series.Series;
 
-namespace APSIM.Tests.Graphing.SeriesExporters
+namespace UnitTests.Graphing.SeriesExporters
 {
     /// <summary>
     /// Tests for <see cref="LineSeriesExporter"/>.

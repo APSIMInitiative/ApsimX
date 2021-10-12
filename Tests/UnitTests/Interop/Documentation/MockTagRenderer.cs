@@ -3,7 +3,7 @@ using APSIM.Interop.Documentation;
 using APSIM.Interop.Markdown.Renderers;
 using APSIM.Shared.Documentation;
 
-namespace APSIM.Tests.Interop.Documentation
+namespace UnitTests.Interop.Documentation
 {
     /// <summary>
     /// Renderer class for a <see cref="MockTag"/>. This simply calls

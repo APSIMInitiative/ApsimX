@@ -7,7 +7,7 @@ using APSIM.Interop.Markdown;
 using MigraDocCore.DocumentObjectModel;
 using Moq;
 
-namespace APSIM.Tests.Interop.Markdown.Renderers.Inlines
+namespace UnitTests.Interop.Markdown.Renderers.Inlines
 {
     /// <summary>
     /// Tests for <see cref="AutolinkInlineRenderer"/>.

@@ -7,7 +7,7 @@ using Moq;
 using NUnit.Framework;
 using System;
 
-namespace APSIM.Tests.Interop.Documentation
+namespace UnitTests.Interop.Documentation
 {
     /// <summary>
     /// Unit tests for <see cref="PdfBuilder.AppendReference(string, TextStyle)"/>.

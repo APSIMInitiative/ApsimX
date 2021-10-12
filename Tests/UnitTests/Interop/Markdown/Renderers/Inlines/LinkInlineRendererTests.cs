@@ -14,7 +14,7 @@ using System;
 using System.Drawing;
 using System.IO;
 
-namespace APSIM.Tests.Interop.Markdown.Renderers.Inlines
+namespace UnitTests.Interop.Markdown.Renderers.Inlines
 {
     /// <summary>
     /// Tests for <see cref="LinkInlineRenderer"/>.

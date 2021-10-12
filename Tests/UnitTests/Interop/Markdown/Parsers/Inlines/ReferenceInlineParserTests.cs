@@ -9,7 +9,7 @@ using APSIM.Interop.Markdown.Inlines;
 using Markdig.Syntax;
 using Markdig;
 
-namespace APSIM.Tests.Interop.Markdown.Parsers.Inlines
+namespace UnitTests.Interop.Markdown.Parsers.Inlines
 {
     [TestFixture]
     public class ReferenceInlineParserTests

@@ -15,7 +15,7 @@ using System.Linq;
 using OxyPlot.Series;
 using APSIM.Shared.Utilities;
 
-namespace APSIM.Tests.Graphing.SeriesExporters
+namespace UnitTests.Graphing.SeriesExporters
 {
     /// <summary>
     /// Tests for <see cref="ErrorSeriesExporter"/>.

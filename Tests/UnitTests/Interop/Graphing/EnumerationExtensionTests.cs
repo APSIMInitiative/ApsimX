@@ -8,7 +8,7 @@ using MarkerType = APSIM.Shared.Graphing.MarkerType;
 using OxyAxisPosition = OxyPlot.Axes.AxisPosition;
 using System.Drawing;
 
-namespace APSIM.Tests.Graphing.SeriesExporters
+namespace UnitTests.Graphing.SeriesExporters
 {
     /// <summary>
     /// Tests for <see cref="EnumerationExtensions"/>, to ensure that apsim

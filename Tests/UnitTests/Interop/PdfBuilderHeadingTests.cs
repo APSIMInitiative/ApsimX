@@ -10,7 +10,7 @@ using FormattedText = MigraDocCore.DocumentObjectModel.FormattedText;
 using Text = MigraDocCore.DocumentObjectModel.Text;
 using OutlineLevel = MigraDocCore.DocumentObjectModel.OutlineLevel;
 
-namespace APSIM.Tests.Interop.Documentation
+namespace UnitTests.Interop.Documentation
 {
     /// <summary>
     /// Tests for the headings API of the <see cref="PdfBuilder"/> class.

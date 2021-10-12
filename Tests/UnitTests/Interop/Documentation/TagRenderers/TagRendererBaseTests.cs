@@ -5,7 +5,7 @@ using Document = MigraDocCore.DocumentObjectModel.Document;
 using NUnit.Framework;
 using System;
 
-namespace APSIM.Tests.Interop.Documentation.TagRenderers
+namespace UnitTests.Interop.Documentation.TagRenderers
 {
     /// <summary>
     /// Tests for the <see cref="TagRendererBase{T}"/> class.

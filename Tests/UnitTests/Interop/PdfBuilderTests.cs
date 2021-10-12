@@ -20,7 +20,7 @@ using System.Data;
 using System.Collections.Generic;
 using APSIM.Shared.Graphing;
 
-namespace APSIM.Tests.Interop
+namespace UnitTests.Interop
 {
     /// <summary>
     /// Unit tests for <see cref="PdfBuilder"/>.

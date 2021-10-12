@@ -12,7 +12,7 @@ using LegendPosition = APSIM.Shared.Graphing.LegendPosition;
 using MarkerType = APSIM.Shared.Graphing.MarkerType;
 using System.Linq;
 
-namespace APSIM.Tests.Interop.Graphing
+namespace UnitTests.Interop.Graphing
 {
     /// <summary>
     /// This class contains tests for the conversion of an apsim graph

@@ -15,7 +15,7 @@ using Section = APSIM.Shared.Documentation.Section;
 using APSIM.Interop.Documentation.Extensions;
 using MigraDocCore.DocumentObjectModel;
 
-namespace APSIM.Tests.Interop.Documentation.TagRenderers
+namespace UnitTests.Interop.Documentation.TagRenderers
 {
     /// <summary>
     /// Tests for the <see cref="ParagraphTagRenderer"/> class.

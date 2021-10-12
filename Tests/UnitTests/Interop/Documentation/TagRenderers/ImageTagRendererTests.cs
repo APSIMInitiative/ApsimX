@@ -12,7 +12,7 @@ using ImageTag = APSIM.Shared.Documentation.Image;
 using MigraDocImage = MigraDocCore.DocumentObjectModel.Shapes.Image;
 using System.Drawing;
 
-namespace APSIM.Tests.Interop.Documentation.TagRenderers
+namespace UnitTests.Interop.Documentation.TagRenderers
 {
     /// <summary>
     /// Tests for <see cref="ImageTagRenderer"/>.
