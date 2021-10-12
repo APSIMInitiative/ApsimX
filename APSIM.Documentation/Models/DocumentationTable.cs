@@ -38,17 +38,7 @@ namespace APSIM.Documentation.Models
         public void BuildDocuments(string path)
         {
             CancellationTokenSource cts = new CancellationTokenSource();
-
-            // To document rows serially, uncomment this line, then comment out the
-            // remainder of this function. This is useful when running in debug mode,
-            // because attempting to document all rows in parallel uses a lot of memory.
-
-            // DocumentRows(rows, path, cts.Token).Wait();
-
-            foreach (IDocumentationRow row in rows)
-                foreach (IDocumentationCell cell in row.Cells)
-                    foreach (IDocumentationFile file in cell.Files)
-                        file.Generate(path);
+            DocumentRows(rows, path, cts.Token).Wait();
         }
 
         private static async Task DocumentRows(IEnumerable<IDocumentationRow> rows, string path, CancellationToken cancelToken)
@@ -58,9 +48,12 @@ namespace APSIM.Documentation.Models
             {
                 Task task = DocumentRow(row, path, cancelToken);
                 tasks.Add(task);
-                // Comment this out to enable parallel documentation of rows in the table.
-                await task.ConfigureAwait(false);
-                GC.Collect();
+
+                // Uncomment this to enable serial documentation of rows in the table.
+                // This should massively reduce memory usage.
+
+                // await task.ConfigureAwait(false);
+                // GC.Collect();
             }
             foreach (Task task in tasks)
                 await task.ConfigureAwait(false);
