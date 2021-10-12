@@ -151,7 +151,7 @@ namespace UnitTests.Interop.Documentation
             Paragraph bibliography = (Paragraph)doc.LastSection.Elements[2];
             Assert.AreEqual(typeof(FormattedText), bibliography.Elements[0].GetType());
             FormattedText formatted = (FormattedText)bibliography.Elements[0];
-            Assert.AreEqual(doc.Styles.Normal.Name, formatted.Style);
+            Assert.AreEqual("Bibliography", formatted.Style);
         }
 
         /// <summary>
