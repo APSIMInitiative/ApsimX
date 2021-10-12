@@ -114,8 +114,8 @@ namespace APSIM.Documentation
             IEnumerable<string> cols = new[] { "Name", "Documentation", "Params/Inputs/Outputs", "Detailed" };
             IEnumerable<IDocumentationRow> rows = new[]
             {
-                AgPastureDocsRow("AGPRyegrass (AgPasture)", "AGPRyegrass.json", "AgPasture.apsimx", "AgpRyegrass.pdf"),
-                AgPastureDocsRow("AGPWhiteClover (AgPasture)", "AGPWhiteClover.json", "AgPasture.apsimx", "AgpWhiteClover.pdf"),
+                AgPastureDocsRow("AGPRyegrass (AgPasture)", "AGPRyegrass.json", "AgPasture.apsimx", "AgpRyegrass.pdf", true),
+                AgPastureDocsRow("AGPWhiteClover (AgPasture)", "AGPWhiteClover.json", "AgPasture.apsimx", "AgpWhiteClover.pdf", false),
                 // todo: agroforestry
                 StandardPmfPlantRow("Barley"),
                 StandardPmfPlantRow("Chicory"),
@@ -153,13 +153,16 @@ namespace APSIM.Documentation
             return ModelWithNoResourceRow("MicroClimate", new[] { scienceCell });
         }
 
-        private static IDocumentationRow AgPastureDocsRow(string name, string resourceFile, string validationFile, string outFile)
+        private static IDocumentationRow AgPastureDocsRow(string name, string resourceFile, string validationFile, string outFile, bool documentSpeciesTable)
         {
             string speciesFile = Path.Combine(validation, "AgPasture", "SpeciesTable.apsimx");
             IDocumentationFile speciesParams = new DocsFromFile(speciesFile, "SpeciesTable.pdf", options);
             IDocumentationFile scienceDocs = new ExternalDocument("Science Documentation", agpScience);
 
-            IEnumerable<IDocumentationFile> files = new[] { scienceDocs, speciesParams };
+            List<IDocumentationFile> files = new List<IDocumentationFile>();
+	    files.Add(scienceDocs);
+	    if (documentSpeciesTable)
+		files.Add(speciesParams);
             IDocumentationCell detailsCells = new DocumentationCell(files);
             return StandardDocsRow(name, resourceFile, validationFile, outFile, detailsCells.ToEnumerable());
         }
