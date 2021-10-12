@@ -1,5 +1,6 @@
 ﻿using APSIM.Cli.Options;
 using APSIM.Interop.Documentation;
+using APSIM.Interop.Documentation.Formats;
 using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using CommandLine;
@@ -70,7 +71,8 @@ namespace APSIM.Cli
                 string pdfFile = Path.ChangeExtension(file, ".pdf");
                 string directory = Path.GetDirectoryName(file);
                 PdfWriter writer = new PdfWriter(new PdfOptions(directory, null));
-                writer.Write(pdfFile, model.Document());
+                IEnumerable<ITag> tags = options.ParamsDocs ? new ParamsInputsOutputs(model).Document() : model.Document();
+                writer.Write(pdfFile, tags);
             }
         }
     }

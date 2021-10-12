@@ -22,6 +22,12 @@ namespace APSIM.Cli.Options
         public bool Recursive { get; set; }
 
         /// <summary>
+        /// Generate Params/Inputs/Outputs Documentation.
+        /// </summary>
+        [Option("params", HelpText = "Generate Params/Inputs/Outputs Documentation")]
+        public bool ParamsDocs { get; set; }
+
+        /// <summary>
         /// Concrete examples shown in help text.
         /// </summary>
         [Usage]
