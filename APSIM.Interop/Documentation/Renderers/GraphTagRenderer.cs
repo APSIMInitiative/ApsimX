@@ -56,8 +56,9 @@ namespace APSIM.Interop.Documentation.Renderers
 
             // Temp hack - set marker size to 5. We need to review
             // appropriate sizing for graphs in autodocs.
-            foreach (var series in ((OxyPlot.PlotModel)plot).Series.OfType<OxyPlot.Series.LineSeries>())
-                series.MarkerSize = 5;
+            if (plot is OxyPlot.PlotModel model)
+                foreach (var series in model.Series.OfType<OxyPlot.Series.LineSeries>())
+                    series.MarkerSize = 5;
 
             renderer.AppendImage(exporter.Export(plot, width, width / aspectRatio));
             renderer.StartNewParagraph();

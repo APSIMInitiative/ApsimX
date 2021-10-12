@@ -70,6 +70,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
             // Mock graph exporter - this will just return the image field of this class.
             Mock<IGraphExporter> mockExporter = new Mock<IGraphExporter>();
             mockExporter.Setup<Image>(e => e.Export(It.IsAny<IGraph>(), It.IsAny<double>(), It.IsAny<double>())).Returns(() => image);
+            mockExporter.Setup<Image>(e => e.Export(It.IsAny<OxyPlot.IPlotModel>(), It.IsAny<double>(), It.IsAny<double>())).Returns(() => image);
 
             renderer = new GraphTagRenderer(mockExporter.Object);
         }
@@ -145,7 +146,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
         public void TestExportedSize()
         {
             Mock<IGraphExporter> exporter = new Mock<IGraphExporter>();
-            exporter.Setup<Image>(e => e.Export(It.IsAny<IGraph>(), It.IsAny<double>(), It.IsAny<double>())).Returns<IGraph, double, double>((graph, width, height) =>
+            exporter.Setup<Image>(e => e.Export(It.IsAny<OxyPlot.IPlotModel>(), It.IsAny<double>(), It.IsAny<double>())).Returns<IGraph, double, double>((graph, width, height) =>
             {
                 // This should be the page width in px, with height calculated from an aspect ratio of 16:9.
                 // fixme: this isn't really the best way to verify this but it'll do for now.
@@ -156,6 +157,7 @@ namespace UnitTests.Interop.Documentation.TagRenderers
 
             renderer = new GraphTagRenderer(exporter.Object);
             renderer.Render(graph, pdfBuilder);
+            Assert.AreEqual(2, TestContext.CurrentContext.AssertCount);
         }
 
         /// <summary>

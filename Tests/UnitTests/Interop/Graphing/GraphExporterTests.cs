@@ -39,6 +39,10 @@ namespace UnitTests.Interop.Graphing
         [SetUp]
         public void Setup()
         {
+            Mock<Axis> mockAxis = new Mock<Axis>("", AxisPosition.Bottom);
+            xAxis = mockAxis.Object;
+            yAxis = mockAxis.Object;
+
             Mock<ILegendConfiguration> mockLegend = new Mock<ILegendConfiguration>();
             mockLegend.Setup(l => l.InsideGraphArea).Returns(() => legendInsideGraphArea);
             mockLegend.Setup(l => l.Orientation).Returns(() => legendOrientation);
@@ -47,12 +51,32 @@ namespace UnitTests.Interop.Graphing
 
             Mock<IGraph> mockGraph = new Mock<IGraph>();
             mockGraph.Setup(g => g.Series).Returns(series);
-            mockGraph.Setup(g => g.XAxis).Returns(xAxis);
-            mockGraph.Setup(g => g.YAxis).Returns(yAxis);
+            mockGraph.Setup(g => g.XAxis).Returns(() => xAxis);
+            mockGraph.Setup(g => g.YAxis).Returns(() => yAxis);
             mockGraph.Setup(g => g.Legend).Returns(legend);
             graph = mockGraph.Object;
 
             exporter = new GraphExporter();
+        }
+
+        /// <summary>
+        /// Test a graph with no x-axis. Should throw if we attempt to export it.
+        /// </summary>
+        [Test]
+        public void TestNoXAxis()
+        {
+            xAxis = null;
+            Assert.Throws<NullReferenceException>(() => exporter.ToPlotModel(graph));
+        }
+
+        /// <summary>
+        /// Test a graph with no x-axis. Should throw if we attempt to export it.
+        /// </summary>
+        [Test]
+        public void TestNoYAxis()
+        {
+            yAxis = null;
+            Assert.Throws<NullReferenceException>(() => exporter.ToPlotModel(graph));
         }
 
         /// <summary>

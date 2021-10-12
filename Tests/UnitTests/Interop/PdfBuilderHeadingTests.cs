@@ -9,6 +9,7 @@ using Paragraph = MigraDocCore.DocumentObjectModel.Paragraph;
 using FormattedText = MigraDocCore.DocumentObjectModel.FormattedText;
 using Text = MigraDocCore.DocumentObjectModel.Text;
 using OutlineLevel = MigraDocCore.DocumentObjectModel.OutlineLevel;
+using MigraDocCore.DocumentObjectModel.Fields;
 
 namespace UnitTests.Interop.Documentation
 {
@@ -428,12 +429,14 @@ namespace UnitTests.Interop.Documentation
         {
             Assert.NotNull(paragraph, "Heading was not written to a paragraph object");
 
-            Assert.AreEqual(2, paragraph.Elements.Count);
+            Assert.AreEqual(3, paragraph.Elements.Count);
             FormattedText indices = paragraph.Elements[0] as FormattedText;
             FormattedText heading = paragraph.Elements[1] as FormattedText;
+            BookmarkField bookmark = paragraph.Elements[2] as BookmarkField;
 
             Assert.NotNull(indices, "Heading indices were not written to document");
             Assert.NotNull(heading, "Heading text was not written to document");
+            Assert.NotNull(bookmark, "Heading text was not written as a bookmark");
 
             Assert.AreEqual(1, indices.Elements.Count, "Heading indices should be a single text element");
             Assert.AreEqual(1, heading.Elements.Count, "Heading text should be a single text element");
@@ -446,6 +449,7 @@ namespace UnitTests.Interop.Documentation
 
             Assert.AreEqual(expectedIndices, indicesText.Content, "Heading index is incorrect");
             Assert.AreEqual(expectedHeadingText, headingText.Content, "Heading text is incorrect");
+            Assert.AreEqual($"#{expectedHeadingText}", bookmark.Name);
         }
     }
 }

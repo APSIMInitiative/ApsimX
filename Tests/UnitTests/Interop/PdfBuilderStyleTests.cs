@@ -184,6 +184,49 @@ namespace UnitTests.Interop
             Assert.True(h5.Font.Bold);
             Assert.True(h6.Font.Bold);
 
+            // These headings are all at the top level. Outline level is based on
+            // nested-ness of the heading, so these headings should all have outline
+            // level set to 1.
+            Assert.AreEqual(OutlineLevel.Level1, h1.ParagraphFormat.OutlineLevel);
+            Assert.AreEqual(OutlineLevel.Level1, h2.ParagraphFormat.OutlineLevel);
+            Assert.AreEqual(OutlineLevel.Level1, h3.ParagraphFormat.OutlineLevel);
+            Assert.AreEqual(OutlineLevel.Level1, h4.ParagraphFormat.OutlineLevel);
+            Assert.AreEqual(OutlineLevel.Level1, h5.ParagraphFormat.OutlineLevel);
+            Assert.AreEqual(OutlineLevel.Level1, h6.ParagraphFormat.OutlineLevel);
+        }
+
+        /// <summary>
+        /// Ensure that heading styles work correctly for nested headings.
+        /// </summary>
+        [Test]
+        public void TestNestedHeadingOutlineLevel()
+        {
+            Style h1 = CreateHeading(1);
+            builder.PushSubHeading();
+            Style h2 = CreateHeading(2);
+            builder.PushSubHeading();
+            Style h3 = CreateHeading(3);
+            builder.PushSubHeading();
+            Style h4 = CreateHeading(4);
+            builder.PushSubHeading();
+            Style h5 = CreateHeading(5);
+            builder.PushSubHeading();
+            Style h6 = CreateHeading(6);
+            builder.PushSubHeading();
+
+            Assert.Greater(h1.Font.Size.Point, h2.Font.Size.Point);
+            Assert.Greater(h2.Font.Size.Point, h3.Font.Size.Point);
+            Assert.Greater(h3.Font.Size.Point, h4.Font.Size.Point);
+            Assert.Greater(h4.Font.Size.Point, h5.Font.Size.Point);
+            Assert.Greater(h5.Font.Size.Point, h6.Font.Size.Point);
+
+            Assert.True(h1.Font.Bold);
+            Assert.True(h2.Font.Bold);
+            Assert.True(h3.Font.Bold);
+            Assert.True(h4.Font.Bold);
+            Assert.True(h5.Font.Bold);
+            Assert.True(h6.Font.Bold);
+
             Assert.AreEqual(OutlineLevel.Level1, h1.ParagraphFormat.OutlineLevel);
             Assert.AreEqual(OutlineLevel.Level2, h2.ParagraphFormat.OutlineLevel);
             Assert.AreEqual(OutlineLevel.Level3, h3.ParagraphFormat.OutlineLevel);

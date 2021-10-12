@@ -240,8 +240,9 @@ namespace UnitTests.Interop.Markdown.Renderers.Inlines
                 renderer.CallBase = true;
                 renderer.Object.Write(pdfBuilder, inline);
             }
-            pdfBuilder.AppendText("Not be in same paragraph as image", TextStyle.Normal);
             Assert.AreEqual(2, document.LastSection.Elements.Count);
+            pdfBuilder.AppendText("Not be in same paragraph as image", TextStyle.Normal);
+            Assert.AreEqual(3, document.LastSection.Elements.Count);
         }
 
         /// <summary>

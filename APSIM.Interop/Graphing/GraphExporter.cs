@@ -123,9 +123,9 @@ namespace APSIM.Interop.Graphing
             }
 
             // Axes (don't add them if there are no series to display on the graph).
-            if (xAxisRequirements.AxisKind != null)
+            if (xAxisRequirements?.AxisKind != null)
                 plot.Axes.Add(graph.XAxis.ToOxyPlotAxis(xAxisRequirements, labels.XLabels));
-            if (yAxisRequirements.AxisKind != null)
+            if (yAxisRequirements?.AxisKind != null)
                 plot.Axes.Add(graph.YAxis.ToOxyPlotAxis(yAxisRequirements, labels.YLabels));
 
             // Legend

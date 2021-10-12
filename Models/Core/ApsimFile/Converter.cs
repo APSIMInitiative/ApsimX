@@ -3712,7 +3712,10 @@
         {
             foreach (JObject graph in JsonUtilities.ChildrenRecursively(root, "Graph"))
             {
-                foreach (JObject axis in graph["Axis"])
+                JToken axes = graph["Axis"];
+                if (axes == null)
+                    continue;
+                foreach (JObject axis in axes)
                 {
                     // Class moved into APSIM.Shared.Graphing namespace.
                     axis["$type"] = "APSIM.Shared.Graphing.Axis, APSIM.Shared";
