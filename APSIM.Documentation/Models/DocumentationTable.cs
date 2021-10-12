@@ -79,18 +79,7 @@ namespace APSIM.Documentation.Models
 
         private static Task DocumentFile(IDocumentationFile file, string path, CancellationToken cancelToken)
         {
-            return Task.Run(() => 
-            {
-                try
-                {
-                    file.Generate(path);
-                }
-                catch (Exception err)
-                {
-                    Console.Error.WriteLine($"Failed to generate documentation for file {file.OutputFileName}");
-                    Console.Error.WriteLine(err);
-                }
-            }, cancelToken);
+            return Task.Run(() => file.Generate(path), cancelToken);
         }
 
         /// <summary>
