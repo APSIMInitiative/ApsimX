@@ -240,9 +240,8 @@
             // Nasty!
             IModel script = Children[0];
 
-            BindingFlags flags = BindingFlags.Instance | BindingFlags.Public;
-            MethodInfo document = script.GetType().GetMethod(nameof(Document), flags);
-            if (document != null)
+            Type scriptType = script.GetType();
+            if (scriptType.GetMethod(nameof(Document)).DeclaringType == scriptType)
                 foreach (ITag tag in script.Document())
                     yield return tag;
         }
