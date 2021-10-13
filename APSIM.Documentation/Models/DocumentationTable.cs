@@ -100,8 +100,12 @@ namespace APSIM.Documentation.Models
 
             // Write column headers.
             html.AppendLine("<tr>");
+            uint numColumns = 0;
             foreach (string column in columns)
+            {
                 html.AppendLine($"<th>{column}</th>");
+                numColumns++;
+            }
             html.AppendLine("</tr>");
 
             // Write rows.
@@ -109,6 +113,7 @@ namespace APSIM.Documentation.Models
             {
                 html.AppendLine("<tr>");
                 html.AppendLine($"<td>{row.Name}</td>");
+                uint numCells = 1;
                 foreach (IDocumentationCell cell in row.Cells)
                 {
                     html.AppendLine("<td>");
@@ -117,6 +122,12 @@ namespace APSIM.Documentation.Models
                     string links = string.Join("", files);
                     html.AppendLine(links);
                     html.AppendLine("</td>");   
+                    numCells++;
+                }
+                while (numCells < numColumns)
+                {
+                    html.AppendLine("<td></td>");
+                    numCells++;
                 }
                 html.AppendLine("</tr>");
             }
