@@ -40,7 +40,7 @@ namespace APSIM.Documentation
                 html.AppendLine("<html>");
                 html.AppendLine("  <head>");
                 html.AppendLine("    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">");
-                html.AppendLine("    <link rel=\"stylesheet\" media=\"screen\" href=\"/index.css\" type=\"text/css\" />");
+                html.AppendLine("    <link rel=\"stylesheet\" media=\"screen\" href=\"index.css\" type=\"text/css\" />");
                 html.AppendLine("  </head>");
                 html.AppendLine("  <body>");
 
