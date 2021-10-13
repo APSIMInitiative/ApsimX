@@ -211,10 +211,14 @@ namespace APSIM.Documentation
         private static IDocumentationRow StockRow()
         {
             string validationFile = Path.Combine(validation, "Stock", "Stock.apsimx");
-            IDocumentationFile supplement = new ParamsDocsFromFile(validationFile, $"Stock-parameters.pdf", options, "[Supplement]");
+
+            IDocumentationFile paramsDoc = new ParamsDocsFromFile(validationFile, $"Stock-parameters.pdf", options, "[Supplement]");
+            IDocumentationCell paramsCell = new DocumentationCell(paramsDoc);
+
             IDocumentationFile grazPlanDoc = new ExternalDocument("GRAZPLAN Animal Biology Model", grazPlan);
-            IDocumentationCell detailsCell = new DocumentationCell(new[] { supplement, grazPlanDoc });
-            return ModelWithNoResourceRow("Stock", detailsCell.ToEnumerable());
+            IDocumentationCell detailsCell = new DocumentationCell(grazPlanDoc);
+
+            return CustomDocsRow("Stock", validationFile.ToEnumerable(), "Stock.pdf", new [] { paramsCell, detailsCell });
         }
 
         private static IDocumentationRow SoilWaterDocs()
