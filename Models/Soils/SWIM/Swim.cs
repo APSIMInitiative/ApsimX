@@ -53,7 +53,8 @@ namespace Models.Soils
         [Link(IsOptional = true)]
         private SwimWaterTable waterTable = null;
 
-        const double divideTolerance = 1D-8;
+        const double floatComparisonTolerance = 1e-16;
+        const double divideTolerance = 1e-8;
         const double effpar = 0.184;
         const double psi_ll15 = -15000.0;
         const double psiad = -1e6;
@@ -2592,7 +2593,7 @@ namespace Models.Soils
 
         private void CalcEvapVariables()
         {
-            if (!MathUtilities.FloatsAreEqual(apsim_timestep, 1440.0))
+            if (!MathUtilities.FloatsAreEqual(apsim_timestep, 1440.0, floatComparisonTolerance))
                 throw new Exception("apswim can only calculate Eo for daily timestep");
 
             string time;
@@ -3064,7 +3065,7 @@ namespace Models.Soils
                 // Insert starting element placeholder into log
                 for (int counter = 0; counter < SWIMTime.Length; counter++)
                 {
-                    if (MathUtilities.FloatsAreEqual(SWIMTime[counter], time))
+                    if (MathUtilities.FloatsAreEqual(SWIMTime[counter], time, floatComparisonTolerance))
                     {
                         inserted = true;
                         break;  // There is already a placeholder there
@@ -3098,7 +3099,7 @@ namespace Models.Soils
             inserted = false;
             for (int counter = 0; counter < SWIMTime.Length; counter++)
             {
-                if (MathUtilities.FloatsAreEqual(SWIMTime[counter], FTime))
+                if (MathUtilities.FloatsAreEqual(SWIMTime[counter], FTime, floatComparisonTolerance))
                 {
                     inserted = true;
                     break;  // There is already a placeholder there
@@ -3507,13 +3508,13 @@ namespace Models.Soils
 
                 // Start with first guess as largest size_of possible
                 _dt = DTMax;
-                if (MathUtilities.FloatsAreEqual(DTMin, DTMax))
+                if (MathUtilities.FloatsAreEqual(DTMin, DTMax, floatComparisonTolerance))
                     _dt = DTMin;
                 else
                 {
                     if (!run_has_started)
                     {
-                        if (MathUtilities.FloatsAreEqual(DTMin, 0.0))
+                        if (MathUtilities.FloatsAreEqual(DTMin, 0.0, floatComparisonTolerance))
                             _dt = Math.Min(0.01 * (timestepRemaining), 0.25);
                         else
                             _dt = DTMin;
@@ -3760,7 +3761,7 @@ namespace Models.Soils
 
                 double decayFraction = MathUtilities.Divide(_hmin - _hm0, _hm1 - _hm0, 0.0, divideTolerance);
 
-                if (MathUtilities.FloatsAreEqual(decayFraction, 0.0))
+                if (MathUtilities.FloatsAreEqual(decayFraction, 0.0, floatComparisonTolerance))
                 {
                     // the roughness is totally decayed
                     sstorage = _hm0;
@@ -3802,7 +3803,7 @@ namespace Models.Soils
 
                 double decayFraction = MathUtilities.Divide(gsurf - _g0, _g1 - _g0, 0.0, divideTolerance);
 
-                if (MathUtilities.FloatsAreEqual(decayFraction, 0.0))
+                if (MathUtilities.FloatsAreEqual(decayFraction, 0.0, floatComparisonTolerance))
                 {
                     // seal is totally decayed
                     surfcon = _g0;
@@ -3857,7 +3858,7 @@ namespace Models.Soils
             double[] rhs = new double[n + 1];
             double[] dp = new double[n + 1];
             double[] vbp = new double[n + 1];
-            PondingData pondingData = new PondingData();
+             PondingData pondingData = new PondingData();
 
             do
             {
@@ -3915,7 +3916,7 @@ namespace Models.Soils
                         _p[j] += dp[i];
                         if (j > 0 && j < n - 1)
                         {
-                            if (MathUtilities.FloatsAreEqual(x[j], x[j + 1]))
+                            if (MathUtilities.FloatsAreEqual(x[j], x[j + 1], floatComparisonTolerance))
                             {
                                 j++;
                                 _p[j] = _p[j - 1];
@@ -3927,6 +3928,9 @@ namespace Models.Soils
                         _h = Math.Max(0.0, _h + pondingData.v);
                     //_h = Math.Max(0.0, _h + dp[-1]);
                 }
+
+                var msg = it + ",psi," + StringUtilities.Build(_psi, ",") + ",th," + StringUtilities.Build(th, ",");
+                summary.WriteMessage(this, msg);
             }
             while (fail && it < itlim);
 
@@ -4048,7 +4052,7 @@ namespace Models.Soils
 
                 //Peter's CHANGE 21/10/98 to ensure zero exchange is treated as linear
                 //         if (p%fip(solnum,j).eq.1.) then
-                if ((MathUtilities.FloatsAreEqual(ex[solnum][j], 0.0)) || (MathUtilities.FloatsAreEqual(fip[solnum][j], 1.0)))
+                if ((MathUtilities.FloatsAreEqual(ex[solnum][j], 0.0, floatComparisonTolerance)) || (MathUtilities.FloatsAreEqual(fip[solnum][j], 1.0, floatComparisonTolerance)))
                 {
                     //           linear exchange isotherm
                     c2[i] = 1.0;
@@ -4083,7 +4087,7 @@ namespace Models.Soils
 
             for (int i = 1; i <= n; i++) // NOTE: staring from 1 is deliberate this time
             {
-                if (!MathUtilities.FloatsAreEqual(x[i - 1], x[i]))
+                if (!MathUtilities.FloatsAreEqual(x[i - 1], x[i], floatComparisonTolerance))
                 {
                     double w1;
                     double thav = 0.5 * (th[i - 1] + th[i]);
@@ -4174,7 +4178,7 @@ namespace Models.Soils
             j = 0;
             for (int i = 1; i <= n; i++)
             {
-                if (!MathUtilities.FloatsAreEqual(x[i - 1], x[i]))
+                if (!MathUtilities.FloatsAreEqual(x[i - 1], x[i], floatComparisonTolerance))
                 {
                     j = j + 1;
                     a[j] = a[i];
@@ -4217,7 +4221,7 @@ namespace Models.Soils
             }
             for (int i = n - 1; i > 0; i--)
             {
-                if (!MathUtilities.FloatsAreEqual(x[i], x[i + 1]))
+                if (!MathUtilities.FloatsAreEqual(x[i], x[i + 1], floatComparisonTolerance))
                 {
                     csl[solnum][i] = csl[solnum][j];
                     j--;
@@ -4252,14 +4256,14 @@ namespace Models.Soils
                     j = 0;
                     for (int i = 0; i <= n; i++)
                     {
-                        if (!MathUtilities.FloatsAreEqual(x[i - 1], x[i]))
+                        if (!MathUtilities.FloatsAreEqual(x[i - 1], x[i], floatComparisonTolerance))
                         {
                             if (i > 0)
                                 j++;
                         }
                         //cnh               kk=indxsl(solnum,i)
                         int kk = i;
-                        if (!MathUtilities.FloatsAreEqual(fip[solnum][i], 1.0))
+                        if (!MathUtilities.FloatsAreEqual(fip[solnum][i], 1.0, floatComparisonTolerance))
                         {
                             double cp = 0.0;
                             if (csl[solnum][i] > 0.0)
@@ -4323,7 +4327,7 @@ namespace Models.Soils
             //     get solute fluxes
             for (int i = 1; i <= n; i++)
             {
-                if (!MathUtilities.FloatsAreEqual(x[i - 1], x[i]))
+                if (!MathUtilities.FloatsAreEqual(x[i - 1], x[i], floatComparisonTolerance))
                 {
                     double dfac = 0.5 * (th[i - 1] + th[i]) * dc[solnum][i] / (x[i] - x[i - 1]);
                     double aq = Math.Abs(q[i]);
@@ -4344,7 +4348,7 @@ namespace Models.Soils
             }
             for (int i = 2; i < n; i++)
             {
-                if (MathUtilities.FloatsAreEqual(x[i - 1], x[i]))
+                if (MathUtilities.FloatsAreEqual(x[i - 1], x[i], floatComparisonTolerance))
                 {
                     qsl[solnum][i] = (dx[i] * qsl[solnum][i - 1] + dx[i - 1] * qsl[solnum][i + 1]) / (dx[i - 1] + dx[i]);
                 }
@@ -4356,7 +4360,7 @@ namespace Models.Soils
                 //nh         j=indxsl(solnum,i)
                 j = i;
                 double cp = 1.0;
-                if (!MathUtilities.FloatsAreEqual(fip[solnum][i], 1.0))
+                if (!MathUtilities.FloatsAreEqual(fip[solnum][i], 1.0, floatComparisonTolerance))
                 {
                     cp = 0.0;
                     if (csl[solnum][i] > 0.0)
@@ -4641,7 +4645,7 @@ namespace Models.Soils
                 // Ctot is OK, proceed to calculations
 
                 // Check for no adsorption and whether the isotherm is linear
-                if (MathUtilities.FloatsAreEqual(ex[solnum][node], 0.0))
+                if (MathUtilities.FloatsAreEqual(ex[solnum][node], 0.0, floatComparisonTolerance))
                 {
                     //There is no adsorption:
 
@@ -4649,7 +4653,7 @@ namespace Models.Soils
                     solved = true;
                 }
 
-                else if (MathUtilities.FloatsAreEqual(fip[solnum][node], 0.0))
+                else if (MathUtilities.FloatsAreEqual(fip[solnum][node], 0.0, floatComparisonTolerance))
                 {
                     // Full adsorption, solute is immobile:
 
@@ -4657,7 +4661,7 @@ namespace Models.Soils
                     solved = true;
                 }
 
-                else if (MathUtilities.FloatsAreEqual(fip[solnum][node], 1.0))
+                else if (MathUtilities.FloatsAreEqual(fip[solnum][node], 1.0, floatComparisonTolerance))
                 {
                     // Linear adsorption:
 
@@ -4811,8 +4815,8 @@ namespace Models.Soils
             {
                 // Cw is positive, proceed with the calculations
 
-                if ((MathUtilities.FloatsAreEqual(fip[solnum][node], 1.0))
-                     || (MathUtilities.FloatsAreEqual(ex[solnum][node], 0.0)))
+                if ((MathUtilities.FloatsAreEqual(fip[solnum][node], 1.0, floatComparisonTolerance))
+                     || (MathUtilities.FloatsAreEqual(ex[solnum][node], 0.0, floatComparisonTolerance)))
                 {
                     // Linear isotherm or no adsorption
 
@@ -5202,6 +5206,10 @@ namespace Models.Soils
             for (int i = 0; i <= n; i++)
                 Watvar(i, _p[i], out _psi[i], out psip[i], out psipp[i], out th[i], ref thp[i], out hk[i], ref hkp[i]);
 
+            // If curve number is zero then allow ponding
+            //if (CN2Bare == 0)
+            //    isbc = 1;
+
             //   check boundary potls
             if (itbc == 0 && isbc == 0 && _psi[0] > 0.0)
             {
@@ -5229,7 +5237,7 @@ namespace Models.Soils
             double hsoil;
             for (int i = 1; i <= n; i++)
             {
-                if (!MathUtilities.FloatsAreEqual(x[i - 1], x[i]))
+                if (!MathUtilities.FloatsAreEqual(x[i - 1], x[i], floatComparisonTolerance))
                 {
                     deltax = x[i] - x[i - 1];
                     deltap = _p[i] - _p[i - 1];
@@ -5537,7 +5545,7 @@ namespace Models.Soils
                     //           j is next different node, k is equation
                     if (i > 0 && i < n - 1)
                     {
-                        if (MathUtilities.FloatsAreEqual(x[i], x[i + 1]))
+                        if (MathUtilities.FloatsAreEqual(x[i], x[i + 1], floatComparisonTolerance))
                         {
                             xipdif = false;
                             j = i + 2;

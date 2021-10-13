@@ -240,7 +240,7 @@ namespace Models.PMF.OilPalm
         double[] PotSWUptake;
 
         /// <summary>The sw uptake</summary>
-        double[] SWUptake;
+        public double[] WaterUptake { get; private set; }
 
         /// <summary>Potential daily evapotranspiration for the palm canopy</summary>
         /// <value>The pep.</value>
@@ -354,7 +354,7 @@ namespace Models.PMF.OilPalm
         /// <value>The n uptake.</value>
         [JsonIgnore]
         [Units("kg/ha")]
-        public double[] NUptake { get; set; }
+        public double[] NitrogenUptake { get; set; }
 
         /// <summary>Daily stem dry matter growth</summary>
         /// <value>The stem growth.</value>
@@ -710,7 +710,7 @@ namespace Models.PMF.OilPalm
             StemMass = 0;
             StemN = 0;
             CropInGround = false;
-            NUptake = new double[] { 0 };
+            NitrogenUptake = new double[] { 0 };
             UnderstoryNUptake = new double[] { 0 };
             UnderstoryCoverGreen = 0;
             StemGrowth = 0;
@@ -736,9 +736,9 @@ namespace Models.PMF.OilPalm
 
             //MyPaddock.Parent.ChildPaddocks
             PotSWUptake = new double[soilPhysical.Thickness.Length];
-            SWUptake = new double[soilPhysical.Thickness.Length];
+            WaterUptake = new double[soilPhysical.Thickness.Length];
             PotNUptake = new double[soilPhysical.Thickness.Length];
-            NUptake = new double[soilPhysical.Thickness.Length];
+            NitrogenUptake = new double[soilPhysical.Thickness.Length];
 
             UnderstoryPotSWUptake = new double[soilPhysical.Thickness.Length];
             UnderstorySWUptake = new double[soilPhysical.Thickness.Length];
@@ -946,12 +946,12 @@ namespace Models.PMF.OilPalm
                 if (layer <= LayerIndex(RootDepth))
                     if (Roots[layer].Mass > 0)
                     {
-                        RAw[layer] = SWUptake[layer] / Roots[layer].Mass
+                        RAw[layer] = WaterUptake[layer] / Roots[layer].Mass
                                    * soilPhysical.Thickness[layer]
                                    * RootProportion(layer, RootDepth);
                         RAw[layer] = Math.Max(RAw[layer], 1e-20);  // Make sure small numbers to avoid lack of info for partitioning
 
-                        RAn[layer] = NUptake[layer] / Roots[layer].Mass
+                        RAn[layer] = NitrogenUptake[layer] / Roots[layer].Mass
                                    * soilPhysical.Thickness[layer]
                                    * RootProportion(layer, RootDepth);
                         RAn[layer] = Math.Max(RAw[layer], 1e-10);  // Make sure small numbers to avoid lack of info for partitioning
@@ -1208,10 +1208,10 @@ namespace Models.PMF.OilPalm
             EP = 0.0;
             for (int j = 0; j < soilPhysical.LL15mm.Length; j++)
             {
-                SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
-                EP += SWUptake[j];
+                WaterUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
+                EP += WaterUptake[j];
             }
-            waterBalance.RemoveWater(SWUptake);
+            waterBalance.RemoveWater(WaterUptake);
 
             if (PEP > 0.0)
             {
@@ -1254,10 +1254,10 @@ namespace Models.PMF.OilPalm
             double Fr = Math.Min(1.0, Ndemand / TotPotNUptake);
 
             for (int j = 0; j < soilPhysical.LL15mm.Length; j++)
-                NUptake[j] = PotNUptake[j] * Fr;
-            NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(NO3.kgha, NUptake));
+                NitrogenUptake[j] = PotNUptake[j] * Fr;
+            NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(NO3.kgha, NitrogenUptake));
 
-            Fr = Math.Min(1.0, Math.Max(0, MathUtilities.Sum(NUptake) / BunchNDemand));
+            Fr = Math.Min(1.0, Math.Max(0, MathUtilities.Sum(NitrogenUptake) / BunchNDemand));
             double DeltaBunchN = BunchNDemand * Fr;
 
             double Tot = 0;
@@ -1269,7 +1269,7 @@ namespace Models.PMF.OilPalm
 
             // Calculate fraction of N demand for Vegetative Parts
             if ((Ndemand - DeltaBunchN) > 0)
-                Fr = Math.Max(0.0, ((MathUtilities.Sum(NUptake) - DeltaBunchN) / (Ndemand - DeltaBunchN)));
+                Fr = Math.Max(0.0, ((MathUtilities.Sum(NitrogenUptake) - DeltaBunchN) / (Ndemand - DeltaBunchN)));
             else
                 Fr = 0.0;
 
@@ -1290,7 +1290,7 @@ namespace Models.PMF.OilPalm
 
             double EndN = PlantN;
             double Change = EndN - StartN;
-            double Uptake = MathUtilities.Sum(NUptake) / 10.0;
+            double Uptake = MathUtilities.Sum(NitrogenUptake) / 10.0;
             if (Math.Abs(Change - Uptake) > 0.001)
                 throw new Exception("Error in N Allocation");
 

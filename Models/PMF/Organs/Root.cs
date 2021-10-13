@@ -349,7 +349,7 @@
         [JsonIgnore]
         public Biomass[] LayerDead { get { return PlantZone.LayerDead; } }
 
-        /// <summary>Gets or sets the water uptake.</summary>
+        /// <summary>Gets the water uptake.</summary>
         [Units("mm")]
         public double WaterUptake
         {
@@ -362,9 +362,24 @@
             }
         }
 
+        /// <summary>Gets the water uptake.</summary>
+        [Units("mm")]
+        public double[] SWUptake
+        {
+            get
+            {
+                if (Zones == null || Zones.Count == 0)
+                    return null;
+                double[] uptake = (double[]) Zones[0].WaterUptake;
+                for (int i = 1; i != Zones.Count; i++)
+                    uptake = MathUtilities.Add(uptake, Zones[i].WaterUptake);
+                return MathUtilities.Multiply_Value(uptake, -1); // convert to positive values.
+            }
+        }
+
         /// <summary>Gets or sets the N uptake.</summary>
         [Units("kg/ha")]
-        public double NUptake
+        public double NitrogenUptake
         {
             get
             {
@@ -372,6 +387,21 @@
                 foreach (ZoneState zone in Zones)
                     uptake += MathUtilities.Sum(zone.NitUptake);
                 return uptake;
+            }
+        }
+
+        /// <summary>Gets the nitrogen uptake.</summary>
+        [Units("mm")]
+        public double[] NUptake
+        {
+            get
+            {
+                if (Zones == null || Zones.Count == 0)
+                    return null;
+                double[] uptake = (double[])Zones[0].WaterUptake.Clone();
+                for (int i = 1; i != Zones.Count; i++)
+                    uptake = MathUtilities.Add(uptake, Zones[i].NitUptake);
+                return MathUtilities.Multiply_Value(uptake, -1); // convert to positive values.
             }
         }
 

@@ -358,7 +358,7 @@
                         zones.Add(UptakeDemands);
 
                         // get the N amount available in the soil
-                        myRoot.EvaluateSoilNitrogenAvailable(zone, mySoilWaterUptake);
+                        myRoot.EvaluateSoilNitrogenAvailable(zone, WaterUptake);
 
                         UptakeDemands.NO3N = myRoot.mySoilNO3Available;
                         UptakeDemands.NH4N = myRoot.mySoilNH4Available;
@@ -386,6 +386,7 @@
 
                 mySoilNH4Uptake = MathUtilities.Multiply_Value(mySoilNH4Available, fractionUsed);
                 mySoilNO3Uptake = MathUtilities.Multiply_Value(mySoilNO3Available, fractionUsed);
+                NitrogenUptake = MathUtilities.Add(mySoilNO3Uptake, mySoilNH4Uptake);
 
                 // reduce the PotentialUptakes that we pass to the soil arbitrator
                 foreach (ZoneWaterAndN UptakeDemands in zones)
@@ -405,7 +406,7 @@
         /// <param name="zones">The water uptake from each layer (mm), by zone.</param>
         public void SetActualWaterUptake(List<ZoneWaterAndN> zones)
         {
-            Array.Clear(mySoilWaterUptake, 0, mySoilWaterUptake.Length);
+            Array.Clear(WaterUptake, 0, WaterUptake.Length);
 
             foreach (ZoneWaterAndN zone in zones)
             {
@@ -413,7 +414,7 @@
                 PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
                 if (myRoot != null)
                 {
-                    mySoilWaterUptake = MathUtilities.Add(mySoilWaterUptake, zone.Water);
+                    WaterUptake = MathUtilities.Add(WaterUptake, zone.Water);
                     myRoot.PerformWaterUptake(zone.Water);
                 }
             }
@@ -1147,6 +1148,9 @@
         /// <summary>Amount of soil NO3-N taken up by the plant (kg/ha).</summary>
         private double[] mySoilNO3Uptake;
 
+        /// <summary>Amount of soil water taken up (mm).</summary>
+        public double[] NitrogenUptake { get; private set; }
+
         ////- Water uptake process >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Amount of water demanded for new growth (mm).</summary>
@@ -1156,7 +1160,7 @@
         private double[] mySoilWaterAvailable;
 
         /// <summary>Amount of soil water taken up (mm).</summary>
-        private double[] mySoilWaterUptake;
+        public double[] WaterUptake { get; private set; }
 
         ////- Growth limiting factors >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -1890,13 +1894,6 @@
             get { return mySoilWaterAvailable; }
         }
 
-        /// <summary>Amount of water taken up from each soil layer (mm).</summary>
-        [Units("mm")]
-        public double[] WaterUptake
-        {
-            get { return mySoilWaterUptake; }
-        }
-
         ////- Growth limiting factors >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Growth limiting factor due to variations in intercepted radiation (0-1).</summary>
@@ -2362,7 +2359,7 @@
         private void InitiliaseSoilArrays()
         {
             mySoilWaterAvailable = new double[nLayers];
-            mySoilWaterUptake = new double[nLayers];
+            WaterUptake = new double[nLayers];
             mySoilNH4Uptake = new double[nLayers];
             mySoilNO3Uptake = new double[nLayers];
         }
@@ -2582,7 +2579,7 @@
             luxuryNRemobilised = 0.0;
 
             Array.Clear(mySoilWaterAvailable, 0, nLayers);
-            Array.Clear(mySoilWaterUptake, 0, nLayers);
+            Array.Clear(WaterUptake, 0, nLayers);
             Array.Clear(mySoilNH4Uptake, 0, nLayers);
             Array.Clear(mySoilNO3Uptake, 0, nLayers);
 
@@ -3207,7 +3204,7 @@
                 fractionUsed = Math.Min(1.0, demand / supply);
 
             // 4. get the amount of water actually taken up
-            mySoilWaterUptake = MathUtilities.Multiply_Value(mySoilWaterAvailable, fractionUsed);
+            WaterUptake = MathUtilities.Multiply_Value(mySoilWaterAvailable, fractionUsed);
         }
 
         /// <summary>Gets the water uptake for each layer as calculated by an external module (SWIM).</summary>
@@ -3220,7 +3217,7 @@
                 if (cropUptake.Name == Name)
                 {
                     for (int layer = 0; layer < cropUptake.Amount.Length; layer++)
-                        mySoilWaterUptake[layer] = cropUptake.Amount[layer];
+                        WaterUptake[layer] = cropUptake.Amount[layer];
                 }
             }
         }
@@ -4042,7 +4039,7 @@
         /// <returns>A limiting factor for plant growth (0-1)</returns>
         internal double WaterDeficitFactor()
         {
-            double factor = MathUtilities.Divide(mySoilWaterUptake.Sum(), myWaterDemand, 1.0);
+            double factor = MathUtilities.Divide(WaterUptake.Sum(), myWaterDemand, 1.0);
             return Math.Max(0.0, Math.Min(1.0, factor));
         }
 
