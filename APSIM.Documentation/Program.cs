@@ -99,14 +99,14 @@ namespace APSIM.Documentation
                 StandardTutorialRow("Parameter sensitivity (Factorial ANOVA)", "Sensitivity_FactorialANOVA"),
                 StandardTutorialRow("Report", "Report"),
             };
-            return new DocumentationTable(cols, rows);
+            return new DocumentationTable("Tutorials", cols, rows);
         }
 
         private static IDocumentationTable GetClemTable()
         {
             IEnumerable<string> cols = new string[4] { "Name", "Science Documentation", "Example1", "Example2" };
             IEnumerable<IDocumentationRow> rows = new[] { ClemDocsRow() };
-            return new DocumentationTable(cols, rows);
+            return new DocumentationTable("CLEM", cols, rows);
         }
 
         private static IDocumentationTable GetAutodocsConfig()
@@ -144,7 +144,7 @@ namespace APSIM.Documentation
                 StandardPmfPlantRow("Wheat"),
                 StandardPmfPlantRow("WhiteClover"),
             };
-            return new DocumentationTable(cols, rows);
+            return new DocumentationTable("Model Documentation", cols, rows);
         }
 
         private static IDocumentationRow MicroClimateRow()

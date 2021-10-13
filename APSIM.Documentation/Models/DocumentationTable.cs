@@ -21,13 +21,20 @@ namespace APSIM.Documentation.Models
         private IEnumerable<IDocumentationRow> rows;
 
         /// <summary>
+        /// Name of the table.
+        /// </summary>
+        public string Name { get; private set; }
+
+        /// <summary>
         /// Create a new <see cref="DocumentationTable"/> instance.
         /// </summary>
+        /// <param name="name">Name of the table.</param>
         /// <param name="cols">Table column names.</param>
         /// <param name="rows">Table rows.</param>
-        public DocumentationTable(IEnumerable<string> cols, IEnumerable<IDocumentationRow> rows)
+        public DocumentationTable(string name, IEnumerable<string> cols, IEnumerable<IDocumentationRow> rows)
         {
-            this.columns = cols;
+            Name = name;
+            columns = cols;
             this.rows = rows;
         }
 
@@ -88,6 +95,7 @@ namespace APSIM.Documentation.Models
         public string BuildHtmlDocument()
         {
             StringBuilder html = new StringBuilder();
+            html.AppendLine($"<h1>{Name}</h1>");
             html.AppendLine("<table>");
 
             // Write column headers.
