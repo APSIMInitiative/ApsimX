@@ -1111,15 +1111,6 @@
             // e.g. A Graph called Biomass should use an icon called Graph.png
             // e.g. A Plant called Wheat should use an icon called Wheat.png
             // e.g. A plant called Wheat with a resource name of Maize (don't do this) should use an icon called Maize.png.
-
-            if (modelType == typeof(Models.Manager))
-            {
-
-            }
-            if (modelType == typeof(Zone))
-            {
-                
-            }
             string resourceNameForImage;
             bool exists;
             if (typeof(ModelCollectionFromResource).IsAssignableFrom(modelType) && modelName != null)
