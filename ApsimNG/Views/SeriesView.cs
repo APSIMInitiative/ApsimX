@@ -89,7 +89,7 @@
 
             editView1 = new EditView(this);
 
-            Image helpImage = new Image(null, "ApsimNG.Resources.help.png");
+            Image helpImage = new Image(null, "ApsimNG.Resources.MenuImages.Help.svg");
             helpBox = new EventBox();
             helpBox.Add(helpImage);
             helpBox.ButtonReleaseEvent += Help_ButtonPressEvent;

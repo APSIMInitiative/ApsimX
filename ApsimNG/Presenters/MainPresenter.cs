@@ -561,58 +561,58 @@
             // Add the buttons into the main window.
             startPage.AddButton(
                                 "Open APSIM File",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.OpenFile.png"),
+                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.OpenFile.svg"),
                                           this.OnOpenApsimXFile);
 
             startPage.AddButton(
                                 "Open an example",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.OpenExample.png"),
+                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.OpenExample.svg"),
                                           this.OnExample);
 
             startPage.AddButton(
                                 "Standard toolbox",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.png"),
+                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.svg"),
                                           this.OnStandardToolboxClick);
 
             startPage.AddButton(
                                 "Management toolbox",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.png"),
+                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.svg"),
                                           this.OnManagementToolboxClick);
 
             startPage.AddButton(
                                 "Training toolbox",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.png"),
+                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.svg"),
                                           this.OnTrainingToolboxClick);
 
             startPage.AddButton(
                                 "Import old .apsim file",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Import.png"),
+                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Import.svg"),
                                           this.OnImport);
 
             startPage.AddButton(
                                 "Upgrade",
-                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
+                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.svg"),
                                         this.OnUpgrade);
 
             startPage.AddButton(
                                 "View Cloud Jobs",
-                                        new Gtk.Image(null, "ApsimNG.Resources.Cloud.png"),
+                                        new Gtk.Image(null, "ApsimNG.Resources.Cloud.svg"),
                                         this.OnViewCloudJobs);
 
 #if DEBUG
             startPage.AddButton(
                                 "Upgrade Resource Files",
-                                new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
+                                new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.svg"),
                                 this.OnShowConverter);
 #endif
 
             startPage.AddButton(
                                 "Settings",
-                                new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Settings.png"),
+                                new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Settings.svg"),
                                 OnShowSettingsDialog);
             startPage.AddButton(
                             "Help",
-                            new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Help.png"),
+                            new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Help.svg"),
                             this.OnHelp);
             // Populate the view's listview.
             startPage.List.Values = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();

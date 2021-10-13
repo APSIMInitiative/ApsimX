@@ -882,7 +882,7 @@
                 {
                     MenuDescriptionArgs desc = new MenuDescriptionArgs();
                     desc.Name = mainMenuName.MenuName;
-                    desc.ResourceNameForImage = "ApsimNG.Resources.MenuImages." + desc.Name + ".png";
+                    desc.ResourceNameForImage = $"ApsimNG.Resources.MenuImages.{desc.Name.Replace(" ", "")}.svg";
 
                     EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.mainMenu, method);
                     desc.OnClick = handler;
@@ -1112,32 +1112,64 @@
             // e.g. A Plant called Wheat should use an icon called Wheat.png
             // e.g. A plant called Wheat with a resource name of Maize (don't do this) should use an icon called Maize.png.
 
+            if (modelType == typeof(Models.Manager))
+            {
+
+            }
+            if (modelType == typeof(Zone))
+            {
+                
+            }
             string resourceNameForImage;
-            ManifestResourceInfo info = null;
+            bool exists;
             if (typeof(ModelCollectionFromResource).IsAssignableFrom(modelType) && modelName != null)
             {
-                resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + resourceName + ".png";
-                info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(resourceNameForImage);
-
-                // If there's no image for resource name (e.g. Wheat.png), try the model name (e.g. Plant.png)
-                if (info == null)
-                    resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelType.Name + ".png";
+                (exists, resourceNameForImage) = CheckIfIconExists(resourceName);
+                if (!exists)
+                    (exists, resourceNameForImage) = CheckIfIconExists(modelType.Name);
             }
             else
             {
-                string modelNamespace = modelType.FullName.Split('.')[1] + ".";
-                resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelNamespace + modelType.Name + ".png";
-
-                if (MainView.MasterView != null && !MainView.MasterView.HasResource(resourceNameForImage))
-                    resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelType.Name + ".png";
+                (exists, resourceNameForImage) = CheckIfIconExists(modelType.Name);
+                if (!exists)
+                {
+                    string modelNamespace = modelType.FullName.Split('.')[1];
+                    (exists, resourceNameForImage) = CheckIfIconExists($"{modelNamespace}.{modelType.Name}");
+                }
             }
 
-            // Check to see if you can find the image in the resource for this project.
-            info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(resourceNameForImage);
-            if (info == null)
-                resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelName + ".png";
+            if (!exists)
+                (exists, resourceNameForImage) = CheckIfIconExists(modelName);
 
             return resourceNameForImage;
+        }
+
+        /// <summary>
+        /// Check if an icon exists as an embedded resource in this assembly
+        /// (ApsimNG). Return true if it exists, and if so, the second element
+        /// of the tuple will be the name of the resource.
+        /// </summary>
+        /// <param name="iconName"></param>
+        /// <returns></returns>
+        public static (bool, string) CheckIfIconExists(string iconName)
+        {
+            string[] extensions = new[]
+            {
+                ".svg",
+                ".png"
+            };
+            foreach (string extension in extensions)
+            {
+                string resourceName = GetResourceName(iconName, extension);
+                if (Assembly.GetExecutingAssembly().GetManifestResourceInfo(resourceName) != null)
+                    return (true, resourceName);
+            }
+            return (false, null);
+        }
+
+        private static string GetResourceName(string name, string extension)
+        {
+            return $"ApsimNG.Resources.TreeViewImages.{name}{extension}";
         }
 
         #endregion

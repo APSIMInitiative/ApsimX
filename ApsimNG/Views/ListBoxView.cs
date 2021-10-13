@@ -1,6 +1,7 @@
 ﻿# if NETCOREAPP
 using TreeModel = Gtk.ITreeModel;
 #endif
+using UserInterface.Presenters;
 
 namespace UserInterface.Views
 {
@@ -179,15 +180,14 @@ namespace UserInterface.Views
                     else if (isModels)
                     {
                         // lie112 Add model name component of namespace to allow for treeview images to be placed in folders in resources
-                        string resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + addedModelDetails + text + ".png";
-                        if (!MasterView.HasResource(resourceNameForImage))
-                        {
-                            resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + text + ".png";
-                        }
-                        if (MasterView.HasResource(resourceNameForImage))
-                            image = new Gdk.Pixbuf(null, resourceNameForImage);
-                        else
-                            image = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png"); // It there something else we could use as a default?
+                        (bool exists, string resourceName) = ExplorerPresenter.CheckIfIconExists($"{addedModelDetails}{text}");
+                        if (!exists)
+                            (exists, resourceName) = ExplorerPresenter.CheckIfIconExists(text);
+                        
+                        if (!exists)
+                            (exists, resourceName) = ExplorerPresenter.CheckIfIconExists("Simulations");
+
+                        image = new Gdk.Pixbuf(null, resourceName);
                     }
                     string tooltip = isModels ? val : StringUtilities.PangoString(val);
                     listmodel.AppendValues(text, image, tooltip);
@@ -202,24 +202,36 @@ namespace UserInterface.Views
         /// <param name="image">The image.</param>
         private string AddFileNameListItem(string fileName, ref Gdk.Pixbuf image)
         {
-            List<string> resourceNames = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
-            List<string> largeImageNames = resourceNames.FindAll(r => r.Contains(".LargeImages."));
-            string result = $"<span>{Path.GetFileName(fileName)}</span>\n<small><i><span>{Path.GetDirectoryName(fileName)}</span></i></small>";
+            image = null;
             Listview.ItemPadding = 6; // Restore padding if we have images to display
 
-            image = null;
-            // Add an image index.
-            foreach (string largeImageName in largeImageNames)
+            List<string> resourceNames = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
+
+            List<string> images = resourceNames.FindAll(r => r.EndsWith(".svg"));
+            images.AddRange(resourceNames.FindAll(r => r.Contains(".LargeImages.")));
+
+            string result = $"<span>{Path.GetFileName(fileName)}</span>\n<small><i><span>{Path.GetDirectoryName(fileName)}</span></i></small>";
+            string searchName = Path.GetFileNameWithoutExtension(fileName);
+            (bool exists, string resourceName) = ExplorerPresenter.CheckIfIconExists(searchName);
+            if (exists)
+                image = new Gdk.Pixbuf(null, resourceName);
+            else
             {
-                string shortImageName = StringUtilities.GetAfter(largeImageName, ".LargeImages.").Replace(".png", "").ToLower();
-                if (result.ToLower().Contains(shortImageName))
+                // Add an image index.
+                foreach (string imageName in images)
                 {
-                    image = new Gdk.Pixbuf(null, largeImageName);
-                    break;
+                    string[] parts = imageName.Split('.');
+                    string shortImageName = parts.Length > 1 ? parts[parts.Length - 2] : StringUtilities.GetAfter(imageName, ".LargeImages.").Replace(".png", "");
+                    if (result.ToLower().Contains(shortImageName.ToLower()))
+                    {
+                        image = new Gdk.Pixbuf(null, imageName);
+                        break;
+                    }
                 }
             }
             if (image == null)
                 image = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
+
             return result;
         }
 
