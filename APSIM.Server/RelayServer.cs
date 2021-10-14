@@ -51,6 +51,16 @@ namespace APSIM.Server
         private const string workerInputsPath = "/inputs";
 
         /// <summary>
+        /// A label with this name is added to all pods created by the bootstrapper.
+        /// </summary>
+        private const string podTypeLabelName = "dev.apsim.info/pod-type";
+
+        /// <summary>
+        /// All worker pods have their <see cref="podTypeLabelName"/> set to this value.
+        /// </summary>
+        private const string workerPodType = "worker";
+
+        /// <summary>
         /// Port number used for socket connections to the worker pods.
         /// </summary>
         private const uint portNo = 27746;
@@ -58,7 +68,6 @@ namespace APSIM.Server
         // State
         private readonly Kubernetes client;
         private readonly RelayServerOptions relayOptions;
-        private readonly string owner = "drew"; // todo: This should be specified in options.
         private readonly Guid jobID;
         private readonly string instanceName;
         private readonly string podNamespace;
@@ -112,7 +121,8 @@ namespace APSIM.Server
         private IEnumerable<string> FindWorkers()
         {
             List<string> podNames = new List<string>();
-            V1PodList pods = client.ListNamespacedPod(podNamespace);
+            string labelSelector = $"{podTypeLabelName}={workerPodType}";
+            V1PodList pods = client.ListNamespacedPod(podNamespace, labelSelector: labelSelector);
             foreach (V1Pod pod in pods.Items)
             {
                 string podName = pod.Name();
