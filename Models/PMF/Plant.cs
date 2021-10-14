@@ -217,10 +217,10 @@
         }
 
         /// <summary>The sw uptake</summary>
-        public double[] WaterUptake => Root == null ? null : Root.SWUptake;
+        public IReadOnlyList<double> WaterUptake => Root == null ? null : Root.SWUptakeLayered;
 
         /// <summary>The nitrogen uptake</summary>
-        public double[] NitrogenUptake => Root == null ? null : Root.NUptake;
+        public IReadOnlyList<double> NitrogenUptake => Root == null ? null : Root.NUptakeLayered;
 
         /// <summary>Amount of assimilate available to be damaged.</summary>
         public double AssimilateAvailable => 0;

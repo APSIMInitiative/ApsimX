@@ -145,15 +145,17 @@ namespace Models.PMF
         [JsonIgnore]
         public string plant_status = "alive";
 
+        double[] SWUptake;
+
         /// <summary>The sw uptake</summary>
-        public double[] WaterUptake { get; private set; }
+        public IReadOnlyList<double> WaterUptake => SWUptake;
         /// <summary>The no3 uptake</summary>
         double[] NO3Uptake;
         /// <summary>The nh4 uptake</summary>
         double[] NH4Uptake;
 
         /// <summary>The nitrogen uptake</summary>
-        public double[] NitrogenUptake { get; private set; }
+        public IReadOnlyList<double> NitrogenUptake { get; private set; }
 
         /// <summary>A list of uptakes generated for the soil arbitrator</summary>
         [JsonIgnore]
@@ -218,7 +220,7 @@ namespace Models.PMF
 
 
             double[] PotSWUptake = new double[soilPhysical.LL15.Length];
-            WaterUptake = new double[soilPhysical.LL15.Length];
+            SWUptake = new double[soilPhysical.LL15.Length];
 
             for (int j = 0; j < soilPhysical.LL15.Length; j++)
                 PotSWUptake[j] = Math.Max(0.0, RootProportion(j, RootDepth) * soilCrop.KL[j] * (MyZone.Water[j] - soilPhysical.LL15mm[j]));
@@ -226,15 +228,15 @@ namespace Models.PMF
             double TotPotSWUptake = MathUtilities.Sum(PotSWUptake);
             
             for (int j = 0; j < soilPhysical.LL15.Length; j++)
-                WaterUptake[j] = PotSWUptake[j] * Math.Min(1.0, PotentialEP / TotPotSWUptake);
+                SWUptake[j] = PotSWUptake[j] * Math.Min(1.0, PotentialEP / TotPotSWUptake);
 
             List<ZoneWaterAndN> Uptakes = new List<ZoneWaterAndN>();
             ZoneWaterAndN Uptake = new ZoneWaterAndN(this.Parent as Zone);
 
-            Uptake.Water = WaterUptake;
-            Uptake.NO3N = new double[WaterUptake.Length];
-            Uptake.NH4N = new double[WaterUptake.Length];
-            Uptake.NH4N = new double[WaterUptake.Length];
+            Uptake.Water = SWUptake;
+            Uptake.NO3N = new double[SWUptake.Length];
+            Uptake.NH4N = new double[SWUptake.Length];
+            Uptake.NH4N = new double[SWUptake.Length];
             Uptakes.Add(Uptake);
             return Uptakes;
 
@@ -280,10 +282,10 @@ namespace Models.PMF
         /// </summary>
         public void SetActualWaterUptake(List<ZoneWaterAndN> info)
         {
-            WaterUptake = info[0].Water;
-            EP = MathUtilities.Sum(WaterUptake);
+            SWUptake = info[0].Water;
+            EP = MathUtilities.Sum(SWUptake);
 
-            waterBalance.RemoveWater(WaterUptake);
+            waterBalance.RemoveWater(SWUptake);
         }
         /// <summary>
         /// Set the n uptake for today

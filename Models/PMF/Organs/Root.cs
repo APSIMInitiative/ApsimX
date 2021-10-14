@@ -364,7 +364,7 @@
 
         /// <summary>Gets the water uptake.</summary>
         [Units("mm")]
-        public double[] SWUptake
+        public double[] SWUptakeLayered
         {
             get
             {
@@ -379,7 +379,7 @@
 
         /// <summary>Gets or sets the N uptake.</summary>
         [Units("kg/ha")]
-        public double NitrogenUptake
+        public double NUptake
         {
             get
             {
@@ -392,7 +392,7 @@
 
         /// <summary>Gets the nitrogen uptake.</summary>
         [Units("mm")]
-        public double[] NUptake
+        public double[] NUptakeLayered
         {
             get
             {

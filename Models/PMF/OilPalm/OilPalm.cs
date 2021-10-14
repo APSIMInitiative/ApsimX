@@ -240,7 +240,7 @@ namespace Models.PMF.OilPalm
         double[] PotSWUptake;
 
         /// <summary>The sw uptake</summary>
-        public double[] WaterUptake { get; private set; }
+        public IReadOnlyList<double> WaterUptake { get; private set; }
 
         /// <summary>Potential daily evapotranspiration for the palm canopy</summary>
         /// <value>The pep.</value>
@@ -354,7 +354,7 @@ namespace Models.PMF.OilPalm
         /// <value>The n uptake.</value>
         [JsonIgnore]
         [Units("kg/ha")]
-        public double[] NitrogenUptake { get; set; }
+        public IReadOnlyList<double> NitrogenUptake { get; set; }
 
         /// <summary>Daily stem dry matter growth</summary>
         /// <value>The stem growth.</value>
@@ -1206,12 +1206,14 @@ namespace Models.PMF.OilPalm
                 throw new Exception("Total potential soil water uptake is zero");
 
             EP = 0.0;
+            var uptake = new double[soilPhysical.LL15mm.Length];
             for (int j = 0; j < soilPhysical.LL15mm.Length; j++)
             {
-                WaterUptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
+                uptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
                 EP += WaterUptake[j];
             }
-            waterBalance.RemoveWater(WaterUptake);
+            waterBalance.RemoveWater(uptake);
+            WaterUptake = uptake;
 
             if (PEP > 0.0)
             {
@@ -1253,9 +1255,11 @@ namespace Models.PMF.OilPalm
             double TotPotNUptake = MathUtilities.Sum(PotNUptake);
             double Fr = Math.Min(1.0, Ndemand / TotPotNUptake);
 
+            double[] uptake = new double[soilPhysical.LL15mm.Length];
             for (int j = 0; j < soilPhysical.LL15mm.Length; j++)
-                NitrogenUptake[j] = PotNUptake[j] * Fr;
-            NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(NO3.kgha, NitrogenUptake));
+                uptake[j] = PotNUptake[j] * Fr;
+            NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(NO3.kgha, uptake));
+            NitrogenUptake = uptake;
 
             Fr = Math.Min(1.0, Math.Max(0, MathUtilities.Sum(NitrogenUptake) / BunchNDemand));
             double DeltaBunchN = BunchNDemand * Fr;

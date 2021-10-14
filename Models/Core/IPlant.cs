@@ -1,4 +1,5 @@
 ﻿using Models.PMF;
+using System.Collections.Generic;
 
 namespace Models.Core
 {
@@ -23,10 +24,10 @@ namespace Models.Core
         IBiomass AboveGround { get; }
 
         /// <summary>Daily soil water uptake from each soil layer (mm)</summary>
-        double[] WaterUptake { get; }
+        IReadOnlyList<double> WaterUptake { get; }
 
         /// <summary>Daily nitrogen uptake from each soil layer (kg/ha).</summary>
-        double[] NitrogenUptake { get; }
+        IReadOnlyList<double> NitrogenUptake { get; }
 
         /// <summary>Sows the plant</summary>
         /// <param name="cultivar">The cultivar.</param>
