@@ -24,7 +24,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 141; } }
+        public static int LatestVersion { get { return 142; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3697,6 +3697,30 @@
                     compositeBiomass["IncludeLive"] = includeLive;
                     compositeBiomass["IncludeDead"] = includeDead;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Change OilPalm.NUptake to OilPalm.NitrogenUptake
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion142(JObject root, string fileName)
+        {
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                bool changed1 = manager.Replace("OilPalm.NUptake", "OilPalm.NitrogenUptake");
+                bool changed2 = manager.Replace("OilPalm.SWUptake", "OilPalm.WaterUptake");
+                if (changed1 || changed2)
+                    manager.Save();
+            }
+
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[OilPalm].NUptake", "[OilPalm].NitrogenUptake");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[OilPalm].SWUptake", "[OilPalm].WaterUptake");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "OilPalm.NUptake", "OilPalm.NitrogenUptake");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "OilPalm.SWUptake", "OilPalm.WaterUptake");
             }
         }
 
