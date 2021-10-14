@@ -97,7 +97,7 @@ namespace Models.PMF.Arbitrator
             var grainDemand = N.StructuralDemand[grainIndex] + N.MetabolicDemand[grainIndex];
             //have to correct the leaf demand calculation
             var leaf = Organs[leafIndex] as SorghumLeaf;
-            var leafAdjustment = leaf.calculateClassicDemandDelta();
+            var leafAdjustment = leaf.CalculateClassicDemandDelta();
 
             //double NDemand = (N.TotalPlantDemand - N.TotalReallocation) / kgha2gsm * Plant.Zone.Area; //NOTE: This is in kg, not kg/ha, to arbitrate N demands for spatial simulations.
             //old sorghum uses g/m^2 - need to convert after it is used to calculate actual diffusion

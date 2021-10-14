@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net472</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <BaseOutputPath>../../bin</BaseOutputPath>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
-	  <RunSettingsFilePath>$(MSBuildProjectDirectory)\.runsettings</RunSettingsFilePath>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <RunSettingsFilePath>$(MSBuildProjectDirectory)\.runsettings</RunSettingsFilePath>
     <AutoGenerateBindingRedirects>false</AutoGenerateBindingRedirects>
     <NoWarn>CS1591,CS1572,CS1573,CS0067</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
@@ -12,79 +12,25 @@
   </PropertyGroup>
 
   <ItemGroup>
-	  <EmbeddedResource Include="**\*.xml" />
+    <EmbeddedResource Include="**\*.xml" />
     <EmbeddedResource Include="**\*.json" />
-	  <EmbeddedResource Include="**\*.apsim" />
-	  <EmbeddedResource Include="**\*.apsimx" />
-	  <EmbeddedResource Include="Weather\WeatherTestsExcelFile.xlsx" />
+    <EmbeddedResource Include="**\*.apsim" />
+    <EmbeddedResource Include="**\*.apsimx" />
+    <EmbeddedResource Include="Weather\WeatherTestsExcelFile.xlsx" />
     <EmbeddedResource Include="**\*.Expected.txt" />
   </ItemGroup>
 
   <ItemGroup>
-	  <!-- Project references -->
+    <!-- Project references -->
     <ProjectReference Include="..\..\APSIM.Shared\APSIM.Shared.csproj" />
-	  <ProjectReference Include="..\..\ApsimNG\ApsimNG.csproj" />
-	  <ProjectReference Include="..\..\Models\Models.csproj" />
-	
+    <ProjectReference Include="..\..\ApsimNG\ApsimNG.csproj" />
+    <ProjectReference Include="..\..\Models\Models.csproj" />
+    <ProjectReference Include="..\..\APSIM.Server\APSIM.Server.csproj" />
+
     <!-- nuget -->
-	  <PackageReference Include="OxyPlot.Core" Version="2.0.0-unstable0956" />
-	  <PackageReference Include="OxyPlot.GtkSharp" Version="2.0.0-unstable0956" />
-	  <PackageReference Include="NUnit" Version="3.12.0" />
-	  <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.2.0" />
-	  <PackageReference Include="Mono.Cecil" Version="0.9.6.0" />
-	  <PackageReference Include="System.Resources.Extensions" Version="5.0.0-preview.1.20120.5" />
-	
-	<!-- Other misc assemblies required for framework builds -->
-	<Reference Include="atk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\DeploymentSupport\Windows\Bin64\atk-sharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-	<Reference Include="gdk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\DeploymentSupport\Windows\Bin64\gdk-sharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="glib-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\DeploymentSupport\Windows\Bin64\glib-sharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="gtk-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\DeploymentSupport\Windows\Bin64\gtk-sharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="gtkdotnet, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\DeploymentSupport\Windows\Bin64\gtkdotnet.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-	<Reference Include="pango-sharp, Version=2.12.0.0, Culture=neutral, PublicKeyToken=35e10195dab3c99f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\DeploymentSupport\Windows\Bin64\pango-sharp.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-	<Reference Include="Mono.Cairo, Version=4.0.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\DeploymentSupport\Windows\Bin64\Mono.Cairo.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net472'">
-    <Reference Include="System.ComponentModel.DataAnnotations">
-      <Private>false</Private>
-    </Reference>
-    <!--<PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.50.5147" />    -->
-	<PackageReference Include="PDFsharp-MigraDoc" Version="1.51.5186-beta" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Update="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
+    <PackageReference Include="System.Resources.Extensions" Version="5.0.0-preview.1.20120.5" />
   </ItemGroup>
 </Project>

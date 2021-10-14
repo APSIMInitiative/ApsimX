@@ -16,8 +16,11 @@
         /// <summary>The data store model to work with.</summary>
         private IDataStore dataStore;
 
+        /// <summary>The sheet.</summary>
+        private Sheet sheet;
+
         /// <summary>The sheet widget.</summary>
-        private SheetWidget sheet;
+        private SheetWidget sheetWidget;
 
         /// <summary>The sheet cell selector.</summary>
         SingleCellSelect cellSelector;
@@ -177,19 +180,20 @@
                         dataProvider.PagingStart += (sender, args) => explorerPresenter.MainPresenter.ShowWaitCursor(true);
                         dataProvider.PagingEnd += (sender, args) => explorerPresenter.MainPresenter.ShowWaitCursor(false);
 
-                        sheet = new SheetWidget()
+                        sheet = new Sheet()
                         {
                             DataProvider = dataProvider,
                             NumberFrozenRows = dataProvider.NumHeadingRows,
                             NumberFrozenColumns = dataProvider.NumPriorityColumns
                         };
+                        sheetWidget = new SheetWidget(sheet);
 #if NETFRAMEWORK
                         sheet.RowHeight = 20;
 #endif
 
-                        cellSelector = new SingleCellSelect(sheet);
-                        var scrollbars = new SheetScrollBars(sheet);
-                        sheet.CellPainter = new DefaultCellPainter(sheet, sheetSelection: cellSelector);
+                        cellSelector = new SingleCellSelect(sheet, sheetWidget);
+                        var scrollbars = new SheetScrollBars(sheet, sheetWidget);
+                        sheet.CellPainter = new DefaultCellPainter(sheet, sheetWidget, sheetSelection: cellSelector);
 
                         sheetContainer.Add(scrollbars.MainWidget);
                         statusLabel.Text = $"Number of rows: {dataProvider.RowCount - dataProvider.NumHeadingRows}";

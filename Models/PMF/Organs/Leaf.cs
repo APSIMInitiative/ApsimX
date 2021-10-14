@@ -58,7 +58,7 @@ namespace Models.PMF.Organs
         public double GrowthRespiration { get; set; }
 
         /// <summary>Factors for assigning priority to DM demands</summary>
-        [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
+        [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         private BiomassDemand dmDemandPriorityFactors = null;
 
@@ -90,9 +90,6 @@ namespace Models.PMF.Organs
 
         /// <summary>The dry matter demand</summary>
         public BiomassPoolType DMDemand { get; set; }
-
-        /// <summary>The dry matter demand</summary>
-        public BiomassPoolType DMDemandPriorityFactor { get; set; }
 
         /// <summary>Structural nitrogen demand</summary>
         public BiomassPoolType NDemand { get; set; }
@@ -1555,18 +1552,9 @@ namespace Models.PMF.Organs
             DMDemand.Metabolic = MetabolicDemand;
             DMDemand.Storage = StorageDemand;
 
-            if (dmDemandPriorityFactors != null)
-            {
-                DMDemandPriorityFactor.Structural = dmDemandPriorityFactors.Structural.Value();
-                DMDemandPriorityFactor.Metabolic = dmDemandPriorityFactors.Metabolic.Value();
-                DMDemandPriorityFactor.Storage = dmDemandPriorityFactors.Storage.Value();
-            }
-            else
-            {
-                DMDemandPriorityFactor.Structural = 1.0;
-                DMDemandPriorityFactor.Metabolic = 1.0;
-                DMDemandPriorityFactor.Storage = 1.0;
-            }
+            DMDemand.QStructuralPriority = dmDemandPriorityFactors.Structural.Value();
+            DMDemand.QMetabolicPriority = dmDemandPriorityFactors.Metabolic.Value();
+            DMDemand.QStoragePriority = dmDemandPriorityFactors.Storage.Value();
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
@@ -2035,7 +2023,6 @@ namespace Models.PMF.Organs
         {
             DMDemand = new BiomassPoolType();
             NDemand = new BiomassPoolType();
-            DMDemandPriorityFactor = new BiomassPoolType();
             DMSupply = new BiomassSupplyType();
             NSupply = new BiomassSupplyType();
             Allocated = new Biomass();

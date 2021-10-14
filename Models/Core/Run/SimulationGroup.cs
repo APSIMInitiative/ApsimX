@@ -328,7 +328,7 @@
 
         private IEnumerable<IPostSimulationTool> FindPostSimulationTools()
         {
-            return rootModel.FindAllDescendants<IPostSimulationTool>()
+            return relativeTo.FindAllInScope<IPostSimulationTool>()
                             .Where(t => t.FindAllAncestors()
                                          .All(a => !(a is ParallelPostSimulationTool || a is SerialPostSimulationTool)));
         }

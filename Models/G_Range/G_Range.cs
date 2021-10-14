@@ -9,6 +9,7 @@ namespace Models
     using Models.Soils.Arbitrator;
     using Models.Interfaces;
     using APSIM.Shared.Utilities;
+    using Models.PMF;
 
     /// <summary>
     /// Implements the plant growth model logic abstracted from G_Range
@@ -70,7 +71,7 @@ namespace Models
         public string[] CultivarNames { get { return null; } }
 
         /// <summary>Get above ground biomass</summary>
-        public PMF.Biomass AboveGround
+        public IBiomass AboveGround
         {
             get
             {
@@ -107,6 +108,12 @@ namespace Models
 
         /// <summary>End the crop</summary>
         public void EndCrop() { }
+
+        /// <summary>Daily soil water uptake from each soil layer (mm)</summary>
+        public IReadOnlyList<double> WaterUptake => throw new NotImplementedException("Uptake isn't calculated in GRange.");
+
+        /// <summary>Daily nitrogen uptake from each soil layer (kg/ha).</summary>
+        public IReadOnlyList<double> NitrogenUptake => throw new NotImplementedException("Uptake isn't calculated in GRange.");
 
         #endregion
 

@@ -1,5 +1,6 @@
 ﻿using Models.Core;
 using Models.Core.Attributes;
+using Models.CLEM.Interfaces;
 using Models.Storage;
 using System;
 using System.Data;
@@ -13,7 +14,7 @@ namespace Models.CLEM.Reporting
     [ViewName("UserInterface.Views.CLEMView")]
     [PresenterName("UserInterface.Presenters.ReportQueryPresenter")]
     [ValidParent(ParentType = typeof(Report))]
-    [Description("Queries a report")]
+    [Description("Allows an SQL statement to be applied to the database as a view for analysis and graphing")]
     [Version(1, 0, 0, "")]
     public class ReportQuery : Model, ICLEMUI
     {
@@ -36,28 +37,15 @@ namespace Models.CLEM.Reporting
         /// </summary>
         public DataTable RunQuery()
         {
-            if (SQL != "")
+            var storage = FindInScope<IDataStore>();
+            if (storage != null)
             {
-                var storage = FindInScope<IDataStore>();
-                AddView(storage, Name, SQL);
-                return storage.Reader.GetDataUsingSql(SQL);
+                if (SaveView(storage, out _))
+                {
+                    return storage.Reader.GetDataUsingSql(SQL);
+                }
             }
-            else
-            {
-                return new DataTable();
-            }
-        }
-
-        private void AddView(IDataStore data, string name, string sql)
-        {
-            try
-            {
-                data.AddView(Name, SQL);
-            }
-            catch (Exception ex)
-            {
-                throw new ApsimXException(this, $"Error trying to execute SQL query for [{this.Name}]: {ex.Message}");
-            }
+            return new DataTable();
         }
 
         /// <summary>
@@ -66,10 +54,33 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("Completed")]
         private void OnCompleted(object sender, EventArgs e)
         {
-            if (SQL != "")
+            string errorMsg;
+            if(!SaveView(dataStore, out errorMsg))
             {
-                AddView(dataStore, Name, SQL);
+                throw new ApsimXException(this, $"Invalid SQL: Unable to create query report [{this.Name}] using SQL provided\r\nError: {errorMsg}\r\nIf your SQL contains links to other ReportQueries you may need to run this Report after the others have been created by disabling it in the first run and then enabling again.");
+  
+                // TODO: this next line replaces the one above when the summary model can be written to in Completed to report all such errors and not simply stop with this error 
+                //summary.WriteWarning(this, $"Invalid SQL: Unable to create query report [{this.Name}] using SQL provided\r\nIf your SQL contains links to other ReportQueries you may need to run this Report after the others have been created.");
             }
+        }
+
+        private bool SaveView(IDataStore store, out string errorMsg)
+        {
+            errorMsg = "";
+            try
+            {
+                if (SQL != null && SQL != "")
+                {
+                    (store.Reader as DataStoreReader).ExecuteSql(SQL);
+                    store.AddView(Name, SQL);
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errorMsg = ex.Message;
+            }
+            return false;
         }
     }
 }

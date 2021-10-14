@@ -74,7 +74,7 @@ namespace UserInterface.Views
         /// <summary>Cleanup the instance.</summary>
         public void Cleanup()
         {
-            dataStore.ExecuteSql("DROP TABLE keyset");
+            dataStore.ExecuteSql("DROP TABLE IF EXISTS keyset");
         }
 
         /// <summary>Invoked when the paging is about to start.</summary>
@@ -159,9 +159,10 @@ namespace UserInterface.Views
         /// <remarks>This concept of a rolling cursor comes from: https://sqlite.org/forum/forumpost/2cfa137263</remarks>
         private void CreateTemporaryKeyset()
         {
+            Cleanup();
             string filter = GetFilter();
             string sql = "CREATE TEMPORARY TABLE keyset AS " +
-                         $"SELECT rowid FROM {tableName} ";
+                         $"SELECT rowid FROM \"{tableName}\" ";
             if (!string.IsNullOrEmpty(filter))
                 sql += $"WHERE {filter}";
 
@@ -203,7 +204,7 @@ namespace UserInterface.Views
         private void GetRowCount()
         {
             string filter = GetFilter();
-            var sql = $"SELECT COUNT(*) FROM {tableName}";
+            var sql = $"SELECT COUNT(*) FROM \"{tableName}\"";
             if (!string.IsNullOrEmpty(filter))
                 sql += $" WHERE {filter}";
             var table = dataStore.GetDataUsingSql(sql);
@@ -220,6 +221,12 @@ namespace UserInterface.Views
         private string GetFilter()
         {
             var filter = rowFilter;
+            string checkpointFilter = $"CheckpointID = {dataStore.GetCheckpointID(checkpointName)}";
+            if (string.IsNullOrEmpty(filter))
+                filter = checkpointFilter;
+            else
+                filter += $" AND {checkpointFilter}";
+
             if (simulationNames != null)
             {
                 var simulationFilter = $"SimulationID in ({dataStore.ToSimulationIDs(simulationNames).Join(",")})";

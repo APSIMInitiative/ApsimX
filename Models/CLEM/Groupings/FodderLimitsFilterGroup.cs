@@ -2,10 +2,6 @@
 using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Newtonsoft.Json;
 
 namespace Models.CLEM.Groupings
 {
@@ -15,9 +11,9 @@ namespace Models.CLEM.Groupings
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [Description("This grouping is not currently used.")]
+    //[Description("This grouping is not currently used.")]
     [Version(1, 0, 1, "")]
-    public class FodderLimitsFilterGroup: CLEMModel, IFilterGroup
+    public class FodderLimitsFilterGroup : FilterGroup<Ruminant>
     {
         /// <summary>
         /// Monthly values to supply selected individuals
@@ -38,17 +34,5 @@ namespace Models.CLEM.Groupings
         /// Are set limits strict, or can individual continue eating if food available? 
         /// </summary>
         public bool StrictLimits { get; set; }
-
-        /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
-
-        /// <summary>
-        /// Proportion of group to use
-        /// </summary>
-        [JsonIgnore]
-        public double Proportion { get; set; }
     }
 }

@@ -68,9 +68,7 @@ namespace UserInterface.Presenters
         {
             bool catExists = this.CategoryItems.Exists(item => item.Name == catName);
             if (!catExists)
-            {
                 this.CategoryItems.Add(new CategoryItem(catName));
-            }
         }
     }
 
@@ -309,11 +307,9 @@ namespace UserInterface.Presenters
 
                     // Only allow lists that are double[], int[] or string[]
                     if (includeProperty && property.PropertyType.GetInterface("IList") != null)
-                    {
                         includeProperty = property.PropertyType == typeof(double[]) ||
                                           property.PropertyType == typeof(int[]) ||
                                           property.PropertyType == typeof(string[]);
-                    }
 
                     if (includeProperty)
                     { 
@@ -369,21 +365,13 @@ namespace UserInterface.Presenters
                     TreeViewNode child = new TreeViewNode();
                     child.Name = subcat;
                     if (subcat.ToLower().Contains("pasture"))
-                    {
                         child.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.PastureTreeItem.png";
-                    }
                     else if (subcat.ToLower().Contains("unspecif"))
-                    {
                         child.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.UnspecifiedTreeItem.png";
-                    }
                     else if (model.GetType().Name.ToLower().Contains("ruminant"))
-                    {
                         child.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.RuminantGroup.png";
-                    }
                     else
-                    {
                         child.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.UnspecifiedTreeItem.png";
-                    }
                     description.Children.Add(child);
                 }
                 root.Children.Add(description);

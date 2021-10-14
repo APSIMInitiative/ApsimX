@@ -39,6 +39,14 @@
             this.explorerPresenter = presenter;
             this.explorerPresenter.MainPresenter.AddStopHandler(OnStopSimulation);
 
+            // Ensure that errors are displayed in GUI live as they occur.
+            object errorMutex = new object();
+            runner.ErrorHandler = e =>
+            {
+                lock (errorMutex)
+                    explorerPresenter.MainPresenter.ShowError(e, false);
+            };
+
             jobRunner.AllSimulationsCompleted += OnAllJobsCompleted;
         }
 

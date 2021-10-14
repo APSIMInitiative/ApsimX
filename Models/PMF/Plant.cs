@@ -58,10 +58,10 @@
 
         /// <summary>Above ground weight</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        public Biomass AboveGround { get; set; }
+        public IBiomass AboveGround { get; set; }
 
         /// <summary>Above ground weight</summary>
-        public Biomass AboveGroundHarvestable { get { return AboveGround; } }
+        public IBiomass AboveGroundHarvestable { get { return AboveGround; } }
 
         /// <summary>Used by several organs to determine the type of crop.</summary>
         public string PlantType { get; set; }
@@ -216,6 +216,11 @@
             }
         }
 
+        /// <summary>The sw uptake</summary>
+        public IReadOnlyList<double> WaterUptake => Root == null ? null : Root.SWUptakeLayered;
+
+        /// <summary>The nitrogen uptake</summary>
+        public IReadOnlyList<double> NitrogenUptake => Root == null ? null : Root.NUptakeLayered;
 
         /// <summary>Amount of assimilate available to be damaged.</summary>
         public double AssimilateAvailable => 0;

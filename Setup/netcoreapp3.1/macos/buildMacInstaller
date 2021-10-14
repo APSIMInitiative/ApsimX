@@ -7,7 +7,7 @@
 # 2. Optional output file name. Default value is apsim-$version.dmg.
 
 # Exit immediately upon error
-set -e
+set -euo pipefail
 
 # Get version number (first argument).
 # Abort with error if no version number provided.
@@ -24,7 +24,19 @@ sed -i -e "s/0\.0\.0\.0/$version/g" "$apsimx/Models/Properties/AssemblyVersion.c
 cp "$apsimx/Models/Properties/AssemblyVersion.cs" "$apsimx/ApsimNG/Properties/"
 
 # Publish the build.
-dotnet publish --nologo -f netcoreapp3.1 -c Release --no-self-contained -r osx-x64 "$apsimx/ApsimX.sln"
+
+# fixme - this is a hack to workaround problems caused by building all
+# proejcts to the same output dir. Basically if we build ApsimNG after
+# Models, an ELF Models binary will be copied in as a dependency for ApsimNG,
+# which will overwrite the previously-built Mach-O binary. Therefore we
+# need to build Models last. The problem also occurs if we just publish
+# the solution file, as Models will be one of the first proejcts to be
+# built/copied, as it's a dependency for several others.
+projects=(ApsimNG APSIM.Server Models)
+for project in ${projects[@]}
+do
+    dotnet publish --nologo -f netcoreapp3.1 -c Release -r osx-x64 $project
+done
 
 # Now generate the installer.
 
@@ -38,7 +50,7 @@ test -d MacBundle && rm -rf MacBundle
 appdir=MacBundle/APSIM$version.app/Contents
 template="$apsimx/Setup/osx/Template"
 copy() {  rsync -aq --mkpath --exclude='*.db' --exclude='*.db-wal' --exclude='*.db-shm' $@; }
-copy $template/Contents/MacOS/ApsimNG $appdir/MacOS/
+copy "$DIR/launcher.sh" $appdir/MacOS/ApsimNG
 copy $template/Contents/Resources/ApsimNG.icns $appdir/Resources/
 copy "$apsimx/Examples" $appdir/Resources/
 copy "$apsimx/Tests/UnderReview" $appdir/Resources/
@@ -47,6 +59,18 @@ copy "$apsimx/bin/Release/netcoreapp3.1/osx-x64/publish/*" $appdir/Resources/bin
 copy "$apsimx/APSIM.bib" $appdir/Resources/
 copy "$plist" $appdir/
 
+# Extract gtk deps
+DELETE_DEPS=0
+if [ -z ${GTK_DEPS+x} ]; then
+    DELETE_DEPS=1
+    echo "GTK_DEPS variable is not set. Downloading depdendencies..."
+    GTK_DEPS=$(mktemp XXXXXX.tar.gz)
+    url="https://github.com/hol430/apsim-mac/raw/master/deps.tar.gz"
+    curl -Lo "$GTK_DEPS" "$url"
+fi
+test -f "$GTK_DEPS" || (echo "File not found: GTK_DEPS ($GTK_DEPS)")
+tar xzf "$GTK_DEPS" -C "$appdir/Resources/"
+if [ $DELETE_DEPS -eq 1 ]; then rm "$GTK_DEPS"; fi
 # Now create the .dmg file.
 if [ $# -ge 2 ]; then
     outfile=$2

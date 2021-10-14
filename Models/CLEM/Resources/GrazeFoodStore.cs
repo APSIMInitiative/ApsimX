@@ -20,7 +20,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
-    [Description("This resource group holds all graze food store types (pastures) for the simulation.")]
+    [Description("Resource group for all graze food store types (pastures) in the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStore.htm")]
     public class GrazeFoodStore: ResourceBaseWithTransactions
@@ -31,29 +31,27 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public List<GrazeFoodStoreType> Items;
 
+        /// <summary>
+        /// Ecological indicators calculated event
+        /// </summary>
+        public event EventHandler EcologicalIndicatorsCalculated;
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        private new void OnSimulationCommencing(object sender, EventArgs e)
         {
             Items = new List<GrazeFoodStoreType>();
 
-            IEnumerable<IModel> childNodes = FindAllChildren<IModel>();
-
-            foreach (IModel childModel in childNodes)
+            foreach (IModel childModel in FindAllChildren<IModel>())
             {
                 switch (childModel.GetType().ToString())
                 {
                     case "Models.CLEM.Resources.GrazeFoodStoreType":
                         GrazeFoodStoreType grazefood = childModel as GrazeFoodStoreType;
-                        grazefood.TransactionOccurred += Resource_TransactionOccurred;
                         grazefood.EcologicalIndicatorsCalculated += Resource_EcologicalIndicatorsCalculated;
                         Items.Add(grazefood);
-                        break;
-                    case "Models.CLEM.Resources.CommonLandFoodStoreType":
-                        CommonLandFoodStoreType commonfood = childModel as CommonLandFoodStoreType;
-                        commonfood.TransactionOccurred += Resource_TransactionOccurred;
                         break;
                     default:
                         break;
@@ -65,21 +63,13 @@ namespace Models.CLEM.Resources
         /// Overrides the base class method to allow for clean up
         /// </summary>
         [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
+        private new void OnSimulationCompleted(object sender, EventArgs e)
         {
             foreach (GrazeFoodStoreType childModel in this.FindAllChildren<GrazeFoodStoreType>())
-            {
-                childModel.TransactionOccurred -= Resource_TransactionOccurred;
                 childModel.EcologicalIndicatorsCalculated -= Resource_EcologicalIndicatorsCalculated;
-            }
-            foreach (CommonLandFoodStoreType childModel in this.FindAllChildren<CommonLandFoodStoreType>())
-            {
-                childModel.TransactionOccurred -= Resource_TransactionOccurred;
-            }
+
             if (Items != null)
-            {
                 Items.Clear();
-            }
             Items = null;
         }
 
@@ -92,17 +82,12 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Override base event
+        /// On ecological indicators calculated event
         /// </summary>
         protected void OnEcologicalIndicatorsCalculated(EventArgs e)
         {
             EcologicalIndicatorsCalculated?.Invoke(this, e);
         }
-
-        /// <summary>
-        /// Override base event
-        /// </summary>
-        public event EventHandler EcologicalIndicatorsCalculated;
 
         /// <summary>
         /// Last ecological indicators received
@@ -111,46 +96,5 @@ namespace Models.CLEM.Resources
         public EcologicalIndicators LastEcologicalIndicators { get; set; }
 
         #endregion
-
-        #region Transactions
-
-        // Must be included away from base class so that APSIM Event.Subscriber can find them 
-
-        /// <summary>
-        /// Override base event
-        /// </summary>
-        protected new void OnTransactionOccurred(EventArgs e)
-        {
-            TransactionOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Override base event
-        /// </summary>
-        public new event EventHandler TransactionOccurred;
-
-        private void Resource_TransactionOccurred(object sender, EventArgs e)
-        {
-            LastTransaction = (e as TransactionEventArgs).Transaction;
-            OnTransactionOccurred(e);
-        }
-
-        #endregion
-
-        #region descriptive summary
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
-        {
-            string html = "";
-            return html;
-        } 
-        #endregion
-
     }
-
-
 }

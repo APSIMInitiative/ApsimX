@@ -74,6 +74,16 @@
         }
 
         /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="namePath"></param>
+        /// <returns>Information about the named variable, but without its current data values</returns>
+        public IVariable GetObjectProperties(string namePath)
+        {
+            return GetInternal(namePath, true, true);
+        }
+
+        /// <summary>
         /// Set the value of a variable. Will throw if variable doesn't exist.
         /// </summary>
         /// <param name="namePath">The name of the object to set</param>
@@ -92,8 +102,9 @@
         /// </summary>
         /// <param name="namePath">The name of the object to return</param>
         /// <param name="ignoreCase">If true, ignore case when searching for the object or property</param>
+        /// <param name="propertiesOnly">If true, fetch only property information, but not the value</param>
         /// <returns>The found object or null if not found</returns>
-        private IVariable GetInternal(string namePath, bool ignoreCase = true)
+        private IVariable GetInternal(string namePath, bool ignoreCase = true, bool propertiesOnly = false)
         {
             IModel relativeTo = relativeToModel;
             string cacheKey = namePath;
@@ -207,7 +218,12 @@
                         throw new Exception($"Unable to locate model {namePath}");
 
                     // Check property info
-                    PropertyInfo propertyInfo = relativeToObject.GetType().GetProperty(namePathBits[j]);
+                    Type declaringType;
+                    if (properties.Any())
+                        declaringType = properties.Last().DataType;
+                    else
+                        declaringType = relativeToObject.GetType();
+                    PropertyInfo propertyInfo = declaringType.GetProperty(namePathBits[j]);
                     if (propertyInfo == null && ignoreCase) // If not found, try using a case-insensitive search
                     {
                         propertyInfo = relativeToObject.GetType().GetProperty(namePathBits[j], BindingFlags.Public | BindingFlags.Static | BindingFlags.Instance | BindingFlags.IgnoreCase);
@@ -292,6 +308,8 @@
                     {
                         VariableProperty property = new VariableProperty(relativeToObject, propertyInfo, arraySpecifier);
                         properties.Add(property);
+                        if (propertiesOnly && j == namePathBits.Length - 1)
+                            break;
                         relativeToObject = property.Value;
                         if (relativeToObject == null)
                             return null;
@@ -309,6 +327,8 @@
                         }
                         //                        VariableProperty property = new VariableProperty(relativeToObject, propertyInfo, arraySpecifier);
                         properties.Add(method);
+                        if (propertiesOnly && j == namePathBits.Length - 1)
+                            break;
                         relativeToObject = method.Value;
                         if (relativeToObject == null)
                             return null;
@@ -319,6 +339,8 @@
                         // we want to return the property value for all items in the array.
                         VariableProperty property = new VariableProperty(relativeToObject, namePathBits[j]);
                         properties.Add(property);
+                        if (propertiesOnly && j == namePathBits.Length - 1)
+                            break;
                         relativeToObject = property.Value;
                         if (relativeToObject == null)
                             return null;

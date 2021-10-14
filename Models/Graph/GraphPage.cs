@@ -51,7 +51,7 @@
             // Get each series to add child definitions.
             for (int g = 0; g < allDefinitions.Count; g++)
                 foreach (var s in allDefinitions[g].Graph.FindAllChildren<Series>())
-                    s.CreateChildSeriesDefinitions(storage, simulationDescriptions, allDefinitions[g].SeriesDefinitions, simulationFilter);
+                    allDefinitions[g].SeriesDefinitions.AddRange(s.CreateChildSeriesDefinitions(storage, simulationDescriptions, allDefinitions[g].SeriesDefinitions.Where(sd => sd.Series == s), simulationFilter));
 
             // Remove series that have no data.
             foreach (var definition in allDefinitions)

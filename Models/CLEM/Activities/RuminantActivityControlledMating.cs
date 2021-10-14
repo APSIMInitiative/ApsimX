@@ -4,6 +4,7 @@ using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -22,19 +23,42 @@ namespace Models.CLEM.Activities
     [Description("Adds controlled mating details to ruminant breeding")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantControlledMating.htm")]
     [Version(1, 0, 1, "")]
-    public class RuminantActivityControlledMating : CLEMRuminantActivityBase
+    public class RuminantActivityControlledMating : CLEMRuminantActivityBase, IValidatableObject
     {
-        [Link]
-        private List<LabourRequirement> labour;
+        private List<SetAttributeWithValue> attributeList;
+        private ActivityTimerBreedForMilking milkingTimer;
+        private RuminantActivityBreed breedingParent;
 
-        private RuminantGroup breederGroup;
+        /// <summary>
+        /// Maximum age for mating (months)
+        /// </summary>
+        [Description("Maximum female age for mating")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(120)]
+        public double MaximumAgeMating { get; set; }
 
-        List<SetAttributeWithValue> attributeList;
+        /// <summary>
+        /// Number joinings per male
+        /// </summary>
+        [Description("Number of joinings per male")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(1)]
+        public int JoiningsPerMale { get; set; }
 
         /// <summary>
         /// The available attributes for the breeding sires
         /// </summary>
         public List<SetAttributeWithValue> SireAttributes => attributeList;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public RuminantActivityControlledMating()
+        {
+            SetDefaults();
+            this.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
+            TransactionCategory = "Livestock.Manage";
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -43,48 +67,77 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.AllocationStyle = ResourceAllocationStyle.Manual;
-
             this.InitialiseHerd(false, true);
-
-            breederGroup = new RuminantGroup();
-            breederGroup.Children.Add(new RuminantFilter() { Parameter = RuminantFilterParameters.Gender, Operator = FilterOperators.Equal, Value="Female" });
-            breederGroup.Children.Add(new RuminantFilter() { Parameter = RuminantFilterParameters.IsBreeder, Operator = FilterOperators.Equal, Value = "True" });
 
             attributeList = this.FindAllDescendants<SetAttributeWithValue>().ToList();
 
-            // get labour specifications
-            labour = this.FindAllChildren<LabourRequirement>().Cast<LabourRequirement>().ToList();
-            if (labour.Count() == 0)
-            {
-                labour = new List<LabourRequirement>();
-            }
+            milkingTimer = FindChild<ActivityTimerBreedForMilking>();
 
             // check that timer exists for controlled mating
             if (!this.TimingExists)
-            {
                 Summary.WriteWarning(this, $"Breeding with controlled mating [a={this.Parent.Name}].[a={this.Name}] requires a Timer otherwise breeding will be undertaken every time-step");
+
+            // get details from parent breeding activity
+            breedingParent = this.Parent as RuminantActivityBreed;
+        }
+
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            if (breedingParent is null)
+            {
+                string[] memberNames = new string[] { "Controlled mating parent" };
+                results.Add(new ValidationResult($"Invalid parent component of [a={this.Name}]. Expecting [a=RuminantActivityBreed].[a=RuminantActivityControlledMating]", memberNames));
             }
+            return results;
+        }
+        #endregion
+
+        /// <summary>An event handler to perfrom actions needed at the start of the time step</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
+        {
+            this.Status = ActivityStatus.NotNeeded;
+        }
+
+        /// <summary>
+        /// Provide the list of all breeders currently available
+        /// </summary>
+        /// <returns>A list of breeders to work with before returning to the breed activity</returns>
+        private IEnumerable<RuminantFemale> GetBreeders()
+        {
+            // return the full list of breeders currently able to breed
+            // controlled mating includes a max breeding age property, so reduces numbers mated
+            return milkingTimer != null
+                ? milkingTimer.IndividualsToBreed
+                : CurrentHerd(true).OfType<RuminantFemale>()
+                    .Where(a => a.IsAbleToBreed & a.Age <= MaximumAgeMating);
         }
 
         /// <summary>
         /// Provide the list of breeders to mate accounting for the controlled mating failure rate, and required resources
         /// </summary>
         /// <returns>A list of breeders for the breeding activity to work with</returns>
-        public IEnumerable<Ruminant> BreedersToMate()
+        public IEnumerable<RuminantFemale> BreedersToMate()
         {
+            IEnumerable<RuminantFemale> breeders = null;
             this.Status = ActivityStatus.NotNeeded;
             if(this.TimingOK) // general Timer or TimeBreedForMilking ok
             {
-                // get list of breeders using filtergroups to this activity
-                IEnumerable<Ruminant> herd = CurrentHerd(true).FilterRuminants(breederGroup);
-
-                if (herd.Count() > 0)
+                breeders = GetBreeders();
+                if (breeders != null &&  breeders.Count() > 0)
                 {
-                    // reduce to breed for milking number
-                    // get number needed
-
                     // calculate labour and finance costs
-                    List<ResourceRequest> resourcesneeded = GetResourcesNeededForActivityLocal(herd);
+                    List<ResourceRequest> resourcesneeded = GetResourcesNeededForActivityLocal(breeders);
                     CheckResources(resourcesneeded, Guid.NewGuid());
                     bool tookRequestedResources = TakeResources(resourcesneeded, true);
                     // get all shortfalls
@@ -177,142 +230,60 @@ namespace Models.CLEM.Activities
                         limiter = Math.Min(cashlimit, labourlimit);
                     }
 
-                    if (limiter == 1)
-                    {
+                    if (limiter < 1)
+                        this.Status = ActivityStatus.Partial;
+                    else if (limiter == 1)
                         this.Status = ActivityStatus.Success;
-                    }
 
-                    // report that this activity was performed as it does not use base GetResourcesRequired
-                    this.TriggerOnActivityPerformed();
-
-                    return herd.Take(Convert.ToInt32(Math.Floor(herd.Count() * limiter), CultureInfo.InvariantCulture));
+                    breeders = breeders.Take(Convert.ToInt32(Math.Floor(breeders.Count() * limiter), CultureInfo.InvariantCulture));
                 }
                 // report that this activity was performed as it does not use base GetResourcesRequired
                 this.TriggerOnActivityPerformed();
             }
-            return null;
+            return breeders;
         }
 
         /// <summary>
         /// Private method to determine resources required for this activity in the current month
         /// This method is local to this activity and not called with CLEMGetResourcesRequired event
         /// </summary>
-        /// <returns>List of required resource requests</returns>
+        /// <param name="breederList">The breeders being mated</param>
+        /// <returns>List of resource requests</returns>
         private List<ResourceRequest> GetResourcesNeededForActivityLocal(IEnumerable<Ruminant> breederList)
         {
-            ResourceRequestList = null;
-            int head = breederList.Count();
-            double adultEquivalents = breederList.Sum(a => a.AdultEquivalent);
 
-            if (head == 0)
-            {
-                return null;
-            }
 
-            // get all fees for breeding
-            foreach (RuminantActivityFee item in this.FindAllChildren<RuminantActivityFee>())
-            {
-                if (ResourceRequestList == null)
-                {
-                    ResourceRequestList = new List<ResourceRequest>();
-                }
 
-                double sumneeded = 0;
-                switch (item.PaymentStyle)
-                {
-                    case AnimalPaymentStyleType.Fixed:
-                        sumneeded = item.Amount;
-                        break;
-                    case AnimalPaymentStyleType.perHead:
-                        sumneeded = head * item.Amount;
-                        break;
-                    case AnimalPaymentStyleType.perAE:
-                        sumneeded = adultEquivalents * item.Amount;
-                        break;
-                    default:
-                        throw new Exception(String.Format("PaymentStyle ({0}) is not supported for ({1}) in ({2})", item.PaymentStyle, item.Name, this.Name));
-                }
-                ResourceRequestList.Add(new ResourceRequest()
-                {
-                    AllowTransmutation = false,
-                    Required = sumneeded,
-                    ResourceType = typeof(Finance),
-                    ResourceTypeName = item.BankAccountName.Split('.').Last(),
-                    ActivityModel = this,
-                    FilterDetails = null,
-                    Category = item.Name
-                }
-                );
-            }
-
-            // for each labour item specified
-            foreach (var item in labour)
-            {
-                double daysNeeded = 0;
-                switch (item.UnitType)
-                {
-                    case LabourUnitType.Fixed:
-                        daysNeeded = item.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perHead:
-                        daysNeeded = Math.Ceiling(head / item.UnitSize) * item.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perAE:
-                        daysNeeded = Math.Ceiling(adultEquivalents / item.UnitSize) * item.LabourPerUnit;
-                        break;
-                    default:
-                        throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", item.UnitType, item.Name, this.Name));
-                }
-                if (daysNeeded > 0)
-                {
-                    if (ResourceRequestList == null)
-                    {
-                        ResourceRequestList = new List<ResourceRequest>();
-                    }
-
-                    ResourceRequestList.Add(new ResourceRequest()
-                    {
-                        AllowTransmutation = false,
-                        Required = daysNeeded,
-                        ResourceType = typeof(Labour),
-                        ResourceTypeName = "",
-                        ActivityModel = this,
-                        FilterDetails = new List<object>() { item }
-                    }
-                    );
-                }
-            }
-            return ResourceRequestList;
+            return null;
         }
 
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
+        /// <summary>
+        /// Determine the labour required for this activity based on LabourRequired items in tree
+        /// </summary>
+        /// <param name="requirement">Labour requirement model</param>
+        /// <returns></returns>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            throw new NotImplementedException();
-        }
+            IEnumerable<Ruminant> herd = CurrentHerd(false);
+            int head = herd.Where(a => a.Weaned == false).Count();
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
+            double daysNeeded = 0;
+            switch (requirement.UnitType)
+            {
+                case LabourUnitType.Fixed:
+                    daysNeeded = requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHead:
+                    daysNeeded = head * requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perAE:
+                    double sumAE = 0;
+                    daysNeeded = sumAE * requirement.LabourPerUnit;
+                    break;
+                default:
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+            }
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
         }
 
         #region descriptive summary

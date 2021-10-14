@@ -44,7 +44,7 @@
         /// <summary>
         /// The most recent exception that has been thrown.
         /// </summary>
-        public List<string> LastError { get; private set; }
+        public List<string> LastError { get; private set; } = new List<string>();
 
         /// <summary>Attach this presenter with a view. Can throw if there are errors during startup.</summary>
         /// <param name="view">The view to attach</param>
@@ -209,6 +209,7 @@
         /// </summary>
         public void ClearStatusPanel()
         {
+            LastError.Clear();
             view.ClearStatusPanel();
         }
 
@@ -264,7 +265,7 @@
         /// <param name="error"></param>
         public void ShowError(string error)
         {
-            LastError = new List<string>();
+            LastError.Clear();
             view.ShowMessage(error, Simulation.ErrorLevel.Error, withButton : false);
         }
 
@@ -275,6 +276,8 @@
         /// <param name="overwrite">Overwrite any existing error messages?</param>
         public void ShowError(Exception error, bool overwrite = true)
         {
+            if (overwrite)
+                LastError.Clear();
             if (error != null)
             {
                 if (view == null)
@@ -284,14 +287,9 @@
                 }
                 else
                 {
-                    LastError = new List<string> { error.ToString() };
+                    LastError.Add(error.ToString());
                     view.ShowMessage(GetInnerException(error).Message, Simulation.ErrorLevel.Error, overwrite: overwrite, addSeparator: !overwrite);
                 }
-            }
-            else
-            {
-                LastError = new List<string>();
-                ShowError(new NullReferenceException("Attempted to display a null error"));
             }
         }
 
@@ -317,7 +315,7 @@
             }
             else
             {
-                LastError = new List<string>();
+                LastError.Clear();
                 ShowError(new NullReferenceException("Attempted to display a null error"));
             }
         }
@@ -479,7 +477,7 @@
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, true);
+                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => ShowError(e), true);
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
 
                     // Add to MRU list and update display
@@ -914,7 +912,6 @@
         /// <returns>The explorer presenter.</returns>
         private IPresenter CreateNewTab(string name, Simulations simulations, bool onLeftTabControl, string viewName, string presenterName)
         {
-            this.view.ShowMessage(" ", Simulation.ErrorLevel.Information); // Clear the message window
             ViewBase newView;
             IPresenter newPresenter;
             try
@@ -1253,8 +1250,8 @@
             {
                 int version = Models.Core.ApsimFile.Converter.LatestVersion;
                 ClearStatusPanel();
-                string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string resources = Path.Combine(bin, "..", "Models", "Resources");
+                string apsimx = PathUtilities.GetAbsolutePath("%root%", null);
+                string resources = Path.Combine(apsimx, "Models", "Resources");
                 if (!Directory.Exists(resources))
                     throw new Exception("Unable to locate resources directory");
                 IEnumerable<string> files = Directory.EnumerateFiles(resources, "*.json", SearchOption.AllDirectories);

@@ -15,6 +15,7 @@ namespace UnitTests
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Text;
 
     [SetUpFixture]
     public static class Utilities
@@ -140,16 +141,27 @@ namespace UnitTests
 
         public static string RunModels(string arguments)
         {
-            string pathToModels = typeof(IModel).Assembly.Location;
+            return RunModels(StringUtilities.SplitStringHonouringQuotes(arguments, " ").Cast<string>().ToArray());
+        }
 
-            ProcessUtilities.ProcessWithRedirectedOutput proc = new ProcessUtilities.ProcessWithRedirectedOutput();
-            proc.Start(pathToModels, arguments, Path.GetTempPath(), true);
-            proc.WaitForExit();
+        public static string RunModels(string[] arguments)
+        {
+            TextWriter stdout = Console.Out;
 
-            if (proc.ExitCode != 0)
-                throw new Exception(proc.StdOut);
-
-            return proc.StdOut;
+            try
+            {
+                StringWriter output = new StringWriter();
+                Console.SetOut(output);
+                Console.SetError(output);
+                int exitCode = Models.Program.Main(arguments);
+                if (exitCode != 0)
+                    throw new Exception($"Models invocation failed. Output:\n{output.ToString()}");
+                return output.ToString();
+            }
+            finally
+            {
+                Console.SetOut(stdout);
+            }
         }
 
         /// <summary>
