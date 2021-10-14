@@ -1210,7 +1210,7 @@ namespace Models.PMF.OilPalm
             for (int j = 0; j < soilPhysical.LL15mm.Length; j++)
             {
                 uptake[j] = PotSWUptake[j] * Math.Min(1.0, PEP / TotPotSWUptake);
-                EP += WaterUptake[j];
+                EP += uptake[j];
             }
             waterBalance.RemoveWater(uptake);
             WaterUptake = uptake;
