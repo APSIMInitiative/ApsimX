@@ -81,24 +81,31 @@ namespace APSIM.Server.IO
         /// <param name="error">Error encountered by the command.</param>
         public void OnCommandFinished(ICommand command, Exception error = null)
         {
-            if (error == null)
+            try
             {
-                SendMessage(fin);
-                if (command is ReadCommand reader)
+                if (error == null)
                 {
-                    ValidateResponse(ReadString(), ack);
-                    foreach (string param in reader.Parameters)
+                    SendMessage(fin);
+                    if (command is ReadCommand reader)
                     {
-                        if (reader.Result.Columns[param] == null)
-                            throw new Exception($"Columns {param} does not exist in table {reader.Result.TableName}");
-                        Array data = reader.Result.AsEnumerable().Select(r => r[param]).ToArray();
-                        SendArray(data);
                         ValidateResponse(ReadString(), ack);
+                        foreach (string param in reader.Parameters)
+                        {
+                            if (reader.Result.Columns[param] == null)
+                                throw new Exception($"Columns {param} does not exist in table {reader.Result.TableName}");
+                            Array data = reader.Result.AsEnumerable().Select(r => r[param]).ToArray();
+                            SendArray(data);
+                            ValidateResponse(ReadString(), ack);
+                        }
                     }
                 }
+                else
+                    SendMessage(error.ToString());
             }
-            else
-                SendMessage(error.ToString());
+            catch (Exception err)
+            {
+                SendMessage(err.ToString());
+            }
         }
 
         /// <summary>
