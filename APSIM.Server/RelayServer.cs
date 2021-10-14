@@ -201,6 +201,9 @@ namespace APSIM.Server
                     tables.Add(task.Result);
             }
             command.Result = DataTableUtilities.Merge(tables);
+            foreach (string param in command.Parameters)
+                if (command.Result.Columns[param] == null)
+                    throw new Exception($"Column {param} does not exist in table {command.TableName} (it appears to have disappeared in the merge)");
         }
 
         private Task<DataTable> RelayReadCommand(string podName, ReadCommand command, IConnectionManager connection)
