@@ -208,6 +208,9 @@
             get { return null; }
         }
 
+        /// <summary>Root length density (mm/mm^3).</summary>
+        public IReadOnlyList<double> RootLengthDensity => Root.LengthDensity;
+
         /// <summary>Sows the plant.</summary>
         /// <param name="cultivar">The cultivar type</param>
         /// <param name="population">The number of plants per area</param>
