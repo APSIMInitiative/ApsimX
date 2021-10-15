@@ -2485,10 +2485,14 @@ namespace Models.Soils
 
             for (var vegnum = 0; vegnum < canopies.Count; vegnum++)
             {
-                if (canopies[vegnum] is IPlant plant)
-                {
-                    ICanopy canopy = canopies[vegnum];
+                var model = canopies[vegnum] as IModel;
+                var canopy = canopies[vegnum];
 
+                var plant = model as IPlant;
+                if (plant == null)
+                    plant = model.Parent as IPlant; // the canopy might be a leaf and it's parent is a plant.
+                if (plant != null)
+                {
                     if (plant.IsAlive)
                     {
                         pep[vegnum] = canopies[vegnum].WaterDemand / 10.0; // convert mm to cm
