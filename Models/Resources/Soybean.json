@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 143,
+  "Version": 142,
   "Name": "Simulations",
   "Children": [
     {
@@ -61,8 +61,7 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -88,8 +87,7 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -124,8 +122,7 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -151,8 +148,7 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -170,8 +166,7 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",

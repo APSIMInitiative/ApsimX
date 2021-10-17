@@ -24,7 +24,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 143; } }
+        public static int LatestVersion { get { return 144; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3701,6 +3701,30 @@
         }
 
         /// <summary>
+        /// Change OilPalm.NUptake to OilPalm.NitrogenUptake
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion142(JObject root, string fileName)
+        {
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                bool changed1 = manager.Replace("OilPalm.NUptake", "OilPalm.NitrogenUptake");
+                bool changed2 = manager.Replace("OilPalm.SWUptake", "OilPalm.WaterUptake");
+                if (changed1 || changed2)
+                    manager.Save();
+            }
+
+            foreach (var report in JsonUtilities.ChildrenOfType(root, "Report"))
+            {
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[OilPalm].NUptake", "[OilPalm].NitrogenUptake");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "[OilPalm].SWUptake", "[OilPalm].WaterUptake");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "OilPalm.NUptake", "OilPalm.NitrogenUptake");
+                JsonUtilities.SearchReplaceReportVariableNames(report, "OilPalm.SWUptake", "OilPalm.WaterUptake");
+            }
+        }
+
+        /// <summary>
         /// Changes to facilitate the autodocs refactor:
         /// - Rename Models.Axis to APSIM.Shared.Graphing.Axis.
         /// - Copy the value of all folders' IncludeInDocumentation property
@@ -3708,7 +3732,7 @@
         /// </summary>
         /// <param name="root">Root node.</param>
         /// <param name="fileName">Path to the .apsimx file.</param>
-        private static void UpgradeToVersion142(JObject root, string fileName)
+        private static void UpgradeToVersion143(JObject root, string fileName)
         {
             foreach (JObject graph in JsonUtilities.ChildrenRecursively(root, "Graph"))
             {
@@ -3767,7 +3791,7 @@
         /// </summary>
         /// <param name="root"></param>
         /// <param name="fileName"></param>
-        private static void UpgradeToVersion143(JObject root, string fileName)
+        private static void UpgradeToVersion144(JObject root, string fileName)
         {
             foreach (JObject map in JsonUtilities.ChildrenRecursively(root, "Map"))
             {

@@ -144,12 +144,17 @@ namespace Models.PMF
         [JsonIgnore]
         public string plant_status = "alive";
 
-        /// <summary>The sw uptake</summary>
         double[] SWUptake;
+
+        /// <summary>The sw uptake</summary>
+        public IReadOnlyList<double> WaterUptake => SWUptake;
         /// <summary>The no3 uptake</summary>
         double[] NO3Uptake;
         /// <summary>The nh4 uptake</summary>
         double[] NH4Uptake;
+
+        /// <summary>The nitrogen uptake</summary>
+        public IReadOnlyList<double> NitrogenUptake { get; private set; }
 
         /// <summary>A list of uptakes generated for the soil arbitrator</summary>
         [JsonIgnore]
@@ -288,6 +293,7 @@ namespace Models.PMF
         {
             NO3Uptake = info[0].NO3N;
             NH4Uptake = info[0].NH4N;
+            NitrogenUptake = MathUtilities.Add(NO3Uptake, NH4Uptake);
 
             NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(NO3.kgha, NO3Uptake));
             NH4.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(NH4.kgha, NH4Uptake));

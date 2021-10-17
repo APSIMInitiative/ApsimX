@@ -1843,6 +1843,12 @@ namespace Models
         /// The g_dlt_sw_dep
         /// </summary>
         double[] g_dlt_sw_dep = new double[max_layer]; 				//! water uptake in each layer (mm water)
+
+        /// <summary>
+        /// Soil water uptake - positive values.
+        /// </summary>
+        public IReadOnlyList<double> WaterUptake => MathUtilities.Multiply_Value(g_dlt_sw_dep, -1);
+
         //double[]      sat_dep  = new double[max_layer]; 				//!
         //double[]      dul_dep  = new double[max_layer]; 				//! drained upper limit soil water content for soil layer L (mm water)
         //double[]      ll15_dep  = new double[max_layer]; 				//!
@@ -11933,7 +11939,7 @@ namespace Models
         /// </value>
         [Units("(g/m2)")]
         [JsonIgnore]
-        public double[] no3_uptake
+        public IReadOnlyList<double> NitrogenUptake
             {
             get
                 {

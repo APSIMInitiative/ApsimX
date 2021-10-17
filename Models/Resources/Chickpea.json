@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 143,
+  "Version": 142,
   "Name": "Simulations",
   "Children": [
     {
@@ -15,7 +15,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "\r\nThe APSIM Chickpea model has been developed from the original APSIM Chickpea model described by [robertson_simulation_2002] using the Plant Modelling Framework of [brown_plant_2014].\n\nNote to users:\nDesi and Kabuli chickpea are two subspecies of chickpea. The variety set includes both types. As indicated by Peake et al., 2021 (GRDC Updates), there was less confidence in predicting ",
+          "Text": "\r\nThe APSIM Chickpea model has been developed from the original APSIM Chickpea model described by [robertson_simulation_2002] using the Plant Modelling Framework of [brown_plant_2014].",
           "Name": "Introduction",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -70,8 +70,7 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -97,8 +96,7 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -133,8 +131,7 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -160,8 +157,7 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -179,8 +175,7 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": true
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",

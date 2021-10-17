@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 143,
+  "Version": 142,
   "Name": "Simulations",
   "Children": [
     {
@@ -7356,8 +7356,7 @@
               ],
               "IncludeInDocumentation": true,
               "Enabled": true,
-              "ReadOnly": false,
-              "ShowInDocs": false
+              "ReadOnly": false
             },
             {
               "$type": "Models.Core.Folder, Models",
@@ -7941,26 +7940,26 @@
                                               "Caption": null,
                                               "Axis": [
                                                 {
-                                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                                                  "$type": "Models.Axis, Models",
+                                                  "Type": 0,
                                                   "Title": "Y",
                                                   "Inverted": false,
-                                                  "Minimum": null,
-                                                  "Maximum": null,
-                                                  "Interval": null,
+                                                  "Minimum": "NaN",
+                                                  "Maximum": "NaN",
+                                                  "Interval": "NaN",
                                                   "DateTimeAxis": false,
-                                                  "CrossesAtZero": false,
-                                                  "Position": 0
+                                                  "CrossesAtZero": false
                                                 },
                                                 {
-                                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                                                  "$type": "Models.Axis, Models",
+                                                  "Type": 3,
                                                   "Title": "X",
                                                   "Inverted": false,
-                                                  "Minimum": null,
-                                                  "Maximum": null,
-                                                  "Interval": null,
+                                                  "Minimum": "NaN",
+                                                  "Maximum": "NaN",
+                                                  "Interval": "NaN",
                                                   "DateTimeAxis": false,
-                                                  "CrossesAtZero": false,
-                                                  "Position": 3
+                                                  "CrossesAtZero": false
                                                 }
                                               ],
                                               "LegendPosition": 5,
@@ -8496,8 +8495,7 @@
               ],
               "IncludeInDocumentation": true,
               "Enabled": true,
-              "ReadOnly": false,
-              "ShowInDocs": false
+              "ReadOnly": false
             },
             {
               "$type": "Models.Functions.MultiplyFunction, Models",
@@ -10555,8 +10553,7 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": false
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -10582,8 +10579,7 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": false
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.QPrioritythenRelativeAllocation, Models",
@@ -10618,8 +10614,7 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": false
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -10645,8 +10640,7 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": false
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -10664,8 +10658,7 @@
                   ],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
-                  "ReadOnly": false,
-                  "ShowInDocs": false
+                  "ReadOnly": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
