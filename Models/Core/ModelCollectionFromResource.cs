@@ -12,7 +12,7 @@
 
     /// <summary>This class loads a model from a resource</summary>
     [Serializable]
-    public class ModelCollectionFromResource : Model, IOptionallySerialiseChildren
+    public abstract class ModelCollectionFromResource : Model, IOptionallySerialiseChildren
     {
         private static string[] propertiesToExclude = new string[] { "Name", "Children", "IsHidden", "IncludeInDocumentation", "Enabled", "ReadOnly" };
 
