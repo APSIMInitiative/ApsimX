@@ -22,6 +22,8 @@
     using Models.Soils.Standardiser;
     using Models.GrazPlan;
     using Models.Climate;
+    using APSIM.Interop.Markdown.Renderers;
+    using APSIM.Interop.Documentation;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -828,23 +830,19 @@
         {
             try
             {
-                if (this.explorerPresenter.Save())
-                {
-                    explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
-                    explorerPresenter.MainPresenter.ShowWaitCursor(true);
+                explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
+                explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
-                    var modelToDocument = explorerPresenter.CurrentNode as IModel;
+                IModel modelToDocument = explorerPresenter.CurrentNode;
 
-                    var destinationFolder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
-                    CreateFileDocumentationCommand command = new CreateFileDocumentationCommand(explorerPresenter, destinationFolder);
-                    string fileNameWritten = command.FileNameWritten;
+                PdfWriter pdf = new PdfWriter();
+                string fileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".pdf");
+                pdf.Write(fileNameWritten, modelToDocument.Document());
 
-                    command.Do();
-                    explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
+                explorerPresenter.MainPresenter.ShowMessage($"Written {fileNameWritten}", Simulation.MessageType.Information);
 
-                    // Open the document.
-                    ProcessUtilities.ProcessStart(fileNameWritten);
-                }
+                // Open the document.
+                ProcessUtilities.ProcessStart(fileNameWritten);
             }
             catch (Exception err)
             {
