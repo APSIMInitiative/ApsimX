@@ -6,12 +6,14 @@ namespace UserInterface.Views
     using Interfaces;
     using EventArguments;
     using EventArguments.DirectedGraph;
-    using ApsimNG.Classes.DirectedGraph;
+    using APSIM.Interop.Visualisation;
     using Gtk;
     using Models.Management;
     using Models;
     using Extensions;
     using Utility;
+    using APSIM.Shared.Graphing;
+    using Node = APSIM.Shared.Graphing.Node;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -279,7 +281,7 @@ namespace UserInterface.Views
             actions.Clear();
             nodeDescriptions.Clear();
             comboModel.Clear();
-            var graph = new Models.DirectedGraph();
+            var graph = new DirectedGraph();
 
             nodes.ForEach(node =>
             {
@@ -307,7 +309,7 @@ namespace UserInterface.Views
             ctxBox.Foreach(c => ctxBox.Remove(c)); 
 
             Arc arc = graphView.DirectedGraph.Arcs.Find(a => a.Name == objectName);
-            Models.Node node = graphView.DirectedGraph.Nodes.Find(n => n.Name == objectName);
+            Node node = graphView.DirectedGraph.Nodes.Find(n => n.Name == objectName);
             if (node != null)
             {
                 //ctxLabel.Text = "State";
@@ -502,7 +504,7 @@ namespace UserInterface.Views
 #else
                     var colour = colourChooser.Rgba.ToColour().ToGdk();
 #endif
-                    graphView.SelectedObject.Colour = Utility.Colour.GtkToOxyColor(colour);
+                    graphView.SelectedObject.Colour = Utility.Colour.FromGtk(colour);
                     OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
                 }
             }
@@ -663,7 +665,7 @@ namespace UserInterface.Views
             try
             {
                 // todo: set location to context menu location
-                var node = new Models.Node { Name = graphView.DirectedGraph.NextNodeID() };
+                var node = new Node { Name = graphView.DirectedGraph.NextNodeID() };
                 StateNode newNode = new StateNode(node);
                 AddNode?.Invoke(this, new AddNodeEventArgs(newNode));
             }

@@ -109,7 +109,7 @@
         /// Get a list of parameter names for this model.
         /// </summary>
         /// <returns></returns>
-        public List<string> GetModelParameterNames()
+        public IEnumerable<string> GetModelParameterNames()
         {
             if (ResourceName != null && ResourceName != "")
             {

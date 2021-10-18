@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.PMF;
+using System;
+using System.Collections.Generic;
 
 namespace Models.Functions.DemandFunctions
 {
-    /// <summary>
-    /// # [Name]
-    /// Demand is calculated from the product of growth rate, thermal time and population.
-    /// </summary>
+    /// <summary>Demand is calculated from the product of growth rate, thermal time and population.</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -85,7 +82,18 @@ namespace Models.Functions.DemandFunctions
 
             return Value * ExpansionStress.Value(arrayIndex);
         }
-        
+
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
+        }
+
         [EventSubscribe("PlantSowing")]
         private void OnPlantSowing(object sender, SowingParameters data)
         {

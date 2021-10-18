@@ -4,22 +4,24 @@ using Models.Functions;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.PMF
 {
 
     /// <summary>
-    /// Process Retranslocation of BiomassType using Storage First and then Metabolic
+    /// Process Retranslocation of BiomassType using Storage First and then Metabolic.
+    /// 
+    /// Arbitration is performed in two passes for each of the supply sources. On the
+    /// first pass, biomass or nutrient supply is allocated to structural and metabolic
+    /// pools of each organ based on their demand relative to the demand from all organs.
+    /// On the second pass any remaining supply is allocated to non-structural pool based
+    /// on the organ's relative demand.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IOrgan))]
-    public class RetranslocateAvailableN : Model, IRetranslocateMethod, ICustomDocumentation
+    public class RetranslocateAvailableN : Model, IRetranslocateMethod
     {
         /// <summary>The calculation for N retranslocation function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -103,30 +105,6 @@ namespace Models.PMF
             genOrgan.Allocated.StructuralN -= structuralRetranslocation;
             remainingN -= structuralRetranslocation;
 
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // write description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                string RelativeDocString = "Arbitration is performed in two passes for each of the supply sources.  On the first pass, biomass or nutrient supply is allocated to structural and metabolic pools of each organ based on their demand relative to the demand from all organs.  On the second pass any remaining supply is allocated to non-structural pool based on the organ's relative demand.";
-
-                tags.Add(new AutoDocumentation.Paragraph(RelativeDocString, indent));
-            }
         }
     }
 }

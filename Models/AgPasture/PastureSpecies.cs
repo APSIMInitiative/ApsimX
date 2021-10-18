@@ -16,7 +16,6 @@
     using Models.Soils.Nutrients;
 
     /// <summary>
-    /// # [Name]
     /// Describes a pasture species.
     /// </summary>
     [Serializable]

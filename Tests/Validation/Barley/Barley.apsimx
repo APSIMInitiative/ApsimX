@@ -6,15 +6,6 @@
   "Name": "Simulations",
   "Children": [
     {
-      "$type": "Models.Memo, Models",
-      "Text": "\r\n# The APSIM Barley Model\r\n\r\n_Brown, H.E., Huth, N.I., Khaembah E.N., Zyskowski, R., and Holzworth, D.P._\r\n\r\n",
-      "Name": "TitlePage",
-      "Children": [],
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
       "$type": "Models.Core.Replacements, Models",
       "Name": "Replacements",
       "Children": [
