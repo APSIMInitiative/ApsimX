@@ -65,6 +65,11 @@ namespace Models.PMF
         [JsonIgnore]
         public double WAllocated { get; protected set; }
 
+        /// <summary>Water Supply Demand Ratio.</summary>
+        /// <value>The water supply demand ratio.</value>
+        [JsonIgnore]
+        public double WSDRatio { get; protected set; }
+
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
 
@@ -146,11 +151,12 @@ namespace Models.PMF
         public virtual void SetActualWaterUptake(List<ZoneWaterAndN> zones)
         {
             // Calculate the total water supply across all zones.
-            double waterSupply = 0;   //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
+            WSupply = 0;   //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             foreach (ZoneWaterAndN Z in zones)
             {
-                waterSupply += MathUtilities.Sum(Z.Water) * Z.Zone.Area;
+                WSupply += MathUtilities.Sum(Z.Water) * Z.Zone.Area;
             }
+
             // Calculate total plant water demand.
             WDemand = 0.0; //NOTE: This is in L, not mm, to arbitrate water demands for spatial simulations.
             
@@ -162,7 +168,7 @@ namespace Models.PMF
             // Calculate the fraction of water demand that has been given to us.
             double fraction = 1;
             if (WDemand > 0)
-                fraction = Math.Min(1.0, waterSupply / WDemand);
+                WSDRatio = Math.Min(1.0, WSupply / WDemand);
 
             // Proportionally allocate supply across organs.
             WAllocated = 0.0;
@@ -170,7 +176,7 @@ namespace Models.PMF
             foreach (IHasWaterDemand WD in waterDemandingOrgans)
             {
                 double demand = WD.CalculateWaterDemand();
-                double allocation = fraction * demand;
+                double allocation = WSDRatio * demand;
                 WD.WaterAllocation = allocation;
                 WAllocated += allocation;
             }
