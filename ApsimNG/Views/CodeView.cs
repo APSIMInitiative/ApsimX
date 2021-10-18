@@ -1,5 +1,4 @@
-﻿#if NETCOREAPP
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using System.Reflection;
@@ -1006,4 +1005,3 @@ namespace UserInterface.Views
         #endregion
     }
 }
-#endif

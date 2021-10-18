@@ -16,7 +16,7 @@ using APSIM.Interop.Documentation.Renderers;
 using System.Diagnostics;
 using APSIM.Interop.Utility;
 using APSIM.Interop.Documentation.Helpers;
-#if NETCOREAPP
+
 using MigraDocCore.DocumentObjectModel;
 using MigraDocCore.DocumentObjectModel.Tables;
 using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
@@ -24,14 +24,7 @@ using static MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shape
 using Color = MigraDocCore.DocumentObjectModel.Color;
 using PdfSharpCore.Drawing;
 using PdfSharpCore.Fonts;
-#else
-using MigraDoc.DocumentObjectModel;
-using MigraDoc.DocumentObjectModel.Tables;
-using Color = MigraDoc.DocumentObjectModel.Color;
-using System.Drawing.Imaging;
-using PdfSharp.Drawing;
-using PdfSharp.Fonts;
-#endif
+
 
 namespace APSIM.Interop.Markdown.Renderers
 {
@@ -46,10 +39,10 @@ namespace APSIM.Interop.Markdown.Renderers
         /// </summary>
         static PdfBuilder()
         {
-#if NETCOREAPP
+
             if (ImageSource.ImageSourceImpl == null)
                 ImageSource.ImageSourceImpl = new PdfSharpCore.Utils.ImageSharpImageSource<SixLabors.ImageSharp.PixelFormats.Rgba32>();
-#endif
+
             // This is a bit tricky on non-Windows platforms. 
             // Normally PdfSharp tries to get a Windows DC for associated font information
             // See https://alex-maz.info/pdfsharp_150 for the work-around we can apply here.
@@ -791,15 +784,10 @@ namespace APSIM.Interop.Markdown.Renderers
             if (sorted.Any())
                 AppendHeading("References");
 
-#if NETCOREAPP
+
             foreach ((string name, ICitation citation) in sorted)
             {
-#else
-            foreach (KeyValuePair<string, ICitation> pair in sorted)
-            {
-                string name = pair.Key;
-                ICitation citation = pair.Value;
-#endif
+
                 // If a URL is provided for this citation, insert the citation
                 // as a hyperlink.
                 bool isLink = !string.IsNullOrEmpty(citation.URL);
@@ -946,15 +934,7 @@ namespace APSIM.Interop.Markdown.Renderers
             // the modified image to the paragraph.
 
             GetPageSize(paragraph.Section, out double pageWidth, out double pageHeight);
-#if NETFRAMEWORK
-            string path = Path.ChangeExtension(Path.GetTempFileName(), ".png");
-            ReadAndResizeImage(image, pageWidth, pageHeight).Save(path, ImageFormat.Png);
-            if (linkState == null)
-                paragraph./*Section.*/AddImage(path);
-            else
-                //((Link)linkState).LinkObject.AddImage(path);
-                throw new NotImplementedException("tbi: image in hyperlink in .net framework builds");
-#else
+
             // Note: the first argument passed to the FromStream() function
             // is the name of the image. Thist must be unique throughout the document,
             // otherwise you will run into problems with duplicate imgages.
@@ -970,7 +950,7 @@ namespace APSIM.Interop.Markdown.Renderers
                 paragraph.AddImage(imageSource);
             else
                 ((Link)linkState).LinkObject.AddImage(imageSource);
-#endif
+
         }
 
         /// <summary>

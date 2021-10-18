@@ -8,11 +8,9 @@
     /// <summary>This view allows a single series to be edited.</summary>
     public class SeriesView : ViewBase, ISeriesView
     {
-#if NETFRAMEWORK
-        private Table table1 = null;
-#else
+
         private Grid table1;
-#endif
+
         private VBox vbox1 = null;
         private Label label4 = null;
         private Label label5 = null;
@@ -43,9 +41,7 @@
         {
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.SeriesView.glade");
             vbox1 = (VBox)builder.GetObject("vbox1");
-#if NETFRAMEWORK
-            table1 = (Table)builder.GetObject("table1");
-#else
+
             Widget table = (Widget)builder.GetObject("table1");
             vbox1.Remove(table);
             table1 = new Grid();
@@ -54,7 +50,7 @@
             // is allocated to the graph (aka plotview).
             vbox1.PackStart(table1, false, true, 0);
             vbox1.ReorderChild(table1, 0);
-#endif
+
             label4 = (Label)builder.GetObject("label4");
             label5 = (Label)builder.GetObject("label5");
             mainWidget = vbox1;
@@ -97,7 +93,7 @@
             filterBox.PackStart(editView1.MainWidget, true, true, 0);
             filterBox.PackEnd(helpBox, false, true, 0);
 
-#if NETCOREAPP
+
             table1.Attach(new Label("Data Source:") { Xalign = 0 }, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
             table1.Attach(new Label("X:") { Xalign = 0 }, 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
             table1.Attach(new Label("Y:") { Xalign = 0 }, 0, 1, 2, 3, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
@@ -110,7 +106,7 @@
             table1.Attach(new Label("Marker type:") { Xalign = 0 }, 0, 1, 7, 8, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
             table1.Attach(new Label("Colour:") { Xalign = 0 }, 0, 1, 8, 9, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
             table1.Attach(new Label("Filter:") { Xalign = 0 }, 0, 1, 9, 10, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
-#endif
+
 
             table1.Attach(dataSourceDropDown.MainWidget, 1, 2, 0, 1, AttachOptions.Fill, 0, 10, 2);
             table1.Attach(xDropDown.MainWidget, 1, 2, 1, 2, AttachOptions.Fill, 0, 10, 2);

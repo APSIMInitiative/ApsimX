@@ -102,11 +102,9 @@ namespace APSIM.Interop.Graphing
             List<string> xAxisLabels = existingAxisLabels.XLabels.ToList();
             List<string> yAxisLabels = existingAxisLabels.YLabels.ToList();
 
-#if NETCOREAPP
+
             foreach ((object xi, object yi) in x.Zip(y))
-#else
-            foreach ((object xi, object yi) in x.Zip(y, (xi, yi) => (xi, yi)))
-#endif
+
                 data.Add(new DataPoint(GetDataPointValue(xi, xAxisLabels), GetDataPointValue(yi, yAxisLabels)));
 
             return new DataPointCollection(data, xAxisLabels, yAxisLabels);

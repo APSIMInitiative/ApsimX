@@ -83,7 +83,7 @@ namespace Utility
         {
             return ToOxy(FromGtk(colour));
         }
-#if NETCOREAPP
+
         /// <summary>
         /// Convert a System.Drawing.Color to a Gdk.RGBA.
         /// </summary>
@@ -115,6 +115,6 @@ namespace Utility
                 Convert.ToInt32(MathUtilities.Bound(colour.Blue, 0, 1) * 0xff)
             );
         }
-#endif
+
     }
 }

@@ -12,9 +12,9 @@ namespace UserInterface.Views
     using System.Runtime.Serialization;
     using System.Timers;
 
-#if NETCOREAPP
+
     using TreeModel = Gtk.ITreeModel;
-#endif
+
 
     /// <summary>
     /// This class encapsulates a hierachical tree view that the user interacts with.
@@ -373,13 +373,13 @@ namespace UserInterface.Views
             {
                 expandedRows.Add(path.ToString());
             }));
-#if NETCOREAPP
+
             treeview1.CursorChanged -= OnAfterSelect;
-#endif
+
             treemodel.Clear();
-#if NETCOREAPP
+
             treeview1.CursorChanged += OnAfterSelect;
-#endif
+
             TreeIter iter = treemodel.AppendNode();
             RefreshNode(iter, nodeDescriptions, false);
             treeview1.ShowAll();
@@ -602,11 +602,9 @@ namespace UserInterface.Views
                     Color colour = (Color)model.GetValue(iter, 4);
                     if (colour == Color.Empty)
                     {
-#if NETFRAMEWORK
-                        Gdk.Color foreground = treeview1.Style.Foreground(StateType.Normal);
-#else
+
                         Gdk.Color foreground = treeview1.StyleContext.GetColor(StateFlags.Normal).ToGdkColor();
-#endif
+
                         colour = Utility.Colour.FromGtk(foreground);
                     }
                     (cell as CellRendererText).Strikethrough = (bool)model.GetValue(iter, 5);

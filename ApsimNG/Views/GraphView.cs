@@ -23,14 +23,11 @@
     using APSIM.Shared.Graphing;
     using APSIM.Interop.Graphing.Extensions;
     using APSIM.Interop.Graphing.CustomSeries;
-#if NETFRAMEWORK
-    using OxyLegendPosition = OxyPlot.LegendPosition;
-    using OxyLegendOrientation = OxyPlot.LegendOrientation;
-#else
+
     using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
     using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
     using LegendPlacement = OxyPlot.Legends.LegendPlacement;
-#endif
+
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -155,7 +152,7 @@
 
             
 
-#if NETCOREAPP
+
             // Not sure why but Oxyplot fonts are not scaled correctly on .net core on high DPI screens.
             // On my Surface Pro screen I'm using a 150% scaling which makes the fonts on graphs tiny.
             // I notice that the GTK3 ScaleFactor has a value of 80% in this situation. If the screen
@@ -163,7 +160,7 @@
             // For now I'll just scale all fonts by 2.0. Works on my various screens. Will need some testing.
             var font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
             fontSize = font.SizeIsAbsolute ? font.Size : Convert.ToInt32(font.Size / Pango.Scale.PangoScale) * 2;
-#endif
+
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -293,11 +290,9 @@
         {
             get
             {
-#if NETFRAMEWORK
-                int preferredWidth = plot1.ChildRequisition.Width;
-#else
+
                 plot1.GetPreferredWidth(out int minWidth, out int preferredWidth);
-#endif
+
                 return plot1.Allocation.Width > 1 ? plot1.Allocation.Width : preferredWidth;
             }
             set
@@ -310,11 +305,9 @@
         {
             get
             {
-#if NETFRAMEWORK
-                int preferredHeight = plot1.ChildRequisition.Height;
-#else
+
                 plot1.GetPreferredHeight(out int minHeight, out int preferredHeight);
-#endif
+
                 return plot1.Allocation.Height > 1 ? plot1.Allocation.Height : preferredHeight;
             }
             set
@@ -1699,11 +1692,9 @@
                 Rectangle plotArea = new Rectangle((int)plotRect.X, (int)plotRect.Y, (int)plotRect.Width, (int)plotRect.Height);
 
                 IEnumerable<Cairo.Rectangle> legends;
-#if NETFRAMEWORK
-                legends = new[] { plot1.Model.LegendArea.ToRect(true) };
-#else
+
                 legends = plot1.Model.Legends.Select(l => l.LegendArea.ToRect(true));
-#endif
+
                 foreach (Cairo.Rectangle legendRect in legends)
                 {
                     Rectangle legendArea = new Rectangle((int)legendRect.X, (int)legendRect.Y, (int)legendRect.Width, (int)legendRect.Height);

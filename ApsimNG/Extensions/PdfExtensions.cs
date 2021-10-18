@@ -6,12 +6,10 @@ namespace UserInterface.Extensions
     using APSIM.Shared.Utilities;
     using System.Drawing.Imaging;
     using APSIM.Interop.Utility;
-#if NETFRAMEWORK
-    using MigraDoc.DocumentObjectModel;
-#else
+
     using MigraDocCore.DocumentObjectModel;
     using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
-#endif
+
     /// <summary>
     /// Extension methods for PdfSharp DOM objects.
     /// </summary>
@@ -37,11 +35,7 @@ namespace UserInterface.Extensions
 
             // fixme - ResizeImage() expects units in pixels
             GetPageSize(section, out double pageWidth, out double pageHeight);
-#if NETFRAMEWORK
-            string path = Path.ChangeExtension(Path.GetTempFileName(), ".png");
-            ReadAndResizeImage(fullPath, pageWidth, pageHeight).Save(path, ImageFormat.Png);
-            section.AddImage(path);
-#else
+
             if (paragraph != null)
             {
                 // Note: the first argument passed to the FromStream() function
@@ -56,7 +50,7 @@ namespace UserInterface.Extensions
                     return stream;
                 }));
             }
-#endif
+
         }
 
         /// <summary>

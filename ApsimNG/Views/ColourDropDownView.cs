@@ -5,10 +5,10 @@
     using global::UserInterface.Extensions;
     using Gtk;
 
-#if NETCOREAPP
+
     using CellLayout = Gtk.ICellLayout;
     using TreeModel = Gtk.ITreeModel;
-#endif
+
 
     /// <summary>An interface for a drop down</summary>
     public interface IColourDropDownView
@@ -105,14 +105,12 @@
                     {
                         typeEnum = ColourDropTypeEnum.Text;
                         text = (string)val;
-#if NETFRAMEWORK
-                        color = combobox1.Style.Base(StateType.Normal);
-#else
+
                         // This is the old (obsolete) way of doing things. Can't just get rid of this
                         // because changing the background of each cell is the whole point of this view.
                         // Needs to be reimplemented for gtk3, so I won't suppress this warning.
                         color = combobox1.Toplevel.GetBackgroundColour(StateFlags.Normal);
-#endif
+
                     }
                     comboModel.AppendValues(text, color, (int)typeEnum);
                 }

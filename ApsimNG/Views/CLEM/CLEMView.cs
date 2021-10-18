@@ -130,9 +130,7 @@ namespace UserInterface.Views
             if (typeof(ViewBase).IsInstanceOfType(control))
             {
                 EventBox frame = new EventBox();
-#if NETFRAMEWORK
-                frame.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
-#endif
+
                 HBox hbox = new HBox();
                 uint border = 0;
                 if (tabName == "Properties")

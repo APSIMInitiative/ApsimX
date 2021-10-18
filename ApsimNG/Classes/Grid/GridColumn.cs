@@ -7,9 +7,9 @@
     using System.Drawing;
     using Views;
 
-#if NETCOREAPP
+
     using StateType = Gtk.StateFlags;
-#endif
+
 
     /// <summary>
     /// Represents a grid column.
@@ -231,11 +231,9 @@
                 Button button = gridView.GetColumnHeaderButton(this.ColumnIndex);
                 if (button != null)
                 {
-#if NETFRAMEWORK
-                    button.ModifyBg(StateType.Normal, new Gdk.Color(value.R, value.G, value.B));
-#else
+
                     throw new NotImplementedException("tbi - gtk3 equivalent");
-#endif
+
                 }
             }
         }
@@ -262,11 +260,9 @@
                 Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
                 if (label != null)
                 {
-#if NETFRAMEWORK
-                    label.ModifyFg(StateType.Normal, new Gdk.Color(value.R, value.G, value.B));
-#else
+
                     throw new NotImplementedException("tbi - gtk3 equivalent");
-#endif
+
                 }
             }
         }

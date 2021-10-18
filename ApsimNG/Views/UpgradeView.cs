@@ -321,9 +321,9 @@
                         tempSetupFileName = Path.Combine(Path.GetTempPath(), "APSIMSetup.exe");
 
                         string sourceURL;
-#if NETCOREAPP
+
                         upgrade.ReleaseURL = upgrade.ReleaseURL.Replace("ApsimSetup", "apsim-");
-#endif
+
                         if (ProcessUtilities.CurrentOS.IsMac)
                         {
                             sourceURL = Path.ChangeExtension(upgrade.ReleaseURL, "dmg");
@@ -439,42 +439,7 @@
 
                         if (File.Exists(tempSetupFileName))
                         {
-#if NETFRAMEWORK
-                            // Copy the separate upgrader executable to the temp directory.
-                            string sourceUpgraderFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Updater.exe");
-                            string upgraderFileName = Path.Combine(Path.GetTempPath(), "Updater.exe");
 
-                            // Check to see if upgrader is already running for whatever reason.
-                            // Kill them if found.
-                            foreach (Process process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(upgraderFileName)))
-                                process.Kill();
-
-                            // Delete the old upgrader.
-                            if (File.Exists(upgraderFileName))
-                                File.Delete(upgraderFileName);
-                            // Copy in the new upgrader.
-                            File.Copy(sourceUpgraderFileName, upgraderFileName, true);
-
-                            // Run the upgrader.
-                            string ourDirectory = PathUtilities.GetApsimXDirectory();
-                            string newDirectory = Path.GetFullPath(Path.Combine(ourDirectory, "..", "APSIM" + versionNumber));
-                            string arguments = StringUtilities.DQuote(ourDirectory) + " " +
-                                               StringUtilities.DQuote(newDirectory);
-
-                            ProcessStartInfo info = new ProcessStartInfo();
-                            if (ProcessUtilities.CurrentOS.IsMac)
-                            {
-                                info.FileName = "mono";
-                                info.Arguments = upgraderFileName + " " + arguments;
-                            }
-                            else
-                            {
-                                info.FileName = upgraderFileName;
-                                info.Arguments = arguments;
-                            }
-                            info.WorkingDirectory = Path.GetTempPath();
-                            Process.Start(info);
-#else
                             if (ProcessUtilities.CurrentOS.IsWindows)
                             {
                                 // The InnoSetup installer can be run with the /upgradefrom:xxx parameter
@@ -496,7 +461,7 @@
                                 ReflectionUtilities.WriteResourceToFile(GetType().Assembly, "ApsimNG.Resources.Scripts.upgrade-debian.sh", script);
                                 Process.Start("/bin/sh", $"{script} {tempSetupFileName}");
                             }
-#endif
+
                             Application.Invoke((_, __) =>
                             {
                                 window1.GetGdkWindow().Cursor = null;

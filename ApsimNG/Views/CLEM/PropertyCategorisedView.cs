@@ -44,10 +44,7 @@ namespace UserInterface.Views
             mainWidget = hpaned;
             rightHandView.BorderWidth = 7;
 
-#if NETFRAMEWORK
-            rightHandView.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
-            rightHandView.ShadowType = ShadowType.None ;
-#endif
+
 
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
@@ -165,11 +162,9 @@ namespace UserInterface.Views
         /// <summary>Get screenshot of right hand panel.</summary>
         public System.Drawing.Image GetScreenshotOfRightHandPanel()
         {
-#if NETFRAMEWORK
-            throw new NotImplementedException("This view does not support the saving of right hand to image");
-#else
+
             throw new NotImplementedException("tbi - gtk3 equivalent");
-#endif
+
         }
 
         /// <summary>Show the wait cursor</summary>

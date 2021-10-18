@@ -105,11 +105,9 @@ namespace ApsimNG.Cloud.Azure
             buttonContainer.PackStart(btnHelp, false, false, 0);
             buttonContainer.PackEnd(btnSave, false, false, 0);
 
-#if NETFRAMEWORK
-            Table primaryContainer = new Table(10, 2, false);
-#else
+
             Grid primaryContainer = new Grid();
-#endif
+
 
             primaryContainer.Attach(new Label("Batch Account:") { Xalign = 0 }, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Shrink, 0, 0);
             primaryContainer.Attach(batchAccountInput, 1, 2, 0, 1, (AttachOptions.Fill | AttachOptions.Expand), AttachOptions.Shrink, 0, 0);

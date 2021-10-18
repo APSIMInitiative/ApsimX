@@ -46,10 +46,9 @@ namespace UserInterface.Views
                 }
             }
 
-#if NETCOREAPP3_1
             Gtk.CssProvider css_provider = new CssProvider();
             css_provider.LoadFromData(css);
-#endif
+
             hbox = new HBox();
             vbox1 = new VBox();
             labels = new VBox();
@@ -60,11 +59,10 @@ namespace UserInterface.Views
                 Xpad = 3
             };
 
-#if NETCOREAPP3_1
             hbox.StyleContext.AddProvider(css_provider,Gtk.StyleProviderPriority.Application);
             modelTypeLabel.StyleContext.AddProvider(css_provider,Gtk.StyleProviderPriority.Application);
             modelTypeLabel.StyleContext.AddClass("wrapper_label_type");
-#endif
+
 
             modelDescriptionLabel = new Label()
             {
@@ -73,17 +71,13 @@ namespace UserInterface.Views
             };
             modelDescriptionLabel.LineWrapMode = Pango.WrapMode.Word;
             modelDescriptionLabel.Wrap = true;
-#if NETFRAMEWORK
-            modelDescriptionLabel.ModifyBg(StateType.Normal, new Gdk.Color(131, 0, 131));
-#endif
+
             modelHelpLinkLabel = new LinkButton("", "")
             {
                 Xalign = 0.0f,
             };
             modelHelpLinkLabel.Clicked += ModelHelpLinkLabel_Clicked;
-#if netframework
-            modelhelplinklabel.modifybase(statetype.normal, new gdk.color(131, 0, 131));
-#endif
+
             modelHelpLinkLabel.Visible = false;
 
             Gtk.CellRendererPixbuf pixbufRender = new CellRendererPixbuf();
@@ -99,20 +93,13 @@ namespace UserInterface.Views
                 Xpad = 4,
                 UseMarkup = true
             };
-#if NETFRAMEWORK
-            modelVersionLabel.ModifyFg(StateType.Normal, new Gdk.Color(150, 150, 150));
-            modelVersionLabel.ModifyBg(StateType.Normal, new Gdk.Color(131, 0, 131));
-#endif
+
             modelVersionLabel.LineWrapMode = Pango.WrapMode.Word;
             modelVersionLabel.Wrap = true;
 
-#if NETFRAMEWORK
-            modelDescriptionLabel.ModifyBg(StateType.Normal, new Gdk.Color(131, 0, 131));
-            modelVersionLabel.ModifyFg(StateType.Normal, new Gdk.Color(150, 150, 150));
-            modelVersionLabel.ModifyBg(StateType.Normal, new Gdk.Color(131, 0, 131));
-#else
+
             //labels.OverrideBackgroundColor(StateFlags.Normal, new Gdk.RGBA(131, 0, 131,0.5));
-#endif
+
 
             bottomView = new Viewport
             {
@@ -132,11 +119,9 @@ namespace UserInterface.Views
             ScrolledWindow scroll = new ScrolledWindow();
             scroll.ShadowType = ShadowType.EtchedIn;
             scroll.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
-#if NETFRAMEWORK
-            scroll.AddWithViewport(bottomView);
-#else
+
             scroll.Add(bottomView);
-#endif
+
 
             vbox1.Add(scroll);
 
@@ -211,11 +196,7 @@ namespace UserInterface.Views
             {
                 modelTypeLabelText = value;
                 // update markup and include colour if supplied
-#if NETFRAMEWORK
-                modelTypeLabel.Markup = $"<span{(((modelTypeColour??"")!="")?$" foreground=\"#{modelTypeColour}\"":"")} size=\"15000\"><b>{value}</b></span>";
-#else
                 modelTypeLabel.Markup = value;
-#endif
             }
         }
 
@@ -254,9 +235,8 @@ namespace UserInterface.Views
             get { return ModelTypeTextStyle; }
             set
             {
-#if NETCOREAPP3_1
             modelTypeLabel.StyleContext.AddClass($"wrapper_label_type_{value}");
-#endif
+
                 ;
             } 
         }
@@ -271,10 +251,7 @@ namespace UserInterface.Views
                     byte r = Convert.ToByte(value.Substring(0, 2), 16);
                     byte g = Convert.ToByte(value.Substring(2, 2), 16);
                     byte b = Convert.ToByte(value.Substring(4, 2), 16);
-#if NETFRAMEWORK
-                    // gtk tbi
-                    modelTypeLabel.ModifyFg(StateType.Normal, new Gdk.Color(r, g, b));
-#endif
+
                     modelTypeColour = value;
                     ModelTypeText = ModelTypeText;
                 }

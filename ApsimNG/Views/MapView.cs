@@ -19,10 +19,10 @@
     using Coordinate = GeoAPI.Geometries.Coordinate;
     using MapTag = Models.Mapping.MapTag;
 
-#if NETCOREAPP
+
     using ExposeEventArgs = Gtk.DrawnArgs;
     using StateType = Gtk.StateFlags;
-#endif
+
 
     /// <remarks>
     /// This view is intended to diplay sites on a map. For the most part, in works, but it has a few flaws
@@ -152,20 +152,20 @@
         public MapView(ViewBase owner) : base(owner)
         {
             image = new Gtk.Image();
-#if NETCOREAPP
+
             image.Halign = Align.Start;
             image.Valign = Align.Start;
-#endif
+
             var container = new Gtk.EventBox();
             container.Add(image);
 
             VPaned box = new VPaned();
             PropertiesView = new PropertyView(this);
             box.Pack1(((ViewBase)PropertiesView).MainWidget, true, false);
-#if NETCOREAPP
+
             if ( ((ViewBase)PropertiesView).MainWidget is ScrolledWindow scroller)
                 scroller.VscrollbarPolicy = PolicyType.Never;
-#endif
+
             box.Pack2(container, true, true);
             
             container.AddEvents(
@@ -174,11 +174,9 @@
             | (int)Gdk.EventMask.ScrollMask);
             container.ButtonPressEvent += OnButtonPress;
             container.ButtonReleaseEvent += OnButtonRelease;
-#if NETFRAMEWORK
-            image.ExposeEvent += OnImageExposed;
-#else
+
             image.Drawn += OnImageExposed;
-#endif
+
             container.Destroyed += OnMainWidgetDestroyed;
             container.ScrollEvent += OnMouseScroll;
 
@@ -280,11 +278,9 @@
             try
             {
                 RefreshMap();
-#if NETFRAMEWORK
-                image.ExposeEvent -= OnImageExposed;
-#else
+
                 image.Drawn -= OnImageExposed;
-#endif
+
             }
             catch (Exception err)
             {

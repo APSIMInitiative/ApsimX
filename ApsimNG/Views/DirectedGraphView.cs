@@ -15,10 +15,10 @@
     using APSIM.Interop.Visualisation;
     using APSIM.Shared.Graphing;
 
-#if NETCOREAPP
+
     using ExposeEventArgs = Gtk.DrawnArgs;
     using StateType = Gtk.StateFlags;
-#endif
+
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -97,11 +97,9 @@
             | (int)Gdk.EventMask.ButtonPressMask
             | (int)Gdk.EventMask.ButtonReleaseMask);
 
-#if NETFRAMEWORK
-            drawable.ExposeEvent += OnDrawingAreaExpose;
-#else
+
             drawable.Drawn += OnDrawingAreaExpose;
-#endif
+
             drawable.ButtonPressEvent += OnMouseButtonPress;
             drawable.ButtonReleaseEvent += OnMouseButtonRelease;
             drawable.MotionNotifyEvent += OnMouseMove;
@@ -112,12 +110,10 @@
                 VscrollbarPolicy = PolicyType.Always
             };
 
-#if NETFRAMEWORK
-            scroller.AddWithViewport(drawable);
-#else
+
             // In gtk3, a viewport will automatically be added if required.
             scroller.Add(drawable);
-#endif
+
 
             mainWidget = scroller;
             drawable.Realized += OnRealized;
@@ -181,16 +177,7 @@
         /// <summary>Export the view to the image</summary>
         public System.Drawing.Image Export()
         {
-#if NETFRAMEWORK
-            int width;
-            int height;
-            MainWidget.GdkWindow.GetSize(out width, out height);
-            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(drawable.GdkWindow, drawable.Colormap, 0, 0, 0, 0, width - 20, height - 20);
-            byte[] buffer = screenshot.SaveToBuffer("png");
-            MemoryStream stream = new MemoryStream(buffer);
-            System.Drawing.Bitmap bitmap = new Bitmap(stream);
-            return bitmap;
-#else
+
             var window = new OffscreenWindow();
             window.Add(MainWidget);
 
@@ -213,7 +200,7 @@
                 System.Drawing.Bitmap bitmap = new Bitmap(stream);
                 return bitmap;
             }
-#endif
+
         }
 
         /// <summary>The drawing canvas is being exposed to user.</summary>
@@ -223,11 +210,9 @@
             {
                 DrawingArea area = (DrawingArea)sender;
 
-#if NETFRAMEWORK
-                Cairo.Context context = Gdk.CairoHelper.Create(area.GdkWindow);
-#else
+
                 Cairo.Context context = args.Cr;
-#endif
+
                 CairoContext drawingContext = new CairoContext(context, MainWidget);
                 DirectedGraphRenderer.Draw(drawingContext, arcs, nodes);
 

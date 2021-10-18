@@ -16,11 +16,11 @@
     using System.Reflection;
     using System.Text;
 
-#if NETCOREAPP
+
     using TreeModel = Gtk.ITreeModel;
     using CellLayout = Gtk.ICellLayout;
     using StateType = Gtk.StateFlags;
-#endif
+
 
     /// <summary>
     /// A grid control that implements the grid view interface.
@@ -136,11 +136,9 @@
         /// The edit control currently in use (if any).
         /// We keep track of this to facilitate handling "partial" edits (e.g., when the user moves to a different component.
         /// </summary>
-#if NETFRAMEWORK
-        private CellEditable editControl = null;
-#else
+
         private ICellEditable editControl = null;
-#endif
+
         /// <summary>
         /// The tree path for the row currently being edited.
         /// </summary>
@@ -243,11 +241,9 @@
             Grid.KeyPressEvent += GridviewKeyPressEvent;
             fixedColView.KeyPressEvent += GridviewKeyPressEvent;
             Grid.EnableSearch = false;
-#if NETFRAMEWORK
-            Grid.ExposeEvent += GridviewExposed;
-#else
+
             Grid.Drawn += GridviewExposed;
-#endif
+
             fixedColView.FocusInEvent += FocusInEvent;
             fixedColView.FocusOutEvent += FocusOutEvent;
             fixedColView.EnableSearch = false;
@@ -257,43 +253,9 @@
             scrollingWindow2.Vadjustment = scrollingWindow.Vadjustment;
             fixedColView.Vadjustment = Grid.Vadjustment;
 
-#if NETFRAMEWORK
-            scrollingWindow2.VscrollbarPolicy = PolicyType.Never;
-            scrollingWindow2.ScrollEvent += OnFixedColViewScroll;
-#endif
+
         }
-#if NETFRAMEWORK
-        /// <summary>
-        /// We hide the scrollbar in the fixed column view to disguise
-        /// the fact that it's a separate treeview. This means that it
-        /// doesn't scroll via the mouse wheel. Here we trap the scroll
-        /// event (which still seems to be fired but is ignored) and
-        /// manually tell the fixed col view to scroll up or down.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        /// <remarks>
-        /// This doesn't seem to scroll very far. Is
-        /// Vadjustment.StepIncrement the wrong value to be using here?
-        /// </remarks>
-        private void OnFixedColViewScroll(object sender, ScrollEventArgs args)
-        {
-            try
-            {
-                if (args.Event.Direction == Gdk.ScrollDirection.Up || args.Event.Direction == Gdk.ScrollDirection.Down)
-                {
-                    double increment = fixedColView.Vadjustment.StepIncrement;
-                    if (args.Event.Direction == Gdk.ScrollDirection.Up)
-                        increment *= -1;
-                    fixedColView.Vadjustment.Value += increment;
-                }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-         }
-#endif
+
 
         /// <summary>
         /// Invoked when the user wants to copy a range of cells to the clipboard.
@@ -770,11 +732,9 @@
             if (colAttributes.TryGetValue(col, out colAttr))
                 return colAttr.ForegroundColor;
             else
-#if NETFRAMEWORK
-                return Grid.Style.Foreground(StateType.Normal);
-#else
+
                 return Grid.StyleContext.GetColor(StateFlags.Normal).ToGdkColor();
-#endif
+
         }
 
         /// <summary>
@@ -809,12 +769,10 @@
             if (colAttributes.TryGetValue(col, out colAttr))
                 return colAttr.BackgroundColor;
             else
-#if NETFRAMEWORK
-                return Grid.Style.Base(StateType.Normal);
-#else
+
                 // fixme
                 return Grid.GetBackgroundColour(StateType.Normal);
-#endif
+
         }
 
         /// <summary>
@@ -964,11 +922,9 @@
                     Grid.Hide();
                 splitter.PositionSet = true;
                 int splitterWidth = (int)splitter.StyleGetProperty("handle-size");
-#if NETFRAMEWORK
-                int width = fixedColView.SizeRequest().Width;
-#else
+
                 fixedColView.GetPreferredWidth(out _, out int width);
-#endif
+
                 if (splitter.Allocation.Width > 1 && Grid.Visible)
                     splitter.Position = Math.Min(width + splitterWidth, splitter.Allocation.Width / 2);
                 else
@@ -1031,11 +987,9 @@
                 {
                     foreach (Widget child in ((Gtk.Button)widget).AllChildren)
                     {
-#if NETFRAMEWORK
-                        if (child.GetType() != typeof(Gtk.HBox))
-#else
+
                         if (!(child is Box))
-#endif
+
                             continue;
 
                         foreach (Widget grandChild in ((Box)child).AllChildren)
@@ -1077,11 +1031,9 @@
             fixedColView.KeyPressEvent -= GridviewKeyPressEvent;
             fixedColView.FocusInEvent -= FocusInEvent;
             fixedColView.FocusOutEvent -= FocusOutEvent;
-#if NETFRAMEWORK
-            Grid.ExposeEvent -= GridviewExposed;
-#else
+
             Grid.Drawn -= GridviewExposed;
-#endif
+
             // It's good practice to disconnect the event handlers, as it makes memory leaks
             // less likely. However, we may not "own" the event handlers, so how do we 
             // know what to disconnect?
@@ -1661,13 +1613,7 @@
             // Therefore we need to trap the Realized event and fix the colours when it fires.
             Grid.Realized += GridRealized;
 
-#if NETFRAMEWORK
-            // tbi - gtk3 (do we even need this?)
-            Grid.ModifyBase(StateType.Active, fixedColView.Style.Base(StateType.Selected));
-            Grid.ModifyText(StateType.Active, fixedColView.Style.Text(StateType.Selected));
-            fixedColView.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
-            fixedColView.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
-#endif
+
             Grid.QueryTooltip += OnQueryTooltip;
 
             if (Grid.IsRealized)
@@ -1698,9 +1644,7 @@
 
                 colLookup.Add(textRender, i);
 
-#if NETFRAMEWORK
-                textRender.FixedHeightFromFont = 1; // 1 line high
-#endif
+
                 textRender.Editable = !isReadOnly;
                 textRender.EditingStarted += OnCellBeginEdit;
                 textRender.EditingCanceled += TextRenderEditingCanceled;
@@ -1783,11 +1727,9 @@
                 {
                     ColRenderAttributes attrib = new ColRenderAttributes();
                     attrib.ForegroundColor = Grid.GetForegroundColour(StateType.Normal);
-#if NETFRAMEWORK
-                    attrib.BackgroundColor = Grid.Style.Base(StateType.Normal);
-#else
+
                     attrib.BackgroundColor = Grid.GetBackgroundColour(StateType.Normal);
-#endif
+
                     colAttributes.Add(i, attrib);
                 }
             }
@@ -1808,11 +1750,7 @@
                 if (Grid != null)
                     Grid.Realized -= GridRealized;
 
-#if NETFRAMEWORK
-                // tbi - gtk3
-                fixedColView.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
-                fixedColView.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
-#endif
+
 
                 if (DataSource == null)
                     return;
@@ -1996,12 +1934,7 @@
             {
                 Label newLabel = new Label();
                 view.Columns[i].Widget = newLabel;
-#if NETFRAMEWORK
-                // In gtk3, explicit newline (\n) will cause the header to wrap anyway.
-                // In fact, setting Label.Wrap to true causes problems with the height
-                // of the fixed column treeview.
-                newLabel.Wrap = true;
-#endif
+
                 newLabel.Justify = Justification.Center;
                 /*
                 if (i == 1 && isPropertyMode)  // Add a tiny bit of extra space when left-aligned
@@ -2835,22 +2768,18 @@
         /// </summary>
         /// <param name="sender">Sender of the event.</param>
         /// <param name="e">Event arguments.</param>
-#if NETFRAMEWORK
-        private void GridviewExposed(object sender, ExposeEventArgs e)
-#else
+
         private void GridviewExposed(object sender, DrawnArgs e)
-#endif
+
         {
             try
             {
                 if (numberLockedCols > 0)
                     LockLeftMostColumns(numberLockedCols);
 
-#if NETFRAMEWORK
-                Grid.ExposeEvent -= GridviewExposed;
-#else
+
                 Grid.Drawn -= GridviewExposed;
-#endif
+
             }
             catch (Exception err)
             {

@@ -8,13 +8,13 @@ using APSIM.Shared.Graphing;
 using APSIM.Interop.Graphing.Extensions;
 using System.Collections.Generic;
 using System.Linq;
-#if NETCOREAPP
+
 using Legend = OxyPlot.Legends.Legend;
 using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
 using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
 using OxyLegendPlacement = OxyPlot.Legends.LegendPlacement;
 using OxyPlot.SkiaSharp;
-#endif
+
 
 namespace APSIM.Interop.Graphing
 {
@@ -60,25 +60,11 @@ namespace APSIM.Interop.Graphing
         {
             using (Stream stream = new MemoryStream())
             {
-#if NETCOREAPP
+
                 PngExporter.Export(plot, stream, (int)width, (int)height);
                 stream.Seek(0, SeekOrigin.Begin);
                 return Image.FromStream(stream);
-#else
-                // Using the built-in svg exporter for netfx builds.
-                // This doesn't look great.
 
-                // SvgExporter wants dimensions in points.
-                double widthPt = width / pointsToPixels;
-                double heightPt = height / pointsToPixels;
-
-                SvgExporter exporter = new SvgExporter();
-                exporter.Width = widthPt;
-                exporter.Height = heightPt;
-                exporter.Export(plot, stream);
-                stream.Seek(0, SeekOrigin.Begin);
-                return ImageUtilities.ReadSvg(stream, (int)width, (int)height);;
-#endif
             }
         }
 
@@ -129,11 +115,7 @@ namespace APSIM.Interop.Graphing
                 plot.Axes.Add(graph.YAxis.ToOxyPlotAxis(yAxisRequirements, labels.YLabels));
 
             // Legend
-#if NETFRAMEWORK
-            plot.LegendOrientation = graph.Legend.Orientation.ToOxyPlotLegendOrientation();
-            plot.LegendPosition = graph.Legend.Position.ToOxyPlotLegendPosition();
-            plot.LegendPlacement = graph.Legend.InsideGraphArea ? LegendPlacement.Inside : LegendPlacement.Outside;
-#else
+
             plot.Legends.Add(new Legend()
             {
                 LegendOrientation = graph.Legend.Orientation.ToOxyPlotLegendOrientation(),
@@ -141,7 +123,7 @@ namespace APSIM.Interop.Graphing
                 LegendPlacement = graph.Legend.InsideGraphArea ? OxyLegendPlacement.Inside : OxyLegendPlacement.Outside,
                 Font = font,
             });
-#endif
+
 
             // Apply font
             plot.TitleFont = font;

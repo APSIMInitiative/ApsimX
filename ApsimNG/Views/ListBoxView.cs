@@ -55,14 +55,7 @@ namespace UserInterface.Views
     {
         public IkonView(TreeModel model) : base(model) { }
 
-#if NETFRAMEWORK
-        // ItemPadding is included in the GtkSharp API but not in gtk-sharp (the gtk2 wrapper).
-        public int ItemPadding
-        {
-            get { return (int)GetProperty("item-padding"); }
-            set { SetProperty("item-padding", new GLib.Value(value)); }
-        }
-#endif
+
     }
 
     /// <summary>A list view.</summary>
@@ -94,7 +87,7 @@ namespace UserInterface.Views
         {
             Listview = new IkonView(listmodel);
             mainWidget = Listview;
-#if NETCOREAPP
+
             // It appears that the gtkiconview has changed considerably
             // between gtk2 and gtk3. In the gtk3 world, use of the 
             // set_text_column API is not recommended and in fact it appears
@@ -106,17 +99,12 @@ namespace UserInterface.Views
             CellRenderer cell = new CellRendererText(){ WrapMode = Pango.WrapMode.Word };
             Listview.PackStart(cell, true);
             Listview.AddAttribute(cell, "markup", 0);
-#else
-            Listview.MarkupColumn = 0;
-            Listview.PixbufColumn = 1;
-#endif
+
             Listview.TooltipColumn = 2;
             Listview.SelectionMode = SelectionMode.Browse;
-#if NETFRAMEWORK
-            Listview.Orientation = Gtk.Orientation.Horizontal;
-#else
+
             Listview.ItemOrientation = Gtk.Orientation.Horizontal;
-#endif
+
             Listview.RowSpacing = 0;
             Listview.ColumnSpacing = 0;
             Listview.ItemPadding = 0;

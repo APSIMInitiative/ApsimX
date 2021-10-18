@@ -7,10 +7,10 @@ using System;
 using System.Collections.Generic;
 using UserInterface.Extensions;
 
-#if NETCOREAPP
+
 using ExposeEventArgs = Gtk.DrawnArgs;
 using StateType = Gtk.StateFlags;
-#endif
+
 
 namespace UserInterface.Views
 {
@@ -48,11 +48,9 @@ namespace UserInterface.Views
             | (int)Gdk.EventMask.ButtonPressMask
             | (int)Gdk.EventMask.ButtonReleaseMask);
 
-#if NETFRAMEWORK
-            chart.ExposeEvent += OnDrawChart;
-#else
+
             chart.Drawn += OnDrawChart;
-#endif
+
             chart.ButtonPressEvent += OnMouseButtonPress;
             chart.ButtonReleaseEvent += OnMouseButtonRelease;
             chart.MotionNotifyEvent += OnMouseMove;
@@ -78,11 +76,9 @@ namespace UserInterface.Views
         {
             try
             {
-#if NETFRAMEWORK
-                chart.ExposeEvent -= OnDrawChart;
-#else
+
                 chart.Drawn -= OnDrawChart;
-#endif
+
                 chart.ButtonPressEvent -= OnMouseButtonPress;
                 chart.ButtonReleaseEvent -= OnMouseButtonRelease;
                 chart.MotionNotifyEvent -= OnMouseMove;
@@ -228,19 +224,15 @@ namespace UserInterface.Views
 
         private void Refresh(bool drawTriangle)
         {
-#if NETFRAMEWORK
-            bool isPaintable = chart.IsAppPaintable;
-#else
+
             bool isPaintable = chart.AppPaintable;
-#endif
+
             if (isPaintable && chart.Visible)
             {
-#if NETFRAMEWORK
-                Context context = Gdk.CairoHelper.Create(chart.GdkWindow);
-#else
+
                 Gdk.DrawingContext drawingContext = chart.GetGdkWindow().BeginDrawFrame(chart.GetGdkWindow().VisibleRegion);
                 Context context = drawingContext.CairoContext;
-#endif
+
 
                 if (drawTriangle)
                     DrawTriangle(context);
