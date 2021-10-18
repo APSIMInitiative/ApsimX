@@ -48,7 +48,7 @@ namespace Models.PMF.Struct
 		/// <summary>
 		/// Final leaf number.
 		/// </summary>
-		public double FinalLeafNo { get; private set; }
+		public double FinalLeafNo { get; set; }
 
 		/// <summary>
 		/// Current leaf number.
@@ -89,6 +89,23 @@ namespace Models.PMF.Struct
 			//doRegistrations();
 		}
 
+		/// <summary> Potential Leaf sizes can be calculated early and then referenced</summary>
+        public void UpdatePotentialLeafSizes(ICulmLeafArea areaCalc)
+        {
+			LeafSizes.Clear();
+			//calculate the size of all leaves
+			List<double> sizes = new List<double>();
+			for (int i = 1; i < Math.Ceiling(FinalLeafNo) + 1; i++)
+				sizes.Add(areaCalc.CalculateIndividualLeafArea(i, FinalLeafNo, VertAdjValue));
+
+			// allow for the offset effect for subsequent tillers
+			//tillers wil have less leaves - but they are initially larger
+			//the effect is to shift the curve to the left
+			int offset = CulmNo;
+			for (int i = 0; i < Math.Ceiling(FinalLeafNo - (offset)); i++)
+				LeafSizes.Add(sizes[i + offset]);
+		}
+
 		/// <summary>
 		/// Perform initialisation.
 		/// </summary>
@@ -98,7 +115,7 @@ namespace Models.PMF.Struct
 			FinalLeafNo = 0.0;
 			dltLeafNo = 0.0;
 			largestLeafPlateau = 0; //value less than 1 means ignore it
-			CurrentLeafNo = parameters.LeafNoAtEmergence.Value();
+			CurrentLeafNo = parameters.LeafNoAtEmergence?.Value() ?? 0;
 			VertAdjValue = 0.0;
 			Proportion = 1.0;
 			TotalLAI = 0.0;
