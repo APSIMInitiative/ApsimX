@@ -222,9 +222,6 @@
         /// <summary>The nitrogen uptake</summary>
         public IReadOnlyList<double> NitrogenUptake => Root == null ? null : Root.NUptakeLayered;
 
-        /// <summary>Root length density (mm/mm^3).</summary>
-        public IReadOnlyList<double> RootLengthDensity => Root.LengthDensity;
-
         /// <summary>Amount of assimilate available to be damaged.</summary>
         public double AssimilateAvailable => 0;
 

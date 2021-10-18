@@ -164,8 +164,6 @@ namespace Models.Soils
 
         //double psim;
         double[] psimin;
-        double[][] rld;
-        double[][] rc;
         double[] rtp;
         double[] rt;
         double[] ctp;
@@ -436,10 +434,6 @@ namespace Models.Soils
         /// 
         /// </summary>
         private double slcerr = 0.000001;
-
-        // [Param(MinVal = 0.0, MaxVal = 10.0)]
-        //[Units("mm/mm^2")]
-        private double min_total_root_length = 0;
         
         /// <summary>
         /// 
@@ -2169,8 +2163,6 @@ namespace Models.Soils
             Array.Resize(ref qexpot, newSize);
             Array.Resize(ref qssif, newSize);
             Array.Resize(ref qssof, newSize + 1);
-            Array.Resize(ref rld, newSize);
-            Array.Resize(ref rc, newSize);
             Array.Resize(ref qr, newSize);
             Array.Resize(ref qrpot, newSize);
             Array.Resize(ref RootRadius, newSize);
@@ -2195,8 +2187,6 @@ namespace Models.Soils
 
             for (int i = oldSize; i < newSize; i++)
             {
-                Array.Resize(ref rld[i], num_crops);
-                Array.Resize(ref rc[i], num_crops);
                 Array.Resize(ref qr[i], num_crops);
                 Array.Resize(ref qrpot[i], num_crops);
                 Array.Resize(ref RootRadius[i], num_crops);
@@ -2270,8 +2260,6 @@ namespace Models.Soils
 
             for (int i = 0; i <= n; i++)
             {
-                Array.Resize(ref rld[i], newSize);
-                Array.Resize(ref rc[i], newSize);
                 Array.Resize(ref qr[i], newSize);
                 Array.Resize(ref qrpot[i], newSize);
                 Array.Resize(ref RootRadius[i], newSize);
@@ -2496,37 +2484,12 @@ namespace Models.Soils
                     if (plant.IsAlive)
                     {
                         pep[vegnum] = canopies[vegnum].WaterDemand / 10.0; // convert mm to cm
-
-                        // Initialise tempory varaibles to zero
-                        IReadOnlyList<double> temp_rlv_l = plant.RootLengthDensity;
-
-                        //  convert mm/mm^3 to cm/cc
-                        double length = 0.0;
-                        for (int layer = 0; layer <= n; layer++)
-                        {
-                            rld[layer][vegnum] = temp_rlv_l[layer] * 100.0;
-                            length = length + temp_rlv_l[layer] * Thickness[layer];
-                        }
-                        if ((length > 0.0) && (length < min_total_root_length))
-                            IssueWarning("Possible error with low total RLV for " + crop_names[vegnum]);
-
                         canopy_height[vegnum] = canopy.Height;
                         cover_tot[vegnum] = canopy.CoverTotal;
                         bare = bare * (1.0 - cover_tot[vegnum]);
-
-                        // Solute demands don't seem to be used
-                        //for (int solnum = 0; solnum < num_solutes; solnum++)
-                        //{
-                        //    double sol;
-                        //    string solute_demand_name = solute_names[solnum] + "_demand";
-                        //    if (My.Get(cropOwner + "." + solute_demand_name, out sol))
-                        //        solute_demand[vegnum][solnum] = sol;
-                        //}
                     }
                     else
                     {
-                        for (int i = 0; i <= n; i++)
-                            rld[i][vegnum] = 0.0;
                         pep[vegnum] = 0.0;
                         canopy_height[vegnum] = 0.0;
                         cover_tot[vegnum] = 0.0;
@@ -4892,18 +4855,6 @@ namespace Models.Soils
 
                 // pot soil evap rate is not linked to apsim timestep
                 tresp = sep / _dt;
-
-                for (int iveg = 0; iveg < nveg; iveg++)
-                {
-                    for (int i = 0; i <= n; i++)
-                    {
-                        if (rld[i][iveg] < 1.0e-20)
-                            rld[i][iveg] = 1.0e-20;
-                        double rldi = rld[i][iveg];
-
-                        rc[i][iveg] = -Math.Log(Math.PI * RootRadius[i][iveg] * RootRadius[i][iveg] * rldi) / (4.0 * Math.PI * rldi * dx[i]);
-                    }
-                }
             }
             else if (istat == 1)
             {
@@ -5274,17 +5225,7 @@ namespace Models.Soils
                 qs[i] = (th[i] - thold[i]) * dx[i] / _dt;
                 qsp[i] = thp[i] * dx[i] / _dt;
             }
-            //   get uptake fluxes to roots if still in iterations
-            if (iroots < 2)
-            {
-                for (int i = 0; i <= n; i++)
-                {
-                    psios[i] = _psi[i];
-                    for (int solnum = 0; solnum < num_solutes; solnum++)
-                        psios[i] = psios[i] - tslos[solnum] * tcsl[solnum][i];
-                }
-                Uptake(ref psios, ref hk, ref psip, ref hkp, ref qex, ref qexp);
-            }
+
             rex = 0.0;
             for (int i = 0; i <= n; i++)
                 rex = rex + qex[i];
@@ -5584,138 +5525,6 @@ namespace Models.Soils
             {
                 roff = 0.0;
                 roffh = 0.0;
-            }
-        }
-
-        private void Uptake(ref double[] tpsi, ref double[] thk, ref double[] tpsip, ref double[] thkp, ref double[] tqex, ref double[,] tqexp)
-        {
-            //     gets flow rates to roots and total water extraction rates
-            //
-            //  Note some variables renamed using g%t prefix because of clash with
-            //  common variables.
-            // g%psi->tpsi
-            // psip->tpsip
-            // g%hk->thk
-            // hkp->thkp
-            // g%qex->tqex
-            // qexp->tqexp
-            // g%q->tq
-            // tr->ttr
-
-            //     set root conductance gr (alter as required)
-            //      double precision gr  ! cm/g%h
-            //      parameter (gr=1.4d-7)
-
-            //
-            for (int i = 0; i <= n; i++)
-            {
-                tqex[i] = 0.0;
-                qexpot[i] = 0.0;
-                for (int j = 0; j < 3; j++)
-                    tqexp[j, i] = 0.0;
-                //nh
-                for (int k = 0; k < nveg; k++)
-                {
-                    qr[i][k] = 0.0;
-                    qrpot[i][k] = 0.0;
-                }
-                //nh
-            }
-
-            double[] g_ = new double[n + 1];
-
-            for (int iveg = 0; iveg < nveg; iveg++)
-            {
-                //        find transpiration rates
-                rt[iveg] = 0.0;
-                double ttr = rtp[iveg];
-                if (ttr > 0.0)
-                {
-                    double psix = psimin[iveg];
-                    //           get soil->xylem conductances
-                    double a = 0.0;
-                    double b = 0.0;
-                    bool stress;
-                    for (int i = 0; i <= n; i++)
-                    {
-                        g_[i] = 0.0;
-                        if (tpsi[i] > psix)
-                        {
-                            //nh root conductance is not an input
-                            //nh                  g(i)=1./(g%rc(i,iveg)/thk(i)+1./(gr*g%rld(i,iveg)*p%dx(i)))
-                            g_[i] = 1.0 / (rc[i][iveg] / thk[i] + 1.0 / (RootConductance[i][iveg] * rld[i][iveg] * dx[i]));
-                        }
-                        a = a + g_[i] * tpsi[i];
-                        b = b + g_[i];
-                    }
-                    if (b == 0.0)
-                        stress = true;
-                    else if ((a - ttr) / b < psix)
-                        stress = true;
-                    else
-                        stress = false;
-                    if (!stress)
-                    {
-                        //              get xylem potl
-                        bool change = true;
-                        while (change)
-                        {
-                            change = false;
-                            psix = (a - ttr) / b;
-                            for (int i = 0; i <= n; i++)
-                            {
-                                if (tpsi[i] < psix && g_[i] != 0.0)
-                                {
-                                    change = true;
-                                    a = a - g_[i] * tpsi[i];
-                                    b = b - g_[i];
-                                    g_[i] = 0.0;
-                                }
-                            }
-                        }
-                    }
-
-                    if (_psix[iveg] > psix)
-                        _psix[iveg] = psix;
-
-                    for (int i = 0; i <= n; i++)
-                    {
-                        if (g_[i] != 0.0)
-                        {
-                            double tq = g_[i] * (tpsi[i] - psix);
-                            tqex[i] = tqex[i] + tq;
-                            //                 get partial derivs of tqex at i-1, i, i+1 wrt g%p
-                            double qpsi = g_[i];
-                            double qhk = g_[i] * rc[i][iveg] * tq / (thk[i] * thk[i]);
-                            if (!stress)
-                            {
-                                double derp = qpsi * tpsip[i] + qhk * thkp[i];
-                                if (i > 0)
-                                    tqexp[2, i - 1] = tqexp[2, i - 1] - g_[i - 1] * derp / b;
-                                if (i < n)
-                                    tqexp[0, i + 1] = tqexp[0, i + 1] - g_[i + 1] * derp / b;
-                                qpsi = qpsi * (1.0 - g_[i] / b);
-                                qhk = qhk * (1.0 - g_[i] / b);
-                            }
-                            tqexp[1, i] = tqexp[1, i] + qpsi * tpsip[i] + qhk * thkp[i];
-                            rt[iveg] = rt[iveg] + tq;
-                            qr[i][iveg] = tq;
-                        }
-                        else
-                        {
-                            qr[i][iveg] = 0.0;
-                        }
-                        if (ttr > 0)
-                        {
-                            qrpot[i][iveg] = g_[i] * (tpsi[i] - psimin[iveg]);
-                            qexpot[i] = qexpot[i] + qrpot[i][iveg];
-                        }
-                        else
-                        {
-                            qrpot[i][iveg] = 0.0;
-                        }
-                    }
-                }
             }
         }
 

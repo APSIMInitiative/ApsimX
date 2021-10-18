@@ -115,10 +115,6 @@ namespace Models
         /// <summary>Daily nitrogen uptake from each soil layer (kg/ha).</summary>
         public IReadOnlyList<double> NitrogenUptake => throw new NotImplementedException("Uptake isn't calculated in GRange.");
 
-        /// <summary>Root length density (mm/mm^3).</summary>
-        [JsonIgnore]
-        public IReadOnlyList<double> RootLengthDensity => throw new NotImplementedException("GRange doesn't have a root length density. It won't work with SWIM.");
-
         #endregion
 
         #region ICanopy interface

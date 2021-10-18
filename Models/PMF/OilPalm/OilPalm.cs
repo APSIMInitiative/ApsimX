@@ -236,10 +236,6 @@ namespace Models.PMF.OilPalm
         [Units("mm")]
         public double RootDepth {get; set;}
 
-        /// <summary>Root length density (mm/mm^3).</summary>
-        [JsonIgnore]
-        public IReadOnlyList<double> RootLengthDensity => throw new NotImplementedException("OilPalm doesn't have a root length density. It won't work with SWIM.");
-
         /// <summary>The pot sw uptake</summary>
         double[] PotSWUptake;
 

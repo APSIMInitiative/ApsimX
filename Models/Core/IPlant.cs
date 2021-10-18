@@ -29,9 +29,6 @@ namespace Models.Core
         /// <summary>Daily nitrogen uptake from each soil layer (kg/ha).</summary>
         IReadOnlyList<double> NitrogenUptake { get; }
 
-        /// <summary>Root length density (mm/mm^3).</summary>
-        IReadOnlyList<double> RootLengthDensity { get; }
-
         /// <summary>Sows the plant</summary>
         /// <param name="cultivar">The cultivar.</param>
         /// <param name="population">The population.</param>
