@@ -16,7 +16,7 @@
     [ValidParent(typeof(Replacements))]
     [ValidParent(typeof(Factor))]
     [ValidParent(typeof(CompositeFactor))]
-    public class Model : IModel
+    public abstract class Model : IModel
     {
         [NonSerialized]
         private IModel modelParent;
