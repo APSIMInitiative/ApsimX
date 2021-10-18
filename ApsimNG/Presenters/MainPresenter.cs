@@ -27,6 +27,8 @@
     /// </summary>
     public class MainPresenter
     {
+        private class MockModel : Model { }
+
         /// <summary>A list of presenters for tabs on the left.</summary>
         public List<IPresenter> Presenters1 { get; set; } = new List<IPresenter>();
 
@@ -44,7 +46,7 @@
         /// <summary>
         /// The most recent exception that has been thrown.
         /// </summary>
-        public List<string> LastError { get; private set; }
+        public List<string> LastError { get; private set; } = new List<string>();
 
         /// <summary>Attach this presenter with a view. Can throw if there are errors during startup.</summary>
         /// <param name="view">The view to attach</param>
@@ -184,9 +186,9 @@
 
             var compiler = new ScriptCompiler();
 #if NETFRAMEWORK
-            var results = compiler.Compile(code, new Model(), assemblies);
+            var results = compiler.Compile(code, new MockModel(), assemblies);
 #else
-            var results = compiler.Compile(code, new Model());
+            var results = compiler.Compile(code, new MockModel());
 #endif
             if (results.ErrorMessages != null)
                 throw new Exception($"Script compile errors: {results.ErrorMessages}");
@@ -209,6 +211,7 @@
         /// </summary>
         public void ClearStatusPanel()
         {
+            LastError.Clear();
             view.ClearStatusPanel();
         }
 
@@ -264,7 +267,7 @@
         /// <param name="error"></param>
         public void ShowError(string error)
         {
-            LastError = new List<string>();
+            LastError.Clear();
             view.ShowMessage(error, Simulation.ErrorLevel.Error, withButton : false);
         }
 
@@ -275,6 +278,8 @@
         /// <param name="overwrite">Overwrite any existing error messages?</param>
         public void ShowError(Exception error, bool overwrite = true)
         {
+            if (overwrite)
+                LastError.Clear();
             if (error != null)
             {
                 if (view == null)
@@ -284,14 +289,9 @@
                 }
                 else
                 {
-                    LastError = new List<string> { error.ToString() };
+                    LastError.Add(error.ToString());
                     view.ShowMessage(GetInnerException(error).Message, Simulation.ErrorLevel.Error, overwrite: overwrite, addSeparator: !overwrite);
                 }
-            }
-            else
-            {
-                LastError = new List<string>();
-                ShowError(new NullReferenceException("Attempted to display a null error"));
             }
         }
 
@@ -317,7 +317,7 @@
             }
             else
             {
-                LastError = new List<string>();
+                LastError.Clear();
                 ShowError(new NullReferenceException("Attempted to display a null error"));
             }
         }

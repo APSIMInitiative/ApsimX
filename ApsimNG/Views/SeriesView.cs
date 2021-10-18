@@ -4,6 +4,7 @@
     using Gtk;
     using System;
     using Extensions;
+    using APSIM.Shared.Utilities;
 
     /// <summary>This view allows a single series to be edited.</summary>
     public class SeriesView : ViewBase, ISeriesView
@@ -248,7 +249,7 @@
             try
             {
                 if (args.Event.Button == 1)
-                  System.Diagnostics.Process.Start("https://apsimnextgeneration.netlify.com/usage/graphs/graphfilters/");
+                    ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.com/usage/graphs/graphfilters/");
             }
             catch (Exception err)
             {

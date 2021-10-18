@@ -12,7 +12,7 @@ using Models.CLEM.Reporting;
 namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Activity timer based on monthly interval
+    /// Activity timer based on month range
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(GrazeFoodStoreFertilityLimiter))]
     [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
     [ValidParent(ParentType = typeof(ReportRuminantHerd))]
-    [Description("This activity timer defines a range between months upon which to perform activities.")]
+    [Description("This timer defines a range between months upon which to perform activities.")]
     [HelpUri(@"Content/Features/Timers/MonthRange.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerMonthRange: CLEMModel, IActivityTimer, IActivityPerformedNotifier

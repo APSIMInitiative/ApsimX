@@ -3,6 +3,7 @@
     using APSIM.Shared.Utilities;
     using Models.Factorial;
     using System;
+    using APSIM.Shared.Documentation;
     using System.Collections.Generic;
     using Newtonsoft.Json;
     using System.Linq;
@@ -15,7 +16,7 @@
     [ValidParent(typeof(Replacements))]
     [ValidParent(typeof(Factor))]
     [ValidParent(typeof(CompositeFactor))]
-    public class Model : IModel
+    public abstract class Model : IModel
     {
         [NonSerialized]
         private IModel modelParent;
@@ -28,7 +29,6 @@
             this.Name = GetType().Name;
             this.IsHidden = false;
             this.Children = new List<IModel>();
-            IncludeInDocumentation = true;
             Enabled = true;
         }
 
@@ -53,11 +53,6 @@
         /// </summary>
         [JsonIgnore]
         public bool IsHidden { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the graph should be included in the auto-doc documentation.
-        /// </summary>
-        public bool IncludeInDocumentation { get; set; }
 
         /// <summary>
         /// A cleanup routine, in which we clear our child list recursively
@@ -528,6 +523,43 @@
 
             // Simulation can be null if this model is not under a simulation e.g. DataStore.
             return new Locater();
+        }
+
+        /// <summary>
+        /// Document the model, and any child models which should be documented.
+        /// </summary>
+        /// <remarks>
+        /// It is a mistake to call this method without first resolving links.
+        /// </remarks>
+        public virtual IEnumerable<ITag> Document()
+        {   
+            yield return new Section(Name, GetModelDescription());
+        }
+
+        /// <summary>
+        /// Get a description of the model from the summary and remarks
+        /// xml documentation comments in the source code.
+        /// </summary>
+        /// <remarks>
+        /// Note that the returned tags are not inside a section.
+        /// </remarks>
+        protected IEnumerable<ITag> GetModelDescription()
+        {
+            yield return new Paragraph(CodeDocumentation.GetSummary(GetType()));
+            yield return new Paragraph(CodeDocumentation.GetRemarks(GetType()));
+        }
+
+        /// <summary>
+        /// Document all child models of a given type.
+        /// </summary>
+        /// <param name="withHeadings">If true, each child to be documented will be given its own section/heading.</param>
+        /// <typeparam name="T">The type of models to be documented.</typeparam>
+        protected IEnumerable<ITag> DocumentChildren<T>(bool withHeadings = false) where T : IModel
+        {
+            if (withHeadings)
+                return FindAllChildren<T>().Select(m => new Section(m.Name, m.Document()));
+            else
+                return FindAllChildren<T>().SelectMany(m => m.Document());
         }
     }
 }

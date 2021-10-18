@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics;
+    using APSIM.Shared.Utilities;
     using Models.Core;
 
     /// <summary>
@@ -141,9 +142,7 @@
         {
             try
             {
-                Process process = new Process();
-                process.StartInfo.FileName = "https://apsimnextgeneration.netlify.com/";
-                process.Start();
+                ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.com/");
             }
             catch (Exception err)
             {

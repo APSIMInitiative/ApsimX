@@ -10,7 +10,7 @@ namespace Models.Functions
     /// \retval fraction of NO3 denitrified.
     [Serializable]
     [Description("Soil NO3 Denitrification model from CERES-Maize")]
-    public class CERESDenitrificationModel : Model, IFunction, ICustomDocumentation
+    public class CERESDenitrificationModel : Model, IFunction
     {
         [Link]
         Soils.IPhysical soilPhysical = null;
@@ -61,15 +61,6 @@ namespace Models.Functions
                     result[i] = Value(i);
                 return result;
             }
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-
         }
     }
 }

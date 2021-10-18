@@ -18,7 +18,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Relationship))]
-    [Description("Tracks a bound running value based on a relationship where Y represents the change in this value for a given X")]
+    [Description("Track a bound running value based on a relationship where Y represents the change in this value for a given X")]
     [Version(1, 0, 1, "This component replaces the depreciated RelationshipTracker and is placed below a Relationship")]
     [HelpUri(@"Content/Features/Relationships/RelationshipRunningValue.htm")]
     public class RelationshipRunningValue: CLEMModel, IValidatableObject

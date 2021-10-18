@@ -13,7 +13,6 @@
     using System.Reflection;
 
     /// <summary>
-    /// # [Name]
     /// The surface organic matter model.
     /// </summary>
     [Serializable]

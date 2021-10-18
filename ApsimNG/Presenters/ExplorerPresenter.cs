@@ -1091,7 +1091,7 @@
                 if (!child.IsHidden)
                     description.Children.Add(GetNodeDescription(child));
             description.Strikethrough = !model.Enabled;
-            description.Checked = model.IncludeInDocumentation && showDocumentationStatus;
+            description.Checked = false; // Set this to true to show a tick next to this item.
             description.Colour = System.Drawing.Color.Empty;
             return description;
         }

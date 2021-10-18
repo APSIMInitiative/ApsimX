@@ -83,11 +83,11 @@
         {
             if (model == null)
                 return;
-            if (force || (model.IncludeInDocumentation && model.Enabled))
+            if (force || (/*model.IncludeInDocumentation &&*/ model.Enabled))
             {
-                if (model is ICustomDocumentation)
-                    (model as ICustomDocumentation).Document(tags, headingLevel, indent);
-                else
+                // if (model is ICustomDocumentation)
+                //     (model as ICustomDocumentation).Document(tags, headingLevel, indent);
+                // else
                     DocumentModelSummary(model, tags, headingLevel, indent, documentAllChildren);
             }
         }
@@ -540,7 +540,7 @@
             if (model == null)
                 return;
             foreach (IModel child in model.Children)
-                if (child.IncludeInDocumentation &&
+                if (/*child.IncludeInDocumentation &&*/
                     (childTypesToExclude == null || Array.IndexOf(childTypesToExclude, child.GetType()) == -1))
                     DocumentModel(child, tags, headingLevel + 1, indent);
         }

@@ -22,7 +22,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(CLEMRuminantActivityBase))]
-    [Description("This ruminant group is applied to all activities at or below this point in the simulation tree")]
+    [Description("Specify individuals applied to all activities at or below this point in the simulation tree")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantActivityGroup.htm")]
     public class RuminantActivityGroup : FilterGroup<Ruminant>

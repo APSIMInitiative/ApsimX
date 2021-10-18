@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using ApsimNG.Classes.DirectedGraph;
+using APSIM.Interop.Visualisation;
 using Models.Management;
 
 namespace UserInterface.EventArguments.DirectedGraph

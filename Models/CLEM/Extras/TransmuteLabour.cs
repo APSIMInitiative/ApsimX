@@ -20,7 +20,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Transmutation))]
-    [Description("This Transmutation cost specifies how much labour is needed to convert to the needed resource. Any number of these can be supplied under a Transmutation such that you may need money and labour to purchase supplements.")]
+    [Description("Identifies how the labour (as resource B) is transmuted into a shortfall resource (A, e.g.food)")]
     [HelpUri(@"Content/Features/Transmutation/TransmutationCostLabour.htm")]
     public class TransmuteLabour : CLEMModel, ITransmute, IValidatableObject
     {

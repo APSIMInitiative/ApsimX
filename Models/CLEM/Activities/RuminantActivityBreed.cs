@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages the breeding of ruminants based upon the current herd filtering.")]
+    [Description("Manages the breeding of ruminants based on the current herd filtering")]
     [Version(1, 0, 8, "Include passing inherited attributes from mating to newborn")]
     [Version(1, 0, 7, "Removed UseAI to a new ControlledMating add-on activity")]
     [Version(1, 0, 6, "Fixed period considered in infering pre simulation conceptions and spread of uncontrolled matings.")]
@@ -313,7 +313,8 @@ namespace Models.CLEM.Activities
 
                         // add attributes inherited from mother
                         foreach (var attribute in female.Attributes.Items)
-                            newCalfRuminant.Attributes.Add(attribute.Key, attribute.Value.GetInheritedAttribute() as IIndividualAttribute);
+                            if (attribute.Value != null)
+                                newCalfRuminant.Attributes.Add(attribute.Key, attribute.Value.GetInheritedAttribute() as IIndividualAttribute);
 
                         HerdResource.AddRuminant(newCalfRuminant, this);
 
@@ -391,21 +392,21 @@ namespace Models.CLEM.Activities
 
                                     if (useControlledMating)
                                         female.LastMatingStyle = MatingStyle.Controlled;
-                                    else
-                                    {
-                                        male = maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count() - 1)];
-                                        female.LastMatingStyle = ((male as RuminantMale).IsWildBreeder ? MatingStyle.WildBreeder : MatingStyle.Natural);
-                                    }
 
                                     // if mandatory attributes are present in the herd, save male value with female details.
                                     if(female.BreedParams.IncludedAttributeInheritanceWhenMating)
                                     {
-                                        if(useControlledMating)
+                                        if (useControlledMating)
                                             // save all male attributes
                                             AddMalesAttributeDetails(female, controlledMating.SireAttributes, needsNewJoiningMale(controlledMating.JoiningsPerMale, numberServiced));
                                         else
+                                        {
+                                            male = maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count() - 1)];
+                                            female.LastMatingStyle = ((male as RuminantMale).IsWildBreeder ? MatingStyle.WildBreeder : MatingStyle.Natural);
+
                                             // randomly select male
                                             AddMalesAttributeDetails(female, male as Ruminant);
+                                        }
                                     }
                                     status = Reporting.ConceptionStatus.Conceived;
                                     NumberConceived++;

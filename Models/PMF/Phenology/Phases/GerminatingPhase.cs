@@ -7,13 +7,13 @@ using Models.Soils;
 using Models.Functions;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// # [Name] Phase
-    /// The [Name] phase goes from [Start] stage to [End] stage and assumes
-    /// germination [End] will be reached on the day after sowing or the first day 
+    /// This phase goes from a start stage to an end stage and assumes
+    /// germination will be reached on the day after sowing or the first day 
     /// thereafter when the extractable soil water at sowing depth is greater than zero."
     /// </summary>
     [Serializable]
@@ -43,7 +43,7 @@ namespace Models.PMF.Phen
 
         // 2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
-        
+
         /// <summary>The soil layer in which the seed is sown.</summary>
         private int SowLayer = 0;
 
@@ -116,6 +116,17 @@ namespace Models.PMF.Phen
         private void OnPlantSowing(object sender, SowingParameters data)
         {
             SowLayer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, plant.SowingData.Depth);
+        }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write a table containing phase numers and start/end stages.
+            yield return new Paragraph($"The phase goes from {Start.ToLower()} to {End.ToLower()} and assumes {End.ToLower()} will be reached on the day after sowing or the first day thereafter when the extractable soil water at sowing depth is greater than zero.");
+
+            // Write memos.
+            foreach (var tag in DocumentChildren<Memo>())
+                yield return tag;
         }
     }
 }

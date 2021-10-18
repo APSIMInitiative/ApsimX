@@ -22,6 +22,7 @@
             var weirdo = soil.FindChild<WEIRDO>();
             var organicNode = soil.FindChild<Organic>();
             var waterBalance = soil.FindChild<ISoilWater>();
+            var swim3 = soil.FindChild<Swim3>();
 
             // Determine the target layer structure.
             var targetThickness = physicalNode.Thickness;
@@ -39,6 +40,8 @@
             SetAnalysisThickness(analysisNode, targetThickness);
             SetSoilOrganicMatterThickness(organicNode, targetThickness);
             SetPhysicalPropertiesThickness(physicalNode, targetThickness, soil);
+            if (swim3 != null)
+                SetSWIMThickness(swim3, targetThickness, soil);
         }
 
         /// <summary>Sets the water thickness.</summary>
@@ -183,7 +186,29 @@
                     sample.OC = MapConcentration(sample.OC, sample.Thickness, thickness, double.NaN, allowMissingValues: true);
                 if (sample.PH != null)
                     sample.PH = MapConcentration(sample.PH, sample.Thickness, thickness, double.NaN, allowMissingValues: true);
+                if (sample.LabileP != null)
+                    sample.LabileP = MapConcentration(sample.LabileP, sample.Thickness, thickness, double.NaN, allowMissingValues: true);
+                if (sample.UnavailableP != null)
+                    sample.UnavailableP = MapConcentration(sample.UnavailableP, sample.Thickness, thickness, double.NaN, allowMissingValues: true);
                 sample.Thickness = thickness;
+            }
+        }
+
+        /// <summary>Sets the sample thickness.</summary>
+        /// <param name="swim">The swim model.</param>
+        /// <param name="thickness">The thickness to change the sample to.</param>
+        /// <param name="soil">The soil</param>
+        private static void SetSWIMThickness(Swim3 swim, double[] thickness, Soil soil)
+        {
+            foreach (var soluteParameters in soil.FindAllChildren<SwimSoluteParameters>())
+            {
+                if (!MathUtilities.AreEqual(thickness, soluteParameters.Thickness))
+                {
+                    if (soluteParameters.Exco != null)
+                        soluteParameters.Exco = MapConcentration(soluteParameters.Exco, soluteParameters.Thickness, thickness, 0.2);
+                    if (soluteParameters.FIP != null)
+                        soluteParameters.FIP = MapConcentration(soluteParameters.FIP, soluteParameters.Thickness, thickness, 0.2);
+                }
             }
         }
 

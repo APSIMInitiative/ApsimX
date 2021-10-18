@@ -16,7 +16,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyMultiModelView")]
     [PresenterName("UserInterface.Presenters.PropertyMultiModelPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
-    [Description("This holds the list of initial cohorts for a given (parent) ruminant herd or type.")]
+    [Description("Holds the list of initial cohorts for a given ruminant herd")]
     [Version(1, 0, 2, "Includes attribute specification for whole herd")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohorts.htm")]

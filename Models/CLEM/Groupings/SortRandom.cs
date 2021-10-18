@@ -18,7 +18,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantFeedGroup))]
     [ValidParent(ParentType = typeof(RuminantGroup))]
     [ValidParent(ParentType = typeof(AnimalPriceGroup))]
-    [Description("Shuffles (randomises) individuals in the list")]
+    [Description("Shuffle (randomises) individuals in the fiter group")]
     [Version(1, 0, 0, "")]
     public class SortRandom : CLEMModel, IValidatableObject, ISort
     {

@@ -23,7 +23,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
-    [Description("This component specifies an SQLite database with native pasture production used in the CLEM simulation")]
+    [Description("Access to an SQLite database with native pasture production (data cube)")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Added ability to define table and columns to use")]
     [Version(1, 0, 3, "Includes access to ecological indicators from database")]

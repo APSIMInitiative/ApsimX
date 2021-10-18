@@ -53,7 +53,7 @@ namespace Models.Soils
         [Link(IsOptional = true)]
         private SwimWaterTable waterTable = null;
 
-        const double divideTolerance = 1D-8;
+        const double divideTolerance = 1e-8;
         const double effpar = 0.184;
         const double psi_ll15 = -15000.0;
         const double psiad = -1e6;
@@ -248,8 +248,8 @@ namespace Models.Soils
         double[] psid;
 
         bool ivap;
-        int isbc;
-        int itbc;
+        int isbc = 0; // No storage of water on soil surface
+        int itbc = 0; // Infinite surface conductance
         int ibbc;
 
         string[] solute_names;
@@ -263,15 +263,12 @@ namespace Models.Soils
         [Units("mm")]
         double hm0 = 0;
 
-        [Units("mm")]
         double minimum_surface_storage = Double.NaN;
 
         double _hm1;
         //[Input(IsOptional = true)]
         [Units("mm")]
         double hm1 = 0;
-        //[Param(IsOptional = true, MinVal = 1e-3, MaxVal = 1000.0)]
-        [Units("mm")]
         double maximum_surface_storage = Double.NaN;
 
         double _hrc;
@@ -280,7 +277,6 @@ namespace Models.Soils
         double hrc = 0;
         // AAARRGGH! "precipitation_constant" is used both as a parameter in mm for hrc, and in cm for grc (though not both at once, presumably)
         // Actually, those two should be in different sections of the init data, but I haven't implemented that correctly.
-        //[Param(IsOptional = true, MinVal = 1.0, MaxVal = 1000.0)]
         double precipitation_constant = Double.NaN;
 
         //[Param(IsOptional = true, MinVal = 1.0e-6, MaxVal = 100.0, Name = "runoff_rate_factor")]
@@ -1011,53 +1007,114 @@ namespace Models.Soils
             }
         }
 
-
-        /// <summary>Constant potential bottom boundary</summary>
-        [Units("cm")]
-        public double bbc_potential
-        {
-            set
-            {
-                bbc_value = value;
-                if (ibbc != 1)
-                {
-                    ibbc = 1;
-                    summary.WriteMessage(this, "Bottom boundary condition now constant potential");
-                }
-            }
-        }
-
-        /// <summary>Constant potential bottom boundary</summary>
-        [Units("cm")]
-        public double bbc_seepage_potential
-        {
-            set
-            {
-                bbc_value = value;
-                if (ibbc != 3)
-                {
-                    ibbc = 3;
-                    summary.WriteMessage(this, "Bottom boundary condition now a seepage potential");
-                }
-            }
-        }
-
-        /// <summary>Bottom boundary condition</summary>
-        [Units("cm")]
-        public double bbc_gradient
-        {
-            set
-            {
-                bbc_value = value;
-                if (ibbc != 0)
-                {
-                    ibbc = 0;
-                    summary.WriteMessage(this, "Bottom boundary condition now constant gradient");
-                }
-            }
-        }
-
         #endregion
+
+        /// <summary>
+        /// Runoff calculated by curve number - no ponding allowed.
+        /// </summary>
+        public void SetSurfaceBCForCurveNumber()
+        {
+            isbc = 0;
+        }
+
+        /// <summary>
+        /// Runoff calculated by a power function.
+        /// </summary>
+        /// <param name="minimumSurfaceStorage">Minimum surface storage (mm).</param>
+        /// <param name="maximumSurfaceStorage">Maximum surface storage (mm).</param>
+        /// <param name="initialSurfaceStorage">Initial surface storage (mm).</param>
+        /// <param name="precipitationConstant">Precipitation constant (mm).</param>
+        /// <param name="runoffRateFactor">Runoff rate factor (mm/mm^p).</param>
+        /// <param name="runoffRatePower">Runoff rate power ().</param>
+        public void SetSurfaceBCForPowerFunction(double minimumSurfaceStorage, double maximumSurfaceStorage, 
+                                                 double initialSurfaceStorage, double precipitationConstant,
+                                                 double runoffRateFactor, double runoffRatePower)
+        {
+            isbc = 2;
+            minimum_surface_storage = minimumSurfaceStorage;
+            maximum_surface_storage = maximumSurfaceStorage;
+            _hmin = initialSurfaceStorage;
+            precipitation_constant = precipitationConstant;
+            roff0 = runoffRateFactor;
+            roff1 = runoffRatePower;
+        }
+
+        /// <summary>
+        /// Set the lower boundary condition for gradient.
+        /// </summary>
+        /// <param name="bbcGradient">Bottom boundary condition (cm).</param>
+        public void SetLowerBCForGradient(double bbcGradient)
+        {
+            bbc_value = bbcGradient;
+            if (ibbc != 0)
+            {
+                ibbc = 0;
+                summary.WriteMessage(this, "Bottom boundary condition now constant gradient");
+            }
+        }
+
+        /// <summary>
+        /// Set the constant potential bottom boundary.
+        /// </summary>
+        /// <param name="bbcPotential">Constant potential bottom boundary (cm).</param>
+        public void SetLowerBCForGivenPotential(double bbcPotential)
+        {
+            bbc_value = bbcPotential;
+            if (ibbc != 1)
+            {
+                ibbc = 1;
+                summary.WriteMessage(this, "Bottom boundary condition now constant potential");
+            }
+        }
+
+        /// <summary>
+        /// Set the constant potential bottom boundary.
+        /// </summary>
+        /// <param name="bbcPotentialSeepage">Constant potential bottom boundary (cm).</param>
+        public void SetLowerBCForSeepage(double bbcPotentialSeepage)
+        {
+            bbc_value = bbcPotentialSeepage;
+            if (ibbc != 3)
+            {
+                ibbc = 3;
+                summary.WriteMessage(this, "Bottom boundary condition now a seepage potential");
+            }
+        }
+
+        /// <summary>
+        /// Set the top boundary condition for infinite surface conductance.
+        /// </summary>
+        public void SetTopBCForInfiniteSurfaceConductance()
+        {
+            itbc = 0;
+        }
+
+        /// <summary>
+        /// Set the top boundary condition for constant potential.
+        /// </summary>
+        public void SetTopBCForConstantPotential()
+        {
+            itbc = 1;
+        }
+
+        /// <summary>
+        /// Set the top boundary condition for conductance function.
+        /// </summary>
+        /// <param name="minimumConductance">Minimum conductance (/h).</param>
+        /// <param name="maximumConductance">Maximum conductance (/h).</param>
+        /// <param name="initialConductance">Initial conductance (/h).</param>
+        /// <param name="precipitationConstant">Precipitation constant (cm).</param>
+        public void SetTopBCForConductanceFunction(double minimumConductance, double maximumConductance,
+                                                   double initialConductance, double precipitationConstant)
+        {
+            itbc = 2;
+            minimum_conductance = minimumConductance;
+            maximum_conductance = maximumConductance;
+            initial_conductance = initialConductance;
+            precipitation_constant = precipitationConstant;
+        }
+
+
 
         #region Events sent by this Module
 
@@ -1643,11 +1700,6 @@ namespace Models.Soils
 
             // No solutes uptakes are calculated by this model
             slupf = new double[num_solutes];
-
-            // Infinite surface conductance
-            itbc = 0;
-            // No storage of water on soil surface
-            isbc = 0;
         }
 
         private void InitCalc()

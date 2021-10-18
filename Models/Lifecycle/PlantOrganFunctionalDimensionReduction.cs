@@ -9,7 +9,6 @@ using Models.PMF.Interfaces;
 namespace Models.LifeCycle
 {
     /// <summary>
-    /// # [Name]
     /// For Pests/Diseases that reduce the functional area or length of an organ without removing biomass
     /// for example clogging of vescles or growing spots on leaf surfaces to block radiation interception
     /// </summary>
