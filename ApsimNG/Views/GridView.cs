@@ -2541,6 +2541,19 @@
             // Need to ensure that the specified column both exists and is visible.
             // This can sometimes be changed by the call to view.GrabFocus(), as this
             // will cause the datastore column/row filters to be applied.
+            if (row >= table.Rows.Count)
+            {
+                if (CanGrow)
+                    table.Rows.Add(table.NewRow());
+                else
+                {
+                    selectedCellRowIndex = -1;
+                    selectedCellColumnIndex = -1;
+                    selectionRowMax = -1;
+                    selectionColMax = -1;
+                    return;
+                }
+            }
             if (!view.Visible || column >= view.Columns.Length || row >= table.Rows.Count)
             {
                 selectedCellRowIndex = -1;

@@ -27,6 +27,8 @@
     /// </summary>
     public class MainPresenter
     {
+        private class MockModel : Model { }
+
         /// <summary>A list of presenters for tabs on the left.</summary>
         public List<IPresenter> Presenters1 { get; set; } = new List<IPresenter>();
 
@@ -184,7 +186,7 @@
 
             var compiler = new ScriptCompiler();
 
-            var results = compiler.Compile(code, new Model());
+            var results = compiler.Compile(code, new MockModel());
 
             if (results.ErrorMessages != null)
                 throw new Exception($"Script compile errors: {results.ErrorMessages}");

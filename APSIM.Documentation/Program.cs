@@ -8,6 +8,7 @@ using APSIM.Interop.Documentation;
 using APSIM.Shared.Utilities;
 using Models;
 using System.Text;
+using Models.Core;
 
 namespace APSIM.Documentation
 {
@@ -40,7 +41,12 @@ namespace APSIM.Documentation
                 html.AppendLine("<html>");
                 html.AppendLine("  <head>");
                 html.AppendLine("    <meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">");
-                html.AppendLine("    <link rel=\"stylesheet\" media=\"screen\" href=\"index.css\" type=\"text/css\" />");
+                html.AppendLine("    <style>");
+                string css = ReflectionUtilities.GetResourceAsString("APSIM.Documentation.index.css");
+                css = css.Replace(Environment.NewLine, " ");
+                html.AppendLine(css);
+                html.AppendLine("    </style>");
+
                 html.AppendLine("  </head>");
                 html.AppendLine("  <body>");
 
@@ -70,11 +76,6 @@ namespace APSIM.Documentation
                 html.AppendLine("</html>");
                 string index = Path.Combine(outputPath, "index.html");
                 File.WriteAllText(index, html.ToString());
-
-                // Put index.css next to index.html.
-                string css = ReflectionUtilities.GetResourceAsString("APSIM.Documentation.index.css");
-                string cssFile = Path.Combine(outputPath, "index.css");
-                File.WriteAllText(cssFile, css);
 
                 Console.WriteLine($"Successfully generated files at {outputPath}");
             }
@@ -144,7 +145,7 @@ namespace APSIM.Documentation
                 StandardPmfPlantRow("Wheat"),
                 StandardPmfPlantRow("WhiteClover"),
             };
-            return new DocumentationTable("Model Documentation", cols, rows);
+            return new DocumentationTable($"Model Documentation for version {Simulations.ApsimVersion}", cols, rows);
         }
 
         private static IDocumentationRow MicroClimateRow()
