@@ -18,7 +18,7 @@ namespace Models.CLEM.Activities
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourActivityFeedToTargets))]
-    [Description("This component defines a target to be achieved when trying to feed people to set targets")]
+    [Description("Defines a target to be achieved when trying to feed people to set targets")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeedTarget.htm")]
     public class LabourActivityFeedTarget: CLEMModel
@@ -81,23 +81,15 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                if (Metric is null || Metric == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">METRIC NOT SET</span>: ");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">" + Metric + "</span>: ");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(Metric, "Metric not set"));
                 if (TargetValue > 0)
                 {
                     htmlWriter.Write("<span class=\"setvalue\">");
                     htmlWriter.Write(TargetValue.ToString("#,##0.##"));
                 }
                 else
-                {
                     htmlWriter.Write("<span class=\"errorlink\">VALUE NOT SET");
-                }
+
                 htmlWriter.Write("</span> units per AE per day</div>");
 
                 if (OtherSourcesValue > 0)

@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs the management of ruminant numbers based upon the current herd filtering. It requires a RuminantActivityBuySell to undertake the purchases and sales.")]
+    [Description("Overall management of ruminant numbers with multiple management actions")]
     [Version(1, 0, 9, "Allows details of breeders and sires for purchase to be specified")]
     [Version(1, 0, 8, "Reworking of rules to better allow small herd management")]
     [Version(1, 0, 7, "Added ability to turn on/off marking max age breeders and sires and age/weight males for sale and allow this action in other activities")]
@@ -39,6 +39,14 @@ namespace Models.CLEM.Activities
         private int minBreeders;
         private int femaleBreedersRequired = 0;
         private int maleBreedersRequired = 0;
+        private string grazeStoreSires = "";
+        private string grazeStoreBreeders = "";
+        private string grazeStoreGrowOutFemales = "";
+        private string grazeStoreGrowOutMales = "";
+        private GrazeFoodStoreType foodStoreSires;
+        private GrazeFoodStoreType foodStoreBreeders;
+        private RuminantType breedParams;
+        private IEnumerable<SpecifiedRuminantListItem> purchaseDetails;
 
         /// <summary>
         /// Maximum number of breeders that can be kept
@@ -55,6 +63,15 @@ namespace Models.CLEM.Activities
         [Description("Minimum number of female breeders to be kept")]
         [Required, GreaterThanEqualValue(0)]
         public int MinimumBreedersKept { get; set; }
+
+        /// <summary>
+        /// Stop model is breeder herd exceeds maximum breeders time this multiplier
+        /// </summary>
+        [Category("Herd size", "Breeding females")]
+        [Description("Stop model max breeders multiplier")]
+        [System.ComponentModel.DefaultValueAttribute(2)]
+        [Required, GreaterThanValue(0)]
+        public double MaxBreedersMultiplierToStop { get; set; }
 
         /// <summary>
         /// Include the marking for sale of old breeders in this activity
@@ -165,7 +182,7 @@ namespace Models.CLEM.Activities
         /// Male selling age (months)
         /// </summary>
         [Category("Grow out herd", "Males")]
-        [Description("Male selling age (months)")]
+        [Description("Grow out male selling age (months)")]
         [System.ComponentModel.DefaultValueAttribute(24)]
         [Required, GreaterThanEqualValue(0)]
         public double MaleSellingAge { get; set; }
@@ -174,7 +191,7 @@ namespace Models.CLEM.Activities
         /// Male selling weight (kg)
         /// </summary>
         [Category("Grow out herd", "Males")]
-        [Description("Male selling weight (kg)")]
+        [Description("Grow out male selling weight (kg)")]
         [Required, GreaterThanEqualValue(0)]
         public double MaleSellingWeight { get; set; }
 
@@ -190,7 +207,7 @@ namespace Models.CLEM.Activities
         /// Female selling age (months)
         /// </summary>
         [Category("Grow out herd", "Females")]
-        [Description("Female grow out selling age (months)")]
+        [Description("Grow out female selling age (months)")]
         [System.ComponentModel.DefaultValueAttribute(24)]
         [Required, GreaterThanEqualValue(0)]
         public double FemaleSellingAge { get; set; }
@@ -199,7 +216,7 @@ namespace Models.CLEM.Activities
         /// Female selling weight (kg)
         /// </summary>
         [Category("Grow out herd", "Females")]
-        [Description("Female grow out selling weight (kg)")]
+        [Description("Grow out female selling weight (kg)")]
         [Required, GreaterThanEqualValue(0)]
         public double FemaleSellingWeight { get; set; }
 
@@ -239,11 +256,6 @@ namespace Models.CLEM.Activities
         [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string GrazeFoodStoreNameGrowOutMales { get; set; }
 
-        private string grazeStoreSires = "";
-        private string grazeStoreBreeders = "";
-        private string grazeStoreGrowOutFemales = "";
-        private string grazeStoreGrowOutMales = "";
-
         /// <summary>
         /// Minimum pasture (kg/ha) before restocking if placed in paddock
         /// </summary>
@@ -265,26 +277,6 @@ namespace Models.CLEM.Activities
         [Category("Start up", "Breeding males")]
         [Description("Adjust breeding sires at start-up")]
         public bool AdjustBreedingMalesAtStartup { get; set; }
-
-        /// <summary>
-        /// Store graze for sires
-        /// </summary>
-        private GrazeFoodStoreType foodStoreSires;
-
-        /// <summary>
-        /// Store graze for breeders
-        /// </summary>
-        private GrazeFoodStoreType foodStoreBreeders;
-
-        /// <summary>
-        /// Breed params for this activity
-        /// </summary>
-        private RuminantType breedParams;
-
-        /// <summary>
-        /// List of individual purchase details
-        /// </summary>
-        private IEnumerable<SpecifiedRuminantListItem> purchaseDetails;
 
         /// <summary>
         /// Constructor
@@ -317,67 +309,11 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                // sires
-                RuminantGroup group = new RuminantGroup();
-                group.Children.Add(new RuminantFilter() { Value = "Male", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.Gender });
-                group.Children.Add(new RuminantFilter() { Value = "True", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.IsSire });
-                var purchases = purchaseDetails.Select(a => a.ExampleRuminant);
-                var filteredPurchases = purchases.FilterRuminants(group);
-                if (filteredPurchases.Count() <= 0)
-                {
-                    if (MaximumSiresKept > 0 && MaximumSiresPerPurchase > 0)
-                    {
-                        string[] memberNames = new string[] { "No breeding males specified" };
-                        results.Add(new ValidationResult("No purchases specified by [r=SpecifyRuminant] represent breeding males required by this simulation.\r\nIf the purchase of males is not permitted then set [MaximumSiresPerPurchase] to [0]", memberNames));
-                    }
-                }
-                else
-                {
-                    double sumProportions = 0;
-                    foreach (var item in filteredPurchases)
-                    {
-                        var linkedItem = purchaseDetails.Where(a => a.ExampleRuminant == item).FirstOrDefault();
-                        linkedItem.Label = "MaleBreeder";
-                        sumProportions += linkedItem.SpecifyRuminantComponent.Proportion;
-                        linkedItem.CummulativeProbability = sumProportions;
-                    }
-                    if (sumProportions != 1)
-                    {
-                        string[] memberNames = new string[] { "Invalid proportions set" };
-                        results.Add(new ValidationResult("The proportions set in each [r=SpecifyRuminant] representing breeding males do not add up to 1.", memberNames));
-                    }
-                }
-
-                // breeders
-                group = new RuminantGroup();
-                group.Children.Add(new RuminantFilter() { Value = "Female", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.Gender });
-                group.Children.Add(new RuminantFilter() { Value = "True", Operator = FilterOperators.Equal, Parameter = RuminantFilterParameters.IsBreeder });
-                purchases = purchaseDetails.Select(a => a.ExampleRuminant).Cast<Ruminant>();
-                filteredPurchases = purchases.FilterRuminants(group);
-                if (filteredPurchases.Count() <= 0)
-                {
-                    if (MaximumProportionBreedersPerPurchase > 0)
-                    {
-                        string[] memberNames = new string[] { "No breeding females specified" };
-                        results.Add(new ValidationResult("No purchases specified by [r=SpecifyRuminant] represent breeding females required by this simulation.\r\nIf the purchase of females is not permitted then set [MaximumProportionBreedersPerPurchase] to [0]", memberNames));
-                    }
-                }
-                else
-                {
-                    double sumProportions = 0;
-                    foreach (var item in filteredPurchases)
-                    {
-                        var linkedItem = purchaseDetails.FirstOrDefault(a => a.ExampleRuminant == item);
-                        linkedItem.Label = "FemaleBreeder";
-                        sumProportions += linkedItem.SpecifyRuminantComponent.Proportion;
-                        linkedItem.CummulativeProbability = sumProportions;
-                    }
-                    if (sumProportions != 1)
-                    {
-                        string[] memberNames = new string[] { "Invalid proportions set" };
-                        results.Add(new ValidationResult("The proportions set in each [r=SpecifyRuminant] representing breeding females do not add up to 1.", memberNames));
-                    }
-                }
+                if (ValidateSires() is ValidationResult sires)
+                    results.Add(sires);
+                
+                if (ValidateBreeders() is ValidationResult breeders)
+                    results.Add(breeders);
 
                 // unknown entries
                 var unknownPurchases = purchaseDetails.Where(a => a.Label == "");
@@ -392,6 +328,84 @@ namespace Models.CLEM.Activities
             }
             return results;
         } 
+
+        private ValidationResult ValidateSires()
+        {            
+            var purchases = purchaseDetails.Select(a => a.ExampleRuminant)
+                .OfType<RuminantMale>()
+                .Where(m => m.IsAbleToBreed);
+
+            if (purchases.Count() <= 0)
+            {
+                if (MaximumSiresKept > 0 && MaximumSiresPerPurchase > 0)
+                {
+                    string[] memberNames = new string[] { "No breeding males specified" };
+                    string error = "No purchases specified by [r=SpecifyRuminant] represent breeding males " +
+                        "required by this simulation.\r\nIf the purchase of males is not permitted then set " +
+                        "[MaximumSiresPerPurchase] to [0]";
+
+                    return new ValidationResult(error, memberNames);
+                }
+            }
+            else
+            {
+                double sumProportions = 0;
+                foreach (var item in purchases)
+                {
+                    var linkedItem = purchaseDetails.Where(a => a.ExampleRuminant == item).FirstOrDefault();
+                    linkedItem.Label = "MaleBreeder";
+                    sumProportions += linkedItem.SpecifyRuminantComponent.Proportion;
+                    linkedItem.CummulativeProbability = sumProportions;
+                }
+                if (sumProportions != 1)
+                {
+                    string[] memberNames = new string[] { "Invalid proportions set" };
+                    string error = "The proportions set in each [r=SpecifyRuminant] representing breeding" +
+                        " males do not add up to 1.";
+                    return new ValidationResult(error, memberNames);
+                }
+            }
+
+            return null;
+        }
+
+        private ValidationResult ValidateBreeders()
+        {
+            var purchases = purchaseDetails
+                .Select(a => a.ExampleRuminant)
+                .OfType<RuminantFemale>()
+                .Where(f => f.IsBreeder);
+
+            if (purchases.Count() <= 0 && MaximumProportionBreedersPerPurchase > 0)
+            {
+                string[] memberNames = new string[] { "No breeding females specified" };
+                var error = "No purchases specified by [r=SpecifyRuminant] represent breeding " +
+                    "females required by this simulation.\r\nIf the purchase of females is not" +
+                    " permitted then set [MaximumProportionBreedersPerPurchase] to [0]";
+                return new ValidationResult(error, memberNames);                
+            }
+            else
+            {
+                double sumProportions = 0;
+                foreach (var item in purchases)
+                {
+                    var linkedItem = purchaseDetails.FirstOrDefault(a => a.ExampleRuminant == item);
+                    linkedItem.Label = "FemaleBreeder";
+                    sumProportions += linkedItem.SpecifyRuminantComponent.Proportion;
+                    linkedItem.CummulativeProbability = sumProportions;
+                }
+
+                if (sumProportions != 1)
+                {
+                    string[] memberNames = new string[] { "Invalid proportions set" };
+                    var error = "The proportions set in each [r=SpecifyRuminant] representing breeding" +
+                        " females do not add up to 1.";
+                    return new ValidationResult(error, memberNames);
+                }
+            }
+            return null;
+        }
+
         #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -409,7 +423,7 @@ namespace Models.CLEM.Activities
             maxBreeders = Math.Max(this.MaximumBreedersKept, minBreeders);
 
             this.InitialiseHerd(false, true);
-            breedParams = Resources.GetResourceItem(this, typeof(RuminantHerd), this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
+            breedParams = Resources.FindResourceType<RuminantHerd, RuminantType>(this, this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
 
             decimal breederHerdSize = 0;
 
@@ -427,7 +441,7 @@ namespace Models.CLEM.Activities
                     {
                         // breeders
                         int heifers = 0;// Convert.ToInt32(cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= 12 & a.Age < breedParams.MinimumAge1stMating)).Sum(a => a.Number));
-                        var cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age <= this.MaximumBreederAge));
+                        var cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Sex == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age <= this.MaximumBreederAge));
                         int initialBreeders = Convert.ToInt32(cohortList.Sum(a => a.Number), CultureInfo.InvariantCulture);
                         if (initialBreeders < (minBreeders - heifers))
                         {
@@ -444,9 +458,8 @@ namespace Models.CLEM.Activities
                                 }
                             }
                             if (numberAdded == 0)
-                            {
                                 throw new ApsimXException(this, $"Unable to scale breeding female population up to the maximum breeders kept at startup\r\nNo cohorts representing breeders were found in the initial herd structure [r=InitialCohorts] for [r={breedParams.Name}]\r\nAdd at least one initial cohort that meets the breeder criteria of age at first mating and max age kept");
-                            }
+
                             breederHerdSize = initialBreeders + numberAdded;
                         }
                         else if (initialBreeders > (maxBreeders - heifers))
@@ -454,7 +467,7 @@ namespace Models.CLEM.Activities
                             int reduceBy = Math.Max(0, initialBreeders - maxBreeders - heifers);
                             // reduce initial herd size
                             // randomly select the individuals to remove form the breeder herd
-                            var breeders = individuals.Where(a => a.Gender == Sex.Female && a.Age > breedParams.MinimumAge1stMating && a.Age < this.MaximumBreederAge).OrderBy(x => Guid.NewGuid()).Take(reduceBy);
+                            var breeders = individuals.Where(a => a.Sex == Sex.Female && a.Age > breedParams.MinimumAge1stMating && a.Age < this.MaximumBreederAge).OrderBy(x => Guid.NewGuid()).Take(reduceBy);
                             foreach (var item in breeders)
                             {
                                 item.SaleFlag = HerdChangeReason.ReduceInitialHerd;
@@ -466,11 +479,7 @@ namespace Models.CLEM.Activities
                             {
                                 // add warning
                                 string warn = $"Unable to reduce breeders at the start of the simulation to number required [{maxBreeders}] using [a={this.Name}]";
-                                if (!Warnings.Exists(warn))
-                                {
-                                    Summary.WriteWarning(this, warn);
-                                    Warnings.Add(warn);
-                                }
+                                Warnings.CheckAndWrite(warn, Summary, this);
                             }
                             breederHerdSize = maxBreeders;
                         }
@@ -478,19 +487,15 @@ namespace Models.CLEM.Activities
 
                     // max sires
                     if (MaximumSiresKept < 1 & MaximumSiresKept > 0)
-                    {
                         SiresKept = Convert.ToInt32(Math.Ceiling(maxBreeders * breederHerdSize), CultureInfo.InvariantCulture);
-                    }
                     else
-                    {
                         SiresKept = Convert.ToInt32(Math.Truncate(MaximumSiresKept), CultureInfo.InvariantCulture);
-                    }
 
                     // sires
                     if (AdjustBreedingMalesAtStartup)
                     {
                         // get number in herd
-                        List<RuminantTypeCohort> cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Male & a.Sire == true).ToList();
+                        List<RuminantTypeCohort> cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Sex == Sex.Male & a.Sire == true).ToList();
                         int numberPresent = Convert.ToInt32(cohortList.Sum(a => a.Number));
                         // expand from those in herd
                         if (numberPresent < SiresKept)
@@ -500,11 +505,7 @@ namespace Models.CLEM.Activities
                             {
                                 // add warning
                                 string warn = $"Unable to increase breeding sires at the start of the simulation to number required [{SiresKept}] using [a={this.Name}]\r\nNo representative sires are present in the initial herd. Future sire purchases will be used.";
-                                if (!Warnings.Exists(warn))
-                                {
-                                    Summary.WriteWarning(this, warn);
-                                    Warnings.Add(warn);
-                                }
+                                Warnings.CheckAndWrite(warn, Summary, this);
                             }
                             else
                             {
@@ -525,7 +526,7 @@ namespace Models.CLEM.Activities
                             int reduceBy = Math.Max(0, numberPresent - SiresKept);
                             // reduce initial sire herd size
                             // randomly select the individuals to remove form the breeder herd
-                            List<RuminantMale> sires = individuals.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.IsSire).OrderBy(x => Guid.NewGuid()).Take(reduceBy).ToList();
+                            var sires = individuals.OfType<RuminantMale>().Where(a => a.IsSire).OrderBy(x => Guid.NewGuid()).Take(reduceBy);
                             foreach (var item in sires)
                             {
                                 item.SaleFlag = HerdChangeReason.ReduceInitialHerd;
@@ -537,21 +538,14 @@ namespace Models.CLEM.Activities
                             {
                                 // add warning
                                 string warn = $"Unable to reduce breeding sires at the start of the simulation to number required [{SiresKept}] using [a={this.Name}]";
-                                if (!Warnings.Exists(warn))
-                                {
-                                    Summary.WriteWarning(this, warn);
-                                    Warnings.Add(warn);
-                                }
+                                Warnings.CheckAndWrite(warn, Summary, this);
                             }
                         }
                     }
 
                 }
                 else
-                {
                     throw new ApsimXException(this, $"Unable to adjust herd at start of similation!\r\nNo initial herd structure [r=InitialCohorts] has been provided in [r={breedParams.Name}] from which to get details.");
-                }
-
             }
 
             // check GrazeFoodStoreExists for breeders
@@ -559,7 +553,7 @@ namespace Models.CLEM.Activities
             if(GrazeFoodStoreNameBreeders != null && !GrazeFoodStoreNameBreeders.StartsWith("Not specified"))
             {
                 grazeStoreBreeders = GrazeFoodStoreNameBreeders.Split('.').Last();
-                foodStoreBreeders = Resources.GetResourceItem(this, GrazeFoodStoreNameBreeders, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+                foodStoreBreeders = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameBreeders, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             }
 
             // check for managed paddocks and warn if breeders placed in yards.
@@ -567,9 +561,7 @@ namespace Models.CLEM.Activities
             {
                 var ah = this.FindInScope<ActivitiesHolder>();
                 if(ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
-                {
                     Summary.WriteWarning(this, $"Breeders purchased by [a={this.Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]");
-                }
             }
 
             // check GrazeFoodStoreExists for sires
@@ -577,7 +569,7 @@ namespace Models.CLEM.Activities
             if (GrazeFoodStoreNameSires != null && !GrazeFoodStoreNameSires.StartsWith("Not specified"))
             {
                 grazeStoreSires = GrazeFoodStoreNameSires.Split('.').Last();
-                foodStoreSires = Resources.GetResourceItem(this, GrazeFoodStoreNameSires, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+                foodStoreSires = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreNameSires, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
             }
 
             // check for managed paddocks and warn if sires placed in yards.
@@ -585,44 +577,34 @@ namespace Models.CLEM.Activities
             {
                 var ah = this.FindInScope<ActivitiesHolder>();
                 if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
-                {
                     Summary.WriteWarning(this, $"Sires purchased by [a={this.Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]");
-                }
             }
 
             // check GrazeFoodStoreExists for grow out males
             if (MarkAgeWeightMalesForSale)
             {
                 if (GrazeFoodStoreNameGrowOutMales != null && !GrazeFoodStoreNameGrowOutMales.StartsWith("Not specified"))
-                {
                     grazeStoreGrowOutMales = GrazeFoodStoreNameGrowOutMales.Split('.').Last();
-                }
 
                 // check for managed paddocks and warn if sires placed in yards.
                 if (grazeStoreGrowOutMales == "")
                 {
                     var ah = this.FindInScope<ActivitiesHolder>();
                     if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
-                    {
                         Summary.WriteWarning(this, $"Males grown out before sale by [a={this.Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]");
-                    }
                 }
 
                 if (SellFemalesLikeMales)
                 {
                     if (GrazeFoodStoreNameGrowOutFemales != null && !GrazeFoodStoreNameGrowOutFemales.StartsWith("Not specified"))
-                    {
                         grazeStoreGrowOutFemales = GrazeFoodStoreNameGrowOutFemales.Split('.').Last();
-                    }
 
                     // check for managed paddocks and warn if sires placed in yards.
                     if (grazeStoreGrowOutFemales == "")
                     {
                         var ah = this.FindInScope<ActivitiesHolder>();
                         if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
-                        {
                             Summary.WriteWarning(this, $"Females grown out before sale by [a={this.Name}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]");
-                        }
                     }
                 }
             }
@@ -656,8 +638,7 @@ namespace Models.CLEM.Activities
             {
                 this.Status = ActivityStatus.NotNeeded;
                 // tag all grow out and move to pasture specified
-                //var check = herd.Where(a => a.Weaned && (a.Gender == Sex.Female ? (SellFemalesLikeMales && (a as RuminantFemale).IsPreBreeder) : !(a as RuminantMale).IsSire) && !a.Tags.Contains("GrowOut"));
-                foreach (var ind in herd.Where(a => (a.Gender == Sex.Female ? (SellFemalesLikeMales && (a as RuminantFemale).IsPreBreeder) : !(a as RuminantMale).IsSire) && !a.ReplacementBreeder && !a.Attributes.Exists("GrowOut")))
+                foreach (var ind in herd.Where(a => (a.Sex == Sex.Female ? (SellFemalesLikeMales && (a as RuminantFemale).IsPreBreeder) : !(a as RuminantMale).IsSire) && !a.ReplacementBreeder && !a.Attributes.Exists("GrowOut")))
                 {
                     ind.Location = ((ind is RuminantFemale) ? grazeStoreGrowOutFemales : grazeStoreGrowOutMales);
                     ind.Attributes.Add("GrowOut");
@@ -687,48 +668,41 @@ namespace Models.CLEM.Activities
                 bool sufficientFoodBreeders = true;
                 bool sufficientFoodSires = true;
                 if (foodStoreBreeders != null)
-                {
                     sufficientFoodBreeders = (foodStoreBreeders.TonnesPerHectare * 1000) >= MinimumPastureBeforeRestock;
-                }
+
                 if (foodStoreSires != null)
-                {
                     sufficientFoodSires = (foodStoreSires.TonnesPerHectare * 1000) >= MinimumPastureBeforeRestock;
-                }
 
                 // check for maximum age if permitted
-                foreach (var ind in herd.Where(a => ((a.Gender == Sex.Female) ? MarkOldBreedersForSale : MarkOldSiresForSale) && a.Age >= ((a.Gender == Sex.Female) ? MaximumBreederAge : MaximumSireAge)) )
+                foreach (var ind in herd.Where(a => ((a.Sex == Sex.Female) ? MarkOldBreedersForSale : MarkOldSiresForSale) && a.Age >= ((a.Sex == Sex.Female) ? MaximumBreederAge : MaximumSireAge)) )
                 {
                     ind.SaleFlag = HerdChangeReason.MaxAgeSale;
                     this.Status = ActivityStatus.Success;
-
                     // ensure females are not pregnant and add warning if pregnant old females found.
-                    if (ind.Gender == Sex.Female && (ind as RuminantFemale).IsPregnant)
-                    {
-                        string warning = "Some females sold at maximum age in [a=" + this.Name + "] were pregnant.\r\nConsider changing the MaximumBreederAge in [a=RuminantActivityManage] or ensure [r=RuminantType.MaxAgeMating] is Gestation length less than the MaximumBreederAge to avoid selling pregnant individuals.";
-                        if (!Warnings.Exists(warning))
-                        {
-                            Warnings.Add(warning);
-                            Summary.WriteWarning(this, warning);
-                        }
-                    }
+                    // TODO: need to report pregnant females here. Not really a warning that's critical and can be handled by user in other activities
                 }
 
                 // MALES
                 // check for sires after sale of old individuals and buy/sell
-                int numberMaleSiresInHerd = herd.Where(a => a.Gender == Sex.Male & a.SaleFlag == HerdChangeReason.None).Cast<RuminantMale>().Where(a => a.IsSire).Count();
+                int numberMaleSiresInHerd = herd.OfType<RuminantMale>().Where(a => a.SaleFlag == HerdChangeReason.None && a.IsSire).Count();
 
                 // Number of females
                 // weaned, >breeding age, female
-                int numberFemaleBreedingInHerd = herd.Where(a => a.Gender == Sex.Female && a.SaleFlag == HerdChangeReason.None && a.Weaned && a.Age >= a.BreedParams.MinimumAge1stMating ).Count();
-                int numberFemaleTotalInHerd = herd.Where(a => a.Gender == Sex.Female && a.SaleFlag == HerdChangeReason.None).Count();
+                int numberFemaleBreedingInHerd = herd.OfType<RuminantFemale>().Where(a => a.SaleFlag == HerdChangeReason.None && a.IsBreeder).Count();
+
+                // prevent runaway population growth in idividual based model by a check against max breeders
+                if(numberFemaleBreedingInHerd > MaximumBreedersKept * MaxBreedersMultiplierToStop)
+                    throw new ApsimXException(this, $"The breeder herd [{numberFemaleBreedingInHerd}] has exceeded the maximum number of breeders [{MaximumBreedersKept}] x the stop model max breeders multiplier [{MaxBreedersMultiplierToStop}]{System.Environment.NewLine}This is a safety mechanism to limit runaway population growth in the individual-based ruminant model. Adjust [Maximum breeders kept] or the [Stop model max breeders multiplier] if this population was intended");
+
+                int numberFemaleTotalInHerd = herd.OfType<RuminantFemale>().Where(a => a.SaleFlag == HerdChangeReason.None).Count();
 
                 // these are the breeders already marked for sale
                 // don't include those marked as max age sale as these can't be considered excess female
-                int numberFemaleMarkedForSale = herd.Where(a => a.Gender == Sex.Female && (a as RuminantFemale).IsBreeder & a.SaleFlag != HerdChangeReason.None & a.SaleFlag != HerdChangeReason.MaxAgeSale).Count();
+                int numberFemaleMarkedForSale = herd.OfType<RuminantFemale>().Where(a => a.IsBreeder && a.SaleFlag != HerdChangeReason.None && a.SaleFlag != HerdChangeReason.MaxAgeSale).Count();
 
                 // defined heifers here as weaned and will be a breeder in the next year
                 // we should not include those individuals > 12 months before reaching breeder age
-                List<RuminantFemale> preBreeders = herd.Where(a => a.Gender == Sex.Female && a.Weaned && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.Age < a.BreedParams.MinimumAge1stMating && !a.Attributes.Exists("GrowOut")).Cast<RuminantFemale>().ToList();
+                List<RuminantFemale> preBreeders = herd.OfType<RuminantFemale>().Where(a => a.IsPreBreeder && (a.Age - a.BreedParams.MinimumAge1stMating > -11) & !a.Attributes.Exists("GrowOut")).ToList();
                 int numberFemaleHeifersInHerd = preBreeders.Count();
 
                 // adjust males sires
@@ -739,7 +713,7 @@ namespace Models.CLEM.Activities
                     int numberToRemove = numberMaleSiresInHerd - SiresKept;
                     if (numberToRemove > 0)
                     {
-                        foreach (var male in herd.Where(a => a.Gender == Sex.Male).Cast<RuminantMale>().Where(a => a.IsSire).OrderByDescending(a => a.Age).Take(numberToRemove).Take(numberToRemove))
+                        foreach (var male in herd.OfType<RuminantMale>().Where(a => a.IsSire).OrderByDescending(a => a.Age).Take(numberToRemove).Take(numberToRemove))
                         {
                             male.Location = grazeStoreSires;
                             male.SaleFlag = HerdChangeReason.ExcessSireSale;
@@ -755,9 +729,7 @@ namespace Models.CLEM.Activities
                         // limit by breeders as proportion of max breeders so we don't spend alot on sires when building the herd and females more valuable
                         double propOfBreeders = 1;
                         if (RestockSiresRelativeToBreeders)
-                        {
                             propOfBreeders = Math.Max(1, (double)numberFemaleBreedingInHerd / (double)maxBreeders);
-                        }
 
                         int sires = Convert.ToInt32(Math.Ceiling(SiresKept * propOfBreeders), CultureInfo.InvariantCulture);
                         maleBreedersRequired = Math.Min(MaximumSiresPerPurchase, Math.Max(0, sires - numberMaleSiresInHerd));
@@ -768,7 +740,9 @@ namespace Models.CLEM.Activities
 
                             // remove young males from sale herd to replace breeding sires (not those sold because too old)
                             // only consider individuals that will mature in next 12 months
-                            foreach (RuminantMale male in herd.Where(a => a.Gender == Sex.Male && a.Weaned && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && (a.SaleFlag == HerdChangeReason.AgeWeightSale || a.SaleFlag == HerdChangeReason.None) && !(a as RuminantMale).IsCastrated).OrderByDescending(a => a.Age * a.Weight).Take(maleBreedersRequired))
+                            List<RuminantMale> saleherd = herd.OfType<RuminantMale>().Where(a => a.ReadyForSale && a.SaleFlag != HerdChangeReason.MaxAgeSale).ToList();
+
+                            foreach (RuminantMale male in saleherd.Where(a => a.Weaned && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && (a.SaleFlag == HerdChangeReason.AgeWeightSale || a.SaleFlag == HerdChangeReason.None) && !a.IsCastrated).OrderByDescending(a => a.Age * a.Weight).Take(maleBreedersRequired))
                             {
                                 male.Location = grazeStoreSires;
                                 male.SaleFlag = HerdChangeReason.None;
@@ -781,7 +755,7 @@ namespace Models.CLEM.Activities
                             // if still insufficent, look into current growing out herd for replacement before they are castrated below
                             // try get best male from grow out herd (not castrated)
                             // only consider individuals that will mature in next 12 months
-                            foreach (RuminantMale male in growOutHerd.Where(a => a.Gender == Sex.Male && a.Weaned && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && !(a as RuminantMale).IsCastrated).OrderByDescending(a => a.Age * a.Weight).Take(maleBreedersRequired))
+                            foreach (RuminantMale male in growOutHerd.OfType<RuminantMale>().Where(a => a.Weaned && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && !a.IsCastrated).OrderByDescending(a => a.Age * a.Weight).Take(maleBreedersRequired))
                             {
                                 male.Location = grazeStoreSires;
                                 male.SaleFlag = HerdChangeReason.None;
@@ -803,7 +777,7 @@ namespace Models.CLEM.Activities
                         // get grow-out males that are not castrated and not marked as replacement breeder
                         if (CastrateGrowOutMales)
                         {
-                            foreach (RuminantMale male in growOutHerd.Where(a => a.Gender == Sex.Male && !a.ReplacementBreeder && !a.Attributes.Exists("Castrated")))
+                            foreach (RuminantMale male in growOutHerd.OfType<RuminantMale>().Where(a => !a.ReplacementBreeder && !a.IsCastrated))
                             {
                                 male.Attributes.Add("Castrated");
                             } 
@@ -842,9 +816,8 @@ namespace Models.CLEM.Activities
                                 ind.PurchaseAge = ind.Age;
 
                                 if(!ind.Attributes.Exists("Sire"))
-                                {
                                     ind.Attributes.Add("Sire");
-                                }
+
                                 // add to purchase request list and await purchase in Buy/Sell
                                 HerdResource.PurchaseIndividuals.Add(ind);
                                 maleBreedersRequired--;
@@ -896,7 +869,7 @@ namespace Models.CLEM.Activities
                     foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
                     {
                         // works with current filtered herd to obey filtering.
-                        List<Ruminant> herdToSell = herd.FilterRuminants(item).ToList();
+                        List<Ruminant> herdToSell = item.Filter(herd).ToList();
                         int sellNum = herdToSell.Count();
                         int cnt = 0;
                         while (cnt < sellNum && excessBreeders > 0)
@@ -915,22 +888,14 @@ namespace Models.CLEM.Activities
                                 {
                                     // warning trying to sell non-breeder to reduce breeder herd
                                     string warn = $"The [f={item.Name}] filter group used to reduce breeder numbers in [a={this.Name}] includes non-breeding females.\r\nThese individuals will be ignored.";
-                                    if (!Warnings.Exists(warn))
-                                    {
-                                        Summary.WriteWarning(this, warn);
-                                        Warnings.Add(warn);
-                                    }
+                                    Warnings.CheckAndWrite(warn, Summary, this);
                                 }
                             }
                             else
                             {
                                 // warning trying to sell a male to reduce breeder herd
                                 string warn = $"The [f={item.Name}] filter group used to reduce breeder numbers in [a={this.Name}] includes males.\r\nThese individuals will be ignored.";
-                                if (!Warnings.Exists(warn))
-                                {
-                                    Summary.WriteWarning(this, warn);
-                                    Warnings.Add(warn);
-                                }
+                                Warnings.CheckAndWrite(warn, Summary, this);
                             }
                             cnt++;
                         }
@@ -942,7 +907,6 @@ namespace Models.CLEM.Activities
                     // some young will take multiple years before reaching breeding age
 
                     // remove any pre-breeder and becoming a breeder before next herd management (thus adding to breeder pool)
-                    //foreach (var female in herd.Where(a => a.Gender == Sex.Female && (a as RuminantFemale).IsHeifer && a.Age >= a.BreedParams.MinimumAge1stMating & !a.Tags.Contains("GrowHeifer")).OrderByDescending(a => a.Age))
                     foreach (var female in preBreeders.Where(a => a.SaleFlag == HerdChangeReason.None).OrderByDescending(a => a.Age).Take(excessBreeders))
                     {
                         // tag for sale.
@@ -961,12 +925,15 @@ namespace Models.CLEM.Activities
                         // remove females from sale herd to replace breeders (not those sold because too old)
                         if (femaleBreedersRequired > 0)
                         {
+                            List<RuminantFemale> saleherd = herd.OfType<RuminantFemale>().Where(a => a.ReadyForSale && a.SaleFlag != HerdChangeReason.MaxAgeSale).ToList();
+
                             // can only remove those that will make breeder age in the next year before management
                             // includes suitable pre-breeders
                             // also includes suitable females in the grow out herd marked with AgeWeightSale
-                            foreach (RuminantFemale female in herd.Where(a => a.Gender == Sex.Female & (a.Age - a.BreedParams.MinimumAge1stMating > -11) & a.SaleFlag == HerdChangeReason.AgeWeightSale).OrderByDescending(a => a.Weight * a.Age).Take(femaleBreedersRequired))
+                            foreach (RuminantFemale female in saleherd.Where(a => (a.Age - a.BreedParams.MinimumAge1stMating > -11)).OrderByDescending(a => a.Weight * a.Age).Take(femaleBreedersRequired))
                             {
                                 // keep by removing any tag for sale.
+                                female.Attributes.Remove("GrowOut"); // in case grow out heifer
                                 female.SaleFlag = HerdChangeReason.None;
                                 female.Location = grazeStoreBreeders;
                                 femaleBreedersRequired--;
@@ -975,12 +942,14 @@ namespace Models.CLEM.Activities
                         }
 
                         // remove grow out heifers from grow out if of breeding in next year age
-                        if (SellFemalesLikeMales & femaleBreedersRequired > 0)
+                        if (SellFemalesLikeMales && femaleBreedersRequired > 0)
                         {
-                            foreach (Ruminant female in herd.Where(a => a.Gender == Sex.Female && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.Attributes.Exists("GrowOut")).OrderByDescending(a => a.Weight * a.Age).Take(femaleBreedersRequired))
+                            foreach (Ruminant female in herd.OfType<RuminantFemale>().Where(a => (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.Attributes.Exists("GrowOut")).OrderByDescending(a => a.Weight * a.Age).Take(femaleBreedersRequired))
                             {
                                 female.Attributes.Remove("GrowOut");
                                 female.SaleFlag = HerdChangeReason.None;
+                                if (!(female as RuminantFemale).IsBreeder)
+                                    female.ReplacementBreeder = true;
                                 female.Location = grazeStoreBreeders;
                                 femaleBreedersRequired--;
                                 this.Status = ActivityStatus.Success;
@@ -1052,6 +1021,49 @@ namespace Models.CLEM.Activities
                                 }
                             }
                         }
+
+                        // still need breeders and couldn't buy them so look at even younger indvididuals still in sale herd
+                        if (femaleBreedersRequired > 0)
+                        {
+                            List<RuminantFemale> saleherd = herd.OfType<RuminantFemale>().Where(a => a.ReadyForSale && a.SaleFlag != HerdChangeReason.MaxAgeSale).ToList();
+                            foreach (RuminantFemale female in saleherd.OrderByDescending(a => a.Weight * a.Age).Take(femaleBreedersRequired))
+                            {
+                                female.Attributes.Remove("GrowOut");
+                                // keep by removing any tag for sale.
+                                female.SaleFlag = HerdChangeReason.None;
+                                female.Location = grazeStoreBreeders;
+                                femaleBreedersRequired--;
+                                this.Status = ActivityStatus.Success;
+                            }
+                        }
+
+                        // remove grow out heifers from grow out if young as these will be future needed replacements
+                        if (SellFemalesLikeMales & femaleBreedersRequired > 0)
+                        {
+                            foreach (Ruminant female in herd.OfType<RuminantFemale>().Where(a => a.Attributes.Exists("GrowOut")).OrderByDescending(a => a.Weight * a.Age).Take(femaleBreedersRequired))
+                            {
+                                female.Attributes.Remove("GrowOut");
+                                female.SaleFlag = HerdChangeReason.None;
+                                female.Location = grazeStoreBreeders;
+                                if (!(female as RuminantFemale).IsBreeder)
+                                    female.ReplacementBreeder = true;
+                                femaleBreedersRequired--;
+                                this.Status = ActivityStatus.Success;
+                            }
+                        }
+
+                        // remove any pregnant female from sales even at max age as young is valuable this year
+                        if (femaleBreedersRequired > 0)
+                        {
+                            foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => a.ReadyForSale && a.IsPregnant).ToList())
+                            {
+                                female.SaleFlag = HerdChangeReason.None;
+                                female.Location = grazeStoreBreeders;
+                                femaleBreedersRequired--;
+                                this.Status = ActivityStatus.Success;
+                            }
+                        }
+
                     }
                 }
 
@@ -1082,7 +1094,7 @@ namespace Models.CLEM.Activities
             {
                 // any suitable males for sale will be flagged as a prebreeder
                 // male, readyForSale, not maxAgeSale, not castrated
-                foreach (var individual in this.CurrentHerd(true).Where(a => a.Sex == Sex.Male && a.ReadyForSale && a.SaleFlag != HerdChangeReason.MaxAgeSale && !a.Attributes.Exists("Castrated")))
+                foreach (var individual in this.CurrentHerd(true).OfType<RuminantMale>().Where(a => a.ReadyForSale && a.SaleFlag != HerdChangeReason.MaxAgeSale && !a.IsCastrated))
                 {
                     individual.Attributes.Remove("GrowOut");
                     individual.Attributes.Add("Sire");
@@ -1102,7 +1114,7 @@ namespace Models.CLEM.Activities
             {
                 // any suitable females for sale will be flagged as a prebreeder 
                 // female, readyForSale, not maxAgeSale, notDryBreeder
-                foreach (var individual in this.CurrentHerd(true).Where(a => a.Sex == Sex.Female && a.ReadyForSale && a.SaleFlag != HerdChangeReason.MaxAgeSale && a.SaleFlag != HerdChangeReason.DryBreederSale))
+                foreach (var individual in this.CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.ReadyForSale && a.SaleFlag != HerdChangeReason.MaxAgeSale))
                 {
                     individual.Attributes.Remove("GrowOut");
                     if (!(individual as RuminantFemale).IsBreeder)
@@ -1115,54 +1127,6 @@ namespace Models.CLEM.Activities
                         break;
                 }
             }
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
         }
 
         #region descriptive summary
@@ -1183,28 +1147,18 @@ namespace Models.CLEM.Activities
                 int maxBreed = Math.Max(MinimumBreedersKept, MaximumBreedersKept);
                 htmlWriter.Write("The herd will be maintained");
                 if (minimumBreedersKept == 0)
-                {
                     htmlWriter.Write(" using only natural recruitment up to <span class=\"setvalue\">" + MaximumBreedersKept.ToString("#,###") + "</span> breeders");
-                }
                 else if (minimumBreedersKept == maxBreed)
-                {
                     htmlWriter.Write(" with breeder purchases and natural recruitment up to <span class=\"setvalue\">" + minimumBreedersKept.ToString("#,###") + "</span > breeders");
-                }
                 else
-                {
                     htmlWriter.Write(" with breeder purchases up to <span class=\"setvalue\">" + minimumBreedersKept.ToString("#,###") + "</span > and natural recruitment to <span class=\"setvalue\">" + maxBreed.ToString("#,###") + "</span> breeders");
-                }
                 htmlWriter.Write("</div>");
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (MarkOldBreedersForSale)
-                {
                     htmlWriter.Write("Individuals will be sold when over <span class=\"setvalue\">" + MaximumBreederAge.ToString("###") + "</span> months old");
-                }
                 else
-                {
                     htmlWriter.Write($"Old breeders will not be marked for sale{skippedMarkForSale}");
-                }
                 htmlWriter.Write("</div>");
                 if (MaximumProportionBreedersPerPurchase < 1 & minimumBreedersKept > 0)
                 {
@@ -1218,27 +1172,17 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (MaximumSiresKept == 0)
-                {
                     htmlWriter.Write("No breeding sires will be kept");
-                }
                 else if (MaximumSiresKept < 1)
-                {
                     htmlWriter.Write("The number of breeding males will be determined as <span class=\"setvalue\">" + MaximumSiresKept.ToString("###%") + "</span> of the maximum female breeder herd. Currently <span class=\"setvalue\">" + (Convert.ToInt32(Math.Ceiling(MaximumBreedersKept * MaximumSiresKept), CultureInfo.InvariantCulture).ToString("#,##0")) + "</span> individuals");
-                }
                 else
-                {
                     htmlWriter.Write("A maximum of <span class=\"setvalue\">" + MaximumSiresKept.ToString("#,###") + "</span> will be kept");
-                }
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (MarkOldSiresForSale)
-                {
                     htmlWriter.Write("Individuals will be sold when over <span class=\"setvalue\">" + MaximumSireAge.ToString("###") + "</span> months old");
-                }
                 else
-                {
                     htmlWriter.Write($"Old sires will not be marked for sale{skippedMarkForSale}");
-                }
 
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("</div>");
@@ -1284,54 +1228,47 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("</div>");
 
                 if (skippedMarkForSale.Length > 0)
-                {
-                    htmlWriter.Write("<br />* This activity is not marking all individuals for sale when conditions met. It is your responsibility to ensure old individuals and age or weight sales of young males are handled either by turning on the associated feature on in this activitiy or using a RuminantActivityMarkForSale activity.");
-                }
+                    htmlWriter.Write("<div class=\"warningbanner\">* This activity is not marking all individuals for sale when conditions met. It is your responsibility to ensure old individuals and age or weight sales of young males are handled either by turning on the associated feature on in this activitiy or using a RuminantActivityMarkForSale activity.</div>");
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("Purchased breeders will be placed in ");
+
                 if (GrazeFoodStoreNameBreeders == null || GrazeFoodStoreNameBreeders == "")
-                {
                     htmlWriter.Write("<span class=\"resourcelink\">General yards</span>");
-                }
                 else
                 {
                     htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreNameBreeders + "</span>");
                     if (MinimumPastureBeforeRestock > 0)
-                    {
                         htmlWriter.Write(" with no restocking while pasture is below <span class=\"setvalue\">" + MinimumPastureBeforeRestock.ToString() + "</span> kg/ha");
-                    }
                 }
                 htmlWriter.Write("</div>");
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("Purchased sires will be placed in ");
                 if (GrazeFoodStoreNameSires == null || GrazeFoodStoreNameSires == "")
-                {
                     htmlWriter.Write("<span class=\"resourcelink\">General yards</span>");
-                }
                 else
                 {
                     htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreNameSires + "</span>");
                     if (MinimumPastureBeforeRestock > 0)
-                    {
                         htmlWriter.Write(" with no restocking while pasture is below <span class=\"setvalue\">" + MinimumPastureBeforeRestock.ToString() + "</span> kg/ha");
-                    }
                 }
                 htmlWriter.Write("</div>");
+
+                // does controlled mating exist in simulation
+                var zone = this.FindAncestor<Zone>();
+                bool cmate = zone?.FindDescendant<RuminantActivityControlledMating>() != null;
+                if (!cmate && GrazeFoodStoreNameBreeders != "" && GrazeFoodStoreNameBreeders == GrazeFoodStoreNameSires)
+                    htmlWriter.Write($"<div class=\"warningbanner\">Uncontrolled mating will occur as soon as Breeders and Sires are placed in <span class=\"resourcelink\">{GrazeFoodStoreNameBreeders}</span>.</div>");
 
                 if (MarkAgeWeightMalesForSale || MaleSellingAge + MaleSellingWeight > 0)
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write("Grow-out males will be placed in ");
                     if (GrazeFoodStoreNameGrowOutMales == null || GrazeFoodStoreNameGrowOutMales == "")
-                    {
                         htmlWriter.Write("<span class=\"resourcelink\">General yards</span>");
-                    }
                     else
-                    {
                         htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreNameGrowOutMales + "</span>");
-                    }
                     htmlWriter.Write("</div>");
 
                     if(SellFemalesLikeMales)
@@ -1339,14 +1276,13 @@ namespace Models.CLEM.Activities
                         htmlWriter.Write("\r\n<div class=\"activityentry\">");
                         htmlWriter.Write("Grow-out females will be placed in ");
                         if (GrazeFoodStoreNameGrowOutFemales == null || GrazeFoodStoreNameGrowOutFemales == "")
-                        {
                             htmlWriter.Write("<span class=\"resourcelink\">General yards</span>");
-                        }
                         else
-                        {
                             htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreNameGrowOutFemales + "</span>");
-                        }
                         htmlWriter.Write("</div>");
+
+                        if (!cmate && GrazeFoodStoreNameGrowOutFemales != "" & !CastrateGrowOutMales && GrazeFoodStoreNameGrowOutFemales == GrazeFoodStoreNameGrowOutMales)
+                            htmlWriter.Write($"<div class=\"warningbanner\">Uncontrolled mating may occur in grow out females and males if allowed to mature before sales as they are placed in <span class=\"resourcelink\">{GrazeFoodStoreNameGrowOutFemales}</span> if using natural mating.</div>");
                     }
                 }
 

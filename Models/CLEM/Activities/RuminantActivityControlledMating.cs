@@ -25,14 +25,25 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class RuminantActivityControlledMating : CLEMRuminantActivityBase, IValidatableObject
     {
-        [Link]
-        private List<LabourRequirement> labour;
-
-        private RuminantGroup breederGroup;
         private List<SetAttributeWithValue> attributeList;
         private ActivityTimerBreedForMilking milkingTimer;
         private RuminantActivityBreed breedingParent;
-        private RuminantType breedParams;
+
+        /// <summary>
+        /// Maximum age for mating (months)
+        /// </summary>
+        [Description("Maximum female age for mating")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(120)]
+        public double MaximumAgeMating { get; set; }
+
+        /// <summary>
+        /// Number joinings per male
+        /// </summary>
+        [Description("Number of joinings per male")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(1)]
+        public int JoiningsPerMale { get; set; }
 
         /// <summary>
         /// The available attributes for the breeding sires
@@ -44,6 +55,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityControlledMating()
         {
+            SetDefaults();
             this.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
             TransactionCategory = "Livestock.Manage";
         }
@@ -57,15 +69,7 @@ namespace Models.CLEM.Activities
             this.AllocationStyle = ResourceAllocationStyle.Manual;
             this.InitialiseHerd(false, true);
 
-            breederGroup = new RuminantGroup();
-            breederGroup.Children.Add(new RuminantFilter() { Name = "sex", Parameter = RuminantFilterParameters.Gender, Operator = FilterOperators.Equal, Value="Female" });
-            breederGroup.Children.Add(new RuminantFilter() { Name = "abletobreed", Parameter = RuminantFilterParameters.IsAbleToBreed, Operator = FilterOperators.Equal, Value = "True" });
-            // TODO: add sort by condition
-
             attributeList = this.FindAllDescendants<SetAttributeWithValue>().ToList();
-
-            // get labour specifications
-            labour = this.FindAllChildren<LabourRequirement>().ToList();
 
             milkingTimer = FindChild<ActivityTimerBreedForMilking>();
 
@@ -75,7 +79,6 @@ namespace Models.CLEM.Activities
 
             // get details from parent breeding activity
             breedingParent = this.Parent as RuminantActivityBreed;
-            breedParams = Resources.GetResourceItem(this, $"{HerdResource.Name}.{breedingParent.PredictedHerdName}", OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
         }
 
         #region validation
@@ -97,7 +100,7 @@ namespace Models.CLEM.Activities
         }
         #endregion
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler to perfrom actions needed at the start of the time step</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMStartOfTimeStep")]
@@ -112,20 +115,12 @@ namespace Models.CLEM.Activities
         /// <returns>A list of breeders to work with before returning to the breed activity</returns>
         private IEnumerable<RuminantFemale> GetBreeders()
         {
-            IEnumerable<RuminantFemale> breedersAvailable = null;
-
-            if (milkingTimer != null)
-            {
-                breedersAvailable = milkingTimer.IndividualsToBreed;
-            }
-            else
-            {
-                // return the full list of breeders currently able to breed
-                // controlled mating respects the max breeding age property of the breed, so reduce
-                // TODO: remove OfType when code handles adding gender property 
-                breedersAvailable = CurrentHerd(true).FilterRuminants(breederGroup).OfType<RuminantFemale>().Where(a => a.Age <= breedParams.MaximumAgeMating);
-            }
-            return breedersAvailable;
+            // return the full list of breeders currently able to breed
+            // controlled mating includes a max breeding age property, so reduces numbers mated
+            return milkingTimer != null
+                ? milkingTimer.IndividualsToBreed
+                : CurrentHerd(true).OfType<RuminantFemale>()
+                    .Where(a => a.IsAbleToBreed & a.Age <= MaximumAgeMating);
         }
 
         /// <summary>
@@ -236,13 +231,10 @@ namespace Models.CLEM.Activities
                     }
 
                     if (limiter < 1)
-                    {
                         this.Status = ActivityStatus.Partial;
-                    }
                     else if (limiter == 1)
-                    {
                         this.Status = ActivityStatus.Success;
-                    }
+
                     breeders = breeders.Take(Convert.ToInt32(Math.Floor(breeders.Count() * limiter), CultureInfo.InvariantCulture));
                 }
                 // report that this activity was performed as it does not use base GetResourcesRequired
@@ -255,40 +247,43 @@ namespace Models.CLEM.Activities
         /// Private method to determine resources required for this activity in the current month
         /// This method is local to this activity and not called with CLEMGetResourcesRequired event
         /// </summary>
-        /// <returns>List of required resource requests</returns>
+        /// <param name="breederList">The breeders being mated</param>
+        /// <returns>List of resource requests</returns>
         private List<ResourceRequest> GetResourcesNeededForActivityLocal(IEnumerable<Ruminant> breederList)
         {
+
+
+
             return null;
         }
 
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
+        /// <summary>
+        /// Determine the labour required for this activity based on LabourRequired items in tree
+        /// </summary>
+        /// <param name="requirement">Labour requirement model</param>
+        /// <returns></returns>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            throw new NotImplementedException();
-        }
+            IEnumerable<Ruminant> herd = CurrentHerd(false);
+            int head = herd.Where(a => a.Weaned == false).Count();
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
+            double daysNeeded = 0;
+            switch (requirement.UnitType)
+            {
+                case LabourUnitType.Fixed:
+                    daysNeeded = requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHead:
+                    daysNeeded = head * requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perAE:
+                    double sumAE = 0;
+                    daysNeeded = sumAE * requirement.LabourPerUnit;
+                    break;
+                default:
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+            }
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
         }
 
         #region descriptive summary

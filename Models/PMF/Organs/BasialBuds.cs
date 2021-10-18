@@ -3,11 +3,13 @@ using Models.Core;
 using Models.PMF.Organs;
 using Models.Functions;
 using Models.PMF.Phen;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Organs
 {
     /// <summary>
-    /// Keep tracting LAI and nodes after plant reaches buds visible stage
+    /// Keep tracking LAI and nodes after plant reaches buds visible stage
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -34,6 +36,19 @@ namespace Models.PMF.Organs
         /// Leaf Area Index Function
         /// </summary>
         [Link(Type = LinkType.Child, ByName = true)] private IFunction Deltalai = null;
+
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            // Document everything else.
+            foreach (var child in Children)
+                yield return new Section(child.Name, child.Document());
+        }
+
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

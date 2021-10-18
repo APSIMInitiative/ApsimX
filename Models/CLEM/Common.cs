@@ -449,7 +449,11 @@ namespace Models.CLEM
         /// <summary>
         /// FileReader model
         /// </summary>
-        FileReader
+        FileReader,
+        /// <summary>
+        /// Filter model
+        /// </summary>
+        Filter
     }
 
     /// <summary>
@@ -778,6 +782,18 @@ namespace Models.CLEM
         UsePricing
     }
 
+    /// <summary>
+    /// Style of taking individuals from a filter group
+    /// </summary>
+    public enum TakeFromFilterStyle
+    {
+        /// <summary>
+        /// Take a proportion of the group selected
+        /// </summary>
+        Proportion,
+        /// <summary>
+        /// Take a set number of individuals
+        /// </summary>
+        Individuals
+    }
 }
-
-

@@ -4,38 +4,37 @@ using Models.Functions;
 using Models.Interfaces;
 using Models.PMF.Interfaces;
 using Models.PMF.Library;
-using Models.PMF.Phen;
 using Models.PMF.Struct;
 using Newtonsoft.Json;
+using Models.PMF.Phen;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Organs
 {
 
     /// <summary>
     /// This organ is simulated using a SimpleLeaf organ type.  It provides the core functions of intercepting radiation, producing biomass
-    ///  through photosynthesis, and determining the plant's transpiration demand.  The model also calculates the growth, senescence, and
-    ///  detachment of leaves.  SimpleLeaf does not distinguish leaf cohorts by age or position in the canopy.
+    /// through photosynthesis, and determining the plant's transpiration demand.  The model also calculates the growth, senescence, and
+    /// detachment of leaves.  SimpleLeaf does not distinguish leaf cohorts by age or position in the canopy.
     /// 
     /// Radiation interception and transpiration demand are computed by the MicroClimate model.  This model takes into account
-    ///  competition between different plants when more than one is present in the simulation.  The values of canopy Cover, LAI, and plant
-    ///  Height (as defined below) are passed daily by SimpleLeaf to the MicroClimate model.  MicroClimate uses an implementation of the
-    ///  Beer-Lambert equation to compute light interception and the Penman-Monteith equation to calculate potential evapotranspiration.  
-    ///  These values are then given back to SimpleLeaf which uses them to calculate photosynthesis and soil water demand.
+    /// competition between different plants when more than one is present in the simulation.  The values of canopy Cover, LAI, and plant
+    /// Height (as defined below) are passed daily by SimpleLeaf to the MicroClimate model.  MicroClimate uses an implementation of the
+    /// Beer-Lambert equation to compute light interception and the Penman-Monteith equation to calculate potential evapotranspiration.  
+    /// These values are then given back to SimpleLeaf which uses them to calculate photosynthesis and soil water demand.
     /// </summary>
     /// <remarks>
-    /// NOTE: the summary above is used in the Apsim's autodoc.
-    /// 
     /// SimpleLeaf has two options to define the canopy: the user can either supply a function describing LAI or a function describing canopy cover directly.  From either of these functions SimpleLeaf can obtain the other property using the Beer-Lambert equation with the specified value of extinction coefficient.
     /// The effect of growth rate on transpiration is captured by the Fractional Growth Rate (FRGR) function, which is passed to the MicroClimate model.
     /// </remarks>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class SorghumLeaf : Model, IHasWaterDemand, IOrgan, IArbitration, ICustomDocumentation, IOrganDamage, ICanopy
+    public class SorghumLeaf : Model, IHasWaterDemand, IOrgan, IArbitration, IOrganDamage, ICanopy
     {
         /// <summary>The plant</summary>
         [Link]
@@ -353,9 +352,6 @@ namespace Models.PMF.Organs
 
         /// <summary>The dry matter supply</summary>
         public BiomassSupplyType DMSupply { get; set; }
-
-        /// <summary>The dry matter demand</summary>
-        public BiomassPoolType DMDemandPriorityFactor { get; set; }
 
         /// <summary>The nitrogen supply</summary>
         public BiomassSupplyType NSupply { get; set; }
@@ -1107,10 +1103,6 @@ namespace Models.PMF.Organs
         {
             NDemand = new BiomassPoolType();
             DMDemand = new BiomassPoolType();
-            DMDemandPriorityFactor = new BiomassPoolType();
-            DMDemandPriorityFactor.Structural = 1.0;
-            DMDemandPriorityFactor.Metabolic = 1.0;
-            DMDemandPriorityFactor.Storage = 1.0;
             NSupply = new BiomassSupplyType();
             DMSupply = new BiomassSupplyType();
             potentialDMAllocation = new BiomassPoolType();
@@ -1341,181 +1333,65 @@ namespace Models.PMF.Organs
             Clear();
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading, the name of this organ
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            // Add a heading and description.
+            foreach (ITag tag in base.Document())
+                yield return tag;
 
-                // write the basic description of this class, given in the <summary>
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
+            // List the parameters, properties, and processes from this organ that need to be documented:
 
-                // write the memos
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
+            // Document initial DM weight.
+            yield return new Paragraph($"Initial DM mass = {InitialDMWeight} gm^-2^");
 
-                //// List the parameters, properties, and processes from this organ that need to be documented:
+            // Document DM demands.
+            List<ITag> dmDemandsTags = new List<ITag>();
+            dmDemandsTags.Add(new Paragraph("The dry matter demand for the organ is calculated as defined in DMDemands, based on the DMDemandFunction and partition fractions for each biomass pool."));
+            dmDemandsTags.AddRange(dmDemands.Document());
+            yield return new Section("Dry Matter Demand", dmDemandsTags);
 
-                // document initial DM weight
-                IModel iniWt = this.FindChild("initialWtFunction");
-                AutoDocumentation.DocumentModel(iniWt, tags, headingLevel + 1, indent);
+            // Document N demands.
+            List<ITag> nDemandTags = new List<ITag>();
+            nDemandTags.Add(new Paragraph("The N demand is calculated as defined in NDemands, based on DM demand the N concentration of each biomass pool."));
+            nDemandTags.AddRange(nDemands.Document());
+            yield return new Section("Nitrogen Demand", nDemandTags);
 
-                // document DM demands
-                tags.Add(new AutoDocumentation.Heading("Dry Matter Demand", headingLevel + 1));
-                tags.Add(new AutoDocumentation.Paragraph("The dry matter demand for the organ is calculated as defined in DMDemands, based on the DMDemandFunction and partition fractions for each biomass pool.", indent));
-                IModel DMDemand = this.FindChild("dmDemands");
-                AutoDocumentation.DocumentModel(DMDemand, tags, headingLevel + 2, indent);
+            // Document N concentration thresholds.
+            yield return new Paragraph($"Minimum N Concentration = {MinNconc}");
+            yield return new Paragraph($"Critical N Concentraion = {CritNconc}");
+            yield return new Paragraph($"Maximum N Concentration = {MaxNconc}");
 
-                // document N demands
-                tags.Add(new AutoDocumentation.Heading("Nitrogen Demand", headingLevel + 1));
-                tags.Add(new AutoDocumentation.Paragraph("The N demand is calculated as defined in NDemands, based on DM demand the N concentration of each biomass pool.", indent));
-                IModel NDemand = this.FindChild("nDemands");
-                AutoDocumentation.DocumentModel(NDemand, tags, headingLevel + 2, indent);
+            // Document DM supplies.
+            yield return new Section("Dry Matter Supply", new Paragraph($"{Name} does not reallocate DM when senescence of the organ occurs."));
 
-                // document N concentration thresholds
-                IModel MinN = this.FindChild("MinimumNConc");
-                AutoDocumentation.DocumentModel(MinN, tags, headingLevel + 2, indent);
-                IModel CritN = this.FindChild("CriticalNConc");
-                AutoDocumentation.DocumentModel(CritN, tags, headingLevel + 2, indent);
-                IModel MaxN = this.FindChild("MaximumNConc");
-                AutoDocumentation.DocumentModel(MaxN, tags, headingLevel + 2, indent);
-                IModel NDemSwitch = this.FindChild("NitrogenDemandSwitch");
-                if (NDemSwitch is Constant)
-                {
-                    if ((NDemSwitch as Constant).Value() == 1.0)
-                    {
-                        //Don't bother documenting as is does nothing
-                    }
-                    else
-                    {
-                        tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor of " + (NDemSwitch as Constant).Value() + " as specified by the NitrogenDemandSwitch", indent));
-                    }
-                }
-                else
-                {
-                    tags.Add(new AutoDocumentation.Paragraph("The demand for N is reduced by a factor specified by the NitrogenDemandSwitch.", indent));
-                    AutoDocumentation.DocumentModel(NDemSwitch, tags, headingLevel + 2, indent);
-                }
+            // Document DM retranslocation.
+            yield return new Section("DM Retranslocation Factor", new Paragraph($"{Name} does not retranslocate non-structural DM."));
 
-                // document DM supplies
-                tags.Add(new AutoDocumentation.Heading("Dry Matter Supply", headingLevel + 1));
-                IModel DMReallocFac = this.FindChild("DMReallocationFactor");
-                if (DMReallocFac is Constant)
-                {
-                    if ((DMReallocFac as Constant).Value() == 0)
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate DM when senescence of the organ occurs.", indent));
-                    else
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " will reallocate " + (DMReallocFac as Constant).Value() * 100 + "% of DM that senesces each day.", indent));
-                }
-                else
-                {
-                    tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing DM that is allocated each day is quantified by the DMReallocationFactor.", indent));
-                    AutoDocumentation.DocumentModel(DMReallocFac, tags, headingLevel + 2, indent);
-                }
-                IModel DMRetransFac = this.FindChild("DMRetranslocationFactor");
-                if (DMRetransFac is Constant)
-                {
-                    if ((DMRetransFac as Constant).Value() == 0)
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural DM.", indent));
-                    else
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " will retranslocate " + (DMRetransFac as Constant).Value() * 100 + "% of non-structural DM each day.", indent));
-                }
-                else
-                {
-                    tags.Add(new AutoDocumentation.Paragraph("The proportion of non-structural DM that is allocated each day is quantified by the DMReallocationFactor.", indent));
-                    AutoDocumentation.DocumentModel(DMRetransFac, tags, headingLevel + 2, indent);
-                }
+            // Document photosynthesis.
+            yield return new Section("Photosynthesis", photosynthesis.Document());
 
-                // document photosynthesis
-                IModel PhotosynthesisModel = this.FindChild("Photosynthesis");
-                AutoDocumentation.DocumentModel(PhotosynthesisModel, tags, headingLevel + 2, indent);
+            // Document N supplies.
+            yield return new Section("Nitrogen Supply", new Paragraph($"{Name} does not reallocate N when senescence of the organ occurs."));
 
-                // document N supplies
-                tags.Add(new AutoDocumentation.Heading("Nitrogen Supply", headingLevel + 1));
-                IModel NReallocFac = this.FindChild("NReallocationFactor");
-                if (NReallocFac is Constant)
-                {
-                    if ((NReallocFac as Constant).Value() == 0)
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " does not reallocate N when senescence of the organ occurs.", indent));
-                    else
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " will reallocate " + (NReallocFac as Constant).Value() * 100 + "% of N that senesces each day.", indent));
-                }
-                else
-                {
-                    tags.Add(new AutoDocumentation.Paragraph("The proportion of senescing N that is allocated each day is quantified by the NReallocationFactor.", indent));
-                    AutoDocumentation.DocumentModel(NReallocFac, tags, headingLevel + 2, indent);
-                }
-                IModel NRetransFac = this.FindChild("NRetranslocationFactor");
-                if (NRetransFac is Constant)
-                {
-                    if ((NRetransFac as Constant).Value() == 0)
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " does not retranslocate non-structural N.", indent));
-                    else
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " will retranslocate " + (NRetransFac as Constant).Value() * 100 + "% of non-structural N each day.", indent));
-                }
-                else
-                {
-                    tags.Add(new AutoDocumentation.Paragraph("The proportion of non-structural N that is allocated each day is quantified by the NReallocationFactor.", indent));
-                    AutoDocumentation.DocumentModel(NRetransFac, tags, headingLevel + 2, indent);
-                }
+            // Document N retranslocation.
+            yield return new Section("Nitrogen Retranslocation Factor", new Paragraph($"{Name} does not retranslocate non-structural N."));
 
-                // document canopy
-                tags.Add(new AutoDocumentation.Heading("Canopy Properties", headingLevel + 1));
-                IModel laiF = this.FindChild("LAIFunction");
-                IModel coverF = this.FindChild("CoverFunction");
-                if (laiF != null)
-                {
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " has been defined with a LAIFunction, cover is calculated using the Beer-Lambert equation.", indent));
-                    AutoDocumentation.DocumentModel(laiF, tags, headingLevel + 2, indent);
-                }
-                else
-                {
-                    tags.Add(new AutoDocumentation.Paragraph(Name + " has been defined with a CoverFunction. LAI is calculated using an inverted Beer-Lambert equation", indent));
-                    AutoDocumentation.DocumentModel(coverF, tags, headingLevel + 2, indent);
-                }
-                IModel exctF = this.FindChild("ExtinctionCoefficientFunction");
-                AutoDocumentation.DocumentModel(exctF, tags, headingLevel + 2, indent);
-                IModel heightF = this.FindChild("HeightFunction");
-                AutoDocumentation.DocumentModel(heightF, tags, headingLevel + 2, indent);
+            // todo: document LAI(/CoverTot?).
+            List<ITag> canopyTags = new List<ITag>();
+            canopyTags.AddRange(extinctionCoefficientFunction.Document());
+            canopyTags.AddRange(heightFunction.Document());
+            yield return new Section("Canopy Properties", canopyTags);
 
-                // document senescence and detachment
-                tags.Add(new AutoDocumentation.Heading("Senescence and Detachment", headingLevel + 1));
-                IModel SenRate = this.FindChild("SenescenceRate");
-                if (SenRate is Constant)
-                {
-                    if ((SenRate as Constant).Value() == 0)
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " has senescence parameterised to zero so all biomass in this organ will remain alive.", indent));
-                    else
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " senesces " + (SenRate as Constant).Value() * 100 + "% of its live biomass each day, moving the corresponding amount of biomass from the live to the dead biomass pool.", indent));
-                }
-                else
-                {
-                    tags.Add(new AutoDocumentation.Paragraph("The proportion of live biomass that senesces and moves into the dead pool each day is quantified by the SenescenceRate.", indent));
-                    AutoDocumentation.DocumentModel(SenRate, tags, headingLevel + 2, indent);
-                }
+            // Document senescence and detachment.
+            List<ITag> senescenceTags = new List<ITag>();
+            senescenceTags.Add(new Paragraph($"{Name} has senescence parameterised to zero so all biomass in this organ will remain alive."));
+            senescenceTags.Add(new Paragraph($"{Name} has detachment parameterised to zero so all biomass in this organ will remain with the plant until a defoliation or harvest event occurs."));
+            senescenceTags.AddRange(biomassRemovalModel.Document());
 
-                IModel DetRate = this.FindChild("DetachmentRateFunction");
-                if (DetRate is Constant)
-                {
-                    if ((DetRate as Constant).Value() == 0)
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " has detachment parameterised to zero so all biomass in this organ will remain with the plant until a defoliation or harvest event occurs.", indent));
-                    else
-                        tags.Add(new AutoDocumentation.Paragraph(Name + " detaches " + (DetRate as Constant).Value() * 100 + "% of its live biomass each day, passing it to the surface organic matter model for decomposition.", indent));
-                }
-                else
-                {
-                    tags.Add(new AutoDocumentation.Paragraph("The proportion of Biomass that detaches and is passed to the surface organic matter model for decomposition is quantified by the DetachmentRateFunction.", indent));
-                    AutoDocumentation.DocumentModel(DetRate, tags, headingLevel + 2, indent);
-                }
-
-                if (biomassRemovalModel != null)
-                    biomassRemovalModel.Document(tags, headingLevel + 1, indent);
-            }
+            yield return new Section("Senescence and Detachment", senescenceTags);
         }
     }
 }

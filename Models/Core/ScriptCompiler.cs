@@ -150,6 +150,7 @@
                 typeof(APSIM.Shared.Utilities.MathUtilities).Assembly.Location,
                 typeof(Newtonsoft.Json.JsonIgnoreAttribute).Assembly.Location,
                 typeof(System.Drawing.Color).Assembly.Location,
+                typeof(APSIM.Shared.Documentation.CodeDocumentation).Assembly.Location,
             };
 
             if (previousCompilations != null)
@@ -235,10 +236,12 @@
 
                     MemoryStream ms = new MemoryStream();
                     MemoryStream pdbStream = new MemoryStream();
+                    using (MemoryStream xmlDocumentationStream = new MemoryStream())
                     {
                         EmitResult emitResult = compiled.Emit(
                             peStream: ms,
                             pdbStream: withDebug ? pdbStream : null,
+                            xmlDocumentationStream: xmlDocumentationStream,
                             embeddedTexts: embeddedTexts
                             );
                         if (!emitResult.Success)
@@ -271,6 +274,12 @@
                             string fileName = Path.Combine(Path.GetTempPath(), compiled.AssemblyName + ".dll");
                             using (FileStream file = new FileStream(fileName, FileMode.Create, FileAccess.Write))
                                 ms.WriteTo(file);
+
+                            // Write XML Documentation file.
+                            string documentationFile = Path.ChangeExtension(fileName, ".xml");
+                            xmlDocumentationStream.Seek(0, SeekOrigin.Begin);
+                            using (FileStream documentationWriter = new FileStream(documentationFile, FileMode.Create, FileAccess.Write))
+                                xmlDocumentationStream.WriteTo(documentationWriter);
 
                             // Set the compilation properties.
                             ms.Seek(0, SeekOrigin.Begin);
@@ -327,6 +336,7 @@
                MetadataReference.CreateFromFile(Path.Join(runtimePath, "System.Private.Xml.dll")),
                MetadataReference.CreateFromFile(typeof(MathUtilities).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(IModel).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(APSIM.Shared.Documentation.CodeDocumentation).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(MathNet.Numerics.Fit).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(Newtonsoft.Json.JsonIgnoreAttribute).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(System.Drawing.Color).Assembly.Location),
@@ -334,6 +344,7 @@
                MetadataReference.CreateFromFile(typeof(System.ComponentModel.TypeConverter).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(Console).Assembly.Location),
                MetadataReference.CreateFromFile(typeof(System.IO.File).Assembly.Location),
+               MetadataReference.CreateFromFile(typeof(System.IO.Pipes.PipeStream).Assembly.Location),
             };
 
             if (previousCompilations != null)

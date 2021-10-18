@@ -9,6 +9,7 @@ using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.Soils.Arbitrator;
 using Models.Zones;
+using APSIM.Shared.Documentation;
 
 namespace Models.Agroforestry
 {
@@ -23,7 +24,7 @@ namespace Models.Agroforestry
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class AgroforestrySystem : Zone, ICustomDocumentation
+    public class AgroforestrySystem : Zone
     {
 
         /// <summary>
@@ -142,19 +143,9 @@ namespace Models.Agroforestry
         }
 
         /// <summary>Writes documentation for this cultivar by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public override void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // write description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                tree = this.FindChild<TreeProxy>();
-                AutoDocumentation.DocumentModel(tree, tags, headingLevel, indent);
-            }
+            throw new NotImplementedException("tbi");
         }
     }
 }

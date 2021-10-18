@@ -46,7 +46,12 @@ namespace APSIM.Server.Commands
         /// <param name="runner">Job runner.</param>
         public void Run(Runner runner, ServerJobRunner jobRunner, IDataStore storage)
         {
+            if (!storage.Reader.TableNames.Contains(TableName))
+                throw new Exception($"Table {TableName} does not exist in the database.");
             Result = storage.Reader.GetData(TableName, fieldNames: Parameters);
+            if (Result == null)
+                throw new Exception($"Unable to read table {TableName} from datastore (cause unknown - but the table appears to exist)");
+
             Result.TableName = TableName;
         }
 

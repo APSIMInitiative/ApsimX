@@ -1,12 +1,11 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
 
@@ -20,7 +19,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityTask))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
-    [Description("This activity timer is used to determine whether an activity (and all sub activities) will be performed based on the harvest dates of the CropActivityManageProduct above.")]
+    [Description("This timer is related to the harvest dates of the CropActivityManageProduct above.")]
     [HelpUri(@"Content/Features/Timers/CropHarvest.htm")]
     [Version(1, 0, 3, "Accepts harvest tags for multiple harvests of single crop")]
     [Version(1, 0, 2, "Allows timer sequence to be added as child component")]
@@ -28,7 +27,7 @@ namespace Models.CLEM.Activities
     public class ActivityTimerCropHarvest : CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
     {
         [Link]
-        Clock Clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Months before harvest to start performing activities
@@ -82,7 +81,7 @@ namespace Models.CLEM.Activities
             {
                 if(ManageProductActivity.ActivityEnabled)
                 {
-                    int today = Clock.Today.Year * 12 + Clock.Today.Month;
+                    int today = clock.Today.Year * 12 + clock.Today.Month;
                     // check and return status if already calculated
                     if (lastDate == today)
                     {
@@ -171,9 +170,7 @@ namespace Models.CLEM.Activities
                         dates[1] = ManageProductActivity.NextHarvest.HarvestDate;
                     }
                     else
-                    {
                         return new int[] {0,0 };
-                    }
                 }
             }
             else
@@ -197,9 +194,7 @@ namespace Models.CLEM.Activities
                     dates[1] = ManageProductActivity.NextHarvest.HarvestDate;
                 }
                 else
-                {
                     return new int[] { 0, 0 };
-                }
             }
 
             for (int i = 0; i < 2; i++)
@@ -218,11 +213,10 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                int today = Clock.Today.Year * 12 + Clock.Today.Month;
+                int today = clock.Today.Year * 12 + clock.Today.Month;
                 if (lastDate != today)
-                {
                     month = CalculateMonthBounds(today);
-                }
+
                 return (month[0] < today && month[1] < today);
             }
         }
@@ -316,9 +310,8 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("</div>");
                 }
                 if (!this.Enabled)
-                {
                     htmlWriter.Write(" - DISABLED!");
-                }
+
                 return htmlWriter.ToString(); 
             }
         }

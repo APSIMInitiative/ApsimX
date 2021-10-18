@@ -5,11 +5,11 @@ using System.Text;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions.SupplyFunctions
 {
     ///<summary>
-    /// # [Name]
     ///%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
     ///float DLL CanopyGrossPhotosynthesis(float fPgMax, float fLUE, float fLAI,
     ///                                float fLatitude,int nDay,float fHour, float fPARdir,float fPARdif)
@@ -155,6 +155,17 @@ namespace Models.Functions.SupplyFunctions
             FGROS = FGROS * vLAI;
 
             return FGROS;
+        }
+
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
         }
     }
 }

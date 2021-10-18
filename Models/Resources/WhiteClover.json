@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 137,
+  "Version": 144,
   "Name": "Simulations",
   "Children": [
     {
@@ -14,7 +14,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "\r\n## Presentation\r\n\r\nThis model has been built using APSIM's Plant Modelling Framework (PMF), as introduced in [brown_plant_2014] and described in more detail in www.apsim.info.  It aims to simulate the development and growth of white clover (*Trifolium repens*) as a forage crop.  The model focus primarily on describing the vegetative growth with only a simplified account of the reproductive phase.  Only an inflorescence organ is defined, so flowers and seeds and their development are not considered separately.  This was done because the reproductive phase of white clover stands is quite long and undefined: different plants may start flowering at different times and single plants may have flower buds as well as ripen seed at the same time (e.g. [HydeEtAl1959]; [Thomas1987Chapter]; [MedeirosAndSteiner2000]); more details in the phenology section below.  With more comprehensive data, the implementation of this phase and the reproductive organs may be revisited in the future.  The white clover model simulates the aboveground plant structure, including the photosynthesis process, using the SimpleLeaf procedure of PMF, which does not consider explicitly leaf age or their placement in the canopy.  The model describes a perennial crop, with phenology rewinding to the vegetative stage at the end of the reproductive phase.  \r\n\r\n\r\n##Inclusion in APSIM simulations\r\nTo include white clover in a simulation the procedure is the same as any other APSIM crop:  \r\n\r\n * The white clover object can be dragged or copied from the Crop folder in the toolbox into a Field in any simulation;  \r\n\r\n * To become active and grow, the white clover crop needs to be sown using a manager script with a sowing rule. e.g.:  \r\n<pre><code class='language-cs'>\r\n    WhiteClover.Sow(cultivar: Huia, population: 450, depth: 5, rowSpacing: 100);\r\n</code></pre>\r\nIf a specified cultivar is not available, a fatal error will be thrown.\r\n\r\n\r\n###Harvest and biomass removal\r\nWhite clover biomass can be removed by raising one of the valid methods: Harvest, Cut, Graze, or Prune; this is done using a manager script, similarly to other crops.  The proportion of the biomass of each organ that is removed from the system and/or added to the residue pools may be specified; otherwise defaults will be used.  Note that the sum of fractions removed and added to the residue should be <= 1.0.  To specify the proportions for removal in a manager script, use a RemovalFractions class as shown below:  \r\n<pre><code class='language-cs'>\r\n[EventSubscribe(\"Commencing\")]  \r\nprivate void OnSimulationCommencing(object sender, EventArgs e)  \r\n{  \r\n  RemoveFraction = new RemovalFractions(WhiteClover.Organs);  \r\n}  \r\n[EventSubscribe(\"DoManagement\")]    \r\nprivate void OnDoManagement(object sender, EventArgs e)  \r\n{  \r\n  if (Clock.Today.Date == HarvestDate)  \r\n  {  \r\n    RemoveFraction.SetFractionToRemove(\"Leaf\", 0.80, \"Live\");  \r\n    RemoveFraction.SetFractionToRemove(\"Petiole\", 0.50, \"Live\");  \r\n    RemoveFraction.SetFractionToResidue(\"Leaf\", 0.05, \"Live\");\r\n    RemoveFraction.SetFractionToResidue(\"Petiole\", 0.01, \"Live\");\r\n    WhiteClover.Harvest(RemoveFraction);  \r\n  }\r\n}\r\n</code></pre>\r\n\r\nThe default values for the fractions (%) to be removed or transferred to residue are shown below in the description of each organ.\r\n\r\n###Crop termination\r\nTo fully terminate a crop the EndCrop event should be raised:\r\n<pre><code class='language-cs'>\r\n WhiteClover.EndCrop();\r\n</code></pre>\r\nOnce a crop has been ended the field is open to be used by another APSIM plant model, or another white clover crop.  Note that ending white clover is not necessary before sowing another crop, competition for resources will take place between crops when there is more than one in the field.\r\n",
+          "Text": "_Rogerio Cichota, Plant and Food Research, New Zealand_\n\n\n## Preamble\n\nWhite clover (*Trifolium repens*) is a herbaceous perennial herb in the Fabaceae family (former Leguminosae) native of Europe and west Asia.  It can now be be found in swards around the world in places with temperate and subtropical climates ([ThomasChapter1987]; [BrockEtAl1989]).  The plant aboveground consists of prostrate segmented stolons, from which tri-foliate leaves grow on top of a 5-15 cm petiole.  From the axils of each leaf emerges either a flower stalk (peduncle) or a branching stolon.  Roots are quite thick and relatively shallow; the initial taproot dies after a year or so, but roots can also grow from each branching stolon.  These rooted stolon behave and can become independent plants. Cultivated varieties are commonly classified into small-, medium- and large-leaved cultivars, which besides leaf size also reflects variations in plant height and proportion of stolons ([CaradusEtAl1989]).  The inflorescence is typically of white colour and grows about one third higher than the leaves.  As a legume, white clover can host N-fixing bacteria (*Rhizobium*) in a symbiotic relationship. N fixation by rhyzobia can tranfer large quantities of N from the atmosphere into the soil.  This is a major reason why white clover is typically sown alongside grasses in pastures.  Nonetheless, white clover is also a valuable forage, producing very high quality feed and is highly palatable to ruminants.  \n\n\n**Objective:**  The model presented here was built to simulate the growth of white clover as a forage crop.  The current model focus on describing biomass accumulation and regrowth after defoliation in monocultural swards.  The model was developed using the Plant Modelling Framework (PMF) and thus, it is readily possible to use the WhiteClover model in mixed swards, but this usage has not been properly tested yet and should be done with caution.  \nThe simulation of variations in N concentration over the growing season can also be considered as incipient and only reasonably good. The model should be updated and its performance revised in the future when more data becomes available.  \n\r\n## Presentation\r\n\r\nThis model has been built using APSIM's Plant Modelling Framework (PMF), as introduced in [brown_plant_2014] and described in more detail in www.apsim.info.  It aims to simulate the development and growth of white clover (*Trifolium repens*) as a forage crop.  The model focus primarily on describing the vegetative growth with only a simplified account of the reproductive phase.  Only an inflorescence organ is defined, so flowers and seeds and their development are not considered separately.  This was done because the reproductive phase of white clover stands is quite long and undefined: different plants may start flowering at different times and single plants may have flower buds as well as ripen seed at the same time (e.g. [HydeEtAl1959]; [Thomas1987Chapter]; [MedeirosAndSteiner2000]); more details in the phenology section below.  With more comprehensive data, the implementation of this phase and the reproductive organs may be revisited in the future.  The white clover model simulates the aboveground plant structure, including the photosynthesis process, using the SimpleLeaf procedure of PMF, which does not consider explicitly leaf age or their placement in the canopy.  The model describes a perennial crop, with phenology rewinding to the vegetative stage at the end of the reproductive phase.  \r\n\r\n\r\n## Inclusion in APSIM simulations\r\nTo include white clover in a simulation the procedure is the same as any other APSIM crop:  \r\n\r\n * The white clover object can be dragged or copied from the Crop folder in the toolbox into a Field in any simulation;  \r\n\r\n * To become active and grow, the white clover crop needs to be sown using a manager script with a sowing rule. e.g.:  \r\n```csharp\r\n    WhiteClover.Sow(cultivar: Huia, population: 450, depth: 5, rowSpacing: 100);\r\n```\r\nIf a specified cultivar is not available, a fatal error will be thrown.\r\n\r\n\r\n### Harvest and biomass removal\r\nWhite clover biomass can be removed by raising one of the valid methods: Harvest, Cut, Graze, or Prune; this is done using a manager script, similarly to other crops.  The proportion of the biomass of each organ that is removed from the system and/or added to the residue pools may be specified; otherwise defaults will be used.  Note that the sum of fractions removed and added to the residue should be <= 1.0.  To specify the proportions for removal in a manager script, use a RemovalFractions class as shown below:  \r\n```csharp\r\n[EventSubscribe(\"Commencing\")]  \r\nprivate void OnSimulationCommencing(object sender, EventArgs e)  \r\n{  \r\n  RemoveFraction = new RemovalFractions(WhiteClover.Organs);  \r\n}  \r\n[EventSubscribe(\"DoManagement\")]    \r\nprivate void OnDoManagement(object sender, EventArgs e)  \r\n{  \r\n  if (Clock.Today.Date == HarvestDate)  \r\n  {  \r\n    RemoveFraction.SetFractionToRemove(\"Leaf\", 0.80, \"Live\");  \r\n    RemoveFraction.SetFractionToRemove(\"Petiole\", 0.50, \"Live\");  \r\n    RemoveFraction.SetFractionToResidue(\"Leaf\", 0.05, \"Live\");\r\n    RemoveFraction.SetFractionToResidue(\"Petiole\", 0.01, \"Live\");\r\n    WhiteClover.Harvest(RemoveFraction);  \r\n  }\r\n}\r\n```\r\n\r\nThe default values for the fractions (%) to be removed or transferred to residue are shown below in the description of each organ.\r\n\r\n### Crop termination\r\nTo fully terminate a crop the EndCrop event should be raised:\r\n```csharp\r\n WhiteClover.EndCrop();\r\n```\n\r\nOnce a crop has been ended the field is open to be used by another APSIM plant model, or another white clover crop.  Note that ending white clover is not necessary before sowing another crop, competition for resources will take place between crops when there is more than one in the field.\r\n",
           "Name": "GeneralDescription",
           "Children": [],
           "IncludeInDocumentation": false,
@@ -453,7 +453,8 @@
                       "$type": "Models.PMF.Arbitrator.SendPotentialDMAllocationsMethod, Models",
                       "Name": "SendPotentialDMAllocationsMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -467,7 +468,8 @@
                       "$type": "Models.PMF.Arbitrator.DryMatterAllocationsMethod, Models",
                       "Name": "DryMatterAllocationsMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -501,7 +503,8 @@
                       "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
                       "Name": "ReallocationMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -515,7 +518,8 @@
                       "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
                       "Name": "RetranslocationMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -525,7 +529,8 @@
                       "$type": "Models.PMF.Arbitrator.NitrogenAllocationsMethod, Models",
                       "Name": "NitrogenAllocationsMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -1135,7 +1140,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "DMDemands",
               "Children": [
                 {
@@ -1349,6 +1354,21 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": false,
@@ -1356,7 +1376,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "NDemands",
               "Children": [
                 {
@@ -1466,6 +1486,21 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": false,
@@ -2352,7 +2387,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "DMDemands",
               "Children": [
                 {
@@ -2547,6 +2582,21 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": false,
@@ -2554,7 +2604,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "NDemands",
               "Children": [
                 {
@@ -2664,6 +2714,21 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": false,
@@ -3103,27 +3168,6 @@
               "$type": "Models.Functions.VariableReference, Models",
               "Name": "initialNConcFunction",
               "VariableName": "[Petiole].MinimumNConc"
-            },
-            {
-              "$type": "Models.PMF.BiomassDemand, Models",
-              "Name": "dmDemandPriorityFactors",
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Structural",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Metabolic",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Storage",
-                  "FixedValue": "1"
-                }
-              ]
             }
           ],
           "IncludeInDocumentation": false,
@@ -3275,7 +3319,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "DMDemands",
               "Children": [
                 {
@@ -3470,6 +3514,21 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": false,
@@ -3477,7 +3536,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "NDemands",
               "Children": [
                 {
@@ -3587,6 +3646,21 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": false,
@@ -4295,27 +4369,6 @@
               "$type": "Models.Functions.VariableReference, Models",
               "Name": "initialNConcFunction",
               "VariableName": "[Stolon].MinimumNConc"
-            },
-            {
-              "$type": "Models.PMF.BiomassDemand, Models",
-              "Name": "dmDemandPriorityFactors",
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Structural",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Metabolic",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Storage",
-                  "FixedValue": "1"
-                }
-              ]
             }
           ],
           "IncludeInDocumentation": false,
@@ -4616,7 +4669,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "DMDemands",
               "Children": [
                 {
@@ -4811,6 +4864,21 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": false,
@@ -4818,7 +4886,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "NDemands",
               "Children": [
                 {
@@ -4928,6 +4996,21 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": false,
@@ -5308,27 +5391,6 @@
               "$type": "Models.Functions.VariableReference, Models",
               "Name": "initialNConcFunction",
               "VariableName": "[Inflorescence].MinimumNConc"
-            },
-            {
-              "$type": "Models.PMF.BiomassDemand, Models",
-              "Name": "dmDemandPriorityFactors",
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Structural",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Metabolic",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Storage",
-                  "FixedValue": "1"
-                }
-              ]
             }
           ],
           "IncludeInDocumentation": false,
@@ -6602,7 +6664,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "DMDemands",
               "Children": [
                 {
@@ -6844,6 +6906,21 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": false,
@@ -6851,7 +6928,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "NDemands",
               "Children": [
                 {
@@ -6961,6 +7038,21 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": false,
@@ -7563,27 +7655,6 @@
               "$type": "Models.Functions.VariableReference, Models",
               "Name": "initialNConcFunction",
               "VariableName": "[Taproot].MinimumNConc"
-            },
-            {
-              "$type": "Models.PMF.BiomassDemand, Models",
-              "Name": "dmDemandPriorityFactors",
-              "Children": [
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Structural",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Metabolic",
-                  "FixedValue": "1"
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "Name": "Storage",
-                  "FixedValue": "1"
-                }
-              ]
             }
           ],
           "IncludeInDocumentation": false,
@@ -7818,7 +7889,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "DMDemands",
               "Children": [
                 {
@@ -8051,6 +8122,21 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": false,
@@ -8058,7 +8144,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "NDemands",
               "Children": [
                 {
@@ -8168,6 +8254,21 @@
                   "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": false,
@@ -8860,158 +8961,171 @@
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Leaf].Dead",
-            "[Stolon].Live",
-            "[Stolon].Dead",
-            "[Petiole].Live",
-            "[Petiole].Dead",
-            "[Inflorescence].Live",
-            "[Inflorescence].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "AboveGround",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stolon",
+            "Petiole",
+            "Inflorescence"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Stolon].Live",
-            "[Petiole].Live",
-            "[Inflorescence].Live"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "AboveGroundLive",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stolon",
+            "Petiole",
+            "Inflorescence"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": false
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Dead",
-            "[Stolon].Dead",
-            "[Petiole].Dead",
-            "[Inflorescence].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "AboveGroundDead",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stolon",
+            "Petiole",
+            "Inflorescence"
+          ],
+          "IncludeLive": false,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Root].Live",
-            "[Root].Dead",
-            "[Taproot].Live",
-            "[Taproot].Dead",
-            "[Nodule].Live",
-            "[Nodule].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "BelowGround",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Root",
+            "Taproot",
+            "Nodule"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Root].Live",
-            "[Taproot].Live",
-            "[Nodule].Live"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "BelowGroundLive",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Root",
+            "Taproot",
+            "Nodule"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": false
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Root].Dead",
-            "[Taproot].Dead",
-            "[Nodule].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "BelowGroundDead",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Root",
+            "Taproot",
+            "Nodule"
+          ],
+          "IncludeLive": false,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Leaf].Dead",
-            "[Stolon].Live",
-            "[Stolon].Dead",
-            "[Petiole].Live",
-            "[Petiole].Dead",
-            "[Inflorescence].Live",
-            "[Inflorescence].Dead",
-            "[Root].Live",
-            "[Root].Dead",
-            "[Taproot].Live",
-            "[Taproot].Dead",
-            "[Nodule].Live",
-            "[Nodule].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "Total",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stolon",
+            "Petiole",
+            "Inflorescence",
+            "Root",
+            "Taproot",
+            "Nodule"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Stolon].Live",
-            "[Petiole].Live",
-            "[Inflorescence].Live",
-            "[Root].Live",
-            "[Taproot].Live",
-            "[Nodule].Live"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "TotalLive",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stolon",
+            "Petiole",
+            "Inflorescence",
+            "Root",
+            "Taproot",
+            "Nodule"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": false
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Dead",
-            "[Stolon].Dead",
-            "[Petiole].Dead",
-            "[Inflorescence].Dead",
-            "[Root].Dead",
-            "[Taproot].Dead",
-            "[Nodule].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "TotalDead",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stolon",
+            "Petiole",
+            "Inflorescence",
+            "Root",
+            "Taproot",
+            "Nodule"
+          ],
+          "IncludeLive": false,
+          "IncludeDead": true
         },
         {
           "$type": "Models.Functions.PhaseLookup, Models",

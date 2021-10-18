@@ -6,11 +6,13 @@ using Models.PMF.Interfaces;
 using Newtonsoft.Json;
 using Models.PMF.Library;
 using Models.Interfaces;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
+using System.Linq;
 
 namespace Models.PMF.Organs
 {
     /// <summary>
-    /// # [Name] 
     /// This organ uses a generic model for plant reproductive components.  Yield is calculated from its components in terms of organ number and size (for example, grain number and grain size).  
     /// </summary>
     [Serializable]
@@ -60,9 +62,6 @@ namespace Models.PMF.Organs
 
         /// <summary>The dry matter demand</summary>
         public BiomassPoolType DMDemand { get; set; }
-
-        /// <summary>The dry matter demand</summary>
-        public BiomassPoolType DMDemandPriorityFactor { get; set; }
 
         /// <summary>Structural nitrogen demand</summary>
         public BiomassPoolType NDemand { get; set; }
@@ -132,6 +131,11 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         public IFunction RemobilisationCost = null;
+
+        /// <summary>Factors for assigning priority to DM demands</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/m2/d")]
+        private BiomassDemand dmDemandPriorityFactors = null;
 
         /// <summary>The ripe stage</summary>
         [Description("Stage at which this organ becomes ripe")]
@@ -286,6 +290,9 @@ namespace Models.PMF.Organs
         private void SetDMDemand(object sender, EventArgs e)
         {
             DMDemand.Structural = DMDemandFunction.Value() / DMConversionEfficiency.Value();
+            DMDemand.QStructuralPriority = dmDemandPriorityFactors.Structural.Value();
+            DMDemand.QMetabolicPriority = dmDemandPriorityFactors.Metabolic.Value();
+            DMDemand.QStoragePriority = dmDemandPriorityFactors.Storage.Value();
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
@@ -399,16 +406,31 @@ namespace Models.PMF.Organs
             biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, Live, Dead, Removed, Detached);
         }
 
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            // Document Constants
+            var constantTags = new List<ITag>();
+            foreach (var constant in FindAllChildren<Constant>())
+                foreach (var tag in constant.Document())
+                    constantTags.Add(tag);
+            yield return new Section("Constants", constantTags);
+
+            // Document everything else.
+            foreach (var child in Children.Where(child => !(child is Constant)))
+                yield return new Section(child.Name, child.Document());
+
+        }
+
         /// <summary>Clears this instance.</summary>
         private void Clear()
         {
             Live = new Biomass();
             Dead = new Biomass();
             DMDemand = new BiomassPoolType();
-            DMDemandPriorityFactor = new BiomassPoolType();
-            DMDemandPriorityFactor.Structural = 1.0;
-            DMDemandPriorityFactor.Metabolic = 1.0;
-            DMDemandPriorityFactor.Storage = 1.0;
             NDemand = new BiomassPoolType();
             DMSupply = new BiomassSupplyType();
             NSupply = new BiomassSupplyType();

@@ -13,7 +13,6 @@ using System.IO;
 namespace Models.CLEM.Activities
 {
     /// <summary>Activity to arrange and pay an enterprise expenses
-    /// Expenses can be flagged as overheads for accounting
     /// </summary>
     /// <version>1.0</version>
     [Serializable]
@@ -22,11 +21,13 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs payment of a specified expense.")]
+    [Description("Perform payment of a specified expense")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Finances/PayExpenses.htm")]
     public class FinanceActivityPayExpense : CLEMActivityBase
     {
+        private FinanceType bankAccount;
+
         /// <summary>
         /// Amount payable
         /// </summary>
@@ -43,11 +44,6 @@ namespace Models.CLEM.Activities
         public string AccountName { get; set; }
 
         /// <summary>
-        /// Store finance type to use
-        /// </summary>
-        private FinanceType bankAccount;
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public FinanceActivityPayExpense()
@@ -62,7 +58,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            bankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
+            bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <inheritdoc/>
@@ -84,48 +80,6 @@ namespace Models.CLEM.Activities
             return resourcesNeeded;
         }
 
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
         #region descriptive summary
 
         /// <inheritdoc/>
@@ -135,16 +89,8 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Pay ");
                 htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> from ");
-                if (AccountName == null || AccountName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[ACCOUNT NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + AccountName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
-
                 return htmlWriter.ToString(); 
             }
         } 
