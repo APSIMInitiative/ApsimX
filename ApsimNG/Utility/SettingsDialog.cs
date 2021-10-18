@@ -67,7 +67,7 @@ namespace UserInterface.Views
                 }
             }
             while (response == ResponseType.Apply);
-            this.Cleanup();
+            this.Dispose();
         }
 
         private PropertyGroup GetPropertyGroup()

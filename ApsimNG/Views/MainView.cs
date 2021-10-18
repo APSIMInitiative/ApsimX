@@ -344,7 +344,7 @@
         {
             get
             {
-                return MainWidget == null ? null : MainWidget.Toplevel.GetGdkWindow();
+                return MainWidget == null ? null : MainWidget.Toplevel.Window;
             }
         }
 
@@ -542,7 +542,7 @@
             notebook2.SwitchPage -= OnChangeTab;
             stopButton.Clicked -= OnStopClicked;
             window1.DeleteEvent -= OnClosing;
-            mainWidget.Cleanup();
+            mainWidget.Dispose();
 
             // Let all the destruction stuff be carried out, just in 
             // case we've got any unmanaged resources that should be 
@@ -684,8 +684,8 @@
         {
             get
             {
-                if (window1.GetGdkWindow() != null)
-                    return (window1.GetGdkWindow().State & Gdk.WindowState.Maximized) == Gdk.WindowState.Maximized;
+                if (window1.Window != null)
+                    return (window1.Window.State & Gdk.WindowState.Maximized) == Gdk.WindowState.Maximized;
                 else
                     return false;
             }
@@ -776,7 +776,7 @@
             MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Question, ButtonsType.YesNo, message);
             md.Title = "Save changes";
             int result = md.Run();
-            md.Cleanup();
+            md.Dispose();
             switch ((ResponseType)result)
             {
                 case ResponseType.Yes:
@@ -942,7 +942,7 @@
 
             // Select the current font.
             if (Utility.Configuration.Settings.FontName != null)
-                fontDialog.SetFontName(Utility.Configuration.Settings.FontName.ToString());
+                fontDialog.Font = Utility.Configuration.Settings.FontName.ToString();
 
 
             //fontDialog.FontActivated += OnChangeFont;
@@ -971,7 +971,7 @@
                 Utility.Configuration.Settings.FontName = newFont.ToString();
                 ChangeFont(newFont);
                 if (args.ResponseId != ResponseType.Apply)
-                    fontDialog.Cleanup();
+                    fontDialog.Dispose();
             }
             catch (Exception err)
             {
@@ -1137,7 +1137,7 @@
             md.Title = title;
             md.WindowPosition = WindowPosition.Center;
             int result = md.Run();
-            md.Cleanup();
+            md.Dispose();
             return result;
         }
 

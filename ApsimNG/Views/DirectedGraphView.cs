@@ -18,6 +18,7 @@
 
     using ExposeEventArgs = Gtk.DrawnArgs;
     using StateType = Gtk.StateFlags;
+    using Utility;
 
 
     /// <summary>
@@ -125,8 +126,10 @@
             else
             {
                 // Needs to be reimplemented for gtk3.
-                DGObject.DefaultOutlineColour = Utility.Colour.FromGtk(owner.MainWidget.GetForegroundColour(StateType.Normal));
-                DGObject.DefaultBackgroundColour = Utility.Colour.FromGtk(owner.MainWidget.GetBackgroundColour(StateType.Normal));
+                DGObject.DefaultOutlineColour = owner.MainWidget.StyleContext.GetColor(StateFlags.Normal).ToColour();
+#pragma warning disable 0612
+                DGObject.DefaultBackgroundColour = owner.MainWidget.StyleContext.GetBackgroundColor(StateFlags.Normal).ToColour();
+#pragma warning restore 0612
             }
             mainWidget.Destroyed += OnDestroyed;
         }

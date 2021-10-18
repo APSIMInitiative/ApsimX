@@ -418,7 +418,7 @@
                 // This may break if Gtk# changes the way they implement event handlers.
                 textEditor.DetachAllHandlers();
                 accel.Dispose();
-                textEditor.Cleanup();
+                textEditor.Dispose();
                 textEditor = null;
                 owner = null;
             }
@@ -465,7 +465,8 @@
         {
             try
             {
-                scroller.Vadjustment.SetValue(vertScrollPos);
+                if (vertScrollPos > 0 && vertScrollPos < scroller.Vadjustment.Upper)
+                    scroller.Vadjustment.Value = vertScrollPos;
             }
             catch (Exception err)
             {
@@ -482,7 +483,8 @@
         {
             try
             {
-                scroller.Hadjustment.SetValue(horizScrollPos);
+                if (horizScrollPos > 0 && horizScrollPos < scroller.Hadjustment.Upper)
+                    scroller.Hadjustment.Value = horizScrollPos;
             }
             catch (Exception err)
             {

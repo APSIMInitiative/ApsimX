@@ -509,7 +509,7 @@ namespace UserInterface.Views
             TextIter iter = tmpView.Buffer.StartIter;
             ProcessMarkdownBlocks(cell, ref iter, tmpView, 0, false);
             string result = tmpView.Buffer.Text;
-            tmpView.Cleanup();
+            tmpView.Dispose();
             return result;
         }
 
@@ -811,7 +811,7 @@ namespace UserInterface.Views
             {
                 URL = url;
 
-                ForegroundGdk = (ViewBase.MasterView as ViewBase).MainWidget.StyleContext.GetColor(StateType.Link).ToGdkColor();
+                ForegroundGdk = (ViewBase.MasterView as ViewBase).MainWidget.StyleContext.GetColor(StateType.Link).ToColour().ToGdk();
 
                 Underline = Pango.Underline.Single;
             }

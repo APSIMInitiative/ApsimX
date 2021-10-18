@@ -11,8 +11,7 @@ namespace UserInterface.Views
     using System.Runtime.InteropServices;
     using System.Runtime.Serialization;
     using System.Timers;
-
-
+    using Utility;
     using TreeModel = Gtk.ITreeModel;
 
 
@@ -603,7 +602,7 @@ namespace UserInterface.Views
                     if (colour == Color.Empty)
                     {
 
-                        Gdk.Color foreground = treeview1.StyleContext.GetColor(StateFlags.Normal).ToGdkColor();
+                        Gdk.Color foreground = treeview1.StyleContext.GetColor(StateFlags.Normal).ToColour().ToGdk();
 
                         colour = Utility.Colour.FromGtk(foreground);
                     }
@@ -693,7 +692,7 @@ namespace UserInterface.Views
                             if (e.Event.X > rect.X + 18)
                             {
                                 // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
-                                timer.Interval = treeview1.GetSettings().DoubleClickTime + 10;
+                                timer.Interval = Settings.Default.DoubleClickTime + 10;
                                 timer.AutoReset = false;
                                 timer.Start();
                             }
@@ -948,9 +947,9 @@ namespace UserInterface.Views
                         dropArgs.NodePath = GetFullPath(path);
 
                         dropArgs.DragObject = dragDropData;
-                        if (e.Context.GetAction() == Gdk.DragAction.Copy)
+                        if (e.Context.SelectedAction == Gdk.DragAction.Copy)
                             dropArgs.Copied = true;
-                        else if (e.Context.GetAction() == Gdk.DragAction.Move)
+                        else if (e.Context.SelectedAction == Gdk.DragAction.Move)
                             dropArgs.Moved = true;
                         else
                             dropArgs.Linked = true;
@@ -958,7 +957,7 @@ namespace UserInterface.Views
                         success = true;
                     }
                 }
-                Gtk.Drag.Finish(e.Context, success, e.Context.GetAction() == Gdk.DragAction.Move, e.Time);
+                Gtk.Drag.Finish(e.Context, success, e.Context.SelectedAction == Gdk.DragAction.Move, e.Time);
                 e.RetVal = success;
             }
             catch (Exception err)

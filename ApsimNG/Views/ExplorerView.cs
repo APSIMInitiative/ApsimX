@@ -60,7 +60,7 @@ namespace UserInterface.Views
                 if (child != (descriptionView as ViewBase)?.MainWidget)
                 {
                     rightHandView.Remove(child);
-                    child.Cleanup();
+                    child.Dispose();
                 }
             }
 
@@ -85,7 +85,7 @@ namespace UserInterface.Views
                 {
                     Widget descriptionWidget = (descriptionView as ViewBase).MainWidget;
                     rightHandView.Remove(descriptionWidget);
-                    descriptionWidget.Cleanup();
+                    descriptionWidget.Dispose();
                 }
                 descriptionView = null;
             }
@@ -148,7 +148,7 @@ namespace UserInterface.Views
                     foreach (Widget child in rightHandView.Children)
                     {
                         rightHandView.Remove(child);
-                        child.Cleanup();
+                        child.Dispose();
                     }
                 }
                 ToolStrip.Destroy();

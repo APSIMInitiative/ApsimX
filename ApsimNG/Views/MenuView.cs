@@ -27,7 +27,7 @@
         public void Destroy()
         {
             ClearMenu();
-            menu.Cleanup();
+            menu.Dispose();
         }
 
         /// <summary>Populate the main menu tool strip.</summary>
@@ -129,7 +129,7 @@
                     }
                 }
                 menu.Remove(w);
-                w.Cleanup();
+                w.Dispose();
             }
         }
     }

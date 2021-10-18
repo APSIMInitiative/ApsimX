@@ -372,9 +372,9 @@
             completionView.KeyReleaseEvent -= OnKeyRelease;
 
             if (completionForm.IsRealized)
-                completionForm.Cleanup();
-            completionView.Cleanup();
-            completionForm.Cleanup();
+                completionForm.Dispose();
+            completionView.Dispose();
+            completionForm.Dispose();
             completionForm = null;
         }
 

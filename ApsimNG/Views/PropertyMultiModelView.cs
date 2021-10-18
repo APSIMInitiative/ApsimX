@@ -58,7 +58,7 @@ namespace UserInterface.Views
 
             box.Remove(propertyTable);
 
-            propertyTable.Cleanup();
+            propertyTable.Dispose();
 
 
             propertyTable = new Grid();
@@ -90,7 +90,7 @@ namespace UserInterface.Views
             // If a widget was previously focused, then try to give it focus again.
             if (widgetIsFocused)
             {
-                Widget widget = propertyTable.GetChild(row, col);
+                Widget widget = propertyTable.GetChildAt(row, col);
                 if (widget is Entry entry)
                 {
                     entry.GrabFocus();

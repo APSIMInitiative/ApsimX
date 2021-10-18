@@ -5,6 +5,7 @@
     using Interfaces;
     using System;
     using System.Drawing;
+    using Utility;
     using Views;
 
 
@@ -216,7 +217,9 @@
                 Button button = gridView.GetColumnHeaderButton(this.ColumnIndex);
                 if (button != null)
                 {
-                    Gdk.Color bg = button.GetBackgroundColour(StateType.Normal);
+#pragma warning disable 0612
+                    Gdk.Color bg = button.StyleContext.GetBackgroundColor(StateFlags.Normal).ToColour().ToGdk();
+#pragma warning restore 0612
 
                     return Color.FromArgb(bg.Red, bg.Green, bg.Blue);
                 }
@@ -247,10 +250,7 @@
             {
                 Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
                 if (label != null)
-                {
-                    Gdk.Color fg = label.GetForegroundColour(StateType.Normal);
-                    return Color.FromArgb(fg.Red, fg.Green, fg.Blue);
-                }
+                    return label.StyleContext.GetColor(StateType.Normal).ToColour();
                 else
                    return System.Drawing.Color.Black;
             }

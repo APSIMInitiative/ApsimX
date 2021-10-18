@@ -52,7 +52,7 @@ namespace UserInterface.Views
         {
             try
             {
-                panel.Cleanup();
+                panel.Dispose();
             }
             catch (Exception err)
             {

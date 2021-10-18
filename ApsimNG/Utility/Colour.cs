@@ -65,7 +65,7 @@ namespace Utility
         /// </summary>
         /// <param name="colour">Colour to be translated.</param>
         /// <returns>The same colour as a Cairo.Color.</returns>
-        public static OxyColor ToOxy(Color colour)
+        public static OxyColor ToOxy(this Color colour)
         {
             return APSIM.Interop.Graphing.EnumerationExtensions.ToOxyColour(colour);
         }
@@ -115,6 +115,5 @@ namespace Utility
                 Convert.ToInt32(MathUtilities.Bound(colour.Blue, 0, 1) * 0xff)
             );
         }
-
     }
 }

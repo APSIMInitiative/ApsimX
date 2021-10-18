@@ -105,7 +105,7 @@ namespace UserInterface.Views
 
             box.Remove(propertyTable);
 
-            propertyTable.Cleanup();
+            propertyTable.Dispose();
 
 
             propertyTable = new Grid();
@@ -128,7 +128,7 @@ namespace UserInterface.Views
             // If a widget was previously focused, then try to give it focus again.
             if (widgetIsFocused)
             {
-                Widget widget = propertyTable.GetChild(row, col);
+                Widget widget = propertyTable.GetChildAt(row, col);
                 if (widget is Entry entry)
                 {
                     entry.GrabFocus();
@@ -183,7 +183,7 @@ namespace UserInterface.Views
                 {
                     Button info = new Button(new Image(Stock.Info, IconSize.Button));
                     info.TooltipText = property.Tooltip;
-                    propertyTable.Attach(info, 1, 2, startRow, startRow + 1, AttachOptions.Shrink, AttachOptions.Shrink, 0, 0);
+                    propertyTable.Attach(info, 1, startRow, 1, 1);
                     info.Clicked += OnInfoButtonClicked;
                 }
 
@@ -201,7 +201,12 @@ namespace UserInterface.Views
 
             foreach (PropertyGroup subProperties in properties.SubModelProperties)
             {
-                propertyTable.Attach(new Label($"<b>{subProperties.Name} Properties</b>") { Xalign = 0, UseMarkup = true }, 0, 2, startRow, ++startRow, AttachOptions.Fill | AttachOptions.Expand, AttachOptions.Fill, 0, 5);
+                Label label = new Label($"<b>{subProperties.Name} Properties</b>");
+                label.Xalign = 0;
+                label.UseMarkup = true;
+                propertyTable.Attach(label, 0, startRow, 2, 1);
+                label.Ypad = 5;
+                startRow++;
                 AddPropertiesToTable(ref table, subProperties, ref startRow, columnOffset);
             }
         }

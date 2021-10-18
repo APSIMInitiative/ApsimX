@@ -193,7 +193,7 @@ namespace Utility
         private void OnKeyPress(object sender, KeyPressEventArgs args)
         {
             if (args.Event.Key == Gdk.Key.Escape)
-                window.Cleanup();
+                window.Dispose();
         }
 
         /// <summary>

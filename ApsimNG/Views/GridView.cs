@@ -20,6 +20,7 @@
     using TreeModel = Gtk.ITreeModel;
     using CellLayout = Gtk.ICellLayout;
     using StateType = Gtk.StateFlags;
+    using Utility;
 
 
     /// <summary>
@@ -377,7 +378,7 @@
                 if (value != isReadOnly)
                 {
                     foreach (TreeViewColumn col in Grid.Columns)
-                        foreach (CellRenderer render in col.GetCells())
+                        foreach (CellRenderer render in col.Cells)
                             if (render is CellRendererText)
                                 (render as CellRendererText).Editable = !value;
                 }
@@ -495,8 +496,10 @@
                     if (IsSeparator(rowNo))
                     {
                         // tbi - gtk3 equivalent
-                        textRenderer.ForegroundGdk = view.GetForegroundColour(StateType.Normal);
-                        Color separatorColour = Utility.Configuration.Settings.DarkTheme ? Utility.Colour.FromGtk(MainWidget.GetBackgroundColour(StateType.Active)) : Color.LightSteelBlue;
+                        textRenderer.ForegroundGdk = view.StyleContext.GetColor(StateFlags.Normal).ToColour().ToGdk();
+#pragma warning disable 0612
+                        Color separatorColour = Utility.Configuration.Settings.DarkTheme ? MainWidget.StyleContext.GetBackgroundColor(StateFlags.Active).ToColour() : Color.LightSteelBlue;
+#pragma warning restore 0612
 
                         cell.CellBackgroundGdk = new Gdk.Color(separatorColour.R, separatorColour.G, separatorColour.B);
                         textRenderer.Editable = false;
@@ -509,21 +512,23 @@
                     else
                     {
                         // tbi - gtk3 equivalent
-                        cell.CellBackgroundGdk = Grid.GetBackgroundColour(cellState);
-                        textRenderer.ForegroundGdk = Grid.GetForegroundColour(cellState);
+#pragma warning disable 0612
+                        cell.CellBackgroundGdk = Grid.StyleContext.GetBackgroundColor(cellState).ToColour().ToGdk();
+#pragma warning restore 0612
+                        textRenderer.ForegroundGdk = Grid.StyleContext.GetColor(StateFlags.Normal).ToColour().ToGdk();
                     }
 
                     if (IsRowReadonly(rowNo))
                     {
-                        textRenderer.ForegroundGdk = view.GetForegroundColour(StateType.Insensitive);
+                        textRenderer.ForegroundGdk = view.StyleContext.GetColor(StateFlags.Insensitive).ToColour().ToGdk();
                         textRenderer.Editable = false;
                     }
 
                     if (view == Grid)
                     {
-                        col.GetCells()[1].Visible = false;
-                        col.GetCells()[2].Visible = false;
-                        col.GetCells()[3].Visible = false;
+                        col.Cells[1].Visible = false;
+                        col.Cells[2].Visible = false;
+                        col.Cells[3].Visible = false;
                     }
                     object dataVal = DataSource.Rows[rowNo][colNo];
                     Type dataType = dataVal.GetType();
@@ -539,14 +544,14 @@
                         // Currently not handling booleans and lists in the "fixed" column grid
                         if (dataType == typeof(bool))
                         {
-                            CellRendererToggle toggleRend = col.GetCells()[1] as CellRendererToggle;
+                            CellRendererToggle toggleRend = col.Cells[1] as CellRendererToggle;
                             if (toggleRend != null)
                             {
                                 toggleRend.CellBackgroundGdk = cell.CellBackgroundGdk; // cell.CellBackgroundGdk does not affect this
                                 toggleRend.Active = (bool)dataVal;
                                 toggleRend.Activatable = true;
                                 cell.Visible = false;
-                                col.GetCells()[2].Visible = false;
+                                col.Cells[2].Visible = false;
                                 toggleRend.Visible = true;
                                 return;
                             }
@@ -557,7 +562,7 @@
                             ListStore store;
                             if (ComboLookup.TryGetValue(location, out store))
                             {
-                                CellRendererCombo comboRend = col.GetCells()[2] as CellRendererCombo;
+                                CellRendererCombo comboRend = col.Cells[2] as CellRendererCombo;
                                 if (comboRend != null)
                                 {
                                     comboRend.Model = store;
@@ -565,7 +570,7 @@
                                     comboRend.Editable = true;
                                     comboRend.HasEntry = false;
                                     cell.Visible = false;
-                                    col.GetCells()[1].Visible = false;
+                                    col.Cells[1].Visible = false;
                                     comboRend.Visible = true;
                                     comboRend.Text = AsString(dataVal);
                                     comboRend.CellBackgroundGdk = cell.CellBackgroundGdk; // cell.CellBackgroundGdk does not affect this
@@ -574,7 +579,7 @@
                             }
                             if (ButtonList.Contains(location))
                             {
-                                CellRendererActiveButton buttonRend = col.GetCells()[3] as CellRendererActiveButton;
+                                CellRendererActiveButton buttonRend = col.Cells[3] as CellRendererActiveButton;
                                 if (buttonRend != null)
                                 {
                                     buttonRend.Visible = true;
@@ -733,7 +738,7 @@
                 return colAttr.ForegroundColor;
             else
 
-                return Grid.StyleContext.GetColor(StateFlags.Normal).ToGdkColor();
+                return Grid.StyleContext.GetColor(StateFlags.Normal).ToColour().ToGdk();
 
         }
 
@@ -771,7 +776,9 @@
             else
 
                 // fixme
-                return Grid.GetBackgroundColour(StateType.Normal);
+#pragma warning disable 0612 // fixme
+                return Grid.StyleContext.GetBackgroundColor(StateFlags.Normal).ToColour().ToGdk();
+#pragma warning restore 0612
 
         }
 
@@ -1185,7 +1192,7 @@
             while (Grid.Columns.Length > 0)
             {
                 TreeViewColumn col = Grid.GetColumn(0);
-                foreach (CellRenderer render in col.GetCells())
+                foreach (CellRenderer render in col.Cells)
                 {
                     if (render is CellRendererText)
                     {
@@ -1222,7 +1229,7 @@
             while (fixedColView.Columns.Length > 0)
             {
                 TreeViewColumn col = fixedColView.GetColumn(0);
-                foreach (CellRenderer render in col.GetCells())
+                foreach (CellRenderer render in col.Cells)
                     if (render is CellRendererText)
                     {
                         CellRendererText textRender = render as CellRendererText;
@@ -1460,7 +1467,7 @@
             column.CellGetSize(rectangle, out offsetX, out offsetY, out cellWidth, out cellHeight);
 
             // And now get padding from CellRenderer
-            CellRenderer renderer = column.GetCells()[row];
+            CellRenderer renderer = column.Cells[row];
             cellHeight += (int)renderer.Ypad;
             return new Point(column.Width, cellHeight);
         }
@@ -1498,7 +1505,7 @@
         {
             int frameX, frameY, containerX, containerY;
             MasterView.MainWindow.GetOrigin(out frameX, out frameY);
-            Grid.GetGdkWindow().GetOrigin(out containerX, out containerY);
+            Grid.Window.GetOrigin(out containerX, out containerY);
             Point relCoordinates = GetCellPosition(col, row + 1);
             return new Point(relCoordinates.X + containerX, relCoordinates.Y + containerY);
         }
@@ -1726,9 +1733,10 @@
                 if (!colAttributes.TryGetValue(i, out _))
                 {
                     ColRenderAttributes attrib = new ColRenderAttributes();
-                    attrib.ForegroundColor = Grid.GetForegroundColour(StateType.Normal);
-
-                    attrib.BackgroundColor = Grid.GetBackgroundColour(StateType.Normal);
+                    attrib.ForegroundColor = Grid.StyleContext.GetColor(StateFlags.Normal).ToColour().ToGdk();
+#pragma warning disable 0612 // fixme
+                    attrib.BackgroundColor = Grid.StyleContext.GetBackgroundColor(StateFlags.Normal).ToColour().ToGdk();
+#pragma warning restore 0612
 
                     colAttributes.Add(i, attrib);
                 }
@@ -2697,7 +2705,7 @@
                                     Tuple<int, int> location = new Tuple<int, int>(newlySelectedRowIndex, newlySelectedColumnIndex);
                                     if (ButtonList.Contains(location) && e.Event.Type == Gdk.EventType.ButtonPress)
                                     {
-                                        CellRendererActiveButton button = column.GetCells()[3] as CellRendererActiveButton;
+                                        CellRendererActiveButton button = column.Cells[3] as CellRendererActiveButton;
                                         if (e.Event.X >= button.LastRect.X &&
                                             e.Event.X <= button.LastRect.X + button.LastRect.Width)
                                         {

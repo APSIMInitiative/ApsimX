@@ -6,8 +6,7 @@ using OxyPlot.GtkSharp;
 using System;
 using System.Collections.Generic;
 using UserInterface.Extensions;
-
-
+using Utility;
 using ExposeEventArgs = Gtk.DrawnArgs;
 using StateType = Gtk.StateFlags;
 
@@ -167,7 +166,7 @@ namespace UserInterface.Views
             double y3 = height + offsetY;
 
             context.NewPath();
-            context.SetSourceColor(Utility.Colour.ToOxy(owner.MainWidget.GetForegroundColour(StateType.Normal)));
+            context.SetSourceColor(Utility.Colour.ToOxy(owner.MainWidget.StyleContext.GetColor(StateFlags.Normal).ToColour().ToGdk()));
 
             context.MoveTo(x1, y1);
 
@@ -218,7 +217,7 @@ namespace UserInterface.Views
             context.NewPath();
             context.Arc(p.X, p.Y, markerRadius, 0, 2 * Math.PI);
             context.StrokePreserve();
-            context.SetSourceColor(Utility.Colour.ToOxy(owner.MainWidget.GetForegroundColour(StateType.Normal)));
+            context.SetSourceColor(owner.MainWidget.StyleContext.GetColor(StateFlags.Normal).ToColour().ToOxy());
             context.Fill();
         }
 
@@ -230,7 +229,7 @@ namespace UserInterface.Views
             if (isPaintable && chart.Visible)
             {
 
-                Gdk.DrawingContext drawingContext = chart.GetGdkWindow().BeginDrawFrame(chart.GetGdkWindow().VisibleRegion);
+                Gdk.DrawingContext drawingContext = chart.Window.BeginDrawFrame(chart.Window.VisibleRegion);
                 Context context = drawingContext.CairoContext;
 
 

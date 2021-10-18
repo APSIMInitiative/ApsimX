@@ -178,7 +178,7 @@ namespace UserInterface.Views
             while (Fixedcolview.Columns.Length > 0)
             {
                 TreeViewColumn col = Fixedcolview.GetColumn(0);
-                foreach (CellRenderer render in col.GetCells())
+                foreach (CellRenderer render in col.Cells)
                 {
                     if (render is CellRendererText)
                     {
@@ -617,7 +617,7 @@ namespace UserInterface.Views
                 {
                     foreach (TreeViewColumn col in Grid.Columns)
                     {
-                        foreach (CellRenderer render in col.GetCells())
+                        foreach (CellRenderer render in col.Cells)
                         {
                             if (render is CellRendererText)
                             {

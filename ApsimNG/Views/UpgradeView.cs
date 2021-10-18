@@ -149,13 +149,13 @@
         {
             try
             {
-                window1.GetGdkWindow().Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+                window1.Window.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
                 PopulateForm();
-                window1.GetGdkWindow().Cursor = null;
+                window1.Window.Cursor = null;
                 if (loadFailure)
-                    window1.Cleanup();
+                    window1.Dispose();
             }
             catch (Exception err)
             {
@@ -314,7 +314,7 @@
                             throw new Exception("Encountered an error while updating registration information. Please try again later.", err);
                         }
 
-                        window1.GetGdkWindow().Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+                        window1.Window.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
 
                         WebClient web = new WebClient();
 
@@ -360,11 +360,11 @@
                             if (waitDlg != null)
                             {
                                 web.DownloadProgressChanged -= OnDownloadProgressChanged;
-                                waitDlg.Cleanup();
+                                waitDlg.Dispose();
                                 waitDlg = null;
                             }
-                            if (window1 != null && window1.GetGdkWindow() != null)
-                                window1.GetGdkWindow().Cursor = null;
+                            if (window1 != null && window1.Window != null)
+                                window1.Window.Cursor = null;
                         }
 
                     }
@@ -426,7 +426,7 @@
                 {
                     if (waitDlg != null)
                     {
-                        waitDlg.Cleanup();
+                        waitDlg.Dispose();
                         waitDlg = null;
                     }
                 });
@@ -464,10 +464,10 @@
 
                             Application.Invoke((_, __) =>
                             {
-                                window1.GetGdkWindow().Cursor = null;
+                                window1.Window.Cursor = null;
 
                                 // Shutdown the user interface
-                                window1.Cleanup();
+                                window1.Dispose();
                                 tabbedExplorerView.Close();
                             });
                         }
@@ -476,7 +476,7 @@
                     {
                         Application.Invoke(delegate
                         {
-                            window1.GetGdkWindow().Cursor = null;
+                            window1.Window.Cursor = null;
                             ViewBase.MasterView.ShowMsgDialog(err.Message, "Installation Error", MessageType.Error, ButtonsType.Ok, window1);
                         });
                     }

@@ -122,7 +122,7 @@ namespace UserInterface.Views
                 Listview.SelectionChanged -= OnSelectionChanged;
                 Listview.ButtonPressEvent -= OnDoubleClick;
                 ClearPopup();
-                popup.Cleanup();
+                popup.Dispose();
                 listmodel.Dispose();
                 accel.Dispose();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
@@ -476,7 +476,7 @@ namespace UserInterface.Views
                     }
                 }
                 popup.Remove(w);
-                w.Cleanup();
+                w.Dispose();
             }
         }
     }

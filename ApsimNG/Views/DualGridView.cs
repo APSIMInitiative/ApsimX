@@ -42,7 +42,7 @@ namespace UserInterface.Views
             try
             {
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
-                mainWidget.Cleanup();
+                mainWidget.Dispose();
                 //Grid1.Dispose();
                 //Grid2.Dispose();
                 owner = null;

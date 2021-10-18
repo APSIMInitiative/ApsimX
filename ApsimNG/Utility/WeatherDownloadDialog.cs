@@ -139,7 +139,7 @@ namespace Utility
             MessageDialog md = new MessageDialog(dialog1, DialogFlags.Modal, type, ButtonsType.Ok, msg);
             md.Title = title;
             md.Run();
-            md.Cleanup();
+            md.Dispose();
         }
 
         /// <summary>
@@ -200,7 +200,7 @@ namespace Utility
                         explorerPresenter.CommandHistory.Add(command, true);
                     }
                 }
-                dialog1.Cleanup();
+                dialog1.Dispose();
             }
             catch (Exception err)
             {
@@ -324,7 +324,7 @@ namespace Utility
         {
             try
             {
-                dialog1.Cleanup();
+                dialog1.Dispose();
             }
             catch (Exception err)
             {
@@ -585,7 +585,7 @@ namespace Utility
                         string stationString = (string)list.GetValue(iter, 0);
                         stationNumber = Int32.Parse(stationString);
                     }
-                    md.Cleanup();
+                    md.Dispose();
                 }
                 if (stationNumber >= 0) // Phew! We finally have a station number. Now fetch the data.
                 {
@@ -682,9 +682,9 @@ namespace Utility
             }
             set
             {
-                if (dialog1.Toplevel.GetGdkWindow() != null)
+                if (dialog1.Toplevel.Window != null)
                 {
-                    dialog1.Toplevel.GetGdkWindow().Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
+                    dialog1.Toplevel.Window.Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
                     waiting = value;
                 }
             }

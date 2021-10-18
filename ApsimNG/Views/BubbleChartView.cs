@@ -130,32 +130,36 @@ namespace UserInterface.Views
 
             Label l3 = new Label("Name");
             l3.Xalign = 0;
-            t1.Attach(l3, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            t1.Attach(l3, 0, 0, 1, 1);
+
             Label l4 = new Label("Description");
             l4.Xalign = 0;
-            t1.Attach(l4, 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            t1.Attach(l4, 0, 1, 1, 1);
+
             Label l5 = new Label("Colour");
             l5.Xalign = 0;
-            t1.Attach(l5, 0, 1, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            t1.Attach(l5, 0, 2, 1, 1);
 
             nameEntry = new Entry();
             nameEntry.Changed += OnNameChanged;
             nameEntry.Xalign = 0;
+
             // Setting the WidthRequest to 350 will effectively
             // set the minimum size, beyond which it cannot be further
             // shrunk by dragging the HPaned's splitter.
             nameEntry.WidthRequest = 350;
-            t1.Attach(nameEntry, 1, 2, 0, 1, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            t1.Attach(nameEntry, 1, 0, 1, 1);
+
             descEntry = new Entry();
             descEntry.Xalign = 0;
             descEntry.Changed += OnDescriptionChanged;
             descEntry.WidthRequest = 350;
-            t1.Attach(descEntry, 1, 2, 1, 2, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            t1.Attach(descEntry, 1, 1, 1, 1);
             colourChooser = new ColorButton();
             colourChooser.Xalign = 0;
             colourChooser.ColorSet += OnColourChanged;
             colourChooser.WidthRequest = 350;
-            t1.Attach(colourChooser, 1, 2, 2, 3, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            t1.Attach(colourChooser, 1, 2, 1, 1);
             nodeSelWdgt = t1;
             ctxBox.PackStart(t1, true, true, 0);
 

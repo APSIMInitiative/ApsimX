@@ -174,7 +174,7 @@ namespace UserInterface.Views
                     foreach (Widget child in bottomView.Children)
                     {
                         bottomView.Remove(child);
-                        child.Cleanup();
+                        child.Dispose();
                     }
                 }
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
@@ -263,7 +263,7 @@ namespace UserInterface.Views
             foreach (Widget child in bottomView.Children)
             {
                 bottomView.Remove(child);
-                child.Cleanup();
+                child.Dispose();
             }
             ViewBase view = control as ViewBase;
             if (view != null)
