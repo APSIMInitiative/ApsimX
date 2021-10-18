@@ -14,12 +14,7 @@
     using Point = System.Drawing.Point;
     using APSIM.Interop.Visualisation;
     using APSIM.Shared.Graphing;
-
-
-    using ExposeEventArgs = Gtk.DrawnArgs;
-    using StateType = Gtk.StateFlags;
     using Utility;
-
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -207,7 +202,7 @@
         }
 
         /// <summary>The drawing canvas is being exposed to user.</summary>
-        private void OnDrawingAreaExpose(object sender, ExposeEventArgs args)
+        private void OnDrawingAreaExpose(object sender, DrawnArgs args)
         {
             try
             {

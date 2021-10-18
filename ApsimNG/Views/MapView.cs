@@ -19,11 +19,6 @@
     using Coordinate = GeoAPI.Geometries.Coordinate;
     using MapTag = Models.Mapping.MapTag;
 
-
-    using ExposeEventArgs = Gtk.DrawnArgs;
-    using StateType = Gtk.StateFlags;
-
-
     /// <remarks>
     /// This view is intended to diplay sites on a map. For the most part, in works, but it has a few flaws
     /// and room for improvement. 
@@ -273,7 +268,7 @@
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event data.</param>
-        private void OnImageExposed(object sender, ExposeEventArgs args)
+        private void OnImageExposed(object sender, DrawnArgs args)
         {
             try
             {

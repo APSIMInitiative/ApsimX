@@ -1,16 +1,11 @@
 ﻿namespace UserInterface.Classes
 {
-    using global::UserInterface.Extensions;
     using Gtk;
     using Interfaces;
     using System;
     using System.Drawing;
     using Utility;
     using Views;
-
-
-    using StateType = Gtk.StateFlags;
-
 
     /// <summary>
     /// Represents a grid column.
@@ -250,7 +245,7 @@
             {
                 Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
                 if (label != null)
-                    return label.StyleContext.GetColor(StateType.Normal).ToColour();
+                    return label.StyleContext.GetColor(StateFlags.Normal).ToColour();
                 else
                    return System.Drawing.Color.Black;
             }

@@ -28,7 +28,7 @@ namespace UserInterface.Classes
         {
             base.OnRender(cr, widget, background_area, cell_area, flags);
             //tbi
-            //Gtk.Style.PaintArrow(widget.Style, window, StateType.Normal, ShadowType.Out, cell_area, widget, string.Empty, ArrowType.Down, true, Math.Max(cell_area.X, cell_area.X + cell_area.Width - 20), cell_area.Y, 20, cell_area.Height);
+            //Gtk.Style.PaintArrow(widget.Style, window, StateFlags.Normal, ShadowType.Out, cell_area, widget, string.Empty, ArrowType.Down, true, Math.Max(cell_area.X, cell_area.X + cell_area.Width - 20), cell_area.Y, 20, cell_area.Height);
         }
 
 

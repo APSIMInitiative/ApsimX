@@ -7,9 +7,6 @@ using System;
 using System.Collections.Generic;
 using UserInterface.Extensions;
 using Utility;
-using ExposeEventArgs = Gtk.DrawnArgs;
-using StateType = Gtk.StateFlags;
-
 
 namespace UserInterface.Views
 {
@@ -267,7 +264,7 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="o">Sender object.</param>
         /// <param name="args">Event arguments.</param>
-        private void OnDrawChart(object o, ExposeEventArgs args)
+        private void OnDrawChart(object o, DrawnArgs args)
         {
             try
             {

@@ -178,8 +178,8 @@ namespace APSIM.Interop.Mapping
                 layWorld.DataSource = new ShapeFile(shapeFileName, true);
                 layWorld.Style = new VectorStyle();
                 layWorld.Style.EnableOutline = true;
-                // Color background = Colour.FromGtk(MainWidget.GetBackgroundColour(StateType.Normal));
-                // Color foreground = Colour.FromGtk(MainWidget.GetForegroundColour(StateType.Normal));
+                // Color background = Colour.FromGtk(MainWidget.GetBackgroundColour(StateFlags.Normal));
+                // Color foreground = Colour.FromGtk(MainWidget.GetForegroundColour(StateFlags.Normal));
                 // layWorld.Style.Fill = new SolidBrush(background);
                 // layWorld.Style.Outline.Color = foreground;
                 layWorld.CoordinateTransformation = latLonToMetres;

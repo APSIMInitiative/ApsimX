@@ -16,9 +16,6 @@ using Pango;
 using UserInterface.Classes;
 using Table = Markdig.Extensions.Tables.Table;
 
-using StateType = Gtk.StateFlags;
-
-
 namespace UserInterface.Views
 {
     /// <summary>An interface for a rich text widget.</summary>
@@ -811,7 +808,7 @@ namespace UserInterface.Views
             {
                 URL = url;
 
-                ForegroundGdk = (ViewBase.MasterView as ViewBase).MainWidget.StyleContext.GetColor(StateType.Link).ToColour().ToGdk();
+                ForegroundGdk = (ViewBase.MasterView as ViewBase).MainWidget.StyleContext.GetColor(StateFlags.Link).ToColour().ToGdk();
 
                 Underline = Pango.Underline.Single;
             }

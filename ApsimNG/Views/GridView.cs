@@ -10,18 +10,9 @@
     using System.Collections.Generic;
     using System.Data;
     using System.Drawing;
-    using System.Drawing.Imaging;
-    using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Text;
-
-
-    using TreeModel = Gtk.ITreeModel;
-    using CellLayout = Gtk.ICellLayout;
-    using StateType = Gtk.StateFlags;
     using Utility;
-
 
     /// <summary>
     /// A grid control that implements the grid view interface.
@@ -477,7 +468,7 @@
         /// In netcore builds, TreeModel is an alias for ITreeModel (see using statement at top of file).
         /// Need to rework how colours are handled once we drop gtk2 support.
         /// </remarks>
-        public void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
+        public void OnSetCellData(TreeViewColumn col, CellRenderer cell, ITreeModel model, TreeIter iter)
         {
             try
             {
@@ -490,7 +481,7 @@
                 Grid.TooltipColumn = 0;
                 if (colLookup.TryGetValue(cell, out colNo) && rowNo < DataSource.Rows.Count && colNo < ColumnCount)
                 {
-                    StateType cellState = CellIsSelected(rowNo, colNo) ? StateType.Selected : StateType.Normal;
+                    StateFlags cellState = CellIsSelected(rowNo, colNo) ? StateFlags.Selected : StateFlags.Normal;
 
                     textRenderer.Editable = true;
                     if (IsSeparator(rowNo))
@@ -504,7 +495,7 @@
                         cell.CellBackgroundGdk = new Gdk.Color(separatorColour.R, separatorColour.G, separatorColour.B);
                         textRenderer.Editable = false;
                     }
-                    else if (colAttributes.TryGetValue(colNo, out ColRenderAttributes attributes) && cellState != StateType.Selected)
+                    else if (colAttributes.TryGetValue(colNo, out ColRenderAttributes attributes) && cellState != StateFlags.Selected)
                     {
                         cell.CellBackgroundGdk = attributes.BackgroundColor;
                         textRenderer.ForegroundGdk = attributes.ForegroundColor;
@@ -2225,7 +2216,7 @@
             }
         }
 
-        private void OnSetComboData(CellLayout cell_layout, CellRenderer cell, TreeModel tree_model, TreeIter iter)
+        private void OnSetComboData(ICellLayout cell_layout, CellRenderer cell, ITreeModel tree_model, TreeIter iter)
         {
             try
             {
