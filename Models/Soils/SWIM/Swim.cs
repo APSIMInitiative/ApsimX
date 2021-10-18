@@ -53,7 +53,7 @@ namespace Models.Soils
         [Link(IsOptional = true)]
         private SwimWaterTable waterTable = null;
 
-        const double divideTolerance = 1D-8;
+        const double divideTolerance = 1e-8;
         const double effpar = 0.184;
         const double psi_ll15 = -15000.0;
         const double psiad = -1e6;
