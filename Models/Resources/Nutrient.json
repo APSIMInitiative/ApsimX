@@ -233,6 +233,14 @@
       "Name": "Nutrient",
       "Children": [
         {
+          "$type": "Models.Memo, Models",
+          "Text": "This work builds upon earlier APSIM soil organic matter models such as SoilN ([probert_apsims_1998]).",
+          "Name": "Introduction",
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.Soils.Nutrients.NutrientPool, Models",
           "C": null,
           "N": null,

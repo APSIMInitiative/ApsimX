@@ -14,6 +14,15 @@
       "Name": "Peanut",
       "Children": [
         {
+          "$type": "Models.Memo, Models",
+          "Text": "The model consists of:\r\n\r\n* a phenology model to simulate development between growth phases  \r\n* a structure model to simulate plant morphology  \r\n* a collection of organs to simulate the various plant parts  \r\n* an arbitrator to allocate resources (N, biomass) to the various plant organs",
+          "Name": "TitlePage",
+          "Children": [],
+          "IncludeInDocumentation": true,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
           "$type": "Models.PMF.OrganArbitrator, Models",
           "Name": "Arbitrator",
           "Children": [

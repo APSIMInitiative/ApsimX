@@ -15,7 +15,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "\r\nThe APSIM Chickpea model has been developed from the original APSIM Chickpea model described by [robertson_simulation_2002] using the Plant Modelling Framework of [brown_plant_2014].",
+          "Text": "\r\nThe APSIM Chickpea model has been developed from the original APSIM Chickpea model described by [robertson_simulation_2002] using the Plant Modelling Framework of [brown_plant_2014].\n\nNote to users:\nDesi and Kabuli chickpea are two subspecies of chickpea. The variety set includes both types. As indicated by Peake et al., 2021 (GRDC Updates), there was less confidence in predicting ",
           "Name": "Introduction",
           "Children": [],
           "IncludeInDocumentation": true,
