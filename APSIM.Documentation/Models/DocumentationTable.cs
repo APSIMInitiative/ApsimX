@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using Models.Core;
 
 namespace APSIM.Documentation.Models
 {
@@ -117,7 +118,7 @@ namespace APSIM.Documentation.Models
                 foreach (IDocumentationCell cell in row.Cells)
                 {
                     html.AppendLine("<td>");
-                    IEnumerable<string> files = cell.Files.Select(f => $"<p><a href=\"{f.OutputFileName}\">{f.Name}</a></p>");
+                    IEnumerable<string> files = cell.Files.Select(f => $"<p><a href=\"{GetUrl(f)}\">{f.Name}</a></p>");
                     // fixme - insert actual links with remote path.
                     string links = string.Join("", files);
                     html.AppendLine(links);
@@ -136,6 +137,13 @@ namespace APSIM.Documentation.Models
             html.AppendLine("</body>");
             html.AppendLine("</html>");
             return html.ToString();
+        }
+
+        private object GetUrl(IDocumentationFile file)
+        {
+            if (file is ExternalDocument)
+                return file.OutputFileName;
+            return $"https://apsimdev.apsim.info/ApsimX/Releases/{Simulations.ApsimVersion}/{file.OutputFileName}";
         }
     }
 }
