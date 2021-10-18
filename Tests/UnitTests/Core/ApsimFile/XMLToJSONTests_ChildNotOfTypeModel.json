@@ -12,7 +12,6 @@
           "Name": "G",
           "Axis": [
             {
-              "$type": "Models.Axis, Models",
               "Type": "Bottom",
               "Title": "Date",
               "Inverted": false,
@@ -21,7 +20,6 @@
               "Interval": "NaN"
             },
             {
-              "$type": "Models.Axis, Models",
               "Type": "Left",
               "Title": "Yield",
               "Inverted": false,

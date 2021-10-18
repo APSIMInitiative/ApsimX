@@ -24,7 +24,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 142; } }
+        public static int LatestVersion { get { return 144; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3721,6 +3721,99 @@
                 JsonUtilities.SearchReplaceReportVariableNames(report, "[OilPalm].SWUptake", "[OilPalm].WaterUptake");
                 JsonUtilities.SearchReplaceReportVariableNames(report, "OilPalm.NUptake", "OilPalm.NitrogenUptake");
                 JsonUtilities.SearchReplaceReportVariableNames(report, "OilPalm.SWUptake", "OilPalm.WaterUptake");
+            }
+        }
+
+        /// <summary>
+        /// Changes to facilitate the autodocs refactor:
+        /// - Rename Models.Axis to APSIM.Shared.Graphing.Axis.
+        /// - Copy the value of all folders' IncludeInDocumentation property
+        ///   into their new ShowInDocs property.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion143(JObject root, string fileName)
+        {
+            foreach (JObject graph in JsonUtilities.ChildrenRecursively(root, "Graph"))
+            {
+                JToken axes = graph["Axis"];
+                if (axes == null)
+                    continue;
+                foreach (JObject axis in axes)
+                {
+                    // Class moved into APSIM.Shared.Graphing namespace.
+                    axis["$type"] = "APSIM.Shared.Graphing.Axis, APSIM.Shared";
+
+                    // Type property renamed to Position.
+                    JsonUtilities.RenameProperty(axis, "Type", "Position");
+
+                    // Min/Max/Interval properties are now nullable doubles.
+                    // null is used to indicate no value, rather than NaN.
+                    if (axis["Minimum"].Value<string>() == "NaN")
+                        axis["Minimum"] = null;
+                    if (axis["Maximum"].Value<string>() == "NaN")
+                        axis["Maximum"] = null;
+                    if (axis["Interval"].Value<string>() == "NaN")
+                        axis["Interval"] = null;
+                }
+            }
+
+            foreach (JObject folder in JsonUtilities.ChildrenRecursively(root, "Folder"))
+            {
+                JToken showInDocs = folder["ShowPageOfGraphs"];
+                bool show = showInDocs != null && showInDocs.Value<bool>();
+                folder["ShowInDocs"] = show && ShouldShowInDocs(folder);
+            }
+
+            bool ShouldShowInDocs(JObject folder)
+            {
+                JToken includeInDocumentation = folder["IncludeInDocumentation"];
+                if (includeInDocumentation == null || !includeInDocumentation.Value<bool>())
+                    return false;
+                // bool isFolder = JsonUtilities.Type(folder) == "Folder";
+                // if (isFolder)
+                // {
+                //     JToken showPageOfGraphs = folder["ShowPageOfGraphs"];
+                //     if (showPageOfGraphs == null || !showPageOfGraphs.Value<bool>())
+                //         return false;
+                // }
+                JObject parent = (JObject)JsonUtilities.Parent(folder);
+                if (parent == null)
+                    return true;
+                else
+                    return ShouldShowInDocs(parent);
+            }
+        }
+
+        /// <summary>
+        /// Change the namespace of the Coordinate type.
+        /// Change the namespace of the DirectedGraph type.
+        /// </summary>
+        /// <param name="root"></param>
+        /// <param name="fileName"></param>
+        private static void UpgradeToVersion144(JObject root, string fileName)
+        {
+            foreach (JObject map in JsonUtilities.ChildrenRecursively(root, "Map"))
+            {
+                JObject center = map["Center"] as JObject;
+                if (center != null)
+                    center["$type"] = "Models.Mapping.Coordinate, Models";
+            }
+            foreach (JObject nutrient in JsonUtilities.ChildrenRecursively(root, "Nutrient"))
+            {
+                JToken graph = nutrient["DirectedGraphInfo"];
+                if (graph != null)
+                {
+                    graph["$type"] = "APSIM.Shared.Graphing.DirectedGraph, APSIM.Shared";
+                    JArray nodes = graph["Nodes"] as JArray;
+                    if (nodes != null)
+                        foreach (JToken node in nodes)
+                            node["$type"] = "APSIM.Shared.Graphing.Node, APSIM.Shared";
+                    JArray arcs = graph["Arcs"] as JArray;
+                    if (arcs != null)
+                        foreach (JToken arc in arcs)
+                            arc["$type"] = "APSIM.Shared.Graphing.Arc, APSIM.Shared";
+                }
             }
         }
 

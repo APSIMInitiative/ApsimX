@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Shared.Documentation;
 using System.Collections;
 using Models.Core;
 using Newtonsoft.Json;
@@ -13,7 +14,7 @@ namespace Models.PMF
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
-    public class CompositeBiomass : Model, ICustomDocumentation, IBiomass
+    public class CompositeBiomass : Model, IBiomass
     {
         private List<IOrganDamage> organs;
 
@@ -183,33 +184,18 @@ namespace Models.PMF
             }
         }
 
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name + " Biomass", headingLevel));
+            foreach (ITag tag in base.Document())
+                yield return tag;
 
-                // write description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
+            yield return new Paragraph($"{Name} summarises the following biomass objects:");
 
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-
-                tags.Add(new AutoDocumentation.Paragraph(this.Name + " summarises the following biomass objects:", indent));
-
-                string st = string.Empty;
-                if (OrganNames != null)
-                    foreach (string organName in OrganNames)
-                        st += Environment.NewLine + "* " + organName;
-                tags.Add(new AutoDocumentation.Paragraph(st, indent));
-            }
+            string st = string.Join(Environment.NewLine, OrganNames.Select(o => $"* {o}"));
+            yield return new Paragraph(st);
         }
     }
 }

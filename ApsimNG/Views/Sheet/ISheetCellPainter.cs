@@ -1,4 +1,7 @@
-﻿namespace UserInterface.Views
+﻿using System.Drawing;
+using APSIM.Interop.Drawing;
+
+namespace UserInterface.Views
 {
     /// <summary>
     /// An interface for a class that paints a cell in a sheet widget.
@@ -36,12 +39,12 @@
         /// <summary>Gets the foreground colour of a cell.</summary>
         /// <param name="columnIndex">The column index of the cell.</param>
         /// <param name="rowIndex">The row index of the cell.</param>
-        (int Red, int Green, int Blue) GetForegroundColour(int columnIndex, int rowIndex);
+        Color GetForegroundColour(int columnIndex, int rowIndex);
 
         /// <summary>Gets the background colour of a cell.</summary>
         /// <param name="columnIndex">The column index of the cell.</param>
         /// <param name="rowIndex">The row index of the cell.</param>
-        (int Red, int Green, int Blue) GetBackgroundColour(int columnIndex, int rowIndex);
+        Color GetBackgroundColour(int columnIndex, int rowIndex);
 #endif
     }
 }

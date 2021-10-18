@@ -4,7 +4,6 @@
   "End": "2015-12-31T00:00:00",
   "Name": "Clock",
   "Children": [],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }

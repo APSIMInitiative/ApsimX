@@ -5,6 +5,7 @@ namespace UserInterface.Extensions
     using System.IO;
     using APSIM.Shared.Utilities;
     using System.Drawing.Imaging;
+    using APSIM.Interop.Utility;
 #if NETFRAMEWORK
     using MigraDoc.DocumentObjectModel;
 #else

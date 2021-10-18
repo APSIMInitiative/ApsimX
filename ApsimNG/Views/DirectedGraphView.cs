@@ -1,17 +1,19 @@
 ﻿namespace UserInterface.Views
 {
-    using ApsimNG.Classes.DirectedGraph;
     using Cairo;
     using Extensions;
     using EventArguments;
     using EventArguments.DirectedGraph;
     using Gtk;
-    using Models;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.IO;
     using System.Linq;
+    using Color = System.Drawing.Color;
+    using Point = System.Drawing.Point;
+    using APSIM.Interop.Visualisation;
+    using APSIM.Shared.Graphing;
 
 #if NETCOREAPP
     using ExposeEventArgs = Gtk.DrawnArgs;
@@ -61,7 +63,7 @@
         /// <summary>
         /// Position of the last moved node.
         /// </summary>
-        private PointD lastPos;
+        private Point lastPos;
 
         /// <summary>
         /// List of nodes. These are currently circles with text in them.
@@ -122,13 +124,13 @@
             drawable.SizeAllocated += OnRealized;
             if (owner == null)
             {
-                DGObject.DefaultOutlineColour = OxyPlot.OxyColors.Black;
+                DGObject.DefaultOutlineColour = Color.Black;
             }
             else
             {
                 // Needs to be reimplemented for gtk3.
-                DGObject.DefaultOutlineColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.GetForegroundColour(StateType.Normal));
-                DGObject.DefaultBackgroundColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.GetBackgroundColour(StateType.Normal));
+                DGObject.DefaultOutlineColour = Utility.Colour.FromGtk(owner.MainWidget.GetForegroundColour(StateType.Normal));
+                DGObject.DefaultBackgroundColour = Utility.Colour.FromGtk(owner.MainWidget.GetBackgroundColour(StateType.Normal));
             }
             mainWidget.Destroyed += OnDestroyed;
         }
@@ -226,10 +228,8 @@
 #else
                 Cairo.Context context = args.Cr;
 #endif
-                foreach (DGArc tmpArc in arcs)
-                    tmpArc.Paint(context);
-                foreach (DGNode tmpNode in nodes)
-                    tmpNode.Paint(context);
+                CairoContext drawingContext = new CairoContext(context, MainWidget);
+                DirectedGraphRenderer.Draw(drawingContext, arcs, nodes);
 
                 ((IDisposable)context.GetTarget()).Dispose();
                 ((IDisposable)context).Dispose();
@@ -246,8 +246,8 @@
             try
             {
                 // Get the point clicked by the mouse.
-                PointD clickPoint = new PointD(args.Event.X, args.Event.Y);
-
+                Point clickPoint = new Point((int)args.Event.X, (int)args.Event.Y);
+                
                 if (args.Event.Button == 1)
                 {
                     mouseDown = true;
@@ -302,7 +302,7 @@
             try
             {
                 // Get the point clicked by the mouse.
-                PointD movePoint = new PointD(args.Event.X, args.Event.Y);
+                Point movePoint = new Point((int)args.Event.X, (int)args.Event.Y);
 
                 // If an object is under the mouse then move it
                 if (mouseDown && SelectedObject != null)
@@ -335,7 +335,7 @@
                         OnGraphObjectMoved?.Invoke(this, new ObjectMovedArgs(SelectedObject));
                     else
                     {
-                        PointD clickPoint = new PointD(args.Event.X, args.Event.Y);
+                        Point clickPoint = new Point((int)args.Event.X, (int)args.Event.Y);
                         // Look through nodes for the click point
                         DGObject clickedObject = nodes.FindLast(node => node.HitTest(clickPoint));
 
