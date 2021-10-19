@@ -1108,6 +1108,8 @@
         /// <param name="orientation">Orientation of items in the legend.</param>
         public void FormatLegend(APSIM.Shared.Graphing.LegendPosition legendPositionType, APSIM.Shared.Graphing.LegendOrientation orientation)
         {
+            if (!plot1.Model.Legends.Any())
+                plot1.Model.Legends.Add(new OxyPlot.Legends.Legend());
             OxyLegendPosition oxyLegendPosition;
             if (Enum.TryParse(legendPositionType.ToString(), out oxyLegendPosition))
             {
