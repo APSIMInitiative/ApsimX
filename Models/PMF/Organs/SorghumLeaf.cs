@@ -64,10 +64,6 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Path, Path = "[Phenology].DltTT")]
         private IFunction dltTT { get; set; }
 
-        /// <summary>SupplyDemand Ratio</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction SDRatio = null; //waterSenescence
-
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction frgr = null;
 

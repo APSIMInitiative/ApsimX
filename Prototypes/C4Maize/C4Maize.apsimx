@@ -7159,32 +7159,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.ProtectedDivideFunction, Models",
-                  "NumeratorErrVal": 0.0,
-                  "DenominatorErrVal": 1.0,
-                  "Name": "SDRatio",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Arbitrator].WatSupply",
-                      "Name": "WaterSupply",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Arbitrator].WDemand",
-                      "Name": "WaterDemand",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.Constant, Models",
                   "FixedValue": 1.7,
                   "Units": null,
@@ -7238,6 +7212,32 @@
                       "Units": null,
                       "Name": "SenThreshold",
                       "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ProtectedDivideFunction, Models",
+                      "NumeratorErrVal": 0.0,
+                      "DenominatorErrVal": 1.0,
+                      "Name": "SDRatio",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Arbitrator].WatSupply",
+                          "Name": "WaterSupply",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Arbitrator].WDemand",
+                          "Name": "WaterDemand",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -11734,7 +11734,6 @@
             "[C4Maize].Grain.TemperatureFactor as GrainTempFactor",
             "",
             "[Arbitrator].WaterUptakeMethod.SDRatio",
-            "[Leaf].SDRatio",
             "[Phenology].DltTT as DltTT"
           ],
           "EventNames": [

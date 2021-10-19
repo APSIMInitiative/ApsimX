@@ -34,6 +34,10 @@ namespace Models.Functions
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction senThreshold = null;  //waterSenescence
 
+        /// <summary>SupplyDemand Ratio</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        public IFunction SDRatio = null; //waterSenescence
+
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -92,7 +96,7 @@ namespace Models.Functions
             avLaiEquilibWater = UpdateAvLaiEquilibWater(laiEquilibWaterToday, 10);
 
             //// calculate a 5 day moving average of the supply demand ratio
-            avSDRatio = UpdateAvSDRatio(leaf.SDRatio.Value(), 5);
+            avSDRatio = UpdateAvSDRatio(SDRatio.Value(), 5);
 
             double dltSlaiWater = 0.0;
 

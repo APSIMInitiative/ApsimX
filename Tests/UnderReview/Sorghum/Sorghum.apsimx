@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 396,
+  "ExplorerWidth": 285,
   "Version": 144,
   "Name": "Simulations",
   "Children": [
@@ -5459,32 +5459,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.ProtectedDivideFunction, Models",
-                  "NumeratorErrVal": 0.0,
-                  "DenominatorErrVal": 1.0,
-                  "Name": "SDRatio",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Arbitrator].WatSupply",
-                      "Name": "WaterSupply",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Arbitrator].WDemand",
-                      "Name": "WaterDemand",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.LightSenescenceFunction, Models",
                   "Name": "LightSenescence",
                   "Children": [
@@ -5547,6 +5521,32 @@
                       "Units": null,
                       "Name": "SenThreshold",
                       "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.ProtectedDivideFunction, Models",
+                      "NumeratorErrVal": 0.0,
+                      "DenominatorErrVal": 1.0,
+                      "Name": "SDRatio",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Arbitrator].WatSupply",
+                          "Name": "WaterSupply",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Arbitrator].WDemand",
+                          "Name": "WaterDemand",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
