@@ -8,6 +8,7 @@ using APSIM.Shared.Utilities;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 using Models.PMF;
+using Models.Interfaces;
 
 namespace Models.Functions
 {
@@ -20,6 +21,18 @@ namespace Models.Functions
     {
         [Link(Type = LinkType.Ancestor)]
         private SorghumLeaf Leaf = null;
+
+        /// <summary>The met data</summary>
+        [Link]
+        private IWeather metData = null;
+
+        /// <summary>Radiation level for onset of light senescence.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("Mj/m^2")]
+        private IFunction senRadnCrit = null;
+
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction senLightTimeConst = null;
 
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
@@ -48,7 +61,8 @@ namespace Models.Functions
         /// <value>The value.</value>
         public double Value(int arrayIndex = -1)
         {
-            double critTransmission = MathUtilities.Divide(Leaf.SenRadnCrit, Leaf.metData.Radn, 1);
+            var senRadiationCrit = senRadnCrit.Value();
+            double critTransmission = MathUtilities.Divide(senRadiationCrit, metData.Radn, 1);
             /* TODO : Direct translation - needs cleanup */
             //            ! needs rework for row spacing
             double laiEqlbLightToday;
@@ -65,11 +79,11 @@ namespace Models.Functions
 
             // dh - In old apsim, we had another variable frIntcRadn which is always set to 0.
             // Set Plant::radnInt(void) in Plant.cpp.
-            double radnInt = Leaf.metData.Radn * Leaf.CoverGreen;
-            double radnTransmitted = Leaf.metData.Radn - radnInt;
+            double radnInt = metData.Radn * Leaf.CoverGreen;
+            double radnTransmitted = metData.Radn - radnInt;
             double dltSlaiLight = 0.0;
-            if (radnTransmitted < Leaf.SenRadnCrit)
-                dltSlaiLight = Math.Max(0.0, MathUtilities.Divide(Leaf.LAI - avgLaiEquilibLight, Leaf.SenLightTimeConst, 0.0));
+            if (radnTransmitted < senRadiationCrit)
+                dltSlaiLight = Math.Max(0.0, MathUtilities.Divide(Leaf.LAI - avgLaiEquilibLight, senLightTimeConst.Value(), 0.0));
             dltSlaiLight = Math.Min(dltSlaiLight, Leaf.LAI);
             return dltSlaiLight;
         }

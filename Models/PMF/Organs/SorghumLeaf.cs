@@ -55,7 +55,7 @@ namespace Models.PMF.Organs
 
         /// <summary>The met data</summary>
         [Link]
-        public IWeather metData = null;
+        private IWeather metData = null;
 
         /// <summary>The surface organic matter model</summary>
         [Link]
@@ -108,27 +108,11 @@ namespace Models.PMF.Organs
         private IFunction minPlantWt = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction senLightTimeConst = null;
-
-        /// <summary>Delay factor for water senescence.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction senWaterTimeConst = null; //waterSenescence
-
-        /// <summary>supply:demand ratio for onset of water senescence.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        public IFunction senThreshold = null;  //waterSenescence
-
-        [Link(Type = LinkType.Child, ByName = true)]
         private IFunction nPhotoStressFunction = null;
 
         /// <summary>Link to biomass removal model</summary>
         [Link(Type = LinkType.Child)]
         private BiomassRemoval biomassRemovalModel = null;
-
-        /// <summary>Radiation level for onset of light senescence.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        [Units("Mj/m^2")]
-        private IFunction senRadnCrit = null;
 
         /// <summary>The DM demand function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -430,18 +414,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets the total (live + dead) N concentration (g/g)</summary>
         [JsonIgnore]
         public double Nconc => MathUtilities.Divide(N, Wt, 0.0);
-
-        /// <summary>Radiation level for onset of light senescence.</summary>
-        public double SenRadnCrit => senRadnCrit.Value();
-
-        /// <summary>sen_light_time_const.</summary>
-        public double SenLightTimeConst => senLightTimeConst.Value();
-
-        /// <summary>supply:demand ratio for onset of water senescence.</summary>
-        public double SenThreshold => senThreshold.Value();
-
-        /// <summary>Delay factor for water senescence.</summary>
-        public double SenWaterTimeConst => senWaterTimeConst.Value();
 
         /// <summary>Gets or sets the water allocation.</summary>
         [JsonIgnore]

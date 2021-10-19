@@ -8,6 +8,7 @@ using APSIM.Shared.Utilities;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 using Models.PMF;
+using Models.Interfaces;
 
 namespace Models.Functions
 {
@@ -20,6 +21,18 @@ namespace Models.Functions
     {
         [Link(Type = LinkType.Ancestor)]
         private SorghumLeaf leaf = null;
+
+        /// <summary>The met data</summary>
+        [Link]
+        private IWeather metData = null;
+
+        /// <summary>Delay factor for water senescence.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction senWaterTimeConst = null; //waterSenescence
+
+        /// <summary>supply:demand ratio for onset of water senescence.</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction senThreshold = null;  //waterSenescence
 
         /// <summary>Called when crop is ending</summary>
         /// <param name="sender">The sender.</param>
@@ -59,7 +72,7 @@ namespace Models.Functions
             //double radnCanopy = divide(plant->getRadnInt(), coverGreen, plant->today.radn);
             double effectiveRue = MathUtilities.Divide(leaf.photosynthesis.Value(), leaf.RadiationIntercepted, 0);
 
-            double radnCanopy = MathUtilities.Divide(leaf.RadiationIntercepted, leaf.CoverGreen, leaf.metData.Radn);
+            double radnCanopy = MathUtilities.Divide(leaf.RadiationIntercepted, leaf.CoverGreen, metData.Radn);
             if (MathUtilities.FloatsAreEqual(leaf.CoverGreen, 0))
                 radnCanopy = 0;
 
@@ -83,8 +96,8 @@ namespace Models.Functions
 
             double dltSlaiWater = 0.0;
 
-            if (avSDRatio < leaf.senThreshold.Value())
-                dltSlaiWater = Math.Max(0.0, MathUtilities.Divide((leaf.LAI - avLaiEquilibWater), leaf.senWaterTimeConst.Value(), 0.0));
+            if (avSDRatio < senThreshold.Value())
+                dltSlaiWater = Math.Max(0.0, MathUtilities.Divide((leaf.LAI - avLaiEquilibWater), senWaterTimeConst.Value(), 0.0));
             dltSlaiWater = Math.Min(leaf.LAI, dltSlaiWater);
             return dltSlaiWater;
         }
