@@ -1,15 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
-using System.Reflection;
 using Models.Core;
-using System.Linq;
 using APSIM.Shared.Utilities;
-using Models.PMF.Interfaces;
 using Models.PMF.Organs;
-using Models.PMF;
-using Models.Climate;
-using Models.PMF.Phen;
 using Models.Interfaces;
 
 namespace Models.Functions
@@ -44,23 +37,6 @@ namespace Models.Functions
         /// <summary>Temperature threshold for leaf death.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction frostKillSevere = null;
-
-        /// <summary>Called when crop is ending</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantSowing")]
-        virtual protected void OnPlantSowing(object sender, SowingParameters data)
-        {
-
-        }
-
-        /// <summary>Called when [EndCrop].</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("PlantEnding")]
-        private void OnPlantEnding(object sender, EventArgs e)
-        {
-        }
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>

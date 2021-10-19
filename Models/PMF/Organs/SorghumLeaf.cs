@@ -43,18 +43,15 @@ namespace Models.PMF.Organs
         [Link]
         private ISummary summary = null;
 
+        /// <summary>
+        /// Culms on the leaf
+        /// </summary>
         [Link]
-        private LeafCulms culms = null;
+        public LeafCulms culms = null;
 
         /// <summary>Phenology</summary>
         [Link]
-        public Phenology phenology = null; //forst senescence
-
-        /// <summary>
-        /// Linke to weather, used for frost senescence calcs.
-        /// </summary>
-        [Link]
-        private IWeather weather = null;
+        public Phenology phenology = null; 
 
         /// <summary>The met data</summary>
         [Link]
@@ -66,9 +63,6 @@ namespace Models.PMF.Organs
 
         [Link(Type = LinkType.Path, Path = "[Phenology].DltTT")]
         private IFunction dltTT { get; set; }
-
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction SDRatioFunction = null;
 
         /// <summary>SupplyDemand Ratio</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -116,14 +110,6 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction senLightTimeConst = null;
 
-        /// <summary> Temperature threshold for leaf death, when plant is between floral init and flowering. </summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction frostKill = null;
-
-        /// <summary>Temperature threshold for leaf death.</summary>
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction frostKillSevere = null;
-
         /// <summary>Delay factor for water senescence.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         public IFunction senWaterTimeConst = null; //waterSenescence
@@ -134,12 +120,6 @@ namespace Models.PMF.Organs
 
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction nPhotoStressFunction = null;
-
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction leafNoDeadIntercept = null;
-
-        [Link(Type = LinkType.Child, ByName = true)]
-        private IFunction leafNoDeadSlope = null;
 
         /// <summary>Link to biomass removal model</summary>
         [Link(Type = LinkType.Child)]
@@ -159,6 +139,10 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         private BiomassDemand nDemands = null;
+
+        /// <summary>Light Senescence function</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction AgeSenescence = null;
 
         /// <summary>Light Senescence function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -453,9 +437,6 @@ namespace Models.PMF.Organs
         /// <summary>sen_light_time_const.</summary>
         public double SenLightTimeConst => senLightTimeConst.Value();
 
-        /// <summary>temperature threshold for leaf death.</summary>
-        public double FrostKill => frostKill.Value();
-
         /// <summary>supply:demand ratio for onset of water senescence.</summary>
         public double SenThreshold => senThreshold.Value();
 
@@ -514,16 +495,6 @@ namespace Models.PMF.Organs
             Height = 0;
 
             leafInitialised = false;
-            laiEqlbLightTodayQ = new Queue<double>(10);
-            //sdRatio = 0.0;
-            totalLaiEqlbLight = 0.0;
-            avgLaiEquilibLight = 0.0;
-
-            laiEquilibWaterQ = new Queue<double>(10);
-            sdRatioQ = new Queue<double>(5);
-            totalLaiEquilibWater = 0;
-            totalSDRatio = 0.0;
-            avSDRatio = 0.0;
 
             LAI = 0;
             SLN = 0;
@@ -813,47 +784,6 @@ namespace Models.PMF.Organs
                 }
             }
         }
-        private double totalLaiEqlbLight;
-        private double avgLaiEquilibLight;
-        private Queue<double> laiEqlbLightTodayQ;
-        private double UpdateAvLaiEquilibLight(double laiEqlbLightToday, int days)
-        {
-            totalLaiEqlbLight += laiEqlbLightToday;
-            laiEqlbLightTodayQ.Enqueue(laiEqlbLightToday);
-            if (laiEqlbLightTodayQ.Count > days)
-            {
-                totalLaiEqlbLight -= laiEqlbLightTodayQ.Dequeue();
-            }
-            return MathUtilities.Divide(totalLaiEqlbLight, laiEqlbLightTodayQ.Count, 0);
-        }
-
-        private double totalLaiEquilibWater;
-        private double avLaiEquilibWater;
-        private Queue<double> laiEquilibWaterQ;
-        private double UpdateAvLaiEquilibWater(double valToday, int days)
-        {
-            totalLaiEquilibWater += valToday;
-            laiEquilibWaterQ.Enqueue(valToday);
-            if (laiEquilibWaterQ.Count > days)
-            {
-                totalLaiEquilibWater -= laiEquilibWaterQ.Dequeue();
-            }
-            return MathUtilities.Divide(totalLaiEquilibWater, laiEquilibWaterQ.Count, 0);
-        }
-
-        private double totalSDRatio;
-        private double avSDRatio;
-        private Queue<double> sdRatioQ;
-        private double UpdateAvSDRatio(double valToday, int days)
-        {
-            totalSDRatio += valToday;
-            sdRatioQ.Enqueue(valToday);
-            if (sdRatioQ.Count > days)
-            {
-                totalSDRatio -= sdRatioQ.Dequeue();
-            }
-            return MathUtilities.Divide(totalSDRatio, sdRatioQ.Count, 0);
-        }
 
         /// <summary>Senesce the Leaf Area.</summary>
         private void SenesceArea()
@@ -862,172 +792,27 @@ namespace Models.PMF.Organs
             DltSenescedLaiN = 0.0;
 
             DltSenescedLaiAge = 0;
-            if (phenology.Between("Emergence", "HarvestRipe"))
-                DltSenescedLaiAge = CalcLaiSenescenceAge();
-            DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiAge);
-
             //sLai - is the running total of dltSLai
             //could be a stage issue here. should only be between fi and flag
             LossFromExpansionStress += (DltPotentialLAI - DltStressedLAI);
             var maxLaiPossible = LAI + SenescedLai - LossFromExpansionStress;
 
-            DltSenescedLaiLight = LightSenescence.Value();// CalcLaiSenescenceLight();
-            DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiLight);
-            
-            DltSenescedLaiWater = WaterSenescence.Value(); //CalcLaiSenescenceWater();
-            DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiWater);
+            var sen = new List<double> { DltSenescedLai };
+
+            if (phenology.Between("Emergence", "HarvestRipe"))
+                DltSenescedLaiAge = AgeSenescence.Value();
+            sen.Add(DltSenescedLaiAge);
+
+            DltSenescedLaiLight = LightSenescence.Value();
+            sen.Add(DltSenescedLaiLight);
+
+            DltSenescedLaiWater = WaterSenescence.Value();
+            sen.Add(DltSenescedLaiWater);
 
             DltSenescedLaiFrost = FrostSenescence.Value();
-            DltSenescedLaiFrost = //CalcLaiSenescenceFrost();
-            DltSenescedLai = Math.Max(DltSenescedLai, DltSenescedLaiFrost);
+            sen.Add(DltSenescedLaiFrost);
 
-            DltSenescedLai = Math.Min(DltSenescedLai, LAI);
-        }
-
-        /// <summary>
-        /// Calculate senescence due to frost.
-        /// </summary>
-        private double CalcLaiSenescenceFrost()
-        {
-            if (weather.MinT > FrostKill || !plant.IsEmerged)
-                return 0;
-
-            if(MathUtilities.IsLessThanOrEqual(weather.MinT, frostKillSevere.Value()))
-            {
-                // Temperature is below frostKillSevere parameter, senesce all LAI.
-                summary.WriteMessage(this, FrostSenescenceMessage(fatal: true));
-                return LAI;
-            }
-            // Temperature is warmer than frostKillSevere, but cooler than frostKill.
-            // So the plant will only die if between floral init - flowering.
-
-            if (phenology.Between("Germination", "FloralInitiation"))
-            {
-                // The plant will survive but all of the leaf area is removed except a fraction.
-                // 3 degrees is a default for now - extract to a parameter to customise it.
-                summary.WriteMessage(this, FrostSenescenceMessage(fatal: false));
-                return Math.Max(0, LAI - 0.1);
-            }
-            if (phenology.Between("FloralInitiation", "Flowering"))
-            {
-                // Plant is between floral init and flowering - time to die.
-                summary.WriteMessage(this, FrostSenescenceMessage(fatal: true));
-                return LAI; // rip
-            }
-
-            // After flowering it takes a severe frost to kill the plant
-            // (which didn't happen today).
-            //there should probably be some leaf damage?
-            return 0;
-        }
-
-        /// <summary>
-        /// Generates a message to be displayed when senescence due to frost
-        /// occurs. Putting this in a method for now so we don't have the same
-        /// code twice, but if frost senescence is tweaked in the future it might
-        /// just be easier to do away with the method and hardcode similar
-        /// messages multiple times.
-        /// </summary>
-        /// <param name="fatal">Was the frost event fatal?</param>
-        private string FrostSenescenceMessage(bool fatal)
-        {
-            StringBuilder message = new StringBuilder();
-            message.AppendLine($"Frost Event: ({(fatal ? "Fatal" : "Non Fatal")})");
-            message.AppendLine($"\tMin Temp     = {weather.MinT}");
-            message.AppendLine($"\tSenesced LAI = {LAI - 0.01}");
-            return message.ToString();
-        }
-
-        private double CalcLaiSenescenceWater()
-        {
-            //watSupply is calculated in SorghumArbitrator:StoreWaterVariablesForNitrogenUptake
-            //Arbitrator.WatSupply = Plant.Root.PlantAvailableWaterSupply();
-            double dlt_dm_transp = potentialBiomassTEFunction.Value();
-
-            //double radnCanopy = divide(plant->getRadnInt(), coverGreen, plant->today.radn);
-            double effectiveRue = MathUtilities.Divide(photosynthesis.Value(), RadiationIntercepted, 0);
-
-            double radnCanopy = MathUtilities.Divide(RadiationIntercepted, CoverGreen, metData.Radn);
-            if (MathUtilities.FloatsAreEqual(CoverGreen, 0))
-                radnCanopy = 0;
-
-            double sen_radn_crit = MathUtilities.Divide(dlt_dm_transp, effectiveRue, radnCanopy);
-            double intc_crit = MathUtilities.Divide(sen_radn_crit, radnCanopy, 1.0);
-            if (MathUtilities.FloatsAreEqual(sen_radn_crit, 0))
-                intc_crit = 0;
-
-            //            ! needs rework for row spacing
-            double laiEquilibWaterToday;
-            if (intc_crit < 1.0)
-                laiEquilibWaterToday = -Math.Log(1.0 - intc_crit) / extinctionCoefficientFunction.Value();
-            else
-                laiEquilibWaterToday = LAI;
-
-            // calculate average of the last 10 days of laiEquilibWater`
-            avLaiEquilibWater = UpdateAvLaiEquilibWater(laiEquilibWaterToday, 10);
-
-            //// calculate a 5 day moving average of the supply demand ratio
-            avSDRatio = UpdateAvSDRatio(SDRatio.Value(), 5);
-
-            var movAvgSDRatio = SDRatioFunction.Value();
-            double dltSlaiWater = 0.0;
-
-            if (avSDRatio < senThreshold.Value())
-                dltSlaiWater = Math.Max(0.0, MathUtilities.Divide((LAI - avLaiEquilibWater), senWaterTimeConst.Value(), 0.0));
-            dltSlaiWater = Math.Min(LAI, dltSlaiWater);
-            return dltSlaiWater;
-            //return 0.0;
-        }
-        
-        /// <summary>Return the lai that would senesce on the current day from natural ageing</summary>
-        private double CalcLaiSenescenceAge()
-        {
-            dltDeadLeaves = CalcDltDeadLeaves();
-            double deadLeaves = nDeadLeaves + dltDeadLeaves;
-            double laiSenescenceAge = 0;
-            if (MathUtilities.IsPositive(deadLeaves))
-            {
-                int leafDying = (int)Math.Ceiling(deadLeaves);
-                double areaDying = (deadLeaves % 1.0) * culms.LeafSizes[leafDying - 1];
-                laiSenescenceAge = (culms.LeafSizes.Take(leafDying - 1).Sum() + areaDying) * smm2sm * SowingDensity;
-            }
-            return Math.Max(laiSenescenceAge - SenescedLai, 0);
-        }
-
-        private double CalcDltDeadLeaves()
-        {
-            double nDeadYesterday = nDeadLeaves;
-            double nDeadToday = FinalLeafNo * (leafNoDeadIntercept.Value() + leafNoDeadSlope.Value() * phenology.AccumulatedEmergedTT);
-            nDeadToday = MathUtilities.Bound(nDeadToday, nDeadYesterday, FinalLeafNo);
-            return nDeadToday - nDeadYesterday;
-        }
-
-        private double CalcLaiSenescenceLight()
-        {
-            double critTransmission = MathUtilities.Divide(SenRadnCrit, metData.Radn, 1);
-            /* TODO : Direct translation - needs cleanup */
-            //            ! needs rework for row spacing
-            double laiEqlbLightToday;
-            if (critTransmission > 0.0)
-            {
-                laiEqlbLightToday = -Math.Log(critTransmission) / extinctionCoefficientFunction.Value();
-            }
-            else
-            {
-                laiEqlbLightToday = LAI;
-            }
-            // average of the last 10 days of laiEquilibLight
-            avgLaiEquilibLight = UpdateAvLaiEquilibLight(laiEqlbLightToday, 10);//senLightTimeConst?
-
-            // dh - In old apsim, we had another variable frIntcRadn which is always set to 0.
-            // Set Plant::radnInt(void) in Plant.cpp.
-            double radnInt = metData.Radn * CoverGreen;
-            double radnTransmitted = metData.Radn - radnInt;
-            double dltSlaiLight = 0.0;
-            if (radnTransmitted < SenRadnCrit)
-                dltSlaiLight = Math.Max(0.0, MathUtilities.Divide(LAI - avgLaiEquilibLight, SenLightTimeConst, 0.0));
-            dltSlaiLight = Math.Min(dltSlaiLight, LAI);
-            return dltSlaiLight;
+            DltSenescedLai = Math.Min(sen.Max(), LAI);
         }
 
         private void ApplySenescence()
@@ -1226,7 +1011,6 @@ namespace Models.PMF.Organs
             // if (!parentPlant.IsAlive) return; wtf
             if (!plant.IsAlive) return;
             if (!leafInitialised) return;
-
             ApplySenescence();
 
             //UpdateVars
@@ -1280,7 +1064,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("SetNSupply")]
         private void SetNSupply(object sender, EventArgs e)
         {
-            UpdateArea();
+            UpdateArea(); //must be calculated before potential N partitioning
             var availableLaiN = DltLAI * NewLeafSLN;
 
             double laiToday = CalcLAI();
