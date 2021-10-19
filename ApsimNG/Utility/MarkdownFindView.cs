@@ -88,7 +88,7 @@ namespace Utility
 
         public void Destroy()
         {
-            window1.Cleanup();
+            window1.Dispose();
         }
 
         private void Window1_DeleteEvent(object o, DeleteEventArgs args)
@@ -109,7 +109,7 @@ namespace Utility
         {
             MessageDialog md = new MessageDialog(window1, DialogFlags.Modal, MessageType.Info, ButtonsType.Ok, message);
             md.Run();
-            md.Cleanup();
+            md.Dispose();
         }
 
         private void UpdateTitleBar()

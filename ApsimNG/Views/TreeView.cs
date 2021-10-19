@@ -11,10 +11,9 @@ namespace UserInterface.Views
     using System.Runtime.InteropServices;
     using System.Runtime.Serialization;
     using System.Timers;
-
-#if NETCOREAPP
+    using Utility;
     using TreeModel = Gtk.ITreeModel;
-#endif
+
 
     /// <summary>
     /// This class encapsulates a hierachical tree view that the user interacts with.
@@ -373,13 +372,13 @@ namespace UserInterface.Views
             {
                 expandedRows.Add(path.ToString());
             }));
-#if NETCOREAPP
+
             treeview1.CursorChanged -= OnAfterSelect;
-#endif
+
             treemodel.Clear();
-#if NETCOREAPP
+
             treeview1.CursorChanged += OnAfterSelect;
-#endif
+
             TreeIter iter = treemodel.AppendNode();
             RefreshNode(iter, nodeDescriptions, false);
             treeview1.ShowAll();
@@ -602,11 +601,9 @@ namespace UserInterface.Views
                     Color colour = (Color)model.GetValue(iter, 4);
                     if (colour == Color.Empty)
                     {
-#if NETFRAMEWORK
-                        Gdk.Color foreground = treeview1.Style.Foreground(StateType.Normal);
-#else
-                        Gdk.Color foreground = treeview1.StyleContext.GetColor(StateFlags.Normal).ToGdkColor();
-#endif
+
+                        Gdk.Color foreground = treeview1.StyleContext.GetColor(StateFlags.Normal).ToColour().ToGdk();
+
                         colour = Utility.Colour.FromGtk(foreground);
                     }
                     (cell as CellRendererText).Strikethrough = (bool)model.GetValue(iter, 5);
@@ -695,7 +692,7 @@ namespace UserInterface.Views
                             if (e.Event.X > rect.X + 18)
                             {
                                 // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
-                                timer.Interval = treeview1.GetSettings().DoubleClickTime + 10;
+                                timer.Interval = Settings.Default.DoubleClickTime + 10;
                                 timer.AutoReset = false;
                                 timer.Start();
                             }
@@ -950,9 +947,9 @@ namespace UserInterface.Views
                         dropArgs.NodePath = GetFullPath(path);
 
                         dropArgs.DragObject = dragDropData;
-                        if (e.Context.GetAction() == Gdk.DragAction.Copy)
+                        if (e.Context.SelectedAction == Gdk.DragAction.Copy)
                             dropArgs.Copied = true;
-                        else if (e.Context.GetAction() == Gdk.DragAction.Move)
+                        else if (e.Context.SelectedAction == Gdk.DragAction.Move)
                             dropArgs.Moved = true;
                         else
                             dropArgs.Linked = true;
@@ -960,7 +957,7 @@ namespace UserInterface.Views
                         success = true;
                     }
                 }
-                Gtk.Drag.Finish(e.Context, success, e.Context.GetAction() == Gdk.DragAction.Move, e.Time);
+                Gtk.Drag.Finish(e.Context, success, e.Context.SelectedAction == Gdk.DragAction.Move, e.Time);
                 e.RetVal = success;
             }
             catch (Exception err)

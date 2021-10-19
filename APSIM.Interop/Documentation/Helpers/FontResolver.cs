@@ -1,12 +1,10 @@
-#if NETFRAMEWORK
-using PdfSharp.Fonts;
-#else
-using PdfSharpCore.Fonts;
-#endif
 
-#if NETCOREAPP
+using PdfSharpCore.Fonts;
+
+
+
 using PdfSharpCore.Drawing;
-#endif
+
 using FontHelper = APSIM.Interop.Documentation.Helpers.FontHelper;
 
 namespace APSIM.Interop.Documentation.Helpers

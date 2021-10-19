@@ -1,11 +1,8 @@
 using System;
-#if NETCOREAPP
+
 using Table = MigraDocCore.DocumentObjectModel.Tables.Table;
 using Section = MigraDocCore.DocumentObjectModel.Section;
-#else
-using Table = MigraDoc.DocumentObjectModel.Tables.Table;
-using Section = MigraDoc.DocumentObjectModel.Section;
-#endif
+
 
 namespace APSIM.Interop.Documentation.Extensions
 {

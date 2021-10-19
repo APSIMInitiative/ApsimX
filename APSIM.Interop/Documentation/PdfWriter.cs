@@ -6,17 +6,13 @@ using APSIM.Interop.Documentation.Helpers;
 using APSIM.Interop.Documentation.Renderers;
 using System.Linq;
 using APSIM.Interop.Markdown.Renderers;
-#if NETCOREAPP
+
 using MigraDocCore.DocumentObjectModel;
 using MigraDocCore.DocumentObjectModel.MigraDoc.DocumentObjectModel.Shapes;
 using MigraDocCore.Rendering;
 using PdfSharpCore.Fonts;
 using SixLabors.ImageSharp.PixelFormats;
-#else
-using MigraDoc.DocumentObjectModel;
-using MigraDoc.Rendering;
-using PdfSharp.Fonts;
-#endif
+
 
 namespace APSIM.Interop.Documentation
 {

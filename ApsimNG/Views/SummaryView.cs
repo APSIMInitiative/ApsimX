@@ -95,14 +95,14 @@
             try
             {
                 btnJumpToSimLog.Clicked -= OnJumpToSimulationLog;
-                topBox.Cleanup();
-                SummaryCheckBox.MainWidget.Cleanup();
-                WarningCheckBox.MainWidget.Cleanup();
-                ErrorCheckBox.MainWidget.Cleanup();
-                middleBox.Cleanup();
-                SimulationDropDown.MainWidget.Cleanup();
-                mainControl.Cleanup();
-                ((ViewBase)SummaryDisplay).MainWidget.Cleanup();
+                topBox.Dispose();
+                SummaryCheckBox.MainWidget.Dispose();
+                WarningCheckBox.MainWidget.Dispose();
+                ErrorCheckBox.MainWidget.Dispose();
+                middleBox.Dispose();
+                SimulationDropDown.MainWidget.Dispose();
+                mainControl.Dispose();
+                ((ViewBase)SummaryDisplay).MainWidget.Dispose();
                 mainWidget.Destroyed -= MainWidgetDestroyed;
                 owner = null;
             }

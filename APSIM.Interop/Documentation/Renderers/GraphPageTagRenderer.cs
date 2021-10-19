@@ -54,12 +54,9 @@ namespace APSIM.Interop.Documentation.Renderers
                 if (model is OxyPlot.PlotModel plot)
                 {
                     FixSizing(ref plot);
-#if NETFRAMEWORK
-                    // .NET Framework builds are not long for this world.
-                    // They can keep their legends.
-#else
+
                     plot.Legends.Clear();
-#endif
+
                 }
 
                 renderer.AppendImage(exporter.Export(model, width, height/*width * 2 / 3*/));

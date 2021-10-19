@@ -185,11 +185,9 @@
             };
 
             var compiler = new ScriptCompiler();
-#if NETFRAMEWORK
-            var results = compiler.Compile(code, new MockModel(), assemblies);
-#else
+
             var results = compiler.Compile(code, new MockModel());
-#endif
+
             if (results.ErrorMessages != null)
                 throw new Exception($"Script compile errors: {results.ErrorMessages}");
 

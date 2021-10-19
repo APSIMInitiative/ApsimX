@@ -29,7 +29,7 @@ namespace Utility
             dialog.ShowAll();
             int response = dialog.Run();
             string text = entryBox.Text;
-            dialog.Cleanup();
+            dialog.Dispose();
 
             if (response == 1)
                 return text;

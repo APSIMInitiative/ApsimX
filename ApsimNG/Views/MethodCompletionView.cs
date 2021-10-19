@@ -307,7 +307,7 @@
 
         public void Destroy()
         {
-            mainWindow.Cleanup();
+            mainWindow.Dispose();
         }
     }
 }

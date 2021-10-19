@@ -37,7 +37,7 @@ namespace UserInterface.Views
             set
             {
                 state = value;
-#if NETCOREAPP
+
                 if (state == States.Insensitive)
                     layoutGenerator.StyleContext.State = Gtk.StateFlags.Insensitive;
                 else if (state == States.Selected)
@@ -46,15 +46,15 @@ namespace UserInterface.Views
                     layoutGenerator.StyleContext.State = Gtk.StateFlags.Normal;
                 var c = layoutGenerator.StyleContext.GetColor(layoutGenerator.StyleContext.State);
                 cr.SetSourceColor(new Cairo.Color(c.Red, c.Green, c.Blue, c.Alpha));
-#endif
+
             }
         }
 
         public void DrawFilledRectangle(int left, int top, int width, int height)
         {
-#if NETCOREAPP
+
             layoutGenerator.StyleContext.RenderBackground(cr, left, top, width, height);
-#endif
+
         }
 
         public void DrawFilledRectangle()
