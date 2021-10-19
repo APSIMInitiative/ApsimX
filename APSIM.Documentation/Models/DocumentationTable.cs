@@ -118,7 +118,7 @@ namespace APSIM.Documentation.Models
                 foreach (IDocumentationCell cell in row.Cells)
                 {
                     html.AppendLine("<td>");
-                    IEnumerable<string> files = cell.Files.Select(f => $"<p><a href=\"{GetUrl(f)}\">{f.Name}</a></p>");
+                    IEnumerable<string> files = cell.Files.Select(f => $"<p><a href=\"{GetUrl(f)}\" target=\"blank\">{f.Name}</a></p>");
                     // fixme - insert actual links with remote path.
                     string links = string.Join("", files);
                     html.AppendLine(links);
