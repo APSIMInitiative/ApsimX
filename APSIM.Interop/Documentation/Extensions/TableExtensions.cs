@@ -1,11 +1,8 @@
 using System;
-#if NETCOREAPP
+
 using MigraDocCore.DocumentObjectModel;
 using MigraDocCore.DocumentObjectModel.Tables;
-#else
-using MigraDoc.DocumentObjectModel;
-using MigraDoc.DocumentObjectModel.Tables;
-#endif
+
 
 namespace APSIM.Interop.Documentation.Extensions
 {

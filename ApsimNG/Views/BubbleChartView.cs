@@ -98,11 +98,9 @@ namespace UserInterface.Views
             ScrolledWindow rules = new ScrolledWindow();
             rules.ShadowType = ShadowType.EtchedIn;
             rules.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
-#if NETFRAMEWORK
-            rules.AddWithViewport((RuleList as ViewBase).MainWidget);
-#else
+
             rules.Add((RuleList as ViewBase).MainWidget);
-#endif
+
             (RuleList as ViewBase).MainWidget.ShowAll();
             arcSelBox.PackStart(rules, true, true, 0);
             rules.Show();
@@ -117,11 +115,9 @@ namespace UserInterface.Views
             ScrolledWindow actions = new ScrolledWindow();
             actions.ShadowType = ShadowType.EtchedIn;
             actions.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
-#if NETFRAMEWORK
-            actions.AddWithViewport((ActionList as ViewBase).MainWidget);
-#else
+
             actions.Add((ActionList as ViewBase).MainWidget);
-#endif
+
             (ActionList as ViewBase).MainWidget.ShowAll();
             arcSelBox.PackStart(actions, true, true, 0); actions.Show();
             arcSelWdgt = arcSelBox as Widget;
@@ -129,39 +125,41 @@ namespace UserInterface.Views
             ctxBox.PackStart(arcSelWdgt, true, true, 0);
 
             // Node selection: 
-#if NETFRAMEWORK
-            Table t1 = new Table(3, 2, false);
-#else
+
             Grid t1 = new Grid();
-#endif
+
             Label l3 = new Label("Name");
             l3.Xalign = 0;
-            t1.Attach(l3, 0, 1, 0, 1, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            t1.Attach(l3, 0, 0, 1, 1);
+
             Label l4 = new Label("Description");
             l4.Xalign = 0;
-            t1.Attach(l4, 0, 1, 1, 2, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            t1.Attach(l4, 0, 1, 1, 1);
+
             Label l5 = new Label("Colour");
             l5.Xalign = 0;
-            t1.Attach(l5, 0, 1, 2, 3, AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            t1.Attach(l5, 0, 2, 1, 1);
 
             nameEntry = new Entry();
             nameEntry.Changed += OnNameChanged;
             nameEntry.Xalign = 0;
+
             // Setting the WidthRequest to 350 will effectively
             // set the minimum size, beyond which it cannot be further
             // shrunk by dragging the HPaned's splitter.
             nameEntry.WidthRequest = 350;
-            t1.Attach(nameEntry, 1, 2, 0, 1, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            t1.Attach(nameEntry, 1, 0, 1, 1);
+
             descEntry = new Entry();
             descEntry.Xalign = 0;
             descEntry.Changed += OnDescriptionChanged;
             descEntry.WidthRequest = 350;
-            t1.Attach(descEntry, 1, 2, 1, 2, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            t1.Attach(descEntry, 1, 1, 1, 1);
             colourChooser = new ColorButton();
             colourChooser.Xalign = 0;
             colourChooser.ColorSet += OnColourChanged;
             colourChooser.WidthRequest = 350;
-            t1.Attach(colourChooser, 1, 2, 2, 3, AttachOptions.Expand | AttachOptions.Fill, AttachOptions.Fill, 0, 0);
+            t1.Attach(colourChooser, 1, 2, 1, 1);
             nodeSelWdgt = t1;
             ctxBox.PackStart(t1, true, true, 0);
 
@@ -327,11 +325,9 @@ namespace UserInterface.Views
                     descEntry.Changed += OnDescriptionChanged;
                 }
                 colourChooser.ColorSet -= OnColourChanged;
-#if NETFRAMEWORK
-                colourChooser.Color = Utility.Colour.ToGdk(node.Colour);
-#else
+
                 colourChooser.Rgba = node.Colour.ToRGBA();
-#endif
+
                 colourChooser.ColorSet += OnColourChanged;
 
                 ctxBox.PackStart(nodeSelWdgt, true, true, 0);
@@ -499,11 +495,9 @@ namespace UserInterface.Views
             {
                 if (graphView.SelectedObject != null)
                 {
-#if NETFRAMEWORK
-                    var colour = colourChooser.Color;
-#else
+
                     var colour = colourChooser.Rgba.ToColour().ToGdk();
-#endif
+
                     graphView.SelectedObject.Colour = Utility.Colour.FromGtk(colour);
                     OnGraphChanged?.Invoke(this, new GraphChangedEventArgs(Arcs, Nodes));
                 }

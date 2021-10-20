@@ -70,11 +70,11 @@
         {
             try
             {
-                profileGrid.MainWidget.Cleanup();
+                profileGrid.MainWidget.Dispose();
                 profileGrid = null;
-                properitesView.MainWidget.Cleanup();
+                properitesView.MainWidget.Dispose();
                 properitesView = null;
-                graph.MainWidget.Cleanup();
+                graph.MainWidget.Dispose();
                 graph = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;

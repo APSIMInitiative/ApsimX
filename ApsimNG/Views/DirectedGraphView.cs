@@ -14,11 +14,7 @@
     using Point = System.Drawing.Point;
     using APSIM.Interop.Visualisation;
     using APSIM.Shared.Graphing;
-
-#if NETCOREAPP
-    using ExposeEventArgs = Gtk.DrawnArgs;
-    using StateType = Gtk.StateFlags;
-#endif
+    using Utility;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -97,11 +93,9 @@
             | (int)Gdk.EventMask.ButtonPressMask
             | (int)Gdk.EventMask.ButtonReleaseMask);
 
-#if NETFRAMEWORK
-            drawable.ExposeEvent += OnDrawingAreaExpose;
-#else
+
             drawable.Drawn += OnDrawingAreaExpose;
-#endif
+
             drawable.ButtonPressEvent += OnMouseButtonPress;
             drawable.ButtonReleaseEvent += OnMouseButtonRelease;
             drawable.MotionNotifyEvent += OnMouseMove;
@@ -112,12 +106,10 @@
                 VscrollbarPolicy = PolicyType.Always
             };
 
-#if NETFRAMEWORK
-            scroller.AddWithViewport(drawable);
-#else
+
             // In gtk3, a viewport will automatically be added if required.
             scroller.Add(drawable);
-#endif
+
 
             mainWidget = scroller;
             drawable.Realized += OnRealized;
@@ -129,8 +121,10 @@
             else
             {
                 // Needs to be reimplemented for gtk3.
-                DGObject.DefaultOutlineColour = Utility.Colour.FromGtk(owner.MainWidget.GetForegroundColour(StateType.Normal));
-                DGObject.DefaultBackgroundColour = Utility.Colour.FromGtk(owner.MainWidget.GetBackgroundColour(StateType.Normal));
+                DGObject.DefaultOutlineColour = owner.MainWidget.StyleContext.GetColor(StateFlags.Normal).ToColour();
+#pragma warning disable 0612
+                DGObject.DefaultBackgroundColour = owner.MainWidget.StyleContext.GetBackgroundColor(StateFlags.Normal).ToColour();
+#pragma warning restore 0612
             }
             mainWidget.Destroyed += OnDestroyed;
         }
@@ -181,16 +175,7 @@
         /// <summary>Export the view to the image</summary>
         public System.Drawing.Image Export()
         {
-#if NETFRAMEWORK
-            int width;
-            int height;
-            MainWidget.GdkWindow.GetSize(out width, out height);
-            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(drawable.GdkWindow, drawable.Colormap, 0, 0, 0, 0, width - 20, height - 20);
-            byte[] buffer = screenshot.SaveToBuffer("png");
-            MemoryStream stream = new MemoryStream(buffer);
-            System.Drawing.Bitmap bitmap = new Bitmap(stream);
-            return bitmap;
-#else
+
             var window = new OffscreenWindow();
             window.Add(MainWidget);
 
@@ -213,21 +198,19 @@
                 System.Drawing.Bitmap bitmap = new Bitmap(stream);
                 return bitmap;
             }
-#endif
+
         }
 
         /// <summary>The drawing canvas is being exposed to user.</summary>
-        private void OnDrawingAreaExpose(object sender, ExposeEventArgs args)
+        private void OnDrawingAreaExpose(object sender, DrawnArgs args)
         {
             try
             {
                 DrawingArea area = (DrawingArea)sender;
 
-#if NETFRAMEWORK
-                Cairo.Context context = Gdk.CairoHelper.Create(area.GdkWindow);
-#else
+
                 Cairo.Context context = args.Cr;
-#endif
+
                 CairoContext drawingContext = new CairoContext(context, MainWidget);
                 DirectedGraphRenderer.Draw(drawingContext, arcs, nodes);
 

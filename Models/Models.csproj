@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFrameworks>net472;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
     <BaseOutputPath>../bin</BaseOutputPath>
     <ApplicationIcon />
     <StartupObject />
@@ -19,10 +19,6 @@
     <DefineConstants>NETCORE;NETSTANDARD</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net472'">
-    <DefineConstants>NETFRAMEWORK;NET472</DefineConstants>
-  </PropertyGroup>
-  
   <ItemGroup>
     <Compile Remove="Importer\**" />
     <EmbeddedResource Remove="Importer\**" />
@@ -62,16 +58,6 @@
     <PackageReference Include="MigraDocCore.DocumentObjectModel" Version="0.1.1" />
     <PackageReference Include="MigraDocCore.Rendering" Version="0.1.0" />
     <PackageReference Include="PdfSharpCore" Version="1.2.11" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net472'">
-    <Reference Include="System.ComponentModel.DataAnnotations">
-      <Private>false</Private>
-    </Reference>
-    <!--<PackageReference Include="PDFsharp-MigraDoc-GDI" Version="1.50.5147" />    -->
-	<PackageReference Include="PDFsharp-MigraDoc" Version="1.51.5186-beta" />
-  <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-  <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>

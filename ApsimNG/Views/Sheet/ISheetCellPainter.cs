@@ -33,18 +33,8 @@ namespace UserInterface.Views
         /// <param name="rowIndex">The row index of the cell.</param>
         States GetCellState(int columnIndex, int rowIndex);
 
-#if NETCOREAPP
 
-#else
-        /// <summary>Gets the foreground colour of a cell.</summary>
-        /// <param name="columnIndex">The column index of the cell.</param>
-        /// <param name="rowIndex">The row index of the cell.</param>
-        Color GetForegroundColour(int columnIndex, int rowIndex);
 
-        /// <summary>Gets the background colour of a cell.</summary>
-        /// <param name="columnIndex">The column index of the cell.</param>
-        /// <param name="rowIndex">The row index of the cell.</param>
-        Color GetBackgroundColour(int columnIndex, int rowIndex);
-#endif
+
     }
 }
