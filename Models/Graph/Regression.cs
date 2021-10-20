@@ -101,8 +101,8 @@ namespace Models
                         {
                             if (ReflectionUtilities.IsNumericType(definition.X.GetType().GetElementType()) && ReflectionUtilities.IsNumericType(definition.Y.GetType().GetElementType()))
                             {
-                                x.AddRange(definition.X.Cast<object>().Select(xi => Convert.ToDouble(xi, CultureInfo.InvariantCulture)).Where(d => !double.IsNaN(d)).ToArray());
-                                y.AddRange(definition.Y.Cast<object>().Select(yi => Convert.ToDouble(yi, CultureInfo.InvariantCulture)).Where(d => !double.IsNaN(d)).ToArray());
+                                x.AddRange(definition.X.Cast<object>().Select(xi => Convert.ToDouble(xi, CultureInfo.InvariantCulture)).ToArray());
+                                y.AddRange(definition.Y.Cast<object>().Select(yi => Convert.ToDouble(yi, CultureInfo.InvariantCulture)).ToArray());
                             }
                         }
                     }
