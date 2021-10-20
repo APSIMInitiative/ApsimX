@@ -178,6 +178,10 @@ namespace UserInterface.Views
             string filter = GetFilter();
 
             var data = dataStore.GetDataUsingSql($"SELECT rowid FROM keyset WHERE rowid >= {from+1} ORDER BY rowid LIMIT {count}");
+
+            if (data is null)
+                return "";
+
             var rowIds = DataTableUtilities.GetColumnAsIntegers(data, "rowid");
             var rowIdsCSV = StringUtilities.Build(rowIds, ",");
 
@@ -207,7 +211,7 @@ namespace UserInterface.Views
             var sql = $"SELECT COUNT(*) FROM \"{tableName}\"";
             if (!string.IsNullOrEmpty(filter))
                 sql += $" WHERE {filter}";
-            var table = dataStore.GetDataUsingSql(sql);
+            var table = dataStore.GetDataUsingSql(sql) ?? dataStore.GetDataUsingSql($"SELECT COUNT(*) FROM {tableName}");
             RowCount = Convert.ToInt32(table.Rows[0][0]) + 1; // add a row for headings.
             NumHeadingRows = 1;
             if (units != null)
