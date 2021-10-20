@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 331,
   "Version": 144,
   "Name": "Simulations",
   "Children": [
@@ -5170,42 +5170,6 @@
                           "FixedValue": 1.0,
                           "Units": null,
                           "Name": "One",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.MovingAverageFunction, Models",
-                  "NumberOfDays": 5,
-                  "StageToStartMovingAverage": "Germination",
-                  "Name": "SDRatioFunction",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.ProtectedDivideFunction, Models",
-                      "NumeratorErrVal": 0.0,
-                      "DenominatorErrVal": 1.0,
-                      "Name": "SDRatio",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Arbitrator].WatSupply",
-                          "Name": "WaterSupply",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Arbitrator].WDemand",
-                          "Name": "WaterDemand",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false

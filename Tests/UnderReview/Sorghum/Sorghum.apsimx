@@ -5304,42 +5304,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.MovingAverageFunction, Models",
-                  "NumberOfDays": 5,
-                  "StageToStartMovingAverage": "Germination",
-                  "Name": "SDRatioFunction",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.ProtectedDivideFunction, Models",
-                      "NumeratorErrVal": 0.0,
-                      "DenominatorErrVal": 1.0,
-                      "Name": "SDRatio",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Arbitrator].WatSupply",
-                          "Name": "WaterSupply",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Arbitrator].WDemand",
-                          "Name": "WaterDemand",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.OnEventFunction, Models",
                   "SetEvent": "Flowering",
                   "ReSetEvent": null,
