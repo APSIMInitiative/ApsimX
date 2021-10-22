@@ -364,7 +364,7 @@
                 tabLabel.Text = text;
             HBox headerBox = new HBox();
             Button closeBtn = new Button();
-            Gtk.Image closeImg = new Gtk.Image(new Gdk.Pixbuf(null, "ApsimNG.Resources.Close.png", 12, 12));
+            Gtk.Image closeImg = new Gtk.Image(new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Close.svg", 12, 12));
 
             closeBtn.Image = closeImg;
             closeBtn.Relief = ReliefStyle.None;
