@@ -1711,64 +1711,65 @@
                             args.SeriesIndex = seriesIndex;
                             args.ControlKeyPressed = e.IsControlDown;
                             this.OnLegendClick.Invoke(sender, args);
+                            return;
                         }
                     }
-                    else if (plotArea.Contains(location))
+                }
+                if (plotArea.Contains(location))
+                {
+                    bool userClickedOnAnnotation = false;
+                    foreach (var annotation in this.plot1.Model.Annotations)
                     {
-                        bool userClickedOnAnnotation = false;
-                        foreach (var annotation in this.plot1.Model.Annotations)
+                        var result = annotation.HitTest(new HitTestArguments(new ScreenPoint(location.X, location.Y), 10.0));
+                        if (result != null)
                         {
-                            var result = annotation.HitTest(new HitTestArguments(new ScreenPoint(location.X, location.Y), 10.0));
-                            if (result != null)
-                            {
-                                userClickedOnAnnotation = true;
-                                OnAnnotationClick?.Invoke(this, new EventArgs());
-                            }
+                            userClickedOnAnnotation = true;
+                            OnAnnotationClick?.Invoke(this, new EventArgs());
                         }
-
-                        if (!userClickedOnAnnotation && this.OnPlotClick != null)
-                            this.OnPlotClick.Invoke(sender, e);
                     }
-                    else
+
+                    if (!userClickedOnAnnotation && this.OnPlotClick != null)
+                        this.OnPlotClick.Invoke(sender, e);
+                }
+                else
+                {
+                    Rectangle leftAxisArea = new Rectangle(0, plotArea.Y, plotArea.X, plotArea.Height);
+                    Rectangle titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y);
+                    Rectangle topAxisArea = new Rectangle(plotArea.X, 0, plotArea.Width, 0);
+
+                    if (this.GetAxis(APSIM.Shared.Graphing.AxisPosition.Top) != null)
                     {
-                        Rectangle leftAxisArea = new Rectangle(0, plotArea.Y, plotArea.X, plotArea.Height);
-                        Rectangle titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y);
-                        Rectangle topAxisArea = new Rectangle(plotArea.X, 0, plotArea.Width, 0);
+                        titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y / 2);
+                        topAxisArea = new Rectangle(plotArea.X, plotArea.Y / 2, plotArea.Width, plotArea.Y / 2);
+                    }
 
-                        if (this.GetAxis(APSIM.Shared.Graphing.AxisPosition.Top) != null)
+                    Rectangle rightAxisArea = new Rectangle(plotArea.Right, plotArea.Top, MainWidget.Allocation.Width - plotArea.Right, plotArea.Height);
+                    Rectangle bottomAxisArea = new Rectangle(plotArea.Left, plotArea.Bottom, plotArea.Width, MainWidget.Allocation.Height - plotArea.Bottom);
+                    if (titleArea.Contains(location))
+                    {
+                        if (this.OnTitleClick != null)
                         {
-                            titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y / 2);
-                            topAxisArea = new Rectangle(plotArea.X, plotArea.Y / 2, plotArea.Width, plotArea.Y / 2);
+                            this.OnTitleClick(sender, e);
                         }
+                    }
 
-                        Rectangle rightAxisArea = new Rectangle(plotArea.Right, plotArea.Top, MainWidget.Allocation.Width - plotArea.Right, plotArea.Height);
-                        Rectangle bottomAxisArea = new Rectangle(plotArea.Left, plotArea.Bottom, plotArea.Width, MainWidget.Allocation.Height - plotArea.Bottom);
-                        if (titleArea.Contains(location))
+                    if (this.OnAxisClick != null)
+                    {
+                        if (leftAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Left) != null)
                         {
-                            if (this.OnTitleClick != null)
-                            {
-                                this.OnTitleClick(sender, e);
-                            }
+                            this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Left);
                         }
-
-                        if (this.OnAxisClick != null)
+                        else if (topAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Top) != null)
                         {
-                            if (leftAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Left) != null)
-                            {
-                                this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Left);
-                            }
-                            else if (topAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Top) != null)
-                            {
-                                this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Top);
-                            }
-                            else if (rightAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Right) != null)
-                            {
-                                this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Right);
-                            }
-                            else if (bottomAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Bottom) != null)
-                            {
-                                this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Bottom);
-                            }
+                            this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Top);
+                        }
+                        else if (rightAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Right) != null)
+                        {
+                            this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Right);
+                        }
+                        else if (bottomAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Bottom) != null)
+                        {
+                            this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Bottom);
                         }
                     }
                 }
