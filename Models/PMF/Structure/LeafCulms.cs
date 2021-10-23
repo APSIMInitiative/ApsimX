@@ -3,6 +3,7 @@ using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
 using Models.PMF;
+using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 using Models.PMF.Phen;
 using Newtonsoft.Json;
@@ -63,6 +64,10 @@ namespace Models.PMF.Struct
 		/// </summary>
 		[Link]
 		private IWeather weather = null;
+
+		/// <summary> Tillering Method to use for calculating how many tillers </summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		private ITilleringMethod tillering = null;
 
 		/// <summary>
 		/// Vertical Offset for Largest Leaf Calc.
@@ -214,6 +219,23 @@ namespace Models.PMF.Struct
 		[Link(Type = LinkType.Child, ByName = true)]
 		private IFunction tillerSlaBound = null;
 
+		/// <summary>The Potential Area Calculation</summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		public ICulmLeafArea AreaCalc = null;
+
+		/// <summary> Subsequent tillers are slightly smaller - adjust that size using a percentage</summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		public IFunction VerticalTillerAdjustment = null;
+
+		/// <summary> Maximum values that Subsequent tillers can be adjusted</summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		public IFunction MaxVerticalTillerAdjustment = null;
+
+		/// <summary> LeafAppearance Rate</summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		public LinearInterpolationFunction LeafAppearanceRate = null;
+
+
 		/// <summary>
 		/// If true, tillering will be calculated on the fly.
 		/// Otherwise, number of tillers must be supplied via fertile
@@ -240,7 +262,7 @@ namespace Models.PMF.Struct
 		/// <summary>
 		/// 
 		/// </summary>
-		private double dltLeafNo;
+		public double dltLeafNo;
 
 		/// <summary>
 		/// Final leaf number.
@@ -312,7 +334,7 @@ namespace Models.PMF.Struct
 		/// <summary>
 		/// fixme - start with lower-case.
 		/// </summary>
-		private List<Culm> Culms;
+		public List<Culm> Culms;
 
 		/// <summary>
 		/// Vertical adjustment.
@@ -586,10 +608,12 @@ namespace Models.PMF.Struct
 		/// </summary>
 		public void CalcLeafNo()
 		{
-			if (DynamicTillering)
-				CalcLeafNoDynamic();
-			else
-				CalcLeafNoFixed();
+			dltLeafNo = tillering.CalcLeafNumber();
+			//var tmp = tillering.Name;
+			//if (DynamicTillering)
+			//	CalcLeafNoDynamic();
+			//else
+			//	CalcLeafNoFixed();
 		}
 
 		private void CalcLeafNoDynamic()
