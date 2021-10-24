@@ -109,9 +109,14 @@ namespace Models.PMF.Struct
 				LeafSizes.Add(sizes[i + offset]);
 		}
 
-		/// <summary>
-		/// Perform initialisation.
-		/// </summary>
+		/// <summary>Leaf appearance is calculated in the tillering method</summary>
+		public void AddNewLeaf(double dltLeaf)
+        {
+			dltLeafNo = dltLeaf;
+			CurrentLeafNo += dltLeafNo;
+		}
+
+		/// <summary>Perform initialisation. </summary>
 		public virtual void Initialize()
 		{
 			// leaf number

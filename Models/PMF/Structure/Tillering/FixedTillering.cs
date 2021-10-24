@@ -47,7 +47,7 @@ namespace Models.PMF.Struct
 		}
 		private bool beforeEndJuvenileStage()
 {
-			if (_endJuvenileStage < 1) _endJuvenileStage = phenology.StartStagePhaseIndex("EndJuvenile");
+			if (_endJuvenileStage < 1) _endJuvenileStage = phenology.EndStagePhaseIndex("EndJuvenile");
 			return phenology.Stage < _endJuvenileStage;
 		}
 
@@ -57,25 +57,21 @@ namespace Models.PMF.Struct
 			if (culms.Culms?.Count == 0) return 0.0;
 			if (!plant.IsEmerged) return 0.0;
 
-			//var currentLeafNo = culms.Culms[0].CurrentLeafNo;
+			var currentLeafNo = culms.Culms[0].CurrentLeafNo;
+			double dltLeafNoMainCulm = 0.0;
 			if (beforeFlowering())
 			{
-				//if (beforeEndJuvenileStage())
-				//{
-				//	//ThermalTime Targets to EndJuv are not known until the end of the Juvenile Phase
-				//	//FinalLeafNo is not known until the TT Target is known - meaning the potential leaf sizes aren't known
-				//	culms.Culms.ForEach(c => c.UpdatePotentialLeafSizes(culms.AreaCalc));
-				//}
-				//calcLeafAppearance(culms.Culms[0]);
+                //if (beforeEndJuvenileStage())
+                {
+                    //ThermalTime Targets to EndJuv are not known until the end of the Juvenile Phase
+                    //FinalLeafNo is not known until the TT Target is known - meaning the potential leaf sizes aren't known
+                    culms.Culms.ForEach(c => c.UpdatePotentialLeafSizes(culms.AreaCalc));
+                }
+				dltLeafNoMainCulm = calcLeafAppearance(culms.Culms[0]);
 
-				culms.Culms[0].CulmNo = 0;
-				culms.Culms[0].calculateLeafSizes();
-				culms.FinalLeafNo = culms.Culms[0].FinalLeafNo;
+                culms.Culms[0].CulmNo = 0;
 			}
-			double currentLeafNo = culms.Culms[0].CurrentLeafNo;
-			double dltLeafNoMainCulm = culms.Culms[0].calcLeafAppearance();
 			culms.dltLeafNo = dltLeafNoMainCulm;
-			//var dltLeafNo = dltLeafNoMainCulm; //updates nLeaves
 			double newLeafNo = culms.Culms[0].CurrentLeafNo;
 
 			//should there be any growth after flowering?
@@ -83,24 +79,21 @@ namespace Models.PMF.Struct
 
 			for (int i = 1; i < culms.Culms.Count; i++)
 			{
-				//calcLeafAppearance(culms.Culms[i]);
-				if (beforeFlowering())
-				{
-					culms.Culms[i].calculateLeafSizes();
-				}
-				culms.Culms[i].calcLeafAppearance();
+				calcLeafAppearance(culms.Culms[i]);
 			}
 			return dltLeafNoMainCulm;
 		}
 
-		private void calcLeafAppearance(Culm culm)
+		private double calcLeafAppearance(Culm culm)
 		{
-			var leavesRemainingOnMainStem = culms.FinalLeafNo - culm.CurrentLeafNo;
-			var leafAppearanceRate = culms.LeafAppearanceRate.ValueForX(leavesRemainingOnMainStem);
-
+			var leavesRemaining = culms.FinalLeafNo - culm.CurrentLeafNo;
+			var leafAppearanceRate = culms.LeafAppearanceRate.ValueForX(leavesRemaining);
 			// if leaves are still growing, the cumulative number of phyllochrons or fully expanded leaves is calculated from thermal time for the day.
-			var dltLeafNo = MathUtilities.Bound(MathUtilities.Divide(phenology.thermalTime.Value(), leafAppearanceRate, 0), 0.0, leavesRemainingOnMainStem);
-			culm.CurrentLeafNo += dltLeafNo;
+			var dltLeafNo = MathUtilities.Bound(MathUtilities.Divide(phenology.thermalTime.Value(), leafAppearanceRate, 0), 0.0, leavesRemaining);
+			
+			culm.AddNewLeaf(dltLeafNo);
+
+			return dltLeafNo;
 		}
 
 		void calcTillerAppearance(int newLeafNo, int currentLeafNo)
@@ -185,8 +178,10 @@ namespace Models.PMF.Struct
 				newCulm.VertAdjValue = culms.MaxVerticalTillerAdjustment.Value() + (_tillersAdded * culms.VerticalTillerAdjustment.Value());
 				newCulm.Proportion = fraction;
 				newCulm.FinalLeafNo = culms.Culms[0].FinalLeafNo;
-				newCulm.calcLeafAppearance();
-				newCulm.calculateLeafSizes();
+				//newCulm.calcLeafAppearance();
+				newCulm.UpdatePotentialLeafSizes(culms.AreaCalc);
+				calcLeafAppearance(newCulm);
+				//newCulm.calculateLeafSizes();
 				culms.Culms.Add(newCulm);
 			}
 			else

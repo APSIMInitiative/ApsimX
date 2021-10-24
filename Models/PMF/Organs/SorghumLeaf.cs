@@ -515,10 +515,13 @@ namespace Models.PMF.Organs
         {
             if (plant.IsEmerged)
             {
-                //areaActual in old model
-                // culms.AreaActual() will update this.DltLAI
-                culms.AreaActual();
-                SenesceArea();
+                if(leafInitialised)
+                {
+                    //areaActual in old model
+                    // culms.AreaActual() will update this.DltLAI
+                    culms.AreaActual();
+                    SenesceArea();
+                }
             }
         }
 
