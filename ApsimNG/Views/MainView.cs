@@ -114,16 +114,6 @@
         private Widget hbox1 = null;
 
         /// <summary>
-        /// Dark theme icon.
-        /// </summary>
-        private static readonly Gtk.Image darkThemeIcon = new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Moon.png");
-
-        /// <summary>
-        /// Default theme Icon.
-        /// </summary>
-        private static readonly Gtk.Image defaultThemeIcon = new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Sun.png");
-
-        /// <summary>
         /// Dialog which allows the user to change fonts.
         /// </summary>
 
@@ -896,29 +886,6 @@
             try
             {
                 ShowDetailedError?.Invoke(sender, args);
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Invoked when theme is toggled.
-        /// Toggles the icon displayed on the "toggle theme" button.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        public void ToggleTheme(object sender, EventArgs args)
-        {
-            try
-            {
-                if (sender is ToolButton)
-                {
-                    ToolButton button = sender as ToolButton;
-                    button.IconWidget = Utility.Configuration.Settings.DarkTheme ? defaultThemeIcon : darkThemeIcon;
-                    button.IconWidget.ShowAll();
-                }
             }
             catch (Exception err)
             {
