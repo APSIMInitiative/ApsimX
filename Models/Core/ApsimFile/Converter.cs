@@ -1811,7 +1811,8 @@
                 JArray axes = graph["Axis"] as JArray;
                 if (axes != null)
                     foreach (JObject axis in axes)
-                        axis["$type"] = axis["$type"].ToString().Replace("Models.Graph", "Models");
+                        if (axis["$type"] != null)
+                            axis["$type"] = axis["$type"].ToString().Replace("Models.Graph", "Models");
             }
 
             // Fix nutrient directed graphs - the nodes/arcs are not children, but
