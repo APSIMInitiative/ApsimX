@@ -35,21 +35,19 @@ namespace UserInterface.Views
     public class CLEMView : ViewBase, Views.ICLEMView
     {
         private Notebook nbook = null;
-
         private Dictionary<string, Label> labelDictionary = new Dictionary<string, Label>();
         private Dictionary<string, Viewport> viewportDictionary = new Dictionary<string, Viewport>();
+        private bool setupComplete = false;
+        private string previousTabLabel = "";
 
         /// <summary>Invoked when tab selected</summary>
         public event EventHandler<EventArgs> TabSelected;
-
-        private bool setupComplete = false;
 
         public CLEMView(ViewBase owner) : base(owner)
         {
             nbook = new Notebook();
             nbook.SwitchPage += NotebookSwitchPage;
             nbook.CurrentPage = 0;
-
             mainWidget = nbook;
             setupComplete = true;
         }
@@ -62,17 +60,17 @@ namespace UserInterface.Views
                 {
                     string selectedLabel = nbook.GetTabLabelText(nbook.GetNthPage(nbook.CurrentPage));
                     TabChangedEventArgs  tabEArgs = new TabChangedEventArgs(selectedLabel);
-                    if (TabSelected != null)
+                    if (TabSelected != null && selectedLabel != previousTabLabel)
                     {
                         TabSelected.Invoke(this, tabEArgs);
                     }
+                    previousTabLabel = selectedLabel;
                 }
             }
             catch (Exception err)
             {
                 ShowError(err);
             }
-
         }
 
         /// <summary>
@@ -127,14 +125,12 @@ namespace UserInterface.Views
             foreach (Widget child in newViewport.Children)
             {
                 newViewport.Remove(child);
-                child.Cleanup();
+                child.Dispose();
             }
             if (typeof(ViewBase).IsInstanceOfType(control))
             {
                 EventBox frame = new EventBox();
-#if NETFRAMEWORK
-                frame.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
-#endif
+
                 HBox hbox = new HBox();
                 uint border = 0;
                 if (tabName == "Properties")

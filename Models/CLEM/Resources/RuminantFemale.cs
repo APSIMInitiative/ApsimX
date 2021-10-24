@@ -11,16 +11,30 @@ namespace Models.CLEM.Resources
 
     public class RuminantFemale : Ruminant
     {
-        // Female Ruminant properties
+        /// <summary>
+        /// Sex of individual
+        /// </summary>
+        public override Sex Sex { get { return Sex.Female; } }
 
         /// <summary>
-        /// Is female weaned and of minimum breeing age and weight 
+        /// Is female weaned and of minimum breeding age and weight 
         /// </summary>
         public bool IsBreeder
         {
             get
             {
                 return Weaned && (Age >= BreedParams.MinimumAge1stMating) && (HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight);
+            }
+        }
+
+        /// <summary>
+        /// Is this individual a valid breeder and in condition
+        /// </summary>
+        public override bool IsAbleToBreed
+        {
+            get
+            {
+                return (this.IsBreeder && !this.IsPregnant && (Age - AgeAtLastBirth) * 30.4 >= BreedParams.MinimumDaysBirthToConception);
             }
         }
 
@@ -38,13 +52,9 @@ namespace Models.CLEM.Resources
             get 
             {
                 if (AgeAtLastBirth > 0)
-                {
                     return Age - AgeAtLastBirth;
-                }
                 else
-                {
                     return 0;
-                }
             } 
         }
 
@@ -100,6 +110,11 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Store for the style of mating
+        /// </summary>
+        public MatingStyle LastMatingStyle { get; set; }
+
+        /// <summary>
         /// Indicates if this female is a heifer
         /// Heifer equals less than min breed age and no offspring
         /// </summary>
@@ -124,7 +139,8 @@ namespace Models.CLEM.Resources
                 // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
                 // AL updated 28/10/2020. Removed ( && this.Age < this.BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
                 // this was a misunderstanding opn my part.
-                return (this.Weaned && this.Age < BreedParams.MinimumAge1stMating);
+                //return (this.Weaned && this.Age < BreedParams.MinimumAge1stMating); need to include size restriction as well
+                return (this.Weaned && !this.IsBreeder);
             }
         }
 
@@ -145,9 +161,7 @@ namespace Models.CLEM.Resources
                     birthCount++;
                     birthProb += i;
                     if (rnd <= birthProb)
-                    {
                         return birthCount;
-                    }
                 }
                 birthCount = 1;
             }
@@ -164,13 +178,9 @@ namespace Models.CLEM.Resources
             get
             {
                 if (IsPregnant)
-                {
                     return this.Age >= this.AgeAtLastConception + this.BreedParams.GestationLength;
-                }
                 else
-                {
                     return false;
-                }
             }
         }
 
@@ -213,9 +223,7 @@ namespace Models.CLEM.Resources
         {
             CarryingCount--;
             if(CarryingCount <= 0)
-            {
                 AgeAtLastBirth = this.Age;
-            }
         }
 
         /// <summary>
@@ -236,9 +244,8 @@ namespace Models.CLEM.Resources
         {
             // if she was dry breeder remove flag as she has become pregnant.
             if (SaleFlag == HerdChangeReason.DryBreederSale)
-            {
                 SaleFlag = HerdChangeReason.None;
-            }
+
             PreviousConceptionRate = rate;
             CarryingCount = number;
             AgeAtLastConception = this.Age + ageOffset;
@@ -247,11 +254,6 @@ namespace Models.CLEM.Resources
             NumberOfConceptions++;
             ReplacementBreeder = false;
         }
-
-        /// <summary>
-        /// Indicates if the individual is a dry breeder
-        /// </summary>
-        public bool DryBreeder { get; set; }
 
         /// <summary>
         /// Indicates if the individual is lactating
@@ -283,9 +285,7 @@ namespace Models.CLEM.Resources
                     return dl+15;
                 }
                 else
-                {
                     return 0;
-                }
             }
         }
 
@@ -354,7 +354,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantFemale(double setAge, Sex setGender, double setWeight, RuminantType setParams) : base(setAge, setGender, setWeight, setParams)
+        public RuminantFemale(RuminantType setParams, double setAge, double setWeight) 
+            : base(setParams, setAge, setWeight)
         {
             SucklingOffspringList = new List<Ruminant>();
         }
@@ -375,4 +376,26 @@ namespace Models.CLEM.Resources
         Milked
     }
 
+    /// <summary>
+    /// Style of mating
+    /// </summary>
+    public enum MatingStyle
+    { 
+        /// <summary>
+        /// Natural mating
+        /// </summary>
+        Natural,
+        /// <summary>
+        /// Controlled mating
+        /// </summary>
+        Controlled,
+        /// <summary>
+        /// Wild breeder
+        /// </summary>
+        WildBreeder,
+        /// <summary>
+        /// Mating assigned at setup
+        /// </summary>
+        PreSimulation
+    }
 }

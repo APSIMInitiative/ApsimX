@@ -10,24 +10,26 @@
     using Models;
     using System.Drawing;
     using System.Linq;
+    using APSIM.Shared.Documentation;
+    using APSIM.Shared.Graphing;
+    using APSIM.Shared.Documentation.Tags;
 
     /// <summary>
-    /// # [Name]
     /// The soil nutrient model includes functionality for simulating pools of organmic matter and mineral nitrogen.  The processes for each are described below.
-    /// ## Soil Nutrient Model Structure
-    /// Soil organic matter is modelled as a series of discrete organic matter pools which are described in terms of their masses of carbon and nutrients.  These pools are initialised according to approaches specific to each pool.  Organic matter pools may have carbon flows, such as a decomposition process, associated to them.  These carbon flows are also specific to each pool, are independantly specified, and are described in each case in the documentation for each organic matter pool below.
+    /// </summary>
+    /// <structure>
+    /// Soil organic matter is modelled as a series of discrete organic matter pools which are described in terms of their masses of carbon and nutrients. These pools are initialised according to approaches specific to each pool.  Organic matter pools may have carbon flows, such as a decomposition process, associated to them.  These carbon flows are also specific to each pool, are independantly specified, and are described in each case in the documentation for each organic matter pool below.
     /// 
     /// Mineral nutrient pools (e.g. Nitrate, Ammonium, Urea) are described as solutes within the model.  Each pool captures the mass of the nutrient (e.g. N,P) and they may also contain nutrient flows to describe losses or transformations for that particular compound (e.g. denitrification of nitrate, hydrolysis of urea).
-    /// [DocumentView]
-    /// ## Pools
+    /// </structure>
+    /// <pools>
     /// A nutrient pool class is used to encapsulate the carbon and nitrogen within each soil organic matter pool.  Child functions within these classes provide information for initialisation and flows of C and N to other pools, or losses from the system.
     ///
     /// The soil organic matter pools used within the model are described in the following sections in terms of their initialisation and the carbon flows occuring from them.
-    /// [DocumentType NutrientPool]
-    /// ## Solutes
+    /// </pools>
+    /// <solutes>
     /// The soil mineral nutrient pools used within the model are described in the following sections in terms of their initialisation and the flows occuring from them.
-    /// [DocumentType Solute]
-    /// </summary>
+    /// </solutes>
     [Serializable]
     [ScopedModel]
     [ValidParent(ParentType = typeof(Soil))]
@@ -590,5 +592,36 @@
             directedGraphInfo.End();
         }
 
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Section("The APSIM Nutrient Model", DocumentNutrient());
+        }
+
+        private IEnumerable<ITag> DocumentNutrient()
+        {
+            // Basic model description.
+            yield return new Paragraph(CodeDocumentation.GetSummary(GetType()));
+
+            // Document model structure.
+            List<ITag> structureTags = new List<ITag>();
+            structureTags.Add(new DirectedGraphTag(DirectedGraphInfo));
+            structureTags.Add(new Paragraph(CodeDocumentation.GetCustomTag(GetType(), "structure")));
+            yield return new Section("Soil Nutrient Model Structure", structureTags);
+
+            // Document nutrient pools.
+            List<ITag> poolTags = new List<ITag>();
+            poolTags.Add(new Paragraph(CodeDocumentation.GetCustomTag(GetType(), "pools")));
+            poolTags.AddRange(DocumentChildren<NutrientPool>(true));
+            yield return new Section("Pools", poolTags);
+
+            // Document solutes.
+            List<ITag> soluteTags = new List<ITag>();
+            soluteTags.Add(new Paragraph(CodeDocumentation.GetCustomTag(GetType(), "solutes")));
+            soluteTags.AddRange(DocumentChildren<Solute>(true));
+            yield return new Section("Solutes", soluteTags);
+        }
     }
 }

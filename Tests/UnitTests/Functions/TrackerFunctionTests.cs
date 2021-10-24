@@ -12,7 +12,7 @@ namespace UnitTests.Functions
     class TrackerFunctionTests
     {
         [Serializable]
-        class ValuesFunction : IFunction
+        class ValuesFunction : Model, IFunction
         {
             private double[] valuesToReturn;
             private int i = 0;

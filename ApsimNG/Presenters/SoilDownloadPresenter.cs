@@ -117,7 +117,7 @@ namespace UserInterface.Presenters
 
             searchButton.Clicked -= OnSearchClicked;
             addSoilButton.Clicked -= OnAddSoilButtonClicked;
-            view.MainWidget.Cleanup();
+            view.MainWidget.Dispose();
         }
 
         /// <summary>Populate the controls.</summary>

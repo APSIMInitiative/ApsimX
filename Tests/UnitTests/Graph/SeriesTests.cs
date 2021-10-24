@@ -8,6 +8,8 @@
     using System.Collections.Generic;
     using System.Linq;
     using static UnitTests.Graph.MockSimulationDescriptionGenerator;
+    using APSIM.Shared.Graphing;
+    using Series = Models.Series;
 
     [TestFixture]
     class SeriesTests
@@ -58,9 +60,9 @@
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].YFieldName, "Col2");
             Assert.IsNull(definitions[0].SeriesDefinitions[0].YError);
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].Line, LineType.Solid);
-            Assert.AreEqual(definitions[0].SeriesDefinitions[0].LineThickness, LineThicknessType.Normal);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[0].LineThickness, LineThickness.Normal);
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].Marker, MarkerType.FilledCircle);
-            Assert.AreEqual(definitions[0].SeriesDefinitions[0].MarkerSize, MarkerSizeType.Normal);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[0].MarkerSize, MarkerSize.Normal);
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].ShowInLegend, false);
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].Title, "Series");
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].Type, SeriesType.Bar);
@@ -68,8 +70,8 @@
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].Y as double[], new int[] { 10, 10, 20, 20 });
             Assert.IsNull(definitions[0].SeriesDefinitions[0].X2);
             Assert.IsNull(definitions[0].SeriesDefinitions[0].Y2);
-            Assert.AreEqual(definitions[0].SeriesDefinitions[0].XAxis, Axis.AxisType.Bottom);
-            Assert.AreEqual(definitions[0].SeriesDefinitions[0].YAxis, Axis.AxisType.Left);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[0].XAxis, AxisPosition.Bottom);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[0].YAxis, AxisPosition.Left);
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].XFieldUnits, "()");
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].YFieldUnits, "(g)");
         }
@@ -134,15 +136,15 @@
                 Assert.AreEqual(definition.YFieldName, "Col2");
                 Assert.IsNull(definition.YError);
                 Assert.AreEqual(definition.Line, LineType.Solid);
-                Assert.AreEqual(definition.LineThickness, LineThicknessType.Normal);
+                Assert.AreEqual(definition.LineThickness, LineThickness.Normal);
                 Assert.AreEqual(definition.Marker, MarkerType.FilledCircle);
-                Assert.AreEqual(definition.MarkerSize, MarkerSizeType.Normal);
+                Assert.AreEqual(definition.MarkerSize, MarkerSize.Normal);
                 Assert.AreEqual(definition.ShowInLegend, false);
                 Assert.AreEqual(definition.Type, SeriesType.Bar);
                 Assert.IsNull(definition.X2);
                 Assert.IsNull(definition.Y2);
-                Assert.AreEqual(definition.XAxis, Axis.AxisType.Bottom);
-                Assert.AreEqual(definition.YAxis, Axis.AxisType.Left);
+                Assert.AreEqual(definition.XAxis, AxisPosition.Bottom);
+                Assert.AreEqual(definition.YAxis, AxisPosition.Left);
                 Assert.AreEqual(definition.XFieldUnits, "()");
                 Assert.AreEqual(definition.YFieldUnits, "(g)");
             }
@@ -224,15 +226,15 @@
                 Assert.AreEqual(definition.XFieldName, "Col1");
                 Assert.AreEqual(definition.YFieldName, "Col2");
                 Assert.IsNull(definition.YError);
-                Assert.AreEqual(definition.LineThickness, LineThicknessType.Normal);
+                Assert.AreEqual(definition.LineThickness, LineThickness.Normal);
                 Assert.AreEqual(definition.Marker, MarkerType.FilledCircle);
-                Assert.AreEqual(definition.MarkerSize, MarkerSizeType.Normal);
+                Assert.AreEqual(definition.MarkerSize, MarkerSize.Normal);
                 Assert.AreEqual(definition.ShowInLegend, false);
                 Assert.AreEqual(definition.Type, SeriesType.Bar);
                 Assert.IsNull(definition.X2);
                 Assert.IsNull(definition.Y2);
-                Assert.AreEqual(definition.XAxis, Axis.AxisType.Bottom);
-                Assert.AreEqual(definition.YAxis, Axis.AxisType.Left);
+                Assert.AreEqual(definition.XAxis, AxisPosition.Bottom);
+                Assert.AreEqual(definition.YAxis, AxisPosition.Left);
                 Assert.AreEqual(definition.XFieldUnits, "()");
                 Assert.AreEqual(definition.YFieldUnits, "(g)");
             }
@@ -597,7 +599,9 @@
             var definitions = page.GetAllSeriesDefinitions(graph, reader, null);
 
             Assert.AreEqual(definitions.Count, 1);
-            Assert.AreEqual(definitions[0].SeriesDefinitions.Count, 3);
+            // There should be 3 series - the regression line, the 1:1 line, and the
+            // data series itself.
+            Assert.AreEqual(3, definitions[0].SeriesDefinitions.Count);
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].Title, "Series");
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].Type, SeriesType.Bar);
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].X as double[], new double[] { 1, 2, 3, 4 });
@@ -605,15 +609,15 @@
 
             Assert.AreEqual(definitions[0].SeriesDefinitions[1].Title, "Regression line");
             Assert.AreEqual(definitions[0].SeriesDefinitions[1].Type, SeriesType.Scatter);
-            Assert.AreEqual(definitions[0].SeriesDefinitions[1].LineThickness, LineThicknessType.Normal);
-            Assert.AreEqual(definitions[0].SeriesDefinitions[1].MarkerSize, MarkerSizeType.Normal);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[1].LineThickness, LineThickness.Normal);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[1].MarkerSize, MarkerSize.Normal);
             Assert.AreEqual(definitions[0].SeriesDefinitions[1].X as double[], new double[] { 1, 4 });
             Assert.AreEqual(definitions[0].SeriesDefinitions[1].Y as double[], new double[] { 1, 2.5 });
 
             Assert.AreEqual(definitions[0].SeriesDefinitions[2].Title, "1:1 line");
             Assert.AreEqual(definitions[0].SeriesDefinitions[2].Type, SeriesType.Scatter);
-            Assert.AreEqual(definitions[0].SeriesDefinitions[2].LineThickness, LineThicknessType.Normal);
-            Assert.AreEqual(definitions[0].SeriesDefinitions[2].MarkerSize, MarkerSizeType.Normal);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[2].LineThickness, LineThickness.Normal);
+            Assert.AreEqual(definitions[0].SeriesDefinitions[2].MarkerSize, MarkerSize.Normal);
             Assert.AreEqual(definitions[0].SeriesDefinitions[2].X as double[], new double[] { 1, 4 });
             Assert.AreEqual(definitions[0].SeriesDefinitions[2].Y as double[], new double[] { 1, 4 });
 

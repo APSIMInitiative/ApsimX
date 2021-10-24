@@ -55,7 +55,7 @@ namespace UnitTests.Storage
 
         public List<string> TableAndViewNames => throw new NotImplementedException();
 
-        public List<string> TablesModified { get; set; }
+        public List<string> TablesModified { get; set; } = new List<string>();
 
         [Serializable]
         internal class Row
@@ -296,6 +296,11 @@ namespace UnitTests.Storage
         }
 
         public void Clean(IEnumerable<string> names, bool wait)
+        {
+
+        }
+		
+		public void ExecuteSql(string sql)
         {
             throw new NotImplementedException();
         }

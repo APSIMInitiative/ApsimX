@@ -8,7 +8,6 @@ using System.Linq;
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
     /// An exponential function
     /// </summary>
     [Serializable]

@@ -145,14 +145,8 @@
             string fileName = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".apsimx");
             File.WriteAllText(fileName, json);
 
-            Assembly models = typeof(IModel).Assembly;
-            string modelsExe = AppDomain.CurrentDomain.GetAssemblies().First(a => string.Equals(a.FullName, models.FullName, StringComparison.Ordinal)).Location;
-
-            var proc = new ProcessUtilities.ProcessWithRedirectedOutput();
-            proc.Start(modelsExe, fileName, Path.GetTempPath(), true);
-            proc.WaitForExit();
-
-            Assert.AreNotEqual(0, proc.ExitCode, "A file ran without error when an exception should have been thrown while opening the file.");
+            int result = Models.Program.Main(new[] { fileName });
+            Assert.AreEqual(1, result);
         }
 
         /// <summary>A class that implements IDontSerialiseChildren.</summary>

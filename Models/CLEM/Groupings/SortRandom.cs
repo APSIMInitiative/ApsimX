@@ -17,9 +17,8 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
     [ValidParent(ParentType = typeof(RuminantFeedGroup))]
     [ValidParent(ParentType = typeof(RuminantGroup))]
-    [ValidParent(ParentType = typeof(RuminantDestockGroup))]
     [ValidParent(ParentType = typeof(AnimalPriceGroup))]
-    [Description("Randomly orders any unsorted parameters in the group.")]
+    [Description("Shuffle (randomises) individuals in the fiter group")]
     [Version(1, 0, 0, "")]
     public class SortRandom : CLEMModel, IValidatableObject, ISort
     {
@@ -29,43 +28,25 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public object OrderRule<T>(T t) => RandomNumberGenerator.Generator.Next();
 
-        /// <summary>
-        /// Convert sort to string
-        /// </summary>
-        /// <returns></returns>
-        public override string ToString()
-        {
-            return "Randomise order";
-        }
-
-
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
-            return $"<div class=\"filter\" style=\"opacity: {((this.Enabled) ? "1" : "0.4")}\">{this}</div>";
+            return $"<div class=\"filter\" style=\"opacity: {((this.Enabled) ? "1" : "0.4")}\">Randomise order</div>";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
+            // allows for collapsed box and simple entry
             return "";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
+            // allows for collapsed box and simple entry
             return "";
         }
 
@@ -82,12 +63,11 @@ namespace Models.CLEM.Groupings
         {
             var results = new List<ValidationResult>();
 
-            if (Parent.Children.Last() != this)
+            if (Parent.FindAllChildren<CLEMModel>().Last() != this)
             {
                 string[] memberNames = new string[] { "RandomSort" };
-                results.Add(new ValidationResult("The sort item named " + Name + " needs to be the last element in its group", memberNames));
+                results.Add(new ValidationResult($"The sort item [f={Name}] must be the last component in its group", memberNames));
             }
-
             return results;
         }
         #endregion

@@ -179,7 +179,7 @@
             }
 
             // For each table in the database, read in field names.
-            foreach (var tableName in Connection.GetTableNames())
+            foreach (var tableName in Connection.GetTableAndViewNames())
                 tables.Add(tableName, Connection.GetTableColumns(tableName));
 
             // Get the units table.
@@ -237,7 +237,7 @@
                 distinctKeyword = "DISTINCT";
 
             // Add checkpointID to filter.
-            if (fieldNamesInTable.Contains("CheckpointID"))
+            if (fieldNamesInTable.Contains("CheckpointID") && checkpointIDs.ContainsKey(checkpointName))
                 filter = AddToFilter(filter, $"CheckpointID={checkpointIDs[checkpointName].ID}");
 
             filter = RemoveSimulationNameFromFilter(filter);
@@ -278,13 +278,13 @@
 
             // Build SQL statement
             var sql = $"SELECT {distinctKeyword} {firebirdFirstStatement} {fieldNames.Join(",")}" +
-                      $" FROM {tableName}";
+                      $" FROM \"{tableName}\"";
             if (!string.IsNullOrEmpty(filter))
                 sql += $" WHERE {filter}";
-            if (Connection is SQLite && count > 0)
-                sql += $" LIMIT {count} OFFSET {from}";
             if (orderByFields.Count > 0)
                 sql += $" ORDER BY {orderByFields.Enclose("\"", "\"").Join(",")}";
+            if (Connection is SQLite && count > 0)
+                sql += $" LIMIT {count} OFFSET {from}";
 
             // Run query.
             DataTable result = Connection.ExecuteQuery(sql);
@@ -356,9 +356,9 @@
         /// <param name="filterClause">The clause to add e.g. Exp = 'Exp1'.</param>
         private string AddToFilter(string filter, string filterClause)
         {
-            if (filterClause != null)
+            if (!string.IsNullOrEmpty(filterClause))
             {
-                if (filter == null)
+                if (string.IsNullOrEmpty(filter))
                     return filterClause;
                 else
                     return filter + " AND " + filterClause;
@@ -388,6 +388,13 @@
             {
                 return null;
             }
+        }
+
+        /// <summary>Execute sql.</summary>
+        /// <param name="sql">The SQL.</param>
+        public void ExecuteSql(string sql)
+        {
+            Connection.ExecuteQuery(sql);
         }
 
         /// <summary>

@@ -3,9 +3,7 @@
     using APSIM.Shared.Utilities;
     using Gtk;
     using Models.Core;
-#if NETFRAMEWORK
-    using MonoMac.AppKit;
-#endif
+
     using System;
     using System.Drawing;
     using System.IO;
@@ -15,6 +13,7 @@
     using EventArguments;
     using global::UserInterface.Extensions;
     using System.Text;
+    using Utility;
 
     /// <summary>An enum type for the AskQuestion method.</summary>
     public enum QuestionResponseEnum { Yes, No, Cancel }
@@ -127,11 +126,9 @@
         /// <summary>
         /// Dialog which allows the user to change fonts.
         /// </summary>
-#if NETFRAMEWORK
-        private FontSelectionDialog fontDialog;
-#else
+
         private FontChooserDialog fontDialog;
-#endif
+
 
         /// <summary>
         /// Constructor
@@ -174,12 +171,12 @@
             notebook1.GetTabLabel(notebook1.Children[0]).Name = "selected-tab";
 
             hbox1.HeightRequest = 20;
-#if NETCOREAPP
+
             // Normally, one would specify the style class in the UI (.glade) file.
             // However, doing so breaks gtk2-compatibility, so for now, we will just
             // set the style class in code.
             progressBar.StyleContext.AddClass("fat-progress-bar");
-#endif
+
 
             TextTag tag = new TextTag("error");
             // Make errors orange-ish in dark mode.
@@ -220,8 +217,15 @@
             // Can't set font until widgets are initialised.
             if (!string.IsNullOrEmpty(Utility.Configuration.Settings.FontName))
             {
-                Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
-                ChangeFont(font);
+                try
+                {
+                    Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
+                    ChangeFont(font);
+                }
+                catch (Exception err)
+                {
+                    ShowError(err);
+                }
             }
 
             //window1.ShowAll();
@@ -234,22 +238,27 @@
             if (!ProcessUtilities.CurrentOS.IsLinux)
                 RefreshTheme();
 
-#if NETCOREAPP
+
             LoadStylesheets();
-#endif
+
         }
 
-#if NETCOREAPP
+
         private void LoadStylesheets()
         {
-            string css = ReflectionUtilities.GetResourceAsString("ApsimNG.Resources.Style.global.css");
+            LoadStylesheet("global");
+            LoadStylesheet(Configuration.Settings.DarkTheme ? "dark" : "light");
+        }
+
+        private void LoadStylesheet(string cssName)
+        {
+            string css = ReflectionUtilities.GetResourceAsString($"ApsimNG.Resources.Style.{cssName}.css");
             CssProvider provider = new CssProvider();
             if (!provider.LoadFromData(css))
-                throw new Exception("Unable to parse global.css");
-
-            StyleContext.AddProviderForScreen(Gdk.Screen.Default, provider, StyleProviderPriority.Application);
+                throw new Exception($"Unable to parse {cssName}.css");
+            StyleContext.AddProviderForScreen(window1.Screen, provider, StyleProviderPriority.Application);
         }
-#endif
+
 
         /// <summary>
         /// Invoked when the user changes tabs.
@@ -335,7 +344,7 @@
         {
             get
             {
-                return MainWidget == null ? null : MainWidget.Toplevel.GetGdkWindow();
+                return MainWidget == null ? null : MainWidget.Toplevel.Window;
             }
         }
 
@@ -399,9 +408,7 @@
         /// </summary>
         private void InitMac()
         {
-#if NETFRAMEWORK
-            NSApplication.Init();
-#endif
+
         }
 
         /// <summary>
@@ -535,7 +542,7 @@
             notebook2.SwitchPage -= OnChangeTab;
             stopButton.Clicked -= OnStopClicked;
             window1.DeleteEvent -= OnClosing;
-            mainWidget.Cleanup();
+            mainWidget.Dispose();
 
             // Let all the destruction stuff be carried out, just in 
             // case we've got any unmanaged resources that should be 
@@ -677,8 +684,8 @@
         {
             get
             {
-                if (window1.GetGdkWindow() != null)
-                    return (window1.GetGdkWindow().State & Gdk.WindowState.Maximized) == Gdk.WindowState.Maximized;
+                if (window1.Window != null)
+                    return (window1.Window.State & Gdk.WindowState.Maximized) == Gdk.WindowState.Maximized;
                 else
                     return false;
             }
@@ -769,7 +776,7 @@
             MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Question, ButtonsType.YesNo, message);
             md.Title = "Save changes";
             int result = md.Run();
-            md.Cleanup();
+            md.Dispose();
             switch ((ResponseType)result)
             {
                 case ResponseType.Yes:
@@ -863,26 +870,9 @@
         /// </summary>
         public void RefreshTheme()
         {
-#if NETFRAMEWORK
-            string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".gtkrc");
-            string rc = Utility.Configuration.Settings.DarkTheme ? "dark" : "light";
-            using (Stream rcStream = Assembly.GetExecutingAssembly().GetManifestResourceStream($"ApsimNG.Resources.{rc}.gtkrc"))
-            {
-                using (StreamReader darkTheme = new StreamReader(rcStream))
-                    File.WriteAllText(tempFile, darkTheme.ReadToEnd());
-            }
 
-            Rc.Parse(tempFile);
-
-            // Remove black colour from colour pallete.
-            if (Utility.Configuration.Settings.DarkTheme)
-            {
-                Color black = Color.FromArgb(0, 0, 0);
-                ColourUtilities.Colours = ColourUtilities.Colours.Where(c => c != black).ToArray();
-            }
-#else
             // tbi
-#endif
+
         }
 
         private void AddButtonToStatusWindow(string buttonName, int buttonID)
@@ -942,11 +932,9 @@
         public void ShowFontChooser()
         {
             string title = "Select a font";
-#if NETFRAMEWORK
-            fontDialog = new FontSelectionDialog(title);
-#else
+
             fontDialog = new FontChooserDialog(title, window1);
-#endif
+
 
             // Center the dialog on the main window.
             fontDialog.TransientFor = MainWidget as Window;
@@ -954,15 +942,12 @@
 
             // Select the current font.
             if (Utility.Configuration.Settings.FontName != null)
-                fontDialog.SetFontName(Utility.Configuration.Settings.FontName.ToString());
+                fontDialog.Font = Utility.Configuration.Settings.FontName.ToString();
 
-#if NETFRAMEWORK
-            fontDialog.Response += OnChangeFont;
-            //fontDialog.OkButton.Clicked += OnChangeFont;
-#else
+
             //fontDialog.FontActivated += OnChangeFont;
             fontDialog.Response += OnChangeFont;
-#endif
+
 
             // Show the dialog.
             fontDialog.ShowAll();
@@ -979,16 +964,14 @@
         {
             try
             {
-#if NETFRAMEWORK
-                string fontName = fontDialog.FontName;
-#else
+
                 string fontName = fontDialog.Font;
-#endif
+
                 Pango.FontDescription newFont = Pango.FontDescription.FromString(fontName);
                 Utility.Configuration.Settings.FontName = newFont.ToString();
                 ChangeFont(newFont);
                 if (args.ResponseId != ResponseType.Apply)
-                    fontDialog.Cleanup();
+                    fontDialog.Dispose();
             }
             catch (Exception err)
             {
@@ -1092,9 +1075,7 @@
         private void ChangeFont(Pango.FontDescription font)
         {
             SetWidgetFont(mainWidget, font);
-#if NETFRAMEWORK
-            Settings.Default.SetStringProperty($"gtk-font-name", font.ToString(), "");
-#endif
+
             //Rc.ParseString($"gtk-font-name = \"{font}\"");
         }
 
@@ -1105,7 +1086,7 @@
         /// <param name="newFont"></param>
         private void SetWidgetFont(Widget widget, Pango.FontDescription newFont)
         {
-#if NETCOREAPP
+
             int sizePt = newFont.SizeIsAbsolute ? newFont.Size : Convert.ToInt32(newFont.Size / Pango.Scale.PangoScale);
             CssProvider provider = new CssProvider();
             StringBuilder css = new StringBuilder();
@@ -1119,19 +1100,7 @@
             css.Append("}");
             provider.LoadFromData(css.ToString());
             window1.StyleContext.AddProvider(provider, StyleProviderPriority.Application);
-#else
-            widget.ModifyFont(newFont);
-            if (widget is Container)
-            {
-                foreach (Widget child in (widget as Container).Children)
-                {
-                    SetWidgetFont(child, newFont);
-                }
-                if (widget is Notebook)
-                    for (int i = 0; i < (widget as Notebook).NPages; i++)
-                        SetWidgetFont((widget as Notebook).GetTabLabel((widget as Notebook).GetNthPage(i)), newFont);
-            }
-#endif
+
         }
 
         /// <summary>
@@ -1168,7 +1137,7 @@
             md.Title = title;
             md.WindowPosition = WindowPosition.Center;
             int result = md.Run();
-            md.Cleanup();
+            md.Dispose();
             return result;
         }
 

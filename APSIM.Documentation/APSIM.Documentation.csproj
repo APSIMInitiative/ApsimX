@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <BaseOutputPath>../bin</BaseOutputPath>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../APSIM.Interop/APSIM.Interop.csproj" />
+    <ProjectReference Include="../Models/Models.csproj" />
+
+    <EmbeddedResource Include="index.css" />
+  </ItemGroup>
+
+</Project>

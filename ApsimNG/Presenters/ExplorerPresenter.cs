@@ -230,7 +230,7 @@
             this.HideRightHandPanel();
             if (this.view is Views.ExplorerView)
             {
-                (this.view as Views.ExplorerView).MainWidget.Cleanup();
+                (this.view as Views.ExplorerView).MainWidget.Dispose();
             }
 
             this.ContextMenu = null;
@@ -694,17 +694,16 @@
             {
                 MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
 
-                var runner = new Runner(model);
-                List<Exception> errors = await Task.Run(() => Models.Core.Run.GenerateApsimXFiles.Generate(runner, path, p => MainPresenter.ShowProgress(p, false), true));
-
-                if (errors == null || errors.Count == 0)
+                try
                 {
+                    var runner = new Runner(model);
+                    await Task.Run(() => Models.Core.Run.GenerateApsimXFiles.Generate(runner, 1, path, p => MainPresenter.ShowProgress(p, false), true));
                     MainPresenter.ShowMessage("Successfully generated .apsimx files under " + path + ".", Simulation.MessageType.Information);
                     return true;
                 }
-                else
+                catch (Exception err)
                 {
-                    MainPresenter.ShowError(errors);
+                    MainPresenter.ShowError(err);
                     return false;
                 }
             }
@@ -1092,7 +1091,7 @@
                 if (!child.IsHidden)
                     description.Children.Add(GetNodeDescription(child));
             description.Strikethrough = !model.Enabled;
-            description.Checked = model.IncludeInDocumentation && showDocumentationStatus;
+            description.Checked = false; // Set this to true to show a tick next to this item.
             description.Colour = System.Drawing.Color.Empty;
             return description;
         }
