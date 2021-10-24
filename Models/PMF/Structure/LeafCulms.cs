@@ -235,6 +235,8 @@ namespace Models.PMF.Struct
 		[Link(Type = LinkType.Child, ByName = true)]
 		public LinearInterpolationFunction LeafAppearanceRate = null;
 
+		[Link(Type = LinkType.Child, ByName = true)]
+		private IFunction numberOfLeaves = null;
 
 		/// <summary>
 		/// If true, tillering will be calculated on the fly.
@@ -564,21 +566,23 @@ namespace Models.PMF.Struct
 			NLeaves = leafNo.Sum();
 		}
 		
-		/// <summary>
-		/// Calculate leaf number.
-		/// </summary>
-		/// <param name="sender">Sender object.</param>
-		/// <param name="e">Event arguments.</param>
-		[EventSubscribe("PrePhenology")]
-		private void OnPrePhenology(object sender, EventArgs e)
+		/// <summary>Event from sequencer telling us to do our potential growth.</summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+		[EventSubscribe("DoPotentialPlantGrowth")]
+		private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
 		{
 			if (plant.IsAlive)
 			{
-				CalcLeafNo();
-				TTTargetFI = GetTTFi();
-			}
-		}
+				FinalLeafNo = numberOfLeaves.Value();
+				Culms.ForEach(c => c.FinalLeafNo = FinalLeafNo);
 
+				dltLeafNo = tillering.CalcLeafNumber();
+				//TTTargetFI = GetTTFi();
+				//CalcLeafNo();
+			}
+
+		}
 		/// <summary>
 		/// In old apsim, we update the stage variable of each plant part
 		/// immediately after the call to phenology::development();

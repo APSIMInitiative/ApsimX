@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 462,
+  "ExplorerWidth": 285,
   "Version": 144,
   "Name": "Simulations",
   "Children": [
@@ -1983,6 +1983,117 @@
                   "Units": null,
                   "Name": "VerticalTillerAdjustment",
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LiveOnEventFunction, Models",
+                  "SetEvent": "FloralInitiation",
+                  "ReSetEvent": "Germination",
+                  "Name": "NumberOfLeaves",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.BoundFunction, Models",
+                      "Name": "PreEventValue",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 10.0,
+                          "Units": null,
+                          "Name": "Lower",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 40.0,
+                          "Units": null,
+                          "Name": "Upper",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.AddFunction, Models",
+                          "Name": "AddFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "LeavesInitiated",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].TTEmergToFloralInit",
+                                  "Name": "TTFloralInit",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[NumberOfLeaves].leafInitRate",
+                                  "Name": "leafInitRate",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[NumberOfLeaves].leafNumSeed",
+                              "Name": "leafNumSeed",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[LeafCulms].FinalLeafNo",
+                      "Name": "PostEventValue",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 21.6,
+                      "Units": "oCd",
+                      "Name": "leafInitRate",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Degree days to initiate each leaf primordium until floral init (deg day)",
+                          "Name": "Description",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 4.0,
+                      "Units": null,
+                      "Name": "leafNumSeed",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -5663,101 +5774,6 @@
                   ],
                   "Enabled": true,
                   "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LiveOnEventFunction, Models",
-                  "SetEvent": "FloralInitiation",
-                  "ReSetEvent": "Germination",
-                  "Name": "NumberOfLeaves",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.BoundFunction, Models",
-                      "Name": "PreEventValue",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 10.0,
-                          "Units": null,
-                          "Name": "Lower",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 40.0,
-                          "Units": null,
-                          "Name": "Upper",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.AddFunction, Models",
-                          "Name": "AddFunction",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "LeavesInitiated",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].TTEmergToFloralInit",
-                                  "Name": "TTFloralInit",
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.Constant, Models",
-                                  "FixedValue": 21.6,
-                                  "Units": "oCd",
-                                  "Name": "leafInitRate",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.Memo, Models",
-                                      "Text": "Degree days to initiate each leaf primordium until floral init (deg day)",
-                                      "Name": "Description",
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.Constant, Models",
-                              "FixedValue": 4.0,
-                              "Units": null,
-                              "Name": "leafNumSeed",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].FinalLeafNo",
-                      "Name": "PostEventValue",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
                 }
               ],
               "Enabled": true,
@@ -8654,7 +8670,7 @@
                         "[Grain].DMPerSeed.FixedValue = 0.001427844",
                         "[Leaf].PartitionRate.FixedValue = 0.018",
                         "[Arbitrator].NitrogenUptakeMethod.NUptakeCease.FixedValue = 10",
-                        "[LeafCulms].leafInitRate.FixedValue = 26.1",
+                        "[LeafCulms].NumberOfLeaves.leafInitRate.FixedValue = 26.1",
                         "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
                         "[LeafCulms].aMaxSlope.FixedValue = 8.9",
                         "[LeafCulms].aMaxIntercept.FixedValue = 245.3"
@@ -8673,7 +8689,7 @@
                         "[Leaf].Photosynthesis.RUE.FixedValue = 1.6",
                         "[Leaf].PartitionRate.FixedValue = 0.018",
                         "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
-                        "[LeafCulms].leafInitRate.FixedValue = 23.2"
+                        "[LeafCulms].NumberOfLeaves.leafInitRate.FixedValue = 23.2"
                       ],
                       "Name": "CSH13R",
                       "Children": [],

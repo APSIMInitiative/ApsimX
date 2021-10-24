@@ -68,7 +68,6 @@ namespace Models.PMF.Struct
 				//}
 				//calcLeafAppearance(culms.Culms[0]);
 
-				culms.Culms[0].calcFinalLeafNo();
 				culms.Culms[0].CulmNo = 0;
 				culms.Culms[0].calculateLeafSizes();
 				culms.FinalLeafNo = culms.Culms[0].FinalLeafNo;
@@ -87,7 +86,6 @@ namespace Models.PMF.Struct
 				//calcLeafAppearance(culms.Culms[i]);
 				if (beforeFlowering())
 				{
-					culms.Culms[i].calcFinalLeafNo();
 					culms.Culms[i].calculateLeafSizes();
 				}
 				culms.Culms[i].calcLeafAppearance();
@@ -186,8 +184,7 @@ namespace Models.PMF.Struct
 				newCulm.CurrentLeafNo = 0;//currentLeaf);
 				newCulm.VertAdjValue = culms.MaxVerticalTillerAdjustment.Value() + (_tillersAdded * culms.VerticalTillerAdjustment.Value());
 				newCulm.Proportion = fraction;
-				newCulm.FinalLeafNo = culms.FinalLeafNo;
-				//newCulm.calcFinalLeafNo();
+				newCulm.FinalLeafNo = culms.Culms[0].FinalLeafNo;
 				newCulm.calcLeafAppearance();
 				newCulm.calculateLeafSizes();
 				culms.Culms.Add(newCulm);
