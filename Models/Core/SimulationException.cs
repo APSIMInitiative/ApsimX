@@ -5,6 +5,7 @@ namespace Models.Core
     /// <summary>
     /// An exception thrown during a simulation run.
     /// </summary>
+    [Serializable]
     public class SimulationException : Exception
     {
         /// <summary>
