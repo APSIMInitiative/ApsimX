@@ -54,6 +54,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Category for transactions")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
+        [Models.Core.Display(Order = 500)]
         public string TransactionCategory { get; set; }
 
         /// <summary>
