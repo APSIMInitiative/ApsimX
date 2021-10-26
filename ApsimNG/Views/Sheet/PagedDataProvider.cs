@@ -211,6 +211,8 @@ namespace UserInterface.Views
             var sql = $"SELECT COUNT(*) FROM \"{tableName}\"";
             if (!string.IsNullOrEmpty(filter))
                 sql += $" WHERE {filter}";
+            
+            // Null conditional used to handle the edge case where data does not contain CheckpointID
             var table = dataStore.GetDataUsingSql(sql) ?? dataStore.GetDataUsingSql($"SELECT COUNT(*) FROM {tableName}");
             RowCount = Convert.ToInt32(table.Rows[0][0]) + 1; // add a row for headings.
             NumHeadingRows = 1;
