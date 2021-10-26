@@ -32,19 +32,6 @@ namespace UserInterface.Presenters
         private CLEMView clem;
 
         /// <summary>
-        /// An empty presenter that the SQL view attaches to. The class needs to be a presenter
-        /// so the CLEM presenter can attach it as a tab, but requires no other functionality.
-        /// </summary>
-        private class EmptyPresenter : IPresenter
-        {
-            public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
-            { }
-
-            public void Detach()
-            { }
-        }
-
-        /// <summary>
         /// Attach the model and view to the presenter
         /// </summary>
         /// <param name="model">The model to attach</param>
@@ -66,9 +53,7 @@ namespace UserInterface.Presenters
                 GridPresenter gridPresenter = new GridPresenter();
 
                 // Create the SQL display
-                sqlView = new TextInputView(clemPresenter.View as ViewBase);                
-                EmptyPresenter emptyPresenter = new EmptyPresenter();
-                emptyPresenter.Attach(null, sqlView, clemPresenter.ExplorerPresenter);
+                sqlView = new TextInputView(clemPresenter.View as ViewBase);
 
                 // Generate the table using the model
                 pivot = clemPresenter.ClemModel as ReportPivot;
