@@ -80,6 +80,7 @@ namespace UserInterface.Views
             mainWidget = scroller;
 
             Box container = new Box(Orientation.Vertical, 0);
+            container.Margin = 10;
             container.PackStart(box, false, false, 0);
             scroller.Add(container);
             scroller.PropagateNaturalHeight = true;
