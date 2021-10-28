@@ -61,5 +61,11 @@ namespace Models.PMF.Struct
 			//}
 			return 0.0;
 		}
-    }
+		/// <summary> calculate the potential leaf area</summary>
+		/// <returns></returns>
+		public double CalcPotentialLeafArea()
+        {
+			return 0.0;
+		}
+	}
 }

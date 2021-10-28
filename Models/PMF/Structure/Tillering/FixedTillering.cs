@@ -1,6 +1,7 @@
 ﻿using APSIM.Shared.Utilities;
 using DocumentFormat.OpenXml.Bibliography;
 using Models.Core;
+using Models.Functions;
 using Models.PMF.Interfaces;
 using Models.PMF.Phen;
 using PdfSharpCore.Pdf.Filters;
@@ -21,34 +22,38 @@ namespace Models.PMF.Struct
     [ValidParent(ParentType = typeof(LeafCulms))]
     public class FixedTillering : Model, ITilleringMethod
     {
-		/// <summary>The parent tilering class</summary>
+		/// <summary>The parent Plant</summary>
 		[Link]
-		public Plant plant = null;
+		Plant plant = null;
 
 		/// <summary> Culms on the leaf </summary>
 		[Link]
-		public LeafCulms culms = null;
+		LeafCulms culms = null;
+
+		/// <summary> Culms on the leaf </summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		IFunction areaCalc = null;
 
 		/// <summary>The parent tilering class</summary>
 		[Link]
-		public Phenology phenology = null;
+		Phenology phenology = null;
 
 		/// <summary>Number of Fertile Tillers at Harvest</summary>
 		public double FertileTillerNumber { get; private set; }
 
-		private int _floweringStage;
-		private int _endJuvenileStage;
-		private double _tillersAdded;
+		private int floweringStage;
+		private int endJuvenileStage;
+		private double tillersAdded;
 
-		private bool beforeFlowering()
+        private bool beforeFlowering()
 {
-			if (_floweringStage < 1) _floweringStage = phenology.StartStagePhaseIndex("Flowering");
-			return phenology.Stage < _floweringStage;
+			if (floweringStage < 1) floweringStage = phenology.StartStagePhaseIndex("Flowering");
+			return phenology.Stage < floweringStage;
 		}
 		private bool beforeEndJuvenileStage()
-{
-			if (_endJuvenileStage < 1) _endJuvenileStage = phenology.EndStagePhaseIndex("EndJuvenile");
-			return phenology.Stage < _endJuvenileStage;
+		{
+			if (endJuvenileStage < 1) endJuvenileStage = phenology.EndStagePhaseIndex("EndJuvenile");
+			return phenology.Stage < endJuvenileStage;
 		}
 
 		/// <summary> Calculate number of leaves</summary>
@@ -61,16 +66,15 @@ namespace Models.PMF.Struct
 			double dltLeafNoMainCulm = 0.0;
 			if (beforeFlowering())
 			{
-                //if (beforeEndJuvenileStage())
-                {
-                    //ThermalTime Targets to EndJuv are not known until the end of the Juvenile Phase
-                    //FinalLeafNo is not known until the TT Target is known - meaning the potential leaf sizes aren't known
-                    culms.Culms.ForEach(c => c.UpdatePotentialLeafSizes(culms.AreaCalc));
-                }
-				dltLeafNoMainCulm = calcLeafAppearance(culms.Culms[0]);
-
-                culms.Culms[0].CulmNo = 0;
+				//if (beforeEndJuvenileStage())
+				{
+					//ThermalTime Targets to EndJuv are not known until the end of the Juvenile Phase
+					//FinalLeafNo is not known until the TT Target is known - meaning the potential leaf sizes aren't known
+					culms.Culms.ForEach(c => c.UpdatePotentialLeafSizes(areaCalc as ICulmLeafArea));
+				}
 			}
+
+			dltLeafNoMainCulm = calcLeafAppearance(culms.Culms[0]);
 			culms.dltLeafNo = dltLeafNoMainCulm;
 			double newLeafNo = culms.Culms[0].CurrentLeafNo;
 
@@ -82,9 +86,17 @@ namespace Models.PMF.Struct
 				calcLeafAppearance(culms.Culms[i]);
 			}
 			return dltLeafNoMainCulm;
+        }
+        
+		/// <summary> Calculate the potential leaf area for the tillers</summary>
+		public double CalcPotentialLeafArea()
+        {
+			if(beforeFlowering())
+				return areaCalc.Value();
+			return 0.0;
 		}
 
-		private double calcLeafAppearance(Culm culm)
+        private double calcLeafAppearance(Culm culm)
 		{
 			var leavesRemaining = culms.FinalLeafNo - culm.CurrentLeafNo;
 			var leafAppearanceRate = culms.LeafAppearanceRate.ValueForX(leavesRemaining);
@@ -102,7 +114,7 @@ namespace Models.PMF.Struct
 			if (newLeafNo < 3) return; //don't add before leaf 3
 
 			//if there are still more tillers to add and the newleaf is greater than 3
-			if (_tillersAdded >= FertileTillerNumber) return;
+			if (tillersAdded >= FertileTillerNumber) return;
 
 
 			{
@@ -134,8 +146,8 @@ namespace Models.PMF.Struct
 				}
 				else
 				{
-					if (FertileTillerNumber - _tillersAdded < 1)
-						fraction = FertileTillerNumber - _tillersAdded;
+					if (FertileTillerNumber - tillersAdded < 1)
+						fraction = FertileTillerNumber - tillersAdded;
 				}
 				AddTiller(leafAppearance, currentLeafNo, fraction);
 			}
@@ -149,8 +161,8 @@ namespace Models.PMF.Struct
 		private void AddTiller(double leafAtAppearance, double Leaves, double fractionToAdd)
 		{
 			double fraction = 1;
-			if (FertileTillerNumber - _tillersAdded < 1)
-				fraction = FertileTillerNumber - _tillersAdded;
+			if (FertileTillerNumber - tillersAdded < 1)
+				fraction = FertileTillerNumber - tillersAdded;
 
 			// get number of tillers 
 			// add fractionToAdd 
@@ -175,11 +187,11 @@ namespace Models.PMF.Struct
 				//T6 = 7 leaves
 				newCulm.CulmNo = culms.Culms.Count;
 				newCulm.CurrentLeafNo = 0;//currentLeaf);
-				newCulm.VertAdjValue = culms.MaxVerticalTillerAdjustment.Value() + (_tillersAdded * culms.VerticalTillerAdjustment.Value());
+				newCulm.VertAdjValue = culms.MaxVerticalTillerAdjustment.Value() + (tillersAdded * culms.VerticalTillerAdjustment.Value());
 				newCulm.Proportion = fraction;
 				newCulm.FinalLeafNo = culms.Culms[0].FinalLeafNo;
 				//newCulm.calcLeafAppearance();
-				newCulm.UpdatePotentialLeafSizes(culms.AreaCalc);
+				newCulm.UpdatePotentialLeafSizes(areaCalc as ICulmLeafArea);
 				calcLeafAppearance(newCulm);
 				//newCulm.calculateLeafSizes();
 				culms.Culms.Add(newCulm);
@@ -188,7 +200,7 @@ namespace Models.PMF.Struct
 			{
 				culms.Culms.Last().Proportion = fraction;
 			}
-			_tillersAdded += fractionToAdd;
+			tillersAdded += fractionToAdd;
 		}
 
 		/// <summary>Called when crop is sowed</summary>
@@ -200,7 +212,7 @@ namespace Models.PMF.Struct
 			if (data.Plant == plant)
 			{
 				FertileTillerNumber = data.BudNumber;
-				_tillersAdded = 0.0;
+				tillersAdded = 0.0;
 			}
 		}
 

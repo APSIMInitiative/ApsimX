@@ -15,6 +15,7 @@ namespace Models.PMF.Interfaces
     {
         /// <summary> Update number of leaves for all culms </summary>
         double CalcLeafNumber();
-
+        /// <summary> Calculate the potential leaf area for the tillers</summary>
+        double CalcPotentialLeafArea();
     }
 }

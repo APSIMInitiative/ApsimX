@@ -1,9 +1,11 @@
 ﻿using APSIM.Shared.Utilities;
+using DocumentFormat.OpenXml.Spreadsheet;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 using Models.PMF.Struct;
+using Models.Utilities;
 using Newtonsoft.Json;
 using PdfSharpCore.Pdf.Filters;
 using System;
@@ -19,8 +21,16 @@ namespace Models.PMF
 	[ViewName("UserInterface.Views.PropertyView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	[ValidParent(ParentType = typeof(LeafCulms))]
-	public class C4LeafArea : Model, ICulmLeafArea
+	public class C4LeafArea : Model, ICulmLeafArea, IFunction
 	{
+		/// <summary>The parent Plant</summary>
+		[Link]
+		public Plant plant = null;
+
+		/// <summary> Culms on the leaf </summary>
+		[Link]
+		public LeafCulms culms = null;
+
 		/// <summary>The Potential Area Calculation</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
 		IFunction a0 = null;
@@ -49,7 +59,41 @@ namespace Models.PMF
 
 		/// <summary>Senescence Calculation</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
+		IFunction leafNoCorrection = null;
+
+		/// <summary>Senescence Calculation</summary>
+		[Link(Type = LinkType.Child, ByName = true)]
 		IFunction largestLeafPlateau = null;
+        
+		private double sowingDensity;
+		
+		/// <summary> implement the IFunction interface - code is currently coupled to Leafculms
+		/// Could be refactored to use an interface of Culms
+		/// </summary>
+		public double Value(int arrayIndex = -1)
+		{
+			if (culms == null) culms = Parent as LeafCulms ?? throw new Exception("C4LeafArea expects a LeafCulms as a parent: " + Parent?.Name ?? "Null");
+
+			return calcPotentialLeafArea(culms);
+		}
+
+		/// <summary> Calculate the potential area for all culms</summary>
+		public double calcPotentialLeafArea(LeafCulms culms)
+		{
+			var dltCulmArea = 0.0;
+            foreach (var culm in culms.Culms)
+            {
+				//once leaf no is calculated leaf area of largest expanding leaf is determined
+				double leafNoEffective = Math.Min(culm.CurrentLeafNo + leafNoCorrection.Value(), culm.FinalLeafNo - culm.LeafNoAtAppearance);
+				var tmpArea = CalculateIndividualLeafArea(leafNoEffective, culm.FinalLeafNo, culm.VertAdjValue).ConvertSqM2SqMM();
+
+				culm.LeafArea = tmpArea * sowingDensity * culm.dltLeafNo; // in dltLai
+				culm.TotalLAI += culm.LeafArea; //not sure what this is doing as actual growth may adjust this
+				
+				dltCulmArea += culm.LeafArea * culm.Proportion;
+			}
+			return dltCulmArea;
+		}
 
 		/// <summary>Calculate potential LeafArea</summary>
 		public double CalculateIndividualLeafArea(double leafNo, double finalLeafNo, double vertAdjust = 0.0)
@@ -109,5 +153,18 @@ namespace Models.PMF
 			}
 			return largestLeafPlateau - (finalLeafNo - leafNo);
 		}
+
+		/// <summary>Called when crop is sowed</summary>
+		/// <param name="sender">The sender.</param>
+		/// <param name="data">The <see cref="EventArgs"/> instance containing the event data.</param>
+		[EventSubscribe("PlantSowing")]
+		protected void OnPlantSowing(object sender, SowingParameters data)
+		{
+			if (data.Plant == plant)
+			{
+				sowingDensity = data.Population;
+			}
+		}
+
 	}
 }

@@ -952,14 +952,12 @@ namespace Models.PMF.Organs
         [EventSubscribe("DoPotentialPlantGrowth")]
         private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
         {
-            // save current state
             if (plant.IsEmerged)
                 StartLive = ReflectionUtilities.Clone(Live) as Biomass;
-            DltPotentialLAI = 0;
-            DltStressedLAI = 0;
             if (leafInitialised)
             {
-                culms.CalcPotentialArea();
+                DltPotentialLAI = culms.dltPotentialLAI;
+                DltStressedLAI = culms.dltStressedLAI;
 
                 //old model calculated BiomRUE at the end of the day
                 //this is done at strat of the day

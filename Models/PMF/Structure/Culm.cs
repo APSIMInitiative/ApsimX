@@ -13,15 +13,15 @@ namespace Models.PMF.Struct
     public class Culm
     {
 		private const double smm2sm = 1e-6;
-
-		private double leafNoAtAppearance;
-
 		//Birch, Hammer bell shaped curve parameters
-
 		private double largestLeafPlateau;
-		private double dltLeafNo;
-
 		//private double finalLeafCorrection;
+
+		/// <summary> Used to allow for offset of number of leaves on the tiller</summary>
+		public double LeafNoAtAppearance;
+
+		/// <summary> Potential leaf growth for the day</summary>
+		public double dltLeafNo;
 
 		/// <summary>
 		/// Vertical leaf adjustment.
@@ -64,12 +64,12 @@ namespace Models.PMF.Struct
 		/// <remarks>
 		/// Changes each day.
 		/// </remarks>
-		public double LeafArea { get; private set; }
+		public double LeafArea { get; set; }
 
 		/// <summary>
 		/// Accumulated lai for this culm.
 		/// </summary>
-		public double TotalLAI { get; private set; }
+		public double TotalLAI { get; set; }
 
 		/// <summary>
 		/// 
@@ -86,7 +86,7 @@ namespace Models.PMF.Struct
 		public Culm(double leafAppearance, CulmParams parameters)
 		{
 			//plant = p;
-			leafNoAtAppearance = leafAppearance;
+			LeafNoAtAppearance = leafAppearance;
 			this.parameters = parameters;
 			Initialize();
 			//doRegistrations();
@@ -191,7 +191,7 @@ namespace Models.PMF.Struct
 		public double calcLeafAppearance()
 		{
 			dltLeafNo = 0.0;
-			double remainingLeaves = FinalLeafNo - leafNoAtAppearance - CurrentLeafNo;//nLeaves is used in partitionDM, so need to retain it in Leaf
+			double remainingLeaves = FinalLeafNo - LeafNoAtAppearance - CurrentLeafNo;//nLeaves is used in partitionDM, so need to retain it in Leaf
 			if (remainingLeaves <= 0.0)
 			{
 				return 0.0;
@@ -235,7 +235,7 @@ namespace Models.PMF.Struct
 		public double calcPotentialLeafArea()
 		{
 			//once leaf no is calculated leaf area of largest expanding leaf is determined
-			double leafNoEffective = Math.Min(CurrentLeafNo + parameters.LeafNoCorrection.Value(), FinalLeafNo - leafNoAtAppearance);
+			double leafNoEffective = Math.Min(CurrentLeafNo + parameters.LeafNoCorrection.Value(), FinalLeafNo - LeafNoAtAppearance);
 			LeafArea = calcIndividualLeafSize(leafNoEffective);
 			//leafArea = getAreaOfCurrentLeaf(leafNoEffective);		HACK
 			//leafArea *= proportion; //proportion is 1 unless this tiller is a fraction ie: Fertile Tiller Number is 2.2, then 1 tiller is 0.2

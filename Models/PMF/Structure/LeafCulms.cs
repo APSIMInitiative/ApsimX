@@ -219,10 +219,6 @@ namespace Models.PMF.Struct
 		[Link(Type = LinkType.Child, ByName = true)]
 		private IFunction tillerSlaBound = null;
 
-		/// <summary>The Potential Area Calculation</summary>
-		[Link(Type = LinkType.Child, ByName = true)]
-		public ICulmLeafArea AreaCalc = null;
-
 		/// <summary> Subsequent tillers are slightly smaller - adjust that size using a percentage</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
 		public IFunction VerticalTillerAdjustment = null;
@@ -279,32 +275,12 @@ namespace Models.PMF.Struct
 		/// <summary>
 		/// Wrapper around leaf.DltPotentialLAI
 		/// </summary>
-		private double dltPotentialLAI
-		{
-			get
-			{
-				return leaf.DltPotentialLAI;
-			}
-			set
-			{
-				leaf.DltPotentialLAI = value;
-			}
-		}
+		public double dltPotentialLAI { get; set; }
 
 		/// <summary>
 		/// Wrapper around leaf.DltStressedLAI.
 		/// </summary>
-		private double dltStressedLAI
-		{
-			get
-			{
-				return leaf.DltStressedLAI;
-			}
-			set
-			{
-				leaf.DltStressedLAI = value;
-			}
-		}
+		public double dltStressedLAI { get; set; }
 
 		/// <summary>
 		/// Specific leaf area.
@@ -578,8 +554,10 @@ namespace Models.PMF.Struct
 				Culms.ForEach(c => c.FinalLeafNo = FinalLeafNo);
 
 				dltLeafNo = tillering.CalcLeafNumber();
-				//TTTargetFI = GetTTFi();
-				//CalcLeafNo();
+
+				//CalcPotentialArea();
+				dltPotentialLAI = tillering.CalcPotentialLeafArea();
+				dltStressedLAI = dltPotentialLAI * expansionStress.Value();
 			}
 
 		}
