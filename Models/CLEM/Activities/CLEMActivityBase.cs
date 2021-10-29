@@ -806,9 +806,9 @@ namespace Models.CLEM.Activities
                     resourcelist = resourcelist.Trim(',');
                     if (resourcelist.Length > 0)
                     {
-                        Summary.WriteError(this, String.Format("Ensure all resources are available or change OnPartialResourcesAvailableAction setting for activity [a={0}]", this.Name));
+                        Summary.WriteWarning(this, $"Ensure all resources are available or change OnPartialResourcesAvailableAction setting for activity [a={this.NameWithParent}]");
                         Status = ActivityStatus.Critical;
-                        throw new Exception(String.Format("@i:Insufficient resources [r={0}] for activity [a={1}]", resourcelist, this.Name));
+                        throw new Exception($"Insufficient resources [r={resourcelist}] for activity [a={this.NameWithParent}]");
                     }
                 }
 
