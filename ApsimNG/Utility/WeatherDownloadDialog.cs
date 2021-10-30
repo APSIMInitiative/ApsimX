@@ -653,6 +653,10 @@ namespace Utility
                 ShowMessage(MessageType.Warning, "NASA/CHRIPS data end date can be no later than yesterday", "Invalid end date");
                 return null;
             }
+
+            entryLatitude.Text = entryLatitude.Text.Replace(',', '.');
+            entryLongitude.Text = entryLongitude.Text.Replace(',', '.');
+            
             string url = String.Format("https://worldmodel.csiro.au/gclimate?lat={0}&lon={1}&format=apsim&start={2:yyyyMMdd}&stop={3:yyyyMMdd}",
                             entryLatitude.Text, entryLongitude.Text, startDate, endDate);
             MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
