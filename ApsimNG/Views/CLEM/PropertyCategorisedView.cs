@@ -208,7 +208,7 @@ namespace UserInterface.Views
                 else
                 {
                     // Is there something else we could use as a default?
-                    pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png");
+                    pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.svg");
                 }
             }
 

@@ -81,7 +81,7 @@ namespace UserInterface.Views
             modelHelpLinkLabel.Visible = false;
 
             Gtk.CellRendererPixbuf pixbufRender = new CellRendererPixbuf();
-            pixbufRender.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Help.png");
+            pixbufRender.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Help.svg");
             pixbufRender.Xalign = 0.5f;
             Gtk.Image img = new Image(pixbufRender.Pixbuf);
             modelHelpLinkLabel.Image = img;

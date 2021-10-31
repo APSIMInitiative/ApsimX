@@ -284,7 +284,7 @@ namespace UserInterface.Views
                 // Design plan: include renderers for text, toggles and combos, but hide all but one of them
                 CellRendererText textRender = new Gtk.CellRendererText();
                 CellRendererPixbuf pixbufRender = new CellRendererPixbuf();
-                pixbufRender.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Save.png");
+                pixbufRender.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Save.svg");
                 pixbufRender.Xalign = 0.5f;
 
                 if (i == 0 || i == nCols-1)
