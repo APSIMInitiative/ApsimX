@@ -24,6 +24,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantFeedGroup))]
     [ValidParent(ParentType = typeof(RuminantGroup))]
     [ValidParent(ParentType = typeof(AnimalPriceGroup))]
+    [ValidParent(ParentType = typeof(LabourFilterGroup))]
     [Version(1, 0, 0, "")]
     public class FilterByAttribute : Filter, IValidatableObject
     {
