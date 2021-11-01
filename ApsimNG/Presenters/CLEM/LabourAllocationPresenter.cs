@@ -39,7 +39,9 @@ namespace UserInterface.Presenters
 
         private List<ValidParentAttribute> validpAtt = new List<ValidParentAttribute>();
         private int numberLabourTypes = 0;
+        [NonSerialized]
         private Labour labour;
+        [NonSerialized]
         private List<LabourType> labourList = new List<LabourType>();
 
         /// <summary>
@@ -191,14 +193,16 @@ namespace UserInterface.Presenters
                 labourList.Clear();
                 foreach (LabourType lt in labour.FindAllChildren<LabourType>())
                 {
-                    labourList.Add(new LabourType()
+                    var newLabour = new LabourType()
                     {
                         Parent = labour,
                         Name = lt.Name,
                         AgeInMonths = lt.InitialAge * 12,
                         Sex = lt.Sex
-                    }
-                    );
+                    };
+                    IndividualAttribute att = new IndividualAttribute() { StoredValue = lt.Name };
+                    newLabour.Attributes.Add("Group", att);
+                    labourList.Add(newLabour);
                 }
 
                 // get all parents of LabourRequirement
@@ -362,18 +366,19 @@ namespace UserInterface.Presenters
                     return markdownString.ToString();
                 }
 
-                // create labour list
                 labourList.Clear();
                 foreach (LabourType lt in labour.FindAllChildren<LabourType>())
                 {
-                    labourList.Add(new LabourType()
+                    var newLabour = new LabourType()
                     {
                         Parent = labour,
                         Name = lt.Name,
                         AgeInMonths = lt.InitialAge * 12,
                         Sex = lt.Sex
-                    }
-                    );
+                    };
+                    IndividualAttribute att = new IndividualAttribute() { StoredValue = lt.Name };
+                    newLabour.Attributes.Add("Group", att);
+                    labourList.Add(newLabour);
                 }
 
                 // get all parents of LabourRequirement
