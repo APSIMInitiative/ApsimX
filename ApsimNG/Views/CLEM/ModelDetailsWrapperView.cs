@@ -29,7 +29,6 @@ namespace UserInterface.Views
         private Label modelTypeLabel = null;
         private Label modelDescriptionLabel = null;
         private LinkButton modelHelpLinkLabel = null;
-        //private Label modelVersionLabel = null;
         private Viewport bottomView = null;
         private string modelTypeLabelText;
         private string modelVersionLabelText;
@@ -99,12 +98,10 @@ namespace UserInterface.Views
             vbox1.PackStart(labels, false, true, 0);
 
             ScrolledWindow scroll = new ScrolledWindow();
-            scroll.ShadowType = ShadowType.None; //ShadowType.EtchedIn;
+            scroll.ShadowType = ShadowType.None;
             scroll.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
 
             scroll.Add(bottomView);
-
-
             vbox1.Add(scroll);
 
             mainWidget = vbox1;
