@@ -153,7 +153,7 @@ namespace Utility
         {
             try
             {
-                if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
+                if (!CheckValue(entryLatitude) || !CheckValue(entryLongitude))
                     return;
                 if (String.IsNullOrWhiteSpace(entryFilePath.Text))
                 {
