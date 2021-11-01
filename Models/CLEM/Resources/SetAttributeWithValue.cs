@@ -150,21 +150,15 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write("\r\n<div class=\"resourcebanneralone clearfix\">");
                     htmlWriter.Write($"Attribute  ");
                     if (AttributeName == null || AttributeName == "")
-                    {
                         htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                    }
                     else
-                    {
                         htmlWriter.Write($"<span class=\"setvalue\">{AttributeName}</span>");
-                    }
+
                     if (StandardDeviation == 0)
-                    {
                         htmlWriter.Write($" is provided with a value of <span class=\"setvalue\">{Value.ToString()}</span> ");
-                    }
                     else
-                    {
                         htmlWriter.Write($" is provided with a value taken from mean = <span class=\"setvalue\">{Value.ToString()}</span> and s.d. = <span class=\"setvalue\">{StandardDeviation}</span>");
-                    }
+
                     htmlWriter.Write($"</div>");
                 }
                 else
@@ -172,34 +166,25 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write($"\r\n<div class=\"activityentry\">");
                     htmlWriter.Write($"Provide an attribute with the label ");
                     if (AttributeName == null || AttributeName == "")
-                    {
                         htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                    }
                     else
-                    {
                         htmlWriter.Write($"<span class=\"setvalue\">{AttributeName}</span>");
-                    }
+
                     htmlWriter.Write($" that will be inherited with the <span class=\"setvalue\">{InheritanceStyle.ToString()}</span> style");
                     if (Mandatory)
-                    {
                         htmlWriter.Write($" and is required by all individuals in the population");
-                    }
+
                     htmlWriter.Write($"</div>");
 
                     htmlWriter.Write($"\r\n<div class=\"activityentry\">");
                     if (StandardDeviation == 0)
-                    {
                         htmlWriter.Write($"This attribute has a value of <span class=\"setvalue\">{Value.ToString()}</span> ");
-                    }
                     else
-                    {
                         htmlWriter.Write($"This attribute's value is randonly taken from the normal distribution with a mean of <span class=\"setvalue\">{Value.ToString()}</span> and standard deviation of <span class=\"setvalue\">{StandardDeviation}</span> ");
 
-                    }
                     if (InheritanceStyle != AttributeInheritanceStyle.None)
-                    {
                         htmlWriter.Write($" and is allowed to vary between <span class=\"setvalue\">{MinimumValue}</span> and <span class=\"setvalue\">{MaximumValue}</span> when inherited");
-                    }
+
                     htmlWriter.Write($"</div>");
                 }
                 return htmlWriter.ToString();

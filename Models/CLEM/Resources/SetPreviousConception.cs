@@ -117,13 +117,9 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write("\r\n<div class=\"resourcebanneralone clearfix\">");
                     htmlWriter.Write($"These individuals will be ");
                     if (NumberMonthsPregnant == 0)
-                    {
                         htmlWriter.Write($"<span class=\"errorlink\">Not Set</span> ");
-                    }
                     else
-                    {
                         htmlWriter.Write($"<span class=\"setvalue\">{NumberMonthsPregnant}</span>");
-                    }
                     htmlWriter.Write($" months pregnant</div>");
                 }
                 else
@@ -131,13 +127,9 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write($"\r\n<div class=\"activityentry\">");
                     htmlWriter.Write($"Set last conception age to make these females ");
                     if (NumberMonthsPregnant == 0)
-                    {
                         htmlWriter.Write($"<span class=\"errorlink\">Not Set</span> ");
-                    }
                     else
-                    {
                         htmlWriter.Write($"<span class=\"setvalue\">{NumberMonthsPregnant}</span>");
-                    }
                     htmlWriter.Write($" months pregnant</div>");
                 }
                 return htmlWriter.ToString();

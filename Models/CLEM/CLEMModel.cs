@@ -484,6 +484,7 @@ namespace Models.CLEM
                 ".resource tr:nth-child(2n+3) {background:[ResRowBack] !important;}" +
                 ".resource tr:nth-child(2n+2) {background:[ResRowBack2] !important;}" +
                 ".resource td.fill {background-color: #c1946c !important;}" +
+                ".resource td.disabled {opacity: 0.5 !important;}" +
                 ".resourceborder {border-color:#996633; border-width:1px; border-style:solid; padding:0px; background-color:Cornsilk !important; }" +
                 ".resource h1,h2,h3 {color:#996633; } .activity h1,h2,h3 { color:#009999; margin-bottom:5px; }" +
                 ".resourcebanner {background-color:#996633 !important; color:[ResFontBanner]; padding:5px; font-weight:bold; border-radius:5px 5px 0px 0px; }" +
