@@ -761,7 +761,7 @@ namespace Models.CLEM.Activities
 
             bool deficitFound = false;
             // report any resource defecits here
-            foreach (var item in resourceRequests.Where(a => (a.Available - a.Required) > 0.000001))
+            foreach (var item in resourceRequests.Where(a => (a.Required - a.Available) > 0.000001))
             {
                 ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
 
