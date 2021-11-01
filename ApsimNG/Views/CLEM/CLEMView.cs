@@ -132,17 +132,6 @@ namespace UserInterface.Views
                 EventBox frame = new EventBox();
 
                 HBox hbox = new HBox();
-                uint border = 0;
-                if (tabName == "Properties")
-                {
-                    border = 5;
-                }
-                else if (tabName != "Display" & tabName != "Data")
-                {
-                    border = 10;
-                }
-
-                hbox.BorderWidth = border;
 
                 ViewBase view = (ViewBase)control;
                 hbox.Add(view.MainWidget);

@@ -91,6 +91,7 @@ namespace UserInterface.Views
                 textView = (TextView)gtkControl;
                 mainWidget = textView;
             }
+            textView.Margin = 10;
             textView.PopulatePopup += OnPopulatePopupMenu;
             findView = new MarkdownFindView();
 

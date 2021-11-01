@@ -29,7 +29,6 @@ namespace UserInterface.Views
         private Label modelTypeLabel = null;
         private Label modelDescriptionLabel = null;
         private LinkButton modelHelpLinkLabel = null;
-        private Label modelVersionLabel = null;
         private Viewport bottomView = null;
         private string modelTypeLabelText;
         private string modelVersionLabelText;
@@ -40,10 +39,8 @@ namespace UserInterface.Views
             string css = "";
             using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Style.clem.css"))
             {
-                using (StreamReader reader = new StreamReader(stream, System.Text.Encoding.UTF8))
-                {
-                    css = reader.ReadToEnd();
-                }
+                using StreamReader reader = new StreamReader(stream, System.Text.Encoding.UTF8);
+                css = reader.ReadToEnd();
             }
 
             Gtk.CssProvider css_provider = new CssProvider();
@@ -62,7 +59,6 @@ namespace UserInterface.Views
             hbox.StyleContext.AddProvider(css_provider,Gtk.StyleProviderPriority.Application);
             modelTypeLabel.StyleContext.AddProvider(css_provider,Gtk.StyleProviderPriority.Application);
             modelTypeLabel.StyleContext.AddClass("wrapper_label_type");
-
 
             modelDescriptionLabel = new Label()
             {
@@ -87,20 +83,6 @@ namespace UserInterface.Views
             modelHelpLinkLabel.Image = img;
             modelHelpLinkLabel.Image.Visible = true;
 
-            modelVersionLabel = new Label()
-            {
-                Xalign = 0.0f,
-                Xpad = 4,
-                UseMarkup = true
-            };
-
-            modelVersionLabel.LineWrapMode = Pango.WrapMode.Word;
-            modelVersionLabel.Wrap = true;
-
-
-            //labels.OverrideBackgroundColor(StateFlags.Normal, new Gdk.RGBA(131, 0, 131,0.5));
-
-
             bottomView = new Viewport
             {
                 ShadowType = ShadowType.None
@@ -110,19 +92,16 @@ namespace UserInterface.Views
             hbox.PackStart(modelHelpLinkLabel, false, false, 0);
 
             labels.PackStart(hbox, false, true, 0);
+            modelDescriptionLabel.MarginBottom = 5;
+
             labels.PackStart(modelDescriptionLabel, false, true, 0);
-            labels.PackStart(modelVersionLabel, false, true, 4);
-
-
             vbox1.PackStart(labels, false, true, 0);
 
             ScrolledWindow scroll = new ScrolledWindow();
-            scroll.ShadowType = ShadowType.EtchedIn;
+            scroll.ShadowType = ShadowType.None;
             scroll.SetPolicy(PolicyType.Automatic, PolicyType.Automatic);
 
             scroll.Add(bottomView);
-
-
             vbox1.Add(scroll);
 
             mainWidget = vbox1;
@@ -215,7 +194,6 @@ namespace UserInterface.Views
             set
             {
                 modelVersionLabelText = value;
-                modelVersionLabel.Markup = value;
             }
         }
 
