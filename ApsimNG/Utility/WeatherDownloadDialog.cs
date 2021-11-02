@@ -1,4 +1,4 @@
-﻿
+
 namespace Utility
 {
     using APSIM.Shared.Utilities;
@@ -10,6 +10,7 @@ namespace Utility
     using Newtonsoft.Json;
     using Newtonsoft.Json.Linq;
     using System;
+    using System.Globalization;
     using System.IO;
     using System.Text.RegularExpressions;
     using UserInterface.Commands;
@@ -33,8 +34,8 @@ namespace Utility
         private RadioButton radioSiloDataDrill = null;
         private RadioButton radioSiloPatchPoint = null;
         private RadioButton radioNASA = null;
-        private Calendar calendarStart = null;
-        private Calendar calendarEnd = null;
+        private Gtk.Calendar calendarStart = null;
+        private Gtk.Calendar calendarEnd = null;
         private Entry entryFilePath = null;
         private Button btnBrowse = null;
         private Entry entryEmail = null;
@@ -74,8 +75,8 @@ namespace Utility
             btnCancel = (Button)builder.GetObject("btnCancel");
             btnGetPlacename = (Button)builder.GetObject("btnGetPlacename");
             btnGetLocation = (Button)builder.GetObject("btnGetLocation");
-            calendarStart = (Calendar)builder.GetObject("calendarStart");
-            calendarEnd = (Calendar)builder.GetObject("calendarEnd");
+            calendarStart = (Gtk.Calendar)builder.GetObject("calendarStart");
+            calendarEnd = (Gtk.Calendar)builder.GetObject("calendarEnd");
             entryFilePath = (Entry)builder.GetObject("entryFilePath");
             btnBrowse = (Button)builder.GetObject("btnBrowse");
             entryEmail = (Entry)builder.GetObject("entryEmail");
@@ -233,7 +234,7 @@ namespace Utility
         {
             try
             {
-                if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
+                if (!CheckValue(entryLatitude) || !CheckValue(entryLongitude))
                     return;
                 string url = googleGeocodingApi + "latlng=" + entryLatitude.Text + ',' + entryLongitude.Text;
 
@@ -654,11 +655,14 @@ namespace Utility
                 return null;
             }
 
-            entryLatitude.Text = entryLatitude.Text.Replace(',', '.');
-            entryLongitude.Text = entryLongitude.Text.Replace(',', '.');
-            
+            double latitude = double.Parse(entryLatitude.Text, CultureInfo.CurrentCulture);
+            double longitude = double.Parse(entryLongitude.Text, CultureInfo.CurrentCulture);
+
+            string latitudeStr = latitude.ToString(CultureInfo.InvariantCulture);
+            string longitudeStr = longitude.ToString(CultureInfo.InvariantCulture);
+
             string url = String.Format("https://worldmodel.csiro.au/gclimate?lat={0}&lon={1}&format=apsim&start={2:yyyyMMdd}&stop={3:yyyyMMdd}",
-                            entryLatitude.Text, entryLongitude.Text, startDate, endDate);
+                            latitudeStr, longitudeStr, startDate, endDate);
             MemoryStream stream = WebUtilities.ExtractDataFromURL(url);
             stream.Position = 0;
             using (FileStream fs = new FileStream(dest, FileMode.OpenOrCreate))
