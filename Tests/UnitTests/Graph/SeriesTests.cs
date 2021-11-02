@@ -10,6 +10,10 @@
     using static UnitTests.Graph.MockSimulationDescriptionGenerator;
     using APSIM.Shared.Graphing;
     using Series = Models.Series;
+    using Moq;
+    using System.Data;
+    using System;
+    using UnitTests.Storage;
 
     [TestFixture]
     class SeriesTests
@@ -1245,6 +1249,72 @@
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].Title, "Series1");
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].X as double[], new double[] { 1, 2 });
             Assert.AreEqual(definitions[0].SeriesDefinitions[0].Y as double[], new double[] { 10, 20 });
+        }
+
+        /// <summary>
+        /// Create a single xy series definition with no vary by.
+        /// Ensure it only pulls in experiments in scope.
+        /// </summary>
+        [Test]
+        public void SeriesWithNoSimulationName()
+        {
+            var simulations = new Simulations()
+            {
+                Children = new List<IModel>()
+                {
+                    new MockSimulationDescriptionGenerator(new List<Description>()
+                    {
+                        new Description("Sim1", "SimulationName", "Sim1"),
+                    }),
+                    new Graph()
+                    {
+                        Children = new List<IModel>()
+                        {
+                            new Series()
+                            {
+                                Name = "s0",
+                                TableName = "Observed",
+                                XFieldName = "x",
+                                YFieldName = "y",
+                            },
+                            new Series()
+                            {
+                                Name = "s1",
+                                TableName = "Report",
+                                XFieldName = "x",
+                                YFieldName = "y",
+                            }
+                        }
+                    }
+                }
+            };
+
+            simulations.ParentAllDescendants();
+
+            List<string> checkpoints = new List<string>() { "Current" };
+
+            DataTable report = new DataTable("Report");
+            report.Columns.Add("SimulationName", typeof(string));
+            report.Columns.Add("x", typeof(double));
+            report.Columns.Add("y", typeof(double));
+            report.Rows.Add("Sim1", 0, 1);
+            report.Rows.Add("Sim1", 1, 3);
+
+            DataTable obs = new DataTable("Observed");
+            obs.Columns.Add("x", typeof(double));
+            obs.Columns.Add("y", typeof(double));
+            obs.Rows.Add(0, 1);
+            obs.Rows.Add(1, 2);
+
+            IStorageReader reader = new MockStorageReader(report, obs);
+
+            Graph graph = simulations.FindDescendant<Graph>();
+            GraphPage page = new GraphPage();
+            page.Graphs.Add(graph);
+            List<GraphPage.GraphDefinitionMap> definitions = page.GetAllSeriesDefinitions(graph, reader, null);
+
+            Assert.AreEqual(1, definitions.Count);
+            Assert.AreEqual(2, definitions[0].SeriesDefinitions.Count);
         }
 
         /// <summary>
