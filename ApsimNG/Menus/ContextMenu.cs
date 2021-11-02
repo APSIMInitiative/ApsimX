@@ -24,6 +24,7 @@
     using Models.Climate;
     using APSIM.Interop.Markdown.Renderers;
     using APSIM.Interop.Documentation;
+    using System.Threading.Tasks;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -538,29 +539,27 @@
         /// <param name="e">Event arguments</param>
         [ContextMenu(MenuName = "Export to EXCEL",
                      AppliesTo = new Type[] { typeof(DataStore) }, FollowsSeparator = true)]
-        public void ExportDataStoreToEXCEL(object sender, EventArgs e)
+        public async void ExportDataStoreToEXCEL(object sender, EventArgs e)
         {
+            List<DataTable> tables = new List<DataTable>();
             try
             {
                 explorerPresenter.MainPresenter.ShowWaitCursor(true);
-                List<DataTable> tables = new List<DataTable>();
                 foreach (string tableName in storage.Reader.TableNames)
                 {
-                    using (DataTable table = storage.Reader.GetData(tableName))
-                    {
-                        table.TableName = tableName;
-                        tables.Add(table);
-                    }
+                    DataTable table = storage.Reader.GetData(tableName);
+                    table.TableName = tableName;
+                    tables.Add(table);
                 }
 
                 string fileName = Path.ChangeExtension(storage.FileName, ".xlsx");
-                Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);
-                explorerPresenter.MainPresenter.ShowMessage("Excel successfully created: " + fileName, Simulation.MessageType.Information);
+                explorerPresenter.MainPresenter.ShowMessage("Exporting to excel...", Simulation.MessageType.Information);
+                await Task.Run(() => Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName));
+                explorerPresenter.MainPresenter.ShowMessage($"Excel successfully created: {fileName}", Simulation.MessageType.Information);
 
                 try
                 {
-                    if (ProcessUtilities.CurrentOS.IsWindows)
-                        Process.Start(fileName);
+                    ProcessUtilities.ProcessStart(fileName);
                 }
                 catch
                 {
@@ -573,6 +572,7 @@
             }
             finally
             {
+                tables.ForEach(t => t.Dispose());
                 explorerPresenter.MainPresenter.ShowWaitCursor(false);
             }
         }
