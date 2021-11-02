@@ -1,4 +1,6 @@
-﻿using APSIM.Shared.Utilities;
+﻿using APSIM.Shared.Documentation;
+using APSIM.Shared.Graphing;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Core.Run;
 using Models.Factorial;
@@ -22,7 +24,7 @@ namespace Models
     [ValidParent(ParentType = typeof(Folder))]
     [ValidParent(ParentType = typeof(Simulations))]
     [ValidParent(ParentType = typeof(Zone))]
-    public class GraphPanel : Model, IPostSimulationTool, ICustomDocumentation
+    public class GraphPanel : Model, IPostSimulationTool
     {
         /// <summary>
         /// When set to anything other than default, changes the legend
@@ -134,14 +136,12 @@ namespace Models
         }
 
         /// <summary>
-        /// Document the graph panel.
+        /// Document the model.
         /// </summary>
-        /// <param name="tags"></param>
-        /// <param name="headingLevel"></param>
-        /// <param name="indent"></param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public override IEnumerable<ITag> Document()
         {
-            
+            // tbi
+            yield break;
         }
 
         /// <summary>
@@ -160,7 +160,7 @@ namespace Models
         /// Marker Size. Defaults to MarkerSizeType.Normal.
         /// </summary>
         [Description("Marker Size")]
-        public MarkerSizeType MarkerSize { get; set; }
+        public MarkerSize MarkerSize { get; set; }
 
         /// <summary>
         /// Use same x-axis scales for all graphs?

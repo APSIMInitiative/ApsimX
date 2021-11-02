@@ -36,12 +36,14 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Category for transactions")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
+        [Models.Core.Display(Order = 500)]
         virtual public string TransactionCategory { get; set; }
 
         /// <summary>
         /// Insufficient resources available action
         /// </summary>
         [Description("Insufficient resources available action")]
+        [Models.Core.Display(Order = 1000)]
         public OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
 
         /// <summary>

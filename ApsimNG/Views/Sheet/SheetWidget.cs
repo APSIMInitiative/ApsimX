@@ -36,9 +36,9 @@ namespace UserInterface.Views
             CanFocus = true;
             sheet = sheetEngine;
             sheet.RedrawNeeded += OnRedrawNeeded;
-#if NETCOREAPP
+
             this.StyleContext.AddClass("sheet");
-#endif
+
             AddEvents((int)EventMask.ScrollMask);
         }
 
@@ -47,34 +47,7 @@ namespace UserInterface.Views
             QueueDraw();
         }
 
-#if NETFRAMEWORK
-        /// <summary>Called by base class to draw the sheet widget.</summary>
-        /// <param name="expose">The expose event arguments.</param>
-        protected override bool OnExposeEvent(EventExpose expose)
-        {
-            try
-            {
-                Context cr = CairoHelper.Create(expose.Window);
 
-                // Do initialisation
-                if (sheet.ColumnWidths == null)
-                    Initialise(cr);
-
-                base.OnExposeEvent(expose);
-
-                sheet.Draw(new CairoContext(cr, this));
-
-                ((IDisposable)cr.Target).Dispose();
-                ((IDisposable)cr).Dispose();
-            }
-            catch (Exception err)
-            {
-                ViewBase.MasterView.ShowError(err);
-            }
-
-            return true;
-        }
-#else
         /// <summary>Called by base class to draw the sheet widget.</summary>
         /// <param name="cr">The context to draw in.</param>
         protected override bool OnDrawn(Context cr)
@@ -97,19 +70,16 @@ namespace UserInterface.Views
 
             return true;
         }
-#endif
+
 
         /// <summary>Initialise the widget.</summary>
         /// <param name="cr">The drawing context.</param>
         private void Initialise(Context cr)
         {
-#if NETFRAMEWORK
-            sheet.Width = Parent.Allocation.Width;
-            sheet.Height = Parent.Allocation.Height;
-#else
+
             sheet.Width = this.AllocatedWidth;
             sheet.Height = this.AllocatedHeight;
-#endif
+
             if (cr != null)
                 sheet.Initialise(new CairoContext(cr, this));
 
@@ -173,14 +143,12 @@ namespace UserInterface.Views
             try
             {
                 int delta;
-#if NETFRAMEWORK
-                delta = e.Direction == Gdk.ScrollDirection.Down ? -120 : 120;
-#else
+
                 if (e.Direction == Gdk.ScrollDirection.Smooth)
                     delta = e.DeltaY < 0 ? mouseWheelScrollRows : -mouseWheelScrollRows;
                 else
                     delta = e.Direction == Gdk.ScrollDirection.Down ? -mouseWheelScrollRows : mouseWheelScrollRows;
-#endif
+
                 sheet.InvokeScroll(delta);
             }
             catch (Exception err)

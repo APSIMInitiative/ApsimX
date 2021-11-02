@@ -19,23 +19,7 @@ namespace UserInterface.Classes
         /// </summary>
         public Gdk.Rectangle LastRect { get; set; }
 
-#if NETFRAMEWORK
-        /// <summary>
-        /// Render the cell in the window
-        /// </summary>
-        /// <param name="window">The owning window</param>
-        /// <param name="widget">The widget</param>
-        /// <param name="background_area">Background area</param>
-        /// <param name="cell_area">The cell area</param>
-        /// <param name="expose_area">Expose the area</param>
-        /// <param name="flags">Render flags</param>
-        protected override void Render(Gdk.Drawable window, Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gdk.Rectangle expose_area, CellRendererState flags)
-        {
-            LastRect = new Gdk.Rectangle(cell_area.X, cell_area.Y, cell_area.Width, cell_area.Height);
-            Gdk.GC gc = new Gdk.GC(window);
-            window.DrawPixbuf(gc, Pixbuf, 0, 0, cell_area.X, cell_area.Y, Pixbuf.Width, Pixbuf.Height, Gdk.RgbDither.Normal, 0, 0);
-        }
-#else
+
         /// <summary>
         /// Override the OnRender function to add a button to the cell.
         /// </summary>
@@ -51,6 +35,6 @@ namespace UserInterface.Classes
             // This probably doesn't work
             cr.SetSource(new Cairo.SurfacePattern(new Cairo.ImageSurface(Pixbuf.SaveToBuffer("png"), Cairo.Format.ARGB32, cell_area.Width, cell_area.Height, 1)));
         }
-#endif
+
     }
 }

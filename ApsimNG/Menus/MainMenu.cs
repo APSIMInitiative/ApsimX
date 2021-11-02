@@ -2,6 +2,7 @@
 {
     using System;
     using System.Diagnostics;
+    using APSIM.Shared.Utilities;
     using Models.Core;
 
     /// <summary>
@@ -100,7 +101,7 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [MainMenu(MenuName = "Split screen")]
+        [MainMenu(MenuName = "Split Screen")]
         public void ToggleSecondExplorerViewVisible(object sender, EventArgs e)
         {
             try
@@ -141,9 +142,7 @@
         {
             try
             {
-                Process process = new Process();
-                process.StartInfo.FileName = "https://apsimnextgeneration.netlify.com/";
-                process.Start();
+                ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.com/");
             }
             catch (Exception err)
             {

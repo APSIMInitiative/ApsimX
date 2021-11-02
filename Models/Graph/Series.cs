@@ -10,6 +10,7 @@
     using System.Data;
     using System.Drawing;
     using System.Linq;
+    using APSIM.Shared.Graphing;
 
     /// <summary>The class represents a single series on a graph</summary>
     [ValidParent(ParentType = typeof(Graph))]
@@ -21,17 +22,17 @@
         /// <summary>Constructor for a series</summary>
         public Series()
         {
-            this.XAxis = Axis.AxisType.Bottom;
+            this.XAxis = AxisPosition.Bottom;
         }
 
         /// <summary>Gets or sets the series type</summary>
         public SeriesType Type { get; set; }
 
         /// <summary>Gets or sets the associated x axis</summary>
-        public Axis.AxisType XAxis { get; set; }
+        public AxisPosition XAxis { get; set; }
 
         /// <summary>Gets or sets the associated y axis</summary>
-        public Axis.AxisType YAxis { get; set; }
+        public AxisPosition YAxis { get; set; }
 
         /// <summary>
         /// Gets or sets the color represented as a red, green, blue integer
@@ -66,13 +67,13 @@
         public MarkerType Marker { get; set; }
 
         /// <summary>Marker size.</summary>
-        public MarkerSizeType MarkerSize { get; set; }
+        public MarkerSize MarkerSize { get; set; }
 
         /// <summary>Gets or sets the line type to show</summary>
         public LineType Line { get; set; }
 
         /// <summary>Gets or sets the line thickness</summary>
-        public LineThicknessType LineThickness { get; set; }
+        public LineThickness LineThickness { get; set; }
 
         /// <summary>Gets or sets the name of the table to get data from.</summary>
         public string TableName { get; set; }
@@ -199,10 +200,17 @@
             // We might have child models that want to add to our series definitions e.g. regression.
             foreach (IGraphable graphable in FindAllChildren<IGraphable>())
             {
-                if (graphable is ICachableGraphable cachable)
-                    return cachable.GetSeriesToPutOnGraph(reader, seriesDefinitions, simulationFilter);
-                else
-                    return graphable.CreateSeriesDefinitions(reader, simulationDescriptions, simulationFilter);
+                try
+                {
+                    if (graphable is ICachableGraphable cachable)
+                        return cachable.GetSeriesToPutOnGraph(reader, seriesDefinitions, simulationFilter);
+                    else
+                        return graphable.CreateSeriesDefinitions(reader, simulationDescriptions, simulationFilter);
+                }
+                catch (Exception err)
+                {
+                    throw new Exception($"Unable to render graphable object {graphable.FullPath}", err);
+                }
             }
             return Enumerable.Empty<SeriesDefinition>();
         }

@@ -13,7 +13,7 @@ using System.Collections.Generic;
 using Models.Core;
 using System.Data;
 
-namespace APSIM.Tests
+namespace UnitTests
 {
     /// <summary>
     /// Unit tests for managed comms protocol.

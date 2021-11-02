@@ -1,14 +1,14 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.Documentation;
+using Models.Core;
 using System;
 using System.Collections.Generic;
+using APSIM.Shared.Utilities;
+using System.Data;
 
 namespace Models.Functions
 {
     /// <summary>
-    /// [DocumentType Memo]
-    /// <i>[Name]</i> is calculated using linear interpolation.
-    /// [DocumentChart XYPairs, ,[XVariableName],[Name]]
-    /// [DontDocument XValue]
+    /// A linear interpolation model.
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -107,6 +107,17 @@ namespace Models.Functions
         public double ValueForX(double XValue)
         {
             return XYPairs.ValueIndexed(XValue);
+        }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // fixme - the graph and table should be next to each other.
+            yield return new Paragraph($"*{Name}* is calculated using linear interpolation");
+            foreach (var tag in XYPairs.Document())
+                yield return tag;
         }
     }
 }

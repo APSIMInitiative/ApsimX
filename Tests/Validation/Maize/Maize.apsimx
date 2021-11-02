@@ -7,15 +7,6 @@
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "Text": "# The APSIM Maize Model\r\n\r\n_Brown, H.E., Teixeira, E.I., Huth, N.I. and Holzworth, D.P._\r\n\r\nThe APSIM maize model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\r\n\r\nThe model consists of:\r\n\r\n* a phenology model to simulate development between growth phases  \r\n* a structure model to simulate plant morphology  \r\n* a collection of organs to simulate the various plant parts  \r\n* an arbitrator to allocate resources (N, biomass) to the various plant organs ",
-      "Name": "TitlePage",
-      "Children": [],
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
-      "$type": "Models.Memo, Models",
       "Text": "\r\nThe APSIM Maize model has been tested on a range of datasets from around the world to provide tests across a range of environmental conditions.  Tests include ranges in plant population, nitrogen management and irrigation levels, as well as including historical datasets from africa using cultivars developed during the 1960's, through to modern varieties grown in the American mid-West.\r\n\r\n",
       "Name": "Introduction",
       "Children": [],

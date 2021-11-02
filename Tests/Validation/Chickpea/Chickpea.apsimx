@@ -6,15 +6,6 @@
   "Name": "Simulations",
   "Children": [
     {
-      "$type": "Models.Memo, Models",
-      "Text": "# The APSIM Chickpea Model\r\n\r\nThe APSIM Chickpea model has been developed using the Plant Modelling Framework (PMF) of ([brown_plant_2014]). This new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a model in much the same way that models can be coupled to construct a simulation. This means that dynamic composition of lower level process and organ classes (e.g. photosynthesis, leaf) into larger constructions (e.g. maize, wheat, sorghum) can be achieved by the model developer without additional coding.\r\n\r\nThe model consists of:\r\n\r\n* a phenology model to simulate development between growth phases  \r\n* a structure model to simulate plant morphology  \r\n* a collection of organs to simulate the various plant parts  \r\n* an arbitrator to allocate resources (N, biomass) to the various plant organs \n\nNote to users\nDesi and Kabuli chickpea are two subspecies of chickpea. The variety set includes both types. As indicated by Peake et al., 2021 (GRDC Updates), there was less confidence in predicting ",
-      "Name": "TitlePage",
-      "Children": [],
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
       "$type": "Models.Storage.DataStore, Models",
       "useFirebird": false,
       "CustomFileName": null,
