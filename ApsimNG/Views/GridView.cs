@@ -847,9 +847,9 @@
                 IsUserEditingCell = false;
                 string text = string.Empty;
                 string path = string.Empty;
-                if (editControl is Entry)
+                if (editControl is Entry entry)
                 {
-                    text = (editControl as Entry).Text;
+                    text = entry.Text;
                     path = editPath;
                 }
                 else if (editControl is ComboBox combo)
