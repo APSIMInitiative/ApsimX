@@ -159,12 +159,9 @@ namespace UserInterface.Views
                 if (property.Separators != null)
                     foreach (string separator in property.Separators)
                     {
-                        Label separatorLabel = new Label($"{separator}") { Xalign = 0, UseMarkup = true };
-                        EventBox box = new EventBox();
-                        box.Realized += OnSeparatorLabelRealized;
-                        box.Add(separatorLabel);
-
-                        propertyTable.Attach(box, 0, startRow, 2, 1);
+                        Label separatorLabel = new Label($"<b>{separator}</b>") { Xalign = 0, UseMarkup = true };
+                        separatorLabel.StyleContext.AddClass("separator");
+                        propertyTable.Attach(separatorLabel, 0, startRow, 3, 1);
 
                         startRow++;
                     }
@@ -209,31 +206,6 @@ namespace UserInterface.Views
                 label.Ypad = 5;
                 startRow++;
                 AddPropertiesToTable(ref table, subProperties, ref startRow, columnOffset);
-            }
-        }
-
-        /// <summary>
-        /// Called by the separator labels (well, technically by their
-        /// parent EventBox) when they are realized. Changes the insensitive
-        /// background colour to that of the normal background colour, to
-        /// make the cells more distinct.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        private void OnSeparatorLabelRealized(object sender, EventArgs e)
-        {
-            try
-            {
-                if (sender is Widget widget)
-                {
-
-                    // tbi
-
-                }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
             }
         }
 
