@@ -17,10 +17,7 @@ namespace Models.CLEM.Groupings
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
-    [ValidParent(ParentType = typeof(RuminantFeedGroup))]
-    [ValidParent(ParentType = typeof(RuminantGroup))]
-    [ValidParent(ParentType = typeof(AnimalPriceGroup))]
+    [ValidParent(ParentType = typeof(IFilterGroup))]
     [Description("Defines a sort order using the value of a property or method of the individual")]
     [Version(1, 0, 0, "")]
     public class SortByProperty : CLEMModel, ISort

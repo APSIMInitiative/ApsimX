@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Models.Core;
 
 namespace Models.CLEM.Interfaces
@@ -19,16 +20,26 @@ namespace Models.CLEM.Interfaces
         /// Method to create the full descriptive summary for a model and all ancestors
         /// </summary>
         /// <param name="model">The model providing the summary</param>
-        /// <param name="formatForParentControl">Use full verbose description</param>
+        /// <param name="parentControlList">history of parent controls for description style</param>
         /// <param name="htmlString">Initial string to append to</param>
         /// <param name="markdown2Html">Method to convert markdown memos to html</param>
         /// <returns>Summary description HTML text</returns>
-        string GetFullSummary(IModel model, bool formatForParentControl, string htmlString, Func<string, string> markdown2Html = null);
+        string GetFullSummary(IModel model, List<IModel> parentControlList, string htmlString, Func<string, string> markdown2Html = null);
 
         /// <summary>
         /// Styling to use for HTML summary
         /// </summary>
         HTMLSummaryStyle ModelSummaryStyle { get; set; }
+
+        /// <summary>
+        /// List of parent models before this 
+        /// </summary>
+        List<IModel> CurrentAncestorList { get; set; }
+
+        /// <summary>
+        /// Determines if this discription is below a parent model
+        /// </summary>
+        bool FormatForParentControl { get; }
 
         /// <summary>
         /// Provides the closing html tags for object

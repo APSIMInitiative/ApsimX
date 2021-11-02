@@ -269,7 +269,6 @@ namespace Models.CLEM.Resources
                             htmlWriter.Write(", but should weigh close to the normalised weight of <span class=\"errorlink\">" + normWtString + "</span> kg for their age");
                         htmlWriter.Write("</div>");
                     }
-                    htmlWriter.Write("</div>");
                 }
                 else
                 {
@@ -347,45 +346,48 @@ namespace Models.CLEM.Resources
             {
                 if (formatForParentControl)
                 {
-                    RuminantType rumtype = FindAncestor<RuminantType>();                    
-                    if (rumtype != null)
+                    if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 1] is RuminantInitialCohorts))
                     {
-                        var newInd = Ruminant.Create(Sex, rumtype, Age);
-
-                        string normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
-                        if (Math.Abs(this.Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
+                        RuminantType rumtype = FindAncestor<RuminantType>();
+                        if (rumtype != null)
                         {
-                            normWtString = "<span class=\"errorlink\">" + normWtString + "</span>";
-                            (this.Parent as RuminantInitialCohorts).WeightWarningOccurred = true;
-                        }
-                        htmlWriter.Write($"\r\n<tr{(this.Enabled?"":" class=\"disabled\"")}><td>" + this.Name + "</td><td><span class=\"setvalue\">" + this.Sex + "</span></td><td><span class=\"setvalue\">" + this.Age.ToString() + "</span></td><td><span class=\"setvalue\">" + this.Weight.ToString() + ((this.WeightSD > 0) ? " (" + this.WeightSD.ToString() + ")" : "") + "</spam></td><td>" + normWtString + "</td><td><span class=\"setvalue\">" + this.Number.ToString() + "</span></td><td" + ((this.Suckling) ? " class=\"fill\"" : "") + "></td><td" + ((this.Sire) ? " class=\"fill\"" : "") + "></td>");
+                            var newInd = Ruminant.Create(Sex, rumtype, Age);
 
-                        if((Parent as RuminantInitialCohorts).ConceptionsFound)
-                        {
-                            var setConceptionFound = this.FindChild<SetPreviousConception>();
-                            if(setConceptionFound != null)
-                                htmlWriter.Write($"<td class=\"fill\"><span class=\"setvalue\">{setConceptionFound.NumberMonthsPregnant}</span> mths</td>");
-                            else
-                                htmlWriter.Write("<td></td>");
-                        }
-
-                        if ((Parent as RuminantInitialCohorts).AttributesFound)
-                        {
-                            var setAttributesFound = this.FindAllChildren<SetAttributeWithValue>();
-                            if (setAttributesFound.Any())
+                            string normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
+                            if (Math.Abs(this.Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
                             {
-                                htmlWriter.Write($"<td class=\"fill\">");
-                                foreach (var attribute in setAttributesFound)
-                                {
-                                    htmlWriter.Write($"<span class=\"setvalue\">{attribute.AttributeName}</span> ");
-                                }
-                                htmlWriter.Write($"</td>");
+                                normWtString = "<span class=\"errorlink\">" + normWtString + "</span>";
+                                (this.Parent as RuminantInitialCohorts).WeightWarningOccurred = true;
                             }
-                            else
-                                htmlWriter.Write("<td></td>");
-                        }
+                            htmlWriter.Write($"\r\n<tr{(this.Enabled ? "" : " class=\"disabled\"")}><td>" + this.Name + "</td><td><span class=\"setvalue\">" + this.Sex + "</span></td><td><span class=\"setvalue\">" + this.Age.ToString() + "</span></td><td><span class=\"setvalue\">" + this.Weight.ToString() + ((this.WeightSD > 0) ? " (" + this.WeightSD.ToString() + ")" : "") + "</spam></td><td>" + normWtString + "</td><td><span class=\"setvalue\">" + this.Number.ToString() + "</span></td><td" + ((this.Suckling) ? " class=\"fill\"" : "") + "></td><td" + ((this.Sire) ? " class=\"fill\"" : "") + "></td>");
 
-                        htmlWriter.Write("</tr>");
+                            if ((Parent as RuminantInitialCohorts).ConceptionsFound)
+                            {
+                                var setConceptionFound = this.FindChild<SetPreviousConception>();
+                                if (setConceptionFound != null)
+                                    htmlWriter.Write($"<td class=\"fill\"><span class=\"setvalue\">{setConceptionFound.NumberMonthsPregnant}</span> mths</td>");
+                                else
+                                    htmlWriter.Write("<td></td>");
+                            }
+
+                            if ((Parent as RuminantInitialCohorts).AttributesFound)
+                            {
+                                var setAttributesFound = this.FindAllChildren<SetAttributeWithValue>();
+                                if (setAttributesFound.Any())
+                                {
+                                    htmlWriter.Write($"<td class=\"fill\">");
+                                    foreach (var attribute in setAttributesFound)
+                                    {
+                                        htmlWriter.Write($"<span class=\"setvalue\">{attribute.AttributeName}</span> ");
+                                    }
+                                    htmlWriter.Write($"</td>");
+                                }
+                                else
+                                    htmlWriter.Write("<td></td>");
+                            }
+
+                            htmlWriter.Write("</tr>");
+                        }
                     }
                 }
                 else

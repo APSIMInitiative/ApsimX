@@ -105,11 +105,6 @@ namespace Models.CLEM
         [JsonIgnore]
         public new double Altitude { get; set; } = 50;
 
-        /// <summary>
-        /// Summary style to use for this component
-        /// </summary>
-        public HTMLSummaryStyle ModelSummaryStyle { get; set; }
-
         private string wholeSimulationSummaryFile = "";
 
         /// <summary>
@@ -350,12 +345,26 @@ namespace Models.CLEM
 
         #region Descriptive summary
 
+        /// <summary>
+        /// Summary style to use for this component
+        /// </summary>
+        public HTMLSummaryStyle ModelSummaryStyle { get; set; }
+
+        /// <inheritdoc/>
+        public List<IModel> CurrentAncestorList { get; set; } = new List<IModel>();
+
+        /// <inheritdoc/>
+        public bool FormatForParentControl { get { return CurrentAncestorList.Count > 1; } }
+
         ///<inheritdoc/>
-        public string GetFullSummary(IModel model, bool useFullDescription, string htmlString, Func<string, string> markdown2Html = null)
+        public string GetFullSummary(IModel model, List<IModel> parentControls, string htmlString, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">");
+
+                CurrentAncestorList = parentControls.ToList();
+                CurrentAncestorList.Add(model);
 
                 // get clock
                 IModel parentSim = FindAncestor<Simulation>();
@@ -423,7 +432,7 @@ namespace Models.CLEM
                 }
 
                 foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
-                    htmlWriter.Write(cm.GetFullSummary(cm, true, ""));
+                    htmlWriter.Write(cm.GetFullSummary(cm, CurrentAncestorList, ""));
                 return htmlWriter.ToString(); 
             }
         }

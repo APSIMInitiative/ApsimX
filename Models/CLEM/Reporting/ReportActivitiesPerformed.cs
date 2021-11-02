@@ -410,6 +410,12 @@ namespace Models.CLEM.Reporting
         ///<inheritdoc/>
         public HTMLSummaryStyle ModelSummaryStyle { get; set; }
 
+        /// <inheritdoc/>
+        public List<IModel> CurrentAncestorList { get; set; } = new List<IModel>();
+
+        /// <inheritdoc/>
+        public bool FormatForParentControl { get { return CurrentAncestorList.Count == 1; } }
+
         ///<inheritdoc/>
         public string ModelSummary(bool formatForParentControl)
         {
@@ -441,28 +447,31 @@ namespace Models.CLEM.Reporting
         }
 
         ///<inheritdoc/>
-        public string GetFullSummary(IModel model, bool formatForParentControl, string htmlString, Func<string, string> markdown2Html = null)
+        public string GetFullSummary(IModel model, List<IModel> parentControls, string htmlString, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
+                CurrentAncestorList = parentControls.ToList();
+                CurrentAncestorList.Add(this);
+
                 if (model is ICLEMDescriptiveSummary)
                 {
                     ICLEMDescriptiveSummary cm = model as ICLEMDescriptiveSummary;
-                    htmlWriter.Write(cm.ModelSummaryOpeningTags(formatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryOpeningTags(FormatForParentControl));
 
                     htmlWriter.Write(cm.ModelSummaryInnerOpeningTagsBeforeSummary());
 
-                    htmlWriter.Write(cm.ModelSummary(formatForParentControl));
+                    htmlWriter.Write(cm.ModelSummary(FormatForParentControl));
 
-                    htmlWriter.Write(cm.ModelSummaryInnerOpeningTags(formatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryInnerOpeningTags(FormatForParentControl));
 
                     foreach (var item in (model as IModel).Children)
                     {
-                        htmlWriter.Write(GetFullSummary(item, true, htmlString, markdown2Html));
+                        htmlWriter.Write(GetFullSummary(item, CurrentAncestorList, htmlString, markdown2Html));
                     }
-                    htmlWriter.Write(cm.ModelSummaryInnerClosingTags(formatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryInnerClosingTags(FormatForParentControl));
 
-                    htmlWriter.Write(cm.ModelSummaryClosingTags(formatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryClosingTags(FormatForParentControl));
                 }
                 return htmlWriter.ToString();
             }

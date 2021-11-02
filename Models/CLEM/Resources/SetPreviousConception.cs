@@ -112,15 +112,19 @@ namespace Models.CLEM.Resources
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (formatForParentControl)
+                if (FormatForParentControl)
                 {
-                    htmlWriter.Write("\r\n<div class=\"resourcebanneralone clearfix\">");
-                    htmlWriter.Write($"These individuals will be ");
-                    if (NumberMonthsPregnant == 0)
-                        htmlWriter.Write($"<span class=\"errorlink\">Not Set</span> ");
-                    else
-                        htmlWriter.Write($"<span class=\"setvalue\">{NumberMonthsPregnant}</span>");
-                    htmlWriter.Write($" months pregnant</div>");
+                    // skip if this is inside the table summary of Initial Chohort
+                    if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 3] is RuminantInitialCohorts))
+                    {
+                        htmlWriter.Write("\r\n<div class=\"resourcebanneralone\">");
+                        htmlWriter.Write($"These individuals will be ");
+                        if (NumberMonthsPregnant == 0)
+                            htmlWriter.Write($"<span class=\"errorlink\">Not Set</span> ");
+                        else
+                            htmlWriter.Write($"<span class=\"setvalue\">{NumberMonthsPregnant}</span>");
+                        htmlWriter.Write($" months pregnant</div>");
+                    }
                 }
                 else
                 {

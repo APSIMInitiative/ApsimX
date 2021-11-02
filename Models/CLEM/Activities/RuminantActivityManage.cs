@@ -65,7 +65,7 @@ namespace Models.CLEM.Activities
         public int MinimumBreedersKept { get; set; }
 
         /// <summary>
-        /// Stop model is breeder herd exceeds maximum breeders time this multiplier
+        /// Stop model if breeder herd exceeds maximum breeders time this multiplier
         /// </summary>
         [Category("Herd size", "Breeding females")]
         [Description("Stop model max breeders multiplier")]

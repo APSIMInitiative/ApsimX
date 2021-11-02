@@ -147,19 +147,24 @@ namespace Models.CLEM.Resources
             {
                 if (formatForParentControl)
                 {
-                    htmlWriter.Write("\r\n<div class=\"resourcebanneralone clearfix\">");
-                    htmlWriter.Write($"Attribute  ");
-                    if (AttributeName == null || AttributeName == "")
-                        htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                    else
-                        htmlWriter.Write($"<span class=\"setvalue\">{AttributeName}</span>");
+                    if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 3] is RuminantInitialCohorts))
+                    {
+                        bool isgroupattribute = (CurrentAncestorList.Count >= 2 && CurrentAncestorList[CurrentAncestorList.Count - 2] is RuminantInitialCohorts);
 
-                    if (StandardDeviation == 0)
-                        htmlWriter.Write($" is provided with a value of <span class=\"setvalue\">{Value.ToString()}</span> ");
-                    else
-                        htmlWriter.Write($" is provided with a value taken from mean = <span class=\"setvalue\">{Value.ToString()}</span> and s.d. = <span class=\"setvalue\">{StandardDeviation}</span>");
+                        htmlWriter.Write("\r\n<div class=\"resourcebanneralone clearfix\">");
+                        htmlWriter.Write($"Attribute  ");
+                        if (AttributeName == null || AttributeName == "")
+                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
+                        else
+                            htmlWriter.Write($"<span class=\"setvalue\">{AttributeName}</span>");
 
-                    htmlWriter.Write($"</div>");
+                        if (StandardDeviation == 0)
+                            htmlWriter.Write($" is provided {(isgroupattribute?"to all cohorts":"")} with a value of <span class=\"setvalue\">{Value.ToString()}</span> ");
+                        else
+                            htmlWriter.Write($" is provided {(isgroupattribute ? "to all cohorts" : "")} with a value taken from mean = <span class=\"setvalue\">{Value.ToString()}</span> and s.d. = <span class=\"setvalue\">{StandardDeviation}</span>");
+
+                        htmlWriter.Write($"</div>");
+                    }
                 }
                 else
                 { 
