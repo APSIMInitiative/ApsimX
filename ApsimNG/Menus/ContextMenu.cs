@@ -25,6 +25,7 @@
     using APSIM.Interop.Markdown.Renderers;
     using APSIM.Interop.Documentation;
     using System.Threading.Tasks;
+    using System.Threading;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -544,26 +545,86 @@
             List<DataTable> tables = new List<DataTable>();
             try
             {
-                explorerPresenter.MainPresenter.ShowWaitCursor(true);
-                foreach (string tableName in storage.Reader.TableNames)
-                {
-                    DataTable table = storage.Reader.GetData(tableName);
-                    table.TableName = tableName;
-                    tables.Add(table);
-                }
-
                 string fileName = Path.ChangeExtension(storage.FileName, ".xlsx");
+
+                // Show a message in the GUI.
                 explorerPresenter.MainPresenter.ShowMessage("Exporting to excel...", Simulation.MessageType.Information);
-                await Task.Run(() => Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName));
-                explorerPresenter.MainPresenter.ShowMessage($"Excel successfully created: {fileName}", Simulation.MessageType.Information);
+
+                // Show a progress bar - this is currently the only way to get the stop/cancel button to appear.
+                explorerPresenter.MainPresenter.ShowProgress(0, true);
+
+                CancellationTokenSource cts = new CancellationTokenSource();
+
+                // Read data from database (in the background).
+                Task readTask = Task.Run(() =>
+                {
+                    ushort i = 0;
+                    foreach (string tableName in storage.Reader.TableNames)
+                    {
+                        cts.Token.ThrowIfCancellationRequested();
+                        DataTable table = storage.Reader.GetData(tableName);
+                        table.TableName = tableName;
+                        tables.Add(table);
+
+                        double progress = 0.5 * (i + 1) / storage.Reader.TableNames.Count;
+                        explorerPresenter.MainPresenter.ShowProgress(progress);
+
+                        i++;
+                    }
+                }, cts.Token);
+
+                // Add a handler to the stop button which cancels the excel export..
+                EventHandler<EventArgs> stopHandler = (_, __) =>
+                {
+                    cts.Cancel();
+                    explorerPresenter.MainPresenter.HideProgressBar();
+                    explorerPresenter.MainPresenter.ShowMessage("Export to excel was cancelled.", Simulation.MessageType.Information, true);
+                };
+                explorerPresenter.MainPresenter.AddStopHandler(stopHandler);
 
                 try
                 {
-                    ProcessUtilities.ProcessStart(fileName);
+                    // Wait for data to be read.
+                    await readTask;
+
+                    if (readTask.IsFaulted)
+                        throw new Exception("Failed to read data from datastore", readTask.Exception);
+
+                    if (readTask.IsCanceled || cts.Token.IsCancellationRequested)
+                        return;
+
+                    // Start the excel export as a task.
+                    // todo: progress reporting and proper cancellation would be nice.
+                    Task exportTask = Task.Run(() => Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName), cts.Token);
+
+                    // Wait for the excel file to be generated.
+                    await exportTask;
+
+                    if (exportTask.IsFaulted)
+                        throw new Exception($"Failed to export to excel", exportTask.Exception);
+
+                    if (exportTask.IsCanceled || cts.Token.IsCancellationRequested)
+                        return;
+
+                    // Show a success message.
+                    explorerPresenter.MainPresenter.ShowMessage($"Excel successfully created: {fileName}", Simulation.MessageType.Information);
+
+                    try
+                    {
+                        // Attempt to open the file - but don't display any errors if it doesn't work.
+                        ProcessUtilities.ProcessStart(fileName);
+                    }
+                    catch
+                    {
+                    }
                 }
-                catch
+                finally
                 {
-                    // Swallow exceptions - this was a non-critical operation.
+                    // Remove callback from the stop button.
+                    explorerPresenter.MainPresenter.RemoveStopHandler(stopHandler);
+
+                    // Remove the progress bar and stop button.
+                    explorerPresenter.MainPresenter.HideProgressBar();
                 }
             }
             catch (Exception err)
@@ -572,8 +633,9 @@
             }
             finally
             {
+                // Disposing of datatables isn't strictly necessary, but if we don't,
+                // it could be a while before the memory is reclaimed.
                 tables.ForEach(t => t.Dispose());
-                explorerPresenter.MainPresenter.ShowWaitCursor(false);
             }
         }
 
