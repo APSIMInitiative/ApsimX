@@ -62,6 +62,9 @@
                 foreach (ITag tag in memo.Document())
                     yield return tag;
 
+            foreach (ITag tag in DocumentChildren<Map>())
+                yield return tag;
+
             // Write experiment descriptions. We don't call experiment.Document() here,
             // because we want to just show the experiment design (a string) and put it
             // inside a table cell.
