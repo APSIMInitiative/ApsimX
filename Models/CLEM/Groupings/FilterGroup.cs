@@ -17,6 +17,7 @@ namespace Models.CLEM
     public abstract class FilterGroup<TFilter> : CLEMModel, IFilterGroup
         where TFilter : IFilterable
     {
+        [NonSerialized]
         private protected IEnumerable<Func<IFilterable, bool>> filterRules = null;
         [NonSerialized]
         private protected IEnumerable<ISort> sortList = null;
@@ -47,6 +48,8 @@ namespace Models.CLEM
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
+            filterRules = null;
+            sortList = null;
             InitialiseFilters();
         }
 

@@ -20,10 +20,7 @@ namespace Models.CLEM.Groupings
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Defines a filter rule using Attribute details of the individual")]
-    [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
-    [ValidParent(ParentType = typeof(RuminantFeedGroup))]
-    [ValidParent(ParentType = typeof(RuminantGroup))]
-    [ValidParent(ParentType = typeof(AnimalPriceGroup))]
+    [ValidParent(ParentType = typeof(IFilterGroup))]
     [Version(1, 0, 0, "")]
     public class FilterByAttribute : Filter, IValidatableObject
     {

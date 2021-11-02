@@ -763,7 +763,7 @@ namespace Models.CLEM.Activities
 
             bool deficitFound = false;
             // report any resource defecits here
-            foreach (var item in resourceRequests.Where(a => (a.Available - a.Required) > 0.000001))
+            foreach (var item in resourceRequests.Where(a => (a.Required - a.Available) > 0.000001))
             {
                 ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
 
@@ -808,9 +808,9 @@ namespace Models.CLEM.Activities
                     resourcelist = resourcelist.Trim(',');
                     if (resourcelist.Length > 0)
                     {
-                        Summary.WriteError(this, String.Format("Ensure all resources are available or change OnPartialResourcesAvailableAction setting for activity [a={0}]", this.Name));
+                        Summary.WriteWarning(this, $"Ensure all resources are available or change OnPartialResourcesAvailableAction setting for activity [a={this.NameWithParent}]");
                         Status = ActivityStatus.Critical;
-                        throw new Exception(String.Format("@i:Insufficient resources [r={0}] for activity [a={1}]", resourcelist, this.Name));
+                        throw new Exception($"Insufficient resources [r={resourcelist}] for activity [a={this.NameWithParent}]");
                     }
                 }
 

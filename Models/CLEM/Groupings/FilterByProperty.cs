@@ -37,7 +37,8 @@ namespace Models.CLEM.Groupings
         [Required(AllowEmptyStrings = false, ErrorMessage = "Property or method required")]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetParameters), Order = 1)]
         public string PropertyOfIndividual { get; set; }
-        private IEnumerable<string> GetParameters() => Parent.Parameters.OrderBy(k => k);
+        
+        private IEnumerable<string> GetParameters() => Parent?.Parameters.OrderBy(k => k);
 
         /// <summary>
         /// Constructor
