@@ -572,7 +572,11 @@
 
             foreach (Solute solute in this.FindAllChildren<Solute>())
             {
-                directedGraphInfo.AddNode(solute.Name, ColourUtilities.ChooseColour(2), Color.Black);
+                Point location = new Point(0, 0);
+                Node oldNode;
+                if (oldGraph != null && solute.Name != null && (oldNode = oldGraph.Nodes.Find(f => f.Name == solute.Name)) != null)
+                    location = oldNode.Location;
+                directedGraphInfo.AddNode(solute.Name, ColourUtilities.ChooseColour(2), Color.Black, location);
                 foreach (NFlow nitrogenFlow in solute.FindAllChildren<NFlow>())
                 {
                     string destName = nitrogenFlow.destinationName;
