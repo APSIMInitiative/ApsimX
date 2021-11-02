@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyMultiModelView")]
     [PresenterName("UserInterface.Presenters.PropertyMultiModelPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
-    [Description("This component holds all Animal Price Entries that define the value of individuals in the breed/herd.")]
+    [Description("Holds all animal price entries defining the value of individual ruminants")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Custom grouping with filtering")]
     [Version(1, 0, 3, "Purchase and sales identifier used")]
@@ -69,9 +69,8 @@ namespace Models.CLEM.Resources
         {
             string html = "";
             if (this.FindAllChildren<AnimalPriceGroup>().Count() >= 1)
-            {
                 html += "</table></div>";
-            }
+
             return html;
         }
 
@@ -80,13 +79,10 @@ namespace Models.CLEM.Resources
         {
             string html = "";
             if (this.FindAllChildren<AnimalPriceGroup>().Count() >= 1)
-            {
                 html += "<div class=\"topspacing\"><table><tr><th>Name</th><th>Filter</th><th>Value</th><th>Style</th><th>Type</th></tr>";
-            }
             else
-            {
                 html += "<span class=\"errorlink\">No Animal Price Groups defined!</span>";
-            }
+
             return html;
         } 
         #endregion

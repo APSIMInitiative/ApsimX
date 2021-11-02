@@ -44,6 +44,72 @@
             public int F { get; set; }
         }
 
+        public interface IInterface
+        {
+            int X { get; }
+        }
+
+        public class Container : Model
+        {
+            public InterfaceBase Current { get; set; }
+            public IInterface Value { get; set; }
+        }
+
+        public abstract class InterfaceBase : IInterface
+        {
+            public abstract int X { get; }
+        }
+
+        public class Concrete2 : InterfaceBase
+        {
+            public override int X => 2;
+        }
+
+        public class Concrete3 : InterfaceBase
+        {
+            public override int X => 3;
+        }
+
+        [Test]
+        public void TestAbstractProperty()
+        {
+            Concrete2 c2 = new Concrete2();
+            Concrete3 c3 = new Concrete3();
+            Container container = new Container();
+
+            Simulation sim = new Simulation();
+            sim.Children.Add(container);
+            Simulations sims = new Simulations();
+            sims.Children.Add(sim);
+
+            ILocator locator = sims.GetLocatorService(sim);
+
+            container.Current = c2;
+            Assert.AreEqual(2, locator.Get("[Container].Current.X"));
+            container.Current = c3;
+            Assert.AreEqual(3, locator.Get("[Container].Current.X"));
+        }
+
+        [Test]
+        public void TestPropertyOfInterface()
+        {
+            Concrete2 c2 = new Concrete2();
+            Concrete3 c3 = new Concrete3();
+            Container container = new Container();
+
+            Simulation sim = new Simulation();
+            sim.Children.Add(container);
+            Simulations sims = new Simulations();
+            sims.Children.Add(sim);
+
+            ILocator locator = sims.GetLocatorService(sim);
+
+            container.Value = c2;
+            Assert.AreEqual(2, locator.Get("[Container].Value.X"));
+            container.Value = c3;
+            Assert.AreEqual(3, locator.Get("[Container].Value.X"));
+        }
+
         [Test]
         public void LocatorGetVariable()
         {

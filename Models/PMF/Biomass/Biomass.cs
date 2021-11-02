@@ -7,14 +7,13 @@ using Newtonsoft.Json;
 namespace Models.PMF
 {
     /// <summary>
-    /// # [Name]
     /// Biomass of plant organs
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IOrgan))]
     [ValidParent(ParentType = typeof(Plant))]
     [ValidParent(ParentType = typeof(IOrgan))]
-    public class Biomass: Model
+    public class Biomass : Model, IBiomass
     {
         /// <summary>The structural wt</summary>
         protected double _StructuralWt = 0;

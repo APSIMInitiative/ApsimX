@@ -36,13 +36,9 @@ namespace Models.CLEM.Resources
         {
             double val;
             if (otherMetricAmounts.TryGetValue(metric, out val))
-            {
                 otherMetricAmounts[metric] = val + amount;
-            }
             else
-            {
                 otherMetricAmounts.Add(metric, amount);
-            }
         }
 
         /// <summary>
@@ -54,18 +50,14 @@ namespace Models.CLEM.Resources
         {
             double result = 0;
             if(FoodStore is null)
-            {
                 // check if initial value provided
                 otherMetricAmounts.TryGetValue(metric, out result);
-            }
             else
             {
                 // convert to metric if possible
                 var amount = FoodStore.ConvertTo(metric, AmountConsumed);
                 if (amount != null)
-                {
                     Double.TryParse(amount.ToString(), out result);
-                }
             }
             return result;
         }

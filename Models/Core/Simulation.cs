@@ -1,4 +1,5 @@
-﻿using APSIM.Shared.JobRunning;
+﻿using APSIM.Shared.Documentation;
+using APSIM.Shared.JobRunning;
 using Models.Core.Run;
 using Models.Factorial;
 using Models.Soils.Standardiser;
@@ -12,7 +13,6 @@ using System.Threading;
 namespace Models.Core
 {
     /// <summary>
-    /// # [Name]
     /// A simulation model
     /// </summary>
     [ValidParent(ParentType = typeof(Simulations))]
@@ -21,7 +21,7 @@ namespace Models.Core
     [ValidParent(ParentType = typeof(Sobol))]
     [Serializable]
     [ScopedModel]
-    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, ICustomDocumentation, IReportsStatus
+    public class Simulation : Model, IRunnable, ISimulationDescriptionGenerator, IReportsStatus
     {
         [Link]
         private ISummary summary = null;
@@ -332,26 +332,35 @@ namespace Models.Core
             model.Children.ForEach(child => RemoveDisabledModels(child));
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // document children
-                foreach (IModel child in Children)
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
-        }
-
         /// <summary>
         /// Gets the locater model.
         /// </summary>
         protected override Locater Locator()
         {
             return Locater;
+        }
+
+        /// <summary>
+        /// Document the model, and any child models which should be documented.
+        /// </summary>
+        /// <remarks>
+        /// It is a mistake to call this method without first resolving links.
+        /// </remarks>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Section(Name, DocumentChildren());
+        }
+
+        private IEnumerable<ITag> DocumentChildren()
+        {
+            foreach (ITag tag in DocumentChildren<Memo>())
+                yield return tag;
+            foreach (ITag tag in DocumentChildren<Graph>())
+                yield return tag;
+            foreach (ITag tag in DocumentChildren<Map>())
+                yield return tag;
+            foreach (ITag tag in FindAllDescendants<Manager>().SelectMany(m => m.Document()))
+                yield return tag;
         }
     }
 }

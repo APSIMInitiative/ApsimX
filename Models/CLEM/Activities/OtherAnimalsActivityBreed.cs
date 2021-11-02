@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages the breeding of a specified type of other animal.")]
+    [Description("Manages the breeding of a specified type of other animal")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/OtherAnimals/OtherAnimalsActivityBreed.htm")]
     public class OtherAnimalsActivityBreed : CLEMActivityBase
@@ -99,11 +99,11 @@ namespace Models.CLEM.Activities
         {
             if(this.TimingOK)
             {
-                double malebreeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge && a.Gender == Sex.Male).Sum(b => b.Number);
+                double malebreeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge && a.Sex == Sex.Male).Sum(b => b.Number);
                 if (!UseLocalMales || malebreeders > 0)
                 {
                     // get number of females
-                    double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge && a.Gender == Sex.Female).Sum(b => b.Number);
+                    double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge && a.Sex == Sex.Female).Sum(b => b.Number);
                     // create new cohorts (male and female)
                     if (breeders > 0)
                     {
@@ -112,7 +112,7 @@ namespace Models.CLEM.Activities
                         {
                             Age = 0,
                             Weight = 0,
-                            Gender = Sex.Male,
+                            Sex = Sex.Male,
                             Number = newbysex,
                             SaleFlag = HerdChangeReason.Born
                         };
@@ -121,7 +121,7 @@ namespace Models.CLEM.Activities
                         {
                             Age = 0,
                             Weight = 0,
-                            Gender = Sex.Female,
+                            Sex = Sex.Female,
                             Number = newbysex,
                             SaleFlag = HerdChangeReason.Born
                         };

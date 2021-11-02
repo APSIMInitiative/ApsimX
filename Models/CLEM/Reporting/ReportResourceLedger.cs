@@ -26,7 +26,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(CLEMFolder))]
     [ValidParent(ParentType = typeof(Folder))]
-    [Description("This report automatically generates a ledger of all shortfalls in CLEM Resource requests.")]
+    [Description("This report automatically generates a ledger of resource transactions")]
     [Version(1, 0, 4, "Report style property allows Type and Amount transaction reporting")]
     [Version(1, 0, 3, "Now includes Category and RelatesTo fields for grouping in analysis.")]
     [Version(1, 0, 2, "Updated to enable ResourceUnitsConverter to be used.")]
@@ -99,7 +99,7 @@ namespace Models.CLEM.Reporting
             if (ResourceGroupsToReport != null && ResourceGroupsToReport.Trim() != "")
             {
                 // check it is a ResourceGroup
-                CLEMModel model = resources.GetResourceGroupByName(ResourceGroupsToReport) as CLEMModel;
+                CLEMModel model = resources.FindResource<ResourceBaseWithTransactions>(ResourceGroupsToReport);
                 if (model == null)
                 {
                     summary.WriteWarning(this, String.Format("Invalid resource group [{0}] in ReportResourceBalances [{1}]\r\nEntry has been ignored", this.ResourceGroupsToReport, this.Name));
@@ -111,16 +111,16 @@ namespace Models.CLEM.Reporting
                     {
                         pricingIncluded = model.FindAllDescendants<AnimalPricing>().Where(a => a.Enabled).Count() > 0;
 
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.ID as uID");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.Breed as Breed");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.Gender as Sex");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.Age as Age");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.Weight as Weight");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.AdultEquivalent as AE");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.SaleFlag as Category");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.Category as Class");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.HerdName as RelatesTo");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.PopulationChangeDirection as Change");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.ID as uID");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Breed as Breed");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Sex as Sex");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Age as Age");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Weight as Weight");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.AdultEquivalent as AE");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.SaleFlag as Category");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Class as Class");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.HerdName as RelatesTo");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.PopulationChangeDirection as Change");
 
                         // ToDo: add pricing for ruminants including buy and sell pricing
                         // Needs update in CLEMResourceTypeBase and link between ResourcePricing and AnimalPricing.

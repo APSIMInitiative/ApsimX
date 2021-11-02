@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs the collection of manure from a specified paddock in the simulation.")]
+    [Description("Undertake the collection of manure from a specified paddock in the simulation.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Manure/CollectManurePaddock.htm")]
     public class ManureActivityCollectPaddock: CLEMActivityBase

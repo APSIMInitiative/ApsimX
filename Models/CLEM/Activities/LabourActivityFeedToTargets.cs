@@ -13,17 +13,16 @@ using System.Threading.Tasks;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant feed activity</summary>
+    /// <summary>Labour feed to specified targets activity</summary>
     /// <summary>This activity provides food to people from the whole available human food store based on defined nutritional targets</summary>
     /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs human feeding based on nutritional quality and desired daily targets. It also includes sales of excess food.")]
+    [Description("Perform human (labour) feeding based on nutritional quality and desired daily targets. This also includes sales of excess food.")]
     [Version(1, 0, 2, "This version implements the latest approach as outlines in the help system. Suitable for Ethiopian food security project")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeedToTargets.htm")]
@@ -392,12 +391,12 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<LabourType> group = people?.Items.Where(a => a.Hired != true).ToList();
+            var group = people?.Items.Where(a => a.Hired != true);
             int head = 0;
             double adultEquivalents = 0;
             foreach (var child in FindAllChildren<LabourFeedGroup>())
             {
-                var subgroup = group.Filter(child).ToList();
+                var subgroup = child.Filter(group);
                 head += subgroup.Count();
                 adultEquivalents += subgroup.Sum(a => a.AdultEquivalent);
             }
@@ -597,7 +596,7 @@ namespace Models.CLEM.Activities
             var results = new List<ValidationResult>();
 
             // if finances and not account provided throw error
-            if (SellExcess && Resources.GetResourceGroupByType(typeof(Finance)) != null)
+            if (SellExcess && Resources.FindResource<Finance>() != null)
             {
                 if (bankAccount is null)
                 {

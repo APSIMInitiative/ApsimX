@@ -102,14 +102,11 @@ namespace Utility
             {
                 if (vbox1.Allocation.Height > 1 && vbox1.Allocation.Width > 1)
                 {
-#if NETFRAMEWORK
-            int xres = explorerPresenter.CurrentRightHandView.MainWidget.Toplevel.Screen.Width;
-            int yres = explorerPresenter.CurrentRightHandView.MainWidget.Toplevel.Screen.Height;
-#else
+
             Gdk.Rectangle workArea = Gdk.Display.Default.GetMonitorAtWindow(((ViewBase)ViewBase.MasterView).MainWidget.Window).Workarea;
             int xres = workArea.Right;
             int yres = workArea.Bottom;
-#endif
+
                     dialog1.DefaultHeight = Math.Min(yres - dialogVBox.Allocation.Height, vbox1.Allocation.Height + dialogVBox.Allocation.Height);
                     dialog1.DefaultWidth = Math.Min(xres - dialogVBox.Allocation.Width, vbox1.Allocation.Width + 20);
                     scroller.SizeAllocated -= OnSizeAllocated;
@@ -142,7 +139,7 @@ namespace Utility
             MessageDialog md = new MessageDialog(dialog1, DialogFlags.Modal, type, ButtonsType.Ok, msg);
             md.Title = title;
             md.Run();
-            md.Cleanup();
+            md.Dispose();
         }
 
         /// <summary>
@@ -156,7 +153,7 @@ namespace Utility
         {
             try
             {
-                if (!CheckValue(entryLatitude) || !CheckValue(entryLatitude))
+                if (!CheckValue(entryLatitude) || !CheckValue(entryLongitude))
                     return;
                 if (String.IsNullOrWhiteSpace(entryFilePath.Text))
                 {
@@ -203,7 +200,7 @@ namespace Utility
                         explorerPresenter.CommandHistory.Add(command, true);
                     }
                 }
-                dialog1.Cleanup();
+                dialog1.Dispose();
             }
             catch (Exception err)
             {
@@ -327,7 +324,7 @@ namespace Utility
         {
             try
             {
-                dialog1.Cleanup();
+                dialog1.Dispose();
             }
             catch (Exception err)
             {
@@ -574,11 +571,9 @@ namespace Utility
                     }
                     tree.Model = list;
                     tree.RowActivated += OnPatchPointSoilSelected;
-#if NETFRAMEWORK
-                    Box box = md.VBox;
-#else
+
                     Box box = md.ContentArea;
-#endif
+
                     box.PackStart(tree, true, true, 5);
                     box.ShowAll();
 
@@ -590,7 +585,7 @@ namespace Utility
                         string stationString = (string)list.GetValue(iter, 0);
                         stationNumber = Int32.Parse(stationString);
                     }
-                    md.Cleanup();
+                    md.Dispose();
                 }
                 if (stationNumber >= 0) // Phew! We finally have a station number. Now fetch the data.
                 {
@@ -687,9 +682,9 @@ namespace Utility
             }
             set
             {
-                if (dialog1.Toplevel.GetGdkWindow() != null)
+                if (dialog1.Toplevel.Window != null)
                 {
-                    dialog1.Toplevel.GetGdkWindow().Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
+                    dialog1.Toplevel.Window.Cursor = value ? new Gdk.Cursor(Gdk.CursorType.Watch) : null;
                     waiting = value;
                 }
             }

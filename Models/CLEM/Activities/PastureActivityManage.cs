@@ -1,10 +1,10 @@
 ﻿using Models.Core;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages a pasture by allocating land, tracking pasture state and ecological indicators and communicating with a pasture production database.")]
+    [Description("Manages a pasture (GrazeFoodStoreType) by allocating land, tracking pasture state and ecological indicators, communicating with a pasture production database")]
     [Version(1, 0, 2, "Now supports generic pasture production data reader")]
     [Version(1, 0, 2, "Added ecological indicator calculations")]
     [Version(1, 0, 1, "")]
@@ -65,13 +65,6 @@ namespace Models.CLEM.Activities
         [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture production database reader required")]
         [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetReadersAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(FileCrop), typeof(FileSQLitePasture) } })]
         public string PastureDataReader { get; set; }
-
-        /// <summary>
-        /// Starting amount (kg)
-        /// </summary>
-        [Description("Starting Amount (kg/ha)")]
-        [Required, GreaterThanEqualValue(0)]
-        public double StartingAmount { get; set; }
 
         /// <summary>
         /// Starting stocking rate (Adult Equivalents/square km)
@@ -153,7 +146,7 @@ namespace Models.CLEM.Activities
             if (filePasture == null)
             {
                 string[] memberNames = new string[] { "FilePastureReader" };
-                results.Add(new ValidationResult("Unable to locate pasture database file. Add a FilePastureReader model component to the simulation tree.", memberNames));
+                results.Add(new ValidationResult("Unable to locate pasture database file. Add a FilePasture or FileSQLitePasture reader model component to the simulation tree.", memberNames));
             }
             return results;
         }
@@ -174,6 +167,9 @@ namespace Models.CLEM.Activities
             LandConditionIndex = FindAllDescendants<RelationshipRunningValue>().Where(a => (new string[] { "lc", "landcondition", "landcon", "landconditionindex" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
             GrassBasalArea = FindAllDescendants<RelationshipRunningValue>().Where(a => (new string[] { "gba", "basalarea", "grassbasalarea" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
             filePasture = zoneCLEM.Parent.FindAllDescendants().Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
+
+            if (LandConditionIndex is null || GrassBasalArea is null || filePasture is null)
+                return;
 
             LandType land = null;
             if (filePasture != null)
@@ -242,10 +238,18 @@ namespace Models.CLEM.Activities
 
                 //Now we have a stocking rate and we have starting values for Land Condition and Grass Basal Area
                 //get the starting pasture data list from Pasture reader
-                if (filePasture != null)
+                if (filePasture != null & LinkedNativeFoodType != null)
                 {
                     GetPastureDataList_TodayToNextEcolCalculation();
-                    SetupStartingPasturePools(StartingAmount);
+
+                    double firstMonthsGrowth = 0;
+                    if (pastureDataList != null)
+                    {
+                        PastureDataType pasturedata = pastureDataList.Where(a => a.Year == clock.StartDate.Year && a.Month == clock.StartDate.Month).FirstOrDefault();
+                        firstMonthsGrowth = pasturedata.Growth;
+                    }
+
+                    LinkedNativeFoodType.SetupStartingPasturePools(Area * unitsOfArea2Ha, firstMonthsGrowth);
                 }
             }
         }
@@ -332,93 +336,6 @@ namespace Models.CLEM.Activities
             stockingRateSummed += CalculateStockingRateRightNow();
 
             CalculateEcologicalIndicators();
-        }
-
-        private void SetupStartingPasturePools(double startingGrowth)
-        {
-            // Initial biomass
-            double amountToAdd = Area * startingGrowth;
-            if (amountToAdd <= 0)
-                return;
-
-            // Set up pasture pools to start run based on month and user defined pasture properties
-            // Locates the previous five months where growth occurred (Nov-Mar) and applies decomposition to current month
-            // This months growth will not be included.
-
-            int month = clock.Today.Month;
-            int monthCount = 0;
-            int includedMonthCount = 0;
-            double propBiomass = 1.0;
-            double currentN = LinkedNativeFoodType.GreenNitrogen;
-            // NABSA changes N by 0.8 for particular months. Not needed here as decay included.
-            double currentDMD = currentN * LinkedNativeFoodType.NToDMDCoefficient + LinkedNativeFoodType.NToDMDIntercept;
-            currentDMD = Math.Max(LinkedNativeFoodType.MinimumDMD, currentDMD);
-            LinkedNativeFoodType.Pools.Clear();
-
-            List<GrazeFoodStorePool> newPools = new List<GrazeFoodStorePool>();
-
-            // number of previous growth months to consider. default should be 5 
-            int growMonthHistory = 5;
-
-            while (includedMonthCount < growMonthHistory)
-            {
-                // start month before start of simulation.
-                monthCount++;
-                month--;
-                currentN -= LinkedNativeFoodType.DecayNitrogen;
-                currentN = Math.Max(currentN, LinkedNativeFoodType.MinimumNitrogen);
-                currentDMD *= 1 - LinkedNativeFoodType.DecayDMD;
-                currentDMD = Math.Max(currentDMD, LinkedNativeFoodType.MinimumDMD);
-
-                if (month == 0)
-                    month = 12;
-
-                if (month <= 3 | month >= 11)
-                {
-                    // add new pool
-                    newPools.Add(new GrazeFoodStorePool()
-                    {
-                        Age = monthCount,
-                        Nitrogen = currentN,
-                        DMD = currentDMD,
-                        StartingAmount = propBiomass
-                    });
-                    includedMonthCount++;
-                }
-                propBiomass *= 1 - LinkedNativeFoodType.DetachRate;
-            }
-
-            // assign pasture biomass to pools based on proportion of total
-            double total = newPools.Sum(a => a.StartingAmount);
-            foreach (var pool in newPools)
-                pool.Set(amountToAdd * (pool.StartingAmount / total));
-
-            // Previously: remove this months growth from pool age 0 to keep biomass at approximately setup.
-            // But as updates happen at the end of the month, the fist months biomass is never added so stay with 0 or delete following section
-            // Get this months growth
-            // Get this months pasture data from the pasture data list
-            if (pastureDataList != null)
-            {
-                PastureDataType pasturedata = pastureDataList.Where(a => a.Year == clock.StartDate.Year && a.Month == clock.StartDate.Month).FirstOrDefault();
-
-                double thisMonthsGrowth = pasturedata.Growth * Area;
-                if (thisMonthsGrowth > 0)
-                {
-                    GrazeFoodStorePool thisMonth = newPools.Where(a => a.Age == 0).FirstOrDefault() as GrazeFoodStorePool;
-                    if (thisMonth != null)
-                        thisMonth.Set(Math.Max(0, thisMonth.Amount - thisMonthsGrowth));
-                }
-            }
-
-            // Add to pasture. This will add pool to pasture available store.
-            foreach (var pool in newPools)
-            {
-                string reason = "Initialise";
-                if(newPools.Count()>1)
-                    reason = "Initialise pool " + pool.Age.ToString();
-
-                LinkedNativeFoodType.Add(pool, this, "", reason);
-            }
         }
 
         private double CalculateStockingRateRightNow()
@@ -544,10 +461,6 @@ namespace Models.CLEM.Activities
                         htmlWriter.Write("<span class=\"setvalue\">" + AreaRequested.ToString("#,##0.###") + "</span> " + parentLand.UnitsOfArea + " of ");
                 }
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(LandTypeNameToUse, "Land not set", HTMLSummaryStyle.Resource));
-                htmlWriter.Write("</div>");
-
-                htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                htmlWriter.Write("The simulation starts with <span class=\"setvalue\">" + StartingAmount.ToString("#,##0.##") + "</span> kg/ha");
                 htmlWriter.Write("</div>");
 
                 return htmlWriter.ToString(); 

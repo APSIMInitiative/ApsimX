@@ -11,13 +11,13 @@ using System.Threading.Tasks;
 namespace Models.CLEM.Resources
 {
     /// <summary>
-    /// Advanced ruminant conception for first conception less than 12 months, 12-24 months, 2nd calf and 3+ calf
+    /// Ruminant conception based on body condition: current weight as prop or high weight
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
-    [Description("Advanced ruminant conception for first pregnancy less than 12 months, 12-24 months, 24 months, 2nd calf and 3+ calf")]
+    [Description("Specify ruminant conception based on individual's condition")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantConceptionCondition.htm")]
     public class RuminantConceptionByCondition : CLEMModel, IConceptionModel
@@ -70,13 +70,9 @@ namespace Models.CLEM.Resources
                 htmlWriter.Write("<div class=\"activityentry\">");
                 htmlWriter.Write("Conception is determined by animal condition measured as the ratio of live weight to normalised weight for age.\r\nNo breeding females will concieve if this ratio is below ");
                 if (ConditionCutOff == 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">No set</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"setvalue\">" + ConditionCutOff.ToString("0.0##") + "</span>");
-                }
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString(); 
             }

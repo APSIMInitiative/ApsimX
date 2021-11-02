@@ -17,10 +17,10 @@
         List<IOrganDamage> Organs { get; }
 
         /// <summary>Total amount of above ground biomass.</summary>
-        Biomass AboveGround { get;  }
+        IBiomass AboveGround { get;  }
 
         /// <summary>Total amount of harvestable above ground biomass.</summary>
-        Biomass AboveGroundHarvestable { get; }
+        IBiomass AboveGroundHarvestable { get; }
 
         /// <summary>Plant population.</summary>
         double Population { get; }

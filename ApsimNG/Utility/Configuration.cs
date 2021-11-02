@@ -385,9 +385,9 @@ namespace Utility
         /// </summary>
         private void OnDarkThemeToggled()
         {
-#if NETCOREAPP
+
             EditorStyleName = DarkTheme ? "Adwaita-dark" : "Adwaita";
-#endif
+
         }
     }
 }

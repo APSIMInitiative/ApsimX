@@ -9,6 +9,7 @@ namespace Models.Management
     using Interfaces;
     using Newtonsoft.Json;
     using System.Linq;
+    using APSIM.Shared.Graphing;
 
     /// <summary>
     /// The rotation manager model

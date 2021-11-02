@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs sales and purchases of ruminants. It requires activities such as RuminantActivityManage, RuminantActivityTrade and RuminantActivitySellDryBreeders to identify individuals to be bought or sold. It will use a pricing schedule if supplied for the herd and can include additional trucking rules and emissions settings.")]
+    [Description("Performs all sales and purchases of ruminants. This requires other herd management activities to identify individuals to be bought or sold. It uses any pricing schedule supplied and can include additional trucking rules and emissions settings")]
     [Version(1, 0, 2, "Allows for recording transactions by groups of individuals")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBuySell.htm")]
@@ -73,7 +73,7 @@ namespace Models.CLEM.Activities
                 var breeds = HerdResource.Herd.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).GroupBy(a => a.HerdName);
                 foreach (var herd in breeds)
                     if (!herd.FirstOrDefault().BreedParams.PricingAvailable())
-                        Summary.WriteWarning(this, String.Format("No pricing schedule has been provided for herd [r={0}]. No transactions will be recorded for activity [a={1}]", herd.Key, this.Name));
+                        Summary.WriteWarning(this, String.Format("No pricing schedule has been provided for herd [r={0}]. No financial transactions will be recorded for activity [a={1}]", herd.Key, this.Name));
             }
         }
 
@@ -273,7 +273,7 @@ namespace Models.CLEM.Activities
                     double value = 0;
                     AnimalPriceGroup pricing = null;
                     if (newind.SaleFlag == HerdChangeReason.SirePurchase)
-                        pricing = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase, RuminantFilterParameters.IsSire, "true");
+                        pricing = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase, "Male.IsSire", "true");
                     else
                         pricing = newind.BreedParams.ValueofIndividual(newind, PurchaseOrSalePricingStyleType.Purchase);
 
@@ -389,7 +389,7 @@ namespace Models.CLEM.Activities
                                 double value = 0;
                                 AnimalPriceGroup pricing = null;
                                 if (ind.SaleFlag == HerdChangeReason.SirePurchase)
-                                    pricing = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase, RuminantFilterParameters.IsSire, "true");
+                                    pricing = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase, "IsSire", "true");
                                 else
                                     pricing = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Purchase);
 

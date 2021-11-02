@@ -12,8 +12,7 @@ using System.IO;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant herd management activity</summary>
-    /// <summary>This activity will maintain a breeding herd at the desired levels of age/breeders etc</summary>
+    /// <summary>Manage trade herd activity</summary>
     /// <version>1.0</version>
     /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
@@ -22,7 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages trade individuals. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
+    [Description("Manage a herd of individuals as trade herd")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Includes improvements such as a relationship to define numbers purchased based on pasture biomass and allows placement of purchased individuals in a specified paddock")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantTrade.htm")]
@@ -175,7 +174,7 @@ namespace Models.CLEM.Activities
 
                     for (int i = 0; i < Math.Ceiling(number); i++)
                     {
-                        object ruminantBase = null;
+                        
 
                         double u1 = RandomNumberGenerator.Generator.NextDouble();
                         double u2 = RandomNumberGenerator.Generator.NextDouble();
@@ -183,12 +182,8 @@ namespace Models.CLEM.Activities
                                      Math.Sin(2.0 * Math.PI * u2);
                         double weight = purchasetype.Weight + purchasetype.WeightSD * randStdNormal;
 
-                        if (purchasetype.Gender == Sex.Male)
-                            ruminantBase = new RuminantMale(purchasetype.Age, purchasetype.Gender, weight, herdToUse);
-                        else
-                            ruminantBase = new RuminantFemale(purchasetype.Age, purchasetype.Gender, weight, herdToUse);
+                        var ruminant = Ruminant.Create(purchasetype.Sex, herdToUse, purchasetype.Age, weight);
 
-                        Ruminant ruminant = ruminantBase as Ruminant;
                         ruminant.ID = 0;
                         ruminant.Breed = purchaseSpecific.BreedParams.Name;
                         ruminant.HerdName = purchaseSpecific.BreedParams.Breed;
@@ -197,21 +192,13 @@ namespace Models.CLEM.Activities
                         ruminant.Location = grazeStore;
                         ruminant.PreviousWeight = ruminant.Weight;
 
-                        switch (purchasetype.Gender)
+                        if (ruminant is RuminantFemale female)
                         {
-                            case Sex.Male:
-                                RuminantMale ruminantMale = ruminantBase as RuminantMale;
-                                break;
-                            case Sex.Female:
-                                RuminantFemale ruminantFemale = ruminantBase as RuminantFemale;
-                                ruminantFemale.WeightAtConception = ruminant.Weight;
-                                ruminantFemale.NumberOfBirths = 0;
-                                break;
-                            default:
-                                break;
+                            female.WeightAtConception = ruminant.Weight;
+                            female.NumberOfBirths = 0;
                         }
 
-                        HerdResource.PurchaseIndividuals.Add(ruminantBase as Ruminant);
+                        HerdResource.PurchaseIndividuals.Add(ruminant);
                         this.Status = ActivityStatus.Success;
                     }
                 }

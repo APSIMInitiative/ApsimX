@@ -1,13 +1,10 @@
-﻿using Models.CLEM.Activities;
-using Models.CLEM.Reporting;
+﻿using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
 
@@ -21,7 +18,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
     [ValidParent(ParentType = typeof(AnimalFoodStore))]
-    [Description("This resource represents a common land food store.")]
+    [Description("This resource represents the pasture on common land")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Link to GrazeFoodStore implemented")]
     [HelpUri(@"Content/Features/Resources/AnimalFoodStore/CommonLandStoreType.htm")]
@@ -52,13 +49,6 @@ namespace Models.CLEM.Resources
         [Description("Intercept to convert N% to DMD%")]
         [Required]
         public double NToDMDIntercept { get; set; }
-
-        /// <summary>
-        /// Crude protein denominator to convert N% to DMD%
-        /// </summary>
-        [Description("Crude protein denominator to convert N% to DMD%")]
-        [Required]
-        public double NToDMDCrudeProteinDenominator { get; set; }
 
         /// <summary>
         /// Nitrogen of common land pasture (%)
@@ -229,9 +219,6 @@ namespace Models.CLEM.Resources
 
                 if (NToDMDIntercept == 0)
                     missing.Add("NToDMDIntercept");
-
-                if (NToDMDCrudeProteinDenominator == 0)
-                    missing.Add("NToDMDCrudeProteinDenominator");
 
                 if (missing.Count() > 0)
                 {

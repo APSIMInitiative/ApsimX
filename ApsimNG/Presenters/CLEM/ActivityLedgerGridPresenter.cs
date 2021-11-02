@@ -46,17 +46,15 @@
             //UI Results
             try
             {
-                ActivityLedgerGridView ledgerView = new ActivityLedgerGridView(clemPresenter.view as ViewBase);
-                ReportView rv = new ReportView(clemPresenter.view as ViewBase);
+                ActivityLedgerGridView ledgerView = new ActivityLedgerGridView(clemPresenter.View as ViewBase);
+                ReportView rv = new ReportView(clemPresenter.View as ViewBase);
                 ViewBase reportView = new ViewBase(rv, "ApsimNG.Resources.Glade.DataStoreView.glade");
 
-                Model report = clemPresenter.model as Model;
+                Model report = clemPresenter.Model as Model;
 
                 Simulations simulations = report.FindAncestor<Simulations>();
                 if (simulations != null)
-                {
                     dataStore = simulations.FindChild<IDataStore>();
-                }
 
                 DataStorePresenter dataStorePresenter = new DataStorePresenter();
                 ActivityLedgerGridPresenter activityGridPresenter = new ActivityLedgerGridPresenter();
@@ -64,35 +62,28 @@
                 Zone paddock = report.FindAncestor<Zone>();
 
                 if (paddock != null)
-                {
                     dataStorePresenter.ZoneFilter = paddock;
-                }
-                if (simulation != null)
-                {
-                    if (simulation.Parent is Experiment)
-                    {
-                        dataStorePresenter.ExperimentFilter = simulation.Parent as Experiment;
-                    }
-                    else
-                    {
-                        dataStorePresenter.SimulationFilter = simulation;
-                    }
-                }
 
-                dataStorePresenter.Attach(dataStore, reportView, clemPresenter.explorerPresenter);
-                activityGridPresenter.CreateHtml = (clemPresenter.model as ReportActivitiesPerformed).CreateHTML;
+                if (simulation != null)
+                    if (simulation.Parent is Experiment)
+                        dataStorePresenter.ExperimentFilter = simulation.Parent as Experiment;
+                    else
+                        dataStorePresenter.SimulationFilter = simulation;
+
+                dataStorePresenter.Attach(dataStore, reportView, clemPresenter.ExplorerPresenter);
+                activityGridPresenter.CreateHtml = (clemPresenter.Model as ReportActivitiesPerformed).CreateHTML;
                 activityGridPresenter.ModelReport = report as Report;
                 activityGridPresenter.ModelName = report.Name;
                 activityGridPresenter.SimulationName = simulation.Name;
                 activityGridPresenter.ZoneName = paddock.Name;
-                activityGridPresenter.Attach(dataStore, ledgerView, clemPresenter.explorerPresenter);
+                activityGridPresenter.Attach(dataStore, ledgerView, clemPresenter.ExplorerPresenter);
                 dataStorePresenter.tableDropDown.SelectedValue = report.Name;
 
-                (clemPresenter.view as CLEMView).AddTabView("Display", ledgerView);
-                clemPresenter.presenterList.Add("Display", activityGridPresenter);
+                (clemPresenter.View as CLEMView).AddTabView("Display", ledgerView);
+                clemPresenter.PresenterList.Add("Display", activityGridPresenter);
 
-                (clemPresenter.view as CLEMView).AddTabView("Data", reportView);
-                clemPresenter.presenterList.Add("Data", dataStorePresenter);
+                (clemPresenter.View as CLEMView).AddTabView("Data", reportView);
+                clemPresenter.PresenterList.Add("Data", dataStorePresenter);
             }
             catch (Exception err)
             {
@@ -113,6 +104,7 @@
 
             // save the html version as soon as this report is selected
             // do not create the UI grid version until the user selectes the Display tab
+            // TODO: this code still needs to be fixed in APSIM so this functionality works
             //if (CreateHtml)
             //{
             //    (ModelReport as ReportActivitiesPerformed).CreateDataTable(dataStore, Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), Utility.Configuration.Settings.DarkTheme);

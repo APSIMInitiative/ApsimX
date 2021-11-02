@@ -117,10 +117,8 @@ namespace Models.CLEM.Resources
                 if (nameParts.First() == "")
                     searchForAllIresourceType = true;
                 else
-                {
                     // find resource by name
                     resGroup = FindChild<R>(nameParts.First());
-                }
             }
             else
             {
@@ -149,7 +147,7 @@ namespace Models.CLEM.Resources
                 switch (missingResourceAction)
                 {
                     case OnMissingResourceActionTypes.ReportErrorAndStop:
-                        throw new Exception(errorMsg);
+                        throw new ApsimXException(this, errorMsg);
                     case OnMissingResourceActionTypes.ReportWarning:
                         Warnings.CheckAndWrite(errorMsg, Summary, this);
                         break;
@@ -173,7 +171,7 @@ namespace Models.CLEM.Resources
                 switch (missingResourceTypeAction)
                 {
                     case OnMissingResourceActionTypes.ReportErrorAndStop:
-                        throw new Exception(errorMsg);
+                        throw new ApsimXException(this, errorMsg);
                     case OnMissingResourceActionTypes.ReportWarning:
                         Warnings.CheckAndWrite(errorMsg, Summary, this);
                         break;
@@ -200,15 +198,6 @@ namespace Models.CLEM.Resources
 
             return FindResourceType<R,T>(request.ActivityModel, request.ResourceTypeName, missingResourceAction, missingResourceTypeAction);
         }
-
-
-
-
-
-
-
-
-
 
         /// <summary>
         /// Determines whether resource items of the specified group type exist 
@@ -241,206 +230,6 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Get resource by name
-        /// </summary>
-        /// <param name="name"></param>
-        /// <returns></returns>
-        public object GetResourceGroupByName(string name)
-        {
-            InitialiseResourceGroupList();
-            return ResourceGroupList.FirstOrDefault(x => x.Name == name); 
-        }
-
-        /// <summary>
-        /// Get resource by type
-        /// </summary>
-        /// <param name="resourceGroupType">Type of resource group</param>
-        /// <returns></returns>
-        public object GetResourceGroupByType(Type resourceGroupType)
-        {
-            InitialiseResourceGroupList();
-            return ResourceGroupList.FirstOrDefault(a => a.GetType() == resourceGroupType);
-        }
-
-        /// <summary>
-        /// Retrieve a ResourceType from a ResourceGroup based on a request item including filter and sort options
-        /// </summary>
-        /// <param name="request">A resource request item</param>
-        /// <param name="missingResourceAction">Action to take if requested resource group not found</param>
-        /// <param name="missingResourceTypeAction">Action to take if requested resource type not found</param>
-        /// <returns>A reference to the item of type Model</returns>
-        public IModel GetResourceItem(ResourceRequest request, OnMissingResourceActionTypes missingResourceAction, OnMissingResourceActionTypes missingResourceTypeAction)
-        {
-            if (request.FilterDetails != null)
-            {
-                if (request.ResourceType == null)
-                {
-                    string errorMsg = String.Format("Resource type must be supplied in resource request from [a={0}]", request.ActivityModel.Name);
-                    throw new Exception(errorMsg);
-                }
-
-                var resourceGroup = this.GetResourceGroupByType(request.ResourceType);
-                if(resourceGroup== null)
-                {
-                    string errorMsg = String.Format("Unable to locate resources of type [r{0}] for [a={1}]", request.ResourceType, request.ActivityModel.Name);
-                    switch (missingResourceAction)
-                    {
-                        case OnMissingResourceActionTypes.ReportErrorAndStop:
-                            throw new Exception(errorMsg);
-                        case OnMissingResourceActionTypes.ReportWarning:
-                            Summary.WriteWarning(request.ActivityModel, errorMsg);
-                            break;
-                        default:
-                            break;
-                    }
-                    return null;
-                }
-
-                // get list of children matching the conditions in filter
-                // and return the lowest item that has enough time available
-                object resourceGroupObject = resourceGroup as object;
-                switch (resourceGroupObject.GetType().ToString())
-                {
-                    case "Models.CLEM.Resources.Labour":
-                        // get matching labour types
-                        // use activity uid to ensure unique for this request
-                        List<LabourType> items = (resourceGroup as Labour).Items;
-                        items = items.Filter(request.FilterDetails.FirstOrDefault() as Model)
-                            .Where(a => a.LastActivityRequestID != request.ActivityID)
-                            .ToList();
-
-                        if (items.Where(a => a.Amount >= request.Required).Count()>0)
-                            // get labour least available but with the amount needed
-                            return items.Where(a => a.Amount >= request.Required).OrderByDescending(a => a.Amount).FirstOrDefault();
-                        else
-                            // get labour with most available but with less than the amount needed
-                            return items.OrderByDescending(a => a.Amount).FirstOrDefault();
-                    default:
-                        string errorMsg = "Resource cannot be filtered. Filtering not implemented for [r=" + resourceGroupObject.GetType().ToString() + "] from activity [a=" + request.ActivityModel.Name + "]";
-                        Summary.WriteWarning(request.ActivityModel, errorMsg);
-                        throw new Exception(errorMsg);
-                }
-            }
-            else
-            {
-                // check style of ResourceTypeName used
-                // this is either "Group.Type" from dropdown menus or "Type" only. 
-                if (request.ResourceTypeName.Contains("."))
-                    return GetResourceItem(request.ActivityModel, request.ResourceTypeName, missingResourceAction, missingResourceTypeAction);
-                else
-                    return GetResourceItem(request.ActivityModel, request.ResourceType, request.ResourceTypeName, missingResourceAction, missingResourceTypeAction);
-            }
-        }
-
-        /// <summary>
-        /// Retrieve a ResourceType from a ResourceGroup with specified names
-        /// </summary>
-        /// <param name="requestingModel">name of model requesting resource</param>
-        /// <param name="resourceGroupType">Type of the resource group</param>
-        /// <param name="resourceItemName">Name of the resource item</param>
-        /// <param name="missingResourceAction">Action to take if requested resource group not found</param>
-        /// <param name="missingResourceTypeAction">Action to take if requested resource type not found</param>
-        /// <returns>A reference to the item of type object</returns>
-        public IModel GetResourceItem(Model requestingModel, Type resourceGroupType, string resourceItemName, OnMissingResourceActionTypes missingResourceAction, OnMissingResourceActionTypes missingResourceTypeAction)
-        {
-            // locate specified resource
-            Model resourceGroup = this.FindAllChildren().Where(c => resourceGroupType.IsAssignableFrom(c.GetType())).FirstOrDefault() as Model;
-            if (resourceGroup != null)
-            {
-                IModel resource = resourceGroup.Children.Where(a => a.Name == resourceItemName & a.Enabled).FirstOrDefault();
-                if (resource == null)
-                {
-                    string errorMsg = String.Format("Unable to locate resources item [r={0}] in resources [r={1}] for [a={2}]", resourceItemName, resourceGroupType.ToString(), requestingModel.Name);
-                    switch (missingResourceTypeAction)
-                    {
-                        case OnMissingResourceActionTypes.ReportErrorAndStop:
-                            throw new Exception(errorMsg);
-                        case OnMissingResourceActionTypes.ReportWarning:
-                            Summary.WriteWarning(requestingModel, errorMsg);
-                            break;
-                        default:
-                            break;
-                    }
-                    return null;
-                }
-                return resource;
-            }
-            else
-            {
-                string errorMsg = String.Format("Unable to locate resources of type [r={0}] for [a={1}]", resourceGroupType.ToString(), requestingModel.Name);
-                switch (missingResourceAction)
-                {
-                    case OnMissingResourceActionTypes.ReportErrorAndStop:
-                        throw new Exception(errorMsg);
-                    case OnMissingResourceActionTypes.ReportWarning:
-                        Summary.WriteWarning(requestingModel, errorMsg);
-                        break;
-                    default:
-                        break;
-                }
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// Retrieve a ResourceType from a ResourceGroup with specified names
-        /// </summary>
-        /// <param name="requestingModel">name of model requesting resource</param>
-        /// <param name="resourceGroupAndItem">Period separated list of resource group and type</param>
-        /// <param name="missingResourceAction">Action to take if requested resource group not found</param>
-        /// <param name="missingResourceTypeAction">Action to take if requested resource type not found</param>
-        /// <returns>A reference to the item of type object</returns>
-        public IModel GetResourceItem(Model requestingModel, string resourceGroupAndItem, OnMissingResourceActionTypes missingResourceAction, OnMissingResourceActionTypes missingResourceTypeAction)
-        {
-            if(resourceGroupAndItem == null)
-                resourceGroupAndItem = " . ";
-
-            // locate specified resource
-            string[] names = resourceGroupAndItem.Split('.');
-            if(names.Count()!=2)
-            {
-                string errorMsg = String.Format("Invalid resource group and type string for [{0}], expecting 'ResourceName.ResourceTypeName'. Value provided [{1}] ", requestingModel.Name, resourceGroupAndItem);
-                throw new Exception(errorMsg);
-            }
-
-            if (this.GetResourceGroupByName(names[0]) is Model resourceGroup)
-            {
-                IModel resource = resourceGroup.Children.Where(a => a.Name == names[1] & a.Enabled).FirstOrDefault();
-                if (resource == null)
-                {
-                    string errorMsg = String.Format("Unable to locate resources item [r={0}] in resources [r={1}] for [a={2}]", names[1], names[0], requestingModel.Name);
-                    switch (missingResourceTypeAction)
-                    {
-                        case OnMissingResourceActionTypes.ReportErrorAndStop:
-                            throw new Exception(errorMsg);
-                        case OnMissingResourceActionTypes.ReportWarning:
-                            Summary.WriteWarning(requestingModel, errorMsg);
-                            break;
-                        default:
-                            break;
-                    }
-                    return null;
-                }
-                return resource;
-            }
-            else
-            {
-                string errorMsg = String.Format("Unable to locate resources of type [r={0}] for [a={1}]", names[0], requestingModel.Name);
-                switch (missingResourceAction)
-                {
-                    case OnMissingResourceActionTypes.ReportErrorAndStop:
-                        throw new Exception(errorMsg);
-                    case OnMissingResourceActionTypes.ReportWarning:
-                        Summary.WriteWarning(requestingModel, errorMsg);
-                        break;
-                    default:
-                        break;
-                }
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Returns the link to the matching resource in the market place if found or creates a new clone copy for future transactions
         /// This allows this action to be performed once to store the link rather than at every transaction
         /// This functionality allows resources not in the market at the start of the simulation to be traded.
@@ -454,7 +243,7 @@ namespace Models.CLEM.Resources
 
             // find parent group type
             ResourceBaseWithTransactions parent = (resourceType as Model).Parent as ResourceBaseWithTransactions;
-            if (!(GetResourceGroupByType(parent.GetType()) is ResourceBaseWithTransactions resourceGroupInMarket))
+            if (!(FindResource(parent.GetType()) is ResourceBaseWithTransactions resourceGroupInMarket))
             {
                 // add warning the market is not currently trading in this resource
                 string zoneName = FindAncestor<Zone>().Name;
@@ -605,8 +394,8 @@ namespace Models.CLEM.Resources
                                 }
                             }
                             else // assumed successful transaction based on where clause in transaction selection
-                                // Add resource: tops up resource from tansmutation so available in CheckResources
-                                (resourceTypeInShortfall as IResourceType).Add(packetsNeeded * transmutation.TransmutationPacketSize, request.ActivityModel, request.ResourceTypeName, transmutation.TransactionCategory);
+                                // Add resource: tops up resource from transmutation so available in CheckResources
+                                (resourceTypeInShortfall as IResourceType).Add(packetsNeeded * ((transmutation.TransmutationPacketSize == 0)?1: transmutation.TransmutationPacketSize), request.ActivityModel, request.ResourceTypeName, transmutation.TransactionCategory);
                         }
                     }
                 }

@@ -144,7 +144,11 @@
                             {
                                 IModel ancestor = GetParent(model, fieldType);
                                 if (ancestor == null)
-                                    throw new Exception($"Unable to resolve link {field.Name} in model {model.FullPath}: {model.Name} has no ancestors of type {fieldType.Name}");
+                                {
+                                    if (throwOnFail)
+                                        throw new Exception($"Unable to resolve link {field.Name} in model {model.FullPath}: {model.Name} has no ancestors of type {fieldType.Name}");
+                                    continue;
+                                }
                                 matches.Add(ancestor);
                             }
                             else
@@ -181,9 +185,9 @@
                             array.Add(GetModel(matches[i]));
                         field.Value = array;
                     }
-                    else if (matches.Count == 0 && !throwOnFail)
+                    else if (matches.Count == 0)
                     {
-                        if (!link.IsOptional)
+                        if (throwOnFail && !link.IsOptional)
                             throw new Exception("Cannot find a match for link " + field.Name + " in model " + GetFullName(obj));
                     }
                     else if (matches.Count >= 2 && link.Type != LinkType.Scoped)

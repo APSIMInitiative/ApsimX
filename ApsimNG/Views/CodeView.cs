@@ -1,5 +1,4 @@
-﻿#if NETCOREAPP
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using System.Reflection;
@@ -15,6 +14,7 @@ namespace UserInterface.Views
     using Interfaces;
     using GtkSource;
     using Extensions;
+    using System.Text;
 
     /// <summary>
     /// This class provides an intellisense editor and has the option of syntax highlighting keywords.
@@ -419,7 +419,7 @@ namespace UserInterface.Views
                 // This may break if Gtk# changes the way they implement event handlers.
                 textEditor.DetachAllHandlers();
                 accel.Dispose();
-                textEditor.Cleanup();
+                textEditor.Dispose();
                 textEditor = null;
                 owner = null;
             }
@@ -466,7 +466,8 @@ namespace UserInterface.Views
         {
             try
             {
-                scroller.Vadjustment.SetValue(vertScrollPos);
+                if (vertScrollPos > 0 && vertScrollPos < scroller.Vadjustment.Upper)
+                    scroller.Vadjustment.Value = vertScrollPos;
             }
             catch (Exception err)
             {
@@ -483,7 +484,8 @@ namespace UserInterface.Views
         {
             try
             {
-                scroller.Hadjustment.SetValue(horizScrollPos);
+                if (horizScrollPos > 0 && horizScrollPos < scroller.Hadjustment.Upper)
+                    scroller.Hadjustment.Value = horizScrollPos;
             }
             catch (Exception err)
             {
@@ -518,14 +520,23 @@ namespace UserInterface.Views
                     args.RetVal = true;
                     return;
                 }
-                char previousChar = 'x';
+
+                // If the user typed a period, we will need to ask the owner for
+                // completion items. However, if the user typed a period in the
+                // middle of a number (ie as a decimal separator), we don't want
+                // to trigger a completion request. Moreover, we need to check the
+                // entire previous word (not just the previous character). E.g.
+                // If the user types "123.", then we don't want to trigger a completion
+                // request. If the user types "Swim3.", then we *do* want to trigger
+                // a completion requests.
+                string previousWord = "";
                 if (textEditor.Buffer.CursorPosition > 0)
                 {
                     TextIter prevIter = textEditor.Buffer.GetIterAtOffset(textEditor.Buffer.CursorPosition - 1);
-                    previousChar = prevIter.Char.ToCharArray().FirstOrDefault();
+                    previousWord = GetPreviousWord(prevIter);
                 }
                 char keyChar = (char)Gdk.Keyval.ToUnicode(args.Event.KeyValue);
-                if (keyChar == '.' && !char.IsDigit(previousChar))
+                if (keyChar == '.' && !IsNumber(previousWord))
                 {
                     if (ContextItemsNeeded != null)
                     {
@@ -548,6 +559,34 @@ namespace UserInterface.Views
             {
                 ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// Check if a string is a number.
+        /// </summary>
+        /// <param name="word">Any text.</param>
+        private bool IsNumber(string word)
+        {
+            return double.TryParse(word, NumberStyles.Any, CultureInfo.CurrentCulture, out _);
+        }
+
+        /// <summary>
+        /// Get the word which occurs immediately before the given location.
+        /// </summary>
+        /// <param name="iter">The location.</param>
+        private string GetPreviousWord(TextIter iter)
+        {
+            StringBuilder builder = new StringBuilder();
+            do
+            {
+                char previousChar = iter.Char.ToCharArray().FirstOrDefault();
+                if (char.IsWhiteSpace(previousChar) || previousChar == '.')
+                    break;
+                builder.Append(previousChar);
+            }
+            while (iter.BackwardChar());
+
+            return builder.ToString();
         }
 
         /// <summary>
@@ -1006,4 +1045,3 @@ namespace UserInterface.Views
         #endregion
     }
 }
-#endif

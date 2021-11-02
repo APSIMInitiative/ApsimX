@@ -47,11 +47,29 @@ namespace UnitTests.Core
             }
         }
 
-        [Test]
         [Parallelizable]
-        [TestCaseSource(nameof(GetSimsToTest))]
-        public void TestSimulation(Simulation sim)
+        [TestCase("AgPasture.apsimx")]
+        [TestCase("Barley.apsimx")]
+        [TestCase("Chicory.apsimx")]
+        [TestCase("Eucalyptus.apsimx")]
+        [TestCase("FodderBeet.apsimx")]
+        [TestCase("Maize.apsimx")]
+        [TestCase("Oats.apsimx")]
+        [TestCase("OilPalm.apsimx")]
+        [TestCase("Plantain.apsimx")]
+        [TestCase("Potato.apsimx")]
+        [TestCase("RedClover.apsimx")]
+        [TestCase("Rotation.apsimx")]
+        [TestCase("SCRUM.apsimx")]
+        [TestCase("SimpleGrazing.apsimx")]
+        [TestCase("Soybean.apsimx")]
+        [TestCase("Stock.apsimx")]
+        [TestCase("Sugarcane.apsimx")]
+        [TestCase("Wheat.apsimx")]
+        [TestCase("WhiteClover.apsimx")]
+        public void TestSimulation(string fileName)
         {
+            Simulation sim = CreateSimulation(Path.Combine("%root%", "Examples", fileName));
             Logger logger = new Logger();
             logger.Parent = sim;
             sim.Children.Add(logger);
@@ -75,32 +93,6 @@ namespace UnitTests.Core
             // File.WriteAllText(Path.Combine(Path.GetTempPath(), $"post-{Guid.NewGuid().ToString()}.json"), post);
 
             Assert.AreEqual(pre, post, $"{Path.GetFileName(sim.FileName)} simulation failed to zero all variables");
-        }
-
-        private IEnumerable<Simulation> GetSimsToTest()
-        {
-            // Lazy loading of simulations. The .apsimx files won't be read in
-            // until we're ready to run them. Therefore if we fail in one of
-            // the earlier files, the latter ones won't be read.
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "AgPasture.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "Barley.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "Chicory.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "Eucalyptus.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "FodderBeet.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "Maize.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "Oats.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "OilPalm.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "Plantain.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "Potato.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "RedClover.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "Rotation.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "SCRUM.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "SimpleGrazing.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "Soybean.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "Stock.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "Sugarcane.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "Wheat.apsimx"));
-            yield return CreateSimulation(Path.Combine("%root%", "Examples", "WhiteClover.apsimx"));
         }
 
         private static Simulation CreateSimulation(string path)
