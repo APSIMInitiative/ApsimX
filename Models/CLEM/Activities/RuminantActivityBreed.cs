@@ -40,7 +40,7 @@ namespace Models.CLEM.Activities
         [Link]
         private Clock clock = null;
 
-        private Dictionary<string, IIndividualAttribute> randomHerdAttributes = null;
+        private Dictionary<string, IIndividualAttribute> randomHerdAttributes = new Dictionary<string, IIndividualAttribute>();
 
         /// <summary>
         /// Artificial insemination in use (defined by presence of add-on component)
@@ -399,8 +399,17 @@ namespace Models.CLEM.Activities
                                     if(female.BreedParams.IncludedAttributeInheritanceWhenMating)
                                     {
                                         if (useControlledMating)
+                                        {
+                                            bool newJoining = needsNewJoiningMale(controlledMating.JoiningsPerMale, numberServiced);
+                                            if (!controlledMating.SireAttributes.Any() & (newJoining | !randomHerdAttributes.Any()))
+                                            {
+                                                // select random attributes from breeders
+                                                randomHerdAttributes = location.ElementAt(RandomNumberGenerator.Generator.Next(location.Count())).Attributes.Items;
+                                            }
+
                                             // save all male attributes
-                                            AddMalesAttributeDetails(female, controlledMating.SireAttributes, needsNewJoiningMale(controlledMating.JoiningsPerMale, numberServiced));
+                                            AddMalesAttributeDetails(female, controlledMating.SireAttributes, newJoining);
+                                        }
                                         else
                                         {
                                             male = maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count() - 1)];
@@ -455,14 +464,8 @@ namespace Models.CLEM.Activities
         /// <param name="female">The female breeder successfully mated</param>
         /// <param name="maleAttributes">a list of available male attributes setters</param>
         /// <param name="newMale">Create new instance (T) or use last created (F)</param>
-        /// <param name="randomFemale">Random female from herd for random male representation</param>
-        private void AddMalesAttributeDetails(RuminantFemale female, List<SetAttributeWithValue> maleAttributes, bool newMale = true, RuminantFemale randomFemale = null)
+        private void AddMalesAttributeDetails(RuminantFemale female, List<SetAttributeWithValue> maleAttributes, bool newMale = true)
         {
-            // if no male attributes have been supplied default is select from herd mean using the random female provided
-            if(maleAttributes.Any() == false)
-                if(newMale || randomHerdAttributes is null)
-                    randomHerdAttributes = randomFemale.Attributes.Items;
-
             foreach (var attribute in female.Attributes.Items)
             {
                 var maleAttribute = maleAttributes.Where(a => a.AttributeName == attribute.Key).FirstOrDefault();
@@ -477,8 +480,8 @@ namespace Models.CLEM.Activities
                 }
                 else
                 {
-                    // if there are random female attributes provided
-                    if (randomHerdAttributes != null)
+                    // if there are random herd attributes available
+                    if (randomHerdAttributes.Any())
                     {
                         if (!randomHerdAttributes.TryGetValue(attribute.Key, out IIndividualAttribute randomAttribute))
                             throw new ApsimXException(this, $"Unable to assign mandatory attribute from random herd selection for [a={this.Name}] and madatory attribute [{attribute.Key}]");
