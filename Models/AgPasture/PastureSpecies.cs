@@ -22,7 +22,7 @@
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class PastureSpecies : ModelCollectionFromResource, IPlant, ICanopy, IUptake, IPlantDamage
+    public class PastureSpecies : ModelCollectionFromResource, IPlant, ICanopy, IUptake, IHasDamageableBiomass
     {
         #region Links, events and delegates  -------------------------------------------------------------------------------
 

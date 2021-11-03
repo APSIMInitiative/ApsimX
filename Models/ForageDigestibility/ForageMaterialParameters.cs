@@ -20,12 +20,14 @@ namespace Models.ForageDigestibility
         /// </summary>
         /// <param name="parentModel">Parent model.</param>
         /// <param name="name">Name.</param>
+        /// <param name="live">Is live material?</param>
         /// <param name="digestibility">Digestibility.</param>
         /// <param name="fractionConsumable">Fraction consumable.</param>
         /// <param name="minimum">Minimum mass to maintain (kg/ha).</param>
-        public ForageMaterialParameters(IModel parentModel, string name, string digestibility, double fractionConsumable, double minimum)
+        public ForageMaterialParameters(IModel parentModel, string name, bool live, string digestibility, double fractionConsumable, double minimum)
         {
             Name = name;
+            IsLive = live;
             DigestibilityString = digestibility;
             FractionConsumable = fractionConsumable;
             MinimumAmount = minimum;

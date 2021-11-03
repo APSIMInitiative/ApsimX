@@ -346,7 +346,12 @@
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            allForages = forages.ModelsWithDigestibleBiomass.ToList();
+            if (forages == null)
+                throw new Exception("No forages component found in simulation.");
+            var parentZone = Parent as Zone;
+            if (parentZone != null)
+                throw new Exception("SimpleGrazing is not in a zone");
+            allForages = forages.ModelsWithDigestibleBiomass.Where(forage => forage.Zone == parentZone).ToList();
             ProportionOfTotalDM = new double[allForages.Count()];
 
             if (GrazingRotationType == GrazingRotationTypeEnum.TargetMass)
@@ -414,7 +419,7 @@
             // Calculate pre-grazed dry matter.
             PreGrazeDM = 0.0;
             foreach (var forage in allForages)
-                PreGrazeDM += forage.Material.Sum(m => m.Biomass.Wt);
+                PreGrazeDM += forage.Material.Sum(m => m.Consumable.Wt);
 
             // Convert to kg/ha
             PreGrazeDM *= 10;
@@ -470,12 +475,12 @@
             // Calculate post-grazed dry matter.
             PostGrazeDM = 0.0;
             foreach (var forage in allForages)
-                PostGrazeDM += forage.Material.Sum(m => m.Biomass.Wt);
+                PostGrazeDM += forage.Material.Sum(m => m.Consumable.Wt);
 
             // Calculate proportions of each species to the total biomass.
             for (int i = 0; i < allForages.Count; i++)
             {
-                var proportionToTotalDM = MathUtilities.Divide(allForages[i].Material.Sum(m => m.Biomass.Wt), PostGrazeDM, 0);
+                var proportionToTotalDM = MathUtilities.Divide(allForages[i].Material.Sum(m => m.Consumable.Wt), PostGrazeDM, 0);
                 ProportionOfTotalDM[i] = proportionToTotalDM;
             }
 
@@ -620,7 +625,7 @@
                 double totalWeightedHarvestableWt = 0.0;
                 for (int i = 0; i < allForages.Count; i++)
                 {
-                    var harvestableWt = allForages[i].Material.Sum(m => m.Biomass.Wt);  // g/m2
+                    var harvestableWt = allForages[i].Material.Sum(m => m.Consumable.Wt);  // g/m2
                     totalHarvestableWt += harvestableWt;
                     totalWeightedHarvestableWt += SpeciesCutProportions[i] * harvestableWt;
                 }
@@ -628,16 +633,16 @@
                 var grazedForages = new List<DigestibleBiomass>();
                 for (int i = 0; i < allForages.Count; i++)
                 {
-                    var harvestableWt = allForages[i].Material.Sum(m => m.Biomass.Wt);  // g/m2
+                    var harvestableWt = allForages[i].Material.Sum(m => m.Consumable.Wt);  // g/m2
                     var proportion = harvestableWt * SpeciesCutProportions[i] / totalWeightedHarvestableWt;
                     var amountToRemove = removeAmount * proportion;
                     var grazed = allForages[i].RemoveBiomass(amountToRemove);
                     double grazedDigestibility = grazed.Digestibility;
                     var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazedDigestibility;
 
-                    GrazedDM += grazed.Biomass.Wt;
-                    GrazedN += grazed.Biomass.N;
-                    GrazedME += grazedMetabolisableEnergy * grazed.Biomass.Wt;
+                    GrazedDM += grazed.Consumable.Wt;
+                    GrazedN += grazed.Consumable.N;
+                    GrazedME += grazedMetabolisableEnergy * grazed.Consumable.Wt;
 
                     grazedForages.Add(grazed);
                 }
@@ -650,8 +655,8 @@
                 double returnedToSoilN = 0;
                 foreach (var grazedForage in grazedForages)
                 {
-                    returnedToSoilWt += (1 - grazedForage.Digestibility) * grazedForage.Biomass.Wt;
-                    returnedToSoilN += GetValueFromMonthArray(FractionDefoliatedNToSoil) * grazedForage.Biomass.N;
+                    returnedToSoilWt += (1 - grazedForage.Digestibility) * grazedForage.Consumable.Wt;
+                    returnedToSoilN += GetValueFromMonthArray(FractionDefoliatedNToSoil) * grazedForage.Consumable.N;
                 }
 
                 double dungNReturned;

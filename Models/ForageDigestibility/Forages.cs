@@ -87,6 +87,8 @@ namespace Models.ForageDigestibility
                     }
                 }
             }
+            if (Parameters == null)
+                SetParametersFromGrid(data);
 
             return data;
         }
@@ -106,18 +108,20 @@ namespace Models.ForageDigestibility
             row[0] = fullName;
             row[1] = 0.7;
             row[2] = 0.3;
-            row[3] = 100;
-            row[4] = 100;
-            row[5] = 0;
+            row[3] = 1;
+            row[4] = 1;
+            row[5] = 100;
 
-            var live = Parameters?.Find(p => p.Name.Equals(fullName + ".Live", StringComparison.InvariantCultureIgnoreCase));
+            var live = Parameters?.Find(p => p.Name.Equals(fullName, StringComparison.InvariantCultureIgnoreCase)
+                                             && p.IsLive);
             if (live != null)
             {
                 row[1] = live.DigestibilityString;
                 row[3] = live.FractionConsumable;
                 row[5] = live.MinimumAmount;
 
-                var dead = Parameters?.Find(p => p.Name.Equals(fullName + ".Dead", StringComparison.InvariantCultureIgnoreCase));
+                var dead = Parameters?.Find(p => p.Name.Equals(fullName, StringComparison.InvariantCultureIgnoreCase)
+                                                 && !p.IsLive);
                 if (dead != null)
                 {
                     row[2] = dead.DigestibilityString;
@@ -138,15 +142,27 @@ namespace Models.ForageDigestibility
             foreach (DataRow row in data.Rows)
             {
                 var fullName = row[0].ToString();
+                if (!string.IsNullOrEmpty(fullName)) // can be empty at bottom of grid because grid.CanGrow=true
+                {
+                    Parameters?.RemoveAll(p => p.Name.Equals(fullName, StringComparison.InvariantCultureIgnoreCase));
+                    var live = new ForageMaterialParameters(this, fullName, live: true, row[1].ToString(), Convert.ToDouble(row[3]), Convert.ToDouble(row[5]));
+                    Parameters.Add(live);
 
-                Parameters?.RemoveAll(p => p.Name.Equals(fullName + ".Live", StringComparison.InvariantCultureIgnoreCase));
-                var live = new ForageMaterialParameters(this, fullName + ".Live", row[1].ToString(), Convert.ToDouble(row[3]), Convert.ToDouble(row[5]));
-                Parameters.Add(live);
-
-                Parameters?.RemoveAll(p => p.Name.Equals(fullName + ".Dead", StringComparison.InvariantCultureIgnoreCase));
-                var dead = new ForageMaterialParameters(this, fullName + ".Dead", row[1].ToString(), Convert.ToDouble(row[3]), Convert.ToDouble(row[5]));
-                Parameters.Add(dead);
+                    var dead = new ForageMaterialParameters(this, fullName, live: false, row[2].ToString(), Convert.ToDouble(row[4]), 0.0);
+                    Parameters.Add(dead);
+                }
             }
+        }
+
+        /// <summary>Performs initialisation at the start of the simulation.</summary>
+        /// <param name="sender">The sender model</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
+        [EventSubscribe("Commencing")]
+        private void OnCommencing(object sender, EventArgs e)
+        {
+            // This needs to be done at commencing, before STOCK get's its StartOfSimulation event.
+            if (Parameters == null)
+                SetParametersFromGrid(GetParametersAsGrid()); // Setup with defaults.
         }
     }
 }

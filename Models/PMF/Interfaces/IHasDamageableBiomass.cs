@@ -27,20 +27,39 @@
         /// Constructor.
         /// </summary>
         /// <param name="name">Name of biomass.</param>
-        /// <param name="biomass">Biomass (g/m2).</param>
+        /// <param name="total">Total Biomass (kg/ha).</param>
         /// <param name="isLive">Is biomass live.</param>
-        public DamageableBiomass(string name, Biomass biomass, bool isLive)
+        public DamageableBiomass(string name, Biomass total, bool isLive)
         {
             Name = name;
-            Biomass = biomass;
+            Total = total;
+            Consumable = total;
+            IsLive = isLive;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="name">Name of biomass.</param>
+        /// <param name="total">Total Biomass (kg/ha).</param>
+        /// <param name="fractionConsumable">Fraction of biomass that is consumable.</param>
+        /// <param name="isLive">Is biomass live.</param>
+        public DamageableBiomass(string name, Biomass total, double fractionConsumable, bool isLive)
+        {
+            Name = name;
+            Total = total;
+            Consumable = total * fractionConsumable;
             IsLive = isLive;
         }
 
         /// <summary>Name of material.</summary>
         public string Name { get; }
 
-        /// <summary>Biomass (g/m2)</summary>
-        public Biomass Biomass { get; }
+        /// <summary>Total Biomass (kg/ha)</summary>
+        public Biomass Total { get; }
+
+        /// <summary>Consumable Biomass (kg/ha)</summary>
+        public Biomass Consumable { get; }
 
         /// <summary>Is biomass live.</summary>
         public bool IsLive { get; }

@@ -43,10 +43,12 @@ namespace Models.ForageDigestibility
                         throw new Exception($"Cannot find forage parameters for {fullName}");
                     if (materialParameters.FractionConsumable > 0)
                     {
-                        var consumableBiomass = material.Biomass * 10;  // g/m2 to kg/ha
-                        consumableBiomass.StructuralWt = Math.Max(0.0, consumableBiomass.StructuralWt * materialParameters.FractionConsumable - materialParameters.MinimumAmount);
+                        var totalBiomass = material.Total * 10;       // g/m2 to kg/ha
+
+                        var consumableAmount = Math.Max(0.0, totalBiomass.Wt * materialParameters.FractionConsumable - materialParameters.MinimumAmount);
+                        var consumableFraction = MathUtilities.Divide(consumableAmount, totalBiomass.Wt, 0);
                         
-                        yield return new DigestibleBiomass(new DamageableBiomass(material.Name, consumableBiomass, material.IsLive),
+                        yield return new DigestibleBiomass(new DamageableBiomass(material.Name, totalBiomass, consumableFraction, material.IsLive),
                                                            materialParameters);
                     }
                 }
@@ -78,9 +80,9 @@ namespace Models.ForageDigestibility
                 var allMaterial = Material.ToList();
 
                 // get existing DM and N amounts
-                double harvestableWt = allMaterial.Sum(m => m.Biomass.Wt);
+                double harvestableWt = allMaterial.Sum(m => m.Consumable.Wt);
                 double preRemovalDMShoot = harvestableWt;
-                double preRemovalNShoot = allMaterial.Sum(m => m.Biomass.N);
+                double preRemovalNShoot = allMaterial.Sum(m => m.Consumable.N);
 
                 // Compute the fraction of each tissue to be removed
                 var fracRemoving = new List<FractionDigestibleBiomass>();
@@ -90,7 +92,7 @@ namespace Models.ForageDigestibility
                     amountToRemove = harvestableWt;
                     foreach (var material in allMaterial)
                     {
-                        double frac = MathUtilities.Divide(material.Biomass.Wt, harvestableWt, 0.0);
+                        double frac = MathUtilities.Divide(material.Consumable.Wt, harvestableWt, 0.0);
                         fracRemoving.Add(new FractionDigestibleBiomass(material, frac));
                     }
                 }
@@ -103,16 +105,16 @@ namespace Models.ForageDigestibility
                         if (material.IsLive)
                         {
                             if (material.Name == "Leaf")
-                                frac = material.Biomass.Wt * PreferenceForGreenOverDead * PreferenceForLeafOverStems;
+                                frac = material.Consumable.Wt * PreferenceForGreenOverDead * PreferenceForLeafOverStems;
                             else
-                                frac = material.Biomass.Wt * PreferenceForGreenOverDead;
+                                frac = material.Consumable.Wt * PreferenceForGreenOverDead;
                         }
                         else
                         {
                             if (material.Name == "Leaf")
-                                frac = material.Biomass.Wt * PreferenceForLeafOverStems;
+                                frac = material.Consumable.Wt * PreferenceForLeafOverStems;
                             else
-                                frac = material.Biomass.Wt;
+                                frac = material.Consumable.Wt;
                         }
                         fracRemoving.Add(new FractionDigestibleBiomass(material, frac));
                     }
@@ -121,7 +123,7 @@ namespace Models.ForageDigestibility
                     double totalFrac = fracRemoving.Sum(m => m.Fraction);
                     foreach (var f in fracRemoving)
                     {
-                        double fracRemovable = f.Material.Biomass.Wt / amountToRemove;
+                        double fracRemovable = f.Material.Consumable.Wt / amountToRemove;
                         f.Fraction = Math.Min(fracRemovable, f.Fraction / totalFrac);
                     }
 
@@ -137,7 +139,7 @@ namespace Models.ForageDigestibility
                         count += 1;
                         foreach (var f in fracRemoving)
                         {
-                            double fracRemovable = f.Material.Biomass.Wt / amountToRemove;
+                            double fracRemovable = f.Material.Consumable.Wt / amountToRemove;
                             f.Fraction = Math.Min(fracRemovable, f.Fraction / totalFrac);
                         }
                         totalFrac = totalFrac = fracRemoving.Sum(m => m.Fraction);
@@ -163,14 +165,14 @@ namespace Models.ForageDigestibility
 
                     RemoveBiomass(live.Material.Name, new OrganBiomassRemovalType()
                     {
-                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * live.Fraction, live.Material.Biomass.Wt, 0.0)),
-                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * dead.Fraction, dead.Material.Biomass.Wt, 0.0))
+                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * live.Fraction, live.Material.Consumable.Wt, 0.0)),
+                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * dead.Fraction, dead.Material.Consumable.Wt, 0.0))
                     });
                 }
 
                 // Set outputs and check balance
-                var defoliatedDM = preRemovalDMShoot - allMaterial.Sum(m => m.Biomass.Wt);
-                var defoliatedN = preRemovalNShoot - allMaterial.Sum(m => m.Biomass.N);
+                var defoliatedDM = preRemovalDMShoot - allMaterial.Sum(m => m.Consumable.Wt);
+                var defoliatedN = preRemovalNShoot - allMaterial.Sum(m => m.Consumable.N);
                 if (!MathUtilities.FloatsAreEqual(defoliatedDM, amountToRemove))
                     throw new Exception("Removal of DM resulted in loss of mass balance");
                 else
@@ -191,7 +193,7 @@ namespace Models.ForageDigestibility
         /// <param name="summary">Optional summary object.</param>
         public void RemoveBiomass(string type, double amount, ISummary summary = null)
         {
-            double harvestableWt = Material.Sum(m => m.Biomass.Wt);
+            double harvestableWt = Material.Sum(m => m.Consumable.Wt);
             if (!MathUtilities.FloatsAreEqual(harvestableWt, 0.0))
             {
                 // Get the amount required to remove

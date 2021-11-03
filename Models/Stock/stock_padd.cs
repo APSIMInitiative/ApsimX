@@ -851,16 +851,16 @@ namespace Models.GrazPlan
                 if (dead == null)
                     throw new Exception($"Cannot find dead material for {live.Name}.");
 
-                if (live.Biomass.Wt > 0 || dead.Biomass.Wt > 0)
+                if (live.Consumable.Wt > 0 || dead.Consumable.Wt > 0)
                 {
-                    result.TotalGreen += (greenPropn * live.Biomass.Wt);   // g/m^2
-                    result.TotalDead += dead.Biomass.Wt;
+                    result.TotalGreen += (greenPropn * live.Consumable.Wt);   // g/m^2
+                    result.TotalDead += dead.Consumable.Wt;
 
                     // we can find the dmd of structural, assume storage and metabolic are 100% digestible
-                    dmd = (live.Digestibility * greenPropn * live.Biomass.StructuralWt) + (1 * greenPropn * live.Biomass.StorageWt) + (1 * greenPropn * live.Biomass.MetabolicWt);    // storage and metab are 100% dmd
-                    dmd += ((dead.Digestibility * dead.Biomass.StructuralWt) + (1 * dead.Biomass.StorageWt) + (1 * dead.Biomass.MetabolicWt));
+                    dmd = (live.Digestibility * greenPropn * live.Consumable.StructuralWt) + (1 * greenPropn * live.Consumable.StorageWt) + (1 * greenPropn * live.Consumable.MetabolicWt);    // storage and metab are 100% dmd
+                    dmd += ((dead.Digestibility * dead.Consumable.StructuralWt) + (1 * dead.Consumable.StorageWt) + (1 * dead.Consumable.MetabolicWt));
                     totalDMD += dmd;
-                    totalN += (greenPropn * live.Biomass.N) + (dead.Biomass.Wt > 0 ? dead.Biomass.N : 0);   // g/m^2
+                    totalN += (greenPropn * live.Consumable.N) + (dead.Consumable.Wt > 0 ? dead.Consumable.N : 0);   // g/m^2
                 }
             }
 
@@ -932,7 +932,7 @@ namespace Models.GrazPlan
                 double propnRemoved = Math.Min(1.0, (totalRemoved / area) / (forage.TotalLive + forage.TotalDead + GrazType.Ungrazeable * 10.0)); //  calculations in kg /ha, needs more checking, would be good to use a variable for the unit conversion on ungrazeable
 
                 // calculations of proportions each organ of the total plant removed (in the native units)
-                double totalDM = ForageObj.Material.Sum(m => m.Biomass.Wt);
+                double totalDM = ForageObj.Material.Sum(m => m.Consumable.Wt);
                 
                 double amountRemoved = 0;
                 double amountToRemove = propnRemoved * totalDM;
@@ -943,11 +943,11 @@ namespace Models.GrazPlan
                     if (dead == null)
                         throw new Exception($"Cannot find dead material for {live.Name}.");
 
-                    if (live.Biomass.Wt + dead.Biomass.Wt > 0)
+                    if (live.Consumable.Wt + dead.Consumable.Wt > 0)
                     {
-                        double propnOfPlantDM = (live.Biomass.Wt + dead.Biomass.Wt) / totalDM;
+                        double propnOfPlantDM = (live.Consumable.Wt + dead.Consumable.Wt) / totalDM;
                         double amountOfOrganToRemove = propnOfPlantDM * amountToRemove;
-                        double prpnOfOrganToRemove = amountOfOrganToRemove / (live.Biomass.Wt + dead.Biomass.Wt);
+                        double prpnOfOrganToRemove = amountOfOrganToRemove / (live.Consumable.Wt + dead.Consumable.Wt);
                         prpnOfOrganToRemove = Math.Min(prpnOfOrganToRemove, 1.0);
                         PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
                         removal.FractionDeadToRemove = prpnOfOrganToRemove;

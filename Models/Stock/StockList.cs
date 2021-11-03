@@ -94,11 +94,11 @@
 
                 // find all the child crop, pasture components that have removable biomass
                 var forages = stockModel.FindInScope<Forages>();
-                if (forages != null)
-                {
-                    foreach (var forage in forages.ModelsWithDigestibleBiomass.Where(m => m.Zone == zone))
-                        ForagesAll.AddProvider(newPadd, zone.Name, zone.Name + "." + forage.Name, 0, 0, forage);
-                }
+                if (forages == null)
+                    throw new Exception("No forages component found in simulation.");
+                
+                foreach (var forage in forages.ModelsWithDigestibleBiomass.Where(m => m.Zone == zone))
+                    ForagesAll.AddProvider(newPadd, zone.Name, zone.Name + "." + forage.Name, 0, 0, forage);
             }
         }
 

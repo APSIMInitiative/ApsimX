@@ -35,8 +35,11 @@ namespace Models.ForageDigestibility
         /// <summary>Name of material.</summary>
         public string Name => material.Name;
 
-        /// <summary>Biomass (kg/ha).</summary>
-        public Biomass Biomass => material.Biomass;
+        /// <summary>Total biomass (kg/ha).</summary>
+        public Biomass Total => material.Total;
+
+        /// <summary>Consumable biomass (kg/ha).</summary>
+        public Biomass Consumable => material.Consumable;
 
         /// <summary>Is biomass live.</summary>
         public bool IsLive => material.IsLive;

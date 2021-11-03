@@ -34,11 +34,19 @@
                             },
                             new ForageMaterialParameters()
                             {
-                                Name = "Crop1.Leaf",
+                                Name = "Crop1.Stem",
                                 DigestibilityString = "0.3",
                                 FractionConsumable = 0.5,
                                 MinimumAmount = 50,
                                 IsLive = false
+                            },
+                            new ForageMaterialParameters()
+                            {
+                                Name = "Crop1.Stolon",
+                                DigestibilityString = "0.6",
+                                FractionConsumable = 1.0,
+                                MinimumAmount = 100,
+                                IsLive = true
                             }
                         }
                     },
@@ -51,8 +59,9 @@
                                 Name = "Crop1",
                                 Material = new List<DamageableBiomass>()
                                 {
-                                    new DamageableBiomass("Leaf", new Biomass() {StructuralWt = 200 }, isLive: true),  // g/m2
-                                    new DamageableBiomass("Leaf", new Biomass() {StructuralWt = 100 }, isLive: false)  // g/m2
+                                    new DamageableBiomass("Leaf", new Biomass() {StructuralWt = 200 }, isLive: true),   // g/m2
+                                    new DamageableBiomass("Stem", new Biomass() {StructuralWt = 100 }, isLive: false),  // g/m2
+                                    new DamageableBiomass("Stolon", new Biomass() {StructuralWt = 5 }, isLive: true)   // g/m2
                                 }
                             }
                         }
@@ -68,19 +77,28 @@
             Assert.AreEqual(1, forageModels.Count);
 
             var forageMaterial = forageModels[0].Material.ToList();
-            Assert.AreEqual(2, forageMaterial.Count);
+            Assert.AreEqual(3, forageMaterial.Count);
 
-            // live
-            Assert.AreEqual(1900, forageMaterial[0].Biomass.Wt);  // 2000 (StructuralWt) * 0 (FractionConsumable) - 100 (MinimumAmount)
+            // leaf live
+            Assert.AreEqual(2000, forageMaterial[0].Total.Wt);       // 2000 (StructuralWt)
+            Assert.AreEqual(1900, forageMaterial[0].Consumable.Wt);  // 2000 (StructuralWt) * 1 (FractionConsumable) - 100 (MinimumAmount)
             Assert.IsTrue(forageMaterial[0].IsLive);
             Assert.AreEqual(0.7, forageMaterial[0].Digestibility);
             Assert.AreEqual("Leaf", forageMaterial[0].Name);
 
-            // dead
-            Assert.AreEqual(450, forageMaterial[1].Biomass.Wt);  // 1000 (StructuralWt) * 0.5 (FractionConsumable) - 50 (MinimumAmount)
+            // stem dead
+            Assert.AreEqual(1000, forageMaterial[1].Total.Wt);      // 1000 (StructuralWt)
+            Assert.AreEqual(450, forageMaterial[1].Consumable.Wt);  // 1000 (StructuralWt) * 0.5 (FractionConsumable) - 50 (MinimumAmount)
             Assert.IsFalse(forageMaterial[1].IsLive);
             Assert.AreEqual(0.3, forageMaterial[1].Digestibility);
-            Assert.AreEqual("Leaf", forageMaterial[1].Name);
+            Assert.AreEqual("Stem", forageMaterial[1].Name);
+
+            // stolon live
+            Assert.AreEqual(50, forageMaterial[2].Total.Wt);        // 50 (StructuralWt)
+            Assert.AreEqual(0, forageMaterial[2].Consumable.Wt);    // 50 (StructuralWt) * 1 (FractionConsumable) - 100 (MinimumAmount)
+            Assert.IsTrue(forageMaterial[2].IsLive);
+            Assert.AreEqual(0.6, forageMaterial[2].Digestibility);
+            Assert.AreEqual("Stolon", forageMaterial[2].Name);
         }
 
         /// <summary>Make sure digestibility can be expressed as a function.</summary>
