@@ -11,8 +11,8 @@
     /// <summary>A view for a summary file.</summary>
     public class SummaryView : ViewBase, ISummaryView
     {
-        private HBox topBox;
-        private HBox middleBox;
+        private Widget captureRules;
+        private Widget simulationFilter;
         private VBox mainControl;
 
         /// <summary>Summary messages checkbox</summary>
@@ -36,13 +36,13 @@
         /// An expander widget which holds all of the widgets
         /// controlling summary message filtering.
         /// </summary>
-        private Expander filterExpander;
+        private Widget messageFilters;
 
-        /// <summary>
-        /// An expander widget which holds all of the widgets controlling
-        /// summary message sorting.
-        /// </summary>
-        private Expander sortExpander;
+        // /// <summary>
+        // /// An expander widget which holds all of the widgets controlling
+        // /// summary message sorting.
+        // /// </summary>
+        // private Widget messageSorting;
         private CheckButton chkShowInfo;
         private CheckButton chkShowWarnings;
         private CheckButton chkShowErrors;
@@ -58,36 +58,20 @@
         /// <summary>Initializes a new instance of the <see cref="SummaryView"/> class.</summary>
         public SummaryView(ViewBase owner) : base(owner)
         {
-            topBox = new HBox();
-            SummaryCheckBox = new CheckBoxView(this);
-            SummaryCheckBox.TextOfLabel = "Capture summary?";
-            WarningCheckBox = new CheckBoxView(this);
-            WarningCheckBox.TextOfLabel = "Capture warning messages?";
-            ErrorCheckBox = new CheckBoxView(this);
-            ErrorCheckBox.TextOfLabel = "Capture error messages?";
-            filterExpander = CreateFilteringWidgets();
-            sortExpander = CreateSortingWidgets();
-            topBox.PackStart(SummaryCheckBox.MainWidget, false, false, 10);
-            topBox.PackStart(WarningCheckBox.MainWidget, false, false, 10);
-            topBox.PackStart(ErrorCheckBox.MainWidget, false, false, 10);
+            captureRules = CreateCaptureRules();
+            simulationFilter = CreateSimulationFilter();
 
-            middleBox = new HBox();
-            SimulationDropDown = new DropDownView(this);
-            middleBox.PackStart(new Label("Simulation:"), false, false, 10);
-            middleBox.PackStart(SimulationDropDown.MainWidget, true, true, 10);
-
-            btnJumpToSimLog = new Button("Jump to simulation log");
-            HBox buttonContainer = new HBox();
-            buttonContainer.PackStart(btnJumpToSimLog, false, false, 0);
-            btnJumpToSimLog.Clicked += OnJumpToSimulationLog;
+            Widget jumpToLogContainer = CreateJumpToLogContainer();
+            messageFilters = CreateFilteringWidgets();
+            // messageSorting = CreateSortingWidgets();
 
             mainControl = new VBox();
             mainWidget = mainControl;
-            mainControl.PackStart(topBox, false, false, 0);
-            mainControl.PackStart(filterExpander, false, false, 0);
-            mainControl.PackStart(sortExpander, false, false, 0);
-            mainControl.PackStart(middleBox, false, false, 0);
-            mainControl.PackStart(buttonContainer, false, false, 0);
+            mainControl.PackStart(captureRules, false, false, 0);
+            mainControl.PackStart(messageFilters, false, false, 0);
+            // mainControl.PackStart(messageSorting, false, false, 0);
+            mainControl.PackStart(simulationFilter, false, false, 0);
+            mainControl.PackStart(jumpToLogContainer, false, false, 0);
             SummaryDisplay = new MarkdownView(this);
             ScrolledWindow scroller = new ScrolledWindow();
             scroller.Add(((ViewBase)SummaryDisplay).MainWidget);
@@ -97,16 +81,58 @@
             mainWidget.ShowAll();
         }
 
-        private Expander CreateSortingWidgets()
+        private Widget CreateJumpToLogContainer()
+        {
+            btnJumpToSimLog = new Button("Jump to simulation log");
+            btnJumpToSimLog.Clicked += OnJumpToSimulationLog;
+            HBox box = new HBox();
+            box.PackStart(btnJumpToSimLog, false, false, 0);
+            box.Margin = 5;
+            return box;
+        }
+
+        private Widget CreateSimulationFilter()
+        {
+            HBox box = new HBox();
+            SimulationDropDown = new DropDownView(this);
+            box.PackStart(new Label("Simulation:"), false, false, 10);
+            box.PackStart(SimulationDropDown.MainWidget, true, true, 10);
+            box.MarginBottom = 5;
+            Frame frame = new Frame("Simulation Filter");
+            frame.Add(box);
+            frame.Margin = 5;
+            return frame;
+        }
+
+        private Widget CreateCaptureRules()
+        {
+            SummaryCheckBox = new CheckBoxView(this);
+            SummaryCheckBox.TextOfLabel = "Capture summary?";
+            WarningCheckBox = new CheckBoxView(this);
+            WarningCheckBox.TextOfLabel = "Capture warning messages?";
+            ErrorCheckBox = new CheckBoxView(this);
+            ErrorCheckBox.TextOfLabel = "Capture error messages?";
+            HBox box = new HBox();
+            box.PackStart(SummaryCheckBox.MainWidget, false, false, 10);
+            box.PackStart(WarningCheckBox.MainWidget, false, false, 10);
+            box.PackStart(ErrorCheckBox.MainWidget, false, false, 10);
+            Frame frame = new Frame("Capture Rules");
+            frame.Add(box);
+            frame.Margin = 5;
+            return frame;
+        }
+
+        private Widget CreateSortingWidgets()
         {
             Expander container = new Expander("Sorting");
             
+            container.Margin = 5;
             return container;
         }
 
-        private Expander CreateFilteringWidgets()
+        private Widget CreateFilteringWidgets()
         {
-            chkShowInitialConditions = new CheckButton("Show Initial Conditions");
+            chkShowInitialConditions = new CheckButton("Initial Conditions");
             chkShowInfo = new CheckButton("Information");
             chkShowWarnings = new CheckButton("Warnings");
             chkShowErrors = new CheckButton("Errors");
@@ -125,9 +151,10 @@
             filtersBox.PackStart(chkShowInitialConditions, false, false, 0);
             filtersBox.PackStart(severityBox, false, false, 0);
 
-            Expander filtersExpander = new Expander("Filtering");
-            filtersExpander.Add(filtersBox);
-            return filtersExpander;
+            Frame frame = new Frame("Message Filters");
+            frame.Add(filtersBox);
+            frame.Margin = 5;
+            return frame;
         }
 
         /// <summary>
@@ -174,11 +201,11 @@
             try
             {
                 btnJumpToSimLog.Clicked -= OnJumpToSimulationLog;
-                topBox.Dispose();
+                captureRules.Dispose();
                 SummaryCheckBox.MainWidget.Dispose();
                 WarningCheckBox.MainWidget.Dispose();
                 ErrorCheckBox.MainWidget.Dispose();
-                middleBox.Dispose();
+                simulationFilter.Dispose();
                 SimulationDropDown.MainWidget.Dispose();
                 mainControl.Dispose();
                 ((ViewBase)SummaryDisplay).MainWidget.Dispose();

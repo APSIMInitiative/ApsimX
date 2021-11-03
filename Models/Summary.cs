@@ -290,13 +290,13 @@
         {
             IDataStore storage = this.storage ?? FindInScope<IDataStore>();
             DataTable messages = storage.Reader.GetData("_Messages", simulationNames: simulationName.ToEnumerable());
-            string simulationPath = FindInScope<Simulation>(simulationName).FullPath;
+            string simulationPath = FindInScope<Simulation>(simulationName)?.FullPath;
             foreach (DataRow row in messages.Rows)
             {
                 DateTime date = (DateTime)row["Date"];
                 string text = row["Message"]?.ToString();
                 string relativePath = row["ComponentName"]?.ToString();
-                IModel model = FindByPath(simulationPath + "." + relativePath)?.Value as IModel;
+                IModel model = simulationPath == null ? FindInScope(relativePath) : FindByPath(simulationPath + "." + relativePath)?.Value as IModel;
                 if (!Enum.TryParse<Simulation.ErrorLevel>(row["MessageType"]?.ToString(), out Simulation.ErrorLevel severity))
                     severity = Simulation.ErrorLevel.Information;
                 yield return new Message(date, text, model, severity, simulationName, relativePath);
@@ -311,11 +311,11 @@
         {
             IDataStore storage = this.storage ?? FindInScope<IDataStore>();
             DataTable table = storage.Reader.GetData("_InitialConditions", simulationNames: simulationName.ToEnumerable());
-            string simulationPath = FindInScope<Simulation>(simulationName).FullPath;
+            string simulationPath = FindInScope<Simulation>(simulationName)?.FullPath;
             foreach (IGrouping<string, DataRow> group in table.AsEnumerable().GroupBy(r => r["ModelPath"]?.ToString()))
             {
                 string relativePath = group.Key;
-                IModel model = FindByPath(simulationPath + "." + relativePath)?.Value as IModel;
+                IModel model = simulationPath == null ? FindInScope(relativePath) : FindByPath(simulationPath + "." + relativePath)?.Value as IModel;
                 yield return new InitialConditionsTable(model, group.Select(r => new InitialCondition()
                 {
                     Name = r["Name"]?.ToString(),
