@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Documentation;
+using APSIM.Shared.Documentation;
 using APSIM.Shared.JobRunning;
 using Models.Core.Run;
 using Models.Factorial;
@@ -298,7 +298,7 @@ namespace Models.Core
             {
                 // Exception occurred. Write error to summary.
                 simulationError = new SimulationException("", err, Name, FileName);
-                summary?.WriteError(this, simulationError.ToString());
+                summary?.WriteMessage(this, simulationError.ToString(), Models.Core.MessageType.Error);
 
                 // Rethrow exception
                 throw simulationError;

@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using System;
@@ -126,7 +126,7 @@ namespace Models.CLEM.Activities
             herdToUse = Resources.FindResourceType<RuminantHerd, RuminantType>(this, this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             if(!herdToUse.PricingAvailable())
-                Summary.WriteWarning(this, "No pricing is supplied for herd ["+PredictedHerdName+"] and so no pricing will be included with ["+this.Name+"]");
+                Summary.WriteMessage(this, "No pricing is supplied for herd ["+PredictedHerdName+"] and so no pricing will be included with ["+this.Name+"]", MessageType.Warning);
 
             // check GrazeFoodStoreExists
             grazeStore = "";
@@ -138,7 +138,7 @@ namespace Models.CLEM.Activities
             {
                 var ah = this.FindInScope<ActivitiesHolder>();
                 if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
-                    Summary.WriteWarning(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name));
+                    Summary.WriteMessage(this, String.Format("Trade animals purchased by [a={0}] are currently placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place purchase in] located in the properties [General].[PastureDetails]", this.Name), MessageType.Warning);
             }
 
             numberToStock = this.FindAllChildren<Relationship>().FirstOrDefault() as Relationship;

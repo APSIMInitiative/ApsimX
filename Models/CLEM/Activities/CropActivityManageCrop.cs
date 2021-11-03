@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
@@ -127,7 +127,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMFinalSetupBeforeSimulation(object sender, EventArgs e)
         {
             if (Area == 0 && UseAreaAvailable)
-                Summary.WriteWarning(this, String.Format("No area of [r={0}] has been assigned for [a={1}] at the start of the simulation.\r\nThis is because you have selected to use unallocated land and all land is used by other activities.", LinkedLandItem.Name, this.Name));
+                Summary.WriteMessage(this, String.Format("No area of [r={0}] has been assigned for [a={1}] at the start of the simulation.\r\nThis is because you have selected to use unallocated land and all land is used by other activities.", LinkedLandItem.Name, this.Name), MessageType.Warning);
         }
 
         /// <summary>

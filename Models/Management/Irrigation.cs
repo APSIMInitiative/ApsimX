@@ -1,4 +1,4 @@
-﻿namespace Models
+namespace Models
 {
     using System;
     using System.Linq;
@@ -89,10 +89,10 @@
                 // Raise event and write log
                 Irrigated.Invoke(this, irrigData);
                 if (doOutput)
-                    summary.WriteMessage(this, string.Format("{0:F1} mm of water added via irrigation at depth {1} mm", IrrigationApplied, Depth));
+                    summary.WriteMessage(this, string.Format("{0:F1} mm of water added via irrigation at depth {1} mm", IrrigationApplied, Depth), MessageType.Diagnostic);
             }
             else if (doOutput && amount < 0)
-                summary.WriteMessage(this, "Irrigation did not occur because the amount given was negative");
+                summary.WriteMessage(this, "Irrigation did not occur because the amount given was negative", MessageType.Diagnostic);
         }
 
         /// <summary>Called when [do daily initialisation].</summary>

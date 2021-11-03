@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -279,7 +279,7 @@ namespace Models.Soils
                 if (InitialFOMType != fom_types[FOMtypeID_reset])
                 {   // no valid FOM type was given, use default
                     FOMtypeID_reset = 0;
-                    mySummary.WriteWarning(this,"   The initial FOM type was not found, the default type will be used");
+                    mySummary.WriteMessage(this,"   The initial FOM type was not found, the default type will be used", MessageType.Warning);
                 }
             }
         }
@@ -1706,7 +1706,7 @@ namespace Models.Soils
                 if (initDone)
                 {
                     mySummary.WriteMessage(this, " Attempt to assign values for OC during simulation, "
-                                     + "this operation is not valid and will be ignored");
+                                     + "this operation is not valid and will be ignored", MessageType.Diagnostic);
                 }
                 else
                 {
@@ -1746,7 +1746,7 @@ namespace Models.Soils
                 if (!initDone)
                     reset_ureappm = value;    // check is done on InitCalc
                 else
-                    mySummary.WriteMessage(this, "An external module attempted to change the value of urea during simulation, the command will be ignored");
+                    mySummary.WriteMessage(this, "An external module attempted to change the value of urea during simulation, the command will be ignored", MessageType.Diagnostic);
             }
         }
         /// <summary>
@@ -1775,7 +1775,7 @@ namespace Models.Soils
                 if (!initDone)
                     reset_nh4ppm = value;
                 else
-                    mySummary.WriteMessage(this, "An external module attempted to change the value of NH4 during simulation, the command will be ignored");
+                    mySummary.WriteMessage(this, "An external module attempted to change the value of NH4 during simulation, the command will be ignored", MessageType.Diagnostic);
             }
         }
         /// <summary>
@@ -1804,7 +1804,7 @@ namespace Models.Soils
                 if (!initDone)
                     reset_no3ppm = value;
                 else
-                    mySummary.WriteMessage(this, "An external module attempted to change the value of NO3 during simulation, the command will be ignored");
+                    mySummary.WriteMessage(this, "An external module attempted to change the value of NO3 during simulation, the command will be ignored", MessageType.Diagnostic);
             }
         }
         #endregion  mineral N data
@@ -1879,12 +1879,12 @@ namespace Models.Soils
                             if (inhibitionFactor_Nitrification[layer] < -epsilon)
                             {
                                 inhibitionFactor_Nitrification[layer] = 0.0;
-                                mySummary.WriteWarning(this, "Value for nitrification inhibition is below lower limit, value will be adjusted to 0.0");
+                                mySummary.WriteMessage(this, "Value for nitrification inhibition is below lower limit, value will be adjusted to 0.0", MessageType.Warning);
                             }
                             else if (inhibitionFactor_Nitrification[layer] > 1.0)
                             {
                                 inhibitionFactor_Nitrification[layer] = 1.0;
-                                mySummary.WriteWarning(this, "Value for nitrification inhibition is above upper limit, value will be adjusted to 1.0");
+                                mySummary.WriteMessage(this, "Value for nitrification inhibition is above upper limit, value will be adjusted to 1.0", MessageType.Warning);
                             }
                         }
                         else

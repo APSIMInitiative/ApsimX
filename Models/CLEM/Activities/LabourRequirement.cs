@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Activities;
 using System;
 using System.Collections.Generic;
@@ -124,14 +124,14 @@ namespace Models.CLEM.Activities
             // ensure labour resource added
             Labour lab = Resources.FindResource<Labour>();
             if (lab == null)
-                Summary.WriteWarning(this, "[a=" + this.Parent.Name + "][f=" + this.Name + "] No labour resorces in simulation. Labour requirement will be ignored.");
+                Summary.WriteMessage(this, "[a=" + this.Parent.Name + "][f=" + this.Name + "] No labour resorces in simulation. Labour requirement will be ignored.", MessageType.Warning);
             else
                 if (lab.Children.Count <= 0)
-                    Summary.WriteWarning(this, "[a=" + this.Parent.Name + "][f=" + this.Name + "] No labour resorce types are provided in the labour resource. Labour requirement will be ignored.");
+                    Summary.WriteMessage(this, "[a=" + this.Parent.Name + "][f=" + this.Name + "] No labour resorce types are provided in the labour resource. Labour requirement will be ignored.", MessageType.Warning);
 
             // check filter groups present
             if (this.Children.OfType<LabourFilterGroup>().Count() == 0)
-                Summary.WriteWarning(this, "No LabourFilterGroup is supplied with the LabourRequirement for [a=" + this.Parent.Name + "]. No labour will be used for this activity.");
+                Summary.WriteMessage(this, "No LabourFilterGroup is supplied with the LabourRequirement for [a=" + this.Parent.Name + "]. No labour will be used for this activity.", MessageType.Warning);
 
             // check for individual nesting.
             foreach (LabourFilterGroup fg in this.FindAllChildren<LabourFilterGroup>())

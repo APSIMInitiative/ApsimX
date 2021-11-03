@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Utilities;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
 using Models.Functions;
@@ -577,7 +577,7 @@ namespace Models.PMF.Organs
         /// <param name="fraction">The fraction of leaf to kill</param>
         public void Kill(double fraction)
         {
-            Summary.WriteMessage(this, "Killing " + fraction + " of live leaf on plant");
+            Summary.WriteMessage(this, "Killing " + fraction + " of live leaf on plant", MessageType.Diagnostic);
             cohort.KillLeavesUniformly(fraction);
         }
 

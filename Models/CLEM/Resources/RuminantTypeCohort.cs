@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -171,7 +171,7 @@ namespace Models.CLEM.Resources
                             ruminantMale.Attributes.Add("Sire");
                         }
                         else
-                            Summary.WriteWarning(this, "Breeding sire switch is not valid for individual females [r=" + parent.Name + "].[r=" + this.Parent.Name + "].[r=" + this.Name + "]");
+                            Summary.WriteMessage(this, "Breeding sire switch is not valid for individual females [r=" + parent.Name + "].[r=" + this.Parent.Name + "].[r=" + this.Name + "]", MessageType.Warning);
                     }
 
                     // if weight not provided use normalised weight

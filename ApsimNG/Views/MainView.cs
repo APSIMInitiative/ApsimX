@@ -14,6 +14,7 @@
     using global::UserInterface.Extensions;
     using System.Text;
     using Utility;
+    using MessageType = Models.Core.MessageType;
 
     /// <summary>An enum type for the AskQuestion method.</summary>
     public enum QuestionResponseEnum { Yes, No, Cancel }
@@ -763,7 +764,7 @@
         /// <param name="message">The message to show the user.</param>
         public QuestionResponseEnum AskQuestion(string message)
         {
-            MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Question, ButtonsType.YesNo, message);
+            MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, Gtk.MessageType.Question, ButtonsType.YesNo, message);
             md.Title = "Save changes";
             int result = md.Run();
             md.Dispose();

@@ -1,4 +1,4 @@
-﻿namespace Models
+namespace Models
 {
     using Models.Core;
     using Models.Core.Run;
@@ -452,7 +452,7 @@
             if (EndOfSimulation != null)
                 EndOfSimulation.Invoke(this, args);
 
-            Summary?.WriteMessage(this, "Simulation terminated normally");
+            Summary?.WriteMessage(this, "Simulation terminated normally", MessageType.Diagnostic);
         }
     }
 }

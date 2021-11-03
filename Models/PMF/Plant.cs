@@ -1,4 +1,4 @@
-﻿namespace Models.PMF
+namespace Models.PMF
 {
     using Models.Core;
     using Models.Functions;
@@ -284,7 +284,7 @@
                     message += "  LAI = " + Leaf.LAI.ToString("f2") + " (m^2/m^2)" + "\r\n";
                     message += "  Above Ground Biomass = " + AboveGround.Wt.ToString("f2") + " (g/m^2)" + "\r\n";
                 }
-                summary.WriteMessage(this, message);
+                summary.WriteMessage(this, message, MessageType.Diagnostic);
                 if (Phenology.CurrentPhase.Start == "Flowering" && Flowering != null)
                     Flowering.Invoke(this, null);
             }
@@ -384,7 +384,7 @@
             if (PlantSowing != null)
                 PlantSowing.Invoke(this, SowingData);
 
-            summary.WriteMessage(this, string.Format("A crop of " + PlantType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
+            summary.WriteMessage(this, string.Format("A crop of " + PlantType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"), MessageType.Diagnostic);
         }
 
         /// <summary>Harvest the crop.</summary>
@@ -396,7 +396,7 @@
         /// <summary>Harvest the crop.</summary>
         public void RemoveBiomass(string biomassRemoveType, RemovalFractions removalData = null)
         {
-            summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType.TrimEnd('e') + "ing"));
+            summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType.TrimEnd('e') + "ing"), MessageType.Diagnostic);
 
             // Invoke specific defoliation events.
             if (biomassRemoveType == "Harvest" && Harvesting != null)
@@ -442,7 +442,7 @@
         {
             if (IsAlive == false)
                 throw new Exception("EndCrop method called when no crop is planted.  Either your planting rule is not working or your end crop is happening at the wrong time");
-            summary.WriteMessage(this, "Crop ending");
+            summary.WriteMessage(this, "Crop ending", MessageType.Diagnostic);
 
             // Invoke a plant ending event.
             if (PlantEnding != null)

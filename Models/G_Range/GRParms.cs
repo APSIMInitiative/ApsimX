@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Linq;
 using System.Globalization;
@@ -888,7 +888,7 @@ namespace Models
             rangeType = globe.landscapeType;
             if (rangeType < 1)
             {
-                summary.WriteError(this, "A range cell has a landscape type 0.  Make sure GIS layers agree for X and Y: " + X.ToString() + ", " + Y.ToString());
+                summary.WriteMessage(this, "A range cell has a landscape type 0.  Make sure GIS layers agree for X and Y: " + X.ToString() + ", " + Y.ToString(), MessageType.Error);
                 rangeType = 1;
                 parms = parmArray[0];
             }
@@ -922,7 +922,7 @@ namespace Models
                     {
                         fieldCapacity[iLayer] = 0.03;
                         wiltingPoint[iLayer] = 0.01;
-                        summary.WriteWarning(this, "Warning, check GIS: soil information is not defined for layer: " + iLayer.ToString());
+                        summary.WriteMessage(this, "Warning, check GIS: soil information is not defined for layer: " + iLayer.ToString(), MessageType.Warning);
                         // The following is commented out, to avoid distracting warnings with minor effects on outcomes.But the error to ECHO.GOF is retained.
                         // write(*, *) 'Warning, check GIS: soil information is not defined for cell: ',icell,' and layer: ',ilayer
                     }

@@ -1,4 +1,4 @@
-﻿using Models.CLEM.Groupings;
+using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -75,7 +75,7 @@ namespace Models.CLEM.Activities
 
             // check that timer exists for controlled mating
             if (!this.TimingExists)
-                Summary.WriteWarning(this, $"Breeding with controlled mating [a={this.Parent.Name}].[a={this.Name}] requires a Timer otherwise breeding will be undertaken every time-step");
+                Summary.WriteMessage(this, $"Breeding with controlled mating [a={this.Parent.Name}].[a={this.Name}] requires a Timer otherwise breeding will be undertaken every time-step", MessageType.Warning);
 
             // get details from parent breeding activity
             breedingParent = this.Parent as RuminantActivityBreed;

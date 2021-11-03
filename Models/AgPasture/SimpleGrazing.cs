@@ -1,4 +1,4 @@
-﻿namespace Models.AgPasture
+namespace Models.AgPasture
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
@@ -470,7 +470,7 @@
                 ProportionOfTotalDM[i] = proportionToTotalDM;
             }
 
-            summary.WriteMessage(this, string.Format("Grazed {0:0.0} kgDM/ha, N content {1:0.0} kgN/ha, ME {2:0.0} MJME/ha", GrazedDM, GrazedN, GrazedME));
+            summary.WriteMessage(this, string.Format("Grazed {0:0.0} kgDM/ha, N content {1:0.0} kgN/ha, ME {2:0.0} MJME/ha", GrazedDM, GrazedN, GrazedME), MessageType.Diagnostic);
 
             // Reduce plant population if necessary.
             if (FractionPopulationDecline > 0)
@@ -547,7 +547,7 @@
                     return true;
                 else
                 {
-                    summary.WriteMessage(this, "Defoliation will not happen because there is not enough plant material.");
+                    summary.WriteMessage(this, "Defoliation will not happen because there is not enough plant material.", MessageType.Diagnostic);
                     DaysSinceGraze = 0;
                 }
             }
