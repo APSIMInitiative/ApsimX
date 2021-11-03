@@ -114,7 +114,7 @@ namespace Models.CLEM.Resources
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             bool timerpresent = FindAllChildren<ActivityTimerMonthRange>().Count() > 0;
             parentPasture = this.Parent as GrazeFoodStoreType;

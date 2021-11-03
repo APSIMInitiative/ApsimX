@@ -53,11 +53,11 @@ namespace Models.CLEM.Resources
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (!formatForParentControl)
+                if (!FormatForParentControl)
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     if (Value <= 0)
@@ -71,11 +71,11 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public override string ModelSummaryInnerClosingTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (formatForParentControl)
+                if (FormatForParentControl)
                 {
                     string classstr = "setvalue";
                     if (Value == 0)
@@ -96,11 +96,11 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryInnerOpeningTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (formatForParentControl)                
+                if (FormatForParentControl)                
                     htmlWriter.Write("<tr><td>");                
                 else                
                     htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");                    
@@ -113,15 +113,15 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
-            return !formatForParentControl ? base.ModelSummaryClosingTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryClosingTags() : "";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
-            return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
         }
 
         #endregion

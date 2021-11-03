@@ -205,7 +205,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             string html = "";
             html += "\r\n<div class=\"activityentry\">Shear selected herd and place clip in ";

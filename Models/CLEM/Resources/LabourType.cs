@@ -399,11 +399,11 @@ namespace Models.CLEM.Resources
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (formatForParentControl == false)
+                if (!FormatForParentControl)
                 {
                     htmlWriter.Write("<div class=\"activityentry\">");
                     if (this.Individuals == 0)
@@ -427,21 +427,21 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
-            if (formatForParentControl)
+            if (FormatForParentControl)
                 return "";
             else
-                return base.ModelSummaryClosingTags(formatForParentControl);
+                return base.ModelSummaryClosingTags();
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
-            if (formatForParentControl)
+            if (FormatForParentControl)
                 return "";
             else
-                return base.ModelSummaryOpeningTags(formatForParentControl);
+                return base.ModelSummaryOpeningTags();
         }
 
         #endregion

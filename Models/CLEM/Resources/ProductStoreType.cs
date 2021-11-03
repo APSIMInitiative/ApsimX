@@ -180,9 +180,9 @@ namespace Models.CLEM.Resources
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
-            string html = base.ModelSummary(formatForParentControl);
+            string html = base.ModelSummary();
 
             html += "\r\n<div class=\"activityentry\">";
             if (StartingAmount > 0)

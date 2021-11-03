@@ -205,14 +205,14 @@ namespace Models.CLEM.Resources
         #region descriptive summary 
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             RuminantType rumType;
             bool specifyRuminantParent = false;
 
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (!formatForParentControl)
+                if (!FormatForParentControl)
                 {
                     rumType = FindAncestor<RuminantType>();
                     if(rumType is null)
@@ -336,11 +336,11 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public override string ModelSummaryInnerClosingTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (formatForParentControl)
+                if (FormatForParentControl)
                 {
                     if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 1] == typeof(RuminantInitialCohorts).Name))
                     {
@@ -394,21 +394,21 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryInnerOpeningTags()
         {
             return "";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
-            return !formatForParentControl ? base.ModelSummaryClosingTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryClosingTags() : "";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
-            return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
         }
 
         #endregion

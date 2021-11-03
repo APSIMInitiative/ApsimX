@@ -12,9 +12,8 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns>Html formatted description</returns>
-        string ModelSummary(bool formatForParentControl);
+        string ModelSummary();
 
         /// <summary>
         /// Method to create the full descriptive summary for a model and all ancestors
@@ -45,25 +44,25 @@ namespace Models.CLEM.Interfaces
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        string ModelSummaryClosingTags(bool formatForParentControl);
+        string ModelSummaryClosingTags();
 
         /// <summary>
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        string ModelSummaryOpeningTags(bool formatForParentControl);
+        string ModelSummaryOpeningTags();
 
         /// <summary>
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        string ModelSummaryInnerClosingTags(bool formatForParentControl);
+        string ModelSummaryInnerClosingTags();
 
         /// <summary>
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        string ModelSummaryInnerOpeningTags(bool formatForParentControl);
+        string ModelSummaryInnerOpeningTags();
 
         /// <summary>
         /// Provides the closing html tags for object

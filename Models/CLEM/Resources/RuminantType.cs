@@ -894,7 +894,7 @@ namespace Models.CLEM.Resources
         #region descriptive summary 
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             string html = "";
             return html;

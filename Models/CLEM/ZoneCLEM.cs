@@ -375,14 +375,13 @@ namespace Models.CLEM
                 // create the summary box with properties of this component
                 if (this is ICLEMDescriptiveSummary)
                 {
-                    bool formatForParentControl = true;
-                    htmlWriter.Write(this.ModelSummaryOpeningTags(formatForParentControl));
+                    htmlWriter.Write(this.ModelSummaryOpeningTags());
                     htmlWriter.Write(this.ModelSummaryInnerOpeningTagsBeforeSummary());
-                    htmlWriter.Write(this.ModelSummary(formatForParentControl));
+                    htmlWriter.Write(this.ModelSummary());
                     // TODO: May need to implement Adding Memos for some Models with reduced display
-                    htmlWriter.Write(this.ModelSummaryInnerOpeningTags(formatForParentControl));
-                    htmlWriter.Write(this.ModelSummaryInnerClosingTags(formatForParentControl));
-                    htmlWriter.Write(this.ModelSummaryClosingTags(formatForParentControl));
+                    htmlWriter.Write(this.ModelSummaryInnerOpeningTags());
+                    htmlWriter.Write(this.ModelSummaryInnerClosingTags());
+                    htmlWriter.Write(this.ModelSummaryClosingTags());
                 }
 
                 // find random number generator
@@ -442,7 +441,7 @@ namespace Models.CLEM
         }
 
         ///<inheritdoc/>
-        public string ModelSummary(bool formatForParentControl)
+        public string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -480,13 +479,13 @@ namespace Models.CLEM
         }
 
         ///<inheritdoc/>
-        public string ModelSummaryClosingTags(bool formatForParentControl)
+        public string ModelSummaryClosingTags()
         {
             return "\r\n</div>\r\n</div>";
         }
 
         ///<inheritdoc/>
-        public string ModelSummaryOpeningTags(bool formatForParentControl)
+        public string ModelSummaryOpeningTags()
         {
             string overall = "default";
             string extra = "";
@@ -502,13 +501,13 @@ namespace Models.CLEM
         }
 
         ///<inheritdoc/>
-        public string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public string ModelSummaryInnerClosingTags()
         {
             return "";
         }
 
         ///<inheritdoc/>
-        public string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        public string ModelSummaryInnerOpeningTags()
         {
             return "";
         }

@@ -68,7 +68,7 @@ namespace Models.CLEM.Resources
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             return "<div class=\"activityentry\">Conception rates are being calculated for all females using the same curve.</div>";
         }

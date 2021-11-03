@@ -229,7 +229,7 @@ namespace Models.CLEM
         }
 
         /// <inheritdoc/>
-        public virtual string ModelSummary(bool formatForParentControl)
+        public virtual string ModelSummary()
         {
             return "";
         }
@@ -245,13 +245,13 @@ namespace Models.CLEM
                     cm.CurrentAncestorList = parentControls.ToList();
                     cm.CurrentAncestorList.Add(model.GetType().Name);
 
-                    htmlWriter.Write(cm.ModelSummaryOpeningTags(cm.FormatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryOpeningTags());
 
                     htmlWriter.Write(cm.ModelSummaryInnerOpeningTagsBeforeSummary());
 
-                    htmlWriter.Write(cm.ModelSummary(cm.FormatForParentControl));
+                    htmlWriter.Write(cm.ModelSummary());
 
-                    htmlWriter.Write(cm.ModelSummaryInnerOpeningTags(cm.FormatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryInnerOpeningTags());
 
                     bool reportMemosInPlace = false;
                     // think through the various model types that do not support memos being writen within children
@@ -280,9 +280,9 @@ namespace Models.CLEM
                         }
                     }
 
-                    htmlWriter.Write(cm.ModelSummaryInnerClosingTags(cm.FormatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryInnerClosingTags());
 
-                    htmlWriter.Write(cm.ModelSummaryClosingTags(cm.FormatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryClosingTags());
                 }
                 return htmlWriter.ToString(); 
             }
@@ -299,7 +299,7 @@ namespace Models.CLEM
         public bool FormatForParentControl { get { return CurrentAncestorList.Count > 1; } }
 
         /// <inheritdoc/>
-        public virtual string ModelSummaryClosingTags(bool formatForParentControl)
+        public virtual string ModelSummaryClosingTags()
         {
             return "\r\n</div>\r\n</div>";
         }
@@ -326,7 +326,7 @@ namespace Models.CLEM
         }
 
         /// <inheritdoc/>
-        public virtual string ModelSummaryOpeningTags(bool formatForParentControl)
+        public virtual string ModelSummaryOpeningTags()
         {
             string overall = "activity";
             string extra = "";
@@ -378,7 +378,7 @@ namespace Models.CLEM
 
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + ";\">");
+                htmlWriter.Write("\r\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + ";\">");
                 htmlWriter.Write("\r\n<div class=\"clearfix " + overall + "banner" + extra + "\">" + this.ModelSummaryNameTypeHeader() + "</div>");
                 htmlWriter.Write("\r\n<div class=\"" + overall + "content" + ((extra != "") ? extra : "") + "\">");
 
@@ -387,13 +387,13 @@ namespace Models.CLEM
         }
 
         /// <inheritdoc/>
-        public virtual string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public virtual string ModelSummaryInnerClosingTags()
         {
             return "";
         }
 
         /// <inheritdoc/>
-        public virtual string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        public virtual string ModelSummaryInnerOpeningTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

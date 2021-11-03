@@ -26,7 +26,7 @@ namespace Models.CLEM.Resources
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             string html = $"<div class=\"activityentry\">Currency is {CLEMModel.DisplaySummaryValueSnippet(CurrencyName, "Not specified")}</div>";
             return html;

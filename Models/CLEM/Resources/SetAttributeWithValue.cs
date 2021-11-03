@@ -141,11 +141,11 @@ namespace Models.CLEM.Resources
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (formatForParentControl)
+                if (FormatForParentControl)
                 {
                     if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 3] == typeof(RuminantInitialCohorts).Name))
                     {
@@ -200,18 +200,18 @@ namespace Models.CLEM.Resources
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
-            return !formatForParentControl ? base.ModelSummaryClosingTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryClosingTags() : "";
         }
 
         /// <summary>
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
-            return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
         }
 
         #endregion

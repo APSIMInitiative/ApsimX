@@ -41,21 +41,21 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             return "\r\n<div class=folder>" + this.Name + " folder " + ((!this.Enabled) ? " - DISABLED!" : "") + "</div>";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
             return "\r\n</div>";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
-            return "\r\n<div class=\"activityborder\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + ";\">";
+            return "\r\n<div class=\"activityborder\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + ";\">";
         } 
         #endregion
 

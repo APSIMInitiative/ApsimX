@@ -505,7 +505,7 @@ namespace Models.CLEM.Resources
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             string html = "";
             html += "\r\n<div class=\"activityentry\">Activities reporting on herds will group individuals";

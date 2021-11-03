@@ -32,7 +32,7 @@ namespace Models.CLEM.Resources
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             string html = "";
             if (this.Children.OfType<LabourAvailabilityItem>().Count() + this.Children.OfType<LabourAvailabilityItemMonthly>().Count() == 0)
@@ -45,13 +45,13 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public override string ModelSummaryInnerClosingTags()
         {
             return "</table>";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryInnerOpeningTags()
         {
             string html = "";
             if (this.Children.OfType<LabourAvailabilityItem>().Count() + this.Children.OfType<LabourAvailabilityItemMonthly>().Count() > 0)

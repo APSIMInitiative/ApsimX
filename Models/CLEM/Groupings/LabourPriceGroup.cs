@@ -41,10 +41,10 @@ namespace Models.CLEM.Groupings
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             string html = "";
-            if (!formatForParentControl)
+            if (!FormatForParentControl)
             {
                 html += "\r\n<div class=\"activityentry\">";
                 html += "Pay ";
@@ -64,10 +64,10 @@ namespace Models.CLEM.Groupings
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public override string ModelSummaryInnerClosingTags()
         {
             string html = "";
-            if (formatForParentControl)
+            if (FormatForParentControl)
             {
                 if (Value.ToString() == "0")
                 {
@@ -89,10 +89,10 @@ namespace Models.CLEM.Groupings
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryInnerOpeningTags()
         {
             string html = "";
-            if (formatForParentControl)            
+            if (FormatForParentControl)            
                 html += "<tr><td>" + this.Name + "</td><td>";
             else            
                 html += "\r\n<div class=\"filterborder clearfix\">";            
@@ -104,15 +104,15 @@ namespace Models.CLEM.Groupings
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
-            return !formatForParentControl ? base.ModelSummaryClosingTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryClosingTags() : "";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
-            return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
         } 
         #endregion
     }

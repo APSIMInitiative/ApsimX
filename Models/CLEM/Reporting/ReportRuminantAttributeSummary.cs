@@ -242,7 +242,7 @@ namespace Models.CLEM.Reporting
         }
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             string html = "";
             return html;
