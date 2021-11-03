@@ -355,7 +355,7 @@ namespace Models.CLEM
         public List<string> CurrentAncestorList { get; set; } = new List<string>();
 
         /// <inheritdoc/>
-        public bool FormatForParentControl { get { return CurrentAncestorList.Any(); } }
+        public bool FormatForParentControl { get { return CurrentAncestorList.Count > 0; } }
 
         ///<inheritdoc/>
         public string GetFullSummary(IModel model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)

@@ -445,15 +445,16 @@ namespace Models.CLEM.Activities
             // add all provided requests to the individuals intake pools.
 
             List<LabourType> group = people?.Items.Where(a => IncludeHiredLabour | a.Hired != true).ToList();
-            double aE = group.Sum(a => a.AdultEquivalent * a.Individuals);
             Status = ActivityStatus.NotNeeded;
-            if (group != null && group.Any())
+            if (group != null && group.Count > 0)
             {
                 var requests = ResourceRequestList.Where(a => a.ResourceType == typeof(HumanFoodStore));
                 if (requests.Any())
                 {
                     foreach (ResourceRequest request in requests)
                         if (request.Provided > 0)
+                        {
+                            double aE = group.Sum(a => a.AdultEquivalent * a.Individuals);
                             // add to individual intake
                             foreach (LabourType labour in group)
                                 labour.AddIntake(new LabourDietComponent()
@@ -461,6 +462,7 @@ namespace Models.CLEM.Activities
                                     AmountConsumed = request.Provided * (labour.AdultEquivalent / aE),
                                     FoodStore = request.Resource as HumanFoodStoreType
                                 });
+                        }
                 }
                 if (this.FindAllChildren<LabourActivityFeedTarget>().Where(a => !a.TargetMet).Any())
                     this.Status = ActivityStatus.Partial;

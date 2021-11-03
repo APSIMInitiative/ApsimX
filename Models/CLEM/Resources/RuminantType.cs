@@ -102,7 +102,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Property indicates whether to include attribute inheritance when mating
         /// </summary>
-        public bool IncludedAttributeInheritanceWhenMating { get { return (mandatoryAttributes.Any()); } }
+        public bool IncludedAttributeInheritanceWhenMating { get { return (mandatoryAttributes.Count > 0); } }
 
         /// <summary>
         /// Add a attribute name to the list of mandatory attributes for the type

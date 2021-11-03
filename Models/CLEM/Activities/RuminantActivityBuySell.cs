@@ -116,7 +116,7 @@ namespace Models.CLEM.Activities
             }
 
             // no individuals to sell
-            if(!herd.Any())
+            if(herd.Count == 0)
                 return;
 
             List<Ruminant> soldIndividuals = new List<Ruminant>();
@@ -249,7 +249,7 @@ namespace Models.CLEM.Activities
 
             // get current untrucked list of animal purchases
             List<Ruminant> herd = HerdResource.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).ToList();
-            if (herd.Any())
+            if (herd.Count > 0)
             {
                 if(this.Status!= ActivityStatus.Warning)
                     this.Status = ActivityStatus.Success;
@@ -360,7 +360,7 @@ namespace Models.CLEM.Activities
 
             // get current untrucked list of animal purchases
             List<Ruminant> herd = HerdResource.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).OrderByDescending(a => a.Weight).ToList();
-            if (!herd.Any())
+            if (herd.Count == 0)
                 return;
 
             List<Ruminant> boughtIndividuals = new List<Ruminant>();
