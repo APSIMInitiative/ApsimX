@@ -140,30 +140,6 @@
             }
         }
 
-        /// <summary>Write a message to the summary</summary>
-        /// <param name="author">The model writing the message</param>
-        /// <param name="message">The message to write</param>
-        public void WriteMessage(IModel author, string message)
-        {
-            WriteMessage(author, message, MessageType.Information);
-        }
-
-        /// <summary>Write a warning message to the summary</summary>
-        /// <param name="model">The model writing the message</param>
-        /// <param name="message">The warning message to write</param>
-        public void WriteWarning(IModel model, string message)
-        {
-            WriteMessage(model, message, MessageType.Warning);
-        }
-
-        /// <summary>Write an error message to the summary</summary>
-        /// <param name="model">The model writing the message</param>
-        /// <param name="message">The warning message to write</param>
-        public void WriteError(IModel model, string message)
-        {
-            WriteMessage(model, message, MessageType.Error);
-        }
-
         /// <summary>
         /// Create an initial conditions table in the DataStore.
         /// </summary>
