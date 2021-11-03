@@ -194,9 +194,9 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Divide value1 by value2. On error, the value errVal will be returned.
         /// </summary>
-        public static double Divide(double value1, double value2, double errVal)
+        public static double Divide(double value1, double value2, double errVal, double tol = tolerance)
         {
-            return MathUtilities.FloatsAreEqual(value2, 0.0) ? errVal : value1 / value2;
+            return MathUtilities.FloatsAreEqual(value2, 0.0, tol) ? errVal : value1 / value2;
         }
 
         /// <summary>
@@ -967,7 +967,7 @@ namespace APSIM.Shared.Utilities
 
         /// <summary>
         /// Return the time elapsed in hours between the specified sun angle
-        ///  from 90<sup>o</sup> in am and pm. +ve above the horizon, -ve below the horizon.
+        ///  from 90^o^ in am and pm. +ve above the horizon, -ve below the horizon.
         /// </summary>
         /// \param DayOfYear The day of year
         /// \param SunAngle 
@@ -1139,6 +1139,34 @@ namespace APSIM.Shared.Utilities
         public static double Bound(double x, double x1, double x2)
         {
             return System.Math.Min(System.Math.Max(x, x1), x2);
+        }
+
+        /// <summary>
+        /// Get the min/max values of a list of x/y pairs. Ignores values
+        /// where the x or y value at a particular index is NaN.
+        /// </summary>
+        /// <param name="x">X values.</param>
+        /// <param name="y">Y values.</param>
+        /// <param name="minX">Smallest x value.</param>
+        /// <param name="maxX">Largest x value.</param>
+        /// <param name="minY">Smallest y value.</param>
+        /// <param name="maxY">Largest y value.</param>
+        public static void GetBounds(IEnumerable<double> x, IEnumerable<double> y, out double minX, out double maxX, out double minY, out double maxY)
+        {
+            if (!(x.Any() && y.Any()))
+                throw new ArgumentException("x is empty");
+            minX = minY = double.MaxValue;
+            maxX = maxY = double.MinValue;
+            foreach ((double xi, double yi) in x.Zip(y, (xi, yi) => (xi, yi)))
+            {
+                if (!double.IsNaN(xi) && !double.IsNaN(yi))
+                {
+                    minX = Math.Min(minX, xi);
+                    minY = Math.Min(minY, yi);
+                    maxX = Math.Max(maxX, xi);
+                    maxY = Math.Max(maxY, yi);
+                }
+            }
         }
 
         /// <summary>
@@ -1713,12 +1741,15 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="items">List to search.</param>
         /// <param name="value">Item to search for.</param>
-        public static int SafeIndexOf(List<double> items, double value)
+        public static int SafeIndexOf(IEnumerable<double> items, double value)
         {
-            items.IndexOf(value);
-            for (int i = 0; i < items.Count; i++)
-                if (FloatsAreEqual(items[i], value))
+            int i = 0;
+            foreach (double item in items)
+            {
+                if (FloatsAreEqual(item, value))
                     return i;
+                i++;
+            }
             return -1;
         }
 

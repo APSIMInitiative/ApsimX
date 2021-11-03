@@ -29,16 +29,23 @@
         private List<Exception> errors = new List<Exception>();
 
         /// <summary>Constructor</summary>
-        /// <param name="model">The model the user has selected to run</param>
+        /// <param name="name">Name of the job to be displayed in the UI..</param>
+        /// <param name="runner">Runner which will run the job.</param>
         /// <param name="presenter">The explorer presenter.</param>
-        /// <param name="multiProcess">Use the multi-process runner?</param>
-        /// <param name="storage">A storage writer where all data should be stored</param>
         public RunCommand(string name, Runner runner, ExplorerPresenter presenter)
         {
             this.jobName = name;
             this.jobRunner = runner;
             this.explorerPresenter = presenter;
             this.explorerPresenter.MainPresenter.AddStopHandler(OnStopSimulation);
+
+            // Ensure that errors are displayed in GUI live as they occur.
+            object errorMutex = new object();
+            runner.ErrorHandler = e =>
+            {
+                lock (errorMutex)
+                    explorerPresenter.MainPresenter.ShowError(e, false);
+            };
 
             jobRunner.AllSimulationsCompleted += OnAllJobsCompleted;
         }
@@ -49,6 +56,7 @@
         /// <summary>Perform the command</summary>
         public void Do()
         {
+            explorerPresenter.MainPresenter.ClearStatusPanel();
             IsRunning = true;
             jobRunner.Run();
 
@@ -60,6 +68,8 @@
                 timer.Elapsed += OnTimerTick;
                 timer.Start();
             }
+            // Manually fire of an OnTimerTick event.
+            OnTimerTick(this, null);
         }
 
         /// <summary>All jobs have completed</summary>
@@ -80,9 +90,8 @@
                 // We could display the error message, but we're about to display output to the user anyway.
             }
             if (errors.Count == 0)
-                explorerPresenter.MainPresenter.ShowMessage(string.Format("{0} complete [{1} sec]", jobName, e.ElapsedTime.TotalSeconds.ToString("#.00")), Simulation.MessageType.Information);
-            else
-                explorerPresenter.MainPresenter.ShowError(errors);
+                explorerPresenter.MainPresenter.ShowMessage(string.Format("{0} complete [{1} sec]", jobName, e.ElapsedTime.TotalSeconds.ToString("#.00")), Simulation.MessageType.Information, false);
+            // We don't need to display error messages now - they are displayed as they occur.
 
             if (!Configuration.Settings.Muted)
             {
@@ -98,7 +107,7 @@
                 else
                 {
                     if (File.Exists(Configuration.Settings.SimulationCompleteWavFileName))
-                        player.SoundLocation = Configuration.Settings.SimulationCompleteWithErrorWavFileName;
+                        player.SoundLocation = Configuration.Settings.SimulationCompleteWavFileName;
                     else
                         player.Stream = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.Sounds.Success.wav");
                 }
@@ -115,13 +124,9 @@
         private void OnStopSimulation(object sender, EventArgs e)
         {
             Stop();
-            string msg = jobName + " aborted";
-            if (errors.Count == 0)
-                explorerPresenter.MainPresenter.ShowMessage(msg, Simulation.MessageType.Information);
-            else
-            {
-                explorerPresenter.MainPresenter.ShowError(errors);
-            }
+            // Any error messages will already be onscreen, as they are
+            // rendered as they occur.
+            explorerPresenter.MainPresenter.ShowMessage($"{jobName} aborted", Simulation.MessageType.Information, false);
         }
 
         /// <summary>
@@ -129,6 +134,7 @@
         /// </summary>
         private void Stop()
         {
+            explorerPresenter.MainPresenter.HideProgressBar();
             this.explorerPresenter.MainPresenter.RemoveStopHandler(OnStopSimulation);
             if (timer != null)
             {
@@ -155,8 +161,8 @@
             else //if (jobRunner?.TotalNumberOfSimulations > 0)
             {
                 double progress = jobRunner?.Progress ?? 0;
-                explorerPresenter.MainPresenter.ShowMessage($"{jobName} running ({jobRunner.Status})", Simulation.MessageType.Information);
-                explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(progress * 100, CultureInfo.InvariantCulture));
+                explorerPresenter.MainPresenter.ShowProgressMessage($"{jobName} running ({jobRunner.Status})");
+                explorerPresenter.MainPresenter.ShowProgress(progress);
             }
             //else if (jobRunner != null)
             //    explorerPresenter.MainPresenter.ShowProgress(Convert.ToInt32(jobRunner.Progress * 100, CultureInfo.InvariantCulture));

@@ -90,6 +90,9 @@
         /// <returns>True if child can be added.</returns>
         public static bool IsChildAllowable(object parent, Type childType)
         {
+            if (childType.IsInterface || childType.IsAbstract)
+                return false;
+
             if (childType == typeof(Simulations))
                 return false;
 
@@ -126,7 +129,7 @@
             var allowableModels = new SortedSet<ModelDescription>();
 
             // Add in all types that implement the IModel interface.
-            foreach (Type t in ReflectionUtilities.GetTypesThatHaveInterface(typeof(IModel)))
+            foreach (Type t in ReflectionUtilities.GetTypesThatHaveInterface(typeof(IModel).Assembly, typeof(IModel)))
                 allowableModels.Add(new ModelDescription(t));
 
             // Add in resources.

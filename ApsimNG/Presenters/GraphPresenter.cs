@@ -14,7 +14,8 @@
     using Models;
     using Models.Storage;
     using Views;
-    
+    using APSIM.Shared.Graphing;
+
     /// <summary>
     /// A presenter for a graph.
     /// </summary>
@@ -51,6 +52,7 @@
         /// <param name="model">The model.</param>
         /// <param name="view">The view.</param>
         /// <param name="explorerPresenter">The explorer presenter.</param>
+        /// <param name="cache">Cached definitions to be used.</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter, List<SeriesDefinition> cache)
         {
             this.graph = model as Graph;
@@ -61,9 +63,9 @@
             graphView.OnLegendClick += OnLegendClick;
             graphView.OnCaptionClick += OnCaptionClick;
             graphView.OnHoverOverPoint += OnHoverOverPoint;
+            graphView.OnAnnotationClick += OnAnnotationClick;
             explorerPresenter.CommandHistory.ModelChanged += OnGraphModelChanged;
             this.graphView.AddContextAction("Copy graph to clipboard", CopyGraphToClipboard);
-            this.graphView.AddContextOption("Include in auto-documentation?", IncludeInDocumentationClicked, graph.IncludeInDocumentation);
 
             if (cache == null)
                 DrawGraph();
@@ -87,6 +89,7 @@
             graphView.OnLegendClick -= OnLegendClick;
             graphView.OnCaptionClick -= OnCaptionClick;
             graphView.OnHoverOverPoint -= OnHoverOverPoint;
+            graphView.OnAnnotationClick -= OnAnnotationClick;
         }
 
         public void DrawGraph()
@@ -98,7 +101,9 @@
             // Get a list of series definitions.
             try
             {
-                SeriesDefinitions = graph.GetDefinitionsToGraph(storage?.Reader, SimulationFilter).ToArray();
+                var page = new GraphPage();
+                page.Graphs.Add(graph);
+                SeriesDefinitions = page.GetAllSeriesDefinitions(graph, storage?.Reader, SimulationFilter)[0].SeriesDefinitions;
             }
             catch (SQLiteException e)
             {
@@ -129,7 +134,7 @@
                 graphView.UpdateView();
 
                 // Format the axes.
-                foreach (Models.Axis a in graph.Axis)
+                foreach (APSIM.Shared.Graphing.Axis a in graph.Axis)
                     FormatAxis(a);
 
                 // Get a list of series annotations.
@@ -317,10 +322,12 @@
         /// <param name="annotations">The list of annotations</param>
         private void DrawOnView(IEnumerable<IAnnotation> annotations)
         {
-            double minimumX = graphView.AxisMinimum(Axis.AxisType.Bottom) * 1.01;
-            double maximumX = graphView.AxisMaximum(Axis.AxisType.Bottom);
-            double minimumY = graphView.AxisMinimum(Axis.AxisType.Left);
-            double maximumY = graphView.AxisMaximum(Axis.AxisType.Left);
+            var range = graphView.AxisMaximum(AxisPosition.Bottom) - graphView.AxisMinimum(AxisPosition.Bottom);
+
+            double minimumX = graphView.AxisMinimum(AxisPosition.Bottom) + range * 0.03;
+            double maximumX = graphView.AxisMaximum(AxisPosition.Bottom);
+            double minimumY = graphView.AxisMinimum(AxisPosition.Left);
+            double maximumY = graphView.AxisMaximum(AxisPosition.Left);
             double lowestAxisScale = Math.Min(minimumX, minimumY);
             double largestAxisScale = Math.Max(maximumX, maximumY);
             for (int i = 0; i < annotations.Count(); i++)
@@ -328,33 +335,55 @@
                 IAnnotation annotation = annotations.ElementAt(i);
                 if (annotation is TextAnnotation textAnnotation)
                 {
-                    if (textAnnotation.x is double && ((double)textAnnotation.x) == double.MinValue)
-                    {
-                        double interval = (largestAxisScale - lowestAxisScale) / 8; // fit 10 annotations on graph.
+                    double interval = (maximumY - lowestAxisScale) / 15; // fit 8 annotations on graph.
 
-                        double yPosition = largestAxisScale - (i * interval);
-                        graphView.DrawText(
-                                            textAnnotation.text, 
-                                            minimumX, 
-                                            yPosition,
-                                            textAnnotation.leftAlign, 
-                                            textAnnotation.textRotation,
-                                            Axis.AxisType.Bottom, 
-                                            Axis.AxisType.Left,
-                                            Utility.Configuration.Settings.DarkTheme ? Color.White : textAnnotation.colour);
+                    object x, y;
+                    bool leftAlign = textAnnotation.leftAlign;
+                    bool topAlign = textAnnotation.topAlign;
+                    if (textAnnotation.Name != null && textAnnotation.Name.StartsWith("Regression"))
+                    {
+                        if (graph.AnnotationLocation == AnnotationPosition.TopLeft)
+                        {
+                            x = minimumX;
+                            y = maximumY - i * interval;
+                        }
+                        else if (graph.AnnotationLocation == AnnotationPosition.TopRight)
+                        {
+                            x = minimumX + range * 0.95;
+                            y = maximumY - i * interval;
+                            leftAlign = false;
+                        }
+                        else if (graph.AnnotationLocation == AnnotationPosition.BottomRight)
+                        {
+                            x = minimumX + range * 0.95;
+                            y = minimumY + i * interval;
+                            leftAlign = false;
+                            topAlign = false;
+                        }
+                        else
+                        {
+                            x = minimumX;
+                            y = minimumY + i * interval;
+                            topAlign = false;
+                        }
+
+                        //y = largestAxisScale - (i * interval);
                     }
                     else
                     {
-                        graphView.DrawText(
-                                            textAnnotation.text, 
-                                            textAnnotation.x, 
-                                            textAnnotation.y,
-                                            textAnnotation.leftAlign, 
-                                            textAnnotation.textRotation,
-                                            Axis.AxisType.Bottom, 
-                                            Axis.AxisType.Left,
-                                            Utility.Configuration.Settings.DarkTheme ? Color.White : textAnnotation.colour);
+                        x = textAnnotation.x;
+                        y = textAnnotation.y;
                     }
+
+                    graphView.DrawText( textAnnotation.text,
+                                        x,
+                                        y,
+                                        leftAlign,
+                                        topAlign,
+                                        textAnnotation.textRotation,
+                                        AxisPosition.Bottom,
+                                        AxisPosition.Left,
+                                        Utility.Configuration.Settings.DarkTheme ? Color.White : textAnnotation.colour);
                 }
                 else if (annotation is LineAnnotation lineAnnotation)
                 {
@@ -374,9 +403,13 @@
             }
         }
 
+        private void DefaultPositioning(double minimumX, double lowestAxisScale, double largestAxisScale, int i, TextAnnotation textAnnotation)
+        {
+                   }
+
         /// <summary>Format the specified axis.</summary>
         /// <param name="axis">The axis to format</param>
-        private void FormatAxis(Models.Axis axis)
+        private void FormatAxis(APSIM.Shared.Graphing.Axis axis)
         {
             string title = axis.Title;
             if (axis.Title == null || axis.Title == string.Empty)
@@ -387,11 +420,11 @@
                 HashSet<string> variableNames = new HashSet<string>();
                 foreach (SeriesDefinition definition in SeriesDefinitions)
                 {
-                    if (definition.X != null && definition.XAxis == axis.Type && definition.XFieldName != null)
+                    if (definition.X != null && definition.XAxis == axis.Position && definition.XFieldName != null)
                     {
                         IEnumerator enumerator = definition.X.GetEnumerator();
-                        if (enumerator.MoveNext())
-                            axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
+                        // if (enumerator.MoveNext())
+                        //     axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
                         string xName = definition.XFieldName;
                         if (!variableNames.Contains(xName))
                         {
@@ -403,11 +436,11 @@
                         }
                     }
 
-                    if (definition.Y != null && definition.YAxis == axis.Type && definition.YFieldName != null)
+                    if (definition.Y != null && definition.YAxis == axis.Position && definition.YFieldName != null)
                     {
                         IEnumerator enumerator = definition.Y.GetEnumerator();
-                        if (enumerator.MoveNext())
-                            axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
+                        // if (enumerator.MoveNext())
+                        //     axis.DateTimeAxis = enumerator.Current.GetType() == typeof(DateTime);
                         string yName = definition.YFieldName;
                         if (!variableNames.Contains(yName))
                         {
@@ -424,7 +457,7 @@
                 title = StringUtilities.BuildString(titles.ToArray(), Environment.NewLine);
             }
 
-            graphView.FormatAxis(axis.Type, title, axis.Inverted, axis.Minimum, axis.Maximum, axis.Interval, axis.CrossesAtZero);
+            graphView.FormatAxis(axis.Position, title, axis.Inverted, axis.Minimum ?? double.NaN, axis.Maximum ?? double.NaN, axis.Interval ?? double.NaN, axis.CrossesAtZero);
         }
         
         /// <summary>The graph model has changed.</summary>
@@ -437,7 +470,7 @@
 
         /// <summary>User has clicked an axis.</summary>
         /// <param name="axisType">Type of the axis.</param>
-        private void OnAxisClick(Axis.AxisType axisType)
+        private void OnAxisClick(AxisPosition axisType)
         {
             if (CurrentPresenter != null)
             {
@@ -447,7 +480,7 @@
             AxisPresenter axisPresenter = new AxisPresenter();
             CurrentPresenter = axisPresenter;
             AxisView a = new AxisView(graphView as GraphView);
-            string dimension = (axisType == Axis.AxisType.Left || axisType == Axis.AxisType.Right) ? "Y" : "X";
+            string dimension = (axisType == AxisPosition.Left || axisType == AxisPosition.Right) ? "Y" : "X";
             graphView.ShowEditorPanel(a.MainWidget, dimension + "-Axis options");
             axisPresenter.Attach(GetAxis(axisType), a, explorerPresenter);
         }
@@ -472,20 +505,16 @@
         }
 
         /// <summary>Get an axis</summary>
-        /// <param name="axisType">Type of the axis.</param>
+        /// <param name="position">Type of the axis.</param>
         /// <returns>Return the axis</returns>
         /// <exception cref="System.Exception">Cannot find axis with type:  + axisType.ToString()</exception>
-        private object GetAxis(Axis.AxisType axisType)
+        private object GetAxis(AxisPosition position)
         {
             foreach (Axis a in graph.Axis)
-            {
-                if (a.Type.ToString() == axisType.ToString())
-                {
+                if (a.Position == position)
                     return a;
-                }
-            }
 
-            throw new Exception("Cannot find axis with type: " + axisType.ToString());
+            throw new Exception("Cannot find axis with type: " + position.ToString());
         }
 
         /// <summary>The axis has changed</summary>
@@ -510,6 +539,25 @@
 
             LegendView view = new LegendView(graphView as GraphView);
             graphView.ShowEditorPanel(view.MainWidget, "Legend options");
+            presenter.Attach(graph, view, explorerPresenter);
+        }
+
+        /// <summary>
+        /// User has clicked on graph annotation.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void OnAnnotationClick(object sender, EventArgs e)
+        {
+            if (CurrentPresenter != null)
+                CurrentPresenter.Detach();
+
+            AnnotationPresenter presenter = new AnnotationPresenter();
+            CurrentPresenter = presenter;
+
+            //LegendView view = new LegendView(graphView as GraphView);
+            var view = new ViewBase(graphView as ViewBase, "ApsimNG.Resources.Glade.AnnotationView.glade");
+            graphView.ShowEditorPanel(view.MainWidget, "Stats / Equation options");
             presenter.Attach(graph, view, explorerPresenter);
         }
 
@@ -540,15 +588,6 @@
         private void CopyGraphToClipboard(object sender, EventArgs e)
         {
             graphView.ExportToClipboard();
-        }
-
-        /// <summary>User has clicked "Include In Documentation" menu item.</summary>
-        /// <param name="sender">Sender of event</param>
-        /// <param name="e">Event arguments</param>
-        private void IncludeInDocumentationClicked(object sender, EventArgs e)
-        {
-            graph.IncludeInDocumentation = !graph.IncludeInDocumentation; // toggle
-            this.graphView.AddContextOption("Include in auto-documentation?", IncludeInDocumentationClicked, graph.IncludeInDocumentation);
         }
 
         /// <summary>

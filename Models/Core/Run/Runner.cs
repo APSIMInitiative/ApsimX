@@ -21,6 +21,11 @@
         /// <summary>The job runner being used.</summary>
         private JobRunner jobRunner = null;
 
+        /// <summary>
+        /// Use the pre-set job runner?
+        /// </summary>
+        private bool useFixedRunner;
+
         /// <summary>The stop watch we can use to time all runs.</summary>
         private DateTime startTime;
 
@@ -40,11 +45,14 @@
             SingleThreaded,
 
             /// <summary>Run using multiple cores - each job asynchronously.</summary>
-            MultiThreaded,
-
-            /// <summary>Run using multiple, separate processes - each job asynchronously.</summary>
-            MultiProcess
+            MultiThreaded
         }
+
+        /// <summary>
+        /// If provided, this will be invoked whenever an error occurs.
+        /// </summary>
+        /// <value></value>
+        public Action<Exception> ErrorHandler { get; set; }
 
         /// <summary>
         /// Gets the aggregate progress of all jobs as a real number in range [0, 1].
@@ -203,6 +211,19 @@
             }
         }
 
+        /// <summary>
+        /// Use the given job runner to run jobs.
+        /// </summary>
+        /// <param name="runner">The job runner to be used.</param>
+        public void Use(JobRunner runner)
+        {
+            jobRunner = runner;
+            useFixedRunner = true;
+            jobRunner.JobCompleted += OnJobCompleted;
+            jobRunner.AllCompleted += OnAllCompleted;
+            jobs.ForEach(j => jobRunner.Add(j));
+        }
+
         /// <summary>Invoked every time a job has completed.</summary>
         public event EventHandler<JobCompleteArguments> SimulationCompleted;
 
@@ -238,29 +259,30 @@
         public List<Exception> Run()
         {
             startTime = DateTime.Now;
+            ExceptionsThrown = new List<Exception>();
 
             if (jobs.Count > 0)
             {
-                jobRunner = null;
-
-                switch (runType)
+                if (!useFixedRunner)
                 {
-                    case RunTypeEnum.SingleThreaded:
-                        jobRunner = new JobRunner(numProcessors:1);
-                        break;
-                    case RunTypeEnum.MultiThreaded:
-                        jobRunner = new JobRunner(numberOfProcessors);
-                        break;
-                    case RunTypeEnum.MultiProcess:
-                        jobRunner = new JobRunnerMultiProcess(numberOfProcessors);
-                        break;
+                    jobRunner = null;
+
+                    switch (runType)
+                    {
+                        case RunTypeEnum.SingleThreaded:
+                            jobRunner = new JobRunner(numProcessors:1);
+                            break;
+                        case RunTypeEnum.MultiThreaded:
+                            jobRunner = new JobRunner(numberOfProcessors);
+                            break;
+                    }
+
+                    jobRunner.JobCompleted += OnJobCompleted;
+                    jobRunner.AllCompleted += OnAllCompleted;
+
+                    // Run all simulations.
+                    jobs.ForEach(j => jobRunner.Add(j));
                 }
-
-                jobRunner.JobCompleted += OnJobCompleted;
-                jobRunner.AllCompleted += OnAllCompleted;
-
-                // Run all simulations.
-                jobs.ForEach(j => jobRunner.Add(j));
                 jobRunner.Run(wait);
             }
             else
@@ -278,7 +300,7 @@
             {
                 jobRunner.AllCompleted -= OnAllCompleted;
                 jobRunner?.Stop();
-                jobRunner = null;
+                // jobRunner = null;
                 ElapsedTime = DateTime.Now - startTime;
             }
         }
@@ -336,6 +358,8 @@
                 if (ExceptionsThrown == null)
                     ExceptionsThrown = new List<Exception>();
                 ExceptionsThrown.Add(err);
+                if (ErrorHandler != null)
+                    ErrorHandler(err);
             }
         }
 
@@ -347,6 +371,18 @@
 
             /// <summary>Amount of time all jobs took to run.</summary>
             public TimeSpan ElapsedTime { get; set; }
+        }
+
+        /// <summary>
+        /// Dispose (close) the Datastore. Use with caution!
+        /// This is intended to be used when running from the Models.exe command line
+        /// When we're running in the GUI, we normally want to keep the Datastore open when the run completes.
+        /// </summary>
+        public void DisposeStorage()
+        {
+            foreach (var job in jobs)
+                if (job is SimulationGroup)
+                    (job as SimulationGroup).DisposeStorage();
         }
     }
 }

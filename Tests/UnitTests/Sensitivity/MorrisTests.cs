@@ -26,15 +26,7 @@ namespace UnitTests.Sensitivity
         public void EnsureParameterRenameWorks()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Sensitivity.MorrisTestsBroken.apsimx");
-            List<Exception> exceptions;
-            Simulations simulations = FileFormat.ReadFromString<Simulations>(json, out exceptions);
-            if (exceptions != null && exceptions.Count > 0)
-            {
-                string message = string.Empty;
-                foreach (Exception error in exceptions)
-                    message += error.ToString() + Environment.NewLine;
-                throw new Exception(message);
-            }
+            Simulations simulations = FileFormat.ReadFromString<Simulations>(json, e => throw e, false);
         }
     }
 }

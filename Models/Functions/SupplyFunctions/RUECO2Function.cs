@@ -1,16 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Interfaces;
 
 namespace Models.Functions.SupplyFunctions
 {
     /// <summary>
-    /// This model calculates the CO<sub>2</sub> impact on RUE using the approach of [Reyenga1999].
+    /// This model calculates the CO~2~ impact on RUE using the approach of [Reyenga1999].
     /// 
     /// For C3 plants,
     /// 
-    ///     _F<sub>CO2</sub> = (CO<sub>2</sub> - CP) x (350 + 2 x CP)/(CO<sub>2</sub> + 2 x CP) x (350 - CP)_
+    ///     _F~CO2~ = (CO~2~ - CP) x (350 + 2 x CP)/(CO~2~ + 2 x CP) x (350 - CP)_
     ///     
     /// where CP, is the compensation point calculated from daily average temperature (T) as
     /// 
@@ -18,15 +19,14 @@ namespace Models.Functions.SupplyFunctions
     /// 
     /// For C4 plants,
     /// 
-    ///     _F<sub>CO<sub>2</sub></sub> = 0.000143 * CO<sub>2</sub> + 0.95_
+    ///     _F~CO2~ = 0.000143 * CO~2~ + 0.95_
     /// 
     /// </summary>
     [Serializable]
-    [Description("This model calculates CO2 Impact on RUE using the approach of <br>Reyenga, Howden, Meinke, Mckeon (1999) <br>Modelling global change impact on wheat cropping in south-east Queensland, Australia. <br>Enivironmental Modelling && Software 14:297-306")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IFunction))]
-    public class RUECO2Function : Model, IFunction, ICustomDocumentation
+    public class RUECO2Function : Model, IFunction
     {
         /// <summary>The photosynthetic pathway</summary>
         [Description("PhotosyntheticPathway")]
@@ -83,28 +83,15 @@ namespace Models.Functions.SupplyFunctions
                 throw new Exception("Unknown photosynthetic pathway in RUECO2Function");
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
 
-                // get description of this class
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                // write memos
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
         }
     }
 }

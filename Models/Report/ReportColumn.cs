@@ -7,6 +7,7 @@
     using System;
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Linq;
     using System.Text.RegularExpressions;
 
@@ -112,6 +113,7 @@
 
         /// <summary>Variable containing a reference to the aggregation end date.</summary>
         private IVariable toVariable = null;
+        private string collectionEventName;
 
         /// <summary>The variable groups containing the variable values.</summary>
         private readonly List<VariableGroup> groups = new List<VariableGroup>();
@@ -304,7 +306,7 @@
             // Try and get units.
             try
             {
-                IVariable var = locator.GetObject(variableName);
+                IVariable var = locator.GetObjectProperties(variableName);
                 if (var != null)
                 {
                     Units = var.UnitsLabel;
@@ -322,21 +324,22 @@
             {
                 // temporarly aggregated variable
                 // subscribe to the capture event
-                var collectionEventName = "[Clock].DoReportCalculations";
+                collectionEventName = "[Clock].DoReportCalculations";
                 if (!string.IsNullOrEmpty(on))
                     collectionEventName = on;
                 events.Subscribe(collectionEventName, OnDoReportCalculations);
 
                 // subscribe to the start of day event so that we can determine if we're in the capture window.
                 events.Subscribe("[Clock].DoDailyInitialisation", OnStartOfDay);
-
+                events.Subscribe("[Clock].EndOfSimulation", OnEndOfSimulation);
                 fromVariable = (clock as IModel).FindByPath(fromString);
                 toVariable = (clock as IModel).FindByPath(toString);
                 if (fromVariable != null)
                 {
                     // A from variable name  was specified.
                 }
-                else if (DateTime.TryParse(fromString, out DateTime date))
+                else if (DateTime.TryParseExact(fromString, "d-MMM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date)
+                      || DateTime.TryParse(fromString, out date))
                 {
                     // The from date is a static, hardcoded date string. ie 1-Jan, 1/1/2012, etc.
                     fromVariable = new VariableObject(date);
@@ -355,7 +358,8 @@
                 {
                     // A to variable name  was specified.
                 }
-                else if (DateTime.TryParse(toString, out DateTime date))
+                else if (DateTime.TryParseExact(toString, "d-MMM", CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime date)
+                      || DateTime.TryParse(toString, out date))
                 {
                     // The from date is a static, hardcoded date string. ie 1-Jan, 1/1/2012, etc.
                     toVariable = new VariableObject(date);
@@ -369,6 +373,23 @@
                     events.Subscribe(toString, OnToEvent);
                 }
             }
+        }
+
+        /// <summary>
+        /// Disconnect event handlers when the simulation finishes.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event data.</param>
+        private void OnEndOfSimulation(object sender, EventArgs e)
+        {
+            if (!string.IsNullOrEmpty(collectionEventName))
+                events.Unsubscribe(collectionEventName, OnDoReportCalculations);
+            if (!string.IsNullOrEmpty(toString) && toVariable == null)
+                events.Unsubscribe(toString, OnToEvent);
+            if (!string.IsNullOrEmpty(fromString) && fromVariable == null)
+                events.Unsubscribe(fromString, OnFromEvent);
+            events.Unsubscribe("[Clock].DoDailyInitialisation", OnStartOfDay);
+            events.Unsubscribe("[Clock].EndOfSimulation", OnEndOfSimulation);
         }
 
         /// <summary>

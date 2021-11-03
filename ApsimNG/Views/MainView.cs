@@ -3,7 +3,7 @@
     using APSIM.Shared.Utilities;
     using Gtk;
     using Models.Core;
-    using MonoMac.AppKit;
+
     using System;
     using System.Drawing;
     using System.IO;
@@ -11,6 +11,9 @@
     using System.Linq;
     using Interfaces;
     using EventArguments;
+    using global::UserInterface.Extensions;
+    using System.Text;
+    using Utility;
 
     /// <summary>An enum type for the AskQuestion method.</summary>
     public enum QuestionResponseEnum { Yes, No, Cancel }
@@ -62,6 +65,15 @@
         private ProgressBar progressBar = null;
 
         /// <summary>
+        /// Label adjacent to progress bar. Used to display
+        /// progress status updates. The progress bar does
+        /// support displaying text by itself, but vertical
+        /// space here is limited so we display it in this
+        /// label instead.
+        /// </summary>
+        private Label lblStatus = null;
+
+        /// <summary>
         /// Status window used to display error messages and other information.
         /// </summary>
         private TextView statusWindow = null;
@@ -99,22 +111,14 @@
         /// <summary>
         /// Gtk widget which holds the status panel.
         /// </summary>
-        private HBox hbox1 = null;
-
-        /// <summary>
-        /// Dark theme icon.
-        /// </summary>
-        private static readonly Gtk.Image darkThemeIcon = new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Moon.png");
-
-        /// <summary>
-        /// Default theme Icon.
-        /// </summary>
-        private static readonly Gtk.Image defaultThemeIcon = new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Sun.png");
+        private Widget hbox1 = null;
 
         /// <summary>
         /// Dialog which allows the user to change fonts.
         /// </summary>
-        private FontSelectionDialog fontDialog;
+
+        private FontChooserDialog fontDialog;
+
 
         /// <summary>
         /// Constructor
@@ -126,6 +130,7 @@
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MainView.glade");
             window1 = (Window)builder.GetObject("window1");
             progressBar = (ProgressBar)builder.GetObject("progressBar");
+            lblStatus = (Label)builder.GetObject("lblStatus");
             statusWindow = (TextView)builder.GetObject("StatusWindow");
             stopButton = (Button)builder.GetObject("stopButton");
             notebook1 = (Notebook)builder.GetObject("notebook1");
@@ -133,7 +138,7 @@
             vbox1 = (VBox)builder.GetObject("vbox1");
             vbox2 = (VBox)builder.GetObject("vbox2");
             hpaned1 = (HPaned)builder.GetObject("hpaned1");
-            hbox1 = (HBox)builder.GetObject("hbox1");
+            hbox1 = (Widget)builder.GetObject("vbox3");
             mainWidget = window1;
             window1.Icon = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
             listButtonView1 = new ListButtonView(this);
@@ -156,6 +161,12 @@
             notebook1.GetTabLabel(notebook1.Children[0]).Name = "selected-tab";
 
             hbox1.HeightRequest = 20;
+
+            // Normally, one would specify the style class in the UI (.glade) file.
+            // However, doing so breaks gtk2-compatibility, so for now, we will just
+            // set the style class in code.
+            progressBar.StyleContext.AddClass("fat-progress-bar");
+
 
             TextTag tag = new TextTag("error");
             // Make errors orange-ish in dark mode.
@@ -182,7 +193,9 @@
 
             // If font is null, or font family is null, or font size is 0, fallback
             // to the default font (on windows only).
-            Pango.FontDescription f = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
+            Pango.FontDescription f = null;
+            if (!string.IsNullOrEmpty(Utility.Configuration.Settings.FontName))
+                f = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
             if (ProcessUtilities.CurrentOS.IsWindows && (string.IsNullOrEmpty(Utility.Configuration.Settings.FontName) ||
                                                          f.Family == null ||
                                                          f.Size == 0))
@@ -194,8 +207,15 @@
             // Can't set font until widgets are initialised.
             if (!string.IsNullOrEmpty(Utility.Configuration.Settings.FontName))
             {
-                Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
-                ChangeFont(font);
+                try
+                {
+                    Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
+                    ChangeFont(font);
+                }
+                catch (Exception err)
+                {
+                    ShowError(err);
+                }
             }
 
             //window1.ShowAll();
@@ -207,7 +227,28 @@
 
             if (!ProcessUtilities.CurrentOS.IsLinux)
                 RefreshTheme();
+
+
+            LoadStylesheets();
+
         }
+
+
+        private void LoadStylesheets()
+        {
+            LoadStylesheet("global");
+            LoadStylesheet(Configuration.Settings.DarkTheme ? "dark" : "light");
+        }
+
+        private void LoadStylesheet(string cssName)
+        {
+            string css = ReflectionUtilities.GetResourceAsString($"ApsimNG.Resources.Style.{cssName}.css");
+            CssProvider provider = new CssProvider();
+            if (!provider.LoadFromData(css))
+                throw new Exception($"Unable to parse {cssName}.css");
+            StyleContext.AddProviderForScreen(window1.Screen, provider, StyleProviderPriority.Application);
+        }
+
 
         /// <summary>
         /// Invoked when the user changes tabs.
@@ -216,18 +257,18 @@
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event arguments.</param>
-        [GLib.ConnectBefore]
         private void OnChangeTab(object sender, SwitchPageArgs args)
         {
             try
             {
-                Notebook control = sender as Notebook;
-
-                for (int i = 0; i < control.Children.Length; i++)
+                if (sender is Notebook control)
                 {
-                    // The top-level widget in the tab label is always an event box.
-                    Widget tabLabel = control.GetTabLabel(control.Children[i]);
-                    tabLabel.Name = args.PageNum == i ? "selected-tab" : "unselected-tab";
+                    for (int i = 0; i < control.Children.Length; i++)
+                    {
+                        // The top-level widget in the tab label is always an event box.
+                        Widget tabLabel = control.GetTabLabel(control.Children[i]);
+                        tabLabel.Name = args.PageNum == i ? "selected-tab" : "unselected-tab";
+                    }
                 }
             }
             catch (Exception err)
@@ -293,7 +334,7 @@
         {
             get
             {
-                return MainWidget == null ? null : MainWidget.Toplevel.GdkWindow;
+                return MainWidget == null ? null : MainWidget.Toplevel.Window;
             }
         }
 
@@ -322,14 +363,14 @@
                 tabLabel.Text = text;
             HBox headerBox = new HBox();
             Button closeBtn = new Button();
-            Gtk.Image closeImg = new Gtk.Image(new Gdk.Pixbuf(null, "ApsimNG.Resources.Close.png", 12, 12));
+            Gtk.Image closeImg = new Gtk.Image(new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Close.svg", 12, 12));
 
             closeBtn.Image = closeImg;
             closeBtn.Relief = ReliefStyle.None;
             closeBtn.Clicked += OnCloseBtnClick;
 
-            headerBox.PackStart(tabLabel);
-            headerBox.PackEnd(closeBtn);
+            headerBox.PackStart(tabLabel, true, true, 0);
+            headerBox.PackEnd(closeBtn, true, true, 0);
 
             // Wrap the whole thing inside an event box, so we can respond to a right-button or center-button click
             EventBox eventbox = new EventBox();
@@ -357,7 +398,7 @@
         /// </summary>
         private void InitMac()
         {
-            NSApplication.Init();
+
         }
 
         /// <summary>
@@ -391,8 +432,9 @@
         }
 
         /// <summary>Change the text of a tab.</summary>
-        /// <param name="currentTabName">Current tab text.</param>
+        /// <param name="ownerView">An <see cref="ExplorerView" /> instance whose tab text should be changed.</param>
         /// <param name="newTabName">New text of the tab.</param>
+        /// <param name="tooltip">Optional tooltip text on the tab to be shown on mouseover.</param>
         public void ChangeTabText(object ownerView, string newTabName, string tooltip)
         {
             if (ownerView is ExplorerView)
@@ -490,7 +532,7 @@
             notebook2.SwitchPage -= OnChangeTab;
             stopButton.Clicked -= OnStopClicked;
             window1.DeleteEvent -= OnClosing;
-            mainWidget.Destroy();
+            mainWidget.Dispose();
 
             // Let all the destruction stuff be carried out, just in 
             // case we've got any unmanaged resources that should be 
@@ -516,7 +558,10 @@
         /// with click events, for example.
         /// </summary>
         /// <param name="o">The widget that we are seaching for</param>
+        /// <param name="notebook">The notebook widget to which the object belongs.</param>
+        /// <param name="tabName">This will be set to the name of the tab, if found.</param>
         /// <returns>Page number of the tab, or -1 if not found</returns>
+        /// <remarks>Why is notebook passed by reference? Need to check if this is necessary and remove if not.</remarks>
         private int GetTabOfWidget(object o, ref Notebook notebook, ref string tabName) // Is there a better way?
         {
             tabName = null;
@@ -629,8 +674,8 @@
         {
             get
             {
-                if (window1.GdkWindow != null)
-                    return (window1.GdkWindow.State & Gdk.WindowState.Maximized) == Gdk.WindowState.Maximized;
+                if (window1.Window != null)
+                    return (window1.Window.State & Gdk.WindowState.Maximized) == Gdk.WindowState.Maximized;
                 else
                     return false;
             }
@@ -721,18 +766,37 @@
             MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Question, ButtonsType.YesNo, message);
             md.Title = "Save changes";
             int result = md.Run();
-            md.Destroy();
+            md.Dispose();
             switch ((ResponseType)result)
             {
-                case ResponseType.Yes: return QuestionResponseEnum.Yes;
-                case ResponseType.No: return QuestionResponseEnum.No;
-                default: return QuestionResponseEnum.Cancel;
+                case ResponseType.Yes:
+                    return QuestionResponseEnum.Yes;
+                case ResponseType.No:
+                    return QuestionResponseEnum.No;
+                default:
+                    return QuestionResponseEnum.Cancel;
             }
+        }
+
+        /// <summary>
+        /// Clear the status panel.
+        /// </summary>
+        public void ClearStatusPanel()
+        {
+            Application.Invoke(delegate
+            {
+                numberOfButtons = 0;
+                statusWindow.Buffer.Clear();
+            });
         }
 
         /// <summary>Add a status message to the explorer window</summary>
         /// <param name="message">The message.</param>
         /// <param name="errorLevel">The error level.</param>
+        /// <param name="overwrite">Should any previous messages be overwritten?</param>
+        /// <param name="addSeparator">Add a separator beneath the message?</param>
+        /// <param name="withButton">Add a 'more info' button?</param>
+        /// <remarks>This is kind of a cludge. This method could probably be extracted to its own class.</remarks>
         public void ShowMessage(string message, Simulation.ErrorLevel errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true)
         {
             Application.Invoke(delegate
@@ -779,8 +843,6 @@
                 }
 
                 //this.toolTip1.SetToolTip(this.StatusWindow, message);
-                progressBar.Visible = false;
-                stopButton.Visible = false;
             });
         }
 
@@ -798,24 +860,9 @@
         /// </summary>
         public void RefreshTheme()
         {
-            if (Utility.Configuration.Settings.DarkTheme)
-            {
-                string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".gtkrc");
-                using (Stream rcStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.dark.gtkrc"))
-                {
-                    using (StreamReader darkTheme = new StreamReader(rcStream))
-                        File.WriteAllText(tempFile, darkTheme.ReadToEnd());
-                }
 
-                Rc.Parse(tempFile);
-                // Remove black colour from colour pallete.
-                Color black = Color.FromArgb(0, 0, 0);
-                ColourUtilities.Colours = ColourUtilities.Colours.Where(c => c != black).ToArray();
-            }
-            else if (ProcessUtilities.CurrentOS.IsWindows)
-                // Apsim's default gtk theme uses the 'wimp' rendering engine,
-                // which doesn't play nicely on non-windows systems.
-                Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ".gtkrc"));
+            // tbi
+
         }
 
         private void AddButtonToStatusWindow(string buttonName, int buttonID)
@@ -847,34 +894,14 @@
         }
 
         /// <summary>
-        /// Invoked when theme is toggled.
-        /// Toggles the icon displayed on the "toggle theme" button.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        public void ToggleTheme(object sender, EventArgs args)
-        {
-            try
-            {
-                if (sender is ToolButton)
-                {
-                    ToolButton button = sender as ToolButton;
-                    button.IconWidget = Utility.Configuration.Settings.DarkTheme ? defaultThemeIcon : darkThemeIcon;
-                    button.IconWidget.ShowAll();
-                }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
         /// Shows the font selection dialog.
         /// </summary>
         public void ShowFontChooser()
         {
-            fontDialog = new FontSelectionDialog("Select a font");
+            string title = "Select a font";
+
+            fontDialog = new FontChooserDialog(title, window1);
+
 
             // Center the dialog on the main window.
             fontDialog.TransientFor = MainWidget as Window;
@@ -882,13 +909,12 @@
 
             // Select the current font.
             if (Utility.Configuration.Settings.FontName != null)
-                fontDialog.SetFontName(Utility.Configuration.Settings.FontName.ToString());
+                fontDialog.Font = Utility.Configuration.Settings.FontName.ToString();
 
-            // Event handlers.
-            fontDialog.OkButton.Clicked += OnChangeFont;
-            fontDialog.OkButton.Clicked += OnDestroyFontDialog;
-            fontDialog.ApplyButton.Clicked += OnChangeFont;
-            fontDialog.CancelButton.Clicked += OnDestroyFontDialog;
+
+            //fontDialog.FontActivated += OnChangeFont;
+            fontDialog.Response += OnChangeFont;
+
 
             // Show the dialog.
             fontDialog.ShowAll();
@@ -901,13 +927,18 @@
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event arguments.</param>
-        private void OnChangeFont(object sender, EventArgs args)
+        private void OnChangeFont(object sender, ResponseArgs args)
         {
             try
             {
-                Pango.FontDescription newFont = Pango.FontDescription.FromString(fontDialog.FontName);
+
+                string fontName = fontDialog.Font;
+
+                Pango.FontDescription newFont = Pango.FontDescription.FromString(fontName);
                 Utility.Configuration.Settings.FontName = newFont.ToString();
                 ChangeFont(newFont);
+                if (args.ResponseId != ResponseType.Apply)
+                    fontDialog.Dispose();
             }
             catch (Exception err)
             {
@@ -916,35 +947,24 @@
         }
 
         /// <summary>
-        /// Invoked when the user clicks cancel in the font selection dialog.
-        /// Closes the dialog.
+        /// Show a message next to the progress bar.
         /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        private void OnDestroyFontDialog(object sender, EventArgs args)
+        /// <param name="message">Message to be displayed.</param>
+        public void ShowProgressMessage(string message)
         {
-            try
+            Application.Invoke(delegate
             {
-                if (fontDialog == null)
-                    return;
-                
-                fontDialog.OkButton.Clicked -= OnChangeFont;
-                fontDialog.OkButton.Clicked -= OnDestroyFontDialog;
-                fontDialog.ApplyButton.Clicked -= OnChangeFont;
-                fontDialog.CancelButton.Clicked -= OnDestroyFontDialog;
-                fontDialog.Destroy();
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
+                lblStatus.Visible = !string.IsNullOrEmpty(message);
+                lblStatus.Text = message ?? "";
+            });
         }
 
         /// <summary>
         /// Show progress bar with the specified percent.
         /// </summary>
-        /// <param name="percent"></param>
-        public void ShowProgress(int percent, bool showStopButton = true)
+        /// <param name="progress">Progress (0 - 1).</param>
+        /// <param name="showStopButton">Should a stop button be shown?</param>
+        public void ShowProgress(double progress, bool showStopButton = true)
         {
             // We need to use "Invoke" if the timer is running in a
             // different thread. That means we can use either
@@ -953,13 +973,24 @@
             Application.Invoke(delegate
             {
                 progressBar.Visible = true;
-                progressBar.Fraction = percent / 100.0;
+                progressBar.Fraction = progress;
                 if (showStopButton)
                     stopButton.Visible = true;
             });
         }
 
+        /// <summary>
+        /// Hide the progress bar.
+        /// </summary>
+        public void HideProgressBar()
+        {
+            progressBar.Visible = false;
+            stopButton.Visible = false;
+            lblStatus.Hide();
+        }
+
         /// <summary>User is trying to close the application - allow that to happen?</summary>
+        /// <param name="o">Sender object.</param>
         /// <param name="e">Event arguments.</param>
         protected void OnClosing(object o, DeleteEventArgs e)
         {
@@ -985,6 +1016,7 @@
         }
 
         /// <summary>User is trying to stop all currently executing simulations.</summary>
+        /// <param name="o">Sender object.</param>
         /// <param name="e">Event arguments.</param>
         protected void OnStopClicked(object o, EventArgs e)
         {
@@ -1010,7 +1042,7 @@
         private void ChangeFont(Pango.FontDescription font)
         {
             SetWidgetFont(mainWidget, font);
-            Settings.Default.SetStringProperty($"gtk-font-name", font.ToString(), "");
+
             //Rc.ParseString($"gtk-font-name = \"{font}\"");
         }
 
@@ -1021,17 +1053,21 @@
         /// <param name="newFont"></param>
         private void SetWidgetFont(Widget widget, Pango.FontDescription newFont)
         {
-            widget.ModifyFont(newFont);
-            if (widget is Container)
-            {
-                foreach (Widget child in (widget as Container).Children)
-                {
-                    SetWidgetFont(child, newFont);
-                }
-                if (widget is Notebook)
-                    for (int i = 0; i < (widget as Notebook).NPages; i++)
-                        SetWidgetFont((widget as Notebook).GetTabLabel((widget as Notebook).GetNthPage(i)), newFont);
-            }
+
+            int sizePt = newFont.SizeIsAbsolute ? newFont.Size : Convert.ToInt32(newFont.Size / Pango.Scale.PangoScale);
+            CssProvider provider = new CssProvider();
+            StringBuilder css = new StringBuilder();
+            css.AppendLine("* {");
+            css.AppendLine($"font-family: {newFont.Family};");
+            css.AppendLine($"font-size: {sizePt}pt;");
+            css.AppendLine($"font-style: {newFont.Style};");
+            css.AppendLine($"font-variant: {newFont.Variant};");
+            css.AppendLine($"font-weight: {newFont.Weight};");
+            css.AppendLine($"font-stretch: {newFont.Stretch};");
+            css.Append("}");
+            provider.LoadFromData(css.ToString());
+            window1.StyleContext.AddProvider(provider, StyleProviderPriority.Application);
+
         }
 
         /// <summary>
@@ -1056,7 +1092,11 @@
 
         /// <summary>Show a message in a dialog box</summary>
         /// <param name="message">The message.</param>
+        /// <param name="title">Title of the dialog.</param>
+        /// <param name="msgType">Message type (info, warning, error, ...).</param>
+        /// <param name="buttonType">Type of buttons to be shown in the dialog.</param>
         /// <param name="errorLevel">The error level.</param>
+        /// <param name="masterWindow">The main window.</param>
         public int ShowMsgDialog(string message, string title, Gtk.MessageType msgType, Gtk.ButtonsType buttonType, Window masterWindow)
         {
             MessageDialog md = new Gtk.MessageDialog(masterWindow, Gtk.DialogFlags.Modal,
@@ -1064,7 +1104,7 @@
             md.Title = title;
             md.WindowPosition = WindowPosition.Center;
             int result = md.Run();
-            md.Destroy();
+            md.Dispose();
             return result;
         }
 

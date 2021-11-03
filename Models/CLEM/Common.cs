@@ -122,6 +122,45 @@ namespace Models.CLEM
     }
 
     /// <summary>
+    /// Reasons link to herd change for use with manual mark for sale
+    /// </summary>
+    public enum MarkForSaleReason
+    {
+        /// <summary>
+        /// Reason not provided
+        /// </summary>
+        NotProvided = 0,
+        /// <summary>
+        /// Individual sold as marked for sale
+        /// </summary>
+        MarkedSale = 4,
+        /// <summary>
+        /// Individual reached sale weight or age
+        /// </summary>
+        AgeWeightSale = 12,
+        /// <summary>
+        /// Individual consumed by household
+        /// </summary>
+        Consumed = 15,
+        /// <summary>
+        /// Destocking sale
+        /// </summary>
+        DestockSale = 16,
+        /// <summary>
+        /// Dry breeder sold
+        /// </summary>
+        DryBreederSale = 6,
+        /// <summary>
+        /// Individual reached maximim age and sold
+        /// </summary>
+        MaxAgeSale = 10,
+        /// <summary>
+        /// Trade individual sold weight/age
+        /// </summary>
+        TradeSale = 5 
+    }
+
+    /// <summary>
     /// Mustering timing type
     /// </summary>
     public enum MusterTimingType
@@ -148,7 +187,11 @@ namespace Models.CLEM
         /// <summary>
         /// Value per kg live weight
         /// </summary>
-        perKg
+        perKg,
+        /// <summary>
+        /// Value per adult equivalent
+        /// </summary>
+        perAE,
     }
 
     /// <summary>
@@ -406,7 +449,11 @@ namespace Models.CLEM
         /// <summary>
         /// FileReader model
         /// </summary>
-        FileReader
+        FileReader,
+        /// <summary>
+        /// Filter model
+        /// </summary>
+        Filter
     }
 
     /// <summary>
@@ -544,4 +591,209 @@ namespace Models.CLEM
         Remove
     }
 
+    /// <summary>
+    /// Style of ruminant tag application
+    /// </summary>
+    public enum RuminantStockGroupStyle
+    {
+        /// <summary>
+        /// Animals to select
+        /// </summary>
+        Select = 0,
+        /// <summary>
+        /// Animals to destock
+        /// </summary>
+        Destock = 5,
+    }
+
+    /// <summary>
+    /// Style of inheriting ruminant attributes from parents
+    /// </summary>
+    public enum AttributeInheritanceStyle
+    {
+        /// <summary>
+        /// Not inheritated
+        /// </summary>
+        None = 0,
+        /// <summary>
+        /// From mother's value if present
+        /// </summary>
+        Maternal = 5,
+        /// <summary>
+        /// From father's value if present
+        /// </summary>
+        Paternal = 10,
+        /// <summary>
+        /// At least one parent has attribute or least of both parents
+        /// </summary>
+        LeastParentValue = 15,
+        /// <summary>
+        /// At least one parent has attribute or greatest of both parents
+        /// </summary>
+        GreatestParentValue = 20,
+        /// <summary>
+        /// Both parents must have attribute and the least value is used
+        /// </summary>
+        LeastBothParents = 25,
+        /// <summary>
+        /// Both parents must have attribute and the greatest value is used
+        /// </summary>
+        GreatestBothParents = 30,
+        /// <summary>
+        /// Mean of the attribute value of parents using zero for those without attribute
+        /// </summary>
+        MeanValueZeroAbsent = 35,
+        /// <summary>
+        /// Mean of the attribute value of parents ignoring those without attribute
+        /// </summary>
+        MeanValueIgnoreAbsent = 40,
+        /// <summary>
+        /// Rules for single genetic trait (punnett square)
+        /// </summary>
+        AsGeneticTrait = 45
+    }
+
+    /// <summary>
+    /// Type of ledger transaction (gain or loss)
+    /// </summary>
+    public enum TransactionType
+    {
+        /// <summary>
+        /// Loss of resource
+        /// </summary>
+        Loss = 0,
+        /// <summary>
+        /// Gain in resource
+        /// </summary>
+        Gain = 1
+    }
+
+    /// <summary>
+    /// Style transaction reporting in resource ledger (style and amount) or (gain and loss)
+    /// </summary>
+    public enum ReportTransactionStyle
+    {
+        /// <summary>
+        /// Reports transaction type and amount
+        /// </summary>
+        TypeAndAmountColumns = 1,
+        /// <summary>
+        /// Reports both gain and loss columns for transaction
+        /// </summary>
+        GainAndLossColumns = 0
+    }
+
+    /// <summary>
+    /// The style of assessing an Attribute for filtering
+    /// </summary>
+    public enum AttributeFilterStyle
+    {
+        /// <summary>
+        /// Use the value associated with the attribute
+        /// </summary>
+        ByValue,
+        /// <summary>
+        /// Use boolean of whether the attribute exists on the individual
+        /// </summary>
+        Exists
+    }
+
+    /// <summary>
+    /// The style of accessing date
+    /// </summary>
+    public enum DateStyle
+    {
+        /// <summary>
+        /// Accept single datestamp (CulturalInvariant)
+        /// </summary>
+        DateStamp,
+        /// <summary>
+        /// Use Year and Month entries
+        /// </summary>
+        YearAndMonth
+    }
+
+    /// <summary>
+    /// Style to report transactions involving individuals in herd
+    /// </summary>
+    public enum RuminantTransactionsGroupingStyle
+    {
+        /// <summary>
+        /// Combine all individuals
+        /// </summary>
+        Combined,
+        /// <summary>
+        /// Grouped by pricing groups
+        /// </summary>
+        ByPriceGroup,
+        /// <summary>
+        /// Grouped by class
+        /// </summary>
+        ByClass,
+        /// <summary>
+        /// Grouped by class and sex
+        /// </summary>
+        BySexAndClass,
+    }
+
+    /// <summary>
+    /// General classes of ruminants
+    /// </summary>
+    public enum RuminantClass
+    {
+        /// <summary>
+        /// Calf
+        /// </summary>
+        Calf,
+        /// <summary>
+        /// Weaner
+        /// </summary>
+        Weaner,
+        /// <summary>
+        /// PreBreeder
+        /// </summary>
+        PreBreeder,
+        /// <summary>
+        /// Breeder
+        /// </summary>
+        Breeder,
+        /// <summary>
+        /// Castrate
+        /// </summary>
+        Castrate,
+        /// <summary>
+        /// Sire
+        /// </summary>
+        Sire
+    }
+
+    /// <summary>
+    /// Style of Transmute
+    /// </summary>
+    public enum TransmuteStyle
+    {
+        /// <summary>
+        /// Direct transmute resource (B) to shortfall resource (A) e.g. barter
+        /// </summary>
+        Direct,
+        /// <summary>
+        /// Use pricing details of transmute resource (B) and shortfall resource (A) to calculate exchange rate
+        /// </summary>
+        UsePricing
+    }
+
+    /// <summary>
+    /// Style of taking individuals from a filter group
+    /// </summary>
+    public enum TakeFromFilterStyle
+    {
+        /// <summary>
+        /// Take a proportion of the group selected
+        /// </summary>
+        Proportion,
+        /// <summary>
+        /// Take a set number of individuals
+        /// </summary>
+        Individuals
+    }
 }

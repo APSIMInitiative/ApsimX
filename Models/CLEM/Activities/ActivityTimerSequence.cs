@@ -14,10 +14,10 @@ namespace Models.CLEM.Activities
     /// Activity timer sequence
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ActivityTimerCropHarvest))]
-    [Description("This component adds a timer sequence to selected timers")]
+    [Description("This component adds a timer sequence to a parent timer")]
     [HelpUri(@"Content/Features/Timers/Sequence.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerSequence : CLEMModel, IValidatableObject
@@ -96,15 +96,12 @@ namespace Models.CLEM.Activities
                 results.Add(new ValidationResult($"Invalid sequence of characters supplied {sequence}, expecitng 1/0, T/F, or Y/N list of characters delimted by '' - , or : to represent sequence", memberNames));
             }
             return results;
-        } 
+        }
         #endregion
 
         #region descriptive summary
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -132,19 +129,13 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
             return "";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             return "";

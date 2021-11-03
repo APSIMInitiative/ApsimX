@@ -31,12 +31,6 @@ namespace UserInterface.Presenters
         private IMarkdownView genericView;
 
         /// <summary>
-        /// The explorer
-        /// </summary>
-        private ExplorerPresenter explorerPresenter;
-
-
-        /// <summary>
         /// Attach the view
         /// </summary>
         /// <param name="model">The model</param>
@@ -46,7 +40,6 @@ namespace UserInterface.Presenters
         {
             this.model = model as Model;
             this.genericView = view as IMarkdownView;
-            this.explorerPresenter = explorerPresenter;
         }
 
         public void Refresh()
@@ -59,32 +52,32 @@ namespace UserInterface.Presenters
             int maxErrors = 100;
             using (StringWriter markdownWriter = new StringWriter())
             {
+                int terminatedCount = 0;
                 // find IStorageReader of simulation
                 IModel simulation = model.FindAncestor<Simulation>();
-                IModel simulations = simulation.FindAncestor<Simulations>();
-                IDataStore ds = simulations.FindAllChildren<IDataStore>().FirstOrDefault() as IDataStore;
+                IDataStore ds = model.FindInScope<IDataStore>() as IDataStore;
                 if (ds == null)
+                    return markdownWriter.ToString();
+
+                DataTable dataTable = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages");
+                if (dataTable == null)
                 {
+                    markdownWriter.Write("### Datastore is empty");
+                    markdownWriter.Write("  \r\n  \r\nNo simulation has been performed for this farm");
                     return markdownWriter.ToString();
                 }
-                if (ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages") == null)
-                {
-                    return markdownWriter.ToString();
-                }
-                DataRow[] dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select();
+                DataRow[] dataRows = dataTable.Select();
                 if (dataRows.Count() > 0)
                 {
-                    int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;  //7; // 8;
-                    int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;  //6; // 7;
-                    dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
+                    int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;
+                    int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;
+                    dataRows = dataRows.OrderBy(a => a[errorCol].ToString()).ToArray();
 
                     foreach (DataRow dr in dataRows)
                     {
                         // convert invalid parameter warnings to errors
                         if (dr[msgCol].ToString().StartsWith("Invalid parameter value in model"))
-                        {
                             dr[errorCol] = "0";
-                        }
                     }
 
                     foreach (DataRow dr in dataRows.Take(maxErrors))
@@ -92,26 +85,18 @@ namespace UserInterface.Presenters
                         bool ignore = false;
                         string msgStr = dr[msgCol].ToString();
                         if (msgStr.Contains("@i:"))
-                        {
                             ignore = true;
-                        }
 
                         if (!ignore)
                         {
                             // trim first two rows of error reporting file and simulation.
                             List<string> parts = new List<string>(msgStr.Split('\n'));
                             if (parts[0].Contains("ERROR in file:"))
-                            {
                                 parts.RemoveAt(0);
-                            }
                             if (parts[0].Contains("ERRORS in file:"))
-                            {
                                 parts.RemoveAt(0);
-                            }
                             if (parts[0].Contains("Simulation name:"))
-                            {
                                 parts.RemoveAt(0);
-                            }
                             msgStr = string.Join("\n", parts.Where(a => a.Trim(' ').StartsWith("at ") == false).ToArray());
 
                             // remove starter text
@@ -122,54 +107,44 @@ namespace UserInterface.Presenters
                             };
 
                             foreach (string start in starters)
-                            {
                                 if (msgStr.Contains(start))
-                                {
                                     msgStr = msgStr.Substring(start.Length);
-                                }
-                            }
 
-                            string type = "Message";
                             string title = "Message";
                             switch (dr[errorCol].ToString())
                             {
                                 case "2":
-                                    type = "Error";
                                     title = "Error";
+                                    if (dr[msgCol].ToString().Contains("Invalid parameter value in"))
+                                        msgStr = "Invalid parameter values provided";
+                                    else
+                                    {
+                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
+                                        if (msgStr.Contains("\r\n   --- End of inner"))
+                                            msgStr = msgStr.Substring(0, msgStr.IndexOf("\r\n   --- End of inner"));
+                                    }
                                     break;
                                 case "1":
-                                    type = "Warning";
-                                    title = "Warning";
-                                    break;
-                                default:
-                                    break;
-                            }
-                            if (msgStr.IndexOf(':') >= 0 && msgStr.StartsWith("@"))
-                            {
-                                switch (msgStr.Substring(0, msgStr.IndexOf(':')))
-                                {
-                                    case "@error":
-                                        type = "Error";
-                                        title = "Error";
-                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
-                                        break;
-                                    case "@validation":
-                                        type = "Error";
+                                    if (dr[msgCol].ToString().StartsWith("Invalid parameter value in"))
+                                    {
                                         title = "Validation error";
                                         msgStr = msgStr.Replace("PARAMETER:", "__Parameter:__");
                                         msgStr = msgStr.Replace("DESCRIPTION:", "__Description:__");
                                         msgStr = msgStr.Replace("PROBLEM:", "__Problem:__");
-                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
-                                        break;
-                                }
+                                    }
+                                    else
+                                        title = "Warning";
+                                    break;
+                                default:
+                                    break;
                             }
                             if (msgStr.Contains("terminated normally"))
                             {
-                                type = "Ok";
                                 title = "Success";
                                 DataTable dataRows2 = ds.Reader.GetDataUsingSql("Select * FROM _InitialConditions WHERE Name = 'Run on'"); // (simulationName: simulation.Name, tableName: "_InitialConditions");
                                 int clockCol = dataRows2.Columns["Value"].Ordinal;  // 8;
-                                DateTime lastrun = DateTime.Parse(dataRows2.Rows[0][clockCol].ToString());
+                                terminatedCount = Math.Min(terminatedCount, dataRows2.Rows.Count - 1);
+                                DateTime lastrun = DateTime.Parse(dataRows2.Rows[terminatedCount][clockCol].ToString());
                                 msgStr = "Simulation successfully completed at [" + lastrun.ToShortTimeString() + "] on [" + lastrun.ToShortDateString() + "]";
 
                                 // check for resource shortfall and adjust information accordingly
@@ -180,22 +155,28 @@ namespace UserInterface.Presenters
                                     DataTable dataRowsShortfalls = ds.Reader.GetDataUsingSql("Select * FROM ReportResourceShortfalls");
                                     if (dataRowsShortfalls.Rows.Count > 0)
                                     {
-                                        type = "warning";
                                         title = "Resource shortfalls occurred";
                                         msgStr += "  \r\nA number of resource shortfalls were detected in this simulation. See ReportResourceShortfalls table in DataStore for details.";
                                     }
                                 }
+                                terminatedCount++;
                             }
 
                             markdownWriter.Write("  \r\n### ");
                             markdownWriter.Write(title);
                             msgStr = msgStr.Replace("]", "**");
                             msgStr = msgStr.Replace("[r=", @".resource-**");
+                            msgStr = msgStr.Replace("[rs=", @".resources-**");
                             msgStr = msgStr.Replace("[a=", @".activity-**");
+                            msgStr = msgStr.Replace("[as=", @".activities-**");
                             msgStr = msgStr.Replace("[f=", @".filter-**");
+                            msgStr = msgStr.Replace("[g=", @".group-**");
+                            msgStr = msgStr.Replace("[t=", @".timer-**");
                             msgStr = msgStr.Replace("[x=", "**");
                             msgStr = msgStr.Replace("[o=", "**");
                             msgStr = msgStr.Replace("[m=", @".market-**");
+                            msgStr = msgStr.Replace("[z=", @"clem-**");
+                            msgStr = msgStr.Replace("[l=", @".labour-**");
                             msgStr = msgStr.Replace("[", "**");
                             msgStr = msgStr.Replace("\r\n", "  \r\n  \r\n");
                             msgStr = msgStr.Replace("<b>", "**");
@@ -221,6 +202,8 @@ namespace UserInterface.Presenters
 
         private string CreateHTML()
         {
+            // kept in case we want to report messages with full simulation summary in html
+
             int maxErrors = 100;
             string htmlString = "<!DOCTYPE html>\n" +
                 "<html>\n<head>\n<meta http-equiv=\"X-UA-Compatible\" content=\"IE=edge\" />\n<style>\n" +
@@ -285,54 +268,41 @@ namespace UserInterface.Presenters
                 IModel simulations = simulation.FindAncestor<Simulations>();
                 IDataStore ds = simulations.FindAllChildren<IDataStore>().FirstOrDefault() as IDataStore;
                 if (ds == null)
-                {
                     return htmlWriter.ToString();
-                }
-                if (ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages") == null)
-                {
+
+                if (ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages") == null)
                     return htmlWriter.ToString();
-                }
-                DataRow[] dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select();
+
+                DataRow[] dataRows = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages").Select();
                 if (dataRows.Count() > 0)
                 {
                     int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;  //7; // 8;
                     int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;  //6; // 7;
-                    dataRows = ds.Reader.GetData(simulationName: simulation.Name, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
+                    dataRows = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages").Select().OrderBy(a => a[errorCol].ToString()).ToArray();
 
                     foreach (DataRow dr in dataRows)
-                    {
                         // convert invalid parameter warnings to errors
                         if (dr[msgCol].ToString().StartsWith("Invalid parameter value in model"))
-                        {
                             dr[errorCol] = "0";
-                        }
-                    }
 
                     foreach (DataRow dr in dataRows.Take(maxErrors))
                     {
                         bool ignore = false;
                         string msgStr = dr[msgCol].ToString();
                         if (msgStr.Contains("@i:"))
-                        {
                             ignore = true;
-                        }
 
                         if (!ignore)
                         {
                             // trim first two rows of error reporting file and simulation.
                             List<string> parts = new List<string>(msgStr.Split('\n'));
                             if (parts[0].Contains("ERROR in file:"))
-                            {
                                 parts.RemoveAt(0);
-                            }
                             if (parts[0].Contains("ERRORS in file:"))
-                            {
                                 parts.RemoveAt(0);
-                            }
                             if (parts[0].Contains("Simulation name:"))
-                            {
                                 parts.RemoveAt(0);
-                            }
+
                             msgStr = string.Join("\n", parts.Where(a => a.Trim(' ').StartsWith("at ") == false).ToArray());
 
                             // remove starter text
@@ -343,46 +313,38 @@ namespace UserInterface.Presenters
                             };
 
                             foreach (string start in starters)
-                            {
                                 if (msgStr.Contains(start))
-                                {
                                     msgStr = msgStr.Substring(start.Length);
-                                }
-                            }
 
-                            string type = "Message";
                             string title = "Message";
+                            string type = "Message";
                             switch (dr[errorCol].ToString())
                             {
                                 case "2":
-                                    type = "Error";
                                     title = "Error";
+                                    type = "Error";
+                                    if (dr[msgCol].ToString().Contains("Invalid parameter value in"))
+                                        msgStr = "Invalid parameter values provided";
+                                    else
+                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
                                     break;
                                 case "1":
-                                    type = "Warning";
-                                    title = "Warning";
+                                    if (dr[msgCol].ToString().StartsWith("Invalid parameter value in"))
+                                    {
+                                        title = "Validation error";
+                                        type = "Error";
+                                        msgStr = msgStr.Replace("PARAMETER:", "__Parameter:__");
+                                        msgStr = msgStr.Replace("DESCRIPTION:", "__Description:__");
+                                        msgStr = msgStr.Replace("PROBLEM:", "__Problem:__");
+                                    }
+                                    else
+                                    {
+                                        title = "Warning";
+                                        type = "Warning";
+                                    }
                                     break;
                                 default:
                                     break;
-                            }
-                            if (msgStr.IndexOf(':') >= 0 && msgStr.StartsWith("@"))
-                            {
-                                switch (msgStr.Substring(0, msgStr.IndexOf(':')))
-                                {
-                                    case "@error":
-                                        type = "Error";
-                                        title = "Error";
-                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
-                                        break;
-                                    case "@validation":
-                                        type = "Error";
-                                        title = "Validation error";
-                                        msgStr = msgStr.Replace("PARAMETER:", "<b>Parameter:</b>");
-                                        msgStr = msgStr.Replace("DESCRIPTION:", "<b>Description:</b>");
-                                        msgStr = msgStr.Replace("PROBLEM:", "<b>Problem:</b>");
-                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
-                                        break;
-                                }
                             }
                             if (msgStr.Contains("terminated normally"))
                             {
@@ -414,11 +376,17 @@ namespace UserInterface.Presenters
                             msgStr = msgStr.Replace("\n", "<br />");
                             msgStr = msgStr.Replace("]", "</span>");
                             msgStr = msgStr.Replace("[r=", "<span class=\"resourcelink\">");
+                            msgStr = msgStr.Replace("[rs=", "<span class=\"resourcelink\">");
                             msgStr = msgStr.Replace("[a=", "<span class=\"activitylink\">");
+                            msgStr = msgStr.Replace("[as=", "<span class=\"activitylink\">");
                             msgStr = msgStr.Replace("[f=", "<span class=\"filterlink\">");
+                            msgStr = msgStr.Replace("[g=", "<span class=\"filterlink\">");
+                            msgStr = msgStr.Replace("[t=", "<span class=\"filterlink\">");
                             msgStr = msgStr.Replace("[x=", "<span class=\"filelink\">");
                             msgStr = msgStr.Replace("[o=", "<span class=\"otherlink\">");
                             msgStr = msgStr.Replace("[m=", "<span class=\"marketlink\">");
+                            msgStr = msgStr.Replace("[z=", "<span class=\"setvalue\">");
+                            msgStr = msgStr.Replace("[l=", "<span class=\"filterlink\">");
                             msgStr = msgStr.Replace("[", "<span class=\"setvalue\">");
                             htmlWriter.Write("\n<div class=\"messageentry\">" + msgStr);
                             htmlWriter.Write("\n</div>");

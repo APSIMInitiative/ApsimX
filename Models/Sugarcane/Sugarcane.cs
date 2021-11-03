@@ -15,344 +15,336 @@ using Models.Soils.Nutrients;
 
 namespace Models
     {
-
     /// <summary>
-    /// # [Name]
-    ///##Model Components Overview
-    ///
-    ///Crop dry weight accumulation is driven by the conversion of intercepted radiation to biomass, via a radiation-use efficiency (RUE). 
-    ///
-    ///RUE is reduced whenever extremes of temperature, soil water shortage or excess, or plant nitrogen deficit limit photosynthesis. 
-    ///
-    ///The crop leaf canopy, which intercepts radiation, expands its area as a function of temperature, and can also be limited by extremes of temperature, soil water shortage or excess, or plant nitrogen deficit.
-    ///
-    ///Biomass is partitioned among the various plant components (leaf, cabbage, structural stem, roots and sucrose) as determined by crop phenological stage.
-    ///
-    ///Nitrogen uptake is simulated, as is the return of carbon and nitrogen to the soil in trash and roots. 
-    ///
-    ///In many sugarcane production systems, commercial yield is measured as the fresh weight of sugarcane stems and their sucrose concentration. Hence, the water content in addition to the dry weight of the stem is simulated. 
-    ///
-    ///Since sugarcane is grown both as a plant and ratoon crop, the model also needs to be able to simulate differences between crop classes based on any known physiological differences between these classes.
-    ///
-    /// 
-    ///##Crop growth in the absence of nitrogen or water limitation
-    ///
-    ///###Thermal time
-    ///
-    ///Thermal time is used in the model to drive phenological development and canopy expansion. 
-    ///
-    ///In APSIM-Sugarcane, thermal time is calculated using a base temperature of 9 oC, optimum temperature of 32 oC, and maximum temperature of 45 oC.
-    ///
-    ///The optimum and maximum temperatures were taken from those used for maize [jones_ceres-maize:_1986]. 
-    ///
-    ///Base temperatures for sugarcane have been variously reported between 8 oC and 15 oC [inman-bamber_temperature_1994][robertson_simulating_1998]. 
-    ///The base of 9 oC used in APSIM sugarcane was chosen to be consistent with those studies which sampled the greatest temperature range, namely [inman-bamber_temperature_1994][robertson_simulating_1998] who identified base temperatures of 10 oC and 8 oC respectively. 
-    ///
-    ///For thermal time calculations in the model, temperature is estimated every three hours from a sine function fitted to daily maximum and minimum temperatures, using the method described by [jones_ceres-maize:_1986]. 
-    ///
-    ///###Phenology
-    ///
-    ///The sugar model uses six different stages to define crop growth and status. 
-    ///
-    /// 
-    ///|Stage     |Description                                   |
-    ///|----------|:---------------------------------------------|
-    ///|sowing    |From sowing to sprouting                      |
-    ///|sprouting |From sprouting to emergence                   |
-    ///|emergence |From emergence to the beginning of cane growth|
-    ///|begin_cane|From the beginning of cane growth to flowering|
-    ///|flowering |From flowering to the end of the crop         |
-    ///|end_crop  |Crop is not currently in the simulated system.|
-    /// 
-    ///Sprouting occurs after a lag period, set to 350 oCdays for plant crops and 100 oCdays for ratoon crops. 
-    ///
-    ///Provided the soil water content of the layer is adequate, shoots will elongate towards the soil surface at a rate of 0.8 mm per oCday. 
-    ///
-    ///The thermal duration between emergence and beginning of stalk growth is a genotype coefficient in the range 1200 to 1800 oCdays. 
-    ///
-    ///Although, sugarcane does produce flowers, the number of stalks producing flowers in a field is highly variable, and its physiological basis is not fully understood.
-    ///
-    ///While the model structure has been developed to include flowering as a phenological stage, it has been deactivated until a better physiological basis for prediction is available. 
-    ///
-    ///
-    ///###Canopy expansion
-    ///
-    ///The experimental basis for the canopy expansion model is described by [robertson_simulation_2016].
-    ///
-    ///Briefly, green leaf area index is the product of ***green leaf area per stalk*** and the ***number of stalks per unit ground area***. 
-    ///
-    ///***Green leaf area per stalk*** is simulated by summing the fully-expanded area of successive leaves that appear on each stalk, and adding a correction factor for the area of expanding leaves (set to 1.6 leaves per stalk).
-    ///Profiles of leaf area per leaf are input as genotype coefficients. 
-    ///[robertson_simulation_2016] found leaf appearance rates declined as a continuous function of cumulative thermal time, so that at emergence leaves took 80 oCd to appear while leaf 40 required 150 oCd.
-    ///These responses are reproduced in the model (via a series of linear interpolations) in both plant and ratoon crops.
-    ///
-    ///***Stalk number*** rises rapidly to a peak during the first 1400 oCdays from emergence, thereafter declining to reach a stable stalk number (e.g. [inman-bamber_temperature_1994]). 
-    ///Ratoon crops commonly reach an earlier peak stalk number than plant crops, with consequently faster early canopy expansion in ratoons [robertson_growth_1996].
-    ///In the model, the complexity of simulating the dynamics of tillering in order to predict LAI during early growth is avoided. 
-    ///Instead, the crop is conceived to have a notional constant stalk number throughout growth, usually set at 10 stalks m-2 , although this value can be varied as an input. 
-    ///The additional leaf area associated with tillers that appear and subsequently die, is captured via a calibrated tillering factor, that effectively increases the area of the leaves that are produced over the early tillering period.
-    ///
-    ///The known faster early expansion of LAI in ratoon crops is simulated via two effects. 
-    ///* Firstly, the lag time for regrowth of shoots after harvest is shorter in a ratoon crop than is the equivalent thermal time for a plant crop to initiate stalk elongation.
-    ///* Secondly, tillering is recognised in the model coefficients as making a larger contribution to leaf area development in a ratoon crop than a plant crop.
-    ///
-    ///The daily rate of senescence of green leaf area is calculated as the maximum of four rates determined by the factors of ageing, light competition, water stress and frost.
-    ///
-    ///
-    ///In the model, ageing causes senescence by not allowing at any time more than 13 fully-expanded green leaves per stalk.
-    ///
-    ///Light competition is simulated to induce senescence once fractional radiation interception reaches 0.85.
-    ///
-    ///Water stress induces senescence once the soil water deficit factor for photosynthesis declines below 1.0.
-    ///
-    ///Frosting removes 10% of the LAI per day if the minimum temperature reaches 0 oC, and 100% if it reaches -5 oC. 
-    ///
-    ///
-    ///###Root growth and development
-    ///
-    ///Root biomass is produced independently from the shoot, so that a proportion of daily above-ground biomass production is added to the root system. 
-    ///The proportion decreases from a maximum of 0.30 at emergence and asymptotes to 0.20 at flowering. 
-    ///
-    ///Root biomass is converted to root length via a specific root length of 18000 mm g-1 . 
-    ///The depth of the root front in plant crops increases by 1.5 cm day-1 [_glover_proceedings_nodate] from emergence, with the maximum depth of rooting set by the user.
-    ///
-    ///At harvest, 17% of roots in all the occupied soil layer die [ball-coelho_root_1992]. 
-    ///
-    ///
-    ///
-    ///###Biomass accumulation and partitioning
-    ///
-    ///The sugar model partitions dry matter to **five different plant pools**. These are as follows: 
-    ///
-    ///|Plant Part |Description                              |
-    ///|-----------|:----------------------------------------|
-    ///|Root       |Below-ground biomass                     |
-    ///|Leaf       |Leaf                                     |
-    ///|Sstem      |Structural component of millable stalk   |
-    ///|Cabbage    |Leaf sheath and tip of growing stalks etc|
-    ///|Sucrose    |Sucrose content of millable stalk        |
-    ///
-    ///In addition to the five live biomass pools outlined above, senescent leaf and cabbage is maintained as trash on the plant or progressively detached to become residues on the soil surface. 
-    ///In APSIM, the RESIDUE module [probert_apsim_1996] takes on the role of decomposition of crop residues. 
-    ///
-    ///LAI is used in the model to intercept incident solar radiation following Beer's Law, using a radiation extinction coefficient of 0.38, determined by [muchow_radiation_1994][robertson_growth_1996].
-    ///Intercepted radiation is used to produce daily biomass production using a radiation-use efficiency (RUE) of 1.80 g MJ-1 for plant crops and 1.65 g MJ-1 for ratoon crops. 
-    ///The values of RUE used in the model are those adjusted upwards from field-measured values [muchow_radiation_1994][robertson_growth_1996] due to the underestimate of biomass production caused by incomplete recovery of senesced leaf material [robertson_growth_1996]. 
-    ///In the model, RUE is reduced if the mean daily temperature falls below 15 oC or exceeds 35 oC, and becomes zero if the mean temperature reaches 5 or 50 oC, respectively. 
-    ///These effects are similar to those used in other models of C4 crop species [hammer_assessing_1994]. 
-    ///
-    ///
-    ///
-    ///Four above-ground biomass pools are modelled: **leaf**, **cabbage**, **structural stem**, **stem sucrose**, 
-    ///(and an additional pool for **roots** that is simulated separately from above-ground production). 
-    ///
-    ///Between emergence and the beginning of stalk growth, above-ground biomass is partitioned between leaf and cabbage in the ratio 1.7:1 [robertson_growth_1996].
-    ///
-    ///After the beginning of stem growth 0.7 of above-ground biomass is partitioned to the stem robertson_growth_1996, with the remainder partitioned between leaf and cabbage in the ratio 1.7:1. 
-    ///After a minimum amount of stem biomass has accumulated, the daily biomass partitioned to stem is divided between structural and sucrose pools, following the framework developed by [muchow_effect_1996] and [robertson_growth_1996]. Thereafter, the stem biomass is equal to the sum of structural and sucrose pools.
-    ///
-    ///If biomass partitioned to leaf is insufficient for growth of the leaf area, as determined by a maximum specific leaf area, then daily leaf area expansion is reduced. 
-    ///If biomass partitioned to leaf is in excess of that required to grow the leaf area on that day, then specific leaf area is permitted to decrease to a lower limit, beyond which the “excess” biomass is partitioned to sucrose and structural stem. 
-    ///
-    ///A stalk growth stress factor is calculated as the most limiting of the water, nitrogen and temperature limitations on photosynthesis. 
-    ///This stress factor influences both the onset and rate of assimilate partitioning to sucrose at the expense of structural stem. 
-    ///
-    ///
-    ///###Stem water content
-    ///
-    ///A stem water pool is simulated for the purposes of calculating cane fresh weight and CCS%. 
-    ///
-    ///For every gram of structural stem grown, a weight of water is considered to have been accumulated by the cane stems. 
-    ///
-    ///This relationship varies with thermal time, ranging from 9 g g-1 initially, to 5 g g-1 late in the crop life cycle. 
-    ///
-    ///The former represents the water content of young stem (eg. cabbage) while the latter represents a combination of young stem growth and thickening of older stem. 
-    ///
-    ///Sucrose deposition in the stem removes water content at the rate of 1 g water g-1 sucrose. 
-    ///
-    ///###Varietal effects
-    ///
-    ///Currently varieties differ in only two respects in the model. 
-    ///
-    ///* Firstly, Inman-Bamber (1991) found that varieties in South Africa differed in the fully-expanded area of individual leaves. 
-    ///The distributions for NCo376 and N14 were taken from Inman-Bamber and Thompson (1989), while that for Q117 and Q96 was those assigned values that gave best fit to the time-course of LAI during the model calibration stage. 
-    ///* Secondly, [robertson_growth_1996] found that varieties from South Africa and Australia differed in terms of partitioning of biomass to sucrose in the stem. 
-    ///There is scope for incorporating other varietal differences as new knowledge becomes available.
-    ///
-    ///
-    ///
-    ///
-    ///##Water deficit limitation
-    ///
-    ///Soil water infiltration and redistribution, evaporation and drainage is simulated by other modules in the APSIM framework [probert_apsim_1996] and (Verburg et al, 1997). 
-    ///
-    ///Water stress in the model reduces the rate of leaf area expansion and radiation-use efficiency, via two soil water deficit factors, which vary from zero to 1.0, following the concepts embodied in the CERES models (Ritchie, 1986). 
-    ///Soil water deficit factor 1 (SWDEF1), which is less sensitive to soil drying, reduces the radiation-use efficiency (i.e. net photosynthesis) and hence transpiration, below its maximum. 
-    ///Soil water deficit factor 2 (SWDEF2), which is more sensitive to soil drying, reduces the rate of processes governed primarily by cell expansion, i.e. daily leaf expansion rate. 
-    ///
-    ///SWDEF1 and 2 are calculated as a function of the ratio of (potential soil water supply from the root system) and the (transpiration demand). 
-    ///Following [sinclair_water_1986 and Monteith (1986), transpiration demand is modelled as a function of the (current day's crop growth rate), divided by the transpiration-use efficiency.
-    ///When soil water supply exceeds transpiration demand, assimilate fixation is a function of radiation interception and radiation use efficiency. 
-    ///When soil water supply is less than transpiration demand, assimilate fixation is a function of water supply and transpiration efficiency and the vapour pressure deficit (VPD). 
-    ///
-    ///Transpiration-use efficiency has not been directly measured for sugarcane, but calibration of the current model on datasets exhibiting water deficits (Robertson et al, unpubl. data) resulted in the use of a transpiration-use efficiency of 8 g kg-1 at a VPD of 1 kPa.
-    ///This efficiency declines linearly as a function of VPD (Tanner and Sinclair, 1983). 
-    ///This compares with reported values of 9 g kg-1 kPa-1 for other C 4 species (Tanner and Sinclair 1983), a value that has been used in the models of sorghum (Hammer and Muchow, 1994) and maize [muchow_tailoring_1991]. 
-    ///
-    ///Potential soil water uptake is calculated using the approach first advocated by Monteith (1986) and subsequently tested for sunflower [meinke_sunflower_1993] and grain sorghum (Robertson et al., 1994). 
-    ///It is the sum of root water uptake from each profile layer occupied by roots. 
-    ///The potential rate of extraction in a layer is calculated using a rate constant, which defines the fraction of available water able to be extracted per day. 
-    ///The actual rate of water extraction is the lesser of the potential extraction rate and the transpiration demand. 
-    ///If the computed potential extraction rate from the profile exceeds demand, then the extracted water is removed from the occupied layers in proportion to the values of potential root water uptake in each layer.
-    ///If the computed potential extraction from the profile is less than the demand then SWDEF2 declines in proportion, and the actual root water uptake from a layer is equal to the computed potential uptake. 
-    ///
-    ///In addition to the effects on canopy expansion and biomass accumulation, water stress influence biomass partitioning in the stem in two ways.
-    ///Firstly, the minimum amount of stem biomass required to initiate sucrose accumulation declines with accumulated stress.
-    ///Secondly, the daily dry weight increment between structural stem and sucrose shifts in favour of sucrose as water deficits develop. 
-    ///
-    ///
-    ///##Water excess limitation
-    ///The proportion of the root system exposed to saturated or near saturated soil water conditions is calculated and used to calculate a water logging stress factor. 
-    ///This factor reduces photosynthetic activity via an effect on RUE.
-    ///
-    ///
-    ///##Nitrogen limitation
-    ///N supply from the soil is simulated in other modules in the APSIM framework [probert_apsim_1996]. 
-    ///
-    ///Crop nitrogen demand is simulated using an approach similar to that used in the CERES models [godwin_simulation_1985]. 
-    ///Crop N demand is calculated as the product of maximum tissue N concentration and the increment in tissue weight. 
-    ///
-    ///Separate N pools are described for green leaf, cabbage, millable stalk and dead leaf. The sucrose pool is assumed to have no nitrogen associated with it. 
-    ///Only the leaf N concentrations influence crop growth processes. Growth is unaffected until leaf N concentrations fall below a critical concentration. 
-    ///Sugarcane has been shown to exhibit luxury N uptake [muchow_radiation_1994](Catchpoole and Keating 1995) and the difference between the maximum and critical N concentrations is intended to simulate this phenomenon. 
-    ///Nitrogen stress is proportional to the extent to which leaf N falls between the critical and the minimum N concentration. 
-    ///
-    ///Senescing leaves (and the associated leaf sheaths contained in the cabbage pool) are assumed to die at their minimum N concentrations and the balance of the N in these tissues is retranslocated to the green leaf and cabbage pools. 
-    ///
-    ///Maximum, critical and minimum N concentrations are all functions of thermal time, and were chosen on the basis of the findings of Catchpoole and Keating (1995) and [muchow_radiation_1994] and subsequently refined during the model calibration.
-    ///Critical green leaf concentrations used in the model differ between photosynthetic, leaf expansion and stem growth processes. 
-    ///For photosynthesis they begin at 1.2% N at emergence or ratooning and asymptote towards 0.5%N at flowering. 
-    ///For leaf area expansion they are 1.3 and 0.5% N 
-    ///and stem growth, 1.5 and 0.5%N. 
-    ///
-    ///N uptake cannot exceed N demand by the crop and is simulated to take place by mass flow in the water that is used for transpiration. 
-    ///Should mass flow not meet crop demand and nitrate be available in soil layers, the approach of [van_keulen_simulation_1987] is used to simulate the uptake of nitrate over and above that which can be accounted for by mass flow. 
-    ///While van Keulen and Seligman (1987) referred to this approach as “diffusion”, the routine more realistically serves as a surrogate for a number of sources of uncertainty in nitrate uptake. 
-    ///
-    ///Nitrogen stress also influences biomass partitioning in the stem, in a similar fashion to that described above for water stress.
-    ///
-    ///
-    ///##Other features of the sugar module
-    ///APSIM-Sugarcane includes a number of features relevant to sugarcane production systems.
-    ///
-    ///Either plant or ratoon crops can be simulated at the outset or a plant crop will regenerate as a ratoon crop if a crop cycle is being simulated. 
-    ///Production systems of plant - multiple ratoon - fallow can be simulated or alternatively other APSIM crop or pasture modules can be included in rotation with sugarcane. 
-    ///
-    ///Trash can be burnt or retained at harvest time. 
-    ///
-    ///Insect or other biological or mechanical damage to the canopy can be simulated via “graze” actions. 
-    ///
-    ///Many sugarcane crops are “hilled-up” early in canopy development, an operation that involves the movement of soil from the interrow to the crop row. 
-    ///This operation facilitates irrigation operations and improves the crop's ability to stand upright. 
-    ///APSIM-Sugarcane responds to a management event of hilling-up by removal of lower leaf area and stem from the biomass pools. 
-    ///
-    ///Lodging is a widespread phenomenon in high-yielding sugarcane crops. 
-    ///The APSIM-MANAGER [mccown_apsim:_1996] can initiate a lodging event in response to any aspect of the system state (eg crop size, time of year and weather). 
-    ///APSIM SUGARCANE responds to lodging via four effects:
-    ///
-    ///A low rate of stalk death which has been widely observed in heavily lodged crops (Muchow et al., 1995; Robertson et al., 1996)[singh_lodging_2002];
-    ///
-    ///A reduction in radiation use efficiency (Singh et al., 1999)[singh_lodging_2002]
-    ///
-    ///A reduction in the proportion of daily biomass that is partitioned as sucrose [singh_lodging_2002]; and
-    ///
-    ///A reduction in the maximum number of green leaves, to capture the reported reduction in leaf appearance rate and increase in leaf senescence [singh_lodging_2002]
-    ///
-    /// 
-    ///##Parameterisation
-    ///
-    ///**(Structure of the xml in the .apsimx file)**
-    ///
-    ///There are **4** separate categories of variables in the Sugarcane modules xml. 
-    ///
-    ///They are listed below with some examples of the type of parameters included in each.
-    ///    
-    ///1. **Constants**
-    ///    * Upper and lower bounds for met and soil variables
-    ///2. **Plant_crop**
-    ///    * Growth and partitioning parameters
-    ///    * Water Use Parameters and Water and temperature Stress Factors
-    ///    * Frosting Factors
-    ///    * Nitrogen Contents and Nitrogen Stress Factors
-    ///3. **Ratoon_crop**
-    ///    * Same as Plant crop section but there is the ability to change the parameters between plant and ratoon crops.
-    ///4. **Cultivar (Plant Crop and Ratoon Crop)**
-    ///     * **Plant Crop Cultivar**
-    ///        * Leaf Development Parameters
-    ///        * Phenology
-    ///        * Sucrose and Cane Stalk  (Partitioning Parameters)
-    ///     * **Ratoon Crop Cultivar**
-    ///        * Same as for the Plant Crop Cultivar
-    ///        * ***By creating a completely new cultivar with the same name as the plant crop cultivar but appending "_ratoon" to the end of the name, 
-    ///     the Sugarcane module will then automatically use this ratoon crop cultivar rather then the plant crop cultivar 
-    ///     when the crop changes from a Plant Crop to a Ratoon Crop.***
-    /// 
-    /// 
-    /// 
-    ///**Sugar Module Outputs**
-    ///
-    ///
-    /// |Variable Name  | Units      | Description                                                               |
-    /// |---------------|:-----------|:--------------------------------------------------------------------------| 
-    /// |Stage_name     |            | Name of the current crop growth stage                                     |
-    /// |Stage          |            | Current growth stage number                                               |
-    /// |Crop_status    |            | Status of the current crop (alive,dead,out)                               |
-    /// |ratoon_no      |            | Ratoon number (0 for plant crop, 1 for 1st ratoon, 2 for 2nd ratoon, …etc)|
-    /// |das            | Days       | Days after sowing (ie. crop duration)                                     |
-    /// |Ep             | mm         | Crop evapotranspiration (extraction) for each soil layer                  |
-    /// |cep            | mm         | Cumulative plant evapotranspiration                                       |
-    /// |rlv            | mm/mm^3    | root length per volume of soil in each soil layer                         |
-    /// |esw            | mm         | Extractable Soil water in each soil layer                                 |
-    /// |root_depth     | mm         | Root depth                                                                |
-    /// |sw_demand      | mm         | Daily demand for soil water                                               |
-    /// |biomass        | g/m^2      | Total crop above-ground biomass (Green + Trash)                           |
-    /// |green_biomass  | g/m^2      | Total green crop above-ground biomass                                     |
-    /// |biomass_n      | g/m^2      | Total Nitrogen in above-ground biomass (Green + Trash)                    |
-    /// |green_biomass_n| g/m^2      | Amount of Nitrogen in green above-ground biomass                          |
-    /// |dlt_dm         | g/m^2      | Daily increase in plant dry matter (photosynthesis)                       |
-    /// |dm_senesced    | g/m^2      | Senesced dry matter in each plant pool                                    |
-    /// |n_senesced     | g/m^2      | Amount of Nitrogen in senesced material for each plant pool               |
-    /// |Canefw         | t/ha       | Fresh Cane weight                                                         |
-    /// |ccs            | %          | Commercial Cane Sugar                                                     |
-    /// |Cane_wt        | g/m^2      | Weight of cane dry matter                                                 |
-    /// |leaf_wt        | g/m^2      | Weight of plant green leaf                                                |
-    /// |root_wt        | g/m^2      | Weight of plant roots                                                     |
-    /// |sstem_wt       | g/m^2      | Weight of plant structural stem                                           |
-    /// |sucrose_wt     | g/m^2      | Weight of plant sucrose                                                   |
-    /// |cabbage_wt     | g/m^2      | Weight of plant cabbage                                                   |
-    /// |n_conc_cane    | g/g        | Nitrogen concentration in cane                                            |
-    /// |n_conc_leaf    | g/g        | Nitrogen concentration in green leaf                                      |
-    /// |n_conc_cabbage | g/g        | Nitrogen concentration in green cabbage                                   |
-    /// |n_demand       | g/m^2      | Daily demand for Nitrogen                                                 |
-    /// |cover_green    | 0-1        | Fractional cover by green plant material                                  |
-    /// |cover_tot      | 0-1        | Fractional cover by total plant material (Green + Trash)                  |
-    /// |lai            | mm^2/mm^2  | Leaf area index of green leaves                                           |
-    /// |tlai           | mm^2/mm^2  | Total plant leaf area index (green + senesced)                            |
-    /// |slai           | mm^2/mm^2  | Senesced leaf area index                                                  |
-    /// |n_leaf_crit    | g/m^2      | Critical Nitrogen level for the current crop                              |
-    /// |n_leaf_min     | g/m^2      | Minimum Nitrogen level for the current crop                               |
-    /// |nfact_photo    | 0-1        | Nitrogen stress factor for photosynthesis                                 |
-    /// |nfact_expan    | 0-1        | Nitrogen stress factor for cell expansion                                 |
-    /// |swdef_photo    | 0-1        | Soil water stress factor for photosynthesis                               |
-    /// |swdef_expan    | 0-1        | Soil water stress factor for cell expansion                               |
-    /// |swdef_phen     | 0-1        | Soil water stress factor for phenology                                    |
-    ///
+    /// # The APSIM Sugarcane Model
     /// </summary>
+    /// <remarks>
+    ///## Model Components Overview
+    ///
+    /// Crop dry weight accumulation is driven by the conversion of intercepted radiation to biomass, via a radiation-use efficiency (RUE). 
+    ///
+    /// RUE is reduced whenever extremes of temperature, soil water shortage or excess, or plant nitrogen deficit limit photosynthesis. 
+    ///
+    /// The crop leaf canopy, which intercepts radiation, expands its area as a function of temperature, and can also be limited by extremes of temperature, soil water shortage or excess, or plant nitrogen deficit.
+    ///
+    /// Biomass is partitioned among the various plant components (leaf, cabbage, structural stem, roots and sucrose) as determined by crop phenological stage.
+    ///
+    /// Nitrogen uptake is simulated, as is the return of carbon and nitrogen to the soil in trash and roots. 
+    ///
+    /// In many sugarcane production systems, commercial yield is measured as the fresh weight of sugarcane stems and their sucrose concentration. Hence, the water content in addition to the dry weight of the stem is simulated. 
+    ///
+    /// Since sugarcane is grown both as a plant and ratoon crop, the model also needs to be able to simulate differences between crop classes based on any known physiological differences between these classes.
+    ///
+    /// 
+    /// ## Crop growth in the absence of nitrogen or water limitation
+    ///
+    /// ### Thermal time
+    ///
+    /// Thermal time is used in the model to drive phenological development and canopy expansion. 
+    ///
+    /// In APSIM-Sugarcane, thermal time is calculated using a base temperature of 9 oC, optimum temperature of 32 oC, and maximum temperature of 45 oC.
+    ///
+    /// The optimum and maximum temperatures were taken from those used for maize [jones_ceres-maize:_1986]. 
+    ///
+    /// Base temperatures for sugarcane have been variously reported between 8 oC and 15 oC [inman-bamber_temperature_1994][robertson_simulating_1998]. 
+    /// The base of 9 oC used in APSIM sugarcane was chosen to be consistent with those studies which sampled the greatest temperature range, namely [inman-bamber_temperature_1994][robertson_simulating_1998] who identified base temperatures of 10 oC and 8 oC respectively. 
+    ///
+    /// For thermal time calculations in the model, temperature is estimated every three hours from a sine function fitted to daily maximum and minimum temperatures, using the method described by [jones_ceres-maize:_1986]. 
+    ///
+    /// ### Phenology
+    ///
+    /// The sugar model uses six different stages to define crop growth and status. 
+    ///
+    /// 
+    /// |Stage     |Description                                   
+    /// |----------|:---------------------------------------------
+    /// |sowing    |From sowing to sprouting                      
+    /// |sprouting |From sprouting to emergence                   
+    /// |emergence |From emergence to the beginning of cane growth
+    /// |begin_cane|From the beginning of cane growth to flowering
+    /// |flowering |From flowering to the end of the crop         
+    /// |end_crop  |Crop is not currently in the simulated system.
+    /// 
+    /// Sprouting occurs after a lag period, set to 350 oCdays for plant crops and 100 oCdays for ratoon crops. 
+    ///
+    /// Provided the soil water content of the layer is adequate, shoots will elongate towards the soil surface at a rate of 0.8 mm per oCday. 
+    ///
+    /// The thermal duration between emergence and beginning of stalk growth is a genotype coefficient in the range 1200 to 1800 oCdays. 
+    ///
+    /// Although, sugarcane does produce flowers, the number of stalks producing flowers in a field is highly variable, and its physiological basis is not fully understood.
+    ///
+    /// While the model structure has been developed to include flowering as a phenological stage, it has been deactivated until a better physiological basis for prediction is available. 
+    ///
+    ///
+    /// ### Canopy expansion
+    ///
+    /// The experimental basis for the canopy expansion model is described by [robertson_simulation_2016].
+    ///
+    /// Briefly, green leaf area index is the product of ***green leaf area per stalk*** and the ***number of stalks per unit ground area***. 
+    ///
+    /// ***Green leaf area per stalk*** is simulated by summing the fully-expanded area of successive leaves that appear on each stalk, and adding a correction factor for the area of expanding leaves (set to 1.6 leaves per stalk).
+    /// Profiles of leaf area per leaf are input as genotype coefficients. 
+    /// [robertson_simulation_2016] found leaf appearance rates declined as a continuous function of cumulative thermal time, so that at emergence leaves took 80 oCd to appear while leaf 40 required 150 oCd.
+    /// These responses are reproduced in the model (via a series of linear interpolations) in both plant and ratoon crops.
+    ///
+    /// ***Stalk number*** rises rapidly to a peak during the first 1400 oCdays from emergence, thereafter declining to reach a stable stalk number (e.g. [inman-bamber_temperature_1994]). 
+    /// Ratoon crops commonly reach an earlier peak stalk number than plant crops, with consequently faster early canopy expansion in ratoons [robertson_growth_1996].
+    /// In the model, the complexity of simulating the dynamics of tillering in order to predict LAI during early growth is avoided. 
+    /// Instead, the crop is conceived to have a notional constant stalk number throughout growth, usually set at 10 stalks m-2 , although this value can be varied as an input. 
+    /// The additional leaf area associated with tillers that appear and subsequently die, is captured via a calibrated tillering factor, that effectively increases the area of the leaves that are produced over the early tillering period.
+    ///
+    /// The known faster early expansion of LAI in ratoon crops is simulated via two effects. 
+    /// * Firstly, the lag time for regrowth of shoots after harvest is shorter in a ratoon crop than is the equivalent thermal time for a plant crop to initiate stalk elongation.
+    /// * Secondly, tillering is recognised in the model coefficients as making a larger contribution to leaf area development in a ratoon crop than a plant crop.
+    ///
+    /// The daily rate of senescence of green leaf area is calculated as the maximum of four rates determined by the factors of ageing, light competition, water stress and frost.
+    ///
+    /// In the model, ageing causes senescence by not allowing at any time more than 13 fully-expanded green leaves per stalk.
+    ///
+    /// Light competition is simulated to induce senescence once fractional radiation interception reaches 0.85.
+    ///
+    /// Water stress induces senescence once the soil water deficit factor for photosynthesis declines below 1.0.
+    ///
+    /// Frosting removes 10% of the LAI per day if the minimum temperature reaches 0 oC, and 100% if it reaches -5 oC. 
+    ///
+    ///
+    /// ### Root growth and development
+    ///
+    /// Root biomass is produced independently from the shoot, so that a proportion of daily above-ground biomass production is added to the root system. 
+    /// The proportion decreases from a maximum of 0.30 at emergence and asymptotes to 0.20 at flowering. 
+    ///
+    /// Root biomass is converted to root length via a specific root length of 18000 mm g-1 . 
+    /// The depth of the root front in plant crops increases by 1.5 cm day-1 [_glover_proceedings_nodate] from emergence, with the maximum depth of rooting set by the user.
+    ///
+    /// At harvest, 17% of roots in all the occupied soil layer die [ball-coelho_root_1992]. 
+    ///
+    ///
+    ///
+    /// ### Biomass accumulation and partitioning
+    ///
+    /// The sugar model partitions dry matter to **five different plant pools**. These are as follows: 
+    ///
+    /// |Plant Part |Description                              
+    /// |-----------|:----------------------------------------
+    /// |Root       |Below-ground biomass                     
+    /// |Leaf       |Leaf                                     
+    /// |Sstem      |Structural component of millable stalk   
+    /// |Cabbage    |Leaf sheath and tip of growing stalks etc
+    /// |Sucrose    |Sucrose content of millable stalk        
+    ///
+    /// In addition to the five live biomass pools outlined above, senescent leaf and cabbage is maintained as trash on the plant or progressively detached to become residues on the soil surface. 
+    /// In APSIM, the RESIDUE module [probert_apsim_1996] takes on the role of decomposition of crop residues. 
+    ///
+    /// LAI is used in the model to intercept incident solar radiation following Beer's Law, using a radiation extinction coefficient of 0.38, determined by [muchow_radiation_1994][robertson_growth_1996].
+    /// Intercepted radiation is used to produce daily biomass production using a radiation-use efficiency (RUE) of 1.80 g MJ-1 for plant crops and 1.65 g MJ-1 for ratoon crops. 
+    /// The values of RUE used in the model are those adjusted upwards from field-measured values [muchow_radiation_1994][robertson_growth_1996] due to the underestimate of biomass production caused by incomplete recovery of senesced leaf material [robertson_growth_1996]. 
+    /// In the model, RUE is reduced if the mean daily temperature falls below 15 oC or exceeds 35 oC, and becomes zero if the mean temperature reaches 5 or 50 oC, respectively. 
+    /// These effects are similar to those used in other models of C4 crop species [hammer_assessing_1994]. 
+    ///
+    /// Four above-ground biomass pools are modelled: **leaf**, **cabbage**, **structural stem**, **stem sucrose**, 
+    /// (and an additional pool for **roots** that is simulated separately from above-ground production). 
+    ///
+    /// Between emergence and the beginning of stalk growth, above-ground biomass is partitioned between leaf and cabbage in the ratio 1.7:1 [robertson_growth_1996].
+    ///
+    /// After the beginning of stem growth 0.7 of above-ground biomass is partitioned to the stem robertson_growth_1996, with the remainder partitioned between leaf and cabbage in the ratio 1.7:1. 
+    /// After a minimum amount of stem biomass has accumulated, the daily biomass partitioned to stem is divided between structural and sucrose pools, following the framework developed by [muchow_effect_1996] and [robertson_growth_1996]. Thereafter, the stem biomass is equal to the sum of structural and sucrose pools.
+    ///
+    /// If biomass partitioned to leaf is insufficient for growth of the leaf area, as determined by a maximum specific leaf area, then daily leaf area expansion is reduced. 
+    /// If biomass partitioned to leaf is in excess of that required to grow the leaf area on that day, then specific leaf area is permitted to decrease to a lower limit, beyond which the “excess” biomass is partitioned to sucrose and structural stem. 
+    ///
+    /// A stalk growth stress factor is calculated as the most limiting of the water, nitrogen and temperature limitations on photosynthesis. 
+    /// This stress factor influences both the onset and rate of assimilate partitioning to sucrose at the expense of structural stem. 
+    ///
+    /// ### Stem water content
+    ///
+    /// A stem water pool is simulated for the purposes of calculating cane fresh weight and CCS%. 
+    ///
+    /// For every gram of structural stem grown, a weight of water is considered to have been accumulated by the cane stems. 
+    ///
+    /// This relationship varies with thermal time, ranging from 9 g g-1 initially, to 5 g g-1 late in the crop life cycle. 
+    ///
+    /// The former represents the water content of young stem (eg. cabbage) while the latter represents a combination of young stem growth and thickening of older stem. 
+    ///
+    /// Sucrose deposition in the stem removes water content at the rate of 1 g water g-1 sucrose. 
+    ///
+    /// ### Varietal effects
+    ///
+    /// Currently varieties differ in only two respects in the model. 
+    ///
+    /// * Firstly, Inman-Bamber (1991) found that varieties in South Africa differed in the fully-expanded area of individual leaves. 
+    /// The distributions for NCo376 and N14 were taken from Inman-Bamber and Thompson (1989), while that for Q117 and Q96 was those assigned values that gave best fit to the time-course of LAI during the model calibration stage. 
+    /// * Secondly, [robertson_growth_1996] found that varieties from South Africa and Australia differed in terms of partitioning of biomass to sucrose in the stem. 
+    /// There is scope for incorporating other varietal differences as new knowledge becomes available.
+    ///
+    /// ## Water deficit limitation
+    ///
+    /// Soil water infiltration and redistribution, evaporation and drainage is simulated by other modules in the APSIM framework [probert_apsim_1996] and (Verburg et al, 1997). 
+    ///
+    /// Water stress in the model reduces the rate of leaf area expansion and radiation-use efficiency, via two soil water deficit factors, which vary from zero to 1.0, following the concepts embodied in the CERES models (Ritchie, 1986). 
+    /// Soil water deficit factor 1 (SWDEF1), which is less sensitive to soil drying, reduces the radiation-use efficiency (i.e. net photosynthesis) and hence transpiration, below its maximum. 
+    /// Soil water deficit factor 2 (SWDEF2), which is more sensitive to soil drying, reduces the rate of processes governed primarily by cell expansion, i.e. daily leaf expansion rate. 
+    ///
+    /// SWDEF1 and 2 are calculated as a function of the ratio of (potential soil water supply from the root system) and the (transpiration demand). 
+    /// Following [sinclair_water_1986 and Monteith (1986), transpiration demand is modelled as a function of the (current day's crop growth rate), divided by the transpiration-use efficiency.
+    /// When soil water supply exceeds transpiration demand, assimilate fixation is a function of radiation interception and radiation use efficiency. 
+    /// When soil water supply is less than transpiration demand, assimilate fixation is a function of water supply and transpiration efficiency and the vapour pressure deficit (VPD). 
+    ///
+    /// Transpiration-use efficiency has not been directly measured for sugarcane, but calibration of the current model on datasets exhibiting water deficits (Robertson et al, unpubl. data) resulted in the use of a transpiration-use efficiency of 8 g kg-1 at a VPD of 1 kPa.
+    /// This efficiency declines linearly as a function of VPD (Tanner and Sinclair, 1983). 
+    /// This compares with reported values of 9 g kg-1 kPa-1 for other C 4 species (Tanner and Sinclair 1983), a value that has been used in the models of sorghum (Hammer and Muchow, 1994) and maize [muchow_tailoring_1991]. 
+    ///
+    /// Potential soil water uptake is calculated using the approach first advocated by Monteith (1986) and subsequently tested for sunflower [meinke_sunflower_1993] and grain sorghum (Robertson et al., 1994). 
+    /// It is the sum of root water uptake from each profile layer occupied by roots. 
+    /// The potential rate of extraction in a layer is calculated using a rate constant, which defines the fraction of available water able to be extracted per day. 
+    /// The actual rate of water extraction is the lesser of the potential extraction rate and the transpiration demand. 
+    /// If the computed potential extraction rate from the profile exceeds demand, then the extracted water is removed from the occupied layers in proportion to the values of potential root water uptake in each layer.
+    /// If the computed potential extraction from the profile is less than the demand then SWDEF2 declines in proportion, and the actual root water uptake from a layer is equal to the computed potential uptake. 
+    ///
+    /// In addition to the effects on canopy expansion and biomass accumulation, water stress influence biomass partitioning in the stem in two ways.
+    /// Firstly, the minimum amount of stem biomass required to initiate sucrose accumulation declines with accumulated stress.
+    /// Secondly, the daily dry weight increment between structural stem and sucrose shifts in favour of sucrose as water deficits develop. 
+    ///
+    /// ## Water excess limitation
+    /// The proportion of the root system exposed to saturated or near saturated soil water conditions is calculated and used to calculate a water logging stress factor. 
+    /// This factor reduces photosynthetic activity via an effect on RUE.
+    ///
+    /// ## Nitrogen limitation
+    /// N supply from the soil is simulated in other modules in the APSIM framework [probert_apsim_1996]. 
+    ///
+    /// Crop nitrogen demand is simulated using an approach similar to that used in the CERES models [godwin_simulation_1985]. 
+    /// Crop N demand is calculated as the product of maximum tissue N concentration and the increment in tissue weight. 
+    ///
+    /// Separate N pools are described for green leaf, cabbage, millable stalk and dead leaf. The sucrose pool is assumed to have no nitrogen associated with it. 
+    /// Only the leaf N concentrations influence crop growth processes. Growth is unaffected until leaf N concentrations fall below a critical concentration. 
+    /// Sugarcane has been shown to exhibit luxury N uptake [muchow_radiation_1994](Catchpoole and Keating 1995) and the difference between the maximum and critical N concentrations is intended to simulate this phenomenon. 
+    /// Nitrogen stress is proportional to the extent to which leaf N falls between the critical and the minimum N concentration. 
+    ///
+    /// Senescing leaves (and the associated leaf sheaths contained in the cabbage pool) are assumed to die at their minimum N concentrations and the balance of the N in these tissues is retranslocated to the green leaf and cabbage pools. 
+    ///
+    /// Maximum, critical and minimum N concentrations are all functions of thermal time, and were chosen on the basis of the findings of Catchpoole and Keating (1995) and [muchow_radiation_1994] and subsequently refined during the model calibration.
+    /// Critical green leaf concentrations used in the model differ between photosynthetic, leaf expansion and stem growth processes. 
+    /// For photosynthesis they begin at 1.2% N at emergence or ratooning and asymptote towards 0.5%N at flowering. 
+    /// For leaf area expansion they are 1.3 and 0.5% N 
+    /// and stem growth, 1.5 and 0.5%N. 
+    ///
+    /// N uptake cannot exceed N demand by the crop and is simulated to take place by mass flow in the water that is used for transpiration. 
+    /// Should mass flow not meet crop demand and nitrate be available in soil layers, the approach of [van_keulen_simulation_1987] is used to simulate the uptake of nitrate over and above that which can be accounted for by mass flow. 
+    /// While van Keulen and Seligman (1987) referred to this approach as “diffusion”, the routine more realistically serves as a surrogate for a number of sources of uncertainty in nitrate uptake. 
+    ///
+    /// Nitrogen stress also influences biomass partitioning in the stem, in a similar fashion to that described above for water stress.
+    ///
+    ///
+    /// ## Other features of the sugar module
+    /// APSIM-Sugarcane includes a number of features relevant to sugarcane production systems.
+    ///
+    /// Either plant or ratoon crops can be simulated at the outset or a plant crop will regenerate as a ratoon crop if a crop cycle is being simulated. 
+    /// Production systems of plant - multiple ratoon - fallow can be simulated or alternatively other APSIM crop or pasture modules can be included in rotation with sugarcane. 
+    ///
+    /// Trash can be burnt or retained at harvest time. 
+    ///
+    /// Insect or other biological or mechanical damage to the canopy can be simulated via “graze” actions. 
+    ///
+    /// Many sugarcane crops are “hilled-up” early in canopy development, an operation that involves the movement of soil from the interrow to the crop row. 
+    /// This operation facilitates irrigation operations and improves the crop's ability to stand upright. 
+    /// APSIM-Sugarcane responds to a management event of hilling-up by removal of lower leaf area and stem from the biomass pools. 
+    ///
+    /// Lodging is a widespread phenomenon in high-yielding sugarcane crops. 
+    /// The APSIM-MANAGER [mccown_apsim:_1996] can initiate a lodging event in response to any aspect of the system state (eg crop size, time of year and weather). 
+    /// APSIM SUGARCANE responds to lodging via four effects:
+    ///
+    /// A low rate of stalk death which has been widely observed in heavily lodged crops (Muchow et al., 1995; Robertson et al., 1996)[singh_lodging_2002];
+    ///
+    /// A reduction in radiation use efficiency (Singh et al., 1999)[singh_lodging_2002]
+    ///
+    /// A reduction in the proportion of daily biomass that is partitioned as sucrose [singh_lodging_2002]; and
+    ///
+    /// A reduction in the maximum number of green leaves, to capture the reported reduction in leaf appearance rate and increase in leaf senescence [singh_lodging_2002]
+    ///
+    /// 
+    /// ##Parameterisation
+    ///
+    /// **(Structure of the xml in the .apsimx file)**
+    ///
+    /// There are **4** separate categories of variables in the Sugarcane modules xml. 
+    ///
+    /// They are listed below with some examples of the type of parameters included in each.
+    ///    
+    /// 1. **Constants**
+    ///     * Upper and lower bounds for met and soil variables
+    /// 2. **Plant_crop**
+    ///     * Growth and partitioning parameters
+    ///     * Water Use Parameters and Water and temperature Stress Factors
+    ///     * Frosting Factors
+    ///     * Nitrogen Contents and Nitrogen Stress Factors
+    /// 3. **Ratoon_crop**
+    ///     * Same as Plant crop section but there is the ability to change the parameters between plant and ratoon crops.
+    /// 4. **Cultivar (Plant Crop and Ratoon Crop)**
+    ///      * **Plant Crop Cultivar**
+    ///         * Leaf Development Parameters
+    ///         * Phenology
+    ///         * Sucrose and Cane Stalk  (Partitioning Parameters)
+    ///      * **Ratoon Crop Cultivar**
+    ///         * Same as for the Plant Crop Cultivar
+    ///         * ***By creating a completely new cultivar with the same name as the plant crop cultivar but appending "_ratoon" to the end of the name, 
+    ///      the Sugarcane module will then automatically use this ratoon crop cultivar rather then the plant crop cultivar 
+    ///      when the crop changes from a Plant Crop to a Ratoon Crop.***
+    /// 
+    /// 
+    /// 
+    /// **Sugar Module Outputs**
+    ///
+    ///
+    /// |Variable Name  | Units      | Description                                                               
+    /// |---------------|:-----------|:-------------------------------------------------------------------------- 
+    /// |Stage_name     |            | Name of the current crop growth stage                                     
+    /// |Stage          |            | Current growth stage number                                               
+    /// |Crop_status    |            | Status of the current crop (alive,dead,out)                               
+    /// |ratoon_no      |            | Ratoon number (0 for plant crop, 1 for 1st ratoon, 2 for 2nd ratoon, …etc)
+    /// |das            | Days       | Days after sowing (ie. crop duration)                                     
+    /// |Ep             | mm         | Crop evapotranspiration (extraction) for each soil layer                  
+    /// |cep            | mm         | Cumulative plant evapotranspiration                                       
+    /// |rlv            | mm/mm^3    | root length per volume of soil in each soil layer                         
+    /// |esw            | mm         | Extractable Soil water in each soil layer                                 
+    /// |root_depth     | mm         | Root depth                                                                
+    /// |sw_demand      | mm         | Daily demand for soil water                                               
+    /// |biomass        | g/m^2      | Total crop above-ground biomass (Green + Trash)                           
+    /// |green_biomass  | g/m^2      | Total green crop above-ground biomass                                     
+    /// |biomass_n      | g/m^2      | Total Nitrogen in above-ground biomass (Green + Trash)                    
+    /// |green_biomass_n| g/m^2      | Amount of Nitrogen in green above-ground biomass                          
+    /// |dlt_dm         | g/m^2      | Daily increase in plant dry matter (photosynthesis)                       
+    /// |dm_senesced    | g/m^2      | Senesced dry matter in each plant pool                                    
+    /// |n_senesced     | g/m^2      | Amount of Nitrogen in senesced material for each plant pool               
+    /// |Canefw         | t/ha       | Fresh Cane weight                                                         
+    /// |ccs            | %          | Commercial Cane Sugar                                                     
+    /// |Cane_wt        | g/m^2      | Weight of cane dry matter                                                 
+    /// |leaf_wt        | g/m^2      | Weight of plant green leaf                                                
+    /// |root_wt        | g/m^2      | Weight of plant roots                                                     
+    /// |sstem_wt       | g/m^2      | Weight of plant structural stem                                           
+    /// |sucrose_wt     | g/m^2      | Weight of plant sucrose                                                   
+    /// |cabbage_wt     | g/m^2      | Weight of plant cabbage                                                   
+    /// |n_conc_cane    | g/g        | Nitrogen concentration in cane                                            
+    /// |n_conc_leaf    | g/g        | Nitrogen concentration in green leaf                                      
+    /// |n_conc_cabbage | g/g        | Nitrogen concentration in green cabbage                                   
+    /// |n_demand       | g/m^2      | Daily demand for Nitrogen                                                 
+    /// |cover_green    | 0-1        | Fractional cover by green plant material                                  
+    /// |cover_tot      | 0-1        | Fractional cover by total plant material (Green + Trash)                  
+    /// |lai            | mm^2/mm^2  | Leaf area index of green leaves                                           
+    /// |tlai           | mm^2/mm^2  | Total plant leaf area index (green + senesced)                            
+    /// |slai           | mm^2/mm^2  | Senesced leaf area index                                                  
+    /// |n_leaf_crit    | g/m^2      | Critical Nitrogen level for the current crop                              
+    /// |n_leaf_min     | g/m^2      | Minimum Nitrogen level for the current crop                               
+    /// |nfact_photo    | 0-1        | Nitrogen stress factor for photosynthesis                                 
+    /// |nfact_expan    | 0-1        | Nitrogen stress factor for cell expansion                                 
+    /// |swdef_photo    | 0-1        | Soil water stress factor for photosynthesis                               
+    /// |swdef_expan    | 0-1        | Soil water stress factor for cell expansion                               
+    /// |swdef_phen     | 0-1        | Soil water stress factor for phenology                                    
+    ///
+    /// </remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Zone))]
-    public class Sugarcane : Model, IPlant, ICanopy, IUptake
+    public class Sugarcane : ModelCollectionFromResource, IPlant, ICanopy, IUptake
     {
 
         #region Canopy interface
@@ -501,7 +493,7 @@ namespace Models
         public bool IsC4 { get { return true; } }
 
         /// <summary>Aboveground mass</summary>
-        public Biomass AboveGround { get { return new Biomass(); } }
+        public IBiomass AboveGround { get { return new Biomass(); } }
 
         //CONSTANTS
 
@@ -1851,6 +1843,12 @@ namespace Models
         /// The g_dlt_sw_dep
         /// </summary>
         double[] g_dlt_sw_dep = new double[max_layer]; 				//! water uptake in each layer (mm water)
+
+        /// <summary>
+        /// Soil water uptake - positive values.
+        /// </summary>
+        public IReadOnlyList<double> WaterUptake => MathUtilities.Multiply_Value(g_dlt_sw_dep, -1);
+
         //double[]      sat_dep  = new double[max_layer]; 				//!
         //double[]      dul_dep  = new double[max_layer]; 				//! drained upper limit soil water content for soil layer L (mm water)
         //double[]      ll15_dep  = new double[max_layer]; 				//!
@@ -2355,6 +2353,7 @@ namespace Models
             g_dlt_tt = 0.0;
 
             g_sw_demand = 0.0;
+            WaterDemand = 0;
             //      dm_graze = 0.0;
             //      n_graze = 0.0;
 
@@ -2540,26 +2539,6 @@ namespace Models
 
 
         #region Science.f90 (FortranInfrastructure)
-
-        /// <summary>
-        /// Finds the layer no_ob.
-        /// </summary>
-        /// <param name="Depth">The depth.</param>
-        /// <returns></returns>
-        private int FindLayerNo_ob(double Depth)
-            {
-            // Find the soil layer in which the indicated depth is located
-            // If the depth is not reached, the last element is used
-            double depth_cum = 0.0;
-            for (int i = 0; i < dlayer.Length; i++)
-                {
-                depth_cum = depth_cum + dlayer[i];
-                if (depth_cum >= Depth)
-                    return i + 1;    //convert to one based  
-                }
-            return dlayer.Length;   //one based
-            }
-
 
         /// <summary>
         /// Root_proportions the specified layer_ob.
@@ -4231,7 +4210,7 @@ namespace Models
 
 
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             l_sw_avail_fac_deepest_layer_ob = crop_sw_avail_fac(c_x_sw_ratio, c_y_sw_fac_root, i_dul_dep, i_sw_dep, i_ll_dep, l_deepest_layer_ob);
 
@@ -4367,7 +4346,7 @@ namespace Models
 
 
 
-            l_current_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_current_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             l_current_phase = (int)i_current_stage;
 
             //! this equation allows soil water in the deepest
@@ -4643,7 +4622,7 @@ namespace Models
 
             fill_real_array(ref o_sw_avail_pot, 0.0, o_sw_avail_pot.Length);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 o_sw_avail_pot[layer] = i_dul_dep[layer] - i_ll_dep[layer];
@@ -4698,7 +4677,7 @@ namespace Models
 
             fill_real_array(ref o_sw_avail, 0.0, o_sw_avail.Length);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 o_sw_avail[layer] = i_sw_dep[layer] - i_ll_dep[layer];
@@ -4759,7 +4738,7 @@ namespace Models
 
             fill_real_array(ref o_sw_supply, 0.0, o_sw_supply.Length);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 l_sw_avail = (i_sw_dep[layer] - i_ll_dep[layer]);
@@ -4838,7 +4817,7 @@ namespace Models
 
             //! find total root water potential uptake as sum of all layers
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             l_sw_supply_sum = SumArray(i_sw_supply, l_deepest_layer_ob);
 
             if ((l_sw_supply_sum <= 0.0) || (i_sw_demand <= 0.0))
@@ -4923,7 +4902,7 @@ namespace Models
             double l_sw_supply_sum;       //! total supply over profile (mm)
             bool l_didInterpolate;
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             //! get potential water that can be taken up when profile is full
 
@@ -4972,7 +4951,7 @@ namespace Models
             double l_sw_supply_sum;         //! total supply over profile (mm)
             bool l_didInterpolate;
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
 
             //! get potential water that can be taken up when profile is full
@@ -5027,7 +5006,7 @@ namespace Models
             double sw_avail_sum;        //! actual extractable soil water (mm)
             bool didInterpolate;
 
-            deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             sw_avail_pot_sum = SumArray(i_sw_avail_pot, deepest_layer_ob);
             sw_avail_sum = SumArray(i_sw_avail, deepest_layer_ob);
             sw_avail_ratio = MathUtilities.Divide(sw_avail_sum, sw_avail_pot_sum, 1.0); //!???
@@ -5071,7 +5050,7 @@ namespace Models
 
 
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             //! get potential water that can be taken up when profile is full
             l_sw_supply_sum = SumArray(i_sw_supply, l_deepest_layer_ob);
             l_sw_demand_ratio = MathUtilities.Divide(l_sw_supply_sum, i_sw_demand, 1.0);
@@ -5473,7 +5452,7 @@ namespace Models
 
             if (stage_is_between(i_sowing_stage, i_germ_stage, i_current_stage))
                 {
-                l_layer_no_seed = FindLayerNo_ob(i_sowing_depth);
+                l_layer_no_seed = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_sowing_depth) + 1;
                 l_pesw_seed = MathUtilities.Divide(i_sw_dep[zb(l_layer_no_seed)] - i_ll_dep[zb(l_layer_no_seed)], i_dlayer[zb(l_layer_no_seed)], 0.0);
 
                 //! can't germinate on same day as sowing, because miss out on day of sowing else_where
@@ -5553,7 +5532,7 @@ namespace Models
 
             if (l_current_phase == i_germ_phase)
                 {
-                l_layer_no_seed = FindLayerNo_ob(i_sowing_depth);
+                l_layer_no_seed = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_sowing_depth) + 1;
                 l_fasw_seed = MathUtilities.Divide(i_sw_dep[zb(l_layer_no_seed)] - i_ll_dep[zb(l_layer_no_seed)], i_dul_dep[zb(l_layer_no_seed)] - i_ll_dep[zb(l_layer_no_seed)], 0.0);
                 l_fasw_seed = bound(l_fasw_seed, 0.0, 1.0);
 
@@ -6150,7 +6129,7 @@ namespace Models
 
             //! potential (supply) by transpiration
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             l_sw_supply_sum = SumArray(i_sw_supply, l_deepest_layer_ob);
             return l_sw_supply_sum * i_transp_eff;
 
@@ -6291,7 +6270,7 @@ namespace Models
 
             fill_real_array(ref o_root_array, 0.0, i_dlayer.Length);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             l_root_length_sum = SumArray(i_root_length, l_deepest_layer_ob);
 
@@ -7097,7 +7076,7 @@ namespace Models
                 {
                 fill_real_array(ref o_dlt_root_length, 0.0, i_max_layer);
 
-                l_deepest_layer_ob = FindLayerNo_ob(i_root_depth + i_dlt_root_depth);
+                l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth + i_dlt_root_depth) + 1;
                 l_rlv_factor_tot = 0.0;
 
                 for (int layer = 0; layer < l_deepest_layer_ob; layer++)
@@ -7948,7 +7927,7 @@ namespace Models
 
             fill_real_array(ref o_no3gsm_mflow_pot, 0.0, i_num_layer);
             //! only take the layers in which roots occur
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 //! get  NO3 concentration
@@ -8012,7 +7991,7 @@ namespace Models
             //! only take the layers in which roots occur
             fill_real_array(ref o_no3gsm_diffn_pot, 0.0, i_num_layer);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 l_sw_avail_fract = MathUtilities.Divide(i_sw_avail[layer], i_sw_avail_pot[layer], 0.0);
@@ -8140,7 +8119,7 @@ namespace Models
             double l_total_n_uptake_pot;
             double l_scalef;
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             if (i_current_stage >= c_n_stress_start_stage)
                 {
@@ -8465,7 +8444,7 @@ namespace Models
             //! get potential N uptake (supply) from the root profile.
             //! get totals for diffusion and mass flow.
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
             for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                 {
                 l_NO3gsm_diffn_avail[layer] = i_no3gsm_diffn_pot[layer] - i_no3gsm_mflow_avail[layer];
@@ -8581,7 +8560,7 @@ namespace Models
 
 
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             l_Ngsm_supply = SumArray(i_no3gsm_uptake_pot, l_deepest_layer_ob) + SumArray(i_nh4gsm_uptake_pot, l_deepest_layer_ob);
 
@@ -8667,7 +8646,7 @@ namespace Models
 
 
             fill_real_array(ref o_dlt_N_green, 0.0, max_part);
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             //! find proportion of uptake to be
             //! distributed to each plant part and distribute it.
@@ -10176,7 +10155,7 @@ namespace Models
             //c      N_conc_stover_crit = (g_N_conc_crit(leaf) + g_N_conc_crit(stem)) * 0.5
             l_N_green_demand = SumArray(i_n_demand, max_part);
 
-            l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+            l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
             if (on_day_of(sowing, i_current_stage))
                 {
@@ -10293,7 +10272,7 @@ namespace Models
 
                 l_N_green_conc_percent = MathUtilities.Divide(l_N_green, l_dm_green, 0.0) * fract2pcnt;
 
-                l_deepest_layer_ob = FindLayerNo_ob(i_root_depth);
+                l_deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, i_root_depth) + 1;
 
                 for (int layer = 0; layer < l_deepest_layer_ob; layer++)
                     {
@@ -10364,7 +10343,7 @@ namespace Models
             double asw_pot;
             int deepest_layer_ob;
 
-            deepest_layer_ob = FindLayerNo_ob(g_root_depth);
+            deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, g_root_depth) + 1;
             asw_pot = 0.0;
             asw = 0.0;
             for (int layer = 0; layer < deepest_layer_ob; layer++)
@@ -10889,7 +10868,7 @@ namespace Models
         /// </value>
         [Units("(mm/mm3)")]
         [JsonIgnore]
-        public double[] rlv
+        public IReadOnlyList<double> RootLengthDensity
             {
             get
                 {
@@ -11887,7 +11866,7 @@ namespace Models
             {
             get
                 {
-                int deepest_layer_ob = FindLayerNo_ob(g_root_depth);
+                int deepest_layer_ob = SoilUtilities.LayerIndexOfClosestDepth(dlayer, g_root_depth) + 1;
                 double l_NO3gsm_tot = SumArray(g_no3gsm, deepest_layer_ob);
                 return Math.Round(l_NO3gsm_tot,2);
                 }
@@ -11960,7 +11939,7 @@ namespace Models
         /// </value>
         [Units("(g/m2)")]
         [JsonIgnore]
-        public double[] no3_uptake
+        public IReadOnlyList<double> NitrogenUptake
             {
             get
                 {

@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 126,
+  "Version": 144,
   "Name": "Simulations",
   "Children": [
     {
@@ -12,6 +12,14 @@
       "ResourceName": null,
       "Name": "Barley",
       "Children": [
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "_Brown, H.E., Huth, N.I., Khaembah E.N., Zyskowski, R., and Holzworth, D.P._\n",
+          "Name": "TitlePage",
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        },
         {
           "$type": "Models.PMF.OrganArbitrator, Models",
           "Name": "Arbitrator",
@@ -40,7 +48,8 @@
                       "$type": "Models.PMF.Arbitrator.SendPotentialDMAllocationsMethod, Models",
                       "Name": "SendPotentialDMAllocationsMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -54,7 +63,8 @@
                       "$type": "Models.PMF.Arbitrator.DryMatterAllocationsMethod, Models",
                       "Name": "DryMatterAllocationsMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -78,7 +88,8 @@
                       "$type": "Models.PMF.Arbitrator.ReallocationMethod, Models",
                       "Name": "ReallocationMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -92,7 +103,8 @@
                       "$type": "Models.PMF.Arbitrator.RetranslocationMethod, Models",
                       "Name": "RetranslocationMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
@@ -102,7 +114,8 @@
                       "$type": "Models.PMF.Arbitrator.NitrogenAllocationsMethod, Models",
                       "Name": "NitrogenAllocationsMethod"
                     }
-                  ]
+                  ],
+                  "ShowInDocs": false
                 },
                 {
                   "$type": "Models.PMF.RelativeAllocation, Models",
@@ -167,26 +180,26 @@
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Axis, Models",
-                          "Type": 0,
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                           "Title": "Y",
                           "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null,
                           "DateTimeAxis": false,
-                          "CrossesAtZero": false
+                          "CrossesAtZero": false,
+                          "Position": 0
                         },
                         {
-                          "$type": "Models.Axis, Models",
-                          "Type": 3,
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                           "Title": "X",
                           "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null,
                           "DateTimeAxis": false,
-                          "CrossesAtZero": false
+                          "CrossesAtZero": false,
+                          "Position": 3
                         }
                       ],
                       "LegendPosition": 3,
@@ -233,26 +246,26 @@
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Axis, Models",
-                          "Type": 0,
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                           "Title": "Y",
                           "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null,
                           "DateTimeAxis": false,
-                          "CrossesAtZero": false
+                          "CrossesAtZero": false,
+                          "Position": 0
                         },
                         {
-                          "$type": "Models.Axis, Models",
-                          "Type": 3,
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                           "Title": "X",
                           "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null,
                           "DateTimeAxis": false,
-                          "CrossesAtZero": false
+                          "CrossesAtZero": false,
+                          "Position": 3
                         }
                       ],
                       "LegendPosition": 3,
@@ -299,26 +312,26 @@
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Axis, Models",
-                          "Type": 0,
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                           "Title": "Y",
                           "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null,
                           "DateTimeAxis": false,
-                          "CrossesAtZero": false
+                          "CrossesAtZero": false,
+                          "Position": 0
                         },
                         {
-                          "$type": "Models.Axis, Models",
-                          "Type": 3,
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                           "Title": "X",
                           "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null,
                           "DateTimeAxis": false,
-                          "CrossesAtZero": false
+                          "CrossesAtZero": false,
+                          "Position": 3
                         }
                       ],
                       "LegendPosition": 3,
@@ -394,7 +407,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "Vernalisation responses are based on those described by [Brown_Anthesis_2013].   Vernalisation is assumed to be related to the expression of the Vrn1 Gene.  Its experssion is accumulated daily and daily upregulation as a function of development (DeltaHaunStage) and a TempResponseProfile that declines exponentially from a maximum at 1<sup>o</sup>C to zero at 0<sup>o</sup>C and at 18<sup>o</sup>C.",
+                  "Text": "Vernalisation responses are based on those described by [Brown_Anthesis_2013].   Vernalisation is assumed to be related to the expression of the Vrn1 Gene.  Its experssion is accumulated daily and daily upregulation as a function of development (DeltaHaunStage) and a TempResponseProfile that declines exponentially from a maximum at 1^o^C to zero at 0^o^C and at 18^o^C.",
                   "Name": "Memo",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -1225,6 +1238,45 @@
             },
             {
               "$type": "Models.Functions.OnEventFunction, Models",
+              "SetEvent": "Emergence",
+              "ReSetEvent": "never",
+              "Name": "EmergenceDAS",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "\r\nA function is used to provide emergence date as days after sowing(DAS).\r\n",
+                  "Name": "memo",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.0,
+                  "Units": null,
+                  "Name": "PreEventValue",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Plant].DaysAfterSowing",
+                  "Name": "PostEventValue",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "IncludeInDocumentation": false,
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Functions.OnEventFunction, Models",
               "SetEvent": "FlagLeaf",
               "ReSetEvent": "never",
               "Name": "FlagLeafDAS",
@@ -1413,26 +1465,26 @@
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "Y",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 0
                             },
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "X",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 3
                             }
                           ],
                           "LegendPosition": 3,
@@ -1479,26 +1531,26 @@
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "Y",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 0
                             },
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "X",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 3
                             }
                           ],
                           "LegendPosition": 3,
@@ -1592,26 +1644,26 @@
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "Y",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 0
                             },
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "X",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 3
                             }
                           ],
                           "LegendPosition": 3,
@@ -1658,26 +1710,26 @@
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "Y",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 0
                             },
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "X",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 3
                             }
                           ],
                           "LegendPosition": 3,
@@ -1724,26 +1776,26 @@
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "Y",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 0
                             },
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "X",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 3
                             }
                           ],
                           "LegendPosition": 3,
@@ -1790,26 +1842,26 @@
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "Y",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 0
                             },
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "X",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 3
                             }
                           ],
                           "LegendPosition": 3,
@@ -1856,26 +1908,26 @@
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "Y",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 0
                             },
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "X",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 3
                             }
                           ],
                           "LegendPosition": 3,
@@ -1922,26 +1974,26 @@
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "Y",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 0
                             },
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "X",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 3
                             }
                           ],
                           "LegendPosition": 3,
@@ -1988,26 +2040,26 @@
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "Y",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 0
                             },
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "X",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 3
                             }
                           ],
                           "LegendPosition": 3,
@@ -2054,26 +2106,26 @@
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "Y",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 0
                             },
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "X",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 3
                             }
                           ],
                           "LegendPosition": 3,
@@ -2550,26 +2602,26 @@
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 0,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "Y",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 0
                                     },
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 3,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "X",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 3
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -2616,26 +2668,26 @@
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 0,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "Y",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 0
                                     },
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 3,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "X",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 3
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -2682,26 +2734,26 @@
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 0,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "Y",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 0
                                     },
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 3,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "X",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 3
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -3043,26 +3095,26 @@
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 0,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "Y",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 0
                                     },
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 3,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "X",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 3
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -3745,6 +3797,48 @@
               "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "DMDemandPriorityFactors",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Structural",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "1"
+                }
+              ]
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "NDemandPriorityFactors",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Structural",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "1"
+                }
+              ]
             }
           ],
           "IncludeInDocumentation": false,
@@ -3765,7 +3859,7 @@
           "Name": "Root",
           "Children": [
             {
-              "$type": "Models.Functions.RootShape.RootShapeCylindre, Models",
+              "$type": "Models.Functions.RootShape.RootShapeCylinder, Models",
               "Name": "RootShape",
               "Children": []
             },
@@ -4040,26 +4134,26 @@
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "Y",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 0
                             },
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "X",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 3
                             }
                           ],
                           "LegendPosition": 3,
@@ -4142,26 +4236,26 @@
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "Y",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 0
                             },
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "X",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 3
                             }
                           ],
                           "LegendPosition": 3,
@@ -4319,7 +4413,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "DMDemands",
               "Children": [
                 {
@@ -4382,26 +4476,26 @@
                                           "Caption": null,
                                           "Axis": [
                                             {
-                                              "$type": "Models.Axis, Models",
-                                              "Type": 0,
+                                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                               "Title": "Y",
                                               "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
+                                              "Minimum": null,
+                                              "Maximum": null,
+                                              "Interval": null,
                                               "DateTimeAxis": false,
-                                              "CrossesAtZero": false
+                                              "CrossesAtZero": false,
+                                              "Position": 0
                                             },
                                             {
-                                              "$type": "Models.Axis, Models",
-                                              "Type": 3,
+                                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                               "Title": "X",
                                               "Inverted": false,
-                                              "Minimum": "NaN",
-                                              "Maximum": "NaN",
-                                              "Interval": "NaN",
+                                              "Minimum": null,
+                                              "Maximum": null,
+                                              "Interval": null,
                                               "DateTimeAxis": false,
-                                              "CrossesAtZero": false
+                                              "CrossesAtZero": false,
+                                              "Position": 3
                                             }
                                           ],
                                           "LegendPosition": 3,
@@ -4559,6 +4653,21 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -4566,7 +4675,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "NDemands",
               "Children": [
                 {
@@ -4667,6 +4776,21 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -4976,26 +5100,26 @@
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "Y",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 0
                                 },
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "X",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 3
                                 }
                               ],
                               "LegendPosition": 3,
@@ -5136,26 +5260,26 @@
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "Y",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 0
                                 },
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "X",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 3
                                 }
                               ],
                               "LegendPosition": 3,
@@ -5202,26 +5326,26 @@
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "Y",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 0
                                 },
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "X",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 3
                                 }
                               ],
                               "LegendPosition": 3,
@@ -5268,26 +5392,26 @@
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "Y",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 0
                                 },
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "X",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 3
                                 }
                               ],
                               "LegendPosition": 3,
@@ -5334,26 +5458,26 @@
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "Y",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 0
                                 },
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "X",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 3
                                 }
                               ],
                               "LegendPosition": 3,
@@ -5555,26 +5679,26 @@
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "Y",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 0
                                 },
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "X",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 3
                                 }
                               ],
                               "LegendPosition": 3,
@@ -5621,26 +5745,26 @@
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "Y",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 0
                                 },
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "X",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 3
                                 }
                               ],
                               "LegendPosition": 3,
@@ -5687,26 +5811,26 @@
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "Y",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 0
                                 },
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "X",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 3
                                 }
                               ],
                               "LegendPosition": 3,
@@ -5753,26 +5877,26 @@
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "Y",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 0
                                 },
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "X",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 3
                                 }
                               ],
                               "LegendPosition": 3,
@@ -5819,26 +5943,26 @@
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "Y",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 0
                                 },
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "X",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 3
                                 }
                               ],
                               "LegendPosition": 3,
@@ -5885,26 +6009,26 @@
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "Y",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 0
                                 },
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "X",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 3
                                 }
                               ],
                               "LegendPosition": 3,
@@ -5951,26 +6075,26 @@
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "Y",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 0
                                 },
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "X",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 3
                                 }
                               ],
                               "LegendPosition": 3,
@@ -6017,26 +6141,26 @@
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "Y",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 0
                                 },
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "X",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 3
                                 }
                               ],
                               "LegendPosition": 3,
@@ -6083,26 +6207,26 @@
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "Y",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 0
                                 },
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "X",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 3
                                 }
                               ],
                               "LegendPosition": 3,
@@ -6388,7 +6512,7 @@
                 },
                 {
                   "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "DroughtInducedLagAcceleration",
+                  "Name": "LagAcceleration",
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
@@ -6435,26 +6559,26 @@
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 0,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "Y",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 0
                                     },
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 3,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "X",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 3
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -6501,26 +6625,26 @@
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 0,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "Y",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 0
                                     },
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 3,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "X",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 3
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -6567,26 +6691,26 @@
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 0,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "Y",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 0
                                     },
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 3,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "X",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 3
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -6633,26 +6757,26 @@
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 0,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "Y",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 0
                                     },
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 3,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "X",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 3
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -6699,26 +6823,26 @@
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 0,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "Y",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 0
                                     },
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 3,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "X",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 3
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -6765,26 +6889,26 @@
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 0,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "Y",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 0
                                     },
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 3,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "X",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 3
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -6831,26 +6955,26 @@
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 0,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "Y",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 0
                                     },
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 3,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "X",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 3
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -6897,26 +7021,26 @@
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 0,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "Y",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 0
                                     },
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 3,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "X",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 3
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -6963,26 +7087,26 @@
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 0,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "Y",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 0
                                     },
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 3,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "X",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 3
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -7055,7 +7179,7 @@
                 },
                 {
                   "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "DroughtInducedSenAcceleration",
+                  "Name": "SenescenceAcceleration",
                   "Children": [
                     {
                       "$type": "Models.Functions.Constant, Models",
@@ -7102,26 +7226,26 @@
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 0,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "Y",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 0
                                     },
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 3,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "X",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 3
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -7168,26 +7292,26 @@
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 0,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "Y",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 0
                                     },
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 3,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "X",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 3
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -7234,26 +7358,26 @@
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 0,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "Y",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 0
                                     },
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 3,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "X",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 3
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -7300,26 +7424,26 @@
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 0,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "Y",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 0
                                     },
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 3,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "X",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 3
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -7366,26 +7490,26 @@
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 0,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "Y",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 0
                                     },
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 3,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "X",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 3
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -7432,26 +7556,26 @@
                                   "Caption": null,
                                   "Axis": [
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 0,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "Y",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 0
                                     },
                                     {
-                                      "$type": "Models.Axis, Models",
-                                      "Type": 3,
+                                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                       "Title": "X",
                                       "Inverted": false,
-                                      "Minimum": "NaN",
-                                      "Maximum": "NaN",
-                                      "Interval": "NaN",
+                                      "Minimum": null,
+                                      "Maximum": null,
+                                      "Interval": null,
                                       "DateTimeAxis": false,
-                                      "CrossesAtZero": false
+                                      "CrossesAtZero": false,
+                                      "Position": 3
                                     }
                                   ],
                                   "LegendPosition": 3,
@@ -7669,26 +7793,26 @@
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "Y",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 0
                                 },
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "X",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 3
                                 }
                               ],
                               "LegendPosition": 3,
@@ -7735,26 +7859,26 @@
                               "Caption": null,
                               "Axis": [
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 0,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "Y",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 0
                                 },
                                 {
-                                  "$type": "Models.Axis, Models",
-                                  "Type": 3,
+                                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                                   "Title": "X",
                                   "Inverted": false,
-                                  "Minimum": "NaN",
-                                  "Maximum": "NaN",
-                                  "Interval": "NaN",
+                                  "Minimum": null,
+                                  "Maximum": null,
+                                  "Interval": null,
                                   "DateTimeAxis": false,
-                                  "CrossesAtZero": false
+                                  "CrossesAtZero": false,
+                                  "Position": 3
                                 }
                               ],
                               "LegendPosition": 3,
@@ -7987,26 +8111,26 @@
                           "Caption": null,
                           "Axis": [
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 0,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "Y",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 0
                             },
                             {
-                              "$type": "Models.Axis, Models",
-                              "Type": 3,
+                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                               "Title": "X",
                               "Inverted": false,
-                              "Minimum": "NaN",
-                              "Maximum": "NaN",
-                              "Interval": "NaN",
+                              "Minimum": null,
+                              "Maximum": null,
+                              "Interval": null,
                               "DateTimeAxis": false,
-                              "CrossesAtZero": false
+                              "CrossesAtZero": false,
+                              "Position": 3
                             }
                           ],
                           "LegendPosition": 3,
@@ -8368,6 +8492,48 @@
               "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "DMDemandPriorityFactors",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Structural",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "1"
+                }
+              ]
+            },
+            {
+              "$type": "Models.PMF.BiomassDemand, Models",
+              "Name": "NDemandPriorityFactors",
+              "Children": [
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Structural",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Metabolic",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "Storage",
+                  "FixedValue": "1"
+                }
+              ]
             }
           ],
           "IncludeInDocumentation": false,
@@ -8654,7 +8820,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "DMDemands",
               "Children": [
                 {
@@ -8806,6 +8972,21 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -8813,7 +8994,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "NDemands",
               "Children": [
                 {
@@ -8914,6 +9095,21 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -8953,6 +9149,16 @@
                   "FixedValue": "0.0"
                 }
               ]
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "Name": "Photosynthesis",
+              "FixedValue": "0"
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "Name": "initialNConcFunction",
+              "VariableName": "[Spike].MinimumNConc"
             }
           ],
           "IncludeInDocumentation": false,
@@ -9326,7 +9532,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "DMDemands",
               "Children": [
                 {
@@ -9525,6 +9731,21 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -9532,7 +9753,7 @@
               "ReadOnly": false
             },
             {
-              "$type": "Models.PMF.BiomassDemand, Models",
+              "$type": "Models.PMF.BiomassDemandAndPriority, Models",
               "Name": "NDemands",
               "Children": [
                 {
@@ -9633,6 +9854,21 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStructuralPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QMetabolicPriority",
+                  "FixedValue": "1"
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "Name": "QStoragePriority",
+                  "FixedValue": "1"
                 }
               ],
               "IncludeInDocumentation": true,
@@ -9672,6 +9908,16 @@
                   "FixedValue": "0.0"
                 }
               ]
+            },
+            {
+              "$type": "Models.Functions.Constant, Models",
+              "Name": "Photosynthesis",
+              "FixedValue": "0"
+            },
+            {
+              "$type": "Models.Functions.VariableReference, Models",
+              "Name": "initialNConcFunction",
+              "VariableName": "[Stem].MinimumNConc"
             }
           ],
           "IncludeInDocumentation": false,
@@ -9680,127 +9926,133 @@
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Leaf].Dead",
-            "[Stem].Live",
-            "[Stem].Dead",
-            "[Spike].Live",
-            "[Spike].Dead",
-            "[Grain].Live",
-            "[Grain].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "AboveGround",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Spike",
+            "Grain"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Stem].Live",
-            "[Spike].Live",
-            "[Grain].Live"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "AboveGroundLive",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Spike",
+            "Grain"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": false
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Dead",
-            "[Stem].Dead",
-            "[Spike].Dead",
-            "[Grain].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "AboveGroundDead",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Spike",
+            "Grain"
+          ],
+          "IncludeLive": false,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Root].Live",
-            "[Root].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "BelowGround",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Root"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Leaf].Dead",
-            "[Stem].Live",
-            "[Stem].Dead",
-            "[Root].Live",
-            "[Root].Dead",
-            "[Spike].Live",
-            "[Spike].Dead",
-            "[Grain].Live",
-            "[Grain].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "Total",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Root",
+            "Spike",
+            "Grain"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Live",
-            "[Stem].Live",
-            "[Root].Live",
-            "[Spike].Live",
-            "[Grain].Live"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "TotalLive",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Root",
+            "Spike",
+            "Grain"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": false
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Leaf].Dead",
-            "[Stem].Dead",
-            "[Root].Dead",
-            "[Spike].Dead",
-            "[Grain].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "TotalDead",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Leaf",
+            "Stem",
+            "Root",
+            "Spike",
+            "Grain"
+          ],
+          "IncludeLive": false,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Spike].Live",
-            "[Grain].Live",
-            "[Spike].Dead",
-            "[Grain].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "Ear",
           "Children": [
@@ -9816,22 +10068,29 @@
           ],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Spike",
+            "Grain"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CompositeBiomass, Models",
-          "Propertys": [
-            "[Stem].Live",
-            "[Spike].Live",
-            "[Stem].Dead",
-            "[Spike].Dead"
-          ],
+          "Propertys": null,
           "DMDOfStructural": 0.6,
           "Name": "StemPlusSpike",
           "Children": [],
           "IncludeInDocumentation": false,
           "Enabled": true,
-          "ReadOnly": false
+          "ReadOnly": false,
+          "OrganNames": [
+            "Stem",
+            "Spike"
+          ],
+          "IncludeLive": true,
+          "IncludeDead": true
         },
         {
           "$type": "Models.PMF.CultivarFolder, Models",
@@ -10066,11 +10325,73 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 0.33",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Alestar",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                    "[Phenology].PpSensitivity.FixedValue = 0.5",
+                    "[Phenology].VrnSensitivity.FixedValue = 1.33",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Banks",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
                     "[Phenology].PpSensitivity.FixedValue = 3",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
                   "Name": "Baudin",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8.33",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 2",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Bass",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8.33",
+                    "[Phenology].PpSensitivity.FixedValue = 0",
+                    "[Phenology].VrnSensitivity.FixedValue = 2.66",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Biere",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -10092,7 +10413,24 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 11.33",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 0.33",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Cassiopee",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
                     "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10105,7 +10443,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
                     "[Phenology].PpSensitivity.FixedValue = 3",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10118,11 +10458,148 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 1.33",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Compass",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7.33",
+                    "[Phenology].PpSensitivity.FixedValue = 1.66",
+                    "[Phenology].VrnSensitivity.FixedValue = 2.66",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "CSIROB1",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                    "[Phenology].PpSensitivity.FixedValue = 2",
+                    "[Phenology].VrnSensitivity.FixedValue = 0.66",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "CSIROB3",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 10.66",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 2.33",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Dash",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                    "[Phenology].PpSensitivity.FixedValue = 3",
+                    "[Phenology].VrnSensitivity.FixedValue = 3",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Fathom",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
                     "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
                   "Name": "Fleet",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8.33",
+                    "[Phenology].PpSensitivity.FixedValue = 0.66",
+                    "[Phenology].VrnSensitivity.FixedValue = 1.16",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Flinders",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 10",
+                    "[Phenology].PpSensitivity.FixedValue = 0.5",
+                    "[Phenology].VrnSensitivity.FixedValue = 1",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Franklin",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 10",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 2",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Gairdner",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "[Phenology].PpSensitivity.FixedValue = 2.5",
+                    "[Phenology].VrnSensitivity.FixedValue = 1",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Granger",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,
@@ -10144,6 +10621,21 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7.33",
+                    "[Phenology].PpSensitivity.FixedValue = 1.66",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Grout",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
                     "[Phenology].PpSensitivity.FixedValue = 4",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
@@ -10157,7 +10649,9 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
                     "[Phenology].PpSensitivity.FixedValue = 2",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
@@ -10170,11 +10664,223 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 6.66",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 1",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Lockyer",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Mundah",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                    "[Phenology].PpSensitivity.FixedValue = 2",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Navigator",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
                     "[Phenology].PpSensitivity.FixedValue = 4",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
                     "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
                     "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
                   ],
                   "Name": "Oxford",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "[Phenology].PpSensitivity.FixedValue = 0.5",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "RGT_Planet",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "[Phenology].PpSensitivity.FixedValue = 2",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Rosalind",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                    "[Phenology].PpSensitivity.FixedValue = 0",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Schooner",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 2",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Scope",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "[Phenology].PpSensitivity.FixedValue = 0",
+                    "[Phenology].VrnSensitivity.FixedValue = 0.33",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Shepherd",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 6",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 1.33",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Spartacus_CL",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 8",
+                    "[Phenology].PpSensitivity.FixedValue = 1",
+                    "[Phenology].VrnSensitivity.FixedValue = 0",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Stirling",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                    "[Phenology].PpSensitivity.FixedValue = 3",
+                    "[Phenology].VrnSensitivity.FixedValue = 0.66",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Unicorn",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9.66",
+                    "[Phenology].PpSensitivity.FixedValue = 0.33",
+                    "[Phenology].VrnSensitivity.FixedValue = 8",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Urambie",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 9",
+                    "[Phenology].PpSensitivity.FixedValue = 0.5",
+                    "[Phenology].VrnSensitivity.FixedValue = 0.33",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Westminster",
+                  "Children": [],
+                  "IncludeInDocumentation": false,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].MinimumLeafNumber.FixedValue = 7",
+                    "[Phenology].PpSensitivity.FixedValue = 2",
+                    "[Phenology].VrnSensitivity.FixedValue = 1.33",
+                    "[Phenology].EarlyReproductivePpSensitivity.FixedValue = 2",
+                    "[Structure].BranchMortality.MortalityPhase.Mortality.MortalityPerDegDay.XYPairs.Y = 0.001,0"
+                  ],
+                  "Name": "Yagan",
                   "Children": [],
                   "IncludeInDocumentation": false,
                   "Enabled": true,

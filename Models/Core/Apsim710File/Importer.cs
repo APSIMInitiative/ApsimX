@@ -137,8 +137,8 @@
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.Message);
-                    throw new Exception(e.Message);
+                    Console.WriteLine(e.Message + " " + e.InnerException.Message);
+                    throw new Exception(e.Message + " " + e.InnerException.Message);
                 }
             }
             else
@@ -209,8 +209,7 @@
             xmlWriter.Write(XmlUtilities.FormattedXML(xdoc.OuterXml));
             xmlWriter.Close();
 
-            List<Exception> creationExceptions;
-            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, out creationExceptions);
+            newSimulations = FileFormat.ReadFromFile<Simulations>(xfile, e => throw e, false);
             File.Delete(xfile);
             return newSimulations;
         }

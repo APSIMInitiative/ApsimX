@@ -8,12 +8,11 @@ using System.Linq;
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
     /// Raises the value of the child to the power of the exponent specified
     /// </summary>
     [Serializable]
     [Description("Raises the value of the child to the power of the exponent specified")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PowerFunction : Model, IFunction
     {

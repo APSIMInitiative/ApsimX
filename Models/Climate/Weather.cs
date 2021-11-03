@@ -74,6 +74,12 @@
         private int windIndex;
 
         /// <summary>
+        /// The index of the co2 column in the weather file, or -1
+        /// if the weather file doesn't contain co2.
+        /// </summary>
+        private int co2Index;
+
+        /// <summary>
         /// The index of the DiffuseFraction column in the weather file
         /// </summary>
         private int DiffuseFractionIndex;
@@ -328,6 +334,7 @@
         /// <summary>
         /// Gets or sets the DF value found in weather file or zero if not specified
         /// </summary>
+        [Units("0-1")]
         [JsonIgnore]
         public double DiffuseFraction { get; set; }
 
@@ -548,12 +555,15 @@
             this.rainfallHoursIndex = 0;
             this.vapourPressureIndex = 0;
             this.windIndex = 0;
+            this.co2Index = -1;
             this.DiffuseFractionIndex = 0;
             this.dayLengthIndex = 0;
             if (CO2 == 0)
                 this.CO2 = 350;
             if (AirPressure == 0)
                 this.AirPressure = 1010;
+            if (DiffuseFraction == 0)
+                this.DiffuseFraction = -1;
             if (reader != null)
             {
                 reader.Close();
@@ -572,6 +582,15 @@
                 FirstDateOfSpring = FirstDateOfAutumn;
                 FirstDateOfAutumn = temp;
             }
+        }
+
+        /// <summary>
+        /// Perform the necessary initialisation at the start of simulation.
+        /// </summary>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            First = true;
         }
 
         /// <summary>
@@ -644,6 +663,8 @@
             this.Wind = TodaysMetData.Wind;
             this.DiffuseFraction = TodaysMetData.DiffuseFraction;
             this.DayLength = TodaysMetData.DayLength;
+            if (co2Index != -1)
+                CO2 = TodaysMetData.CO2;
             
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
@@ -740,8 +761,20 @@
             else
                 readMetData.Wind = Convert.ToSingle(values[this.windIndex], CultureInfo.InvariantCulture);
 
+            if (co2Index != -1)
+                readMetData.CO2 = Convert.ToDouble(values[co2Index], CultureInfo.InvariantCulture);
+
             if (this.DiffuseFractionIndex == -1)
-                readMetData.DiffuseFraction = -1;
+            {
+                // Estimate Diffuse Fraction using the Approach of Bristow and Campbell
+                double Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, 0.0); // Radiation for clear and dry sky (ie low humidity)
+                double Q0 = MetUtilities.Q0(clock.Today.DayOfYear + 1, Latitude);
+                double B = Qmax / Q0;
+                double Tt = MathUtilities.Bound(readMetData.Radn / Q0, 0, 1);
+                if (Tt > B) Tt = B;
+                readMetData.DiffuseFraction = (1 - Math.Exp(0.6 * (1 - B / Tt) / (B - 0.4)));
+                if (Tt > 0.5 && readMetData.DiffuseFraction < 0.1) readMetData.DiffuseFraction = 0.1;
+            }
             else
                 readMetData.DiffuseFraction = Convert.ToSingle(values[this.DiffuseFractionIndex], CultureInfo.InvariantCulture);
 
@@ -839,6 +872,7 @@
                     this.windIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Wind");
                     this.DiffuseFractionIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DifFr");
                     this.dayLengthIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DayLength");
+                    co2Index = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "CO2");
 
                     if (!string.IsNullOrEmpty(ConstantsFile))
                     {

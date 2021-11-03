@@ -24,7 +24,7 @@ namespace Models.PMF.Struct
 	/// </remarks>
 	[Serializable]
 	[ValidParent(ParentType = typeof(Plant))]
-	[ViewName("UserInterface.Views.GridView")]
+	[ViewName("UserInterface.Views.PropertyView")]
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	public class LeafCulms : Model
 	{
@@ -51,6 +51,12 @@ namespace Models.PMF.Struct
 		/// </summary>
 		[Link]
 		private Summary summary = null;
+
+		/// <summary>
+		/// Link to clock (used for FTN calculations at time of sowing).
+		/// </summary>
+		[Link]
+		private IClock clock = null;
 
 		/// <summary>
 		/// Link to weather.
@@ -123,10 +129,10 @@ namespace Models.PMF.Struct
 		private IFunction aX0 = null;
 
 		[Link(Type = LinkType.Child, ByName = true)]
-		private IFunction noSeed = null;
+		private IFunction leafNumSeed = null;
 		
 		[Link(Type = LinkType.Child, ByName = true)]
-		private IFunction initRate = null;
+		private IFunction leafInitRate = null;
 		
 		[Link(Type = LinkType.Child, ByName = true)]
 		private IFunction noRateChange1 = null;
@@ -253,11 +259,11 @@ namespace Models.PMF.Struct
 		{
 			get
 			{
-				return leaf.dltPotentialLAI;
+				return leaf.DltPotentialLAI;
 			}
 			set
 			{
-				leaf.dltPotentialLAI = value;
+				leaf.DltPotentialLAI = value;
 			}
 		}
 
@@ -268,11 +274,11 @@ namespace Models.PMF.Struct
 		{
 			get
 			{
-				return leaf.dltStressedLAI;
+				return leaf.DltStressedLAI;
 			}
 			set
 			{
-				leaf.dltStressedLAI = value;
+				leaf.DltStressedLAI = value;
 			}
 		}
 
@@ -437,8 +443,8 @@ namespace Models.PMF.Struct
 			{
 				LeafNoCorrection = leafNoCorrection,
 				AX0 = aX0,
-				NoSeed = noSeed,
-				InitRate = initRate,
+				NoSeed = leafNumSeed,
+				InitRate = leafInitRate,
 				AppearanceRate1 = appearanceRate1,
 				AppearanceRate2 = appearanceRate2,
 				AppearanceRate3 = appearanceRate3,
@@ -478,6 +484,8 @@ namespace Models.PMF.Struct
 			dltLeafNo = 0;
 			tpla = 0;
 			radiationValues = new List<double>();
+
+			NLeaves = 0;
 		}
 
 		/// <summary>
@@ -500,6 +508,8 @@ namespace Models.PMF.Struct
 		private void OnSowing(object sender, EventArgs e)
 		{
 			culmParams.Density = plant.SowingData.Population;
+			if (sender == this.plant && plant.SowingData.BudNumber == -1 && !DynamicTillering)
+				plant.SowingData.BudNumber = CalculateFtn();
 		}
 
 		/// <summary>
@@ -836,7 +846,7 @@ namespace Models.PMF.Struct
 				double pltsPerMetre = plant.SowingData.Population * plant.SowingData.RowSpacing / 1000.0 * plant.SowingData.SkipDensityScale;
 				linearLAI = pltsPerMetre * tpla / 10000.0;
 
-				double laiToday = leaf.calcLAI();
+				double laiToday = leaf.CalcLAI();
 				bool newLeaf = newLeafNo > currentLeafNo;
 				//is it a new leaf, and it is > leaf 6 (leaf 5 appearance triggers initial tiller appeaance)
 				//	bool newTiller = newLeaf && newLeafNo >= 6 && laiToday < maxLAIForTillering; 
@@ -1096,6 +1106,167 @@ namespace Models.PMF.Struct
 		private double CalcStressedLeafArea()
 		{
 			return dltPotentialLAI * expansionStress.Value();
+		}
+	
+		private double CalculateFtn()
+		{
+			// Estimate tillering given latitude, density, time of planting and
+			// row configuration. this will be replaced with dynamic
+			// calculations in the near future. Above latitude -25 is CQ, -25
+			// to -29 is SQ, below is NNSW.
+			double intercept, slope;
+
+			if (weather.Latitude > -12.5 || weather.Latitude < -38.0)
+				// Unknown region.
+				throw new Exception("Unable to estimate number of tillers at latitude {weather.Latitude}");
+
+			if(weather.Latitude > -25.0)
+			{
+				// Central Queensland.
+				if (clock.Today.DayOfYear < 319 && clock.Today.DayOfYear > 182)
+				{
+					// Between 1 July and 15 November.
+					if (plant.SowingData.SkipRow > 1.9)
+					{
+						// Double (2.0).
+						intercept = 0.5786; slope = -0.0521;
+					}
+					else if (plant.SowingData.SkipRow > 1.4)
+					{
+						// Single (1.5).
+						intercept = 0.8786; slope = -0.0696;
+					}
+					else
+					{
+						// Solid (1.0).
+						intercept = 1.1786; slope = -0.0871;
+					}
+				}
+				else
+				{
+					// After 15 November.
+					if (plant.SowingData.SkipRow > 1.9)
+					{
+						// Double (2.0).
+						intercept = 0.4786; slope = -0.0421;
+					}
+					else if (plant.SowingData.SkipRow > 1.4)
+					{
+						// Single (1.5)
+						intercept = 0.6393; slope = -0.0486;
+					}
+					else
+					{
+						// Solid (1.0).
+						intercept = 0.8000; slope = -0.0550;
+					}
+				}
+			}
+			else if(weather.Latitude > -29.0)
+			{
+				// South Queensland.
+				if (clock.Today.DayOfYear < 319 && clock.Today.DayOfYear > 182)
+				{
+					// Between 1 July and 15 November. 
+					if (plant.SowingData.SkipRow > 1.9)
+					{
+						// Double  (2.0).
+						intercept = 1.1571; slope = -0.1043;
+					}
+					else if (plant.SowingData.SkipRow > 1.4)
+					{
+						// Single (1.5).
+						intercept = 1.7571; slope = -0.1393;
+					}
+					else
+					{
+						// Solid (1.0).
+						intercept = 2.3571; slope = -0.1743;
+					}
+				}
+				else
+				{
+					// After 15 November.
+					if (plant.SowingData.SkipRow > 1.9)
+					{
+						// Double (2.0).
+						intercept = 0.6786; slope = -0.0621;
+					}
+					else if (plant.SowingData.SkipRow > 1.4)
+					{
+						// Single (1.5).
+						intercept = 1.1679; slope = -0.0957;
+					}
+					else
+					{
+						// Solid (1.0).
+						intercept = 1.6571; slope = -0.1293;
+					}
+				}
+			}
+			else
+			{
+				// Northern NSW.
+				if(clock.Today.DayOfYear < 319 && clock.Today.DayOfYear > 182)
+				{
+					//  Between 1 July and 15 November. 
+					if (plant.SowingData.SkipRow > 1.9)
+					{
+						// Double (2.0).
+						intercept = 1.3571; slope = -0.1243;
+					}
+					else if (plant.SowingData.SkipRow > 1.4)
+					{
+						// Single (1.5).
+						intercept = 2.2357; slope = -0.1814;
+					}
+					else
+					{
+						// Solid (1.0).
+						intercept = 3.1143; slope = -0.2386;
+					}
+				}
+				else if (clock.Today.DayOfYear > 349 || clock.Today.DayOfYear < 182)
+				{
+					// Between 15 December and 1 July.
+					if (plant.SowingData.SkipRow > 1.9)
+					{
+						// Double (2.0).
+						intercept = 0.4000; slope = -0.0400;
+					}
+					else if (plant.SowingData.SkipRow > 1.4)
+					{
+						// Single (1.5).
+						intercept = 1.0571; slope = -0.0943;
+					}
+					else
+					{
+						// Solid (1.0).
+						intercept = 1.7143; slope = -0.1486;
+					}
+				}
+				else
+				{
+					// Between 15 November and 15 December.
+					if (plant.SowingData.SkipRow > 1.9)
+					{
+						// Double (2.0).
+						intercept = 0.8786; slope = -0.0821;
+					}
+					else if (plant.SowingData.SkipRow > 1.4)
+					{
+						// Single (1.5).
+						intercept = 1.6464; slope = -0.1379;
+					}
+					else
+					{
+						// Solid (1.0).
+						intercept = 2.4143; slope = -0.1936;
+					}
+				}
+			}
+
+   			return Math.Max(slope * plant.SowingData.Population + intercept, 0);
 		}
 	}
 }

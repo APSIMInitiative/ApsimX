@@ -46,6 +46,7 @@ namespace UnitTests.Weather
                 }
             };
 
+            baseSim.Prepare();
             baseSim.Run();
             Assert.AreEqual(MockSummary.messages[0], "Simulation terminated normally");
         }

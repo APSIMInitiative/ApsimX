@@ -1,6 +1,5 @@
-﻿using APSIM.Shared.Extensions;
+﻿﻿using APSIM.Shared.Extensions;
 using APSIM.Shared.Utilities;
-using MarkdownDeep;
 using Models.Core;
 using Models.Functions;
 using System;
@@ -12,6 +11,8 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using UserInterface.Views;
+using UserInterface.Interfaces;
+using Utility;
 
 namespace UserInterface.Presenters
 {
@@ -21,12 +22,9 @@ namespace UserInterface.Presenters
         private ExplorerPresenter presenter;
         private IModel model;
 
-        private Markdown markdown = new Markdown();
 
         public DocumentationPresenter()
         {
-            markdown.ExtraMode = true;
-            markdown.SafeMode = true;
         }
 
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
@@ -47,19 +45,16 @@ namespace UserInterface.Presenters
         {
             StringBuilder markdown = new StringBuilder();
 
+            string summary = AutoDocumentation.GetSummary(model.GetType());
             markdown.AppendLine($"# {model.Name} Description");
             markdown.AppendLine();
-            markdown.AppendLine("## General Description");
-            markdown.AppendLine();
-            string summary = AutoDocumentation.GetSummary(model.GetType())?.Replace("            ", "");
-            
             markdown.AppendLine(summary);
             markdown.AppendLine();
 
             string remarks = AutoDocumentation.GetRemarks(model.GetType());
             if (!string.IsNullOrEmpty(remarks))
             {
-                markdown.AppendLine("## Remarks");
+                markdown.AppendLine($"# Remarks");
                 markdown.AppendLine();
                 markdown.AppendLine(remarks);
                 markdown.AppendLine();
@@ -121,7 +116,7 @@ namespace UserInterface.Presenters
 
                 if (outputs.Rows.Count > 0)
                 {
-                    markdown.AppendLine("## Model Outputs");
+                    markdown.AppendLine("## Outputs");
                     markdown.AppendLine();
                     markdown.AppendLine(DataTableUtilities.ToMarkdown(outputs, true));
                     markdown.AppendLine();

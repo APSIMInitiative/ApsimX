@@ -7,12 +7,11 @@ using Models.PMF.Interfaces;
 namespace Models.LifeCycle
 {
     /// <summary>
-    /// # [Name]
     /// For Pests/Diseases that take assimilate dirrect from the vessels. 
     /// for example aphids
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LifeCyclePhase))]
     public class PlantAssimilateConsumption : Model

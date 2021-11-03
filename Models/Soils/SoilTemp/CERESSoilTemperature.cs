@@ -125,7 +125,7 @@ namespace Models.Soils
         #endregion
 
         /// <summary>Clears this instance.</summary>
-        private void clear()
+        private void Clear()
         {
             // need to initialise some values for surf_temp, repeat the value of ave_temp for the first day (RCichota: why not tav?)
             surf_temp = new double[MaxDaysInYear];
@@ -159,8 +159,8 @@ namespace Models.Soils
 
             ave_temp = (_maxt + _mint) * 0.5;
 
-            if (surf_temp == null)
-                clear();
+            if (clock.Today.Equals(clock.StartDate))
+                Clear();
 
             // Calculate "normal" soil temperature from the day of year assumed to have the warmest average soil temperature
             // The normal soil temperature varies as a cosine function of alx, with average tav and amplitude amp

@@ -14,6 +14,7 @@ using Models.Core.Run;
 using Models.Storage;
 using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
+using Newtonsoft.Json;
 
 namespace Models.CLEM.Reporting
 {
@@ -54,36 +55,8 @@ namespace Models.CLEM.Reporting
         [Description("Automatically create HTML report at end of simulation")]
         public bool AutoCreateHTML { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <inheritdoc/>
         public string SelectedTab { get; set; }
-
-        /// <summary>The columns to write to the data store.</summary>
-        [NonSerialized]
-        private List<IReportColumn> columns = null;
-        [NonSerialized]
-        private ReportData dataToWriteToDb = null;
-
-        /// <summary>Link to a simulation</summary>
-        [Link]
-        private Simulation simulation = null;
-
-        /// <summary>Link to a clock model.</summary>
-        [Link]
-        private IClock clock = null;
-
-        /// <summary>Link to a storage service.</summary>
-        [Link]
-        private IDataStore storage = null;
-
-        /// <summary>Link to a locator service.</summary>
-        [Link]
-        private ILocator locator = null;
-
-        /// <summary>Link to an event service.</summary>
-        [Link]
-        private IEvent events = null;
 
         /// <summary>
         /// Name of filename to save labour report
@@ -104,9 +77,7 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs e)
         {
-            dataToWriteToDb = null;
-
-            VariableNames = new string[]
+            base.VariableNames = new string[]
             {
                 "[Clock].Today as Date",
                 "[Activities].LastActivityPerformed.Name as Name",
@@ -115,204 +86,16 @@ namespace Models.CLEM.Reporting
             };
 
             EventNames = new string[] { "[Activities].ActivityPerformed" };
-
-            // Tidy up variable/event names.
-            VariableNames = TidyUpVariableNames();
-            EventNames = TidyUpEventNames();
-            this.FindVariableMembers();
-
-            // Subscribe to events.
-            foreach (string eventName in EventNames)
-            {
-                if (eventName != string.Empty)
-                {
-                    events.Subscribe(eventName.Trim(), DoOutputEvent);
-                }
-            }
+            SubscribeToEvents();
         }
-
-        [EventSubscribe("Completed")]
-        private void OnCompleted(object sender, EventArgs e)
-        {
-            if (dataToWriteToDb != null)
-            {
-                storage.Writer.WriteTable(dataToWriteToDb);
-            }
-            dataToWriteToDb = null;
-
-            // if auto create
-            if(AutoCreateHTML)
-            {
-                this.CreateDataTable(storage, Path.GetDirectoryName((sender as Simulation).FileName), false);
-            }
-        }
-
-        /// <summary>A method that can be called by other models to perform a line of output.</summary>
-        public new void DoOutput()
-        {
-            if (dataToWriteToDb == null)
-            {
-                string folderName = null;
-                var folderDescriptor = simulation.Descriptors.Find(d => d.Name == "FolderName");
-                if (folderDescriptor != null)
-                {
-                    folderName = folderDescriptor.Value;
-                }
-
-                dataToWriteToDb = new ReportData()
-                {
-                    FolderName = folderName,
-                    SimulationName = simulation.Name,
-                    TableName = Name,
-                    ColumnNames = columns.Select(c => c.Name).ToList(),
-                    ColumnUnits = columns.Select(c => c.Units).ToList()
-                };
-            }
-
-            // Get number of groups.
-            var numGroups = Math.Max(1, columns.Max(c => c.NumberOfGroups));
-
-            for (int groupIndex = 0; groupIndex < numGroups; groupIndex++)
-            {
-                // Create a row ready for writing.
-                List<object> valuesToWrite = new List<object>();
-                List<string> invalidVariables = new List<string>();
-                for (int i = 0; i < columns.Count; i++)
-                {
-                    try
-                    {
-                        valuesToWrite.Add(columns[i].GetValue(groupIndex));
-                    }
-                    catch// (Exception err)
-                    {
-                        // Should we include exception message?
-                        invalidVariables.Add(columns[i].Name);
-                    }
-                }
-                if (invalidVariables != null && invalidVariables.Count > 0)
-                {
-                    throw new Exception($"Error in report {Name}: Invalid report variables found:\r\n{string.Join("\r\n", invalidVariables)}");
-                }
-
-                // Add row to our table that will be written to the db file
-                dataToWriteToDb.Rows.Add(valuesToWrite);
-            }
-
-            // Write the table if we reach our threshold number of rows.
-            if (dataToWriteToDb.Rows.Count >= 100)
-            {
-                storage.Writer.WriteTable(dataToWriteToDb);
-                dataToWriteToDb = null;
-            }
-
-            DayAfterLastOutput = clock.Today.AddDays(1);
-        }
-
-        /// <summary>Create a text report from tables in this data store.</summary>
-        /// <param name="storage">The data store.</param>
-        /// <param name="fileName">Name of the file.</param>
-        public static new void WriteAllTables(IDataStore storage, string fileName)
-        {
-            // Write out each table for this simulation.
-            foreach (string tableName in storage.Reader.TableNames)
-            {
-                DataTable data = storage.Reader.GetData(tableName);
-                if (data != null && data.Rows.Count > 0)
-                {
-                    SortColumnsOfDataTable(data);
-                    StreamWriter report = new StreamWriter(Path.ChangeExtension(fileName, "." + tableName + ".csv"));
-                    DataTableUtilities.DataTableToText(data, 0, ",", true, report);
-                    report.Close();
-                }
-            }
-        }
-
-        /// <summary>Sort the columns alphabetically</summary>
-        /// <param name="table">The table to sort</param>
-        private static void SortColumnsOfDataTable(DataTable table)
-        {
-            var columnArray = new DataColumn[table.Columns.Count];
-            table.Columns.CopyTo(columnArray, 0);
-            var ordinal = -1;
-            foreach (var orderedColumn in columnArray.OrderBy(c => c.ColumnName))
-            {
-                orderedColumn.SetOrdinal(++ordinal);
-            }
-
-            ordinal = -1;
-            int i = table.Columns.IndexOf("SimulationName");
-            if (i != -1)
-            {
-                table.Columns[i].SetOrdinal(++ordinal);
-            }
-
-            i = table.Columns.IndexOf("SimulationID");
-            if (i != -1)
-            {
-                table.Columns[i].SetOrdinal(++ordinal);
-            }
-        }
-
-
-        /// <summary>Called when one of our 'EventNames' events are invoked</summary>
-        public new void DoOutputEvent(object sender, EventArgs e)
-        {
-            DoOutput();
-        }
-
-        /// <summary>
-        /// Fill the Members list with VariableMember objects for each variable.
-        /// </summary>
-        private new void FindVariableMembers()
-        {
-            this.columns = new List<IReportColumn>();
-
-            AddExperimentFactorLevels();
-
-            // If a group by variable was specified then all columns need to be aggregated
-            // columns. Find the first aggregated column so that we can, later, use its from and to
-            // variables to create an agregated column that doesn't have them.
-            string from = null;
-            string to = null;
-            if (!string.IsNullOrEmpty(GroupByVariableName))
-            {
-                FindFromTo(out from, out to);
-            }
-
-            foreach (string fullVariableName in this.VariableNames)
-            {
-                try
-                {
-                    if (!string.IsNullOrEmpty(fullVariableName))
-                    {
-                        columns.Add(new ReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
-                    }
-                }
-                catch (Exception err)
-                {
-                    throw new Exception($"Error while creating report column '{fullVariableName}'", err);
-                }
-            }
-        }
-
-        /// <summary>Add the experiment factor levels as columns.</summary>
-        private void AddExperimentFactorLevels()
-        {
-            if (simulation.Descriptors != null)
-            {
-                foreach (var descriptor in simulation.Descriptors)
-                {
-                    if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
-                    {
-                        this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
-                    }
-                }
-            }
-        }
-
 
         #region create html report
 
+        /// <summary>
+        /// Get the data for display
+        /// </summary>
+        /// <param name="dataStore">The datastore to use</param>
+        /// <returns>Data as a datatable</returns>
         private DataTable GetData(IDataStore dataStore)
         {
             DataTable data = null;
@@ -353,6 +136,11 @@ namespace Models.CLEM.Reporting
             return data;
         }
 
+        /// <summary>
+        /// Method to transpose columns
+        /// </summary>
+        /// <param name="dt">Data as DataTable</param>
+        /// <returns>Transposed DataTable</returns>
         private DataTable Transpose(DataTable dt)
         {
             DataTable dtNew = new DataTable();
@@ -393,7 +181,7 @@ namespace Models.CLEM.Reporting
         }
 
         /// <summary>
-        /// 
+        /// Method to create data table
         /// </summary>
         public DataTable CreateDataTable(IDataStore dataStore, string directoryPath, bool darkTheme)
         {
@@ -403,7 +191,7 @@ namespace Models.CLEM.Reporting
                 if (data != null && data.Rows.Count > 0)
                 {
                     // get unique rows
-                    List<string> activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().ToList<string>();
+                    List<string> activities = data.AsEnumerable().Select(a => a.Field<string>("UniqueID")).Distinct().OrderBy(a => a).ToList<string>();
                     string timeStepUID = data.AsEnumerable().Where(a => a.Field<string>("Name") == "TimeStep").FirstOrDefault().Field<string>("UniqueID");
 
                     // get unique columns
@@ -485,7 +273,6 @@ namespace Models.CLEM.Reporting
                 ".r1 {grid-row: 1; }" +
                 ".r2 {grid-row: 2; }" +
                 ".r3 {grid-row: 3; }" +
- //               "*{box-sizing: border-box; padding: 0; margin: 0;}" +
                 "html {height 100%;}" +
                 "\r\n</style>\r\n<!-- graphscript --></ head>\r\n<body>";
 
@@ -611,7 +398,7 @@ namespace Models.CLEM.Reporting
 
                 if (CreateHTML | AutoCreateHTML)
                 {
-                    // System.IO.File.WriteAllText(Path.Combine(directoryPath, this.HtmlOutputFilename), htmlString.ToString());
+                    System.IO.File.WriteAllText(Path.Combine(directoryPath, this.HtmlOutputFilename), htmlString.ToString());
                 }
             }
         }
@@ -619,16 +406,17 @@ namespace Models.CLEM.Reporting
         #endregion
 
         #region descriptive summary
-        /// <summary>
-        /// 
-        /// </summary>
+
+        ///<inheritdoc/>
         public HTMLSummaryStyle ModelSummaryStyle { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="formatForParentControl"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
+        public List<IModel> CurrentAncestorList { get; set; } = new List<IModel>();
+
+        /// <inheritdoc/>
+        public bool FormatForParentControl { get { return CurrentAncestorList.Count == 1; } }
+
+        ///<inheritdoc/>
         public string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -658,55 +446,44 @@ namespace Models.CLEM.Reporting
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="formatForParentControl"></param>
-        /// <param name="htmlString"></param>
-        /// <returns></returns>
-        public string GetFullSummary(object model, bool formatForParentControl, string htmlString)
+        ///<inheritdoc/>
+        public string GetFullSummary(IModel model, List<IModel> parentControls, string htmlString, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
+                CurrentAncestorList = parentControls.ToList();
+                CurrentAncestorList.Add(this);
+
                 if (model is ICLEMDescriptiveSummary)
                 {
                     ICLEMDescriptiveSummary cm = model as ICLEMDescriptiveSummary;
-                    htmlWriter.Write(cm.ModelSummaryOpeningTags(formatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryOpeningTags(FormatForParentControl));
 
                     htmlWriter.Write(cm.ModelSummaryInnerOpeningTagsBeforeSummary());
 
-                    htmlWriter.Write(cm.ModelSummary(formatForParentControl));
+                    htmlWriter.Write(cm.ModelSummary(FormatForParentControl));
 
-                    htmlWriter.Write(cm.ModelSummaryInnerOpeningTags(formatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryInnerOpeningTags(FormatForParentControl));
 
                     foreach (var item in (model as IModel).Children)
                     {
-                        htmlWriter.Write(GetFullSummary(item, true, htmlString));
+                        htmlWriter.Write(GetFullSummary(item, CurrentAncestorList, htmlString, markdown2Html));
                     }
-                    htmlWriter.Write(cm.ModelSummaryInnerClosingTags(formatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryInnerClosingTags(FormatForParentControl));
 
-                    htmlWriter.Write(cm.ModelSummaryClosingTags(formatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryClosingTags(FormatForParentControl));
                 }
                 return htmlWriter.ToString();
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="formatForParentControl"></param>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummaryClosingTags(bool formatForParentControl)
         {
             return "\r\n</div>\r\n</div>";
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="formatForParentControl"></param>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             string overall = "default";
@@ -722,44 +499,28 @@ namespace Models.CLEM.Reporting
             }
         }
 
-        /// <summary>
-        /// Returns the opacity value for this component in the summary display
-        /// </summary>
+        ///<inheritdoc/>
         public double SummaryOpacity(bool formatForParent) => ((!this.Enabled & (!formatForParent | (formatForParent & this.Parent.Enabled))) ? 0.4 : 1.0);
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="formatForParentControl"></param>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             return "";
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="formatForParentControl"></param>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             return "";
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummaryInnerOpeningTagsBeforeSummary()
         {
             return "";
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
+        ///<inheritdoc/>
         public string ModelSummaryNameTypeHeader()
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -774,6 +535,12 @@ namespace Models.CLEM.Reporting
                 htmlWriter.Write("<div class=\"typediv\">" + this.GetType().Name + "</div>");
                 return htmlWriter.ToString();
             }
+        }
+
+        ///<inheritdoc/>
+        public string ModelSummaryNameTypeHeaderText()
+        {
+            return this.Name;
         }
         #endregion
     }

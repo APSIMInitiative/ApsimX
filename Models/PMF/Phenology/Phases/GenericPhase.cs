@@ -4,15 +4,18 @@ using Models.Core;
 using Models.Functions;
 using System.IO;
 using Newtonsoft.Json;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {
-    /// <summary>Describe the phenological development through a generic phase.</summary>
+    /// <summary>
+    /// The phase goes from the a start stage to and end stage. The class requires a target and a progression function.
+    /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class GenericPhase : Model, IPhase, IPhaseWithTarget, ICustomDocumentation
+    public class GenericPhase : Model, IPhase, IPhaseWithTarget
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
@@ -87,6 +90,29 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         public void ResetPhase() { ProgressThroughPhase = 0.0; }
 
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write description of this class.
+            yield return new Paragraph($"This phase goes from {Start.ToLower()} to {End.ToLower()}.");
+
+            // Write memos
+            foreach (var tag in DocumentChildren<Memo>())
+                yield return tag;
+
+            yield return new Paragraph($"The *Target* for completion is calculated as:");
+
+            // Write target
+            foreach (var tag in target.Document())
+                yield return tag;
+
+            yield return new Paragraph($"*Progression* through phase is calculated daily and accumulated until the *Target* is reached.");
+
+            // Write progression
+            foreach (var tag in progression.Document())
+                yield return tag;
+        }
+
 
         // 4. Private method
         //-----------------------------------------------------------------------------------------------------------------
@@ -96,35 +122,6 @@ namespace Models.PMF.Phen
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
             ResetPhase();
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading
-                tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
-
-                // write description of this class
-                tags.Add(new AutoDocumentation.Paragraph("This <i>phase</i> goes from " + Start + " to " + End + ". It uses a <i>Target</i> "
-                    + "to determine the duration between development <i>Stages</i>.  Daily <i>progress</i> is accumulated until the <i>Target</i> is "
-                    + "met and remaining fraction of the day is forwarded to the next phase.", indent));
-
-                // write memos
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // write intro to children
-                tags.Add(new AutoDocumentation.Paragraph(" The <i>Target</i> and the daily <i>Progression</i> toward " + End + " are described as follow:", indent));
-
-                // write children
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
         }
     }
 }

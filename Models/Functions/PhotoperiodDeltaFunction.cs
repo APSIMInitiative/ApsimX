@@ -8,12 +8,11 @@ using Models.Interfaces;
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
     /// Returns the difference between today's and yesterday's photoperiods in hours.
     /// </summary>
     [Serializable]
     [Description("Returns the difference between today's and yesterday's photoperiods in hours.")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class PhotoperiodDeltaFunction : Model, IFunction
     {

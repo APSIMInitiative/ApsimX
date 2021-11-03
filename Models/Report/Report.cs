@@ -26,8 +26,8 @@ namespace Models
     public class Report : Model
     {
         /// <summary>The columns to write to the data store.</summary>
-        [NonSerialized]
-        private List<IReportColumn> columns = null;
+        [JsonIgnore]
+        public List<IReportColumn> Columns { get; private set; } = null;
 
         /// <summary>The data to write to the data store.</summary>
         [NonSerialized]
@@ -54,26 +54,26 @@ namespace Models
 
         /// <summary>Link to an event service.</summary>
         [Link]
+        [NonSerialized]
         private IEvent events = null;
 
         /// <summary>
         /// Temporarily stores which tab is currently displayed.
         /// Meaningful only within the GUI
         /// </summary>
-        [JsonIgnore] public int ActiveTabIndex = 0;
+        [JsonIgnore] 
+        public int ActiveTabIndex = 0;
 
         /// <summary>
         /// Gets or sets variable names for outputting
         /// </summary>
         [Summary]
-        [Description("Output variables")]
         public string[] VariableNames { get; set; }
 
         /// <summary>
         /// Gets or sets event names for outputting
         /// </summary>
         [Summary]
-        [Description("Output frequency")]
         public string[] EventNames { get; set; }
 
         /// <summary>
@@ -85,36 +85,33 @@ namespace Models
         /// <summary>Group by variable name.</summary>
         public string GroupByVariableName{ get; set; }
 
-        /// <summary>An event handler to allow us to initialize ourselves.</summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
+        /// <summary>
+        /// Connect event handlers.
+        /// </summary>
+        /// <param name="sender">Sender object..</param>
+        /// <param name="args">Event data.</param>
         [EventSubscribe("FinalInitialise")]
-        private void OnFinalInitialise(object sender, EventArgs e)
+        protected void OnFinalInitialise(object sender, EventArgs args)
         {
             DayAfterLastOutput = clock.Today;
-            dataToWriteToDb = null;
+        }
 
-            // Tidy up variable/event names.
-            VariableNames = TidyUpVariableNames();
-            EventNames = TidyUpEventNames();
-
-            // Locate reporting variables.
-            FindVariableMembers();
-
-            // Silently do nothing if no event names present.
-            if (EventNames == null || EventNames.Length < 1)
-                return;
-
-            // Subscribe to events.
-            foreach (string eventName in EventNames)
-                events.Subscribe(eventName, DoOutputEvent);
+        /// <summary>
+        /// Connect event handlers.
+        /// </summary>
+        /// <param name="sender">Sender object..</param>
+        /// <param name="args">Event data.</param>
+        [EventSubscribe("SubscribeToEvents")]
+        private void OnConnectToEvents(object sender, EventArgs args)
+        {
+            SubscribeToEvents();
         }
 
         /// <summary>An event handler called at the end of each day.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
         [EventSubscribe("DoReport")]
-        private void OnDoReport(object sender, EventArgs e)
+        protected void OnDoReport(object sender, EventArgs e)
         {
             foreach (var dateString in dateStringsToReportOn)
             {
@@ -124,10 +121,29 @@ namespace Models
         }
 
         /// <summary>
+        /// Subscribe to events provided
+        /// </summary>
+        protected void SubscribeToEvents()
+        {
+            // Cleanup event names.
+            EventNames = TidyUpEventNames();
+
+            // Tidy up variable/event names.
+            VariableNames = TidyUpVariableNames();
+
+            // Locate reporting variables.
+            FindVariableMembers();
+
+            // Subscribe to events.
+            foreach (string eventName in EventNames)
+                events.Subscribe(eventName, DoOutputEvent);
+        }
+
+        /// <summary>
         /// Sanitises the event names and removes duplicates/comments.
         /// </summary>
         /// <returns></returns>
-        protected string[] TidyUpEventNames()
+        private string[] TidyUpEventNames()
         {
             List<string> eventNames = new List<string>();
             for (int i = 0; i < EventNames?.Length; i++)
@@ -154,14 +170,14 @@ namespace Models
         /// <summary>
         /// Sanitises the variable names and removes duplicates/comments.
         /// </summary>
-        protected string[] TidyUpVariableNames()
+        private string[] TidyUpVariableNames()
         {
             List<string> variableNames = new List<string>();
             IModel zone = FindAncestor<Zone>();
             if (zone == null)
                 zone = simulation;
             variableNames.Add($"[{zone.Name}].Name as Zone");
-            for (int i = 0; i < this.VariableNames.Length; i++)
+            for (int i = 0; i < this.VariableNames?.Length; i++)
             {
                 bool isDuplicate = StringUtilities.IndexOfCaseInsensitive(variableNames, this.VariableNames[i].Trim()) != -1;
                 if (!isDuplicate && this.VariableNames[i] != string.Empty)
@@ -186,7 +202,7 @@ namespace Models
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
         [EventSubscribe("Completed")]
-        private void OnCompleted(object sender, EventArgs e)
+        protected void OnCompleted(object sender, EventArgs e)
         {
             if (dataToWriteToDb != null)
                 storage.Writer.WriteTable(dataToWriteToDb);
@@ -207,29 +223,29 @@ namespace Models
                     FolderName = folderName,
                     SimulationName = simulation.Name,
                     TableName = Name,
-                    ColumnNames = columns.Select(c => c.Name).ToList(),
-                    ColumnUnits = columns.Select(c => c.Units).ToList()
+                    ColumnNames = Columns.Select(c => c.Name).ToList(),
+                    ColumnUnits = Columns.Select(c => c.Units).ToList()
                 };
             }
 
             // Get number of groups.
-            var numGroups = Math.Max(1, columns.Max(c => c.NumberOfGroups));
+            var numGroups = Math.Max(1, Columns.Max(c => c.NumberOfGroups));
 
             for (int groupIndex = 0; groupIndex < numGroups; groupIndex++)
             {
                 // Create a row ready for writing.
                 List<object> valuesToWrite = new List<object>();
                 List<string> invalidVariables = new List<string>();
-                for (int i = 0; i < columns.Count; i++)
+                for (int i = 0; i < Columns.Count; i++)
                 {
                     try
                     {
-                        valuesToWrite.Add(columns[i].GetValue(groupIndex));
+                        valuesToWrite.Add(Columns[i].GetValue(groupIndex));
                     }
                     catch (Exception err)
                     {
                         // Should we include exception message?
-                        invalidVariables.Add($"{columns[i].Name}: {err.Message}");
+                        invalidVariables.Add($"{Columns[i].Name}: {err.Message}");
                     }
                 }
                 if (invalidVariables != null && invalidVariables.Count > 0)
@@ -290,7 +306,7 @@ namespace Models
 
 
         /// <summary>Called when one of our 'EventNames' events are invoked</summary>
-        public void DoOutputEvent(object sender, EventArgs e)
+        public virtual void DoOutputEvent(object sender, EventArgs e)
         {
             DoOutput();
         }
@@ -298,9 +314,9 @@ namespace Models
         /// <summary>
         /// Fill the Members list with VariableMember objects for each variable.
         /// </summary>
-        protected void FindVariableMembers()
+        private void FindVariableMembers()
         {
-            this.columns = new List<IReportColumn>();
+            this.Columns = new List<IReportColumn>();
 
             AddExperimentFactorLevels();
 
@@ -317,7 +333,7 @@ namespace Models
                 try
                 {
                     if (!string.IsNullOrEmpty(fullVariableName))
-                        columns.Add(new ReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
+                        Columns.Add(new ReportColumn(fullVariableName, clock, locator, events, GroupByVariableName, from, to));
                 }
                 catch (Exception err)
                 {
@@ -331,7 +347,7 @@ namespace Models
         /// </summary>
         /// <param name="from"></param>
         /// <param name="to"></param>
-        protected void FindFromTo(out string from, out string to)
+        private void FindFromTo(out string from, out string to)
         {
             // Find the first aggregation column.
             var firstAggregatedVariableName = VariableNames.ToList().Find(var => var.Contains(" from "));
@@ -354,7 +370,7 @@ namespace Models
             {
                 foreach (var descriptor in simulation.Descriptors)
                     if (descriptor.Name != "Zone" && descriptor.Name != "SimulationName")
-                        this.columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
+                        this.Columns.Add(new ReportColumnConstantValue(descriptor.Name, descriptor.Value));
                 StoreFactorsInDataStore();
             }
         }
@@ -394,7 +410,11 @@ namespace Models
                         table.Rows.Add(row);
                     }
                 }
-                storage.Writer.WriteTable(table);
+
+                // Report tables are automatically cleaned before the simulation is run,
+                // as an optimisation specifically designed for this call to WriteTable().
+                // Therefore, we do not need to delete existing data here.
+                storage.Writer.WriteTable(table, false);
             }
         }
     }

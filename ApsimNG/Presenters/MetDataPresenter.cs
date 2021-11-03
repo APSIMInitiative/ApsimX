@@ -7,6 +7,7 @@
     using System.Globalization;
     using System.IO;
     using System.Text;
+    using APSIM.Shared.Graphing;
     using APSIM.Shared.Utilities;
     using Commands;
     using Models;
@@ -222,13 +223,16 @@
                         this.weatherData.ExcelWorkSheetName = sheetName;
                         string newFileName = PathUtilities.GetAbsolutePath(filename, this.explorerPresenter.ApsimXFile.FileName);
                         var changes = new List<ChangeProperty.Property>();
-                        changes.Add(new ChangeProperty.Property(weatherData, nameof(weatherData.FullFileName), newFileName));
+                        if (weatherData.FullFileName != newFileName)
+                            changes.Add(new ChangeProperty.Property(weatherData, nameof(weatherData.FullFileName), newFileName));
                         // Set constants file name to null iff the new file name is not a csv file.
-                        if (Path.GetExtension(newFileName) != ".csv")
+                        if (Path.GetExtension(newFileName) != ".csv" && weatherData.ConstantsFile != null)
                             changes.Add(new ChangeProperty.Property(weatherData, nameof(weatherData.ConstantsFile), null));
-                        ICommand changeFileName = new ChangeProperty(changes);
-                        explorerPresenter.CommandHistory.Add(new ChangeProperty(changes));
-
+                        if (changes.Count > 0)
+                        {
+                            ICommand changeFileName = new ChangeProperty(changes);
+                            explorerPresenter.CommandHistory.Add(new ChangeProperty(changes));
+                        }
                         using (DataTable data = this.weatherData.GetAllData())
                         {
                             this.dataStartDate = this.weatherData.StartDate;
@@ -642,8 +646,8 @@
                                       "Rainfall",
                                       months,
                                       monthlyRain,
-                                      Axis.AxisType.Bottom,
-                                      Axis.AxisType.Left,
+                                      AxisPosition.Bottom,
+                                      AxisPosition.Left,
                                       Color.LightSkyBlue,
                                       true);
             this.weatherDataView.GraphSummary.DrawLineAndMarkers(
@@ -654,13 +658,13 @@
                                                      null,
                                                      null,
                                                      null,
-                                                     Axis.AxisType.Bottom,
-                                                     Axis.AxisType.Right,
+                                                     AxisPosition.Bottom,
+                                                     AxisPosition.Right,
                                                      Color.Red,
                                                      LineType.Solid,
                                                      MarkerType.None,
-                                                     LineThicknessType.Normal,
-                                                     MarkerSizeType.Normal,
+                                                     LineThickness.Normal,
+                                                     MarkerSize.Normal,
                                                      1,
                                                      true);
             this.weatherDataView.GraphSummary.DrawLineAndMarkers(
@@ -671,18 +675,18 @@
                                                      null,
                                                      null,
                                                      null,
-                                                     Axis.AxisType.Bottom,
-                                                     Axis.AxisType.Right,
+                                                     AxisPosition.Bottom,
+                                                     AxisPosition.Right,
                                                      Color.Orange,
                                                      LineType.Solid,
                                                      MarkerType.None,
-                                                     LineThicknessType.Normal,
-                                                     MarkerSizeType.Normal,
+                                                     LineThickness.Normal,
+                                                     MarkerSize.Normal,
                                                      1,
                                                      true);
-            this.weatherDataView.GraphSummary.FormatAxis(Axis.AxisType.Bottom, "Month", false, double.NaN, double.NaN, double.NaN, false);
-            this.weatherDataView.GraphSummary.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN, false);
-            this.weatherDataView.GraphSummary.FormatAxis(Axis.AxisType.Right, "Temperature (oC)", false, double.NaN, double.NaN, double.NaN, false);
+            this.weatherDataView.GraphSummary.FormatAxis(AxisPosition.Bottom, "Month", false, double.NaN, double.NaN, double.NaN, false);
+            this.weatherDataView.GraphSummary.FormatAxis(AxisPosition.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN, false);
+            this.weatherDataView.GraphSummary.FormatAxis(AxisPosition.Right, "Temperature (oC)", false, double.NaN, double.NaN, double.NaN, false);
             this.weatherDataView.GraphSummary.FormatTitle(title);
             this.weatherDataView.GraphSummary.Refresh();
         }
@@ -698,13 +702,13 @@
                                                        title,
                                                        dates,
                                                        rain,
-                                                       Axis.AxisType.Bottom,
-                                                       Axis.AxisType.Left,
+                                                       AxisPosition.Bottom,
+                                                       AxisPosition.Left,
                                                        Color.LightSkyBlue,
                                                        false);
 
-            this.weatherDataView.GraphRainfall.FormatAxis(Axis.AxisType.Bottom, "Date", false, double.NaN, double.NaN, double.NaN, false);
-            this.weatherDataView.GraphRainfall.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN, false);
+            this.weatherDataView.GraphRainfall.FormatAxis(AxisPosition.Bottom, "Date", false, double.NaN, double.NaN, double.NaN, false);
+            this.weatherDataView.GraphRainfall.FormatAxis(AxisPosition.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN, false);
             this.weatherDataView.GraphRainfall.FormatTitle(title);
             this.weatherDataView.GraphRainfall.Refresh();
         }
@@ -726,8 +730,8 @@
                                                            title,
                                                            months,
                                                            monthlyRain,
-                                                           Axis.AxisType.Bottom,
-                                                           Axis.AxisType.Left,
+                                                           AxisPosition.Bottom,
+                                                           AxisPosition.Left,
                                                            Color.LightSkyBlue,
                                                            true);
             }
@@ -742,19 +746,19 @@
                                                  null,
                                                  null,
                                                  null,
-                                                 Axis.AxisType.Bottom,
-                                                 Axis.AxisType.Left,
+                                                 AxisPosition.Bottom,
+                                                 AxisPosition.Left,
                                                  Color.Blue,
                                                  LineType.Solid,
                                                  MarkerType.None,
-                                                 LineThicknessType.Normal,
-                                                 MarkerSizeType.Normal,
+                                                 LineThickness.Normal,
+                                                 MarkerSize.Normal,
                                                  1,
                                                  true);
             }
 
-            this.weatherDataView.GraphMonthlyRainfall.FormatAxis(Axis.AxisType.Bottom, "Date", false, double.NaN, double.NaN, double.NaN, false);
-            this.weatherDataView.GraphMonthlyRainfall.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN, false);
+            this.weatherDataView.GraphMonthlyRainfall.FormatAxis(AxisPosition.Bottom, "Date", false, double.NaN, double.NaN, double.NaN, false);
+            this.weatherDataView.GraphMonthlyRainfall.FormatAxis(AxisPosition.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN, false);
             this.weatherDataView.GraphMonthlyRainfall.FormatTitle(title);
             this.weatherDataView.GraphMonthlyRainfall.Refresh();
         }
@@ -775,13 +779,13 @@
                                                      null,
                                                      null,
                                                      null,
-                                                     Axis.AxisType.Bottom,
-                                                     Axis.AxisType.Left,
+                                                     AxisPosition.Bottom,
+                                                     AxisPosition.Left,
                                                      Color.Blue,
                                                      LineType.Solid,
                                                      MarkerType.None,
-                                                     LineThicknessType.Normal,
-                                                     MarkerSizeType.Normal,
+                                                     LineThickness.Normal,
+                                                     MarkerSize.Normal,
                                                      1,
                                                      true);
 
@@ -793,18 +797,18 @@
                                                      null,
                                                      null,
                                                      null,
-                                                     Axis.AxisType.Bottom,
-                                                     Axis.AxisType.Left,
+                                                     AxisPosition.Bottom,
+                                                     AxisPosition.Left,
                                                      Color.Orange,
                                                      LineType.Solid,
                                                      MarkerType.None,
-                                                     LineThicknessType.Normal,
-                                                     MarkerSizeType.Normal,
+                                                     LineThickness.Normal,
+                                                     MarkerSize.Normal,
                                                      1,
                                                      true);
 
-            this.weatherDataView.GraphTemperature.FormatAxis(Axis.AxisType.Bottom, "Date", false, double.NaN, double.NaN, double.NaN, false);
-            this.weatherDataView.GraphTemperature.FormatAxis(Axis.AxisType.Left, "Temperature (oC)", false, double.NaN, double.NaN, double.NaN, false);
+            this.weatherDataView.GraphTemperature.FormatAxis(AxisPosition.Bottom, "Date", false, double.NaN, double.NaN, double.NaN, false);
+            this.weatherDataView.GraphTemperature.FormatAxis(AxisPosition.Left, "Temperature (oC)", false, double.NaN, double.NaN, double.NaN, false);
             this.weatherDataView.GraphTemperature.FormatTitle(title);
             this.weatherDataView.GraphTemperature.Refresh();
         }
@@ -822,8 +826,8 @@
                                                        "Rainfall",
                                                        dates,
                                                        rain,
-                                                       Axis.AxisType.Bottom,
-                                                       Axis.AxisType.Left,
+                                                       AxisPosition.Bottom,
+                                                       AxisPosition.Left,
                                                        Color.LightSkyBlue,
                                                        true);
             this.weatherDataView.GraphRadiation.DrawLineAndMarkers(
@@ -834,13 +838,13 @@
                                                      null,
                                                      null,
                                                      null,
-                                                     Axis.AxisType.Bottom,
-                                                     Axis.AxisType.Right,
+                                                     AxisPosition.Bottom,
+                                                     AxisPosition.Right,
                                                      Color.Blue,
                                                      LineType.Solid,
                                                      MarkerType.None,
-                                                     LineThicknessType.Normal,
-                                                     MarkerSizeType.Normal,
+                                                     LineThickness.Normal,
+                                                     MarkerSize.Normal,
                                                      1,
                                                      true);
             this.weatherDataView.GraphRadiation.DrawLineAndMarkers(
@@ -851,19 +855,19 @@
                                                      null,
                                                      null,
                                                      null,
-                                                     Axis.AxisType.Bottom,
-                                                     Axis.AxisType.Right,
+                                                     AxisPosition.Bottom,
+                                                     AxisPosition.Right,
                                                      Color.Orange,
                                                      LineType.Solid,
                                                      MarkerType.None,
-                                                     LineThicknessType.Normal,
-                                                     MarkerSizeType.Normal,
+                                                     LineThickness.Normal,
+                                                     MarkerSize.Normal,
                                                      1,
                                                      true);
 
-            this.weatherDataView.GraphRadiation.FormatAxis(Axis.AxisType.Bottom, "Date", false, double.NaN, double.NaN, double.NaN, false);
-            this.weatherDataView.GraphRadiation.FormatAxis(Axis.AxisType.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN, false);
-            this.weatherDataView.GraphRadiation.FormatAxis(Axis.AxisType.Right, "Radiation (mJ/m2)", false, double.NaN, double.NaN, double.NaN, false);
+            this.weatherDataView.GraphRadiation.FormatAxis(AxisPosition.Bottom, "Date", false, double.NaN, double.NaN, double.NaN, false);
+            this.weatherDataView.GraphRadiation.FormatAxis(AxisPosition.Left, "Rainfall (mm)", false, double.NaN, double.NaN, double.NaN, false);
+            this.weatherDataView.GraphRadiation.FormatAxis(AxisPosition.Right, "Radiation (mJ/m2)", false, double.NaN, double.NaN, double.NaN, false);
             this.weatherDataView.GraphRadiation.FormatTitle(title);
             this.weatherDataView.GraphRadiation.Refresh();
         }

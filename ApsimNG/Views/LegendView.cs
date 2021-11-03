@@ -95,8 +95,8 @@ namespace UserInterface.Views
                 chkLegendInsideGraph.Toggled -= OnToggleLegendInsideGraph;
                 listToggle.Toggled -= OnItemChecked;
                 listModel.Dispose();
-                listRender.Destroy();
-                listToggle.Destroy();
+                listRender.Dispose();
+                listToggle.Dispose();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;
             }
@@ -141,23 +141,6 @@ namespace UserInterface.Views
             }
         }
 
-        /// <summary>Returns the index of an item.</summary>
-        /// <param name="text">The text.</param>
-        /// <returns></returns>
-        public TreeIter IndexOf(string text)
-        {
-            TreeIter iter;
-            if (listModel.GetIterFirst(out iter))
-            {
-                do
-                {
-                    if (text == (string)listModel.GetValue(iter, 1))
-                        return iter;
-                } while (listModel.IterNext(ref iter));
-            }
-            return TreeIter.Zero;
-        }
-
         /// <summary>Gets the disabled series names.</summary>
         /// <returns></returns>
         public string[] GetDisabledSeriesNames()
@@ -171,7 +154,7 @@ namespace UserInterface.Views
 
         /// <summary>Called when user checks an item.</summary>
         /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="ItemCheckedEventArgs"/> instance containing the event data.</param>
+        /// <param name="e">The event arguments> instance containing the event data.</param>
         private void OnItemChecked(object sender, ToggledArgs e)
         {
             try

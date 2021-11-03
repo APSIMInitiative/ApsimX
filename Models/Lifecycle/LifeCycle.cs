@@ -10,7 +10,6 @@
     using static Models.LifeCycle.LifeCyclePhase;
 
     /// <summary>
-    /// # [Name]
     /// The LifeCycle model represents a population of organisms within a zone.  It assembles 
     /// an arbitry number of LifeCyclePhases that cohorts of individuals (of the same developmental
     /// stage) pass through during their life.
@@ -24,7 +23,7 @@
     /// </summary>
 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     [ValidParent(ParentType = typeof(LifeCycle))]

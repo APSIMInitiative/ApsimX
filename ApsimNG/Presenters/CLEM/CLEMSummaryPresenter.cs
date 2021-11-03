@@ -19,16 +19,8 @@ namespace UserInterface.Presenters
     /// </summary>
     public class CLEMSummaryPresenter : IPresenter, IRefreshPresenter
     {
-        /// <summary>
-        /// The model
-        /// </summary>
         private Model model;
-
-        /// <summary>
-        /// The view to use
-        /// </summary>
         private IMarkdownView genericView;
-
         private ExplorerPresenter explorer;
         private string htmlFilePath = "";
         private string targetFilePath = "";
@@ -51,21 +43,18 @@ namespace UserInterface.Presenters
             targetFilePath = "CurrentDescriptiveSummary.html";
 
             if (typeof(ISpecificOutputFilename).IsAssignableFrom(model.GetType()))
-            {
                 targetFilePath = (model as ISpecificOutputFilename).HtmlOutputFilename;
-            }
 
             htmlFilePath = Path.Combine(Path.GetDirectoryName(explorer.ApsimXFile.FileName), htmlFilePath);
             targetFilePath = Path.Combine(Path.GetDirectoryName(explorer.ApsimXFile.FileName), targetFilePath);
-            System.IO.File.WriteAllText(htmlFilePath, CLEMModel.CreateDescriptiveSummaryHTML(this.model, Utility.Configuration.Settings.DarkTheme));
+            File.WriteAllText(htmlFilePath, CLEMModel.CreateDescriptiveSummaryHTML(this.model, Utility.Configuration.Settings.DarkTheme, markdown2Html: Utility.MarkdownConverter.ToHtml ));
         }
 
         public void Refresh()
         {
             this.genericView.Text = CreateMarkdown(this.model);
-
             // save summary to disk
-            System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(explorer.ApsimXFile.FileName), "CurrentDescriptiveSummary.html"), CLEMModel.CreateDescriptiveSummaryHTML(this.model, Utility.Configuration.Settings.DarkTheme));
+            File.WriteAllText(Path.Combine(Path.GetDirectoryName(explorer.ApsimXFile.FileName), "CurrentDescriptiveSummary.html"), CLEMModel.CreateDescriptiveSummaryHTML(this.model, Utility.Configuration.Settings.DarkTheme, markdown2Html: Utility.MarkdownConverter.ToHtml));
         }
 
         public string CreateMarkdown(Model modelToSummarise)
@@ -77,16 +66,14 @@ namespace UserInterface.Presenters
                 HelpUriAttribute helpAtt = ReflectionUtilities.GetAttribute(model.GetType(), typeof(HelpUriAttribute), false) as HelpUriAttribute;
                 string modelHelpURL = "";
                 if (helpAtt != null)
-                {
                     modelHelpURL = helpAtt.ToString();
-                }
+
                 // does offline help exist
                 var directory = Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData);
                 string offlinePath = Path.Combine(directory, "CLEM/Help");
                 if (File.Exists(Path.Combine(offlinePath, "Default.htm")))
-                {
                     helpURL = offlinePath.Replace(@"\", "/") + "/" + modelHelpURL.TrimStart('/');
-                }
+
                 // is this application online for online help
                 if (NetworkInterface.GetIsNetworkAvailable())
                 {
@@ -95,9 +82,7 @@ namespace UserInterface.Presenters
                     helpURL = "https://www.apsim.info/clem/" + modelHelpURL.TrimStart('/');
                 }
                 if (helpURL == "")
-                {
                     helpURL = "https://www.apsim.info";
-                }
             }
             catch (Exception ex)
             {
@@ -106,9 +91,7 @@ namespace UserInterface.Presenters
 
             string markdownString = "";
             if (File.Exists(targetFilePath))
-            {
                 markdownString = $"[View descriptive summary of current settings in browser](<{targetFilePath.Replace("\\", "/")}> \"descriptive summary\")  {Environment.NewLine}  {Environment.NewLine}";
-            }
             markdownString += $"View reference details for this component [{modelToSummarise.GetType().Name}](<{helpURL}> \"{modelToSummarise.GetType().Name} help\")  {Environment.NewLine}";
             return markdownString;
         }

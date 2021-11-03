@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Shared.Documentation;
 using Models.Core;
 
 namespace Models.Functions
 {
-    /// <summary>
-    /// A function that adds values from child functions
-    /// </summary>
+    /// <summary>A class that returns the sum of its child functions.</summary>
+
     [Serializable]
     [Description("Add the values of all child functions")]
-    public class AddFunction : Model, IFunction, ICustomDocumentation
+    public class AddFunction : Model, IFunction
     {
         /// <summary>The child functions</summary>
         private IEnumerable<IFunction> ChildFunctions;
@@ -30,13 +30,10 @@ namespace Models.Functions
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-                SubtractFunction.DocumentMathFunction(this, '+', tags, headingLevel, indent);
+            foreach (var tag in MultiplyFunction.DocumentMathFunction('+', Name, Children))
+                yield return tag;
         }
     }
 

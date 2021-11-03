@@ -11,6 +11,8 @@ using System.Threading.Tasks;
 using UserInterface.Interfaces;
 using UserInterface.Views;
 using ApsimNG.EventArguments;
+using APSIM.Shared.Graphing;
+using Models.Core.Run;
 
 namespace UserInterface.Presenters
 {
@@ -68,7 +70,7 @@ namespace UserInterface.Presenters
             this.view.GraphViewCreated += ModifyGraphView;
 
             properties = new PropertyPresenter();
-            properties.Attach(panel, this.view.PropertiesGrid, presenter);
+            properties.Attach(panel, this.view.PropertiesView, presenter);
 
             processingThread = new BackgroundWorker();
             processingThread.DoWork += WorkerThread;
@@ -204,7 +206,7 @@ namespace UserInterface.Presenters
                     graph.LegendOutsideGraph = true;
 
                 if (panel.LegendOrientation != GraphPanel.LegendOrientationType.Default)
-                    graph.LegendOrientation = (Graph.LegendOrientationType)Enum.Parse(typeof(Graph.LegendOrientationType), panel.LegendOrientation.ToString());
+                    graph.LegendOrientation = (LegendOrientation)Enum.Parse(typeof(LegendOrientation), panel.LegendOrientation.ToString());
 
                 if (graph != null && graph.Enabled)
                 {
@@ -212,24 +214,22 @@ namespace UserInterface.Presenters
                     panel.Script.TransformGraph(graph, sim);
 
                     if (panel.LegendPosition != GraphPanel.LegendPositionType.Default)
-                        graph.LegendPosition = (Graph.LegendPositionType)Enum.Parse(typeof(Graph.LegendPositionType), panel.LegendPosition.ToString());
+                        graph.LegendPosition = (LegendPosition)Enum.Parse(typeof(LegendPosition), panel.LegendPosition.ToString());
 
                     // Create and fill cache entry if it doesn't exist.
                     if (!panel.Cache.ContainsKey(sim) || panel.Cache[sim].Count <= i)
                     {
-                        try
-                        {
-                            int x = storage.GetSimulationID(sim);
-                        }
-                        catch (KeyNotFoundException)
-                        {
+                        if (!storage.TryGetSimulationID(sim, out int _))
                             throw new Exception($"Illegal simulation name: '{sim}'. Try running the simulation, and if that doesn't fix it, there is a problem with your config script.");
-                        }
-                        List<SeriesDefinition> definitions = graph.GetDefinitionsToGraph(storage, new List<string>() { sim }).ToList();
+
+                        var graphPage = new GraphPage();
+                        graphPage.Graphs.Add(graph);
+                        var definitions = graphPage.GetAllSeriesDefinitions(panel, storage, new List<string>() { sim }).ToList();
+
                         if (!panel.Cache.ContainsKey(sim))
                             panel.Cache.Add(sim, new Dictionary<int, List<SeriesDefinition>>());
 
-                        panel.Cache[sim][i] = definitions;
+                        panel.Cache[sim][i] = definitions[0].SeriesDefinitions;
                     }
                     tab.AddGraph(graph, panel.Cache[sim][i]);
                 }
@@ -265,8 +265,8 @@ namespace UserInterface.Presenters
                 graphPresenter.DrawGraph(series);
 
                 Axis[] axes = graphView.Axes.ToArray(); // This should always be length 2
-                Axis[] xAxes = axes.Where(a => a.Type == Axis.AxisType.Bottom || a.Type == Axis.AxisType.Top).ToArray();
-                Axis[] yAxes = axes.Where(a => a.Type == Axis.AxisType.Left|| a.Type == Axis.AxisType.Right).ToArray();
+                Axis[] xAxes = axes.Where(a => a.Position == AxisPosition.Bottom || a.Position == AxisPosition.Top).ToArray();
+                Axis[] yAxes = axes.Where(a => a.Position == AxisPosition.Left|| a.Position == AxisPosition.Right).ToArray();
 
                 foreach (GraphTab tab in graphs)
                 {
@@ -290,12 +290,12 @@ namespace UserInterface.Presenters
         {
             foreach (Axis axis in axes)
             {
-                graphView.FormatAxis(axis.Type,
-                                     graphView.AxisTitle(axis.Type),
+                graphView.FormatAxis(axis.Position,
+                                     graphView.AxisTitle(axis.Position),
                                      axis.Inverted,
-                                     axis.Minimum,
-                                     axis.Maximum,
-                                     axis.Interval,
+                                     axis.Minimum ?? double.NaN,
+                                     axis.Maximum ?? double.NaN,
+                                     axis.Interval ?? double.NaN,
                                      axis.CrossesAtZero);
             }
         }

@@ -13,69 +13,13 @@
     using Newtonsoft.Json;
     using Models.Soils.Nutrients;
     using System.Linq;
+    using APSIM.Shared.Documentation;
 
     ///<summary>
-    /// # [Name]
-    /// The generic root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each soil layer. 
-    /// 
-    /// **Root Growth**
-    /// 
-    /// Roots grow downwards through the soil profile, with initial depth determined by sowing depth and the growth rate determined by RootFrontVelocity. 
-    /// The RootFrontVelocity is modified by multiplying it by the soil's XF value, which represents any resistance posed by the soil to root extension. 
-    /// 
-    ///     _Root Depth Increase = RootFrontVelocity x XF<sub>i</sub> x RootDepthStressFactor_
-    /// 
-    /// where i is the index of the soil layer at the rooting front.
-    ///     
-    /// Root depth is also constrained by a maximum root depth.
-    /// 
-    /// Root length growth is calculated using the daily DM partitioned to roots and a specific root length.  Root proliferation in layers is calculated using an approach similar to the generalised equimarginal criterion used in economics.  The uptake of water and N per unit root length is used to partition new root material into layers of higher 'return on investment'. For example, the Root Activity for water is calculated as
-    /// 
-    ///     _RAw<sub>i</sub> = -WaterUptake<sub>i</sub> / LiveRootWt<sub>i</sub> x LayerThickness<sub>i</sub> x ProportionThroughLayer_
-    ///     
-    /// The amount of root mass partitioned to a layer is then proportional to root activity
-    /// 
-    ///     _DMAllocated<sub>i</sub> = TotalDMAllocated x RAw<sub>i</sub> / TotalRAw_
-    /// 
-    /// **Dry Matter Demands**
-    /// 
-    /// A daily DM demand is provided to the organ arbitrator and a DM supply returned. By default, 100% of the dry matter (DM) demanded from the root is structural.  
-    /// The daily loss of roots is calculated using a SenescenceRate function.  All senesced material is automatically detached and added to the soil FOM.  
-    /// 
-    /// **Nitrogen Demands**
-    /// 
-    /// The daily structural N demand from root is the product of total DM demand and the minimum N concentration.  Any N above this is considered Storage 
-    /// and can be used for retranslocation and/or reallocation as the respective factors are set to values other then zero.  
-    /// 
-    /// **Nitrogen Uptake**
-    /// 
-    /// Potential N uptake by the root system is calculated for each soil layer (i) that the roots have extended into.  
-    /// In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor controlling the rate of extraction
-    /// (kNO3 or kNH4), the concentration of N form (ppm), and a soil moisture factor (NUptakeSWFactor) which typically decreases as the soil dries.  
-    /// 
-    ///     _NO3 uptake = NO3<sub>i</sub> x kNO3 x NO3<sub>ppm, i</sub> x NUptakeSWFactor_
-    ///     
-    ///     _NH4 uptake = NH4<sub>i</sub> x kNH4 x NH4<sub>ppm, i</sub> x NUptakeSWFactor_
-    /// 
-    /// As can be seen from the above equations, the values of kNO3 and kNH4 equate to the potential fraction of each mineral N pool which can be taken up per day for wet soil when that pool has a concentration of 1 ppm.
-    /// 
-    /// Nitrogen uptake demand is limited to the maximum daily potential uptake (MaxDailyNUptake) and the plant's N demand. The former provides a means to constrain N uptake to a maximum value observed in the field for the crop as a whole.
-    /// The demand for soil N is then passed to the soil arbitrator which determines how much of the N uptake demand
-    /// each plant instance will be allowed to take up.
-    /// 
-    /// **Water Uptake**
-    /// 
-    /// Potential water uptake by the root system is calculated for each soil layer that the roots have extended into.  
-    /// In each layer potential uptake is calculated as the product of the available water in the layer (water above LL limit) 
-    /// and a factor controlling the rate of extraction (KL).  The values of both LL and KL are set in the soil interface and
-    /// KL may be further modified by the crop via the KLModifier function.  
-    /// 
-    /// _SW uptake = (SW<sub>i</sub> - LL<sub>i</sub>) x KL<sub>i</sub> x KLModifier_
-    /// 
+    /// The root model calculates root growth in terms of rooting depth, biomass accumulation and subsequent root length density in each soil layer. 
     ///</summary>
     [Serializable]
-    [Description("Root Class")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Plant))]
     public class Root : Model, IWaterNitrogenUptake, IArbitration, IOrgan, IOrganDamage, IRoot
@@ -102,12 +46,7 @@
         /// <summary>The DM demand function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
-        private BiomassDemand dmDemands = null;
-
-        /// <summary>Factors for assigning priority to DM demands</summary>
-        [Link(IsOptional = true, Type = LinkType.Child, ByName = true)]
-        [Units("g/m2/d")]
-        private BiomassDemand dmDemandPriorityFactors = null;
+        private BiomassDemandAndPriority dmDemands = null;
 
         /// <summary>Link to the KNO3 link</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -134,7 +73,7 @@
 
         /// <summary>The N demand function</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        private BiomassDemand nDemands = null;
+        private BiomassDemandAndPriority nDemands = null;
 
         /// <summary>The nitrogen root calc switch</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
@@ -231,9 +170,6 @@
 
         /// <summary>The dry matter demand</summary>
         public BiomassPoolType DMDemand { get; set; }
-
-        /// <summary>The dry matter demand</summary>
-        public BiomassPoolType DMDemandPriorityFactor { get; set; }
 
         /// <summary>Structural nitrogen demand</summary>
         public BiomassPoolType NDemand { get; set; }
@@ -357,7 +293,7 @@
         [JsonIgnore]
         public Biomass[] LayerDead { get { return PlantZone.LayerDead; } }
 
-        /// <summary>Gets or sets the water uptake.</summary>
+        /// <summary>Gets the water uptake.</summary>
         [Units("mm")]
         public double WaterUptake
         {
@@ -367,6 +303,21 @@
                 foreach (ZoneState zone in Zones)
                     uptake = uptake + MathUtilities.Sum(zone.WaterUptake);
                 return -uptake;
+            }
+        }
+
+        /// <summary>Gets the water uptake.</summary>
+        [Units("mm")]
+        public double[] SWUptakeLayered
+        {
+            get
+            {
+                if (Zones == null || Zones.Count == 0)
+                    return null;
+                double[] uptake = (double[]) Zones[0].WaterUptake;
+                for (int i = 1; i != Zones.Count; i++)
+                    uptake = MathUtilities.Add(uptake, Zones[i].WaterUptake);
+                return MathUtilities.Multiply_Value(uptake, -1); // convert to positive values.
             }
         }
 
@@ -383,6 +334,21 @@
             }
         }
 
+        /// <summary>Gets the nitrogen uptake.</summary>
+        [Units("mm")]
+        public double[] NUptakeLayered
+        {
+            get
+            {
+                if (Zones == null || Zones.Count == 0)
+                    return null;
+                double[] uptake = (double[])Zones[0].WaterUptake.Clone();
+                for (int i = 1; i != Zones.Count; i++)
+                    uptake = MathUtilities.Add(uptake, Zones[i].NitUptake);
+                return MathUtilities.Multiply_Value(uptake, -1); // convert to positive values.
+            }
+        }
+
         /// <summary>Gets or sets the mid points of each layer</summary>
         [JsonIgnore]
         [Units("mm")]
@@ -392,6 +358,34 @@
         [JsonIgnore]
         [Units("0-1")]
         public double[] RWC { get; private set; }
+
+        /// <summary>Returns the Fraction of Available Soil Water for the root system (across zones and depths in zones)</summary>
+        [Units("unitless")]
+        public double FASW
+        {
+            get
+            {
+                double fasw = 0;
+                double TotalArea = 0;
+
+                foreach (ZoneState Z in Zones)
+                {
+                    Zone zone = this.FindInScope(Z.Name) as Zone;
+                    var soilPhysical = Z.Soil.FindChild<IPhysical>();
+                    var waterBalance = Z.Soil.FindChild<ISoilWater>();
+                    var soilCrop = Z.Soil.FindDescendant<SoilCrop>(parentPlant.Name + "Soil");
+                    double[] paw = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, waterBalance.SW, soilCrop.XF);
+                    double[] pawmm = MathUtilities.Multiply(paw, soilPhysical.Thickness);
+                    double[] pawc = APSIM.Shared.APSoil.APSoilUtilities.CalcPAWC(soilPhysical.Thickness, soilCrop.LL, soilPhysical.DUL, soilCrop.XF);
+                    double[] pawcmm = MathUtilities.Multiply(pawc, soilPhysical.Thickness);
+                    TotalArea += zone.Area;
+
+                    fasw += MathUtilities.Sum(pawmm) / MathUtilities.Sum(pawcmm) * zone.Area;
+                }    
+                    fasw = fasw / TotalArea;
+                return fasw;
+            }
+        }
 
         /// <summary>Gets a factor to account for root zone Water tension weighted for root mass.</summary>
         [Units("0-1")]
@@ -590,22 +584,12 @@
                     DMDemand.Structural = (dmDemands.Structural.Value() / dMCE + remobilisationCost.Value());
                     DMDemand.Storage = Math.Max(0, dmDemands.Storage.Value() / dMCE);
                     DMDemand.Metabolic = 0;
+                    DMDemand.QStructuralPriority = dmDemands.QStructuralPriority.Value();
+                    DMDemand.QMetabolicPriority = dmDemands.QMetabolicPriority.Value();
+                    DMDemand.QStoragePriority = dmDemands.QStoragePriority.Value();
                 }
                 else
                     throw new Exception("dmConversionEfficiency should be greater than zero in " + Name);
-
-                if (dmDemandPriorityFactors != null)
-                {
-                    DMDemandPriorityFactor.Structural = dmDemandPriorityFactors.Structural.Value();
-                    DMDemandPriorityFactor.Metabolic = dmDemandPriorityFactors.Metabolic.Value();
-                    DMDemandPriorityFactor.Storage = dmDemandPriorityFactors.Storage.Value();
-                }
-                else
-                {
-                    DMDemandPriorityFactor.Structural = 1.0;
-                    DMDemandPriorityFactor.Metabolic = 1.0;
-                    DMDemandPriorityFactor.Storage = 1.0;
-                }
             }
         }
 
@@ -622,6 +606,9 @@
             NDemand.Storage = nDemands.Storage.Value();
             if (NDemand.Storage < 0)
                 throw new Exception("Structural N demand function in root returning negative, check parameterisation");
+            NDemand.QStructuralPriority = nDemands.QStructuralPriority.Value();
+            NDemand.QStoragePriority = nDemands.QStoragePriority.Value();
+            NDemand.QMetabolicPriority = nDemands.QMetabolicPriority.Value();
 
             foreach (ZoneState Z in Zones)
             {
@@ -951,6 +938,7 @@
             PlantZone.Clear();
             Zones.Clear();
             needToRecalculateLiveDead = true;
+            GrowthRespiration = 0;
         }
 
         /// <summary>Clears the transferring biomass amounts.</summary>
@@ -1049,6 +1037,58 @@
             return supplyTotal;
         }
 
+
+        /// <summary>Document this model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            var growthTags = new List<ITag>();
+            growthTags.Add(new Paragraph("Roots grow downwards through the soil profile, with initial depth determined by sowing depth and the growth rate determined by RootFrontVelocity. The RootFrontVelocity is modified by multiplying it by the soil's XF value, which represents any resistance posed by the soil to root extension."));
+            growthTags.Add(new Paragraph("_Root Depth Increase = RootFrontVelocity x XF~i~ x RootDepthStressFactor_"));
+            growthTags.Add(new Paragraph("where i is the index of the soil layer at the rooting front."));
+            growthTags.Add(new Paragraph("Root depth is also constrained by a maximum root depth."));
+            growthTags.Add(new Paragraph("Root length growth is calculated using the daily DM partitioned to roots and a specific root length.  Root proliferation in layers is calculated using an approach similar to the generalised equimarginal criterion used in economics.  The uptake of water and N per unit root length is used to partition new root material into layers of higher 'return on investment'. For example, the Root Activity for water is calculated as"));
+            growthTags.Add(new Paragraph("_RAw~i~ = -WaterUptake~i~ / LiveRootWt~i~ x LayerThickness~i~ x ProportionThroughLayer_"));
+            growthTags.Add(new Paragraph("The amount of root mass partitioned to a layer is then proportional to root activity"));
+            growthTags.Add(new Paragraph("_DMAllocated~i~ = TotalDMAllocated x RAw~i~ / TotalRAw_"));
+            yield return new Section("Growth", growthTags);
+
+            yield return new Section("Dry Matter Demands", new Paragraph("A daily DM demand is provided to the organ arbitrator and a DM supply returned. By default, 100% of the dry matter (DM) demanded from the root is structural. The daily loss of roots is calculated using a SenescenceRate function.  All senesced material is automatically detached and added to the soil FOM."));
+
+            yield return new Section("Nitrogen Demands", new Paragraph("The daily structural N demand from root is the product of total DM demand and the minimum N concentration.  Any N above this is considered Storage and can be used for retranslocation and/or reallocation as the respective factors are set to values other then zero."));
+
+            yield return new Section("Nitrogen Uptake", new Paragraph(
+                "Potential N uptake by the root system is calculated for each soil layer (i) that the roots have extended into. " +
+                "In each layer potential uptake is calculated as the product of the mineral nitrogen in the layer, a factor controlling the rate of extraction " +
+                "(kNO3 or kNH4), the concentration of N form (ppm), and a soil moisture factor (NUptakeSWFactor) which typically decreases as the soil dries. " +
+                "    _NO3 uptake = NO3~i~ x kNO3 x NO3~ppm, i~ x NUptakeSWFactor_" +
+                "    _NH4 uptake = NH4~i~ x kNH4 x NH4~ppm, i~ x NUptakeSWFactor_" +
+                "As can be seen from the above equations, the values of kNO3 and kNH4 equate to the potential fraction of each mineral N pool which can be taken up per day for wet soil when that pool has a concentration of 1 ppm." +
+                "Nitrogen uptake demand is limited to the maximum daily potential uptake (MaxDailyNUptake) and the plant's N demand. The former provides a means to constrain N uptake to a maximum value observed in the field for the crop as a whole." +
+                "The demand for soil N is then passed to the soil arbitrator which determines how much of the N uptake demand" +
+                "each plant instance will be allowed to take up."));
+
+            yield return new Section("Water Uptake", new Paragraph(
+                "Potential water uptake by the root system is calculated for each soil layer that the roots have extended into. " +
+                "In each layer potential uptake is calculated as the product of the available water in the layer (water above LL limit) " +
+                "and a factor controlling the rate of extraction (KL).  The values of both LL and KL are set in the soil interface and " +
+                "KL may be further modified by the crop via the KLModifier function. " +
+                "_SW uptake = (SW~i~ - LL~i~) x KL~i~ x KLModifier_ "));
+
+            // Document Constants
+            var constantTags = new List<ITag>();
+            foreach (var constant in FindAllChildren<Constant>())
+                foreach (var tag in constant.Document())
+                    constantTags.Add(tag);
+            yield return new Section("Constants", constantTags);
+
+            // Document everything else.
+            foreach (var child in Children.Where(child => !(child is Constant)))
+                yield return new Section(child.Name, child.Document());
+        }
+
         /// <summary>Computes the amount of DM available for reallocation.</summary>
         private double AvailableDMReallocation()
         {
@@ -1109,7 +1149,6 @@
 
             Zones = new List<ZoneState>();
             DMDemand = new BiomassPoolType();
-            DMDemandPriorityFactor = new BiomassPoolType();
             NDemand = new BiomassPoolType();
             DMSupply = new BiomassSupplyType();
             NSupply = new BiomassSupplyType();
@@ -1118,6 +1157,7 @@
             Senesced = new Biomass();
             Detached = new Biomass();
             Removed = new Biomass();
+            Clear();
         }
 
         /// <summary>Called when [do daily initialisation].</summary>

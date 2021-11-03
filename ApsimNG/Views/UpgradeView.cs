@@ -7,6 +7,7 @@
     using System.Net;
     using System.Reflection;
     using APSIM.Shared.Utilities;
+    using global::UserInterface.Extensions;
     using Gtk;
     using Interfaces;
 
@@ -148,13 +149,13 @@
         {
             try
             {
-                window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+                window1.Window.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
                 PopulateForm();
-                window1.GdkWindow.Cursor = null;
+                window1.Window.Cursor = null;
                 if (loadFailure)
-                    window1.Destroy();
+                    window1.Dispose();
             }
             catch (Exception err)
             {
@@ -313,13 +314,16 @@
                             throw new Exception("Encountered an error while updating registration information. Please try again later.", err);
                         }
 
-                        window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+                        window1.Window.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
 
                         WebClient web = new WebClient();
 
                         tempSetupFileName = Path.Combine(Path.GetTempPath(), "APSIMSetup.exe");
 
                         string sourceURL;
+
+                        upgrade.ReleaseURL = upgrade.ReleaseURL.Replace("ApsimSetup", "apsim-");
+
                         if (ProcessUtilities.CurrentOS.IsMac)
                         {
                             sourceURL = Path.ChangeExtension(upgrade.ReleaseURL, "dmg");
@@ -356,11 +360,11 @@
                             if (waitDlg != null)
                             {
                                 web.DownloadProgressChanged -= OnDownloadProgressChanged;
-                                waitDlg.Destroy();
+                                waitDlg.Dispose();
                                 waitDlg = null;
                             }
-                            if (window1 != null && window1.GdkWindow != null)
-                                window1.GdkWindow.Cursor = null;
+                            if (window1 != null && window1.Window != null)
+                                window1.Window.Cursor = null;
                         }
 
                     }
@@ -380,7 +384,7 @@
             if (string.IsNullOrWhiteSpace(firstNameBox.Text) || 
                 string.IsNullOrWhiteSpace(lastNameBox.Text) ||
                 string.IsNullOrWhiteSpace(emailBox.Text) || 
-                string.IsNullOrWhiteSpace(countryBox.ActiveText))
+                string.IsNullOrWhiteSpace(countryBox.GetActiveText()))
                 throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
         }
 
@@ -418,11 +422,14 @@
         {
             try
             {
-                if (waitDlg != null)
+                Application.Invoke((_, __) =>
                 {
-                    waitDlg.Destroy();
-                    waitDlg = null;
-                }
+                    if (waitDlg != null)
+                    {
+                        waitDlg.Dispose();
+                        waitDlg = null;
+                    }
+                });
                 if (!e.Cancelled && !string.IsNullOrEmpty(tempSetupFileName) && versionNumber != null)
                 {
                     try
@@ -432,53 +439,44 @@
 
                         if (File.Exists(tempSetupFileName))
                         {
-                            // Copy the separate upgrader executable to the temp directory.
-                            string sourceUpgraderFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Updater.exe");
-                            string upgraderFileName = Path.Combine(Path.GetTempPath(), "Updater.exe");
 
-                            // Check to see if upgrader is already running for whatever reason.
-                            // Kill them if found.
-                            foreach (Process process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(upgraderFileName)))
-                                process.Kill();
-
-                            // Delete the old upgrader.
-                            if (File.Exists(upgraderFileName))
-                                File.Delete(upgraderFileName);
-                            // Copy in the new upgrader.
-                            File.Copy(sourceUpgraderFileName, upgraderFileName, true);
-
-                            // Run the upgrader.
-                            string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                            string ourDirectory = Path.GetFullPath(Path.Combine(binDirectory, ".."));
-                            string newDirectory = Path.GetFullPath(Path.Combine(ourDirectory, "..", "APSIM" + versionNumber));
-                            string arguments = StringUtilities.DQuote(ourDirectory) + " " +
-                                               StringUtilities.DQuote(newDirectory);
-
-                            ProcessStartInfo info = new ProcessStartInfo();
-                            if (ProcessUtilities.CurrentOS.IsMac)
+                            if (ProcessUtilities.CurrentOS.IsWindows)
                             {
-                                info.FileName = "mono";
-                                info.Arguments = upgraderFileName + " " + arguments;
+                                // The InnoSetup installer can be run with the /upgradefrom:xxx parameter
+                                // and will handle the removal of the previous version.
+                                string oldVersion = Models.Core.Simulations.ApsimVersion;
+                                Process.Start(tempSetupFileName, $"/upgradefrom={oldVersion}");
+                            }
+                            else if (ProcessUtilities.CurrentOS.IsMac)
+                            {
+                                string script = Path.Combine(Path.GetTempPath(), $"apsim-upgrade-mac-{Guid.NewGuid()}.sh");
+                                ReflectionUtilities.WriteResourceToFile(GetType().Assembly, "ApsimNG.Resources.Scripts.upgrade-mac.sh", script);
+                                string apsimxDir = PathUtilities.GetAbsolutePath("%root%", null);
+                                Process.Start("/bin/sh", $"{script} {tempSetupFileName} {apsimxDir}");
                             }
                             else
                             {
-                                info.FileName = upgraderFileName;
-                                info.Arguments = arguments;
+                                // Assume (Debian) Linux and hope for the best.
+                                string script = Path.Combine(Path.GetTempPath(), $"apsim-upgrade-debian-{Guid.NewGuid()}.sh");
+                                ReflectionUtilities.WriteResourceToFile(GetType().Assembly, "ApsimNG.Resources.Scripts.upgrade-debian.sh", script);
+                                Process.Start("/bin/sh", $"{script} {tempSetupFileName}");
                             }
-                            info.WorkingDirectory = Path.GetTempPath();
-                            Process.Start(info);
-                            window1.GdkWindow.Cursor = null;
 
-                            // Shutdown the user interface
-                            window1.Destroy();
-                            tabbedExplorerView.Close();
+                            Application.Invoke((_, __) =>
+                            {
+                                window1.Window.Cursor = null;
+
+                                // Shutdown the user interface
+                                window1.Dispose();
+                                tabbedExplorerView.Close();
+                            });
                         }
                     }
                     catch (Exception err)
                     {
-                        window1.GdkWindow.Cursor = null;
                         Application.Invoke(delegate
                         {
+                            window1.Window.Cursor = null;
                             ViewBase.MasterView.ShowMsgDialog(err.Message, "Installation Error", MessageType.Error, ButtonsType.Ok, window1);
                         });
                     }
@@ -500,7 +498,7 @@
 
             url = AddToURL(url, "lastName", lastNameBox.Text);
             url = AddToURL(url, "organisation", organisationBox.Text);
-            url = AddToURL(url, "country", countryBox.ActiveText);
+            url = AddToURL(url, "country", countryBox.GetActiveText());
             url = AddToURL(url, "email", emailBox.Text);
             url = AddToURL(url, "product", "APSIM Next Generation");
             url = AddToURL(url, "version", version);
@@ -553,7 +551,7 @@
                 Utility.Configuration.Settings.LastName = lastNameBox.Text;
                 Utility.Configuration.Settings.Email = emailBox.Text;
                 Utility.Configuration.Settings.Organisation = organisationBox.Text;
-                Utility.Configuration.Settings.Country = countryBox.ActiveText;
+                Utility.Configuration.Settings.Country = countryBox.GetActiveText();
             }
             catch (Exception err)
             {

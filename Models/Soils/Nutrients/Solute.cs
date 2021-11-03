@@ -7,12 +7,13 @@ namespace Models.Soils.Nutrients
     using System;
     using APSIM.Shared.Utilities;
     using Newtonsoft.Json;
+    using System.Collections.Generic;
+    using APSIM.Shared.Documentation;
 
     /// <summary>
-    /// # [Name]
-    /// [DocumentType Memo]
-    /// 
-    /// This class used for this nutrient encapsulates the nitrogen within a mineral N pool.  Child functions provide information on flows of N from it to other mineral N pools, or losses from the system.
+    /// This class used for this nutrient encapsulates the nitrogen within a mineral N pool.
+    /// Child functions provide information on flows of N from it to other mineral N pools,
+    /// or losses from the system.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Nutrient))]
@@ -60,7 +61,7 @@ namespace Models.Soils.Nutrients
         /// </summary>
         public void Reset()
         {
-            double[] initialkgha = initial.FindByPath(Name)?.Value as double[];           
+            double[] initialkgha = initial.GetType().GetProperty(Name)?.GetValue(initial) as double[];
             if (initialkgha == null)
                 kgha = new double[soilPhysical.Thickness.Length];  // Urea will fall to here.
             else
@@ -82,6 +83,18 @@ namespace Models.Soils.Nutrients
         {
             for (int i = 0; i < delta.Length; i++)
                 kgha[i] += delta[i];
+        }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            foreach (ITag tag in DocumentChildren<Memo>())
+                yield return tag;
+
+            foreach (ITag tag in GetModelDescription())
+                yield return tag;
         }
     }
 }

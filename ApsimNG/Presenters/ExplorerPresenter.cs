@@ -2,6 +2,7 @@
 {
     using APSIM.Shared.Utilities;
     using Commands;
+    using Extensions;
     using Interfaces;
     using Models.Core;
     using Models.Core.ApsimFile;
@@ -12,6 +13,7 @@
     using System.Linq;
     using System.Reflection;
     using System.Runtime.Serialization;
+    using System.Threading.Tasks;
     using Utility;
     using Views;
 
@@ -37,6 +39,11 @@
         /// <summary>Presenter for the component</summary>
         private IPresenter currentRightHandPresenter;
 
+        /// <summary>
+        /// 
+        /// </summary>
+        public ITreeView Tree => view.Tree;
+
         /// <summary>Initializes a new instance of the <see cref="ExplorerPresenter" /> class</summary>
         /// <param name="mainPresenter">The presenter for the main window</param>
         public ExplorerPresenter(MainPresenter mainPresenter)
@@ -57,7 +64,7 @@
             set
             {
                 showDocumentationStatus = value;
-                Refresh();
+                RefreshNode(ApsimXFile);
             }
         }
 
@@ -96,6 +103,21 @@
         /// </summary>
         public ViewBase CurrentRightHandView { get; private set; }
 
+        /// <summary>
+        /// Convenience function - controls the currently-selected model.
+        /// </summary>
+        public IModel CurrentNode
+        {
+            get
+            {
+                return (IModel)ApsimXFile.FindByPath(CurrentNodePath)?.Value;
+            }
+            set
+            {
+                SelectNode(value.FullPath);
+            }
+        }
+
         /// <summary>Gets the path of the current selected node in the tree.</summary>
         /// <value>The current node path.</value>
         public string CurrentNodePath
@@ -123,13 +145,11 @@
         /// <param name="explorerPresenter">The presenter for this object</param>
         public void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.CommandHistory = new CommandHistory();
             // When the user undoes/redoes something we want to select the affected
             // model. Therefore we can use the same callback for both events.
-            this.CommandHistory.OnUndo += OnUndoRedo;
-            this.CommandHistory.OnRedo += OnUndoRedo;
             this.ApsimXFile = model as Simulations;
             this.view = view as IExplorerView;
+            this.CommandHistory = new CommandHistory(this.view.Tree);
             this.mainMenu = new MainMenu(this);
             this.ContextMenu = new ContextMenu(this);
             ApsimXFile.Links.Resolve(ContextMenu);
@@ -140,42 +160,52 @@
             this.view.Tree.Droped += this.OnDrop;
             this.view.Tree.Renamed += this.OnRename;
 
-            Refresh();
+            Populate();
 
             ApsimFileMetadata file = Configuration.Settings.GetMruFile(ApsimXFile.FileName);
             if (file != null && file.ExpandedNodes != null)
                 this.view.Tree.ExpandNodes(file.ExpandedNodes);
 
             this.PopulateMainMenu();
+
+            // After opening a file, ensure that the root node is selected.
+            SelectNode(ApsimXFile, false);
         }
 
         /// <summary>
-        /// Called after undoing/redoing a command.
-        /// Selects the model which was affected by the command.
+        /// Refresh the specified model and its descendants in the tree control.
         /// </summary>
-        /// <param name="affectedModel">The model which was affected by the command.</param>
         /// <remarks>
-        /// When the user undoes/redoes something we want to select the affected
-        /// model. Therefore this callback is used for both undo and redo operations.
+        /// This does not fully account for changes in the model structure. It will
+        /// not remove any nodes which have been removed from the simulations object,
+        /// and although it will add in new nodes which have been added to the
+        /// simulations object, their position among their siblings will be incorrect
+        /// if the model wasn't appended to the end of the simulations list (ie if it
+        /// was inserted somewhere in the middle).
+        /// 
+        /// That being said, this is much faster than refreshing the entire simulations
+        /// tree and it has other advantages such as maintaining the position of the
+        /// scrollbar.
         /// </remarks>
-        public void OnUndoRedo(IModel model)
+        /// <param name="model">Model to be refreshed.</param>
+        public void RefreshNode(IModel model)
         {
-            Refresh();
             if (model != null)
-            {
-                if (ApsimXFile.FindAllDescendants().Contains(model))
-                    SelectNode(model);
-                else if (model.Parent != null && ApsimXFile.FindAllDescendants().Contains(model.Parent))
-                    SelectNode(model.Parent);
-            }
+                view.Tree.RefreshNode(model.FullPath, GetNodeDescription(model));
         }
 
         /// <summary>
-        /// Refresh the view.
+        /// Fully populate/refresh the view.
         /// </summary>
-        public void Refresh()
+        /// <remarks>
+        /// This will remove all nodes from the tree and rebuild it from scratch.
+        /// This will be slower than calling RefreshNode() and passing in the
+        /// top-level node, and it may also cause other unexpected behaviour such
+        /// as changing the scrollbar position. Any expanded nodes will remain expanded.
+        /// </remarks>
+        public void Populate()
         {
-            view.Tree.Populate(GetNodeDescription(this.ApsimXFile));
+            view.Tree.Populate(GetNodeDescription(ApsimXFile));
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -185,8 +215,6 @@
             {
                 if (File.Exists(ApsimXFile.FileName))
                     Configuration.Settings.SetExpandedNodes(ApsimXFile.FileName, view.Tree.GetExpandedNodes());
-                CommandHistory.OnRedo -= OnUndoRedo;
-                CommandHistory.OnUndo -= OnUndoRedo;
             }
             catch
             {
@@ -202,7 +230,7 @@
             this.HideRightHandPanel();
             if (this.view is Views.ExplorerView)
             {
-                (this.view as Views.ExplorerView).MainWidget.Destroy();
+                (this.view as Views.ExplorerView).MainWidget.Dispose();
             }
 
             this.ContextMenu = null;
@@ -210,6 +238,31 @@
             this.CommandHistory.Clear();
             this.ApsimXFile.ClearSimulationReferences();
             this.ApsimXFile = null;
+        }
+
+        public bool FileHasPendingChanges()
+        {
+            try
+            {
+                // Need to hide the right hand panel because some views may not save
+                // their contents until they get a 'Detach' call.
+                this.HideRightHandPanel();
+
+                // Check the command history (beta feature - see comment in the
+                // property description for more details).
+                if (Configuration.Settings.UseFastFileClose)
+                    return CommandHistory.Modified;
+
+                // The fallback is to write the file to json then compare to the
+                // file on disk.
+                string newSim = FileFormat.WriteToString(ApsimXFile);
+                string origSim = File.ReadAllText(ApsimXFile.FileName);
+                return string.Compare(newSim, origSim) != 0;
+            }
+            finally
+            {
+                this.ShowRightHandPanel();
+            }
         }
 
         /// <summary>
@@ -221,44 +274,26 @@
             bool result = true;
             try
             {
-                if (this.ApsimXFile != null && this.ApsimXFile.FileName != null)
+                if (!string.IsNullOrEmpty(ApsimXFile?.FileName))
                 {
                     QuestionResponseEnum choice = QuestionResponseEnum.No;
 
-                    if (!File.Exists(this.ApsimXFile.FileName))
+                    if (!File.Exists(ApsimXFile.FileName))
                     {
                         choice = MainPresenter.AskQuestion("The original file '" + StringUtilities.PangoString(this.ApsimXFile.FileName) + 
                             "' no longer exists.\n \nClick \"Yes\" to save to this location or \"No\" to discard your work.");
                     }
-                    else
-                    {
-                        // Need to hide the right hand panel because some views may not save
-                        // their contents until they get a 'Detach' call.
-                        this.HideRightHandPanel();
-
-                        // need to test is ApsimXFile has changed and only prompt when changes have occured.
-                        // serialise ApsimXFile to buffer
-                        string newSim = FileFormat.WriteToString(ApsimXFile);
-
-                        StreamReader simStream = new StreamReader(this.ApsimXFile.FileName);
-                        string origSim = simStream.ReadToEnd(); // read original file to buffer2
-                        simStream.Close();
-
-                        if (string.Compare(newSim, origSim) != 0)
-                        {
-                            choice = MainPresenter.AskQuestion("Do you want to save changes in file " + StringUtilities.PangoString(this.ApsimXFile.FileName) + " ?");
-                        }
-                    }
+                    else if (FileHasPendingChanges())
+                        choice = MainPresenter.AskQuestion("Do you want to save changes in file " + StringUtilities.PangoString(this.ApsimXFile.FileName) + " ?");
 
                     if (choice == QuestionResponseEnum.Cancel)
-                    {   // cancel
-                        this.ShowRightHandPanel();
+                    {
+                        ShowRightHandPanel();
                         result = false;
                     }
                     else if (choice == QuestionResponseEnum.Yes)
                     {
-                        // save
-                        this.WriteSimulation();
+                        WriteSimulation(ApsimXFile.FileName);
                         result = true;
                     }
                 }
@@ -266,7 +301,6 @@
             catch (Exception err)
             {
                 MainPresenter.ShowError(new Exception("Cannot save the file. Error: ", err));
-                this.ShowRightHandPanel();
                 result = false;
             }
 
@@ -287,7 +321,7 @@
 
                 if (!string.IsNullOrEmpty(ApsimXFile.FileName))
                 {
-                    ApsimXFile.Write(ApsimXFile.FileName);
+                    WriteSimulation(ApsimXFile.FileName);
                     MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", StringUtilities.PangoString(ApsimXFile.FileName)), Simulation.MessageType.Information);
                     return true;
                 }
@@ -309,10 +343,7 @@
             {
                 try
                 {
-                    /*if (this.ApsimXFile.FileName != null)
-                        Utility.Configuration.Settings.DelMruFile(this.ApsimXFile.FileName); */
-
-                    this.ApsimXFile.Write(newFileName);
+                    WriteSimulation(newFileName);
                     MainPresenter.ChangeTabText(this.view, Path.GetFileNameWithoutExtension(newFileName), newFileName);
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(newFileName, view.Tree.GetExpandedNodes()));
                     MainPresenter.UpdateMRUDisplay();
@@ -329,23 +360,20 @@
         }
 
         /// <summary>Do the actual write to the file</summary>
-        public void WriteSimulation()
+        /// <param name="fileName">Path to which the file will be saved.</param>
+        public void WriteSimulation(string fileName)
         {
-            this.ApsimXFile.ExplorerWidth = this.TreeWidth;
-            this.ApsimXFile.Write(this.ApsimXFile.FileName);
+            ApsimXFile.ExplorerWidth = TreeWidth;
+            ApsimXFile.Write(fileName);
+            CommandHistory.Save();
         }
 
         /// <summary>Select a node in the view.</summary>
-        /// <param name="nodePath">Node to be selected.</param>
+        /// <param name="node">Node to be selected.</param>
         /// <param name="refreshRightHandPanel">Iff true, the right-hand panel will be redrawn.</param>
         public void SelectNode(IModel node, bool refreshRightHandPanel = true)
         {
             SelectNode(node.FullPath, refreshRightHandPanel);
-            if (refreshRightHandPanel)
-            {
-                this.HideRightHandPanel();
-                this.ShowRightHandPanel();
-            }
         }
 
         /// <summary>Select a node in the view.</summary>
@@ -419,7 +447,7 @@
             }
 
             // Select the next node.
-            this.view.Tree.SelectedNode = (allModels[index + 1]).FullPath;
+            this.view.Tree.SelectedNode = allModels[index + 1].FullPath;
             return true;
         }
 
@@ -472,10 +500,9 @@
         }
 
         /// <summary>
-        /// Adds a model to a parent model.
+        /// Delete a model from the tree.
         /// </summary>
-        /// <param name="child">The string representation (JSON or XML) of a model.</param>
-        /// <param name="parentPath">Path to the parent</param>
+        /// <param name="pathToNodeToDelete">Path to the node to be deleted.</param>
         public void DeleteFromTree(string pathToNodeToDelete)
         {
             view.Tree.Delete(pathToNodeToDelete);
@@ -487,7 +514,7 @@
         {
             try
             {
-                DeleteModelCommand command = new DeleteModelCommand(model, this.GetNodeDescription(model), this.view);
+                DeleteModelCommand command = new DeleteModelCommand(model, this.GetNodeDescription(model));
                 CommandHistory.Add(command, true);
             }
             catch (Exception err)
@@ -502,7 +529,7 @@
         {
             try
             {
-                MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, true, this.view);
+                MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, true);
                 CommandHistory.Add(command, true);
             }
             catch (Exception err)
@@ -517,7 +544,7 @@
         {
             try
             {
-                MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, false, this.view);
+                MoveModelUpDownCommand command = new MoveModelUpDownCommand(model, false);
                 CommandHistory.Add(command, true);
             }
             catch (Exception err)
@@ -538,7 +565,7 @@
         /// <summary>
         /// Get whatever text is currently on the clipboard
         /// </summary>
-        /// <returns>Clipboard text</returns>
+        /// <param name="clipboardName">Name of the clipboard to be used.</param>
         public string GetClipboardText(string clipboardName = "_APSIM_MODEL")
         {
             return ViewBase.MasterView.GetClipboardText(clipboardName);
@@ -548,6 +575,7 @@
         /// Place text on the clipboard
         /// </summary>
         /// <param name="text">The text to be stored in the clipboard</param>
+        /// <param name="clipboardName">Name of the clipboard to be used.</param>
         public void SetClipboardText(string text, string clipboardName = "_APSIM_MODEL")
         {
             ViewBase.MasterView.SetClipboardText(text, clipboardName);
@@ -650,7 +678,7 @@
         /// Path which the files will be saved to. 
         /// If null, the user will be prompted to choose a directory.
         /// </param>
-        public bool GenerateApsimXFiles(IModel model, string path = null)
+        public async Task<bool> GenerateApsimXFiles(IModel model, string path = null)
         {
             if (string.IsNullOrEmpty(path))
             {
@@ -666,20 +694,16 @@
             {
                 MainPresenter.ShowMessage("Generating simulation files: ", Simulation.MessageType.Information);
 
-                var runner = new Runner(model);
-                var errors = Models.Core.Run.GenerateApsimXFiles.Generate(runner, path, (int percent) =>
+                try
                 {
-                    MainPresenter.ShowProgress(percent, false);
-                });
-
-                if (errors == null || errors.Count == 0)
-                {
+                    var runner = new Runner(model);
+                    await Task.Run(() => Models.Core.Run.GenerateApsimXFiles.Generate(runner, 1, path, p => MainPresenter.ShowProgress(p, false), true));
                     MainPresenter.ShowMessage("Successfully generated .apsimx files under " + path + ".", Simulation.MessageType.Information);
                     return true;
                 }
-                else
+                catch (Exception err)
                 {
-                    MainPresenter.ShowError(errors);
+                    MainPresenter.ShowError(err);
                     return false;
                 }
             }
@@ -724,20 +748,6 @@
                         presenterName = new PresenterNameAttribute("UserInterface.Presenters.ModelDetailsWrapperPresenter");
                     }
 
-                    if (Configuration.Settings.UseNewPropertyPresenter && presenterName != null)
-                    {
-                        if (presenterName.ToString().Contains(".PropertyPresenter"))
-                        {
-                            presenterName = new PresenterNameAttribute("UserInterface.Presenters.SimplePropertyPresenter");
-                            viewName = new ViewNameAttribute("UserInterface.Views.PropertyView");
-                        }
-                        else if (presenterName.ToString().Contains(".BiomassRemovalPresenter"))
-                        {
-                            presenterName = new PresenterNameAttribute("UserInterface.Presenters.CompositePropertyPresenter");
-                            viewName = new ViewNameAttribute("UserInterface.Views.PropertyView");
-                        }
-                    }
-
                     // if a clem model ignore the newly added description box that is handled by CLEM wrapper
                     if (!model.GetType().Namespace.Contains("CLEM"))
                     {
@@ -773,8 +783,8 @@
 
         /// <summary>Show a view in the right hand panel.</summary>
         /// <param name="model">The model.</param>
-        /// <param name="viewName">The view name.</param>
-        /// <param name="presenterName">The presenter name.</param>
+        /// <param name="gladeResourceName">Name of the glade resource file.</param>
+        /// <param name="presenter">The presenter to be used.</param>
         public void ShowInRightHandPanel(object model, string gladeResourceName, IPresenter presenter)
         {
             ShowInRightHandPanel(model,
@@ -871,7 +881,7 @@
                 {
                     MenuDescriptionArgs desc = new MenuDescriptionArgs();
                     desc.Name = mainMenuName.MenuName;
-                    desc.ResourceNameForImage = "ApsimNG.Resources.MenuImages." + desc.Name + ".png";
+                    desc.ResourceNameForImage = $"ApsimNG.Resources.MenuImages.{desc.Name.Replace(" ", "")}.svg";
 
                     EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.mainMenu, method);
                     desc.OnClick = handler;
@@ -951,9 +961,8 @@
                     ICommand cmd = null;
                     if (e.Copied)
                     {
-                        var command = new AddModelCommand(toParent, modelString);
+                        var command = new AddModelCommand(toParent, modelString, GetNodeDescription);
                         CommandHistory.Add(command, true);
-                        Refresh();
                     }
                     else if (e.Moved)
                     {
@@ -962,9 +971,8 @@
                             Model fromModel = this.ApsimXFile.FindByPath(dragObject.NodePath)?.Value as Model;
                             if (fromModel != null)
                             {
-                                cmd = new MoveModelCommand(fromModel, toParent, this.GetNodeDescription(fromModel), this);
+                                cmd = new MoveModelCommand(fromModel, toParent, GetNodeDescription);
                                 CommandHistory.Add(cmd);
-                                Refresh();
                             }
                         }
                     }
@@ -993,7 +1001,7 @@
                         if (model != null && model.GetType().Name != "Simulations" && e.NewName != string.Empty)
                         {
                             this.HideRightHandPanel();
-                            RenameModelCommand cmd = new RenameModelCommand(model, e.NewName, this.view);
+                            RenameModelCommand cmd = new RenameModelCommand(model, e.NewName);
                             CommandHistory.Add(cmd);
                             this.ShowRightHandPanel();
                             e.CancelEdit = model.Name != e.NewName;
@@ -1026,7 +1034,7 @@
                     IModel firstModel = model.Parent.Children[0];
                     if (model != firstModel)
                     {
-                        CommandHistory.Add(new MoveModelUpDownCommand(model, true, view));
+                        CommandHistory.Add(new MoveModelUpDownCommand(model, true));
                     }
                 }
             }
@@ -1050,7 +1058,7 @@
                     IModel lastModel = model.Parent.Children[model.Parent.Children.Count - 1];
                     if (model != lastModel)
                     {
-                        CommandHistory.Add(new MoveModelUpDownCommand(model, false, this.view));
+                        CommandHistory.Add(new MoveModelUpDownCommand(model, false));
                     }
                 }
             }
@@ -1079,21 +1087,12 @@
             description.ToolTip = model.GetType().Name;
 
             description.Children = new List<TreeViewNode>();
-            foreach (Model child in model.Children)
-            {
+            foreach (IModel child in model.Children)
                 if (!child.IsHidden)
-                {
-                    description.Children.Add(this.GetNodeDescription(child));
-                }
-            }
+                    description.Children.Add(GetNodeDescription(child));
             description.Strikethrough = !model.Enabled;
-            description.Checked = model.IncludeInDocumentation && showDocumentationStatus;
+            description.Checked = false; // Set this to true to show a tick next to this item.
             description.Colour = System.Drawing.Color.Empty;
-            /*
-            // Set the colour here
-            System.Drawing.Color colour = model.Enabled ? System.Drawing.Color.Black : System.Drawing.Color.Red;
-            description.Colour = colour;
-            */
             return description;
         }
 
@@ -1111,33 +1110,56 @@
             // e.g. A Graph called Biomass should use an icon called Graph.png
             // e.g. A Plant called Wheat should use an icon called Wheat.png
             // e.g. A plant called Wheat with a resource name of Maize (don't do this) should use an icon called Maize.png.
-
             string resourceNameForImage;
-            ManifestResourceInfo info = null;
+            bool exists;
             if (typeof(ModelCollectionFromResource).IsAssignableFrom(modelType) && modelName != null)
             {
-                resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + resourceName + ".png";
-                info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(resourceNameForImage);
-
-                // If there's no image for resource name (e.g. Wheat.png), try the model name (e.g. Plant.png)
-                if (info == null)
-                    resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelType.Name + ".png";
+                (exists, resourceNameForImage) = CheckIfIconExists(resourceName);
+                if (!exists)
+                    (exists, resourceNameForImage) = CheckIfIconExists(modelType.Name);
             }
             else
             {
-                string modelNamespace = modelType.FullName.Split('.')[1] + ".";
-                resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelNamespace + modelType.Name + ".png";
-
-                if (MainView.MasterView != null && !MainView.MasterView.HasResource(resourceNameForImage))
-                    resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelType.Name + ".png";
+                (exists, resourceNameForImage) = CheckIfIconExists(modelType.Name);
+                if (!exists)
+                {
+                    string modelNamespace = modelType.FullName.Split('.')[1];
+                    (exists, resourceNameForImage) = CheckIfIconExists($"{modelNamespace}.{modelType.Name}");
+                }
             }
 
-            // Check to see if you can find the image in the resource for this project.
-            info = Assembly.GetExecutingAssembly().GetManifestResourceInfo(resourceNameForImage);
-            if (info == null)
-                resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + modelName + ".png";
+            if (!exists)
+                (exists, resourceNameForImage) = CheckIfIconExists(modelName);
 
             return resourceNameForImage;
+        }
+
+        /// <summary>
+        /// Check if an icon exists as an embedded resource in this assembly
+        /// (ApsimNG). Return true if it exists, and if so, the second element
+        /// of the tuple will be the name of the resource.
+        /// </summary>
+        /// <param name="iconName"></param>
+        /// <returns></returns>
+        public static (bool, string) CheckIfIconExists(string iconName)
+        {
+            string[] extensions = new[]
+            {
+                ".svg",
+                ".png"
+            };
+            foreach (string extension in extensions)
+            {
+                string resourceName = GetResourceName(iconName, extension);
+                if (Assembly.GetExecutingAssembly().GetManifestResourceInfo(resourceName) != null)
+                    return (true, resourceName);
+            }
+            return (false, null);
+        }
+
+        private static string GetResourceName(string name, string extension)
+        {
+            return $"ApsimNG.Resources.TreeViewImages.{name}{extension}";
         }
 
         #endregion

@@ -792,7 +792,6 @@
                 "[Eucalyptus].Stem.Live.Wt",
                 "[Eucalyptus].Total.N",
                 "[Eucalyptus].Leaf.Live.N",
-                "[Eucalyptus].Wood.Wt",
                 "[Eucalyptus].Leaf.CoverGreen",
                 "[Eucalyptus].Leaf.LAI",
                 "[Eucalyptus].TotalLive.Wt",

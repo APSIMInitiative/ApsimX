@@ -13,11 +13,10 @@
     using System.Reflection;
 
     /// <summary>
-    /// # [Name]
     /// The surface organic matter model.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Zone))]
     public class SurfaceOrganicMatter : ModelCollectionFromResource, ISurfaceOrganicMatter, IHaveCanopy, IOrganDamage
@@ -53,7 +52,7 @@
         private ResidueTypes ResidueTypes = null;
 
         /// <summary>The surf om</summary>
-        private List<SurfOrganicMatterType> SurfOM = new List<SurfOrganicMatterType>();
+        public List<SurfOrganicMatterType> SurfOM = new List<SurfOrganicMatterType>();
 
         /// <summary>List of canopies that MicroClimate will use.</summary>
         public List<ICanopy> Canopies { get; set; } = new List<ICanopy>();
@@ -324,6 +323,9 @@
         public void Reset()
         {
             SurfOM = new List<SurfOrganicMatterType>();
+            frPoolC = new double[maxFr, 0];
+            frPoolN = new double[maxFr, 0];
+            frPoolP = new double[maxFr, 0];
             irrig = 0;
             cumeos = 0;
             ReadParam();

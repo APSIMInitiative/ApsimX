@@ -7,6 +7,7 @@
     using Models.PMF.Organs;
     using Models.PMF.Phen;
     using System;
+    using APSIM.Shared.Documentation;
     using System.Linq;
     using System.Collections.Generic;
     using System.Data;
@@ -14,14 +15,17 @@
     using APSIM.Shared.Utilities;
     using System.Globalization;
 
-    ///<summary>
-    /// # [Name]
-    /// The generic plant model
+    /// <summary>
+    /// The model has been developed using the Plant Modelling Framework (PMF) of [brown_plant_2014]. This
+    /// new framework provides a library of plant organ and process submodels that can be coupled, at runtime, to construct a
+    /// model in much the same way that models can be coupled to construct a simulation.This means that dynamic composition
+    /// of lower level process and organ classes(e.g.photosynthesis, leaf) into larger constructions(e.g.maize, wheat,
+    /// sorghum) can be achieved by the model developer without additional coding.
     /// </summary>
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
     [ScopedModel]
-    public class Plant : ModelCollectionFromResource, IPlant, ICustomDocumentation, IPlantDamage
+    public class Plant : ModelCollectionFromResource, IPlant, IPlantDamage
     {
         /// <summary>The summary</summary>
         [Link]
@@ -58,10 +62,10 @@
 
         /// <summary>Above ground weight</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
-        public Biomass AboveGround { get; set; }
+        public IBiomass AboveGround { get; set; }
 
         /// <summary>Above ground weight</summary>
-        public Biomass AboveGroundHarvestable { get { return AboveGround; } }
+        public IBiomass AboveGroundHarvestable { get { return AboveGround; } }
 
         /// <summary>Used by several organs to determine the type of crop.</summary>
         public string PlantType { get; set; }
@@ -79,25 +83,7 @@
         {
             get
             {
-                SortedSet<string> cultivarNames = new SortedSet<string>();
-                foreach (Cultivar cultivar in FindAllDescendants<Cultivar>())
-                {
-                    string name = cultivar.Name;
-                    IEnumerable<Memo> memos = cultivar.FindAllChildren<Memo>();
-                    foreach (IModel memo in memos)
-                    {
-                        name += '|' + ((Memo)memo).Text;
-                    }
-
-                    cultivarNames.Add(name);
-                    if (cultivar.Alias != null)
-                    {
-                        foreach (string alias in cultivar.Alias)
-                            cultivarNames.Add(alias + "|Alias for " + cultivar.Name);
-                    }
-                }
-
-                return new List<string>(cultivarNames).ToArray();
+                return new SortedSet<string>(FindAllDescendants<Cultivar>().SelectMany(c => c.GetNames())).ToArray();
             }
         }
 
@@ -183,6 +169,35 @@
         /// <summary>A list of organs that can be damaged.</summary>
         List<IOrganDamage> IPlantDamage.Organs { get { return Organs.Cast<IOrganDamage>().ToList(); } }
 
+        /// <summary>
+        /// Total plant green cover from all organs
+        /// </summary>
+        [Units("-")]
+        public double CoverGreen
+        {
+            get
+            {
+                double cover = 0;
+                foreach (ICanopy canopy in this.FindAllDescendants<ICanopy>())
+                    cover = 1 - (1.0 - cover) * (1.0 - canopy.CoverGreen);
+                return cover;
+            }
+        }
+
+        /// <summary>
+        /// Total plant cover from all organs
+        /// </summary>
+        [Units("-")]
+        public double CoverTotal
+        {
+            get
+            {
+                double cover = 0;
+                foreach (ICanopy canopy in this.FindAllDescendants<ICanopy>())
+                    cover = 1 - (1.0 - cover) * (1.0 - canopy.CoverTotal);
+                return cover;
+            }
+        }
         /// <summary>Leaf area index.</summary>
         [Units("m^2/m^2")]
         public double LAI
@@ -205,9 +220,14 @@
             }
         }
 
+        /// <summary>The sw uptake</summary>
+        public IReadOnlyList<double> WaterUptake => Root == null ? null : Root.SWUptakeLayered;
+
+        /// <summary>The nitrogen uptake</summary>
+        public IReadOnlyList<double> NitrogenUptake => Root == null ? null : Root.NUptakeLayered;
 
         /// <summary>Amount of assimilate available to be damaged.</summary>
-        public double AssimilateAvailable => throw new NotImplementedException();
+        public double AssimilateAvailable => 0;
 
         /// <summary>Harvest the crop</summary>
         public void Harvest() { Harvest(null); }
@@ -442,36 +462,51 @@
             SowingDate = DateTime.MinValue;
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
+            yield return new Section($"The APSIM {Name} Model", GetTags());
+        }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        private IEnumerable<ITag> GetTags()
+        {
+            // If first child is a memo, document it first.
+            Memo introduction = Children?.FirstOrDefault() as Memo;
+            if (introduction != null)
+                foreach (ITag tag in introduction.Document())
+                    yield return tag;
+
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            yield return new Paragraph($"The model is constructed from the following list of software components. Details of the implementation and model parameterisation are provided in the following sections.");
+
+            // Write Plant Model Table
+            yield return new Paragraph("**List of Plant Model Components.**");
+            DataTable tableData = new DataTable();
+            tableData.Columns.Add("Component Name", typeof(string));
+            tableData.Columns.Add("Component Type", typeof(string));
+            foreach (IModel child in Children)
             {
-                tags.Add(new AutoDocumentation.Paragraph("The " + this.Name + " model is constructed from the following list of software components.  Details of the implementation and model parameterisation are provided in the following sections.", indent));
-                // Write Plant Model Table
-                tags.Add(new AutoDocumentation.Paragraph("**List of Plant Model Components.**", indent));
-                DataTable tableData = new DataTable();
-                tableData.Columns.Add("Component Name", typeof(string));
-                tableData.Columns.Add("Component Type", typeof(string));
-
-                foreach (IModel child in this.FindAllChildren<IModel>())
+                if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(CultivarFolder) && child.GetType() != typeof(CompositeBiomass))
                 {
-                    if (child.GetType() != typeof(Memo) && child.GetType() != typeof(Cultivar) && child.GetType() != typeof(CultivarFolder) && child.GetType() != typeof(CompositeBiomass))
-                    {
-                        DataRow row = tableData.NewRow();
-                        row[0] = child.Name;
-                        row[1] = child.GetType().ToString();
-                        tableData.Rows.Add(row);
-                    }
+                    DataRow row = tableData.NewRow();
+                    row[0] = child.Name;
+                    row[1] = child.GetType().ToString();
+                    tableData.Rows.Add(row);
                 }
-                tags.Add(new AutoDocumentation.Table(tableData, indent));
-
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent, true);
             }
+            yield return new Table(tableData);
+
+            // Document children.
+            foreach (IModel child in Children)
+                if (child != introduction)
+                    yield return new Section(child.Name, child.Document());
         }
 
         /// <summary>Removes a given amount of biomass (and N) from the plant.</summary>

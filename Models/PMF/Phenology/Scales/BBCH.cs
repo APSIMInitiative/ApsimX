@@ -12,7 +12,6 @@ using Models.PMF.Struct;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// # [Name]
     /// This model calculates a BBCH growth stage value based upon the current phenological growth stage within the model. 
     /// The model uses information regarding germination, emergence and leaf appearance for early growth stages (BBCH stages 0 to 39).
     /// 
@@ -43,7 +42,7 @@ namespace Models.PMF.Phen
     ///
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
     public class BBCH: Model

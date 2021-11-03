@@ -42,7 +42,6 @@ namespace Models.Optimisation
     }
 
     /// <summary>
-    /// # [Name]
     /// Encapsulates CroptimizR: An R package for parameter estimation, uncertainty analysis and sensitivity analysis for Crop Models
     /// </summary>
     /// <remarks>
@@ -53,7 +52,7 @@ namespace Models.Optimisation
     [ViewName("UserInterface.Views.PropertyAndGridView")]
     [PresenterName("UserInterface.Presenters.PropertyAndTablePresenter")]
     [ValidParent(ParentType = typeof(Simulations))]
-    public class CroptimizR : Model, ICustomDocumentation, IModelAsTable, IRunnable, IReportsStatus
+    public class CroptimizR : Model, IModelAsTable, IRunnable, IReportsStatus
     {
         /// <summary>
         /// This ID is used to identify temp files used by this tool.
@@ -342,7 +341,9 @@ namespace Models.Optimisation
             newRow[4] = Convert.ToInt32(Simulation.ErrorLevel.Information);
             messages.Rows.Add(newRow);
 
-            storage.Writer.WriteTable(messages);
+            // Messages table will be automatically cleaned, unless the simulations
+            // are not run, in which case execution should never reach this point.
+            storage.Writer.WriteTable(messages, false);
         }
 
         /// <summary>
@@ -385,21 +386,12 @@ namespace Models.Optimisation
             return Path.ChangeExtension(Path.Combine(Path.GetTempPath(), name + id), extension);
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Prepare the job for running.
+        /// </summary>
+        public void Prepare()
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                foreach (IModel child in Children)
-                    if (!(child is Simulation) && !(child is Factors)) // why do we have this check?
-                        AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
+            // Do nothing.
         }
 
         /// <summary>
@@ -413,7 +405,7 @@ namespace Models.Optimisation
             Status = "Installing R Packages";
 
             R r = new R(cancelToken.Token);
-            r.InstallPackages("devtools", "dplyr", "nloptr", "DiceDesign", "RSQLite", "DBI", "cli");
+            r.InstallPackages("remotes", "dplyr", "nloptr", "DiceDesign", "DBI", "cli");
             r.InstallFromGithub("hol430/ApsimOnR", "SticsRPacks/CroptimizR");
 
             Status = "Generating R Script";
@@ -442,15 +434,19 @@ namespace Models.Optimisation
                 apsimxFileDir = FindAncestor<Simulation>()?.FileName;
             if (!string.IsNullOrEmpty(apsimxFileDir))
                 apsimxFileDir = Path.GetDirectoryName(apsimxFileDir);
+
+            IDataStore storage = FindInScope<IDataStore>();
+            bool firstFile = true;
             foreach (string file in Directory.EnumerateFiles(outputPath))
             {
                 if (Path.GetExtension(file) == ".Rdata")
                 {
-                    IDataStore storage = FindInScope<IDataStore>();
                     if (storage != null && storage.Writer != null)
                     {
                         output = ReadRData(file);
-                        storage.Writer.WriteTable(output);
+
+                        storage.Writer.WriteTable(output, deleteAllData:firstFile);
+                        firstFile = false;
                     }
                 }
                 if (!string.IsNullOrEmpty(apsimxFileDir))
@@ -489,9 +485,7 @@ namespace Models.Optimisation
 
             // First, clone the simulations (we don't want to change the values
             // of the parameters in the original file).
-            Simulations clonedSims = FileFormat.ReadFromFile<Simulations>(fileName, out List<Exception> errors);
-            if (errors != null && errors.Count > 0)
-                throw errors[0];
+            Simulations clonedSims = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, false);
             
             // Apply the optimal values to the cloned simulations.
             clonedSims = EditFile.ApplyChanges(clonedSims, optimalValues);
@@ -503,7 +497,7 @@ namespace Models.Optimisation
 
             // Run the child models of the cloned CroptimizR.
             Runner runner = new Runner(clonedSims);
-            errors = runner.Run();
+            List<Exception> errors = runner.Run();
             if (errors != null && errors.Count > 0)
                 throw errors[0];
             storage.Writer.AddCheckpoint(checkpointName);

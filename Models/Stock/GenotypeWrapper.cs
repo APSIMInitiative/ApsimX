@@ -90,11 +90,16 @@
         /// </summary>
         private Genotype ReadParametersFromResource()
         {
-            List<Exception> exceptions;
-            var simulations = FileFormat.ReadFromString<Simulations>(ReflectionUtilities.GetResourceAsString(nameOfStockResource),
-                                                                     out exceptions);
-            if (exceptions.Count > 0)
-                throw new Exception($"Invalid stock resource found. Name of resource: {nameOfStockResource}");
+            Simulations simulations;
+            try
+            {
+                simulations = FileFormat.ReadFromString<Simulations>(ReflectionUtilities.GetResourceAsString(nameOfStockResource),
+                                                                         e => throw e, false);
+            }
+            catch (Exception err)
+            {
+                throw new Exception($"Invalid stock resource found. Name of resource: {nameOfStockResource}", err);
+            }
             parameters = simulations.Children[0] as Genotype;
             return parameters;
         }

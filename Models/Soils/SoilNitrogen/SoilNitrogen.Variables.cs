@@ -6448,12 +6448,15 @@ namespace Models.Soils
         public INutrientPool Humic { get { return new NutrientPool() { C = HumicC, N = HumicN }; } }
 
         /// <summary>The fresh organic matter cellulose pool.</summary>
+        [JsonIgnore]
         public INutrientPool FOMCellulose => throw new NotImplementedException();
 
         /// <summary>The fresh organic matter carbohydrate pool.</summary>
+        [JsonIgnore]
         public INutrientPool FOMCarbohydrate => throw new NotImplementedException();
 
         /// <summary>The fresh organic matter lignin pool.</summary>
+        [JsonIgnore]
         public INutrientPool FOMLignin => throw new NotImplementedException();
 
         /// <summary>The fresh organic matter pool.</summary>
@@ -6463,6 +6466,7 @@ namespace Models.Soils
         public INutrientPool Organic { get { return new NutrientPool() { C = organic_c, N = organic_n }; } }
 
         /// <summary>The fresh organic matter surface residue pool.</summary>
+        [JsonIgnore]
         public INutrientPool SurfaceResidue => throw new NotImplementedException();
 
         /// <summary>The NO3 pool.</summary>

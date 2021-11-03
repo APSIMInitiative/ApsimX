@@ -13,11 +13,10 @@ using Models.Soils.Nutrients;
 namespace Models.PMF
 {
     /// <summary>
-    /// # [Name]
     /// A model of a simple tree
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
     public class SimpleTree : Model, IPlant, ICanopy, IUptake
@@ -139,18 +138,23 @@ namespace Models.PMF
         public double NDemand { get; set; }
 
         /// <summary>Aboveground mass</summary>
-        public Biomass AboveGround { get { return new Biomass(); } }
+        public IBiomass AboveGround { get { return new Biomass(); } }
 
         /// <summary>The plant_status</summary>
         [JsonIgnore]
         public string plant_status = "alive";
 
-        /// <summary>The sw uptake</summary>
         double[] SWUptake;
+
+        /// <summary>The sw uptake</summary>
+        public IReadOnlyList<double> WaterUptake => SWUptake;
         /// <summary>The no3 uptake</summary>
         double[] NO3Uptake;
         /// <summary>The nh4 uptake</summary>
         double[] NH4Uptake;
+
+        /// <summary>The nitrogen uptake</summary>
+        public IReadOnlyList<double> NitrogenUptake { get; private set; }
 
         /// <summary>A list of uptakes generated for the soil arbitrator</summary>
         [JsonIgnore]
@@ -289,6 +293,7 @@ namespace Models.PMF
         {
             NO3Uptake = info[0].NO3N;
             NH4Uptake = info[0].NH4N;
+            NitrogenUptake = MathUtilities.Add(NO3Uptake, NH4Uptake);
 
             NO3.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(NO3.kgha, NO3Uptake));
             NH4.SetKgHa(SoluteSetterType.Plant, MathUtilities.Subtract(NH4.kgha, NH4Uptake));

@@ -5,17 +5,17 @@ using System.Reflection;
 using Models.Core;
 using Models.PMF.Phen;
 using System.Linq;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions
 {
-    /// <summary>
-    /// A function that accumulates values from child functions
+    /// <summary>Accumulates a child function between a start and end stage.
     /// </summary>
     [Serializable]
     [Description("Adds the value of all children functions to the previous day's accumulation between start and end phases")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class AccumulateFunction : Model, IFunction, ICustomDocumentation
+    public class AccumulateFunction : Model, IFunction
     {
         ///Links
         /// -----------------------------------------------------------------------------------------------------------
@@ -66,6 +66,15 @@ namespace Models.Functions
         [Description("(optional) Fraction to remove on Prun")]
         public double FractionRemovedOnPrune { get; set; }
 
+        /// <summary>String list of child functions</summary>
+        public string ChildFunctionList
+        {
+            get
+            {
+                return AutoDocumentation.ChildFunctionList(this.FindAllChildren<IFunction>().ToList());
+            }
+        }
+
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -115,6 +124,16 @@ namespace Models.Functions
             return AccumulatedValue;
         }
 
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Paragraph($"*{Name}* = Accumulated {ChildFunctionList} between {StartStageName.ToLower()} and {EndStageName.ToLower()}");
+
+            foreach (var child in Children)
+                foreach (var tag in child.Document())
+                    yield return tag;
+        }
+
         /// <summary>Called when [cut].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -157,25 +176,6 @@ namespace Models.Functions
         private void OnPlantEnding(object sender, EventArgs e)
         {
             AccumulatedValue = 0;
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-                tags.Add(new AutoDocumentation.Paragraph("**" + this.Name + "** is a daily accumulation of the values of functions listed below between the " + StartStageName + " and "
-                                                            + EndStageName + " stages.  Function values added to the accumulate total each day are:", indent));
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
-            }
         }
     }
 }

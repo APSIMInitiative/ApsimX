@@ -8,8 +8,10 @@
     using Models;
     using Models.Core;
     using Views;
-    using ICSharpCode.NRefactory.CSharp;
+    using Interfaces;
     using Utility;
+
+
 
     /// <summary>
     /// Presenter for the Manager component
@@ -19,7 +21,7 @@
         /// <summary>
         /// The presenter used for properties
         /// </summary>
-        private IPresenter propertyPresenter;
+        private PropertyPresenter propertyPresenter;
 
         /// <summary>
         /// The manager object
@@ -70,10 +72,7 @@
                     explorerPresenter.ShowDescriptionInRightHandPanel(descriptionName.ToString());
             }
 
-            if (Configuration.Settings.UseNewPropertyPresenter)
-                propertyPresenter = new SimplePropertyPresenter();
-            else
-                propertyPresenter = new PropertyPresenter();
+            propertyPresenter = new PropertyPresenter();
             try
             {
                 propertyPresenter.Attach(scriptModel, managerView.PropertyEditor, presenter);
@@ -84,7 +83,7 @@
             }
             managerView.Editor.Mode = EditorType.ManagerScript;
             managerView.Editor.Text = manager.Code;
-            managerView.Editor.ContextItemsNeeded += OnNeedVariableNames;
+
             managerView.Editor.LeaveEditor += OnEditorLeave;
             managerView.Editor.AddContextSeparator();
             managerView.Editor.AddContextActionWithAccel("Test compile", OnDoCompile, "Ctrl+T");
@@ -99,8 +98,8 @@
         /// </summary>
         public void Detach()
         {
-            BuildScript();  // compiles and saves the script
             propertyPresenter.Detach();
+            BuildScript();  // compiles and saves the script
 
             explorerPresenter.CommandHistory.ModelChanged -= CommandHistory_ModelChanged;
             managerView.Editor.ContextItemsNeeded -= OnNeedVariableNames;
@@ -118,10 +117,7 @@
         {
             try
             {
-                if (e.ControlShiftSpace)
-                    intellisense.ShowScriptMethodCompletion(manager, e.Code, e.Offset, new Point(e.Coordinates.X, e.Coordinates.Y));
-                else if (intellisense.GenerateScriptCompletions(e.Code, e.Offset, e.ControlSpace))
-                    intellisense.Show(e.Coordinates.X, e.Coordinates.Y);
+
             }
             catch (Exception err)
             {
@@ -145,13 +141,7 @@
 
         private void RefreshProperties()
         {
-            if (propertyPresenter is SimplePropertyPresenter simplePresenter)
-                simplePresenter.RefreshView(scriptModel);
-            else if (propertyPresenter is PropertyPresenter presenter)
-            {
-                presenter.UpdateModel(scriptModel);
-                presenter.Refresh();
-            }
+            propertyPresenter.RefreshView(scriptModel);
         }
 
         /// <summary>
@@ -239,10 +229,9 @@
         {
             try
             {
-                CSharpFormatter formatter = new CSharpFormatter(FormattingOptionsFactory.CreateAllman());
-                string newText = formatter.Format(managerView.Editor.Text);
-                managerView.Editor.Text = newText;
-                explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(manager, "Code", newText));
+
+                throw new NotImplementedException();
+
             }
             catch (Exception err)
             {

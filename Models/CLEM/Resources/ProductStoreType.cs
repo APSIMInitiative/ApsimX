@@ -1,11 +1,8 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
@@ -14,10 +11,10 @@ namespace Models.CLEM.Resources
     /// Store for emission type
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ProductStore))]
-    [Description("This resource represents a product store type (e.g. Cotton).")]
+    [Description("This resource represents a product store (e.g. cotton)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Products/ProductStoreType.htm")]
     public class ProductStoreType : CLEMResourceTypeBase, IResourceType, IResourceWithTransactionType
@@ -51,8 +48,17 @@ namespace Models.CLEM.Resources
         {
             this.amount = 0;
             if (StartingAmount > 0)
-            {
                 Add(StartingAmount, this, "", "Starting value");
+        }
+
+        /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
             }
         }
 
@@ -88,17 +94,16 @@ namespace Models.CLEM.Resources
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             double addAmount;
-            if (resourceAmount.GetType().Name == "FoodResourcePacket")
+            switch (resourceAmount)
             {
-                addAmount = (resourceAmount as FoodResourcePacket).Amount;
-            }
-            else if (resourceAmount.GetType().ToString() == "System.Double")
-            {
-                addAmount = (double)resourceAmount;
-            }
-            else
-            {
-                throw new Exception(String.Format("ResourceAmount object of type [{0}] is not supported in [r={1}]", resourceAmount.GetType().ToString(), this.Name));
+                case FoodResourcePacket _:
+                    addAmount = (resourceAmount as FoodResourcePacket).Amount;
+                    break;
+                case double _:
+                    addAmount = (double)resourceAmount;
+                    break;
+                default:
+                    throw new Exception($"ResourceAmount object of type [{resourceAmount.GetType().Name}] is not supported in [r={Name}]");
             }
 
             if (addAmount > 0)
@@ -107,7 +112,8 @@ namespace Models.CLEM.Resources
 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    Gain = addAmount,
+                    TransactionType = TransactionType.Gain,
+                    Amount = addAmount,
                     Activity = activity,
                     RelatesToResource = relatesToResource,
                     Category = category,
@@ -127,15 +133,11 @@ namespace Models.CLEM.Resources
         public new void Remove(ResourceRequest request)
         {
             if (request.Required == 0)
-            {
                 return;
-            }
 
             // if this request aims to trade with a market see if we need to set up details for the first time
             if (request.MarketTransactionMultiplier > 0)
-            {
                 FindEquivalentMarketStore();
-            }
 
             // avoid taking too much
             double amountRemoved = request.Required;
@@ -144,9 +146,7 @@ namespace Models.CLEM.Resources
 
             // send to market if needed
             if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
-            {
                 (EquivalentMarketStore as ProductStoreType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, this.NameWithParent, "Farm sales");
-            }
 
             request.Provided = amountRemoved;
             if (amountRemoved > 0)
@@ -154,7 +154,8 @@ namespace Models.CLEM.Resources
                 ResourceTransaction details = new ResourceTransaction
                 {
                     ResourceType = this,
-                    Loss = amountRemoved,
+                    TransactionType = TransactionType.Loss,
+                    Amount = amountRemoved,
                     Activity = request.ActivityModel,
                     Category = request.Category,
                     RelatesToResource = request.RelatesToResource
@@ -189,9 +190,7 @@ namespace Models.CLEM.Resources
 
             html += "\r\n<div class=\"activityentry\">";
             if (StartingAmount > 0)
-            {
                 html += "There is <span class=\"setvalue\">" + this.StartingAmount.ToString("#.###") + "</span> at the start of the simulation.";
-            }
             html += "\r\n</div>";
             return html;
         }

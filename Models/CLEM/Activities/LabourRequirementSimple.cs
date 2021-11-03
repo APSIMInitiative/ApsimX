@@ -14,7 +14,7 @@ namespace Models.CLEM.Activities
     /// Defines the labour required for an Activity where details are provided by the Activity
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Defines the labour required for an Activity where details are provided by the Activity")]
     [Version(1, 0, 1, "")]

@@ -45,6 +45,13 @@ namespace UserInterface.Interfaces
         /// <param name="rootNode">A description of the top level root node</param>
         void Populate(TreeViewNode rootNode);
 
+        /// <summary>
+        /// Refresh the node at the given data..
+        /// </summary>
+        /// <param name="path">The node to refresh.</param>
+        /// <param name="description">Data to use to refresh the node.</param>
+        void RefreshNode(string path, TreeViewNode description);
+
         /// <summary>Moves the specified node up 1 position.</summary>
         /// <param name="nodePath">The path of the node to move.</param>
         void MoveUp(string nodePath);

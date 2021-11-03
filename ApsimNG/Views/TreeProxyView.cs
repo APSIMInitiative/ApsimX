@@ -11,6 +11,7 @@
     using Interfaces;
     using System.Drawing;
     using EventArguments;
+    using APSIM.Interop.Graphing.Extensions;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -68,8 +69,8 @@
             belowGroundGraph.SetSizeRequest(-1, 100);
             graphContainer.PackStart(belowGroundGraph, true, true, 0);
 
-            ConstantsGrid = new GridView(this);
-            constantsTab.Add((ConstantsGrid as ViewBase).MainWidget);
+            Constants = new PropertyView(this);
+            constantsTab.Add((Constants as ViewBase).MainWidget);
             MainWidget.ShowAll();
             mainWidget.Destroyed += MainWidgetDestroyed;
         }
@@ -92,7 +93,7 @@
         /// <summary>
         /// Constants grid.
         /// </summary>
-        public IGridView ConstantsGrid { get; private set; }
+        public IPropertyView Constants { get; private set; }
 
         /// <summary>
         /// Data to be displayed in the spatial data grid.
@@ -249,7 +250,7 @@
                 belowGroundGraph.Model.Axes.Clear();
                 belowGroundGraph.Model.Series.Clear();
                 aboveGroundGraph.Model.Title = "Above Ground";
-                aboveGroundGraph.Model.LegendBorder = OxyColors.Transparent;
+                aboveGroundGraph.Model.SetLegendBorder(OxyColors.Transparent);
                 LinearAxis agxAxis = new LinearAxis();
                 agxAxis.Title = "Multiple of Tree Height";
                 agxAxis.AxislineStyle = LineStyle.Solid;
@@ -299,7 +300,7 @@
             try
             {
                 belowGroundGraph.Model.Title = "Below Ground";
-                belowGroundGraph.Model.LegendBorder = OxyColors.Transparent;
+                belowGroundGraph.Model.SetLegendBorder(OxyColors.Transparent);
                 LinearAxis bgxAxis = new LinearAxis();
                 LinearAxis bgyAxis = new LinearAxis();
 
@@ -327,7 +328,7 @@
                     double[] data = new double[SpatialDataGrid.DataSource.Rows.Count - 4];
                     for (int j = 4; j < SpatialDataGrid.DataSource.Rows.Count; j++)
                     {
-                        data[j - 4] = Convert.ToDouble(SpatialDataGrid.DataSource.Rows[j].Field<string>(i), 
+                        data[j - 4] = Convert.ToDouble(SpatialDataGrid.DataSource.Rows[j].ItemArray[i], 
                                                        System.Globalization.CultureInfo.InvariantCulture);
                     }
 
@@ -378,8 +379,8 @@
 
             }
             graph.Model.TextColor = foregroundColour;
-            graph.Model.LegendTextColor = foregroundColour;
-            graph.Model.LegendTitleColor = foregroundColour;
+            graph.Model.SetLegendTextColour(foregroundColour);
+            graph.Model.SetLegendTitleColour(foregroundColour);
             graph.Model.SubtitleColor = foregroundColour;
             graph.Model.PlotAreaBorderColor = foregroundColour;
         }
@@ -395,8 +396,6 @@
         {
             try
             {
-                TemporalDataGrid.Dispose();
-                SpatialDataGrid.Dispose();
                 mainWidget.Dispose();
                 mainWidget.Destroyed -= MainWidgetDestroyed;
                 owner = null;

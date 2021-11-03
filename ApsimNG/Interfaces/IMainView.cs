@@ -26,8 +26,9 @@ namespace UserInterface.Interfaces
         void AddTab(string text, Image image, Widget control, bool onLeftTabControl);
 
         /// <summary>Change the text of a tab.</summary>
-        /// <param name="currentTabName">Current tab text.</param>
+        /// <param name="ownerView">The owner view.</param>
         /// <param name="newTabName">New text of the tab.</param>
+        /// <param name="tooltip">Tooltip to be shown on tab mouseover.</param>
         void ChangeTabText(object ownerView, string newTabName, string tooltip);
 
         /// <summary>
@@ -108,6 +109,11 @@ namespace UserInterface.Interfaces
         void ShowMessage(string message, Models.Core.Simulation.ErrorLevel errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true);
 
         /// <summary>
+        /// Clear the status panel.
+        /// </summary>
+        void ClearStatusPanel();
+
+        /// <summary>
         /// Displays an error message with a 'more info' button.
         /// </summary>
         /// <param name="err">Error for which we want to display information.</param>
@@ -115,7 +121,11 @@ namespace UserInterface.Interfaces
 
         /// <summary>Show a message in a dialog box</summary>
         /// <param name="message">The message.</param>
+        /// <param name="title">Title of the dialog.</param>
+        /// <param name="msgType">Message type (info, warning, error, ...).</param>
+        /// <param name="buttonType">Type of buttons to be shown in the dialog.</param>
         /// <param name="errorLevel">The error level.</param>
+        /// <param name="masterWindow">The main window.</param>
         int ShowMsgDialog(string message, string title, MessageType msgType, ButtonsType buttonType, Window masterWindow = null);
 
         /// <summary>
@@ -128,8 +138,20 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Show progress bar with the specified percent.
         /// </summary>
-        /// <param name="percent"></param>
-        void ShowProgress(int percent, bool showStopButton = true);
+        /// <param name="progress">Progress (0 - 1)</param>
+        /// <param name="showStopButton">Should a stop button be displayed as well?</param>
+        void ShowProgress(double progress, bool showStopButton = true);
+
+        /// <summary>
+        /// Show a message next to the progress bar.
+        /// </summary>
+        /// <param name="message">Message to be displayed.</param>
+        void ShowProgressMessage(string message);
+
+        /// <summary>
+        /// Hide the progress bar.
+        /// </summary>
+        void HideProgressBar();
 
         /// <summary>
         /// Set the wait cursor (or not).
@@ -178,14 +200,6 @@ namespace UserInterface.Interfaces
         /// <param name="text">Text to be copied.</param>
         /// <param name="clipboardName">Name of the clipboard.</param>
         void SetClipboardText(string text, string clipboardName);
-
-        /// <summary>
-        /// Invoked when theme is toggled.
-        /// Toggles the icon displayed on the "toggle theme" button.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        void ToggleTheme(object sender, EventArgs args);
 
         /// <summary>
         /// Shows the font selection dialog.

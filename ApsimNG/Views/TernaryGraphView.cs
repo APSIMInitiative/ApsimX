@@ -5,6 +5,8 @@ using Gtk;
 using OxyPlot.GtkSharp;
 using System;
 using System.Collections.Generic;
+using UserInterface.Extensions;
+using Utility;
 
 namespace UserInterface.Views
 {
@@ -42,7 +44,9 @@ namespace UserInterface.Views
             | (int)Gdk.EventMask.ButtonPressMask
             | (int)Gdk.EventMask.ButtonReleaseMask);
 
-            chart.ExposeEvent += OnDrawChart;
+
+            chart.Drawn += OnDrawChart;
+
             chart.ButtonPressEvent += OnMouseButtonPress;
             chart.ButtonReleaseEvent += OnMouseButtonRelease;
             chart.MotionNotifyEvent += OnMouseMove;
@@ -61,14 +65,16 @@ namespace UserInterface.Views
             container.PackStart(labels, true, true, 0);
 
             mainWidget = container;
-            mainWidget.HideAll();
+            mainWidget.Hide();
         }
 
         public void Detach()
         {
             try
             {
-                chart.ExposeEvent -= OnDrawChart;
+
+                chart.Drawn -= OnDrawChart;
+
                 chart.ButtonPressEvent -= OnMouseButtonPress;
                 chart.ButtonReleaseEvent -= OnMouseButtonRelease;
                 chart.MotionNotifyEvent -= OnMouseMove;
@@ -100,7 +106,7 @@ namespace UserInterface.Views
             {
                 x = value;
                 xlabel.Text = $"x: {x:F2}";
-                Refresh();
+                Refresh(false);
             }
         }
 
@@ -117,7 +123,7 @@ namespace UserInterface.Views
             {
                 y = value;
                 ylabel.Text = $"y: {y:F2}";
-                Refresh();
+                Refresh(false);
             }
         }
 
@@ -134,7 +140,7 @@ namespace UserInterface.Views
             {
                 z = value;
                 zlabel.Text = $"z: {z:F2}";
-                Refresh();
+                Refresh(false);
             }
         }
 
@@ -157,7 +163,7 @@ namespace UserInterface.Views
             double y3 = height + offsetY;
 
             context.NewPath();
-            context.SetSourceColor(Utility.Colour.ToOxy(owner.MainWidget.Style.Foreground(StateType.Normal)));
+            context.SetSourceColor(Utility.Colour.ToOxy(owner.MainWidget.StyleContext.GetColor(StateFlags.Normal).ToColour().ToGdk()));
 
             context.MoveTo(x1, y1);
 
@@ -187,7 +193,7 @@ namespace UserInterface.Views
         /// the marker location, label text and internal variable value
         /// but does update the model/presenter.
         /// </summary>
-        /// <param name="movePoint"></param>
+        /// <param name="point"></param>
         private void MoveTo(PointD point)
         {
             // Coordinates must be adjusted according to offset/scale.
@@ -208,15 +214,24 @@ namespace UserInterface.Views
             context.NewPath();
             context.Arc(p.X, p.Y, markerRadius, 0, 2 * Math.PI);
             context.StrokePreserve();
-            context.SetSourceColor(Utility.Colour.ToOxy(owner.MainWidget.Style.Foreground(StateType.Normal)));
+            context.SetSourceColor(owner.MainWidget.StyleContext.GetColor(StateFlags.Normal).ToColour().ToOxy());
             context.Fill();
         }
 
-        private void Refresh()
+        private void Refresh(bool drawTriangle)
         {
-            if (chart.IsAppPaintable && chart.Visible)
+
+            bool isPaintable = chart.AppPaintable;
+
+            if (isPaintable && chart.Visible)
             {
-                Context context = Gdk.CairoHelper.Create(chart.GdkWindow);
+
+                Gdk.DrawingContext drawingContext = chart.Window.BeginDrawFrame(chart.Window.VisibleRegion);
+                Context context = drawingContext.CairoContext;
+
+
+                if (drawTriangle)
+                    DrawTriangle(context);
                 DrawMarker(context);
             }
         }
@@ -249,13 +264,11 @@ namespace UserInterface.Views
         /// </summary>
         /// <param name="o">Sender object.</param>
         /// <param name="args">Event arguments.</param>
-        private void OnDrawChart(object o, ExposeEventArgs args)
+        private void OnDrawChart(object o, DrawnArgs args)
         {
             try
             {
-                Context context = Gdk.CairoHelper.Create(chart.GdkWindow);
-                DrawTriangle(context);
-                DrawMarker(context);
+                Refresh(true);
             }
             catch (Exception err)
             {

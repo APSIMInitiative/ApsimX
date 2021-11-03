@@ -31,13 +31,7 @@
     /// system, are mated, give birth or are weaned. Further, animals that are otherwise similar may be
     /// placed in different paddocks, where their growth rates may differ.
     /// 
-    /// ![Alt Text](StockGroupsExample.png)
-    /// 
-    /// **Figure [FigureNumber]:**  The list of animal groups at a particular time during a hypothetical simulation containing a
-    /// STOCK module. Group 1 is distinct from the others because it has a different genotype and sex. Groups 2
-    /// and 3 are distinct because they are in different age classes (yearling vs mature). Groups 2 and 4 are
-    /// distinct because they are in different reproductive states (pregnant vs lactating). Note how the unweaned
-    /// lambs are associated with their mothers.
+    /// ![The list of animal groups at a particular time during a hypothetical simulation containing a STOCK module. Group 1 is distinct from the others because it has a different genotype and sex. Groups 2 and 3 are distinct because they are in different age classes (yearling vs mature). Groups 2 and 4 are distinct because they are in different reproductive states (pregnant vs lactating). Note how the unweaned lambs are associated with their mothers.](StockGroupsExample.png)
     /// 
     /// In the STOCK component, this complexity is handled by representing the set of animals in a
     /// simulated system as a list of animal groups (Figure 2.1). The members of each animal group
@@ -2872,6 +2866,7 @@
                 DMPoolHead[] pools = new DMPoolHead[1];
                 InorgFaeces[] inorgpools = new InorgFaeces[pools.Length];
                 StockVars.PopulateDMPoolValue(this.StockModel, StockProps.prpINORG_FAECES, false, true, false, ref pools);
+                inorgpools[0] = new InorgFaeces();
                 inorgpools[0].N = pools[0].N;
                 inorgpools[0].P = pools[0].P;
                 inorgpools[0].S = pools[0].S;
@@ -2934,6 +2929,7 @@
                 DMPoolHead[] pools = new DMPoolHead[1];
                 InorgFaeces[] inorgpools = new InorgFaeces[pools.Length];
                 StockVars.PopulateDMPoolValue(this.StockModel, StockProps.prpINORG_FAECES, true, true, false, ref pools);
+                inorgpools[0] = new InorgFaeces();
                 inorgpools[0].N = pools[0].N;
                 inorgpools[0].P = pools[0].P;
                 inorgpools[0].S = pools[0].S;

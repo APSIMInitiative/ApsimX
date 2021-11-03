@@ -8,15 +8,17 @@ using System.Linq;
 using Models.PMF.Struct;
 using System.Globalization;
 using Models.PMF.Interfaces;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// This model simulates the development of the crop through successive developmental <i>phases</i>. Each phase is bound by distinct growth <i>stages</i>. Phases often require a target to be reached to signal movement to the next phase. Differences between cultivars are specified by changing the values of the default parameters shown below.
+    /// The phenological development is simulated as the progression through a 
+    /// series of developmental phases, each bound by distinct growth stage. 
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Plant))]
-    public class Phenology : Model, IPhenology, ICustomDocumentation
+    public class Phenology : Model, IPhenology
     {
 
         ///1. Links
@@ -132,7 +134,7 @@ namespace Models.PMF.Phen
         }
         
         /// <summary>Gets the current zadok stage number. Used in manager scripts.</summary>
-        public double Zadok {  get { return zadok.Stage; } }
+        public double Zadok {  get { return zadok?.Stage ?? 0; } }
 
         ///6. Public methods
         /// -----------------------------------------------------------------------------------------------------------
@@ -477,57 +479,58 @@ namespace Models.PMF.Phen
         }
        
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            // Write memos.
+            foreach (var tag in DocumentChildren<Memo>())
+                yield return tag;
+
+            // Document thermal time function.
+            yield return new Section("ThermalTime", thermalTime.Document());
+
+            // Write a table containing phase numers and start/end stages.
+            yield return new Paragraph("**List of stages and phases used in the simulation of crop phenological development**");
+
+            DataTable phaseTable = new DataTable();
+            phaseTable.Columns.Add("Phase Number", typeof(int));
+            phaseTable.Columns.Add("Phase Name", typeof(string));
+            phaseTable.Columns.Add("Initial Stage", typeof(string));
+            phaseTable.Columns.Add("Final Stage", typeof(string));
+
+            int n = 1;
+            foreach (IPhase child in FindAllChildren<IPhase>())
             {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // write description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-
-                // Write Phase Table
-                tags.Add(new AutoDocumentation.Paragraph(" **List of stages and phases used in the simulation of crop phenological development**", indent));
-
-                DataTable tableData = new DataTable();
-                tableData.Columns.Add("Phase Number", typeof(int));
-                tableData.Columns.Add("Phase Name", typeof(string));
-                tableData.Columns.Add("Initial Stage", typeof(string));
-                tableData.Columns.Add("Final Stage", typeof(string));
-
-                int N = 1;
-                foreach (IModel child in this.FindAllChildren<IPhase>())
-                {
-                    DataRow row;
-                    row = tableData.NewRow();
-                    row[0] = N;
-                    row[1] = child.Name;
-                    row[2] = (child as IPhase).Start;
-                    row[3] = (child as IPhase).End;
-                    if (child is GotoPhase)
-                        row[3] = (child as GotoPhase).PhaseNameToGoto;
-                    tableData.Rows.Add(row);
-                    N++;
-                }
-                tags.Add(new AutoDocumentation.Table(tableData, indent));
-                tags.Add(new AutoDocumentation.Paragraph(System.Environment.NewLine, indent));
-
-
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading("Phenological Phases", headingLevel + 1));
-                foreach (IModel child in this.FindAllChildren<IPhase>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 2, indent);
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    if (child.GetType() != typeof(Memo) && !typeof(IPhase).IsAssignableFrom(child.GetType()))
-                        AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
+                DataRow row = phaseTable.NewRow();
+                row[0] = n;
+                row[1] = child.Name;
+                row[2] = (child as IPhase).Start;
+                row[3] = (child as IPhase).End;
+                phaseTable.Rows.Add(row);
+                n++;
             }
+            yield return new Table(phaseTable);
+
+            // Document Phases
+            foreach (var phase in FindAllChildren<IPhase>())
+                yield return new Section(phase.Name, phase.Document());
+
+            // Document Constants
+            var constantTags = new List<ITag>();
+            foreach (var constant in FindAllChildren<Constant>())
+                foreach (var tag in constant.Document())
+                    constantTags.Add(tag);
+            yield return new Section("Constants", constantTags);
+
+            // Document everything else.
+            foreach (var phase in Children.Where(child => !(child is IPhase) &&
+                                                          !(child is Memo) &&
+                                                          !(child is Constant) &&
+                                                          child != thermalTime))
+                yield return new Section(phase.Name, phase.Document());
         }
     }
 }

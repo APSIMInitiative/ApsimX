@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Shared.Documentation;
 using System.Collections.Generic;
 using System.Linq;
 using Models.Core;
@@ -42,9 +43,9 @@ namespace Models.PMF.Organs
     /// 
     /// </remarks>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class LeafCohort : Model, ICustomDocumentation
+    public class LeafCohort : Model
     {
         #region Paramater Input Classes
 
@@ -836,9 +837,9 @@ namespace Models.PMF.Organs
                 //Accelerate thermal time accumulation if crop is water stressed.
                 double thermalTime;
                 if (IsFullyExpanded && IsNotSenescing)
-                    thermalTime = tt * leafCohortParameters.DroughtInducedLagAccelerationValue;
+                    thermalTime = tt * leafCohortParameters.LagAccelerationValue;
                 else if (IsSenescing)
-                    thermalTime = tt * leafCohortParameters.DroughtInducedSenAccelerationValue;
+                    thermalTime = tt * leafCohortParameters.SenescenceAccelerationValue;
                 else thermalTime = tt;
 
                 //Modify leaf area using tillering approach
@@ -932,9 +933,9 @@ namespace Models.PMF.Organs
             //Accellerate thermal time accumulation if crop is water stressed.
             double thermalTime;
             if (IsFullyExpanded && IsNotSenescing)
-                thermalTime = tt * leafCohortParameters.DroughtInducedLagAcceleration.Value();
+                thermalTime = tt * leafCohortParameters.LagAcceleration.Value();
             else if (IsSenescing)
-                thermalTime = tt * leafCohortParameters.DroughtInducedSenAcceleration.Value();
+                thermalTime = tt * leafCohortParameters.SenescenceAcceleration.Value();
             else thermalTime = tt;
 
             //Growing leaf area after DM allocated
@@ -1261,20 +1262,12 @@ namespace Models.PMF.Organs
 
         #endregion
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                tags.Add(new AutoDocumentation.Paragraph("Area = " + Area, indent));
-            }
+            yield return new Paragraph($"Area = {Area}");
         }
     }
 }

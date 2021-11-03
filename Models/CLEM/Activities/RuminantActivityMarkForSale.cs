@@ -16,17 +16,45 @@ namespace Models.CLEM.Activities
     /// <version>1.0</version>
     /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity marks the specified individuals for sale by RuminantAcitivtyBuySell.")]
+    [Description("Mark the specified individuals for sale with specified sale reason")]
+    [Version(1, 0, 2, "Allows specification of sale reason for reporting")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMarkForSale.htm")]
     public class RuminantActivityMarkForSale: CLEMRuminantActivityBase
     {
         private LabourRequirement labourRequirement;
+
+        /// <summary>
+        /// Sale flag to use
+        /// </summary>
+        [Description("Sale reason to apply")]
+        [System.ComponentModel.DefaultValueAttribute("MarkedSale")]
+        [GreaterThanEqualValue(4, ErrorMessage = "A sale reason must be provided")]
+        public MarkForSaleReason SaleFlagToUse { get; set; }
+
+        /// <summary>
+        /// Overwrite any currently recorded sale flag
+        /// </summary>
+        [Description("Overwrite existing sale flag")]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool OverwriteFlag { get; set; }
+
+        private int numberToTag = 0;
+        private bool labourShortfall = false;
+        private HerdChangeReason changeReason;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public RuminantActivityMarkForSale()
+        {
+            TransactionCategory = "Livestock.Manage";
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -36,67 +64,49 @@ namespace Models.CLEM.Activities
         {
             // get all ui tree herd filters that relate to this activity
             this.InitialiseHerd(true, true);
+            changeReason = (HerdChangeReason)SaleFlagToUse;
         }
 
-        /// <summary>
-        /// Overwrite any currently recorded sale flag
-        /// </summary>
-        [Description("Overwrite existing sale flag")]
-        [System.ComponentModel.DefaultValueAttribute(false)]
-        public bool OverwriteFlag { get; set; }
-
-        private int filterGroupsCount = 0;
-        private int numberToTag = 0;
-        private bool labourShortfall = false;
-
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
+            numberToTag = NumberToTag();
             return null;
         }
 
-        /// <summary>
-        /// Determines how much labour is required from this activity based on the requirement provided
-        /// </summary>
-        /// <param name="requirement">The details of how labour are to be provided</param>
-        /// <returns></returns>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        private int NumberToTag()
         {
-            List<Ruminant> herd = CurrentHerd(false);
+            IEnumerable<Ruminant> herd = CurrentHerd(false);
 
-            filterGroupsCount = FindAllChildren<RuminantGroup>().Count();
-            if (filterGroupsCount > 0)
+            var filterGroups = FindAllChildren<RuminantGroup>();
+            int number = 0;
+            if (filterGroups.Any())
             {
-                numberToTag = 0;
-                foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
-                {
-                    numberToTag += herd.Filter(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Count();
-                }
+                number = 0;
+                foreach (RuminantGroup item in filterGroups)
+                    number += item.Filter(herd).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Count();
             }
             else
-            {
-                numberToTag = herd.Count();
-            }
+                number = herd.Count();
 
-            double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
+            return number;
+        }
 
-            double daysNeeded = 0;
-            double numberUnits = 0;
+        /// <inheritdoc/>
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        {
             labourRequirement = requirement;
+            double daysNeeded;
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
                     daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHead:
-                    numberUnits = numberToTag / requirement.UnitSize;
+                    double numberUnits = numberToTag / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
+
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
@@ -105,9 +115,7 @@ namespace Models.CLEM.Activities
             return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Mark", this.PredictedHerdName);
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             labourShortfall = false;
@@ -130,99 +138,53 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to call for changing stocking based on prediced pasture biomass</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMAnimalStock")]
-        private void OnCLEMAnimalStock(object sender, EventArgs e)
+        [EventSubscribe("CLEMAnimalMark")]
+        private void OnCLEMAnimalMark(object sender, EventArgs e)
         {
             if (this.TimingOK)
             {
-                List<Ruminant> herd = CurrentHerd(false);
+                // recalculate numbers and ensure it is not less than number calculated
+                int updatedNumberToTag = NumberToTag(); 
+                if (updatedNumberToTag < numberToTag)
+                    numberToTag = updatedNumberToTag;
+
+                IEnumerable<Ruminant> herd = CurrentHerd(false);
                 if (numberToTag > 0)
                 {
-                    foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
+                    var filterGroups = FindAllChildren<RuminantGroup>();
+
+                    foreach (RuminantGroup item in filterGroups)
                     {
-                        foreach (Ruminant ind in herd.Filter(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
+                        foreach (Ruminant ind in item.Filter(herd).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
                         {
                             this.Status = (labourShortfall)?ActivityStatus.Partial:ActivityStatus.Success;
-                            ind.SaleFlag = HerdChangeReason.MarkedSale;
+                            ind.SaleFlag = changeReason;
                             numberToTag--;
                         }
                     }
-                    if(filterGroupsCount == 0)
+                    if(!filterGroups.Any())
                     {
                         foreach (Ruminant ind in herd.Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
                         {
                             this.Status = (labourShortfall) ? ActivityStatus.Partial : ActivityStatus.Success;
-                            ind.SaleFlag = HerdChangeReason.MarkedSale;
+                            ind.SaleFlag = changeReason;
                             numberToTag--;
                         }
                     }
                 }
                 else
-                {
                     this.Status = ActivityStatus.NotNeeded;
-                }
             }
             else
-            {
                 this.Status = ActivityStatus.Ignored;
-            }
-        }
-
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
-        public override void DoActivity()
-        {
-            // nothing to do. This is performed in the AnimalStock event.
-        }
-
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
-        public override event EventHandler ActivityPerformed;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
         }
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
-            return "\r\n<div class=\"activityentry\">Flag individuals in the following groups for sale (MarkedSale)</div>";
+            return $"\r\n<div class=\"activityentry\">Flag individuals for sale as [{SaleFlagToUse}] in the following groups:</div>";
         } 
         #endregion
     }

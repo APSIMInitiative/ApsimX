@@ -11,9 +11,11 @@
     /// <summary>
     /// This is a post simulation tool that lets the user filter the rows of a source data table.
     /// </summary>
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(DataStore))]
+    [ValidParent(ParentType = typeof(ParallelPostSimulationTool))]
+    [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
     [Serializable]
     public class Filter : Model, IPostSimulationTool
     {

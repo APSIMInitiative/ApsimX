@@ -3,17 +3,19 @@ using System.Collections.Generic;
 using Models.Core;
 using Models.Functions;
 using Newtonsoft.Json;
-using Models.PMF.Struct;
-using System.IO;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// Leaf appearance phenological phase
+    /// This phase goes from the specified start stage to the specified end stage
+    /// and extends from the end of the previous phase until the CompletionNodeNumber
+    /// is achieved. The duration of this phase is determined by leaf appearance rate
+    /// and the CompletionNodeNumber target
     /// </summary>
     [Serializable]
     [Description("This phase extends from the end of the previous phase until the Completion Leaf Number is achieved.  The duration of this phase is determined by leaf appearance rate and the completion leaf number target.")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
     public class NodeNumberPhase : Model, IPhase
@@ -94,39 +96,26 @@ namespace Models.PMF.Phen
             First = true;
         }
 
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            
+            // Write description of this class.
+            yield return new Paragraph($"This phase goes from {Start.ToLower()} to {End.ToLower()} and extends from the end of the previous phase until the *CompletionNodeNumber* is achieved. The duration of this phase is determined by leaf appearance rate and the *CompletionNodeNumber* target");
+
+            // Write children
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
+        }
+
         //7. Private methods
         //-----------------------------------------------------------------------------------------------------------------
 
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)  { ResetPhase(); }
-        
-        
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
-
-                // Describe the start and end stages
-                tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + ".  ", indent));
-
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // get description of this class.
-                AutoDocumentation.DocumentModelSummary(this, tags, headingLevel, indent, false);
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
+            ResetPhase();
         }
     }
 }
-
-      
-      

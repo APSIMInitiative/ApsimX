@@ -7,16 +7,16 @@ using APSIM.Shared.Utilities;
 using Models.Interfaces;
 using Models.PMF;
 using Models.Climate;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions.SupplyFunctions
 {
     /// <summary>
-    /// # [Name]
     /// Daily gross CO2 assimilation and biomass growth is simulated using a canopy photosynthesis model adopted from SPASS, which was a modified version of the original SUCROS model.
     /// The daily gross photosynthesis is called in reponse to event DoPotentialPlantGrowth.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ILeaf))]
 
@@ -212,6 +212,17 @@ namespace Models.Functions.SupplyFunctions
 
             }
             return GrossPhotosynthesis;
+        }
+
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
         }
     }
 }

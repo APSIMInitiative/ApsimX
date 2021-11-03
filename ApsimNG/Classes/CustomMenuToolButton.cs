@@ -54,7 +54,7 @@ namespace UserInterface.Classes
         {
             try
             {
-                GetMenuButton().State = GetToggleButton().State;
+
             }
             catch //(Exception err) // fixme
             {
@@ -73,11 +73,7 @@ namespace UserInterface.Classes
         {
             try
             {
-                if (!(sender is Widget))
-                    return;
-                foreach (Button button in GetButtons())
-                    button.State = (sender as Widget).State;
-                GetMenuButton().State = GetToggleButton().State;
+
             }
             catch //(Exception err) // fixme
             {

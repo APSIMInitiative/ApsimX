@@ -15,13 +15,13 @@ namespace Models.CLEM.Groupings
     /// Contains a group of filters to identify individual labour in a set price group
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourPricing))]
-    [Description("This labour price group sets the pay rate for a set group of individuals.")]
+    [Description("Set the pay rate for the selected group of individuals")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Filters/LabourPriceGroup.htm")]
-    public class LabourPriceGroup : CLEMModel, IFilterGroup
+    [HelpUri(@"Content/Features/Filters/Groups/LabourPriceGroup.htm")]
+    public class LabourPriceGroup : FilterGroup<LabourType>
     {
         /// <summary>
         /// Pay rate
@@ -29,18 +29,6 @@ namespace Models.CLEM.Groupings
         [Description("Daily pay rate")]
         [Required, GreaterThanEqualValue(0)]
         public double Value { get; set; }
-
-        /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
-
-        /// <summary>
-        /// Proportion of group to use
-        /// </summary>
-        [JsonIgnore]
-        public double Proportion { get; set; }
 
         /// <summary>
         /// Constructor
@@ -114,22 +102,14 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             string html = "";
-            if (formatForParentControl)
-            {
+            if (formatForParentControl)            
                 html += "<tr><td>" + this.Name + "</td><td>";
-                if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
-                {
-                    html += "<div class=\"filter\">All individuals</div>";
-                }
-            }
-            else
-            {
-                html += "\r\n<div class=\"filterborder clearfix\">";
-                if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
-                {
-                    html += "<div class=\"filter\">All individuals</div>";
-                }
-            }
+            else            
+                html += "\r\n<div class=\"filterborder clearfix\">";            
+
+            if (FindAllChildren<Filter>().Count() < 1)
+                html += "<div class=\"filter\">All individuals</div>";
+
             return html;
         }
 

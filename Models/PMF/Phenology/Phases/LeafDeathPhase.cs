@@ -5,15 +5,17 @@ using Newtonsoft.Json;
 using Models.PMF.Struct;
 using System.IO;
 using Models.Functions;
-
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// It proceeds until the last leaf on the main-stem has fully senessced.  Therefore its duration depends on the number of main-stem leaves that are produced and the rate at which they seness following final leaf appearance.
+    /// This phase goes from the specified start stage to the specified end stage,
+    /// which occurs when all leaves have fully senesced.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
     public class LeafDeathPhase : Model, IPhase
@@ -89,9 +91,16 @@ namespace Models.PMF.Phen
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
-        { ResetPhase(); }
+        {
+            ResetPhase();
+        }
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Paragraph($"The *{Name}* phase goes from the *{Start}* stage to the *{End}* stage, which occurs when all leaves have fully senesced.");
+        }
     }
 }
-
-      
-      

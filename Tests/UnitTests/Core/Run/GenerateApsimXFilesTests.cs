@@ -3,7 +3,9 @@
     using APSIM.Shared.Utilities;
     using Models;
     using Models.Core;
+    using Models.Core.ApsimFile;
     using Models.Core.Run;
+    using Models.Factorial;
     using Models.Storage;
     using NUnit.Framework;
     using System;
@@ -63,21 +65,92 @@
             Directory.CreateDirectory(path);
 
             // Create a list of progress ints.
-            var progress = new List<int>();
+            var progress = new List<double>();
 
             // Create a runner for our folder.
             Runner runner = new Runner(folder);
-            GenerateApsimXFiles.Generate(runner, path, (s) => { progress.Add(s); });
+            IEnumerable<string> generatedFiles = GenerateApsimXFiles.Generate(runner, 1, path, (s) => { progress.Add(s); });
 
-            Assert.AreEqual(progress.Count, 2);
-            Assert.AreEqual(progress[0], 50);
-            Assert.AreEqual(progress[1], 100);
+            Assert.AreEqual(2, progress.Count);
+            Assert.AreEqual(0.5, progress[0]);
+            Assert.AreEqual(1, progress[1]);
 
-            var generatedFiles = Directory.GetFiles(path).OrderBy(x => x).ToArray();
-            Assert.AreEqual(generatedFiles.Length, 2);
-            Assert.AreEqual("Sim1.apsimx", Path.GetFileName(generatedFiles[0]));
-            Assert.AreEqual("Sim2.apsimx", Path.GetFileName(generatedFiles[1]));
+            Assert.AreEqual(2, generatedFiles.Count());
+            Assert.AreEqual("generated-0.apsimx", Path.GetFileName(generatedFiles.First()));
+            Assert.AreEqual("generated-1.apsimx", Path.GetFileName(generatedFiles.Last()));
             Directory.Delete(path, true);
+        }
+
+        /// <summary>
+        /// This test reproduces bug #6461 on github. The problem occurs when
+        /// an experiment overrides manager script properties via a factor.
+        /// The bug is that the changes aren't saved when the model is serialized.
+        /// </summary>
+        [Test]
+        public void TestManagerParameterChanges()
+        {
+            Manager m = new Manager()
+            {
+                Name = "Manager",
+                Code = "using System; namespace Models { using Core; [Serializable] public class Script : Models.Core.Model { [Description(\"x\")] public string X { get; set; } } }"
+            };
+            Simulations sims = new Simulations()
+            {
+                Children = new List<IModel>()
+                {
+                    new DataStore(),
+                    new Experiment()
+                    {
+                        Name = "expt",
+                        Children = new List<IModel>()
+                        {
+                            new Factors()
+                            {
+                                Children = new List<IModel>()
+                                {
+                                    new Factor()
+                                    {
+                                        Name = "x",
+                                        Specification = "[Manager].Script.X = 1"
+                                    }
+                                }
+                            },
+                            new Simulation()
+                            {
+                                Name = "sim",
+                                Children = new List<IModel>()
+                                {
+                                    new Clock()
+                                    {
+                                        StartDate = new DateTime(2020, 1, 1),
+                                        EndDate = new DateTime(2020, 1, 2),
+                                        Name = "Clock"
+                                    },
+                                    new Summary(),
+                                    m
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+            sims.ParentAllDescendants();
+            m.OnCreated();
+            Runner runner = new Runner(sims);
+            string temp = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
+            try
+            {
+                IEnumerable<string> files = GenerateApsimXFiles.Generate(runner, 1, temp, _ => {});
+                Assert.AreEqual(1, files.Count());
+                string file = files.First();
+                sims = FileFormat.ReadFromFile<Simulations>(file, e => throw e, false);
+                Assert.AreEqual("1", sims.FindByPath("[Manager].Script.X").Value);
+            }
+            finally
+            {
+                if (Directory.Exists(temp))
+                    Directory.Delete(temp, true);
+            }
         }
     }
 }

@@ -15,26 +15,30 @@ namespace Models.CLEM.Activities
 {
     /// <summary>Activity to perform manual cut and carry from a pasture</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("Activity to perform cut and carry from a specified graze food store (i.e. native pasture paddock).")]
+    [Description("Perform cut and carry from a specified graze food store (i.e. native pasture paddock)")]
     [Version(1, 0, 1, "Included new ProportionOfAvailable option for moving pasture")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Pasture/CutAndCarry.htm")]
     public class PastureActivityCutAndCarry : CLEMRuminantActivityBase
     {
         [Link]
-        Clock Clock = null;
+        private Clock clock = null;
+
+        private GrazeFoodStoreType pasture;
+        private AnimalFoodStoreType foodstore;
+        private ActivityCutAndCarryLimiter limiter;
 
         /// <summary>
         /// Name of graze food store/paddock to cut and carry from
         /// </summary>
         [Description("Graze food store/paddock")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Graze food store where pasture is located required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(GrazeFoodStore) } })]
         public string PaddockName { get; set; }
 
         /// <summary>
@@ -42,7 +46,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Animal food store to receive pasture")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Animal food store to receive pasture is required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(AnimalFoodStore) } })]
         public string AnimalFoodStoreName { get; set; }
 
         /// <summary>
@@ -72,9 +76,13 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public double AmountAvailableForHarvest { get; set; }
 
-        private GrazeFoodStoreType pasture { get; set; }
-        private AnimalFoodStoreType foodstore { get; set; }
-        private ActivityCutAndCarryLimiter limiter;
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public PastureActivityCutAndCarry()
+        {
+            TransactionCategory = "Pasture.Collect";
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -86,10 +94,10 @@ namespace Models.CLEM.Activities
             this.AllocationStyle = ResourceAllocationStyle.Manual;
             
             // get pasture
-            pasture = Resources.GetResourceItem(this, PaddockName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+            pasture = Resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, PaddockName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // get food store
-            foodstore = Resources.GetResourceItem(this, AnimalFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as AnimalFoodStoreType;
+            foodstore = Resources.FindResourceType<AnimalFoodStore, AnimalFoodStoreType>(this, AnimalFoodStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // locate a cut and carry limiter associarted with this event.
             limiter = LocateCutAndCarryLimiter(this);
@@ -152,7 +160,7 @@ namespace Models.CLEM.Activities
                 // reduce amount by limiter if present.
                 if (limiter != null)
                 {
-                    double canBeCarried = limiter.GetAmountAvailable(Clock.Today.Month);
+                    double canBeCarried = limiter.GetAmountAvailable(clock.Today.Month);
                     AmountHarvested = Math.Max(AmountHarvested, canBeCarried);
                     limiter.AddWeightCarried(AmountHarvested);
                 }
@@ -162,41 +170,28 @@ namespace Models.CLEM.Activities
             GetResourcesRequiredForActivity();
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>A list of resource requests</returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             List<ResourceRequest> requestList = null;
             if (AmountHarvested > 0)
             {
-                FoodResourcePacket packet = new FoodResourcePacket()
-                {
-                    Amount = AmountHarvested,
-                    PercentN = pasture.Nitrogen,
-                    DMD = pasture.EstimateDMD(pasture.Nitrogen)
-                };
                 requestList = new List<ResourceRequest>()
                 {
                     new ResourceRequest()
                     {
                         ActivityModel = this,
                         AdditionalDetails = this,
-                        Category = "Cut and carry",
+                        Category = TransactionCategory,
                         Required = AmountHarvested,
-                        Resource = pasture,
+                        Resource = pasture
                     }
                 };
             }
             return requestList;
         }
 
-        /// <summary>
-        /// Determine the labour required for this activity based on LabourRequired items in tree
-        /// </summary>
-        /// <param name="requirement">Labour requirement model</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
@@ -223,17 +218,15 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Cut and carry", pasture.NameWithParent);
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, pasture.NameWithParent);
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             // labour limiter
-            var labourRequests = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour)).ToList();
-            if(labourRequests.Count>0)
+            var labourRequests = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour));
+            if(labourRequests.Any())
             {
                 double required = labourRequests.Sum(a => a.Required);
                 double provided = labourRequests.Sum(a => a.Provided);
@@ -253,9 +246,7 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
             FoodResourcePacket packet = new FoodResourcePacket()
@@ -265,93 +256,7 @@ namespace Models.CLEM.Activities
                 DMD = pasture.EstimateDMD(pasture.Nitrogen)
             };
 
-            foodstore.Add(packet, this,"", "Cut and carry");
-        }
-
-        private void PutPastureInStore()
-        {
-            AmountHarvested = 0;
-            AmountAvailableForHarvest = 0;
-            List<Ruminant> herd = new List<Ruminant>();
-
-            if (this.TimingOK)
-            {
-                // determine amount to be cut and carried
-                if (CutStyle != RuminantFeedActivityTypes.SpecifiedDailyAmount)
-                {
-                    herd = CurrentHerd(false);
-                }
-                switch (CutStyle)
-                {
-                    case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                        AmountHarvested += Supply * 30.4;
-                        break;
-                    case RuminantFeedActivityTypes.ProportionOfWeight:
-                        foreach (Ruminant ind in herd)
-                        {
-                            AmountHarvested += Supply * ind.Weight * 30.4;
-                        }
-                        break;
-                    case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                        foreach (Ruminant ind in herd)
-                        {
-                            AmountHarvested += Supply * ind.PotentialIntake;
-                        }
-                        break;
-                    case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                        foreach (Ruminant ind in herd)
-                        {
-                            AmountHarvested += Supply * (ind.PotentialIntake - ind.Intake);
-                        }
-                        break;
-                    default:
-                        throw new Exception(String.Format("FeedActivityType {0} is not supported in {1}", CutStyle, this.Name));
-                }
-
-                AmountAvailableForHarvest = AmountHarvested;
-                // reduce amount by limiter if present.
-                if (limiter != null)
-                {
-                    double canBeCarried = limiter.GetAmountAvailable(Clock.Today.Month);
-                    AmountHarvested = Math.Max(AmountHarvested, canBeCarried);
-                    limiter.AddWeightCarried(AmountHarvested);
-                }
-
-                double labourlimiter = 1.0;
-
-
-                AmountHarvested *= labourlimiter;
-
-                if (AmountHarvested > 0)
-                {
-                    FoodResourcePacket packet = new FoodResourcePacket()
-                    {
-                        Amount = AmountHarvested,
-                        PercentN = pasture.Nitrogen,
-                        DMD = pasture.EstimateDMD(pasture.Nitrogen)
-                    };
-
-                    // take resource
-                    ResourceRequest request = new ResourceRequest()
-                    {
-                        ActivityModel = this,
-                        AdditionalDetails = this,
-                        Category = "Cut and carry",
-                        Required = AmountHarvested,
-                        Resource = pasture
-                    };
-                    pasture.Remove(request);
-
-                    foodstore.Add(packet, this, "", "Cut and carry");
-                }
-                SetStatusSuccess();
-            }
-            // report activity performed.
-            ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
-            {
-                Activity = this
-            };
-            this.OnActivityPerformed(activitye);
+            foodstore.Add(packet, this,"", TransactionCategory);
         }
 
         /// <summary>
@@ -373,50 +278,9 @@ namespace Models.CLEM.Activities
             return limiterFound;
         }
 
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
-        public override event EventHandler ActivityPerformed;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -442,25 +306,10 @@ namespace Models.CLEM.Activities
                 }
 
                 htmlWriter.Write("from ");
-                if (PaddockName == null || PaddockName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[PASTURE NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + PaddockName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(PaddockName, "Pasture not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write(" and carry to ");
-                if (AnimalFoodStoreName == null || AnimalFoodStoreName == "")
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[ANIMAL FOOD STORE NOT SET]</span>");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + AnimalFoodStoreName + "</span>");
-                }
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AnimalFoodStoreName, "Fodd store not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
-
                 return htmlWriter.ToString(); 
             }
         } 

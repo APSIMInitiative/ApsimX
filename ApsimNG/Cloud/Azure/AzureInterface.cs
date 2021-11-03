@@ -176,7 +176,7 @@ namespace ApsimNG.Cloud
 
             // Generate .apsimx file for each simulation to be run.
             Runner run = new Runner(job.Model);
-            GenerateApsimXFiles.Generate(run, job.ModelPath, p => { /* Don't bother with progress reporting */ }, collectExternalFiles:true);
+            GenerateApsimXFiles.Generate(run, 1, job.ModelPath, p => { /* Don't bother with progress reporting */ }, collectExternalFiles:true);
 
             if (ct.IsCancellationRequested)
             {
@@ -227,6 +227,7 @@ namespace ApsimNG.Cloud
         /// </summary>
         /// <param name="ct">Cancellation token.</param>
         /// <param name="ShowProgress">Function to report progress as percentage in range [0, 100].</param>
+        /// <param name="AddJobHandler">Callback which will be run each time a job is loaded.</param>
         public async void ListJobsAsync(CancellationToken ct, Action<double> ShowProgress, Action<JobDetails> AddJobHandler)
         {
             try
@@ -463,6 +464,7 @@ namespace ApsimNG.Cloud
         /// </summary>
         /// <param name="containerName">Name of the container to upload the file to</param>
         /// <param name="filePath">Path to the file on disk</param>
+        /// <param name="ct">Allows for cancellation of the task.</param>
         private async Task<string> UploadFileIfNeededAsync(string containerName, string filePath, CancellationToken ct)
         {
             CloudBlobContainer container = storageClient.GetContainerReference(containerName);
@@ -675,9 +677,7 @@ namespace ApsimNG.Cloud
         {
             try
             {
-                string bin = srcPath;
-                if (!bin.EndsWith("Bin"))
-                    bin = Path.Combine(srcPath, "Bin");
+                string bin = Path.GetDirectoryName(GetType().Assembly.Location);
                 string[] extensions = new string[] { "*.dll", "*.exe" };
 
                 using (FileStream zipToOpen = new FileStream(zipPath, FileMode.Create))

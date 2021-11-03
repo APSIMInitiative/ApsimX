@@ -1,13 +1,15 @@
 ﻿using System;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Interfaces;
 
 namespace Models.Functions.SupplyFunctions
 {
     /// <summary>
-    /// This model calculates the CO<sub>2</sub> impact on stomatal conductance using the approach of [Elli2020].
+    /// This model calculates the CO~2~ impact on stomatal conductance using the approach of [Elli2020].
     /// 
-    ///     _StomatalConductanceCO2Modifier = PhotosynthesisCO2Modifier x (350 - CP)/(CO<sub>2</sub> - CP)_
+    ///     _StomatalConductanceCO2Modifier = PhotosynthesisCO2Modifier x (350 - CP)/(CO~2~ - CP)_
     ///     
     /// where CP, is the compensation point calculated from daily average temperature (T) as
     /// 
@@ -16,7 +18,7 @@ namespace Models.Functions.SupplyFunctions
     /// </summary>
     [Serializable]
     [Description("This model calculates CO2 Impact on stomatal conductance RUE using the approach of <br>Elli et al (2020) <br>Global sensitivity-based modelling approach to identify suitable Eucalyptus traits for adaptation to climate variability and change. <br> in silico Plants Vol. 2, No. 1, pp. 1–17")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(IFunction))]
     public class StomatalConductanceCO2Modifier : Model, IFunction
@@ -46,6 +48,17 @@ namespace Models.Functions.SupplyFunctions
                     double second = (350.0 - CP);
                     return PhotosynthesisCO2Modifier.Value() / (first / second);
                 }
+        }
+
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
         }
     }
 }
