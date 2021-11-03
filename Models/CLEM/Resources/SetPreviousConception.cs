@@ -22,6 +22,8 @@ namespace Models.CLEM.Resources
     {
         [Link]
         private ResourcesHolder resources = null;
+        [Link]
+        private Clock clock = null;
 
         /// <summary>
         /// Number of months pregnant
@@ -48,8 +50,12 @@ namespace Models.CLEM.Resources
             if(NumberMonthsPregnant < female.BreedParams.GestationLength && female.Age - NumberMonthsPregnant >= female.BreedParams.MinimumAge1stMating)
             {
                 int offspring = female.CalulateNumberOfOffspringThisPregnancy();
-                if(offspring > 0)
+                if (offspring > 0)
+                {
                     female.UpdateConceptionDetails(offspring, 1, -1 * NumberMonthsPregnant);
+                    // report conception status changed
+                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, clock.Today.AddMonths(-1 * NumberMonthsPregnant)));
+                }
             }
         }
 
