@@ -14,6 +14,7 @@
     using Storage;
     using Logging;
     using System.Linq;
+    using APSIM.Shared.Documentation.Extensions;
 
     /// <summary>
     /// This model collects the simulation initial conditions and stores into the DataStore.
@@ -288,7 +289,7 @@
         public IEnumerable<Message> GetMessages(string simulationName)
         {
             IDataStore storage = this.storage ?? FindInScope<IDataStore>();
-            DataTable messages = storage.Reader.GetData("_Messages", simulationName: simulationName);
+            DataTable messages = storage.Reader.GetData("_Messages", simulationNames: simulationName.ToEnumerable());
             string simulationPath = FindInScope<Simulation>(simulationName).FullPath;
             foreach (DataRow row in messages.Rows)
             {
@@ -309,7 +310,7 @@
         public IEnumerable<InitialConditionsTable> GetInitialConditions(string simulationName)
         {
             IDataStore storage = this.storage ?? FindInScope<IDataStore>();
-            DataTable table = storage.Reader.GetData("_InitialConditions", simulationName: simulationName);
+            DataTable table = storage.Reader.GetData("_InitialConditions", simulationNames: simulationName.ToEnumerable());
             string simulationPath = FindInScope<Simulation>(simulationName).FullPath;
             foreach (IGrouping<string, DataRow> group in table.AsEnumerable().GroupBy(r => r["ModelPath"]?.ToString()))
             {
@@ -390,7 +391,7 @@
             // Get the initial conditions table.            
             if (showInitialConditions)
             {
-                DataTable initialConditionsTable = storage.Reader.GetData(simulationName: simulationName, tableName:"_InitialConditions");
+                DataTable initialConditionsTable = storage.Reader.GetData(simulationNames: simulationName.ToEnumerable(), tableName:"_InitialConditions");
                 if (initialConditionsTable != null)
                 {
                     // Convert the '_InitialConditions' table in the DataStore to a series of
@@ -405,25 +406,25 @@
                         if (tables[i].Rows.Count > 0 || tables[i + 1].Rows.Count > 0)
                         {
                             string heading = tables[i].TableName;
-                            WriteHeading(writer, heading, outtype, document);
+                            WriteHeading(writer, heading, outtype);
 
                             // Write the manager script.
                             if (tables[i].Rows.Count == 1 && tables[i].Rows[0][0].ToString() == "Script code: ")
                             {
-                                WriteScript(writer, tables[i].Rows[0], outtype, document);
+                                WriteScript(writer, tables[i].Rows[0], outtype);
                             }
                             else
                             {
                                 // Write the properties table if we have any properties.
                                 if (tables[i].Rows.Count > 0)
                                 {
-                                    WriteTable(writer, tables[i], outtype, "PropertyTable", document);
+                                    WriteTable(writer, tables[i], outtype, "PropertyTable");
                                 }
 
                                 // Write the general data table if we have any data.
                                 if (tables[i + 1].Rows.Count > 0)
                                 {
-                                    WriteTable(writer, tables[i + 1], outtype, "ApsimTable", document);
+                                    WriteTable(writer, tables[i + 1], outtype, "ApsimTable");
                                 }
                             }
 
@@ -437,7 +438,7 @@
             // Write out all messages.
             WriteHeading(writer, "Simulation log:", outtype, "log");
             DataTable messageTable = GetMessageTable(storage, simulationName);
-            WriteMessageTable(writer, messageTable, outtype, false, "MessageTable", document, showInfo, showWarnings, showErrors);
+            WriteMessageTable(writer, messageTable, outtype, false, "MessageTable", showInfo, showWarnings, showErrors);
 
             if (outtype == OutputType.html)
             {
@@ -654,11 +655,10 @@
         /// <param name="outtype">Indicates the format to be produced</param>
         /// <param name="includeHeadings">Include headings in the html table produced?</param>
         /// <param name="className">The class name of the generated html table</param>
-        /// <param name="document">Document object if using MigraDoc to generate output, null otherwise </param>
         /// <param name="showInfo"></param>
         /// <param name="showWarnings"></param>
         /// <param name="showErrors"></param>
-        private static void WriteMessageTable(TextWriter writer, DataTable table, OutputType outtype, bool includeHeadings, string className, Document document, bool showInfo, bool showWarnings, bool showErrors)
+        private static void WriteMessageTable(TextWriter writer, DataTable table, OutputType outtype, bool includeHeadings, string className, bool showInfo, bool showWarnings, bool showErrors)
         {
             foreach (DataRow row in table.Rows)
             {

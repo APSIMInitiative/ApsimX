@@ -29,10 +29,6 @@
         /// <summary>The explorer presenter which manages this presenter.</summary>
         private ExplorerPresenter explorerPresenter;
 
-        /// <summary>Our data store</summary>
-        [Link]
-        private IDataStore dataStore = null;
-
         /// <summary>
         /// This dictionary maps simulation names to lists of messages.
         /// </summary>
