@@ -14,7 +14,7 @@
     using System.Collections.Generic;
     using Models.Core.Run;
     using Models.Logging;
-    using ErrorLevel = Models.Core.Simulation.ErrorLevel;
+    using ErrorLevel = Models.Core.MessageType;
     using System.Text;
 
     /// <summary>Presenter class for working with a summary component</summary>

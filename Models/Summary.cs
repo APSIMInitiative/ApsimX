@@ -71,14 +71,8 @@
             Markdown
         }
 
-        /// <summary>Capture and store error messages?</summary>
-        public bool CaptureErrors { get; set; } = true;
-
-        /// <summary>Capture and store warning messages?</summary>
-        public bool CaptureWarnings { get; set; } = true;
-
-        /// <summary>Capture and store summary text?</summary>
-        public bool CaptureSummaryText { get; set; } = true;
+        /// <summary>This setting controls what type of messages will be captured by the summary.</summary>
+        public MessageType Verbosity { get; set; } = MessageType.All;
 
         [EventSubscribe("Commencing")]
         private void OnCommencing(object sender, EventArgs args)
@@ -92,8 +86,7 @@
         [EventSubscribe("DoInitialSummary")]
         private void OnDoInitialSummary(object sender, EventArgs e)
         {
-            if (CaptureSummaryText)
-                CreateInitialConditionsTable();
+            CreateInitialConditionsTable();
         }
 
         /// <summary>Invoked when a simulation is completed.</summary>
@@ -123,17 +116,18 @@
         }
 
         /// <summary>Write a message to the summary</summary>
-        /// <param name="model">The model writing the message</param>
+        /// <param name="author">The model writing the message</param>
         /// <param name="message">The message to write</param>
-        public void WriteMessage(IModel model, string message)
+        /// <param name="messageType">Message output/verbosity level.</param>
+        public void WriteMessage(IModel author, string message, MessageType messageType)
         {
-            if (CaptureSummaryText)
+            if (Verbosity >= messageType)
             {
                 Initialise();
 
                 if (storage == null)
-                    throw new ApsimXException(model, "No datastore is available!");
-                string modelPath = model.FullPath;
+                    throw new ApsimXException(author, "No datastore is available!");
+                string modelPath = author.FullPath;
                 string relativeModelPath = modelPath.Replace(simulation.FullPath + ".", string.Empty);
 
                 var newRow = messages.NewRow();
@@ -141,9 +135,17 @@
                 newRow[1] = relativeModelPath;
                 newRow[2] = clock.Today;
                 newRow[3] = message;
-                newRow[4] = Convert.ToInt32(Simulation.ErrorLevel.Information);
+                newRow[4] = (int)messageType;
                 messages.Rows.Add(newRow);
             }
+        }
+
+        /// <summary>Write a message to the summary</summary>
+        /// <param name="author">The model writing the message</param>
+        /// <param name="message">The message to write</param>
+        public void WriteMessage(IModel author, string message)
+        {
+            WriteMessage(author, message, MessageType.Information);
         }
 
         /// <summary>Write a warning message to the summary</summary>
@@ -151,23 +153,7 @@
         /// <param name="message">The warning message to write</param>
         public void WriteWarning(IModel model, string message)
         {
-            if (CaptureWarnings)
-            {
-                Initialise();
-
-                if (storage == null)
-                    throw new ApsimXException(model, "No datastore is available!");
-                string modelPath = model.FullPath;
-                string relativeModelPath = modelPath.Replace(simulation.FullPath + ".", string.Empty);
-
-                var newRow = messages.NewRow();
-                newRow[0] = simulation.Name;
-                newRow[1] = relativeModelPath;
-                newRow[2] = clock.Today;
-                newRow[3] = message;
-                newRow[4] = Convert.ToInt32(Simulation.ErrorLevel.Warning, CultureInfo.InvariantCulture);
-                messages.Rows.Add(newRow);
-            }
+            WriteMessage(model, message, MessageType.Warning);
         }
 
         /// <summary>Write an error message to the summary</summary>
@@ -175,23 +161,7 @@
         /// <param name="message">The warning message to write</param>
         public void WriteError(IModel model, string message)
         {
-            if (CaptureErrors)
-            {
-                Initialise();
-
-                if (storage == null)
-                    throw new ApsimXException(model, "No datastore is available!");
-                string modelPath = model.FullPath;
-                string relativeModelPath = modelPath.Replace(simulation.FullPath + ".", string.Empty);
-
-                var newRow = messages.NewRow();
-                newRow[0] = simulation.Name;
-                newRow[1] = relativeModelPath;
-                newRow[2] = clock.Today;
-                newRow[3] = message;
-                newRow[4] = Convert.ToInt32(Simulation.ErrorLevel.Error, CultureInfo.InvariantCulture);
-                messages.Rows.Add(newRow);
-            }
+            WriteMessage(model, message, MessageType.Error);
         }
 
         /// <summary>
@@ -297,8 +267,8 @@
                 string text = row["Message"]?.ToString();
                 string relativePath = row["ComponentName"]?.ToString();
                 IModel model = simulationPath == null ? FindInScope(relativePath) : FindByPath(simulationPath + "." + relativePath)?.Value as IModel;
-                if (!Enum.TryParse<Simulation.ErrorLevel>(row["MessageType"]?.ToString(), out Simulation.ErrorLevel severity))
-                    severity = Simulation.ErrorLevel.Information;
+                if (!Enum.TryParse<MessageType>(row["MessageType"]?.ToString(), out MessageType severity))
+                    severity = MessageType.Information;
                 yield return new Message(date, text, model, severity, simulationName, relativePath);
             }
         }
@@ -461,14 +431,14 @@
             {
                 messageTable.Columns.Add("Date", typeof(string));
                 messageTable.Columns.Add("Message", typeof(string));
-                messageTable.Columns.Add("MessageType", typeof(Simulation.ErrorLevel));
+                messageTable.Columns.Add("MessageType", typeof(MessageType));
                 string previousCol1Text = null;
                 string previousMessage = null;
                 foreach (DataRow row in messages.Rows)
                 {
                     // Work out the column 1 text.
                     string modelName = (string)row["ComponentName"];
-                    Simulation.ErrorLevel errorLevel = (Simulation.ErrorLevel)Enum.Parse(typeof(Simulation.ErrorLevel), row["MessageType"].ToString());
+                    MessageType errorLevel = (MessageType)Enum.Parse(typeof(MessageType), row["MessageType"].ToString());
 
                     string col1Text;
                     if (row["Date"].GetType() == typeof(DateTime))
@@ -497,11 +467,11 @@
 
                     string message = (string)row["Message"];
 
-                    if (errorLevel == Simulation.ErrorLevel.Error)
+                    if (errorLevel == MessageType.Error)
                     {
                         previousMessage += "FATAL ERROR: " + message;
                     }
-                    else if (errorLevel == Simulation.ErrorLevel.Warning)
+                    else if (errorLevel == MessageType.Warning)
                     {
                         previousMessage += "WARNING: " + message;
                     }
@@ -514,7 +484,7 @@
                 }
                 if (previousMessage != null)
                 {
-                    messageTable.Rows.Add(new object[] { previousCol1Text, previousMessage, Simulation.ErrorLevel.Information });
+                    messageTable.Rows.Add(new object[] { previousCol1Text, previousMessage, MessageType.Information });
                 }
             }
 
@@ -662,12 +632,12 @@
         {
             foreach (DataRow row in table.Rows)
             {
-                var messageType = (Simulation.ErrorLevel)row["MessageType"];
-                if (messageType == Simulation.ErrorLevel.Information && !showInfo)
+                var messageType = (MessageType)row["MessageType"];
+                if (messageType == MessageType.Information && !showInfo)
                     continue;
-                if (messageType == Simulation.ErrorLevel.Warning && !showWarnings)
+                if (messageType == MessageType.Warning && !showWarnings)
                     continue;
-                if (messageType == Simulation.ErrorLevel.Error && !showErrors)
+                if (messageType == MessageType.Error && !showErrors)
                     continue;
 
                 if (outtype == OutputType.html)

@@ -27,7 +27,7 @@ namespace Models.Logging
         public IModel Provider { get; private set; }
 
         /// <summary>The severity/type of the message.</summary>
-        public Simulation.ErrorLevel Severity { get; private set; }
+        public MessageType Severity { get; private set; }
 
         /// <summary>
         /// Name of the simulation in which the messsage was sent.
@@ -53,7 +53,7 @@ namespace Models.Logging
         /// <param name="severity">The severity of the message.</param>
         /// <param name="simulationName">Name of the simulation in which the message was sent.</param>
         /// <param name="senderPath">Relative path of the sender model.</param>
-        public Message(DateTime date, string text, IModel sender, Simulation.ErrorLevel severity, string simulationName, string senderPath)
+        public Message(DateTime date, string text, IModel sender, MessageType severity, string simulationName, string senderPath)
         {
             Date = date;
             Text = text;
