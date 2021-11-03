@@ -317,7 +317,7 @@ namespace Models.CLEM.Activities
 
                 // unknown entries
                 var unknownPurchases = purchaseDetails.Where(a => a.Label == "");
-                if (unknownPurchases.Count() > 0)
+                if (unknownPurchases.Any())
                 {
                     foreach (var item in unknownPurchases)
                     {

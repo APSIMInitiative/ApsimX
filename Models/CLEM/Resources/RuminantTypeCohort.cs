@@ -204,11 +204,7 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary 
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
             RuminantType rumType;
@@ -346,7 +342,7 @@ namespace Models.CLEM.Resources
             {
                 if (formatForParentControl)
                 {
-                    if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 1] is RuminantInitialCohorts))
+                    if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 1] == typeof(RuminantInitialCohorts).Name))
                     {
                         RuminantType rumtype = FindAncestor<RuminantType>();
                         if (rumtype != null)

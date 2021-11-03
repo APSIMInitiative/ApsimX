@@ -24,7 +24,7 @@ namespace Models.CLEM.Interfaces
         /// <param name="htmlString">Initial string to append to</param>
         /// <param name="markdown2Html">Method to convert markdown memos to html</param>
         /// <returns>Summary description HTML text</returns>
-        string GetFullSummary(IModel model, List<IModel> parentControlList, string htmlString, Func<string, string> markdown2Html = null);
+        string GetFullSummary(IModel model, List<string> parentControlList, string htmlString, Func<string, string> markdown2Html = null);
 
         /// <summary>
         /// Styling to use for HTML summary
@@ -32,9 +32,9 @@ namespace Models.CLEM.Interfaces
         HTMLSummaryStyle ModelSummaryStyle { get; set; }
 
         /// <summary>
-        /// List of parent models before this 
+        /// List of parent model types before this 
         /// </summary>
-        List<IModel> CurrentAncestorList { get; set; }
+        List<string> CurrentAncestorList { get; set; }
 
         /// <summary>
         /// Determines if this discription is below a parent model

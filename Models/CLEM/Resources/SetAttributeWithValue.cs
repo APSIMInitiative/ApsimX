@@ -147,9 +147,9 @@ namespace Models.CLEM.Resources
             {
                 if (formatForParentControl)
                 {
-                    if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 3] is RuminantInitialCohorts))
+                    if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 3] == typeof(RuminantInitialCohorts).Name))
                     {
-                        bool isgroupattribute = (CurrentAncestorList.Count >= 2 && CurrentAncestorList[CurrentAncestorList.Count - 2] is RuminantInitialCohorts);
+                        bool isgroupattribute = (CurrentAncestorList.Count >= 2 && CurrentAncestorList[CurrentAncestorList.Count - 2] == typeof(RuminantInitialCohorts).Name);
 
                         htmlWriter.Write("\r\n<div class=\"resourcebanneralone clearfix\">");
                         htmlWriter.Write($"Attribute  ");

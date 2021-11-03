@@ -102,7 +102,7 @@ namespace Models.CLEM.Activities
                             }
                         };
                         // check if timer sequence ok
-                        if (sequenceTimerList.Count() > 0)
+                        if (sequenceTimerList.Count > 0)
                         {
                             // get month index in sequence
                             int sequenceIndex = today - month[0];

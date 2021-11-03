@@ -351,20 +351,21 @@ namespace Models.CLEM
         public HTMLSummaryStyle ModelSummaryStyle { get; set; }
 
         /// <inheritdoc/>
-        public List<IModel> CurrentAncestorList { get; set; } = new List<IModel>();
+        [JsonIgnore]
+        public List<string> CurrentAncestorList { get; set; } = new List<string>();
 
         /// <inheritdoc/>
-        public bool FormatForParentControl { get { return CurrentAncestorList.Count > 1; } }
+        public bool FormatForParentControl { get { return CurrentAncestorList.Any(); } }
 
         ///<inheritdoc/>
-        public string GetFullSummary(IModel model, List<IModel> parentControls, string htmlString, Func<string, string> markdown2Html = null)
+        public string GetFullSummary(IModel model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">");
 
                 CurrentAncestorList = parentControls.ToList();
-                CurrentAncestorList.Add(model);
+                CurrentAncestorList.Add(model.GetType().Name);
 
                 // get clock
                 IModel parentSim = FindAncestor<Simulation>();
@@ -378,7 +379,7 @@ namespace Models.CLEM
                     htmlWriter.Write(this.ModelSummaryOpeningTags(formatForParentControl));
                     htmlWriter.Write(this.ModelSummaryInnerOpeningTagsBeforeSummary());
                     htmlWriter.Write(this.ModelSummary(formatForParentControl));
-                    // TODO: May need to implament Adding Memos for some Models with reduced display
+                    // TODO: May need to implement Adding Memos for some Models with reduced display
                     htmlWriter.Write(this.ModelSummaryInnerOpeningTags(formatForParentControl));
                     htmlWriter.Write(this.ModelSummaryInnerClosingTags(formatForParentControl));
                     htmlWriter.Write(this.ModelSummaryClosingTags(formatForParentControl));
@@ -432,7 +433,10 @@ namespace Models.CLEM
                 }
 
                 foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
-                    htmlWriter.Write(cm.GetFullSummary(cm, CurrentAncestorList, ""));
+                    htmlWriter.Write(cm.GetFullSummary(cm, CurrentAncestorList, "", markdown2Html));
+                
+                CurrentAncestorList = null;
+
                 return htmlWriter.ToString(); 
             }
         }

@@ -94,7 +94,6 @@ namespace Models.CLEM.Activities
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             IEnumerable<RuminantFemale> herd = this.CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count() == 0);
-            int head = herd.Count();
             double daysNeeded = 0;
             switch (requirement.UnitType)
             {
@@ -102,6 +101,7 @@ namespace Models.CLEM.Activities
                     daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHead:
+                    int head = herd.Count();
                     double numberUnits = head / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
                         numberUnits = Math.Ceiling(numberUnits);

@@ -40,6 +40,8 @@ namespace Models.CLEM.Activities
         [Link]
         private Clock clock = null;
 
+        private Dictionary<string, IIndividualAttribute> randomHerdAttributes = null;
+
         /// <summary>
         /// Artificial insemination in use (defined by presence of add-on component)
         /// </summary>
@@ -338,7 +340,7 @@ namespace Models.CLEM.Activities
                 // whole herd for activity including males
                 herd = CurrentHerd(true);
 
-            if (herd != null && herd.Count() > 0)
+            if (herd != null && herd.Any())
             {
                 // group by location
                 var breeders = from ind in herd
@@ -453,8 +455,14 @@ namespace Models.CLEM.Activities
         /// <param name="female">The female breeder successfully mated</param>
         /// <param name="maleAttributes">a list of available male attributes setters</param>
         /// <param name="newMale">Create new instance (T) or use last created (F)</param>
-        private void AddMalesAttributeDetails(RuminantFemale female, List<SetAttributeWithValue> maleAttributes, bool newMale = true)
+        /// <param name="randomFemale">Random female from herd for random male representation</param>
+        private void AddMalesAttributeDetails(RuminantFemale female, List<SetAttributeWithValue> maleAttributes, bool newMale = true, RuminantFemale randomFemale = null)
         {
+            // if no male attributes have been supplied default is select from herd mean using the random female provided
+            if(maleAttributes.Any() == false)
+                if(newMale || randomHerdAttributes is null)
+                    randomHerdAttributes = randomFemale.Attributes.Items;
+
             foreach (var attribute in female.Attributes.Items)
             {
                 var maleAttribute = maleAttributes.Where(a => a.AttributeName == attribute.Key).FirstOrDefault();
@@ -469,10 +477,27 @@ namespace Models.CLEM.Activities
                 }
                 else
                 {
-                    if(attribute.Value != null)
-                       attribute.Value.StoredMateValue = null;
-                    if(female.BreedParams.IsMandatoryAttribute(attribute.Key))
-                        throw new ApsimXException(this, $"The sire attributes provided for [a={this.Name}] do not include the madatory attribute [{attribute.Key}]");
+                    // if there are random female attributes provided
+                    if (randomHerdAttributes != null)
+                    {
+                        if (!randomHerdAttributes.TryGetValue(attribute.Key, out IIndividualAttribute randomAttribute))
+                            throw new ApsimXException(this, $"Unable to assign mandatory attribute from random herd selection for [a={this.Name}] and madatory attribute [{attribute.Key}]");
+                        else
+                        {
+                            if (attribute.Value != null && attribute.Value.InheritanceStyle != randomAttribute.InheritanceStyle)
+                                throw new ApsimXException(this, $"The inheritance style for attribute [{attribute.Key}] differs between the breeder and attributes supplied by random herd selection in [a={this.Name}]");
+
+                            if (attribute.Value != null)
+                                attribute.Value.StoredMateValue = randomAttribute.StoredValue;
+                        }
+                    }
+                    else
+                    {
+                        if (attribute.Value != null)
+                            attribute.Value.StoredMateValue = null;
+                        if (female.BreedParams.IsMandatoryAttribute(attribute.Key))
+                            throw new ApsimXException(this, $"The sire attributes provided for [a={this.Name}] do not include the madatory attribute [{attribute.Key}]");
+                    }
                 }
             }
         }

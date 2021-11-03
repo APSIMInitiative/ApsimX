@@ -411,10 +411,11 @@ namespace Models.CLEM.Reporting
         public HTMLSummaryStyle ModelSummaryStyle { get; set; }
 
         /// <inheritdoc/>
-        public List<IModel> CurrentAncestorList { get; set; } = new List<IModel>();
+        [JsonIgnore]
+        public List<string> CurrentAncestorList { get; set; } = new List<string>();
 
         /// <inheritdoc/>
-        public bool FormatForParentControl { get { return CurrentAncestorList.Count == 1; } }
+        public bool FormatForParentControl { get { return CurrentAncestorList.Count > 1; } }
 
         ///<inheritdoc/>
         public string ModelSummary(bool formatForParentControl)
@@ -447,16 +448,16 @@ namespace Models.CLEM.Reporting
         }
 
         ///<inheritdoc/>
-        public string GetFullSummary(IModel model, List<IModel> parentControls, string htmlString, Func<string, string> markdown2Html = null)
+        public string GetFullSummary(IModel model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                CurrentAncestorList = parentControls.ToList();
-                CurrentAncestorList.Add(this);
-
                 if (model is ICLEMDescriptiveSummary)
                 {
                     ICLEMDescriptiveSummary cm = model as ICLEMDescriptiveSummary;
+                    cm.CurrentAncestorList = parentControls.ToList();
+                    cm.CurrentAncestorList.Add(model.GetType().Name);
+
                     htmlWriter.Write(cm.ModelSummaryOpeningTags(FormatForParentControl));
 
                     htmlWriter.Write(cm.ModelSummaryInnerOpeningTagsBeforeSummary());
@@ -467,7 +468,7 @@ namespace Models.CLEM.Reporting
 
                     foreach (var item in (model as IModel).Children)
                     {
-                        htmlWriter.Write(GetFullSummary(item, CurrentAncestorList, htmlString, markdown2Html));
+                        htmlWriter.Write(GetFullSummary(item, cm.CurrentAncestorList, htmlString, markdown2Html));
                     }
                     htmlWriter.Write(cm.ModelSummaryInnerClosingTags(FormatForParentControl));
 

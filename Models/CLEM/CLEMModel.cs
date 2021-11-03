@@ -235,7 +235,7 @@ namespace Models.CLEM
         }
 
         /// <inheritdoc/>
-        public virtual string GetFullSummary(IModel model, List<IModel> parentControls, string htmlString, Func<string, string> markdown2Html = null)
+        public virtual string GetFullSummary(IModel model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -243,7 +243,7 @@ namespace Models.CLEM
                 {
                     CLEMModel cm = model as CLEMModel;
                     cm.CurrentAncestorList = parentControls.ToList();
-                    cm.CurrentAncestorList.Add(model);
+                    cm.CurrentAncestorList.Add(model.GetType().Name);
 
                     htmlWriter.Write(cm.ModelSummaryOpeningTags(cm.FormatForParentControl));
 
@@ -293,7 +293,7 @@ namespace Models.CLEM
         public virtual HTMLSummaryStyle ModelSummaryStyle { get; set; }
 
         /// <inheritdoc/>
-        public List<IModel> CurrentAncestorList { get; set; } = new List<IModel>();
+        public List<string> CurrentAncestorList { get; set; } = new List<string>();
 
         /// <inheritdoc/>
         public bool FormatForParentControl { get { return CurrentAncestorList.Count > 1; } }
@@ -681,13 +681,13 @@ namespace Models.CLEM
                 htmlWriter.Write("\r\n</div>");
 
                 if (modelToSummarise is ZoneCLEM)
-                    htmlWriter.Write((modelToSummarise as ZoneCLEM).GetFullSummary(modelToSummarise, new List<IModel>(), htmlWriter.ToString(), markdown2Html));
+                    htmlWriter.Write((modelToSummarise as ZoneCLEM).GetFullSummary(modelToSummarise, new List<string>(), htmlWriter.ToString(), markdown2Html));
                 else if (modelToSummarise is Market)
-                    htmlWriter.Write((modelToSummarise as Market).GetFullSummary(modelToSummarise, new List<IModel>(), htmlWriter.ToString(), markdown2Html));
+                    htmlWriter.Write((modelToSummarise as Market).GetFullSummary(modelToSummarise, new List<string>(), htmlWriter.ToString(), markdown2Html));
                 else if (modelToSummarise is CLEMModel)
-                    htmlWriter.Write((modelToSummarise as CLEMModel).GetFullSummary(modelToSummarise, new List<IModel>(), htmlWriter.ToString(), markdown2Html));
+                    htmlWriter.Write((modelToSummarise as CLEMModel).GetFullSummary(modelToSummarise, new List<string>(), htmlWriter.ToString(), markdown2Html));
                 else if (modelToSummarise is ICLEMDescriptiveSummary)
-                    htmlWriter.Write((modelToSummarise as ICLEMDescriptiveSummary).GetFullSummary(modelToSummarise, new List<IModel>(), htmlWriter.ToString(), markdown2Html));
+                    htmlWriter.Write((modelToSummarise as ICLEMDescriptiveSummary).GetFullSummary(modelToSummarise, new List<string>(), htmlWriter.ToString(), markdown2Html));
                 else
                     htmlWriter.Write("<b>This component has no descriptive summary</b>");
 

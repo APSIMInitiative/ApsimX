@@ -150,11 +150,11 @@ namespace Models.CLEM.Activities
             // get individuals in first lactation cycle of gestation
             double lactationCyclesInGestation = Math.Round((double)ShortenLactationMonths / pregnancyDuration, 2);
 
-            var firstCycleList = pregnantList.Where(a => a.Age - a.AgeAtLastConception <= lactationCyclesInGestation);
-            if (firstCycleList.Any() && (firstCycleList.Count() < maxBreedersPerCycle & firstCycleList.Max(a => a.Age - a.AgeAtLastConception) <= breedingSpreadMonths))
+            var firstCycleList = pregnantList.Where(a => a.Age - a.AgeAtLastConception <= lactationCyclesInGestation).ToList();
+            if (firstCycleList.Any() && (firstCycleList.Count < maxBreedersPerCycle & firstCycleList.Max(a => a.Age - a.AgeAtLastConception) <= breedingSpreadMonths))
             {
                 // if where less than the spread months from the max pregnancy found
-                numberNeeded = maxBreedersPerCycle - firstCycleList.Count();
+                numberNeeded = maxBreedersPerCycle - firstCycleList.Count;
             }
 
             if(numberNeeded > 0)

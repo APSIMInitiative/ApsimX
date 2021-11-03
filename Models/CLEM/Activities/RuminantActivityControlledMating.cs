@@ -134,7 +134,7 @@ namespace Models.CLEM.Activities
             if(this.TimingOK) // general Timer or TimeBreedForMilking ok
             {
                 breeders = GetBreeders();
-                if (breeders != null &&  breeders.Count() > 0)
+                if (breeders != null &&  breeders.Any())
                 {
                     // calculate labour and finance costs
                     List<ResourceRequest> resourcesneeded = GetResourcesNeededForActivityLocal(breeders);
@@ -251,9 +251,6 @@ namespace Models.CLEM.Activities
         /// <returns>List of resource requests</returns>
         private List<ResourceRequest> GetResourcesNeededForActivityLocal(IEnumerable<Ruminant> breederList)
         {
-
-
-
             return null;
         }
 
@@ -295,10 +292,10 @@ namespace Models.CLEM.Activities
             {
                 // set attribute with value
                 IEnumerable<SetAttributeWithValue> attributeSetters = this.FindAllChildren<SetAttributeWithValue>();
-                if (attributeSetters.Count() > 0)
+                if (attributeSetters.Any())
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("This activity provides the Attributes of the sire to ensure inheritance to offpsring");
+                    htmlWriter.Write($"The Attributes of the sire are {(attributeSetters.Any()? "specified below" : "selected at random ofrm the herd")} to ensure inheritance to offpsring");
                     htmlWriter.Write("</div>");
                 }
                 return htmlWriter.ToString();
