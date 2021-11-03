@@ -452,7 +452,7 @@ namespace Models
             if (EndOfSimulation != null)
                 EndOfSimulation.Invoke(this, args);
 
-            Summary?.WriteMessage(this, "Simulation terminated normally", MessageType.Diagnostic);
+            Summary?.WriteMessage(this, "Simulation terminated normally", MessageType.Information);
         }
     }
 }

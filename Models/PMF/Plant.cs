@@ -384,7 +384,7 @@ namespace Models.PMF
             if (PlantSowing != null)
                 PlantSowing.Invoke(this, SowingData);
 
-            summary.WriteMessage(this, string.Format("A crop of " + PlantType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"), MessageType.Diagnostic);
+            summary.WriteMessage(this, string.Format("A crop of " + PlantType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"), MessageType.Information);
         }
 
         /// <summary>Harvest the crop.</summary>
@@ -442,7 +442,7 @@ namespace Models.PMF
         {
             if (IsAlive == false)
                 throw new Exception("EndCrop method called when no crop is planted.  Either your planting rule is not working or your end crop is happening at the wrong time");
-            summary.WriteMessage(this, "Crop ending", MessageType.Diagnostic);
+            summary.WriteMessage(this, "Crop ending", MessageType.Information);
 
             // Invoke a plant ending event.
             if (PlantEnding != null)
