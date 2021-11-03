@@ -48,5 +48,10 @@ namespace UnitTests
         {
             messages.Add("ERROR: " + message);
         }
+
+        public void WriteMessage(IModel model, string message, MessageType messageType)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

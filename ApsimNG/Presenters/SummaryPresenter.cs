@@ -14,8 +14,8 @@
     using System.Collections.Generic;
     using Models.Core.Run;
     using Models.Logging;
-    using ErrorLevel = Models.Core.MessageType;
     using System.Text;
+    using APSIM.Shared.Utilities;
 
     /// <summary>Presenter class for working with a summary component</summary>
     public class SummaryPresenter : IPresenter
@@ -49,11 +49,10 @@
             this.explorerPresenter = parentPresenter;
             summaryView = view as ISummaryView;
 
-            // Populate the view.
-            summaryView.ShowInitialConditions = true;
-            summaryView.ShowInfo = true;
-            summaryView.ShowWarnings = true;
-            summaryView.ShowErrors = true;
+            // Populate the messages filter dropdown.
+            summaryView.MessagesFilter.SelectedEnumValue = MessageType.All;
+            summaryView.VerbosityDropDown.SelectedEnumValue = summaryModel.Verbosity;
+
             SetSimulationNamesInView();
 
             string simulationName = summaryView.SimulationDropDown.SelectedValue;
@@ -62,13 +61,11 @@
 
             this.UpdateView();
 
-            summaryView.SummaryCheckBox.Checked = summaryModel.CaptureSummaryText;
-            summaryView.SummaryCheckBox.Changed += OnSummaryCheckBoxChanged;
-            summaryView.WarningCheckBox.Checked = summaryModel.CaptureWarnings;
-            summaryView.WarningCheckBox.Changed += OnWarningCheckBoxChanged;
-            summaryView.ErrorCheckBox.Checked = summaryModel.CaptureErrors;
-            summaryView.ErrorCheckBox.Changed += OnErrorCheckBoxChanged;
-            summaryView.FiltersChanged += OnFiltersChanged;
+            // Trap the verbosity level change event.
+            summaryView.VerbosityDropDown.Changed += OnVerbosityChanged;
+
+            // Trap the message filter level change event.
+            summaryView.MessagesFilter.Changed += OnMessagesFilterChanged;
 
             // Subscribe to the simulation name changed event.
             summaryView.SimulationDropDown.Changed += this.OnSimulationNameChanged;
@@ -77,9 +74,16 @@
             //summaryView.SummaryDisplay.Copy += OnCopy;
         }
 
-        private void OnFiltersChanged(object sender, EventArgs e)
+        private void OnMessagesFilterChanged(object sender, EventArgs e)
         {
             UpdateView();
+        }
+
+        private void OnVerbosityChanged(object sender, EventArgs e)
+        {
+            MessageType newValue = summaryView.VerbosityDropDown.SelectedEnumValue;
+            ICommand command = new ChangeProperty(summaryModel, nameof(summaryModel.Verbosity), newValue);
+            explorerPresenter.CommandHistory.Add(command);
         }
 
         private void SetSimulationNamesInView()
@@ -123,9 +127,8 @@
         {
             summaryView.SimulationDropDown.Changed -= this.OnSimulationNameChanged;
             //summaryView.SummaryDisplay.Copy -= OnCopy;
-            summaryView.SummaryCheckBox.Changed -= OnSummaryCheckBoxChanged;
-            summaryView.WarningCheckBox.Changed -= OnWarningCheckBoxChanged;
-            summaryView.ErrorCheckBox.Changed -= OnErrorCheckBoxChanged;
+            summaryView.VerbosityDropDown.Changed -= OnVerbosityChanged;
+            summaryView.MessagesFilter.Changed -= OnMessagesFilterChanged;
         }
 
         /// <summary>Populate the summary view.</summary>
@@ -144,32 +147,28 @@
                 markdown.AppendLine(string.Join("", initialConditions[simulationName].Select(i => i.ToMarkdown())));
             }
 
-            // Show Messages.
-            if (summaryView.ShowInfo || summaryView.ShowWarnings || summaryView.ShowErrors)
-            {
-                // Fetch messages from the model for this simulation name.
-                if (!messages.ContainsKey(simulationName))
-                    messages[simulationName] = summaryModel.GetMessages(simulationName).ToArray();
+            // Fetch messages from the model for this simulation name.
+            if (!messages.ContainsKey(simulationName))
+                messages[simulationName] = summaryModel.GetMessages(simulationName).ToArray();
 
-                IEnumerable<Message> filteredMessages = GetFilteredMessages(simulationName);
-                var groupedMessages = filteredMessages.GroupBy(m => new { m.Date, m.RelativePath });
-                if (filteredMessages.Any())
+            IEnumerable<Message> filteredMessages = GetFilteredMessages(simulationName);
+            var groupedMessages = filteredMessages.GroupBy(m => new { m.Date, m.RelativePath });
+            if (filteredMessages.Any())
+            {
+                markdown.AppendLine($"## Simulation log");
+                markdown.AppendLine();
+                markdown.AppendLine(string.Join("", groupedMessages.Select(m => 
                 {
-                    markdown.AppendLine($"## Simulation log");
-                    markdown.AppendLine();
-                    markdown.AppendLine(string.Join("", groupedMessages.Select(m => 
-                    {
-                        StringBuilder md = new StringBuilder();
-                        md.AppendLine($"### {m.Key.Date:yyyy-MM-dd} {m.Key.RelativePath}");
-                        md.AppendLine();
-                        md.AppendLine("```");
-                        foreach (Message msg in m)
-                            md.AppendLine(msg.Text);
-                        md.AppendLine("```");
-                        md.AppendLine();
-                        return md.ToString();
-                    })));
-                }
+                    StringBuilder md = new StringBuilder();
+                    md.AppendLine($"### {m.Key.Date:yyyy-MM-dd} {m.Key.RelativePath}");
+                    md.AppendLine();
+                    md.AppendLine("```");
+                    foreach (Message msg in m)
+                        md.AppendLine(msg.Text);
+                    md.AppendLine("```");
+                    md.AppendLine();
+                    return md.ToString();
+                })));
             }
 
             summaryView.SummaryDisplay.Text = markdown.ToString();
@@ -180,12 +179,7 @@
             if (messages.ContainsKey(simulationName))
             {
                 IEnumerable<Message> result = messages[simulationName];
-                if (!summaryView.ShowInfo)
-                    result = result.Where(m => m.Severity != ErrorLevel.Information);
-                if (!summaryView.ShowWarnings)
-                    result = result.Where(m => m.Severity != ErrorLevel.Warning);
-                if (!summaryView.ShowErrors)
-                    result = result.Where(m => m.Severity != ErrorLevel.Error);
+                result = result.Where(m => m.Severity <= summaryView.MessagesFilter.SelectedEnumValue);
 
                 return result;
             }
@@ -198,24 +192,6 @@
         private void OnSimulationNameChanged(object sender, EventArgs e)
         {
             UpdateView();
-        }
-
-        private void OnSummaryCheckBoxChanged(object sender, EventArgs e)
-        {
-            ChangeProperty command = new ChangeProperty(summaryModel, "CaptureSummaryText", summaryView.SummaryCheckBox.Checked);
-            explorerPresenter.CommandHistory.Add(command);
-        }
-
-        private void OnWarningCheckBoxChanged(object sender, EventArgs e)
-        {
-            ChangeProperty command = new ChangeProperty(summaryModel, "CaptureWarnings", summaryView.WarningCheckBox.Checked);
-            explorerPresenter.CommandHistory.Add(command);
-        }
-
-        private void OnErrorCheckBoxChanged(object sender, EventArgs e)
-        {
-            ChangeProperty command = new ChangeProperty(summaryModel, "CaptureErrors", summaryView.ErrorCheckBox.Checked);
-            explorerPresenter.CommandHistory.Add(command);
         }
 
         /// <summary>

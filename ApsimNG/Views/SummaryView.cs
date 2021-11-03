@@ -7,6 +7,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using Utility;
+    using MessageType = Models.Core.MessageType;
 
     /// <summary>A view for a summary file.</summary>
     public class SummaryView : ViewBase, ISummaryView
@@ -14,15 +15,6 @@
         private Widget captureRules;
         private Widget simulationFilter;
         private VBox mainControl;
-
-        /// <summary>Summary messages checkbox</summary>
-        public CheckBoxView SummaryCheckBox { get; private set; }
-
-        /// <summary>Warning messages checkbox</summary>
-        public CheckBoxView WarningCheckBox { get; private set; }
-
-        /// <summary>Warning messages checkbox</summary>
-        public CheckBoxView ErrorCheckBox { get; private set; }
 
         /// <summary>Drop down box which displays the simulation names.</summary>
         public DropDownView SimulationDropDown { get; private set; }
@@ -43,17 +35,17 @@
         // /// summary message sorting.
         // /// </summary>
         // private Widget messageSorting;
-        private CheckButton chkShowInfo;
-        private CheckButton chkShowWarnings;
-        private CheckButton chkShowErrors;
+
         private CheckButton chkShowInitialConditions;
 
-        public bool ShowErrors { get => chkShowErrors.Active; set => chkShowErrors.Active = value; }
-        public bool ShowWarnings { get => chkShowWarnings.Active; set => chkShowWarnings.Active = value; }
-        public bool ShowInfo { get => chkShowInfo.Active; set => chkShowInfo.Active = value; }
         public bool ShowInitialConditions { get => chkShowInitialConditions.Active; set => chkShowInitialConditions.Active = value; }
 
-        public event EventHandler FiltersChanged;
+        public EnumDropDownView<Models.Core.MessageType> VerbosityDropDown { get; private set; }
+
+        /// <summary>
+        /// Allows the user to select which message types to view.
+        /// </summary>
+        public EnumDropDownView<Models.Core.MessageType> MessagesFilter { get; private set; }
 
         /// <summary>Initializes a new instance of the <see cref="SummaryView"/> class.</summary>
         public SummaryView(ViewBase owner) : base(owner)
@@ -64,6 +56,7 @@
             Widget jumpToLogContainer = CreateJumpToLogContainer();
             messageFilters = CreateFilteringWidgets();
             // messageSorting = CreateSortingWidgets();
+
 
             mainControl = new VBox();
             mainWidget = mainControl;
@@ -106,16 +99,9 @@
 
         private Widget CreateCaptureRules()
         {
-            SummaryCheckBox = new CheckBoxView(this);
-            SummaryCheckBox.TextOfLabel = "Capture summary?";
-            WarningCheckBox = new CheckBoxView(this);
-            WarningCheckBox.TextOfLabel = "Capture warning messages?";
-            ErrorCheckBox = new CheckBoxView(this);
-            ErrorCheckBox.TextOfLabel = "Capture error messages?";
+            VerbosityDropDown = new EnumDropDownView<MessageType>(this);
             HBox box = new HBox();
-            box.PackStart(SummaryCheckBox.MainWidget, false, false, 10);
-            box.PackStart(WarningCheckBox.MainWidget, false, false, 10);
-            box.PackStart(ErrorCheckBox.MainWidget, false, false, 10);
+            box.PackStart(VerbosityDropDown.MainWidget, false, false, 10);
             Frame frame = new Frame("Capture Rules");
             frame.Add(box);
             frame.Margin = 5;
@@ -133,47 +119,17 @@
         private Widget CreateFilteringWidgets()
         {
             chkShowInitialConditions = new CheckButton("Initial Conditions");
-            chkShowInfo = new CheckButton("Information");
-            chkShowWarnings = new CheckButton("Warnings");
-            chkShowErrors = new CheckButton("Errors");
 
-            chkShowInitialConditions.Toggled += OnFiltersChanged;
-            chkShowInfo.Toggled += OnFiltersChanged;
-            chkShowWarnings.Toggled += OnFiltersChanged;
-            chkShowErrors.Toggled += OnFiltersChanged;
-            
-            Box severityBox = new HBox();
-            severityBox.PackStart(chkShowInfo, false, false, 0);
-            severityBox.PackStart(chkShowWarnings, false, false, 0);
-            severityBox.PackStart(chkShowErrors, false, false, 0);
+            MessagesFilter = new EnumDropDownView<MessageType>(this);
 
             Box filtersBox = new VBox();
             filtersBox.PackStart(chkShowInitialConditions, false, false, 0);
-            filtersBox.PackStart(severityBox, false, false, 0);
+            filtersBox.PackStart(MessagesFilter.MainWidget, false, false, 0);
 
             Frame frame = new Frame("Message Filters");
             frame.Add(filtersBox);
             frame.Margin = 5;
             return frame;
-        }
-
-        /// <summary>
-        /// Callback invoked when any of the filtering options are changed
-        /// by the user. Fires of a FiltersChanged event to be handled
-        /// by the presenter.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="e">Event arguments.</param>
-        private void OnFiltersChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                FiltersChanged?.Invoke(this, EventArgs.Empty);
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
         }
 
         private void OnJumpToSimulationLog(object sender, EventArgs e)
@@ -202,9 +158,8 @@
             {
                 btnJumpToSimLog.Clicked -= OnJumpToSimulationLog;
                 captureRules.Dispose();
-                SummaryCheckBox.MainWidget.Dispose();
-                WarningCheckBox.MainWidget.Dispose();
-                ErrorCheckBox.MainWidget.Dispose();
+                VerbosityDropDown.MainWidget.Dispose();
+                MessagesFilter.MainWidget.Dispose();
                 simulationFilter.Dispose();
                 SimulationDropDown.MainWidget.Dispose();
                 mainControl.Dispose();

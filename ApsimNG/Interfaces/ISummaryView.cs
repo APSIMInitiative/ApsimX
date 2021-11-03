@@ -4,20 +4,17 @@ using System.Linq;
 using System.Text;
 using UserInterface.EventArguments;
 using UserInterface.Interfaces;
+using Models.Core;
 
 namespace UserInterface.Views
 {
     /// <summary>An interface for a summary view.</summary>
     interface ISummaryView
     {
-        /// <summary>Summary messages checkbox</summary>
-        CheckBoxView SummaryCheckBox { get; }
-
-        /// <summary>Warning messages checkbox</summary>
-        CheckBoxView WarningCheckBox { get; }
-
-        /// <summary>Warning messages checkbox</summary>
-        CheckBoxView ErrorCheckBox { get; }
+        /// <summary>
+        /// Controls which types of messages are captured by the summary.
+        /// </summary>
+        EnumDropDownView<MessageType> VerbosityDropDown { get; }
 
         /// <summary>Drop down box which displays the simulation names.</summary>
         DropDownView SimulationDropDown { get; }
@@ -25,25 +22,10 @@ namespace UserInterface.Views
         /// <summary>View which displays the summary data.</summary>
         IMarkdownView SummaryDisplay { get; }
 
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        bool ShowErrors { get; set; }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        bool ShowWarnings { get; set; }
-        
-        /// <summary>
-        /// 
-        /// </summary>
-        bool ShowInfo { get; set; }
-
+        /// <summary>Should initial conditions be shown?</summary>
         bool ShowInitialConditions { get; set; }
 
-        /// <summary>Called when the user changes the filtering options.</summary>
-        event EventHandler FiltersChanged;
+        /// <summary>Controls which types of messages the user wants to see.</summary>
+        EnumDropDownView<MessageType> MessagesFilter { get; }
     }
 }
