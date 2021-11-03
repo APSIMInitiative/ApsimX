@@ -23,7 +23,7 @@ namespace UserInterface.Views
         IMarkdownView SummaryDisplay { get; }
 
         /// <summary>Should initial conditions be shown?</summary>
-        bool ShowInitialConditions { get; set; }
+        CheckBoxView ShowInitialConditions { get; }
 
         /// <summary>Controls which types of messages the user wants to see.</summary>
         EnumDropDownView<MessageType> MessagesFilter { get; }

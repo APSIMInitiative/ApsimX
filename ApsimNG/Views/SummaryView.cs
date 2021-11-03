@@ -36,16 +36,17 @@
         // /// </summary>
         // private Widget messageSorting;
 
-        private CheckButton chkShowInitialConditions;
-
-        public bool ShowInitialConditions { get => chkShowInitialConditions.Active; set => chkShowInitialConditions.Active = value; }
-
         public EnumDropDownView<Models.Core.MessageType> VerbosityDropDown { get; private set; }
 
         /// <summary>
         /// Allows the user to select which message types to view.
         /// </summary>
         public EnumDropDownView<Models.Core.MessageType> MessagesFilter { get; private set; }
+
+        /// <summary>
+        /// Allows the user to select whether initial conditions should be shown.
+        /// </summary>
+        public CheckBoxView ShowInitialConditions { get; private set; }
 
         /// <summary>Initializes a new instance of the <see cref="SummaryView"/> class.</summary>
         public SummaryView(ViewBase owner) : base(owner)
@@ -88,8 +89,8 @@
         {
             HBox box = new HBox();
             SimulationDropDown = new DropDownView(this);
-            box.PackStart(new Label("Simulation:"), false, false, 10);
-            box.PackStart(SimulationDropDown.MainWidget, true, true, 10);
+            box.PackStart(new Label("Simulation:"), false, false, 5);
+            box.PackStart(SimulationDropDown.MainWidget, false, false, 5);
             box.MarginBottom = 5;
             Frame frame = new Frame("Simulation Filter");
             frame.Add(box);
@@ -100,8 +101,11 @@
         private Widget CreateCaptureRules()
         {
             VerbosityDropDown = new EnumDropDownView<MessageType>(this);
+            Label verbosity = new Label("Messages which should be saved when the simulation is run:");
             HBox box = new HBox();
-            box.PackStart(VerbosityDropDown.MainWidget, false, false, 10);
+            box.PackStart(verbosity, false, false, 5);
+            box.PackStart(VerbosityDropDown.MainWidget, false, false, 5);
+            box.Margin = 5;
             Frame frame = new Frame("Capture Rules");
             frame.Add(box);
             frame.Margin = 5;
@@ -118,18 +122,39 @@
 
         private Widget CreateFilteringWidgets()
         {
-            chkShowInitialConditions = new CheckButton("Initial Conditions");
+            ShowInitialConditions = new CheckBoxView(this);
+            ShowInitialConditions.TextOfLabel = "Show Initial Conditions";
+            ShowInitialConditions.Changed += OnShowInitialConditionsChanged;
 
             MessagesFilter = new EnumDropDownView<MessageType>(this);
+            Label label = new Label("Filter messages by severity: ");
+
+            Box box = new Box(Orientation.Horizontal, 0);
+            box.PackStart(label, false, false, 5);
+            box.PackStart(MessagesFilter.MainWidget, false, false, 0);
 
             Box filtersBox = new VBox();
-            filtersBox.PackStart(chkShowInitialConditions, false, false, 0);
-            filtersBox.PackStart(MessagesFilter.MainWidget, false, false, 0);
+            filtersBox.PackStart(ShowInitialConditions.MainWidget, false, false, 0);
+            filtersBox.PackStart(box, false, false, 0);
+            filtersBox.Homogeneous = true;
+            box.Margin = 5;
 
             Frame frame = new Frame("Message Filters");
             frame.Add(filtersBox);
             frame.Margin = 5;
             return frame;
+        }
+
+        private void OnShowInitialConditionsChanged(object sender, EventArgs args)
+        {
+            try
+            {
+                btnJumpToSimLog.Visible = ShowInitialConditions.Checked;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         private void OnJumpToSimulationLog(object sender, EventArgs e)

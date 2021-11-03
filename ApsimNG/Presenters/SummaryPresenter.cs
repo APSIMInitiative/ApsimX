@@ -53,28 +53,31 @@
             summaryView.MessagesFilter.SelectedEnumValue = MessageType.All;
             summaryView.VerbosityDropDown.SelectedEnumValue = summaryModel.Verbosity;
 
+            // Show initial conditions table by default.
+            summaryView.ShowInitialConditions.Checked = true;
+
             SetSimulationNamesInView();
 
             string simulationName = summaryView.SimulationDropDown.SelectedValue;
             messages[simulationName] = summaryModel.GetMessages(simulationName)?.ToArray();
             initialConditions[simulationName] = summaryModel.GetInitialConditions(simulationName).ToArray();
 
-            this.UpdateView();
+            UpdateView();
 
             // Trap the verbosity level change event.
             summaryView.VerbosityDropDown.Changed += OnVerbosityChanged;
 
             // Trap the message filter level change event.
-            summaryView.MessagesFilter.Changed += OnMessagesFilterChanged;
+            summaryView.MessagesFilter.Changed += OnFilterChanged;
 
             // Subscribe to the simulation name changed event.
             summaryView.SimulationDropDown.Changed += this.OnSimulationNameChanged;
 
-            // Subscribe to the view's copy event.
-            //summaryView.SummaryDisplay.Copy += OnCopy;
+            // Trap the 'show initial conditions' checkbox's changed event.
+            summaryView.ShowInitialConditions.Changed += OnFilterChanged;
         }
 
-        private void OnMessagesFilterChanged(object sender, EventArgs e)
+        private void OnFilterChanged(object sender, EventArgs e)
         {
             UpdateView();
         }
@@ -128,7 +131,8 @@
             summaryView.SimulationDropDown.Changed -= this.OnSimulationNameChanged;
             //summaryView.SummaryDisplay.Copy -= OnCopy;
             summaryView.VerbosityDropDown.Changed -= OnVerbosityChanged;
-            summaryView.MessagesFilter.Changed -= OnMessagesFilterChanged;
+            summaryView.MessagesFilter.Changed -= OnFilterChanged;
+            summaryView.ShowInitialConditions.Changed -= OnFilterChanged;
         }
 
         /// <summary>Populate the summary view.</summary>
@@ -138,7 +142,7 @@
             StringBuilder markdown = new StringBuilder();
 
             // Show Initial Conditions.
-            if (summaryView.ShowInitialConditions)
+            if (summaryView.ShowInitialConditions.Checked)
             {
                 // Fetch initial conditions from the model for this simulation name.
                 if (!initialConditions.ContainsKey(simulationName))
