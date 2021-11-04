@@ -1,13 +1,11 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
 using System.Reflection;
@@ -29,11 +27,11 @@ namespace Models.CLEM
         public ISummary Summary = null;
 
         private Guid id = Guid.NewGuid();
+        private IEnumerable<IActivityTimer> activityTimers = null;
 
         /// <summary>
         /// Identifies the last selected tab for display
         /// </summary>
-        [JsonIgnore]
         public string SelectedTab { get; set; }
 
         /// <summary>
@@ -74,31 +72,44 @@ namespace Models.CLEM
         /// </summary>
         public void SetDefaults()
         {
+            SetPropertyDefaults(this);
+        }
+
+        /// <summary>
+        /// Public means of setting default values 
+        /// </summary>
+        /// <param name="model"></param>
+        public static void SetPropertyDefaults(IModel model)
+        {
             //Iterate through properties
-            foreach (var property in GetType().GetProperties())
-            {
+            foreach (var property in model.GetType().GetProperties())
                 //Iterate through attributes of this property
                 foreach (Attribute attr in property.GetCustomAttributes(true))
-                {
                     //does this property have [DefaultValueAttribute]?
                     if (attr is System.ComponentModel.DefaultValueAttribute)
                     {
                         //So lets try to load default value to the property
                         System.ComponentModel.DefaultValueAttribute dv = (System.ComponentModel.DefaultValueAttribute)attr;
                         if (dv != null)
-                        {
                             if (property.PropertyType.IsEnum)
-                            {
-                                property.SetValue(this, Enum.Parse(property.PropertyType, dv.Value.ToString()));
-                            }
+                                property.SetValue(model, Enum.Parse(property.PropertyType, dv.Value.ToString()));
                             else
-                            {
-                                property.SetValue(this, dv.Value, null);
-                            }
-                        }
+                                property.SetValue(model, dv.Value, null);
 
                     }
-                }
+
+        }
+
+        /// <summary>
+        /// A list of activity timers for this activity
+        /// </summary>
+        public IEnumerable<IActivityTimer> ActivityTimers
+        {
+            get
+            {
+                if (activityTimers is null)
+                    activityTimers = FindAllChildren<IActivityTimer>();
+                return activityTimers;
             }
         }
 
@@ -109,12 +120,8 @@ namespace Models.CLEM
         {
             get
             {
-                int res = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType())).Sum(a => (a as IActivityTimer).ActivityDue ? 0 : 1);
-
-                var q = this.Children.Where(a => typeof(IActivityTimer).IsAssignableFrom(a.GetType()));
-                var w = q.Sum(a => (a as IActivityTimer).ActivityDue ? 0 : 1);
-
-                return (res == 0);
+                var result = this.FindAllChildren<IActivityTimer>().Sum(a => a.ActivityDue ? 0 : 1);
+                return (result == 0);
             }
         }
 
@@ -135,12 +142,12 @@ namespace Models.CLEM
                     foreach (object type in typesToFind)
                     {
                         if (type is string)
-                        {
                             results.Add(type as string);
-                        }
                         else if (type is Type)
                         {
-                            results.AddRange(resources.GetCLEMResourceNames(type as Type));
+                            var list = resources.FindResource(type as Type)?.FindAllChildren<IResourceType>().Select(a => (a as CLEMModel).NameWithParent);
+                            if (list != null)
+                                results.AddRange(resources.FindResource(type as Type).FindAllChildren<IResourceType>().Select(a => (a as CLEMModel).NameWithParent));
                         }
                     }
                 }
@@ -166,68 +173,159 @@ namespace Models.CLEM
         #region descriptive summary
 
         /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// Create a html snippet
         /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public virtual string ModelSummary(bool formatForParentControl)
+        /// <param name="value">The value to report</param>
+        /// <param name="errorString">Error text when missing</param>
+        /// <param name="entryStyle">Style of snippet</param>
+        /// <param name="htmlTags">Include html tags</param>
+        /// <returns>HTML span snippet</returns>
+        public static string DisplaySummaryValueSnippet(string value, string errorString, HTMLSummaryStyle entryStyle = HTMLSummaryStyle.Default, bool htmlTags = true)
         {
-            return "<div class=\"resourcenote\">No description provided</div>";
+            string spanClass = "setvalue";
+            string errorClass = "errorlink";
+            switch (entryStyle)
+            {
+                case HTMLSummaryStyle.Default:
+                    break;
+                case HTMLSummaryStyle.Resource:
+                    spanClass = "resourcelink";
+                    break;
+                case HTMLSummaryStyle.SubResource:
+                    break;
+                case HTMLSummaryStyle.SubResourceLevel2:
+                    break;
+                case HTMLSummaryStyle.Activity:
+                    spanClass = "activitylink";
+                    break;
+                case HTMLSummaryStyle.SubActivity:
+                    break;
+                case HTMLSummaryStyle.SubActivityLevel2:
+                    break;
+                case HTMLSummaryStyle.Helper:
+                    break;
+                case HTMLSummaryStyle.FileReader:
+                    spanClass = "filelink";
+                    break;
+                case HTMLSummaryStyle.Filter:
+                    spanClass = "filterset";
+                    errorClass = "filtererror";
+                    break;
+                default:
+                    break;
+            }
+
+            if(htmlTags)
+                if (value != null && value != "")
+                    return $"<span class=\"{spanClass}\">{value}</span>";
+                else
+                    return $"<span class=\"{errorClass}\">{errorString}</span>";
+            else
+                if (value != null && value != "")
+                return value.ToString();
+            else
+                return errorString;
+
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <param name="htmlString"></param>
-        /// <returns></returns>
-        public virtual string GetFullSummary(object model, bool formatForParentControl, string htmlString)
+        /// <inheritdoc/>
+        public virtual string ModelSummary(bool formatForParentControl)
+        {
+            return "";
+        }
+
+        /// <inheritdoc/>
+        public virtual string GetFullSummary(IModel model, List<IModel> parentControls, string htmlString, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 if (model.GetType().IsSubclassOf(typeof(CLEMModel)))
                 {
                     CLEMModel cm = model as CLEMModel;
-                    htmlWriter.Write(cm.ModelSummaryOpeningTags(formatForParentControl));
+                    cm.CurrentAncestorList = parentControls.ToList();
+                    cm.CurrentAncestorList.Add(model);
+
+                    htmlWriter.Write(cm.ModelSummaryOpeningTags(cm.FormatForParentControl));
 
                     htmlWriter.Write(cm.ModelSummaryInnerOpeningTagsBeforeSummary());
 
-                    htmlWriter.Write(cm.ModelSummary(formatForParentControl));
+                    htmlWriter.Write(cm.ModelSummary(cm.FormatForParentControl));
 
-                    htmlWriter.Write(cm.ModelSummaryInnerOpeningTags(formatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryInnerOpeningTags(cm.FormatForParentControl));
 
-                    foreach (var item in (model as IModel).Children)
+                    bool reportMemosInPlace = false;
+                    // think through the various model types that do not support memos being writen within children
+                    // for example all the filters in a filter group and timers and cohorts 
+                    // basically anyting that does special actions with all the children
+                    // if if the current model supports memos in place set reportMemosInPlace to true.
+
+                    if (!reportMemosInPlace)
+                        htmlWriter.Write(AddMemosToSummary(model, markdown2Html));
+
+                    foreach (var item in (model).Children)
                     {
-                        htmlWriter.Write(GetFullSummary(item, true, htmlString));
+                        if (item is Memo)
+                        {
+                            if (reportMemosInPlace)
+                            {
+                                string markdownMemo = (item as Memo).Text;
+                                if (markdown2Html != null)
+                                    markdownMemo = markdown2Html(markdownMemo);
+                                htmlWriter.Write($"<div class='memo-container'><div class='memo-head'>Memo</div><div class='memo-text'>{markdownMemo}</div></div>");
+                            }
+                        }
+                        else
+                        {
+                            htmlWriter.Write(GetFullSummary(item, cm.CurrentAncestorList.ToList(), htmlString));
+                        }
                     }
-                    htmlWriter.Write(cm.ModelSummaryInnerClosingTags(formatForParentControl));
 
-                    htmlWriter.Write(cm.ModelSummaryClosingTags(formatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryInnerClosingTags(cm.FormatForParentControl));
+
+                    htmlWriter.Write(cm.ModelSummaryClosingTags(cm.FormatForParentControl));
                 }
                 return htmlWriter.ToString(); 
             }
         }
 
-        /// <summary>
-        /// Styling to use for HTML summary
-        /// </summary>
+        /// <inheritdoc/>
         [JsonIgnore]
         public virtual HTMLSummaryStyle ModelSummaryStyle { get; set; }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
+        public List<IModel> CurrentAncestorList { get; set; } = new List<IModel>();
+
+        /// <inheritdoc/>
+        public bool FormatForParentControl { get { return CurrentAncestorList.Count > 1; } }
+
+        /// <inheritdoc/>
         public virtual string ModelSummaryClosingTags(bool formatForParentControl)
         {
             return "\r\n</div>\r\n</div>";
         }
 
         /// <summary>
-        /// Provides the closing html tags for object
+        /// Create memos included for summary description
         /// </summary>
+        /// <param name="model">Model to report child memos for</param>
+        /// <param name="markdown2Html">markdown to html converter</param>
         /// <returns></returns>
+        public static string AddMemosToSummary(IModel model, Func<string, string> markdown2Html = null)
+        {
+            string html = "";
+            foreach (var memo in model.FindAllChildren<Memo>())
+            {
+                html += "<div class='memo-container'><div class='memo-head'>Memo</div>";
+
+                string memoText = memo.Text;
+                if (markdown2Html != null)
+                    memoText = markdown2Html(memoText);
+                html += $"<div class='memo-text'>{memoText}</div></div>";
+            }
+            return html;
+        }
+
+        /// <inheritdoc/>
         public virtual string ModelSummaryOpeningTags(bool formatForParentControl)
         {
             string overall = "activity";
@@ -236,21 +334,13 @@ namespace Models.CLEM
             if (this.ModelSummaryStyle == HTMLSummaryStyle.Default)
             {
                 if (this is Relationship || this.GetType().IsSubclassOf(typeof(Relationship)))
-                {
                     this.ModelSummaryStyle = HTMLSummaryStyle.Default;
-                }
                 else if (this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
-                {
                     this.ModelSummaryStyle = HTMLSummaryStyle.Resource;
-                }
                 else if (typeof(IResourceType).IsAssignableFrom(this.GetType()))
-                {
                     this.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
-                }
                 else if (this.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
-                {
                     this.ModelSummaryStyle = HTMLSummaryStyle.Activity;
-                }
             }
 
             switch (ModelSummaryStyle)
@@ -296,19 +386,13 @@ namespace Models.CLEM
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public virtual string ModelSummaryInnerClosingTags(bool formatForParentControl)
         {
             return "";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public virtual string ModelSummaryInnerOpeningTags(bool formatForParentControl)
         {
             using (StringWriter htmlWriter = new StringWriter())
@@ -321,45 +405,39 @@ namespace Models.CLEM
                     {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">This resource is measured in  ");
                         if (units == null || units == "")
-                        {
                             htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                        }
                         else
-                        {
                             htmlWriter.Write("<span class=\"setvalue\">" + units + "</span>");
-                        }
+
                         htmlWriter.Write("</div>");
                     }
                 }
                 if (this.GetType().IsSubclassOf(typeof(ResourceBaseWithTransactions)))
-                {
                     if (this.Children.Count() == 0)
-                    {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">Empty</div>");
-                    }
-                }
+
                 return htmlWriter.ToString(); 
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public virtual string ModelSummaryInnerOpeningTagsBeforeSummary()
         {
             return "";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
+        public virtual string ModelSummaryNameTypeHeaderText()
+        {
+            return this.Name;
+        }
+
+        /// <inheritdoc/>
         public string ModelSummaryNameTypeHeader()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("<div class=\"namediv\">" + this.Name + ((!this.Enabled) ? " - DISABLED!" : "") + "</div>");
+                htmlWriter.Write($"<div class=\"namediv\">{ModelSummaryNameTypeHeaderText()} {((!this.Enabled) ? " - DISABLED!" : "")}</div>");
                 if (this.GetType().IsSubclassOf(typeof(CLEMActivityBase)))
                 {
                     htmlWriter.Write("<div class=\"partialdiv\"");
@@ -379,7 +457,7 @@ namespace Models.CLEM
                     }
                     htmlWriter.Write("</div>");
                 }
-                htmlWriter.Write("<div class=\"typediv\">" + this.GetType().Name + "</div>");
+                htmlWriter.Write($"<div class=\"typediv\">{this.GetType().Name}</div>");
                 return htmlWriter.ToString(); 
             }
         }
@@ -389,10 +467,11 @@ namespace Models.CLEM
         /// </summary>
         /// <param name="modelToSummarise">Model to create summary fpr</param>
         /// <param name="darkTheme">Boolean representing if in dark mode</param>
+        /// <param name="markdown2Html">Method to convert markdown to html</param>
         /// <param name="bodyOnly">Only produve the body html</param>
         /// <param name="apsimFilename">Create master simulation summary header</param>
         /// <returns></returns>
-        public static string CreateDescriptiveSummaryHTML(Model modelToSummarise, bool darkTheme = false, bool bodyOnly = false, string apsimFilename = "")
+        public static string CreateDescriptiveSummaryHTML(Model modelToSummarise, bool darkTheme = false, bool bodyOnly = false, string apsimFilename = "", Func<string, string> markdown2Html = null)
         {
             // currently includes autoupdate script for display of summary information in browser
             // give APSIM Next Gen no longer has access to WebKit HTMLView in GTK for .Net core
@@ -417,6 +496,7 @@ namespace Models.CLEM
                 ".resource tr:nth-child(2n+3) {background:[ResRowBack] !important;}" +
                 ".resource tr:nth-child(2n+2) {background:[ResRowBack2] !important;}" +
                 ".resource td.fill {background-color: #c1946c !important;}" +
+                ".resource td.disabled {opacity: 0.5 !important;}" +
                 ".resourceborder {border-color:#996633; border-width:1px; border-style:solid; padding:0px; background-color:Cornsilk !important; }" +
                 ".resource h1,h2,h3 {color:#996633; } .activity h1,h2,h3 { color:#009999; margin-bottom:5px; }" +
                 ".resourcebanner {background-color:#996633 !important; color:[ResFontBanner]; padding:5px; font-weight:bold; border-radius:5px 5px 0px 0px; }" +
@@ -465,13 +545,19 @@ namespace Models.CLEM
                 ".labournote {font-style: italic; color:#666666; padding-top:7px;}" +
                 ".warningbanner {background-color:Orange !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
                 ".errorbanner {background-color:Red !important; border-radius:5px 5px 5px 5px; color:Black; padding:5px; font-weight:bold; margin-bottom:10px;margin-top:10px; }" +
+                ".memobanner {background-color:white !important; border-radius:5px 5px 5px 5px;border-color:Blue;border-width:1px;border-style:solid;color:Navy; padding:10px; margin-bottom:10px;margin-top:10px; font-size:0.8em;}" +
+                ".memobanner {background-color:white !important; border-radius:5px 5px 5px 5px;border-color:Blue;border-width:1px;border-style:solid;color:Navy; padding:10px; margin-bottom:10px;margin-top:10px; font-size:0.8em;}" +
+                ".memo-container {display:grid; grid-template-columns: 70px auto;border-radius:7px; border-color:DeepSkyBlue; border-width:2px; border-style:solid; margin-bottom:10px; margin-top:10px;}" +
+                ".memo-head {background-color:DeepSkyBlue;padding:10px;color:white;font-weight:bold;}" +
+                ".memo-text {margin:auto;margin-left:15px;padding:5px;color:Black;}" +
+                ".memo-container h1 {color:#000000; } .activity h1,h2,h3 { color:#000000; margin-bottom:5px; }" +
                 ".filterlink {font-weight:bold; color:#cc33cc; background-color:[FiltContBack] !important; border-color:#cc33cc; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
                 ".filtername {margin:10px 0px 5px 0px; font-size:0.9em; color:#cc33cc;font-weight:bold;}" +
-                ".filterborder {display: block; width: 100% - 40px; border-color:#cc33cc; background-color:[FiltContBack] !important; border-width:1px; border-style:solid; padding:5px; margin:0px 0px 5px 0px; border-radius:5px; }" +
-                ".filterset {float: left; font-size:0.85em; font-weight:bold; color:#cc33cc; background-color:[FiltContBack] !important; border-width:0px; border-style:none; padding: 0px 3px; margin: 2px 0px 0px 5px; border-radius:3px; }" +
+                ".filterborder {display: block; width: 100% - 40px; border-color:#cc33cc; background-color:[FiltContBack] !important; border-width:1px; border-style:solid; padding:0px 5px 5px 5px; margin:10px 0px 5px 0px; border-radius:5px; }" +
+                ".filterset {font-size:0.85em; font-weight:bold; color:#cc33cc; background-color:[FiltContBack] !important; border-width:0px; border-style:none; padding: 1px 3px; margin: 2px 3px 0px 0px; border-radius:3px; }" +
                 ".filteractivityborder {background-color:[FiltContActivityBack] !important; color:#fff; }" +
-                ".filter {float: left; border-color:#cc33cc; background-color:#cc33cc !important; color:white; border-width:1px; border-style:solid; padding: 0px 5px 0px 5px; font-weight:bold; margin: 0px 5px 0px 5px;  border-radius:3px;}" +
-                ".filtererror {float: left; border-color:red; background-color:red !important; color:white; border-width:1px; border-style:solid; padding: 0px 5px 0px 5px; font-weight:bold; margin: 0px 5px 0px 5px;  border-radius:3px;}" +
+                ".filter {float: left; border-color:#cc33cc; background-color:#cc33cc !important; color:white; border-width:1px; border-style:solid; padding: 1px 5px 1px 5px; margin: 5px 5px 0px 5px; border-radius:3px;}" +
+                ".filtererror {font-size:0.85em; font-weight:bold; border-color:red; background-color:[FiltContBack] !important; color:red; border-width:1px; border-style:solid; padding: 1px 3px; font-weight:bold; margin: 2px 3px 0px 0px; border-radius:3px;}" +
                 ".filebanner {background-color:green !important; border-radius:5px 5px 0px 0px; color:mintcream; padding:5px; font-weight:bold }" +
                 ".filecontent {background-color:[ContFileBack] !important; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:green; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
                 ".defaultbanner {background-color:[ContDefaultBanner] !important; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
@@ -567,26 +653,19 @@ namespace Models.CLEM
                     htmlWriter.Write(htmlString);
 
                     if (apsimFilename == "")
-                    {
                         htmlWriter.Write("\r\n<span style=\"font-size:0.8em; font-weight:bold\">You will need to keep refreshing this page to see changes relating to the last component selected</span><br /><br />");
-                    }
                 }
                 htmlWriter.Write("\r\n<div class=\"clearfix defaultbanner\">");
 
                 string fullname = modelToSummarise.Name;
                 if (modelToSummarise is CLEMModel)
-                {
                     fullname = (modelToSummarise as CLEMModel).NameWithParent;
-                }
 
                 if (apsimFilename != "")
-                {
                     htmlWriter.Write($"<div class=\"namediv\">Full simulation settings</div>");
-                }
                 else
-                {
-                    htmlWriter.Write($"<div class=\"namediv\">Component {fullname} named {modelToSummarise.GetType().Name}</div>");
-                }
+                    htmlWriter.Write($"<div class=\"namediv\">Component {modelToSummarise.GetType().Name} named {fullname}</div>");
+
                 htmlWriter.Write($"<div class=\"typediv\">Details</div>");
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"defaultcontent\">");
@@ -602,30 +681,18 @@ namespace Models.CLEM
                 htmlWriter.Write("\r\n</div>");
 
                 if (modelToSummarise is ZoneCLEM)
-                {
-                    htmlWriter.Write((modelToSummarise as ZoneCLEM).GetFullSummary(modelToSummarise, true, htmlWriter.ToString()));
-                }
+                    htmlWriter.Write((modelToSummarise as ZoneCLEM).GetFullSummary(modelToSummarise, new List<IModel>(), htmlWriter.ToString(), markdown2Html));
                 else if (modelToSummarise is Market)
-                {
-                    htmlWriter.Write((modelToSummarise as Market).GetFullSummary(modelToSummarise, true, htmlWriter.ToString()));
-                }
+                    htmlWriter.Write((modelToSummarise as Market).GetFullSummary(modelToSummarise, new List<IModel>(), htmlWriter.ToString(), markdown2Html));
                 else if (modelToSummarise is CLEMModel)
-                {
-                    htmlWriter.Write((modelToSummarise as CLEMModel).GetFullSummary(modelToSummarise, false, htmlWriter.ToString()));
-                }
+                    htmlWriter.Write((modelToSummarise as CLEMModel).GetFullSummary(modelToSummarise, new List<IModel>(), htmlWriter.ToString(), markdown2Html));
                 else if (modelToSummarise is ICLEMDescriptiveSummary)
-                {
-                    htmlWriter.Write((modelToSummarise as ICLEMDescriptiveSummary).GetFullSummary(modelToSummarise, false, htmlWriter.ToString()));
-                }
+                    htmlWriter.Write((modelToSummarise as ICLEMDescriptiveSummary).GetFullSummary(modelToSummarise, new List<IModel>(), htmlWriter.ToString(), markdown2Html));
                 else
-                {
                     htmlWriter.Write("<b>This component has no descriptive summary</b>");
-                }
 
                 if (!bodyOnly)
-                {
                     htmlWriter.WriteLine("\r\n</body>\r\n</html>");
-                }
 
                 if (htmlWriter.ToString().Contains("<canvas"))
                 {
@@ -655,8 +722,6 @@ namespace Models.CLEM
                 return htmlWriter.ToString();
             }
         }
-
-
 
         #endregion
     }

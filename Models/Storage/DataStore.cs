@@ -1,5 +1,6 @@
 ﻿namespace Models.Storage
 {
+    using APSIM.Shared.Documentation;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Newtonsoft.Json;
@@ -14,7 +15,6 @@
     using System.Threading.Tasks;
 
     /// <summary>
-    /// # [Name]
     /// A storage service for reading and writing to/from a database.
     /// </summary>
     [Serializable]
@@ -279,7 +279,7 @@
         }
 
         /// <summary>
-        /// Add a select based view to the data table for SQLite datastores
+        /// Add a select based view to the SQLite datastore
         /// </summary>
         /// <param name="name">name of the view</param>
         /// <param name="selectSQL">select SQL statement</param>
@@ -291,12 +291,22 @@
                 {
                     connection.ExecuteNonQuery($"DROP VIEW {name}");
                 }
+                dbReader.ExecuteSql(selectSQL);
                 connection.ExecuteNonQuery($"CREATE VIEW {name} AS {selectSQL}");
             }
             else
             {
                 throw new NotImplementedException();
             }
+        }
+
+        /// <summary>
+        /// Override the Document() function but do nothing.
+        /// This model does not show any documentation.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            yield break;
         }
     }
 }

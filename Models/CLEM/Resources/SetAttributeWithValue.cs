@@ -21,11 +21,16 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantInitialCohorts))]
     [ValidParent(ParentType = typeof(RuminantTypeCohort))]
     [ValidParent(ParentType = typeof(RuminantActivityControlledMating))]
-    [Description("This component defines an attribute for the individual")]
+    [Description("Specify an attribute for the individual with associated value")]
     [HelpUri(@"Content/Features/Resources/SetAttributeWithValue.htm")]
     [Version(1, 0, 1, "")]
     public class SetAttributeWithValue : CLEMModel, IValidatableObject, ISetAttribute
     {
+        /// <summary>
+        /// Store of last instance of the individual attribute defined
+        /// </summary>
+        private IndividualAttribute lastInstance { get; set; } = null;
+
         /// <summary>
         /// Name of attribute
         /// </summary>
@@ -78,33 +83,37 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Mandatory attribute
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0)]
+        [System.ComponentModel.DefaultValueAttribute(false)]
         [Description("Mandatory attribute")]
         [Required]
         public bool Mandatory { get; set; }
 
-        /// <summary>
-        /// Get a random realisation of the set value based on Value and Standard deviation 
-        /// </summary>
-        public CLEMAttribute GetRandomSetAttribute()
+        /// <inheritdoc/>
+        public IndividualAttribute GetAttribute(bool createNewInstance = true)
         {
-            double value = Value;
-            double randStdNormal = 0;
-
-            if (StandardDeviation > 0)
+            if (createNewInstance || lastInstance is null)
             {
-                double u1 = RandomNumberGenerator.Generator.NextDouble();
-                double u2 = RandomNumberGenerator.Generator.NextDouble();
-                randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
-                                Math.Sin(2.0 * Math.PI * u2);
+                double value = Value;
+                double randStdNormal = 0;
+
+                if (StandardDeviation > 0)
+                {
+                    double u1 = RandomNumberGenerator.Generator.NextDouble();
+                    double u2 = RandomNumberGenerator.Generator.NextDouble();
+                    randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
+                                    Math.Sin(2.0 * Math.PI * u2);
+                }
+                value = Math.Min(MaximumValue, Math.Max(MinimumValue, value + StandardDeviation * randStdNormal));
+
+                Single valuef = Convert.ToSingle(value);
+
+                lastInstance = new IndividualAttribute()
+                {
+                    InheritanceStyle = InheritanceStyle,
+                    StoredValue = valuef
+                }; 
             }
-            value = (float)Math.Min(MaximumValue, Math.Max(MinimumValue, value + StandardDeviation * randStdNormal));
-
-            return new CLEMAttribute()
-            {
-                InheritanceStyle = InheritanceStyle,
-                storedValue = value
-            };
+            return lastInstance;
         }
 
         /// <summary>
@@ -113,6 +122,7 @@ namespace Models.CLEM.Resources
         public SetAttributeWithValue()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+            SetDefaults();
         }
 
         #region validation
@@ -137,59 +147,49 @@ namespace Models.CLEM.Resources
             {
                 if (formatForParentControl)
                 {
-                    htmlWriter.Write("\r\n<div class=\"resourcebanneralone clearfix\">");
-                    htmlWriter.Write($"Attribute  ");
-                    if (AttributeName == null || AttributeName == "")
+                    if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 3] is RuminantInitialCohorts))
                     {
-                        htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
+                        bool isgroupattribute = (CurrentAncestorList.Count >= 2 && CurrentAncestorList[CurrentAncestorList.Count - 2] is RuminantInitialCohorts);
+
+                        htmlWriter.Write("\r\n<div class=\"resourcebanneralone clearfix\">");
+                        htmlWriter.Write($"Attribute  ");
+                        if (AttributeName == null || AttributeName == "")
+                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
+                        else
+                            htmlWriter.Write($"<span class=\"setvalue\">{AttributeName}</span>");
+
+                        if (StandardDeviation == 0)
+                            htmlWriter.Write($" is provided {(isgroupattribute?"to all cohorts":"")} with a value of <span class=\"setvalue\">{Value.ToString()}</span> ");
+                        else
+                            htmlWriter.Write($" is provided {(isgroupattribute ? "to all cohorts" : "")} with a value taken from mean = <span class=\"setvalue\">{Value.ToString()}</span> and s.d. = <span class=\"setvalue\">{StandardDeviation}</span>");
+
+                        htmlWriter.Write($"</div>");
                     }
-                    else
-                    {
-                        htmlWriter.Write($"<span class=\"setvalue\">{AttributeName}</span>");
-                    }
-                    if (StandardDeviation == 0)
-                    {
-                        htmlWriter.Write($" is provided with a value of <span class=\"setvalue\">{Value.ToString()}</span> ");
-                    }
-                    else
-                    {
-                        htmlWriter.Write($" is provided with a value taken from mean = <span class=\"setvalue\">{Value.ToString()}</span> and s.d. = <span class=\"setvalue\">{StandardDeviation}</span>");
-                    }
-                    htmlWriter.Write($"</div>");
                 }
                 else
                 { 
                     htmlWriter.Write($"\r\n<div class=\"activityentry\">");
                     htmlWriter.Write($"Provide an attribute with the label ");
                     if (AttributeName == null || AttributeName == "")
-                    {
                         htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                    }
                     else
-                    {
                         htmlWriter.Write($"<span class=\"setvalue\">{AttributeName}</span>");
-                    }
+
                     htmlWriter.Write($" that will be inherited with the <span class=\"setvalue\">{InheritanceStyle.ToString()}</span> style");
                     if (Mandatory)
-                    {
                         htmlWriter.Write($" and is required by all individuals in the population");
-                    }
+
                     htmlWriter.Write($"</div>");
 
                     htmlWriter.Write($"\r\n<div class=\"activityentry\">");
                     if (StandardDeviation == 0)
-                    {
                         htmlWriter.Write($"This attribute has a value of <span class=\"setvalue\">{Value.ToString()}</span> ");
-                    }
                     else
-                    {
                         htmlWriter.Write($"This attribute's value is randonly taken from the normal distribution with a mean of <span class=\"setvalue\">{Value.ToString()}</span> and standard deviation of <span class=\"setvalue\">{StandardDeviation}</span> ");
 
-                    }
                     if (InheritanceStyle != AttributeInheritanceStyle.None)
-                    {
                         htmlWriter.Write($" and is allowed to vary between <span class=\"setvalue\">{MinimumValue}</span> and <span class=\"setvalue\">{MaximumValue}</span> when inherited");
-                    }
+
                     htmlWriter.Write($"</div>");
                 }
                 return htmlWriter.ToString();

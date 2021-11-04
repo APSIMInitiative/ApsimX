@@ -179,7 +179,7 @@
             }
 
             // For each table in the database, read in field names.
-            foreach (var tableName in Connection.GetTableNames())
+            foreach (var tableName in Connection.GetTableAndViewNames())
                 tables.Add(tableName, Connection.GetTableColumns(tableName));
 
             // Get the units table.
@@ -237,7 +237,7 @@
                 distinctKeyword = "DISTINCT";
 
             // Add checkpointID to filter.
-            if (fieldNamesInTable.Contains("CheckpointID"))
+            if (fieldNamesInTable.Contains("CheckpointID") && checkpointIDs.ContainsKey(checkpointName))
                 filter = AddToFilter(filter, $"CheckpointID={checkpointIDs[checkpointName].ID}");
 
             filter = RemoveSimulationNameFromFilter(filter);
@@ -278,7 +278,7 @@
 
             // Build SQL statement
             var sql = $"SELECT {distinctKeyword} {firebirdFirstStatement} {fieldNames.Join(",")}" +
-                      $" FROM {tableName}";
+                      $" FROM \"{tableName}\"";
             if (!string.IsNullOrEmpty(filter))
                 sql += $" WHERE {filter}";
             if (orderByFields.Count > 0)

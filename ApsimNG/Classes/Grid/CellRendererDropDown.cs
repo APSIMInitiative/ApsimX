@@ -3,9 +3,9 @@ using Gtk;
 using Gdk;
 using Cairo;
 
-#if NETCOREAPP
+
 using CellEditable = Gtk.ICellEditable;
-#endif
+
 
 namespace UserInterface.Classes
 {
@@ -15,22 +15,7 @@ namespace UserInterface.Classes
     /// </summary>
     public class CellRendererDropDown : CellRendererCombo
     {
-#if NETFRAMEWORK
-        /// <summary>
-        /// Render the cell in the window.
-        /// </summary>
-        /// <param name="window">The owning window.</param>
-        /// <param name="widget">The widget.</param>
-        /// <param name="background_area">Background area.</param>
-        /// <param name="cell_area">The cell area.</param>
-        /// <param name="expose_area">Expose the area.</param>
-        /// <param name="flags">Render flags.</param>
-        protected override void Render(Drawable window, Widget widget, Gdk.Rectangle background_area, Gdk.Rectangle cell_area, Gdk.Rectangle expose_area, CellRendererState flags)
-        {
-            base.Render(window, widget, background_area, cell_area, expose_area, flags);
-            Gtk.Style.PaintArrow(widget.Style, window, StateType.Normal, ShadowType.Out, cell_area, widget, string.Empty, ArrowType.Down, true, Math.Max(cell_area.X, cell_area.X + cell_area.Width - 20), cell_area.Y, 20, cell_area.Height);
-        }
-#else
+
         /// <summary>
         /// Render the cell in the window.
         /// </summary>
@@ -43,9 +28,9 @@ namespace UserInterface.Classes
         {
             base.OnRender(cr, widget, background_area, cell_area, flags);
             //tbi
-            //Gtk.Style.PaintArrow(widget.Style, window, StateType.Normal, ShadowType.Out, cell_area, widget, string.Empty, ArrowType.Down, true, Math.Max(cell_area.X, cell_area.X + cell_area.Width - 20), cell_area.Y, 20, cell_area.Height);
+            //Gtk.Style.PaintArrow(widget.Style, window, StateFlags.Normal, ShadowType.Out, cell_area, widget, string.Empty, ArrowType.Down, true, Math.Max(cell_area.X, cell_area.X + cell_area.Width - 20), cell_area.Y, 20, cell_area.Height);
         }
-#endif
+
 
         /// <summary>
         /// Called when editing is started. Traps the EditingDone event.

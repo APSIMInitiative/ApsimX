@@ -27,6 +27,8 @@
     /// </summary>
     public class MainPresenter
     {
+        private class MockModel : Model { }
+
         /// <summary>A list of presenters for tabs on the left.</summary>
         public List<IPresenter> Presenters1 { get; set; } = new List<IPresenter>();
 
@@ -44,7 +46,7 @@
         /// <summary>
         /// The most recent exception that has been thrown.
         /// </summary>
-        public List<string> LastError { get; private set; }
+        public List<string> LastError { get; private set; } = new List<string>();
 
         /// <summary>Attach this presenter with a view. Can throw if there are errors during startup.</summary>
         /// <param name="view">The view to attach</param>
@@ -183,11 +185,9 @@
             };
 
             var compiler = new ScriptCompiler();
-#if NETFRAMEWORK
-            var results = compiler.Compile(code, new Model(), assemblies);
-#else
-            var results = compiler.Compile(code, new Model());
-#endif
+
+            var results = compiler.Compile(code, new MockModel());
+
             if (results.ErrorMessages != null)
                 throw new Exception($"Script compile errors: {results.ErrorMessages}");
 
@@ -209,6 +209,7 @@
         /// </summary>
         public void ClearStatusPanel()
         {
+            LastError.Clear();
             view.ClearStatusPanel();
         }
 
@@ -264,7 +265,7 @@
         /// <param name="error"></param>
         public void ShowError(string error)
         {
-            LastError = new List<string>();
+            LastError.Clear();
             view.ShowMessage(error, Simulation.ErrorLevel.Error, withButton : false);
         }
 
@@ -275,6 +276,8 @@
         /// <param name="overwrite">Overwrite any existing error messages?</param>
         public void ShowError(Exception error, bool overwrite = true)
         {
+            if (overwrite)
+                LastError.Clear();
             if (error != null)
             {
                 if (view == null)
@@ -284,14 +287,9 @@
                 }
                 else
                 {
-                    LastError = new List<string> { error.ToString() };
+                    LastError.Add(error.ToString());
                     view.ShowMessage(GetInnerException(error).Message, Simulation.ErrorLevel.Error, overwrite: overwrite, addSeparator: !overwrite);
                 }
-            }
-            else
-            {
-                LastError = new List<string>();
-                ShowError(new NullReferenceException("Attempted to display a null error"));
             }
         }
 
@@ -317,7 +315,7 @@
             }
             else
             {
-                LastError = new List<string>();
+                LastError.Clear();
                 ShowError(new NullReferenceException("Attempted to display a null error"));
             }
         }
@@ -479,7 +477,7 @@
                 this.view.ShowWaitCursor(true);
                 try
                 {
-                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => throw e, true);
+                    Simulations simulations = FileFormat.ReadFromFile<Simulations>(fileName, e => ShowError(e), true);
                     presenter = (ExplorerPresenter)this.CreateNewTab(fileName, simulations, onLeftTabControl, "UserInterface.Views.ExplorerView", "UserInterface.Presenters.ExplorerPresenter");
 
                     // Add to MRU list and update display
@@ -561,58 +559,58 @@
             // Add the buttons into the main window.
             startPage.AddButton(
                                 "Open APSIM File",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.OpenFile.png"),
+                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.OpenFile.svg"),
                                           this.OnOpenApsimXFile);
 
             startPage.AddButton(
                                 "Open an example",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.OpenExample.png"),
+                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.OpenExample.svg"),
                                           this.OnExample);
 
             startPage.AddButton(
                                 "Standard toolbox",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.png"),
+                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.svg"),
                                           this.OnStandardToolboxClick);
 
             startPage.AddButton(
                                 "Management toolbox",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.png"),
+                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.svg"),
                                           this.OnManagementToolboxClick);
 
             startPage.AddButton(
                                 "Training toolbox",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.png"),
+                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Toolbox.svg"),
                                           this.OnTrainingToolboxClick);
 
             startPage.AddButton(
                                 "Import old .apsim file",
-                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Import.png"),
+                                          new Gtk.Image(null, "ApsimNG.Resources.Toolboxes.Import.svg"),
                                           this.OnImport);
 
             startPage.AddButton(
                                 "Upgrade",
-                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
+                                        new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.svg"),
                                         this.OnUpgrade);
 
             startPage.AddButton(
                                 "View Cloud Jobs",
-                                        new Gtk.Image(null, "ApsimNG.Resources.Cloud.png"),
+                                        new Gtk.Image(null, "ApsimNG.Resources.Cloud.svg"),
                                         this.OnViewCloudJobs);
 
 #if DEBUG
             startPage.AddButton(
                                 "Upgrade Resource Files",
-                                new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.png"),
+                                new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Upgrade.svg"),
                                 this.OnShowConverter);
 #endif
 
             startPage.AddButton(
                                 "Settings",
-                                new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Settings.png"),
+                                new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Settings.svg"),
                                 OnShowSettingsDialog);
             startPage.AddButton(
                             "Help",
-                            new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Help.png"),
+                            new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Help.svg"),
                             this.OnHelp);
             // Populate the view's listview.
             startPage.List.Values = Configuration.Settings.MruList.Select(f => f.FileName).ToArray();
@@ -914,7 +912,6 @@
         /// <returns>The explorer presenter.</returns>
         private IPresenter CreateNewTab(string name, Simulations simulations, bool onLeftTabControl, string viewName, string presenterName)
         {
-            this.view.ShowMessage(" ", Simulation.ErrorLevel.Information); // Clear the message window
             ViewBase newView;
             IPresenter newPresenter;
             try
@@ -1153,29 +1150,6 @@
         }
 
         /// <summary>
-        /// Toggles between the default and dark themes.
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void OnToggleTheme(object sender, EventArgs e)
-        {
-            try
-            {
-                Configuration.Settings.DarkTheme = !Configuration.Settings.DarkTheme;
-                view.ToggleTheme(sender, e);
-                // Might be better to restart automatically (after asking the user),
-                // but I haven't been able to figure out a reliable cross-platform 
-                // way of attaching the debugger to the new process. I leave this
-                // as an exercise to the reader.
-                view.ShowMsgDialog("Theme changes will be applied upon restarting Apsim.", "Theme Changes", Gtk.MessageType.Info, Gtk.ButtonsType.Ok);
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
         /// Opens the ApsimX online documentation.
         /// </summary>
         /// <param name="sender">Sender object.</param>
@@ -1253,8 +1227,8 @@
             {
                 int version = Models.Core.ApsimFile.Converter.LatestVersion;
                 ClearStatusPanel();
-                string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                string resources = Path.Combine(bin, "..", "Models", "Resources");
+                string apsimx = PathUtilities.GetAbsolutePath("%root%", null);
+                string resources = Path.Combine(apsimx, "Models", "Resources");
                 if (!Directory.Exists(resources))
                     throw new Exception("Unable to locate resources directory");
                 IEnumerable<string> files = Directory.EnumerateFiles(resources, "*.json", SearchOption.AllDirectories);

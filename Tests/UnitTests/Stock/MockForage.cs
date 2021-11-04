@@ -17,9 +17,9 @@
         }
         public List<IOrganDamage> Organs { get; set; } = new List<MockOrgan>().Cast<IOrganDamage>().ToList();
 
-        public Biomass AboveGround => throw new NotImplementedException();
+        public IBiomass AboveGround => throw new NotImplementedException();
 
-        public Biomass AboveGroundHarvestable => throw new NotImplementedException();
+        public IBiomass AboveGroundHarvestable => throw new NotImplementedException();
 
         public double Population => throw new NotImplementedException();
 

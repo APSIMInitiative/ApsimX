@@ -1,159 +1,170 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
+using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Models.CLEM.Groupings
 {
     ///<summary>
-    /// Individual filter rule based on Attribute exists or value
+    /// Individual filter rule based on Attribute exists or associated value
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
-    [ValidParent(ParentType = typeof(RuminantFeedGroup))]
-    [ValidParent(ParentType = typeof(RuminantGroup))]
-    [ValidParent(ParentType = typeof(RuminantDestockGroup))]
-    [ValidParent(ParentType = typeof(AnimalPriceGroup))]
-    // Not yet implemented as Parameter needs to be converterd to GetAttributeByValue(AttributeName)
-    //[Description("This ruminant sort rule is used to order results by the value assicated with a named Attribute. Multiple sorts can be chained, with sorts higher in the tree taking precedence.")]
+    [Description("Defines a filter rule using Attribute details of the individual")]
+    [ValidParent(ParentType = typeof(IFilterGroup))]
     [Version(1, 0, 0, "")]
-    public class FilterByAttribute : CLEMModel, IValidatableObject
+    public class FilterByAttribute : Filter, IValidatableObject
     {
         /// <summary>
-        /// Name of attribute to filter by
+        /// Attribute tag to filter by
         /// </summary>
-        [Description("Name of attribute to filter by")]
-        [Required]
-        public string AttributeName { get; set; }
+        [Description("Attribute tag")]
+        [Models.Core.Display(Order = 1)]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Attribute tag must be provided")]
+        public string AttributeTag { get; set; }
 
         /// <summary>
         /// Style to assess attribute
         /// </summary>
-        [Description("Means of assessing attribute")]
+        [Description("Assessment style")]
+        [Models.Core.Display(Order = 4)]
         [Required]
         public AttributeFilterStyle FilterStyle { get; set; }
 
-        /// <summary>
-        /// Name of parameter to filter by
-        /// </summary>
-        [Description("Operator to use for filtering")]
-        [Required]
-        public FilterOperators Operator
+        ///<inheritdoc/>
+        [EventSubscribe("Commencing")]
+        protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            get
-            {
-                return operatr;
-            }
-            set
-            {
-                operatr = value;
-            }
+            Initialise();
         }
-        private FilterOperators operatr;
+
+        /// <inheritdoc/>
+        public override Func<T, bool> Compile<T>()
+        {
+            Func<T, bool> simple = t => {
+                var simpleFilterParam = Expression.Parameter(typeof(T));
+
+                bool exists = (t as IAttributable).Attributes.Exists(AttributeTag);
+                BinaryExpression simpleBinary;
+                if (FilterStyle == AttributeFilterStyle.Exists)
+                {
+                    var simpleVal = Expression.Constant(Convert.ChangeType(Value ?? 0, typeof(bool)));
+                    if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
+                    {
+                        // Allow for IsTrue and IsFalse operator
+                        simpleVal = Expression.Constant((Operator == ExpressionType.IsTrue));
+                        simpleBinary = Expression.MakeBinary(ExpressionType.Equal, Expression.Constant(exists), simpleVal);
+                    }
+                    else
+                        simpleBinary = Expression.MakeBinary(Operator, Expression.Constant(exists), simpleVal);
+                }
+                else
+                {
+                    if (!exists) return false;
+                    object attributeValue = (t as IAttributable).Attributes.GetValue(AttributeTag).StoredValue;
+                    var simpleVal = Expression.Constant(Convert.ChangeType(Value ?? 0, attributeValue.GetType()));
+                    var expAttributeVal = Expression.Constant(Convert.ChangeType(attributeValue, attributeValue.GetType()));
+
+                    if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
+                    {
+                        throw new ApsimXException(this, $"Invalid FilterByAttribute operator [{OperatorToSymbol()}] in [f={this.NameWithParent}]");
+                    }
+                    else
+                        simpleBinary = Expression.MakeBinary(Operator, expAttributeVal, simpleVal);
+                }
+                var simpleLambda = Expression.Lambda<Func<T, bool>>(simpleBinary, simpleFilterParam).Compile();
+                return simpleLambda(t);
+            };
+            return simple;
+        }
 
         /// <summary>
-        /// Value to check for filter
+        /// Initialise this filter by property 
         /// </summary>
-        [Description("Value to filter by")]
-        public string Value
+        public override void Initialise()
         {
-            get
-            {
-                return _value;
-            }
-            set
-            {
-                _value = value;
-            }
         }
-        private string _value;
 
         /// <summary>
-        /// Convert filter to string
+        /// Constructor
+        /// </summary>
+        public FilterByAttribute()
+        {
+            base.SetDefaults();
+        }
+
+        /// <summary>
+        /// Convert sort to string
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            string str;
-            if (Value == null)
+            return FilterString(false);
+        }
+
+        /// <summary>
+        /// Convert filter to html string
+        /// </summary>
+        /// <returns></returns>
+        public string ToHTMLString()
+        {
+            return FilterString(true);
+        }
+
+        private string FilterString(bool htmltags)
+        {
+            using (StringWriter filterWriter = new StringWriter())
             {
-                str = "FILTER NOT DEFINED";
-            }
-            else
-            {
-                str = $"Attribute \"{AttributeName}\"";
-                if (FilterStyle == AttributeFilterStyle.ByValue)
+                filterWriter.Write($"Filter:");
+                bool truefalse = IsOperatorTrueFalseTest();
+                if (FilterStyle == AttributeFilterStyle.Exists | truefalse)
                 {
-                    str = $" value ";
-                    switch (Operator)
-                    {
-                        case FilterOperators.Equal:
-                            str += "=";
-                            break;
-                        case FilterOperators.NotEqual:
-                            str += "<>";
-                            break;
-                        case FilterOperators.LessThan:
-                            str += "<";
-                            break;
-                        case FilterOperators.LessThanOrEqual:
-                            str += "<=";
-                            break;
-                        case FilterOperators.GreaterThan:
-                            str += ">";
-                            break;
-                        case FilterOperators.GreaterThanOrEqual:
-                            str += ">=";
-                            break;
-                        default:
-                            break;
-                    }
-                    str += Value;
+                    filterWriter.Write(" is");
+                    if (truefalse)
+                        if (Operator == ExpressionType.IsFalse | Value?.ToString().ToLower() == "false")
+                            filterWriter.Write(" not");
+                    filterWriter.Write($" Attribute({CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)})");
                 }
                 else
                 {
-                    if (Value.ToUpper() == "TRUE" || Value.ToUpper() == "FALSE")
-                    {
-                        str += ((Operator == FilterOperators.NotEqual && Value.ToUpper() == "TRUE") || (Operator == FilterOperators.Equal && Value.ToUpper() == "FALSE")) ? " does not exist" : " exists";
-                    }
-                    else
-                    {
-                        str += " has invalid value for style";
-                    }
+                    filterWriter.Write($" Attribute-{CLEMModel.DisplaySummaryValueSnippet(AttributeTag, "No tag", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
+                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
+                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", htmlTags: htmltags, entryStyle: HTMLSummaryStyle.Filter)}");
                 }
+                return filterWriter.ToString();
             }
-            return str;
         }
+
+        #region validation
+        /// <inheritdoc/>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if(FilterStyle == AttributeFilterStyle.ByValue)
+                if ((Value is null || Value.ToString() == "") & !(Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse))
+                {
+                    string[] memberNames = new string[] { "Missing filter compare value" };
+                    results.Add(new ValidationResult($"A value to compare with the Attribute value is required for [f={Name}] in [f={Parent.Name}]", memberNames));
+                }
+            return results;
+        }
+        #endregion
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string html = "";
-            if (!this.ValidParent())
-            {
-                html = "<div class=\"errorlink\">Invalid Parent. RuminantGroup required.</div>";
-            }
-            if (this.Value == null || this.AttributeName == null)
-            {
-                html += "<div class=\"errorlink\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">FILTER NOT DEFINED</div>";
-            }
-            else
-            {
-                html += "<div class=\"filter\" style=\"opacity: " + ((this.Enabled) ? "1" : "0.4") + "\">" + this.ToString() + "</div>";
-            }
-            return html;
+            return $"<div class=\"filter\" style=\"opacity: {((Enabled) ? "1" : "0.4")}\">{ToHTMLString()}</div>";
         }
 
         /// <summary>
@@ -162,6 +173,7 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummaryClosingTags(bool formatForParentControl)
         {
+            // allows for collapsed box and simple entry
             return "";
         }
 
@@ -171,36 +183,10 @@ namespace Models.CLEM.Groupings
         /// <returns></returns>
         public override string ModelSummaryOpeningTags(bool formatForParentControl)
         {
+            // allows for collapsed box and simple entry
             return "";
         }
-
         #endregion
 
-        #region validation
-
-        /// <summary>
-        /// Validate this component
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-
-            // ensure parent is of the right type.
-            if (!this.ValidParent())
-            {
-                string[] memberNames = new string[] { "RuminantFilter" };
-                results.Add(new ValidationResult("The FilterByAttribute named " + this.Name + " does not have a valid RuminantGroup parent component", memberNames));
-            }
-            if ((Value == null || Value == ""))
-            {
-                string[] memberNames = new string[] { "Value" };
-                results.Add(new ValidationResult("Value must be specified", memberNames));
-            }
-            return results;
-        }
-        #endregion
     }
-
 }

@@ -44,24 +44,24 @@ namespace UserInterface.Presenters
         {
             try
             {
-                clem = clemPresenter.view as CLEMView;
-                query = clemPresenter.clemModel as ReportQuery;
+                clem = clemPresenter.View as CLEMView;
+                query = clemPresenter.ClemModel as ReportQuery;
 
                 var store = query.FindInScope<IDataStore>();
 
                 // Create the Data presenter
-                gridView = new GridView(clemPresenter.view as ViewBase);
+                gridView = new GridView(clemPresenter.View as ViewBase);
 
                 var gridPresenter = new GridPresenter();
-                gridPresenter.Attach(null, gridView, clemPresenter.explorerPresenter);
+                gridPresenter.Attach(null, gridView, clemPresenter.ExplorerPresenter);
 
                 // Attach the tab
                 clem.AddTabView("Data", gridView);
-                clemPresenter.presenterList.Add("Data", this);                
+                clemPresenter.PresenterList.Add("Data", this);                
             }
             catch (Exception err)
             {
-                clemPresenter.explorerPresenter.MainPresenter.ShowError(err);
+                clemPresenter.ExplorerPresenter.MainPresenter.ShowError(err);
             }
         }
 

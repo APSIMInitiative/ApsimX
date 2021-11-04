@@ -82,9 +82,7 @@ namespace UserInterface.Views
         /// <param name="font">The font to be used.</param>
         public void ModifyFont(string font)
         {
-#if NETFRAMEWORK
-            editor.ModifyFont(FontDescription.FromString(font));
-#else
+
             using (FontDescription newFont = FontDescription.FromString(font))
             {
                 int sizePt = newFont.SizeIsAbsolute ? newFont.Size : Convert.ToInt32(newFont.Size / Pango.Scale.PangoScale);
@@ -104,7 +102,7 @@ namespace UserInterface.Views
                     editor.StyleContext.AddProvider(provider, StyleProviderPriority.Application);
                 }
             }
-#endif
+
         }
 
         /// <summary>

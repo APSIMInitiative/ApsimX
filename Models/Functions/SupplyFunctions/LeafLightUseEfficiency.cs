@@ -5,11 +5,11 @@ using System.Text;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions.SupplyFunctions
 {
     /// <summary>
-    /// # [Name]
     /// This function calculate the light use efficiency (LUE) of leaf at low light (Eff).
     /// For C3 crops, LUE increases with CO2 concentration while decreases with rising temperature.
     /// For C4 crops, LUE does not change with CO2 concentration and temperature.
@@ -76,6 +76,17 @@ namespace Models.Functions.SupplyFunctions
 
   
             return EffPAR;
+        }
+
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
         }
     }
 }

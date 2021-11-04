@@ -1,11 +1,10 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
 
@@ -75,15 +74,24 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
+            }
+        }
+
+        /// <summary>
         /// Overrides the base class method to allow for clean up
         /// </summary>
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
             if (UncollectedStores != null)
-            {
                 UncollectedStores.Clear();
-            }
             UncollectedStores = null;
         }
 
@@ -206,9 +214,8 @@ namespace Models.CLEM.Resources
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             if (resourceAmount.GetType().ToString() != "System.Double")
-            {
                 throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
-            }
+
             double addAmount = (double)resourceAmount;
             if (addAmount > 0)
             {
@@ -237,9 +244,8 @@ namespace Models.CLEM.Resources
         public new void Remove(ResourceRequest request)
         {
             if (request.Required == 0)
-            {
                 return;
-            }
+
             // avoid taking too much
             double amountRemoved = request.Required;
             amountRemoved = Math.Min(this.Amount, amountRemoved);

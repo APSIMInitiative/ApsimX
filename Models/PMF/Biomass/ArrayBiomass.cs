@@ -11,7 +11,6 @@ using System.Globalization;
 namespace Models.PMF
 {
     /// <summary>
-    /// # [Name]
     /// This class encapsulates an array of biomass objects
     /// </summary>
     [Serializable]

@@ -1,9 +1,4 @@
-﻿using Models.CLEM.Resources;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
 namespace Models.CLEM.Interfaces
 {
@@ -13,14 +8,20 @@ namespace Models.CLEM.Interfaces
     public interface ISetAttribute
     {
         /// <summary>
-        /// Property to return a random assignment of the attribute
+        /// Get an instance of the attribute 
         /// </summary>
-        Resources.CLEMAttribute GetRandomSetAttribute();
+        /// <param name="createNewInstance">Recalculate all randomly assigned values</param>
+        Resources.IndividualAttribute GetAttribute(bool createNewInstance = true);
 
         /// <summary>
         /// Name to apply to the attribute
         /// </summary>
         string AttributeName { get; set; }
+
+        /// <summary>
+        /// Mandatory attribute
+        /// </summary>
+        bool Mandatory { get; set; }
 
     }
 }

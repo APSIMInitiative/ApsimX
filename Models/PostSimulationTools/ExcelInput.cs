@@ -13,7 +13,6 @@
     using System.Linq;
 
     /// <summary>
-    /// # [Name]
     /// Reads the contents of a specific sheet from an EXCEL file and stores into the DataStore. 
     /// </summary>
     [Serializable]
@@ -143,7 +142,9 @@
                             {
                                 TruncateDates(table);
 
-                                storage.Writer.WriteTable(table);
+                                // Don't delete previous data existing in this table. Doing so would
+                                // cause problems when merging sheets from multiple excel files.
+                                storage.Writer.WriteTable(table, false);
                                 storage.Writer.WaitForIdle();
                             }
                         }

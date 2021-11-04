@@ -22,6 +22,10 @@
     using Models.Soils.Standardiser;
     using Models.GrazPlan;
     using Models.Climate;
+    using APSIM.Interop.Markdown.Renderers;
+    using APSIM.Interop.Documentation;
+    using System.Threading.Tasks;
+    using System.Threading;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -168,7 +172,6 @@
                 {
                     Model model = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Model;
                     var runner = new Runner(model, runType: Runner.RunTypeEnum.MultiThreaded, wait: false);
-                    runner.ErrorHandler = e => explorerPresenter.MainPresenter.ShowError(e, false);
                     this.command = new RunCommand(model.Name, runner, this.explorerPresenter);
                     this.command.Do();
                 }
@@ -537,33 +540,91 @@
         /// <param name="e">Event arguments</param>
         [ContextMenu(MenuName = "Export to EXCEL",
                      AppliesTo = new Type[] { typeof(DataStore) }, FollowsSeparator = true)]
-        public void ExportDataStoreToEXCEL(object sender, EventArgs e)
+        public async void ExportDataStoreToEXCEL(object sender, EventArgs e)
         {
+            List<DataTable> tables = new List<DataTable>();
             try
             {
-                explorerPresenter.MainPresenter.ShowWaitCursor(true);
-                List<DataTable> tables = new List<DataTable>();
-                foreach (string tableName in storage.Reader.TableNames)
+                string fileName = Path.ChangeExtension(storage.FileName, ".xlsx");
+
+                // Show a message in the GUI.
+                explorerPresenter.MainPresenter.ShowMessage("Exporting to excel...", Simulation.MessageType.Information);
+
+                // Show a progress bar - this is currently the only way to get the stop/cancel button to appear.
+                explorerPresenter.MainPresenter.ShowProgress(0, true);
+
+                CancellationTokenSource cts = new CancellationTokenSource();
+
+                // Read data from database (in the background).
+                Task readTask = Task.Run(() =>
                 {
-                    using (DataTable table = storage.Reader.GetData(tableName))
+                    ushort i = 0;
+                    foreach (string tableName in storage.Reader.TableNames)
                     {
+                        cts.Token.ThrowIfCancellationRequested();
+                        DataTable table = storage.Reader.GetData(tableName);
                         table.TableName = tableName;
                         tables.Add(table);
-                    }
-                }
 
-                string fileName = Path.ChangeExtension(storage.FileName, ".xlsx");
-                Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName);
-                explorerPresenter.MainPresenter.ShowMessage("Excel successfully created: " + fileName, Simulation.MessageType.Information);
+                        double progress = 0.5 * (i + 1) / storage.Reader.TableNames.Count;
+                        explorerPresenter.MainPresenter.ShowProgress(progress);
+
+                        i++;
+                    }
+                }, cts.Token);
+
+                // Add a handler to the stop button which cancels the excel export..
+                EventHandler<EventArgs> stopHandler = (_, __) =>
+                {
+                    cts.Cancel();
+                    explorerPresenter.MainPresenter.HideProgressBar();
+                    explorerPresenter.MainPresenter.ShowMessage("Export to excel was cancelled.", Simulation.MessageType.Information, true);
+                };
+                explorerPresenter.MainPresenter.AddStopHandler(stopHandler);
 
                 try
                 {
-                    if (ProcessUtilities.CurrentOS.IsWindows)
-                        Process.Start(fileName);
+                    // Wait for data to be read.
+                    await readTask;
+
+                    if (readTask.IsFaulted)
+                        throw new Exception("Failed to read data from datastore", readTask.Exception);
+
+                    if (readTask.IsCanceled || cts.Token.IsCancellationRequested)
+                        return;
+
+                    // Start the excel export as a task.
+                    // todo: progress reporting and proper cancellation would be nice.
+                    Task exportTask = Task.Run(() => Utility.Excel.WriteToEXCEL(tables.ToArray(), fileName), cts.Token);
+
+                    // Wait for the excel file to be generated.
+                    await exportTask;
+
+                    if (exportTask.IsFaulted)
+                        throw new Exception($"Failed to export to excel", exportTask.Exception);
+
+                    if (exportTask.IsCanceled || cts.Token.IsCancellationRequested)
+                        return;
+
+                    // Show a success message.
+                    explorerPresenter.MainPresenter.ShowMessage($"Excel successfully created: {fileName}", Simulation.MessageType.Information);
+
+                    try
+                    {
+                        // Attempt to open the file - but don't display any errors if it doesn't work.
+                        ProcessUtilities.ProcessStart(fileName);
+                    }
+                    catch
+                    {
+                    }
                 }
-                catch
+                finally
                 {
-                    // Swallow exceptions - this was a non-critical operation.
+                    // Remove callback from the stop button.
+                    explorerPresenter.MainPresenter.RemoveStopHandler(stopHandler);
+
+                    // Remove the progress bar and stop button.
+                    explorerPresenter.MainPresenter.HideProgressBar();
                 }
             }
             catch (Exception err)
@@ -572,7 +633,9 @@
             }
             finally
             {
-                explorerPresenter.MainPresenter.ShowWaitCursor(false);
+                // Disposing of datatables isn't strictly necessary, but if we don't,
+                // it could be a while before the memory is reclaimed.
+                tables.ForEach(t => t.Dispose());
             }
         }
 
@@ -650,27 +713,13 @@
             }
         }
 
-        public bool ShowIncludeInDocumentationChecked()
-        {
-            return explorerPresenter != null ? explorerPresenter.ShowIncludeInDocumentation : false;
-        }
-
-        /// <summary>
-        /// Event handler for checkbox for 'Include in documentation' menu item.
-        /// </summary>
-        public bool IncludeInDocumentationChecked()
-        {
-            IModel model = explorerPresenter.CurrentNode as IModel;
-            return (model != null) ? model.IncludeInDocumentation : false;
-        }
-
         /// <summary>
         /// Event handler for checkbox for 'Include in documentation' menu item.
         /// </summary>
         public bool ShowPageOfGraphsChecked()
         {
             Folder folder = explorerPresenter.CurrentNode as Folder;
-            return (folder != null) ? folder.ShowPageOfGraphs : false;
+            return (folder != null) ? folder.ShowInDocs : false;
         }
 
         /// <summary>
@@ -843,23 +892,19 @@
         {
             try
             {
-                if (this.explorerPresenter.Save())
-                {
-                    explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
-                    explorerPresenter.MainPresenter.ShowWaitCursor(true);
+                explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
+                explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
-                    var modelToDocument = explorerPresenter.CurrentNode as IModel;
+                IModel modelToDocument = explorerPresenter.CurrentNode;
 
-                    var destinationFolder = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
-                    CreateFileDocumentationCommand command = new CreateFileDocumentationCommand(explorerPresenter, destinationFolder);
-                    string fileNameWritten = command.FileNameWritten;
+                PdfWriter pdf = new PdfWriter();
+                string fileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".pdf");
+                pdf.Write(fileNameWritten, modelToDocument.Document());
 
-                    command.Do();
-                    explorerPresenter.MainPresenter.ShowMessage("Written " + fileNameWritten, Simulation.MessageType.Information);
+                explorerPresenter.MainPresenter.ShowMessage($"Written {fileNameWritten}", Simulation.MessageType.Information);
 
-                    // Open the document.
-                    ProcessUtilities.ProcessStart(fileNameWritten);
-                }
+                // Open the document.
+                ProcessUtilities.ProcessStart(fileNameWritten);
             }
             catch (Exception err)
             {
@@ -876,43 +921,6 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Include in documentation", IsToggle = true, FollowsSeparator = true)]
-        public void IncludeInDocumentation(object sender, EventArgs e)
-        {
-            try
-            {
-                IModel model = explorerPresenter.CurrentNode as IModel;
-                model.IncludeInDocumentation = !model.IncludeInDocumentation; // toggle switch
-
-                foreach (IModel child in model.FindAllDescendants())
-                    child.IncludeInDocumentation = model.IncludeInDocumentation;
-                explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
-                explorerPresenter.RefreshNode(explorerPresenter.CurrentNode);
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
-        }
-
-        [ContextMenu(MenuName = "Show documentation status", IsToggle = true)]
-        public void ShowIncludeInDocumentation(object sender, EventArgs e)
-        {
-            try
-            {
-                explorerPresenter.ShowIncludeInDocumentation = !explorerPresenter.ShowIncludeInDocumentation;
-            }
-            catch (Exception err)
-            {
-                explorerPresenter.MainPresenter.ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// Event handler for 'Include in documentation'
-        /// </summary>
-        /// <param name="sender">Sender of the event</param>
-        /// <param name="e">Event arguments</param>
         [ContextMenu(MenuName = "Show page of graphs in documentation", IsToggle = true,
                      AppliesTo = new Type[] { typeof(Folder) },
                      FollowsSeparator = true)]
@@ -921,9 +929,7 @@
             try
             {
                 Folder folder = explorerPresenter.CurrentNode as Folder;
-                folder.ShowPageOfGraphs = !folder.ShowPageOfGraphs;
-                foreach (Folder child in folder.FindAllDescendants<Folder>())
-                    child.ShowPageOfGraphs = folder.ShowPageOfGraphs;
+                folder.ShowInDocs = !folder.ShowInDocs;
                 explorerPresenter.PopulateContextMenu(explorerPresenter.CurrentNodePath);
             }
             catch (Exception err)
@@ -931,7 +937,6 @@
                 explorerPresenter.MainPresenter.ShowError(err);
             }
         }
-
 
         [ContextMenu(MenuName = "Find All References",
                      ShortcutKey = "Shift + F12",

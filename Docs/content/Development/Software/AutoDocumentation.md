@@ -17,7 +17,7 @@ To enable auto-documentation, every model must have a 'Document' method with thi
 public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent);
 ```
 
-If a model is derived from 'Model', it can rely on the base class to provide a default implementation of a documentation method. in a lot of cases, this default implementation will be good enough to provide basic documentation. It writes a heading to the PDF, the text inside the <summary> tags for the class and then proceeds to call 'Document' in all children.
+If a model is derived from 'Model', it can rely on the base class to provide a default implementation of a documentation method. in a lot of cases, this default implementation will be good enough to provide basic documentation. It writes a heading to the PDF, the text inside the \<summary\> tags for the class and then proceeds to call 'Document' in all children.
 
 To provide specialised functionality, a model can have it's own Document method. For example, LinearInterpolation.cs has this method:
 

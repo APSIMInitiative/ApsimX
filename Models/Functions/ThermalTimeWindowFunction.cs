@@ -8,7 +8,6 @@ using System.Threading.Tasks;
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
     /// Calculates the amount of time that the supplied thermal time was within the specified window as a fraction of the whole window length
     /// </summary>
     [Serializable]

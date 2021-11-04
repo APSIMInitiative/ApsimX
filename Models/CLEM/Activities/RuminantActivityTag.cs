@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity adds or removes a specified tag to/from the specified individuals for customised filtering.")]
+    [Description("Add or remove a specified tag to/from the specified individuals for customised filtering")]
     [Version(1, 0, 2, "Uses the Attribute feature of Ruminants")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantTag.htm")]
@@ -37,6 +37,7 @@ namespace Models.CLEM.Activities
         {
             // get all ui tree herd filters that relate to this activity
             this.InitialiseHerd(true, true);
+            filterGroups = FindAllChildren<RuminantGroup>();
         }
 
         /// <summary>
@@ -53,47 +54,35 @@ namespace Models.CLEM.Activities
         [System.ComponentModel.DefaultValueAttribute(TagApplicationStyle.Add)]
         public TagApplicationStyle ApplicationStyle { get; set; }
 
-        private int filterGroupsCount = 0;
+        private IEnumerable<RuminantGroup> filterGroups;
         private int numberToTag = 0;
 
         /// <summary>
-        /// Method to determine resources required for this activity in the current month
+        /// constructor
         /// </summary>
-        /// <returns>List of required resource requests</returns>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        public RuminantActivityTag()
         {
-            return null;
+            TransactionCategory = "Livestock.Manage";
         }
 
-        /// <summary>
-        /// Determines how much labour is required from this activity based on the requirement provided
-        /// </summary>
-        /// <param name="requirement">The details of how labour are to be provided</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            List<Ruminant> herd = CurrentHerd(false);
+            IEnumerable<Ruminant> herd = CurrentHerd(false);
 
-            filterGroupsCount = FindAllChildren<RuminantGroup>().Count();
-            if (filterGroupsCount > 0)
+            if (filterGroups.Any())
             {
                 numberToTag = 0;
-                foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
+                foreach (RuminantGroup item in filterGroups)
                 {
                     if (ApplicationStyle == TagApplicationStyle.Add)
-                    {
-                        numberToTag += herd.FilterRuminants(item).Where(a => !a.AttributeExists(TagLabel)).Count();
-                    }
+                        numberToTag += item.Filter(herd).Where(a => !a.Attributes.Exists(TagLabel)).Count();
                     else
-                    {
-                        numberToTag += herd.FilterRuminants(item).Where(a => a.AttributeExists(TagLabel)).Count();
-                    }
+                        numberToTag += item.Filter(herd).Where(a => a.Attributes.Exists(TagLabel)).Count();
                 }
             }
             else
-            {
                 numberToTag = herd.Count();
-            }
 
             double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
             double daysNeeded = 0;
@@ -107,20 +96,17 @@ namespace Models.CLEM.Activities
                 case LabourUnitType.perHead:
                     numberUnits = numberToTag / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
+
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Mark", this.PredictedHerdName);
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
         }
 
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             if (LabourLimitProportion > 0 && LabourLimitProportion < 1 && (labourRequirement != null && labourRequirement.LabourShortfallAffectsActivity))
@@ -139,53 +125,47 @@ namespace Models.CLEM.Activities
             return;
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
             if (this.TimingOK)
             {
-                List<Ruminant> herd = CurrentHerd(false);
+                IEnumerable<Ruminant> herd = CurrentHerd(false);
                 if (numberToTag > 0)
                 {
-                    foreach (RuminantGroup item in FindAllChildren<RuminantGroup>())
+                    foreach (RuminantGroup item in filterGroups)
                     {
-                        foreach (Ruminant ind in herd.FilterRuminants(item).Where(a => (ApplicationStyle == TagApplicationStyle.Add)? !a.AttributeExists(TagLabel): a.AttributeExists(TagLabel)).Take(numberToTag))
+                        foreach (Ruminant ind in item.Filter(herd).Where(a => (ApplicationStyle == TagApplicationStyle.Add)? !a.Attributes.Exists(TagLabel): a.Attributes.Exists(TagLabel)).Take(numberToTag))
                         {
                             if(this.Status != ActivityStatus.Partial)
-                            {
                                 this.Status = ActivityStatus.Success;
-                            }
 
                             switch (ApplicationStyle)
                             {
                                 case TagApplicationStyle.Add:
-                                    ind.AddAttribute(TagLabel);
+                                    ind.Attributes.Add(TagLabel);
                                     break;
                                 case TagApplicationStyle.Remove:
-                                    ind.RemoveAttribute(TagLabel);
+                                    ind.Attributes.Add(TagLabel);
                                     break;
                             }
                             numberToTag--;
                         }
                     }
-                    if(filterGroupsCount == 0)
+                    if(!filterGroups.Any())
                     {
-                        foreach (Ruminant ind in herd.Where(a => (ApplicationStyle == TagApplicationStyle.Add) ? !a.AttributeExists(TagLabel) : a.AttributeExists(TagLabel)).Take(numberToTag))
+                        foreach (Ruminant ind in herd.Where(a => (ApplicationStyle == TagApplicationStyle.Add) ? !a.Attributes.Exists(TagLabel) : a.Attributes.Exists(TagLabel)).Take(numberToTag))
                         {
                             if (this.Status != ActivityStatus.Partial)
-                            {
                                 this.Status = ActivityStatus.Success;
-                            }
 
                             switch (ApplicationStyle)
                             {
                                 case TagApplicationStyle.Add:
-                                    ind.AddAttribute(TagLabel);
+                                    ind.Attributes.Add(TagLabel);
                                     break;
                                 case TagApplicationStyle.Remove:
-                                    ind.RemoveAttribute(TagLabel);
+                                    ind.Attributes.Add(TagLabel);
                                     break;
                             }
                             numberToTag--;
@@ -193,71 +173,18 @@ namespace Models.CLEM.Activities
                     }
                 }
                 else
-                {
                     this.Status = ActivityStatus.NotNeeded;
-                }
             }
             else
-            {
                 this.Status = ActivityStatus.Ignored;
-            }
-        }
-
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
-        public override event EventHandler ActivityPerformed;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
         }
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override string ModelSummary(bool formatForParentControl)
         {
-            string tagstring = "";
-            if (TagLabel != null && TagLabel != "")
-            {
-                tagstring = "<span class=\"setvalue\">" + TagLabel + "</span> ";
-            }
-            else
-            {
-                tagstring = "<span class=\"errorlink\">[NOT SET]</span> ";
-            }
+            string tagstring = CLEMModel.DisplaySummaryValueSnippet(TagLabel, "Not set");
             return $"\r\n<div class=\"activityentry\">{ApplicationStyle} the tag {tagstring} {((ApplicationStyle == TagApplicationStyle.Add)?"to":"from")} all individuals in the following groups</div>";
         }
         #endregion
