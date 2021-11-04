@@ -11,6 +11,10 @@
     [TestFixture]
     public class ForagesTests
     {
+        // Check stock grazing a plant model before and after forages model was created (i.e. old vs new).
+        // Check simple grazing a plant model before and after forages model was created (i.e. old vs new).
+        // Create some documentation on the Forages model - design, the user interface, how to write code to use it. Put on web apsimdev.
+
         /// <summary>Make sure damageable biomasses are correctly matched to forage parameters.</summary>
         [Test]
         public void MatchBiomassToParameters()
@@ -28,6 +32,7 @@
                             {
                                 Name = "Crop1.Leaf",
                                 DigestibilityString = "0.7",
+                                UseDigestibilityFromModel = false,
                                 FractionConsumable = 1,
                                 MinimumAmount = 100,
                                 IsLive = true
@@ -36,6 +41,7 @@
                             {
                                 Name = "Crop1.Stem",
                                 DigestibilityString = "0.3",
+                                UseDigestibilityFromModel = false,
                                 FractionConsumable = 0.5,
                                 MinimumAmount = 50,
                                 IsLive = false
@@ -44,6 +50,7 @@
                             {
                                 Name = "Crop1.Stolon",
                                 DigestibilityString = "0.6",
+                                UseDigestibilityFromModel = false,
                                 FractionConsumable = 1.0,
                                 MinimumAmount = 100,
                                 IsLive = true
@@ -118,6 +125,7 @@
                             {
                                 Name = "Crop1.Leaf",
                                 DigestibilityString = "[Test].A + [Test].B",
+                                UseDigestibilityFromModel = false,
                                 FractionConsumable = 1,
                                 MinimumAmount = 100,
                                 IsLive = true
@@ -158,6 +166,104 @@
             test.OnStartOfDay(null, null);
             Assert.AreEqual(0.6, digestibileMaterial.Digestibility, 0.00001);
 
+        }
+
+        /// <summary>Make sure ForageParameters can use digestibility supplied by a a model.</summary>
+        [Test]
+        public void EnsureForageParametersCanUseInternalDigestibility()
+        {
+            var simulation = new Simulation
+            {
+                Children = new List<IModel>()
+                {
+                    new MockSummary(),
+                    new Forages()
+                    {
+                        Parameters = new List<ForageMaterialParameters>
+                        {
+                            new ForageMaterialParameters()
+                            {
+                                Name = "Crop1.Leaf",
+                                DigestibilityString = null,
+                                UseDigestibilityFromModel = true,
+                                FractionConsumable = 1,
+                                MinimumAmount = 100,
+                                IsLive = true
+                            }
+                        }
+                    },
+                    new Zone()
+                    {
+                        Children = new List<IModel>()
+                        {
+                            new MockForage()
+                            {
+                                Name = "Crop1",
+                                Material = new List<DamageableBiomass>()
+                                {
+                                    new DamageableBiomass("Leaf", new Biomass() {StructuralWt = 200 }, isLive: true, digestibility:0.1),   // g/m2
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            Utilities.ResolveLinks(simulation);
+
+            var forages = simulation.FindChild<Forages>();
+            var forageModels = forages.ModelsWithDigestibleBiomass.ToList();
+            var forageMaterial = forageModels[0].Material.ToList();
+            Assert.AreEqual(0.1, forageMaterial[0].Digestibility);
+        }
+
+        /// <summary>Make sure the ForageMaterialParameters can override a model that supplys digestibility numbers.</summary>
+        [Test]
+        public void EnsureForageParametersCanOverrideModelDigestibility()
+        {
+            var simulation = new Simulation
+            {
+                Children = new List<IModel>()
+                {
+                    new MockSummary(),
+                    new Forages()
+                    {
+                        Parameters = new List<ForageMaterialParameters>
+                        {
+                            new ForageMaterialParameters()
+                            {
+                                Name = "Crop1.Leaf",
+                                DigestibilityString = "0.4",
+                                UseDigestibilityFromModel = false,
+                                FractionConsumable = 1,
+                                MinimumAmount = 100,
+                                IsLive = true
+                            }
+                        }
+                    },
+                    new Zone()
+                    {
+                        Children = new List<IModel>()
+                        {
+                            new MockForage()
+                            {
+                                Name = "Crop1",
+                                Material = new List<DamageableBiomass>()
+                                {
+                                    new DamageableBiomass("Leaf", new Biomass() {StructuralWt = 200 }, isLive: true, digestibility:0.1),   // g/m2
+                                }
+                            }
+                        }
+                    }
+                }
+            };
+
+            Utilities.ResolveLinks(simulation);
+
+            var forages = simulation.FindChild<Forages>();
+            var forageModels = forages.ModelsWithDigestibleBiomass.ToList();
+            var forageMaterial = forageModels[0].Material.ToList();
+            Assert.AreEqual(0.4, forageMaterial[0].Digestibility);
         }
     }
 }

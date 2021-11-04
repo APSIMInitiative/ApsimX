@@ -2288,11 +2288,12 @@
         {
             get
             {
-                foreach (IOrganDamage organ in Children.Where(c => c is IOrganDamage))
-                {
-                    yield return new DamageableBiomass(organ.Name, organ.Live, true);
-                    yield return new DamageableBiomass(organ.Name, organ.Dead, false);
-                }
+                yield return new DamageableBiomass("Leaf", Leaf?.Live, true, Leaf?.LiveDigestibility);
+                yield return new DamageableBiomass("Leaf", Leaf?.Dead, false, Leaf?.DeadDigestibility);
+                yield return new DamageableBiomass("Stem", Stem?.Live, true, Stem?.LiveDigestibility);
+                yield return new DamageableBiomass("Stem", Stem?.Dead, false, Stem?.DeadDigestibility);
+                yield return new DamageableBiomass("Stolon", Stolon?.Live, true, Stolon?.LiveDigestibility);
+                yield return new DamageableBiomass("Stolon", Stolon?.Dead, false, Stolon?.DeadDigestibility);
             }
         }
 

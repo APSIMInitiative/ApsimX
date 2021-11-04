@@ -29,12 +29,14 @@
         /// <param name="name">Name of biomass.</param>
         /// <param name="total">Total Biomass (kg/ha).</param>
         /// <param name="isLive">Is biomass live.</param>
-        public DamageableBiomass(string name, Biomass total, bool isLive)
+        /// <param name="digestibility">Optional digestibility (0-1).</param>
+        public DamageableBiomass(string name, Biomass total, bool isLive, double? digestibility = null)
         {
             Name = name;
             Total = total;
             Consumable = total;
             IsLive = isLive;
+            Digestibility = digestibility;
         }
 
         /// <summary>
@@ -44,12 +46,14 @@
         /// <param name="total">Total Biomass (kg/ha).</param>
         /// <param name="fractionConsumable">Fraction of biomass that is consumable.</param>
         /// <param name="isLive">Is biomass live.</param>
-        public DamageableBiomass(string name, Biomass total, double fractionConsumable, bool isLive)
+        /// <param name="digestibility">Optional digestibility (0-1).</param>
+        public DamageableBiomass(string name, Biomass total, double fractionConsumable, bool isLive, double? digestibility)
         {
             Name = name;
             Total = total;
             Consumable = total * fractionConsumable;
             IsLive = isLive;
+            Digestibility = digestibility;
         }
 
         /// <summary>Name of material.</summary>
@@ -63,5 +67,8 @@
 
         /// <summary>Is biomass live.</summary>
         public bool IsLive { get; }
+
+        /// <summary>Optional digestibility (0-1). Can be null missing digestibility.</summary>
+        public double? Digestibility { get; }
     }
 }

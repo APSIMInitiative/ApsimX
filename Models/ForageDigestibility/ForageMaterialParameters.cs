@@ -28,6 +28,7 @@ namespace Models.ForageDigestibility
         {
             Name = name;
             IsLive = live;
+            UseDigestibilityFromModel = string.Equals(digestibility, "Internal", StringComparison.InvariantCultureIgnoreCase);
             DigestibilityString = digestibility;
             FractionConsumable = fractionConsumable;
             MinimumAmount = minimum;
@@ -52,14 +53,20 @@ namespace Models.ForageDigestibility
         /// <summary>Digestibility of material (0-1).</summary>
         public double Digestibility => digestibilityFunction.Value();
 
+        /// <summary>Use digestibility from the mode?</summary>
+        public bool UseDigestibilityFromModel { get; set; }
+
         /// <summary>Initialise the instance.</summary>
         /// <param name="parentModel">Parent model.</param>
         public void Initialise(IModel parentModel)
         {
-            if (double.TryParse(DigestibilityString, out double doubleValue))
-                digestibilityFunction = new Constant() { FixedValue = doubleValue };
-            else
-                digestibilityFunction = new ExpressionFunction() { Parent = parentModel, Expression = DigestibilityString };
+            if (!UseDigestibilityFromModel)
+            {
+                if (double.TryParse(DigestibilityString, out double doubleValue))
+                    digestibilityFunction = new Constant() { FixedValue = doubleValue };
+                else
+                    digestibilityFunction = new ExpressionFunction() { Parent = parentModel, Expression = DigestibilityString };
+            }
         }
     }
 }

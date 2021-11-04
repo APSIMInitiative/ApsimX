@@ -1,5 +1,6 @@
 ﻿using Models.PMF;
 using Models.PMF.Interfaces;
+using System;
 
 namespace Models.ForageDigestibility
 {
@@ -45,6 +46,24 @@ namespace Models.ForageDigestibility
         public bool IsLive => material.IsLive;
 
         /// <summary>Digestibility of material.</summary>
-        public double Digestibility => parameters == null ? digestibility: parameters.Digestibility;
+        public double Digestibility
+        {
+            get
+            {
+                if (parameters == null)
+                    return digestibility;
+                else
+                {
+                    if (parameters.UseDigestibilityFromModel)
+                    {
+                        if (material.Digestibility == null)
+                            throw new Exception($"You have chosen to use the digestibility from the {parameters.Name} model but the model does not calculate digestibility");
+                        return (double)material.Digestibility;
+                    }
+                    else
+                        return parameters.Digestibility;
+                }
+            }
+        }
     }
 }
