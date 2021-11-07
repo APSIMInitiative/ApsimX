@@ -85,7 +85,6 @@ namespace Models.PMF
 			{
 				//once leaf no is calculated leaf area of largest expanding leaf is determined
 				double leafNoEffective = Math.Min(culm.CurrentLeafNo + leafNoCorrection.Value(), culm.FinalLeafNo - culm.LeafNoAtAppearance);
-				//double leafNoEffective = Math.Min(leafNo.Sum() + parameters.LeafNoCorrection.Value(), FinalLeafNo);
 				var tmpArea = CalculateIndividualLeafArea(leafNoEffective, culm.FinalLeafNo, culm.VertAdjValue).ConvertSqM2SqMM();
 
 				culm.LeafArea = tmpArea * sowingDensity * culm.dltLeafNo; // in dltLai
