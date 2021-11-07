@@ -154,7 +154,7 @@ namespace Models.CLEM.Activities
                     IntakeMultiplier = usingPotentialIntakeMultiplier ? a.FirstOrDefault().BreedParams.OverfeedPotentialIntakeModifier : 1
                 }).ToList();
 
-                if (selectedIndividuals.Any())
+                if (selectedIndividuals.Count > 0)
                 {
                     var selectedIndividualsDetails = selectedIndividuals.FirstOrDefault();
 
@@ -255,7 +255,7 @@ namespace Models.CLEM.Activities
                         TotalAE = (requirement.UnitType == LabourUnitType.perAE) ? a.Sum(b => b.Weight) : 0
                     }).ToList();
 
-                    if (selectedIndividuals.Any())
+                    if (selectedIndividuals.Count > 0)
                     {
                         head += selectedIndividuals.FirstOrDefault().Count;
                         adultEquivalents += selectedIndividuals.FirstOrDefault().TotalAE;
@@ -469,7 +469,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

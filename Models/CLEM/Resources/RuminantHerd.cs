@@ -95,7 +95,7 @@ namespace Models.CLEM.Resources
             {
                 List<Ruminant> herd = Herd.Where(a => a.HerdName == herdName).ToList();
 
-                if (herd.Any())
+                if (herd.Count > 0)
                 {
                     // get list of all sucking individuals
                     var sucklingGroups = herd.Where(a => a.Weaned == false).GroupBy(a => a.Age).OrderByDescending(a => a.Key);
@@ -105,7 +105,7 @@ namespace Models.CLEM.Resources
                         // get list of females of breeding age and condition
                         List<RuminantFemale> breedFemales = herd.OfType<RuminantFemale>().Where(a => a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength + sucklingList.Key && a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.BreedParams.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.Age).ToList();
 
-                        if (!breedFemales.Any())
+                        if (breedFemales.Count == 0)
                         {
                             if (sucklingList.Any())
                             {
@@ -504,12 +504,8 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             string html = "";
             html += "\r\n<div class=\"activityentry\">Activities reporting on herds will group individuals";

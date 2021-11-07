@@ -12,9 +12,8 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// Provides the description of the model settings for summary (GetFullSummary)
         /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
         /// <returns>Html formatted description</returns>
-        string ModelSummary(bool formatForParentControl);
+        string ModelSummary();
 
         /// <summary>
         /// Method to create the full descriptive summary for a model and all ancestors
@@ -24,7 +23,7 @@ namespace Models.CLEM.Interfaces
         /// <param name="htmlString">Initial string to append to</param>
         /// <param name="markdown2Html">Method to convert markdown memos to html</param>
         /// <returns>Summary description HTML text</returns>
-        string GetFullSummary(IModel model, List<IModel> parentControlList, string htmlString, Func<string, string> markdown2Html = null);
+        string GetFullSummary(IModel model, List<string> parentControlList, string htmlString, Func<string, string> markdown2Html = null);
 
         /// <summary>
         /// Styling to use for HTML summary
@@ -32,9 +31,9 @@ namespace Models.CLEM.Interfaces
         HTMLSummaryStyle ModelSummaryStyle { get; set; }
 
         /// <summary>
-        /// List of parent models before this 
+        /// List of parent model types before this 
         /// </summary>
-        List<IModel> CurrentAncestorList { get; set; }
+        List<string> CurrentAncestorList { get; set; }
 
         /// <summary>
         /// Determines if this discription is below a parent model
@@ -45,25 +44,25 @@ namespace Models.CLEM.Interfaces
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        string ModelSummaryClosingTags(bool formatForParentControl);
+        string ModelSummaryClosingTags();
 
         /// <summary>
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        string ModelSummaryOpeningTags(bool formatForParentControl);
+        string ModelSummaryOpeningTags();
 
         /// <summary>
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        string ModelSummaryInnerClosingTags(bool formatForParentControl);
+        string ModelSummaryInnerClosingTags();
 
         /// <summary>
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        string ModelSummaryInnerOpeningTags(bool formatForParentControl);
+        string ModelSummaryInnerOpeningTags();
 
         /// <summary>
         /// Provides the closing html tags for object

@@ -22,6 +22,8 @@ namespace Models.CLEM.Resources
     {
         [Link]
         private ResourcesHolder resources = null;
+        [Link]
+        private Clock clock = null;
 
         /// <summary>
         /// Number of months pregnant
@@ -48,8 +50,12 @@ namespace Models.CLEM.Resources
             if(NumberMonthsPregnant < female.BreedParams.GestationLength && female.Age - NumberMonthsPregnant >= female.BreedParams.MinimumAge1stMating)
             {
                 int offspring = female.CalulateNumberOfOffspringThisPregnancy();
-                if(offspring > 0)
+                if (offspring > 0)
+                {
                     female.UpdateConceptionDetails(offspring, 1, -1 * NumberMonthsPregnant);
+                    // report conception status changed
+                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, clock.Today.AddMonths(-1 * NumberMonthsPregnant)));
+                }
             }
         }
 
@@ -108,14 +114,14 @@ namespace Models.CLEM.Resources
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 if (FormatForParentControl)
                 {
                     // skip if this is inside the table summary of Initial Chohort
-                    if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 3] is RuminantInitialCohorts))
+                    if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 3] == typeof(RuminantInitialCohorts).Name))
                     {
                         htmlWriter.Write("\r\n<div class=\"resourcebanneralone\">");
                         htmlWriter.Write($"These individuals will be ");
@@ -144,18 +150,18 @@ namespace Models.CLEM.Resources
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
-            return !formatForParentControl ? base.ModelSummaryClosingTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryClosingTags() : "";
         }
 
         /// <summary>
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
-            return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
         }
 
         #endregion
