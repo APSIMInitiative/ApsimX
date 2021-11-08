@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 378,
   "Version": 144,
   "Name": "Simulations",
   "Children": [
@@ -1546,7 +1546,6 @@
             {
               "$type": "Models.PMF.Struct.LeafCulms, Models",
               "dltLeafNo": 0.0,
-              "leafNo": null,
               "Culms": [],
               "DynamicTillering": false,
               "FinalLeafNo": 0.0,
@@ -6104,7 +6103,7 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[LeafCulms].NLeaves",
+                                  "VariableName": "[Leaf].LeafNo",
                                   "Name": "LeafNumber",
                                   "Children": [],
                                   "Enabled": true,

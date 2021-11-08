@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 492,
   "Version": 144,
   "Name": "Simulations",
   "Children": [
@@ -4549,16 +4549,8 @@
                               "Children": [
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[LeafCulms].NLeaves",
+                                  "VariableName": "[Leaf].LeafNo",
                                   "Name": "LeafNumber",
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Memo, Models",
-                                  "Text": "LeafNumber is referring to NLeaves for copatitibility with old model.\nShould be CurrentLeafNo?",
-                                  "Name": "Memo",
                                   "Children": [],
                                   "Enabled": true,
                                   "ReadOnly": false
@@ -5484,6 +5476,41 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.Functions.OnEventFunction, Models",
+                  "SetEvent": "Flowering",
+                  "ReSetEvent": null,
+                  "Name": "LaiAnth",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "PreEventValue",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].LAI",
+                      "Name": "PostEventValue",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": "Used as an output variable for Predicted/Observed",
+                      "Name": "Memo",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.Functions.MaximumFunction, Models",
                   "Name": "NPhotoStressFunction",
                   "Children": [
@@ -5571,41 +5598,6 @@
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.OnEventFunction, Models",
-                  "SetEvent": "Flowering",
-                  "ReSetEvent": null,
-                  "Name": "LaiAnth",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 0.0,
-                      "Units": null,
-                      "Name": "PreEventValue",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].LAI",
-                      "Name": "PostEventValue",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Used as an output variable for Predicted/Observed",
-                      "Name": "Memo",
-                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -5860,6 +5852,15 @@
                       "ReadOnly": false
                     }
                   ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowInDocs": false,
+                  "GraphsPerPage": 6,
+                  "Name": "Parameters",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
