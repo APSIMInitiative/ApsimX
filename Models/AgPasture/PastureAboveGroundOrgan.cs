@@ -249,10 +249,11 @@
         {
             // The fractions passed in are based on the harvestable biomass. Convert these to
             // fractions of total biomass so that we can pass these to the tissue RemoveBiomass methods.
-            biomassToRemove.FractionLiveToRemove = MathUtilities.Divide(biomassToRemove.FractionLiveToRemove * DMLiveHarvestable, DMLive, 0);
-            biomassToRemove.FractionDeadToRemove = MathUtilities.Divide(biomassToRemove.FractionDeadToRemove * DMDeadHarvestable, DMDead, 0);
-            biomassToRemove.FractionLiveToResidue = MathUtilities.Divide(biomassToRemove.FractionLiveToResidue * DMLiveHarvestable, DMLive, 0);
-            biomassToRemove.FractionDeadToResidue = MathUtilities.Divide(biomassToRemove.FractionDeadToResidue * DMDeadHarvestable, DMDead, 0);
+            //biomassToRemove.FractionLiveToRemove = MathUtilities.Divide(biomassToRemove.FractionLiveToRemove * DMLiveHarvestable, DMLive, 0);
+            //biomassToRemove.FractionDeadToRemove = MathUtilities.Divide(biomassToRemove.FractionDeadToRemove * DMDeadHarvestable, DMDead, 0);
+            //biomassToRemove.FractionLiveToResidue = MathUtilities.Divide(biomassToRemove.FractionLiveToResidue * DMLiveHarvestable, DMLive, 0);
+            //biomassToRemove.FractionDeadToResidue = MathUtilities.Divide(biomassToRemove.FractionDeadToResidue * DMDeadHarvestable, DMDead, 0);
+            var dm = Tissue.Sum(t => t.DM.Wt);
 
             // Live removal
             for (int t = 0; t < Tissue.Length - 1; t++)
@@ -388,12 +389,12 @@
             DigestibilityTotal = MathUtilities.Divide(totalDigestableDM, DMTotal, 0.0);
             StandingDigestibility = DigestibilityTotal * FractionStanding;
 
-            Live.StructuralWt = DMLiveHarvestable / 10.0;  // to g/m2
-            Live.StructuralN = NLiveHarvestable / 10.0;    // to g/m2
+            Live.StructuralWt = DMLive / 10.0;  // to g/m2
+            Live.StructuralN = NLive / 10.0;    // to g/m2
             LiveDigestibility = DigestibilityLive;
 
-            Dead.StructuralWt = DMDeadHarvestable / 10.0;  // to g/m2
-            Dead.StructuralN = NDeadHarvestable / 10.0;    // to g/m2
+            Dead.StructuralWt = DMDead / 10.0;  // to g/m2
+            Dead.StructuralN = NDead / 10.0;    // to g/m2
             DeadDigestibility = DigestibilityDead;
         }
     }

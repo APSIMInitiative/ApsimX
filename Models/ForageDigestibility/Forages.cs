@@ -51,6 +51,9 @@ namespace Models.ForageDigestibility
                 {
                     // Need to initialise the parameters. When they are deserialised from file
                     // they haven't been initialised.
+                    if (Parameters == null)
+                        SetParametersFromGrid(GetParametersAsGrid()); // Setup with defaults.
+
                     foreach (var param in Parameters)
                         param.Initialise(this);
 
@@ -111,7 +114,14 @@ namespace Models.ForageDigestibility
             row[3] = 1;
             row[4] = 1;
             row[5] = 100;
-
+            if (organName == "Root")
+            {
+                row[1] = 0.0;
+                row[2] = 0.0;
+                row[3] = 0;
+                row[4] = 0;
+                row[5] = 0;
+            }
             var live = Parameters?.Find(p => p.Name.Equals(fullName, StringComparison.InvariantCultureIgnoreCase)
                                              && p.IsLive);
             if (live != null)
@@ -152,17 +162,6 @@ namespace Models.ForageDigestibility
                     Parameters.Add(dead);
                 }
             }
-        }
-
-        /// <summary>Performs initialisation at the start of the simulation.</summary>
-        /// <param name="sender">The sender model</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
-        [EventSubscribe("Commencing")]
-        private void OnCommencing(object sender, EventArgs e)
-        {
-            // This needs to be done at commencing, before STOCK get's its StartOfSimulation event.
-            if (Parameters == null)
-                SetParametersFromGrid(GetParametersAsGrid()); // Setup with defaults.
         }
     }
 }

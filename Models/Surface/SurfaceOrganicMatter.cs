@@ -263,21 +263,17 @@
         {
             get
             {
-                foreach (IOrganDamage organ in Children.Where(c => c is IOrganDamage))
+                yield return new DamageableBiomass("Residue", new Biomass() // Should this be in live i.e. no live SOM
                 {
-                    yield return new DamageableBiomass(organ.Name, new Biomass(), true);
-                    yield return new DamageableBiomass(organ.Name, new Biomass() // Should this be in live i.e. no live SOM
-                    {
-                        StructuralWt = (SurfOM.Sum(som => som.Standing.Sum(om => om.amount)) +
-                                       SurfOM.Sum(som => som.Lying.Sum(om => om.amount))) / 10,  // kg/ha to g/m2
-                        StructuralN = SurfOM.Sum(som => som.Standing.Sum(om => om.N)) +
-                                      SurfOM.Sum(som => som.Lying.Sum(om => om.N)),
-                        MetabolicWt = 0.0,
-                        MetabolicN = 0.0,
-                        StorageWt = 0.0,
-                        StorageN = 0.0,
-                    }, false);
-                }
+                    StructuralWt = (SurfOM.Sum(som => som.Standing.Sum(om => om.amount)) +
+                                    SurfOM.Sum(som => som.Lying.Sum(om => om.amount))) / 10,  // kg/ha to g/m2
+                    StructuralN = SurfOM.Sum(som => som.Standing.Sum(om => om.N)) +
+                                    SurfOM.Sum(som => som.Lying.Sum(om => om.N)) / 10,   // kg/ha to g/m2
+                    MetabolicWt = 0.0,
+                    MetabolicN = 0.0,
+                    StorageWt = 0.0,
+                    StorageN = 0.0,
+                }, false);
             }
         }
 
@@ -297,15 +293,36 @@
                 double totalMassRemoved = 0;
                 foreach (var standing in SurfOM[i].Standing)
                 {
-                    double amountToRemove = standing.amount * biomassToRemove.FractionLiveToRemove;
-                    standing.amount -= amountToRemove;
-                    totalMassRemoved += amountToRemove;
+                    if (standing.amount > 0)
+                    {
+                        double cFraction = standing.C / standing.amount;
+                        double nFraction = standing.N / standing.amount;
+                        double pFraction = standing.P / standing.amount;
+
+                        double amountToRemove = standing.amount * biomassToRemove.FractionDeadToRemove;
+                        standing.amount -= amountToRemove;
+                        totalMassRemoved += amountToRemove;
+
+                        standing.C = cFraction * standing.amount;
+                        standing.N = nFraction * standing.amount;
+                        standing.P = pFraction * standing.amount;
+                    }
                 }
                 foreach (var lying in SurfOM[i].Lying)
                 {
-                    double amountToRemove = lying.amount * biomassToRemove.FractionLiveToRemove;
-                    lying.amount -= amountToRemove;
-                    totalMassRemoved += amountToRemove;
+                    if (lying.amount > 0)
+                    {
+                        double cFraction = lying.C / lying.amount;
+                        double nFraction = lying.N / lying.amount;
+                        double pFraction = lying.P / lying.amount;
+
+                        double amountToRemove = lying.amount * biomassToRemove.FractionDeadToRemove;
+                        lying.amount -= amountToRemove;
+                        totalMassRemoved += amountToRemove;
+                        lying.C = cFraction * lying.amount;
+                        lying.N = nFraction * lying.amount;
+                        lying.P = pFraction * lying.amount;
+                    }
                 }
 
                 SurfOM[i].no3 -= MathUtilities.Divide(no3ppm[i], 1000000.0, 0.0) * totalMassRemoved;

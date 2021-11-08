@@ -8,6 +8,7 @@ namespace Models.GrazPlan
     using System.Collections.Generic;
     using System.Globalization;
     using System.Linq;
+    using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.ForageDigestibility;
     using Models.Interfaces;
@@ -936,7 +937,8 @@ namespace Models.GrazPlan
                 
                 double amountRemoved = 0;
                 double amountToRemove = propnRemoved * totalDM;
-                foreach (var live in ForageObj.Material.Where(m => m.IsLive))
+                var liveMaterial = ForageObj.Material.Where(m => m.IsLive).ToList();
+                foreach (var live in liveMaterial)
                 {
                     // Find corresponding dead material
                     var dead = ForageObj.Material.FirstOrDefault(m => !m.IsLive && m.Name == live.Name);
@@ -957,6 +959,24 @@ namespace Models.GrazPlan
                         amountRemoved += amountOfOrganToRemove;
                     }
                 }
+                if (liveMaterial.Count == 0)
+                {
+                    var deadMaterial = ForageObj.Material.Where(m => !m.IsLive).ToList();
+                    foreach (var dead in deadMaterial)
+                    {
+                        // This can happen for surface organic matter which only has dead material.
+                        double propnOfPlantDM = dead.Consumable.Wt / totalDM;
+                        double amountOfOrganToRemove = propnOfPlantDM * amountToRemove;
+                        double prpnOfOrganToRemove = MathUtilities.Divide(amountOfOrganToRemove, dead.Consumable.Wt, 0);
+                        prpnOfOrganToRemove = Math.Min(prpnOfOrganToRemove, 1.0);
+                        PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
+                        removal.FractionDeadToRemove = prpnOfOrganToRemove;
+                        ForageObj.RemoveBiomass(dead.Name, removal);
+
+                        amountRemoved += amountOfOrganToRemove;
+                    }
+                }
+
                 if (!APSIM.Shared.Utilities.MathUtilities.FloatsAreEqual(amountRemoved, amountToRemove))
                     throw new Exception("Mass balance check fail in Stock. The amount of biomass removed from the plant does not equal the amount of forage the animals consumed.");
                 

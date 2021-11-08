@@ -11,9 +11,11 @@
     [TestFixture]
     public class ForagesTests
     {
-        // Check stock grazing a plant model before and after forages model was created (i.e. old vs new).
-        // Check simple grazing a plant model before and after forages model was created (i.e. old vs new).
-        // Create some documentation on the Forages model - design, the user interface, how to write code to use it. Put on web apsimdev.
+        // DONE: Check STOCK grazing a PMF plant model before and after forages model was created (i.e. old vs new).
+        // DONE: Why is SurfaceOrganicMatter not in the forages GUI?
+        // Check STOCK grazing a AgPasture model before and after forages model was created (i.e. old vs new).
+        // DONE: Check SimpleGrazing a AgPasture model before and after forages model was created (i.e. old vs new).
+        // Create some documentation on the Forages model - design, the user interface, how to write code to use it. How to report digestibility variables (limitation?). Put on web apsimdev.
 
         /// <summary>Make sure damageable biomasses are correctly matched to forage parameters.</summary>
         [Test]
@@ -34,7 +36,7 @@
                                 DigestibilityString = "0.7",
                                 UseDigestibilityFromModel = false,
                                 FractionConsumable = 1,
-                                MinimumAmount = 100,
+                                MinimumAmount = 100,  // kg/ha
                                 IsLive = true
                             },
                             new ForageMaterialParameters()
@@ -43,7 +45,7 @@
                                 DigestibilityString = "0.3",
                                 UseDigestibilityFromModel = false,
                                 FractionConsumable = 0.5,
-                                MinimumAmount = 50,
+                                MinimumAmount = 50,   // kg/ha
                                 IsLive = false
                             },
                             new ForageMaterialParameters()
@@ -52,7 +54,7 @@
                                 DigestibilityString = "0.6",
                                 UseDigestibilityFromModel = false,
                                 FractionConsumable = 1.0,
-                                MinimumAmount = 100,
+                                MinimumAmount = 100,   // kg/ha
                                 IsLive = true
                             }
                         }
@@ -68,7 +70,7 @@
                                 {
                                     new DamageableBiomass("Leaf", new Biomass() {StructuralWt = 200 }, isLive: true),   // g/m2
                                     new DamageableBiomass("Stem", new Biomass() {StructuralWt = 100 }, isLive: false),  // g/m2
-                                    new DamageableBiomass("Stolon", new Biomass() {StructuralWt = 5 }, isLive: true)   // g/m2
+                                    new DamageableBiomass("Stolon", new Biomass() {StructuralWt = 5 }, isLive: true)    // g/m2
                                 }
                             }
                         }
@@ -87,22 +89,22 @@
             Assert.AreEqual(3, forageMaterial.Count);
 
             // leaf live
-            Assert.AreEqual(2000, forageMaterial[0].Total.Wt);       // 2000 (StructuralWt)
-            Assert.AreEqual(1900, forageMaterial[0].Consumable.Wt);  // 2000 (StructuralWt) * 1 (FractionConsumable) - 100 (MinimumAmount)
+            Assert.AreEqual(200, forageMaterial[0].Total.Wt);       // 200 (StructuralWt)
+            Assert.AreEqual(190, forageMaterial[0].Consumable.Wt);  // 200 (StructuralWt) * 1 (FractionConsumable) - 10 (MinimumAmount)
             Assert.IsTrue(forageMaterial[0].IsLive);
             Assert.AreEqual(0.7, forageMaterial[0].Digestibility);
             Assert.AreEqual("Leaf", forageMaterial[0].Name);
 
             // stem dead
-            Assert.AreEqual(1000, forageMaterial[1].Total.Wt);      // 1000 (StructuralWt)
-            Assert.AreEqual(450, forageMaterial[1].Consumable.Wt);  // 1000 (StructuralWt) * 0.5 (FractionConsumable) - 50 (MinimumAmount)
+            Assert.AreEqual(100, forageMaterial[1].Total.Wt);      // 100 (StructuralWt)
+            Assert.AreEqual(45, forageMaterial[1].Consumable.Wt);  // 100 (StructuralWt) * 0.5 (FractionConsumable) - 5 (MinimumAmount)
             Assert.IsFalse(forageMaterial[1].IsLive);
             Assert.AreEqual(0.3, forageMaterial[1].Digestibility);
             Assert.AreEqual("Stem", forageMaterial[1].Name);
 
             // stolon live
-            Assert.AreEqual(50, forageMaterial[2].Total.Wt);        // 50 (StructuralWt)
-            Assert.AreEqual(0, forageMaterial[2].Consumable.Wt);    // 50 (StructuralWt) * 1 (FractionConsumable) - 100 (MinimumAmount)
+            Assert.AreEqual(5, forageMaterial[2].Total.Wt);        // 5 (StructuralWt)
+            Assert.AreEqual(0, forageMaterial[2].Consumable.Wt);    // 5 (StructuralWt) * 1 (FractionConsumable) - 10 (MinimumAmount)
             Assert.IsTrue(forageMaterial[2].IsLive);
             Assert.AreEqual(0.6, forageMaterial[2].Digestibility);
             Assert.AreEqual("Stolon", forageMaterial[2].Name);
@@ -127,7 +129,7 @@
                                 DigestibilityString = "[Test].A + [Test].B",
                                 UseDigestibilityFromModel = false,
                                 FractionConsumable = 1,
-                                MinimumAmount = 100,
+                                MinimumAmount = 100, // kg/ha
                                 IsLive = true
                             }
                         }
@@ -187,7 +189,7 @@
                                 DigestibilityString = null,
                                 UseDigestibilityFromModel = true,
                                 FractionConsumable = 1,
-                                MinimumAmount = 100,
+                                MinimumAmount = 100, // kg/ha
                                 IsLive = true
                             }
                         }
@@ -236,7 +238,7 @@
                                 DigestibilityString = "0.4",
                                 UseDigestibilityFromModel = false,
                                 FractionConsumable = 1,
-                                MinimumAmount = 100,
+                                MinimumAmount = 100, // kg/ha
                                 IsLive = true
                             }
                         }

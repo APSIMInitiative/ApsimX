@@ -205,16 +205,6 @@
         [Description("Optional proportion weighting to graze the species. Must add up to the number of species.")]
         public double[] SpeciesCutProportions { get; set; }
 
-
-        /// <summary>Relative preference for live over dead material during graze (>0.0).</summary>
-        [Units("-")]
-        public double PreferenceForGreenOverDead { get; set; } = 1.0;
-
-        /// <summary>Relative preference for leaf over stem-stolon material during graze (>0.0).</summary>
-        [Units("-")]
-        public double PreferenceForLeafOverStems { get; set; } = 1.0;
-
-
         ////////////// Callbacks to enable/disable GUI parameters //////////////
 
         /// <summary></summary>
@@ -349,7 +339,7 @@
             if (forages == null)
                 throw new Exception("No forages component found in simulation.");
             var parentZone = Parent as Zone;
-            if (parentZone != null)
+            if (parentZone == null)
                 throw new Exception("SimpleGrazing is not in a zone");
             allForages = forages.ModelsWithDigestibleBiomass.Where(forage => forage.Zone == parentZone).ToList();
             ProportionOfTotalDM = new double[allForages.Count()];
@@ -418,11 +408,16 @@
         {
             // Calculate pre-grazed dry matter.
             PreGrazeDM = 0.0;
+            PreGrazeHarvestableDM = 0.0;
             foreach (var forage in allForages)
-                PreGrazeDM += forage.Material.Sum(m => m.Consumable.Wt);
+            {
+                PreGrazeDM += forage.Material.Sum(m => m.Total.Wt);
+                PreGrazeHarvestableDM += forage.Material.Sum(m => m.Consumable.Wt);
+            }
 
             // Convert to kg/ha
             PreGrazeDM *= 10;
+            PreGrazeHarvestableDM *= 10;
 
             // Determine if we can graze today.
             GrazedToday = false;
@@ -475,12 +470,12 @@
             // Calculate post-grazed dry matter.
             PostGrazeDM = 0.0;
             foreach (var forage in allForages)
-                PostGrazeDM += forage.Material.Sum(m => m.Consumable.Wt);
+                PostGrazeDM += forage.Material.Sum(m => m.Total.Wt);
 
             // Calculate proportions of each species to the total biomass.
             for (int i = 0; i < allForages.Count; i++)
             {
-                var proportionToTotalDM = MathUtilities.Divide(allForages[i].Material.Sum(m => m.Consumable.Wt), PostGrazeDM, 0);
+                var proportionToTotalDM = MathUtilities.Divide(allForages[i].Material.Sum(m => m.Total.Wt), PostGrazeDM, 0);
                 ProportionOfTotalDM[i] = proportionToTotalDM;
             }
 
@@ -625,7 +620,7 @@
                 double totalWeightedHarvestableWt = 0.0;
                 for (int i = 0; i < allForages.Count; i++)
                 {
-                    var harvestableWt = allForages[i].Material.Sum(m => m.Consumable.Wt);  // g/m2
+                    var harvestableWt = allForages[i].Material.Sum(m => m.Consumable.Wt * 10);  // kg/ha
                     totalHarvestableWt += harvestableWt;
                     totalWeightedHarvestableWt += SpeciesCutProportions[i] * harvestableWt;
                 }
@@ -633,18 +628,21 @@
                 var grazedForages = new List<DigestibleBiomass>();
                 for (int i = 0; i < allForages.Count; i++)
                 {
-                    var harvestableWt = allForages[i].Material.Sum(m => m.Consumable.Wt);  // g/m2
+                    var harvestableWt = allForages[i].Material.Sum(m => m.Consumable.Wt * 10);  // kg/ha
                     var proportion = harvestableWt * SpeciesCutProportions[i] / totalWeightedHarvestableWt;
                     var amountToRemove = removeAmount * proportion;
-                    var grazed = allForages[i].RemoveBiomass(amountToRemove);
-                    double grazedDigestibility = grazed.Digestibility;
-                    var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazedDigestibility;
+                    if (amountToRemove > 0)
+                    {
+                        var grazed = allForages[i].RemoveBiomass(amountToRemove / 10);  // pass g/m2 into RemoveBiomass.
+                        double grazedDigestibility = grazed.Digestibility;
+                        var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazedDigestibility;
 
-                    GrazedDM += grazed.Consumable.Wt;
-                    GrazedN += grazed.Consumable.N;
-                    GrazedME += grazedMetabolisableEnergy * grazed.Consumable.Wt;
+                        GrazedDM += grazed.Total.Wt * 10;  // kg/ha
+                        GrazedN += grazed.Total.N * 10;    // kg/ha
+                        GrazedME += grazedMetabolisableEnergy * grazed.Total.Wt * 10;
 
-                    grazedForages.Add(grazed);
+                        grazedForages.Add(grazed);
+                    }
                 }
 
                 // Check the amount grazed is the same as requested amount to graze.
@@ -655,8 +653,8 @@
                 double returnedToSoilN = 0;
                 foreach (var grazedForage in grazedForages)
                 {
-                    returnedToSoilWt += (1 - grazedForage.Digestibility) * grazedForage.Consumable.Wt;
-                    returnedToSoilN += GetValueFromMonthArray(FractionDefoliatedNToSoil) * grazedForage.Consumable.N;
+                    returnedToSoilWt += (1 - grazedForage.Digestibility) * grazedForage.Total.Wt;
+                    returnedToSoilN += GetValueFromMonthArray(FractionDefoliatedNToSoil) * grazedForage.Total.N;
                 }
 
                 double dungNReturned;
@@ -668,9 +666,9 @@
                     dungNReturned = Math.Min(returnedToSoilN, returnedToSoilWt * CToDMRatio / CNRatioDung);
                 }
 
-                AmountDungNReturned += dungNReturned;
-                AmountDungWtReturned += returnedToSoilWt;
-                AmountUrineNReturned += returnedToSoilN - dungNReturned;
+                AmountDungNReturned += dungNReturned * 10;                        // g/m2 to kg/ha
+                AmountDungWtReturned += returnedToSoilWt * 10;                    // g/m2 to kg/ha
+                AmountUrineNReturned += (returnedToSoilN - dungNReturned) * 10;   // g/m2 to kg/ha
             }
         }
     }
