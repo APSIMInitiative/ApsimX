@@ -3295,12 +3295,25 @@ namespace Models.Soils
             const int maxIterations = 1000;
             const double tolerance = 1e-9;
             const double dpsi = 0.01;
+            double psiValue;
 
             if (theta == soilPhysical.SAT[node])
                 return 0.0;
             else
             {
-                double psiValue = -100.0; // Initial estimate
+                //
+                if (MathUtilities.FloatsAreEqual(_psi[node], 0.0))
+                {
+                    psiValue = -100.0; // Initial estimate
+                }
+                else
+                {
+                    psiValue = _psi[node]; // Initial estimate
+                }
+                
+
+
+
                 for (int iter = 0; iter < maxIterations; iter++)
                 {
                     double est = SimpleTheta(node, psiValue);
