@@ -1,4 +1,4 @@
-#if NETCOREAPP
+
 namespace UserInterface.Intellisense
 {
     using System;
@@ -305,4 +305,3 @@ namespace UserInterface.Intellisense
         }
     }
 }
-#endif

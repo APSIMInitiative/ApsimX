@@ -22,7 +22,7 @@ namespace Models.CLEM.Resources
     [Description("This resource represents a labour type (i.e. individual or cohort)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourType.htm")]
-    public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFilterable
+    public class LabourType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType, IFilterable, IAttributable
     {
         private double ageInMonths = 0;
 
@@ -398,16 +398,12 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (formatForParentControl == false)
+                if (!FormatForParentControl)
                 {
                     htmlWriter.Write("<div class=\"activityentry\">");
                     if (this.Individuals == 0)
@@ -430,28 +426,22 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
         {
-            if (formatForParentControl)
+            if (FormatForParentControl)
                 return "";
             else
-                return base.ModelSummaryClosingTags(formatForParentControl);
+                return base.ModelSummaryClosingTags();
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
         {
-            if (formatForParentControl)
+            if (FormatForParentControl)
                 return "";
             else
-                return base.ModelSummaryOpeningTags(formatForParentControl);
+                return base.ModelSummaryOpeningTags();
         }
 
         #endregion

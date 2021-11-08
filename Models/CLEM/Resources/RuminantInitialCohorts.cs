@@ -23,6 +23,18 @@ namespace Models.CLEM.Resources
     public class RuminantInitialCohorts : CLEMModel
     {
         /// <summary>
+        /// Determines if any SetPreviousConception components were found
+        /// </summary>
+        [JsonIgnore]
+        public bool ConceptionsFound { get; set; } = false;
+
+        /// <summary>
+        /// Determines if any SetAttribute components were found
+        /// </summary>
+        [JsonIgnore]
+        public bool AttributesFound { get; set; } = false;
+
+        /// <summary>
         /// Records if a warning about set weight occurred
         /// </summary>
         public bool WeightWarningOccurred = false;
@@ -52,14 +64,14 @@ namespace Models.CLEM.Resources
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             string html = "";
             return html;
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public override string ModelSummaryInnerClosingTags()
         {
             string html = "</table>";
             if(WeightWarningOccurred)
@@ -68,10 +80,12 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryInnerOpeningTags()
         {
             WeightWarningOccurred = false;
-            return "<table><tr><th>Name</th><th>Sex</th><th>Age</th><th>Weight</th><th>Norm.Wt.</th><th>Number</th><th>Suckling</th><th>Sire</th></tr>";
+            ConceptionsFound = this.FindAllDescendants<SetPreviousConception>().Any();
+            AttributesFound = this.FindAllDescendants<SetAttributeWithValue>().Any();
+            return $"<table><tr><th>Name</th><th>Sex</th><th>Age</th><th>Weight</th><th>Norm.Wt.</th><th>Number</th><th>Suckling</th><th>Sire</th>{(ConceptionsFound? "<th>Pregnant</th>" : "")}{(AttributesFound ? "<th>Attributes</th>" : "")}</tr>";
         }
 
         #endregion

@@ -20,10 +20,7 @@ namespace Models.CLEM.Groupings
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Defines a filter rule using Attribute details of the individual")]
-    [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
-    [ValidParent(ParentType = typeof(RuminantFeedGroup))]
-    [ValidParent(ParentType = typeof(RuminantGroup))]
-    [ValidParent(ParentType = typeof(AnimalPriceGroup))]
+    [ValidParent(ParentType = typeof(IFilterGroup))]
     [Version(1, 0, 0, "")]
     public class FilterByAttribute : Filter, IValidatableObject
     {
@@ -31,6 +28,7 @@ namespace Models.CLEM.Groupings
         /// Attribute tag to filter by
         /// </summary>
         [Description("Attribute tag")]
+        [Models.Core.Display(Order = 1)]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Attribute tag must be provided")]
         public string AttributeTag { get; set; }
 
@@ -38,6 +36,7 @@ namespace Models.CLEM.Groupings
         /// Style to assess attribute
         /// </summary>
         [Description("Assessment style")]
+        [Models.Core.Display(Order = 4)]
         [Required]
         public AttributeFilterStyle FilterStyle { get; set; }
 
@@ -163,7 +162,7 @@ namespace Models.CLEM.Groupings
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             return $"<div class=\"filter\" style=\"opacity: {((Enabled) ? "1" : "0.4")}\">{ToHTMLString()}</div>";
         }
@@ -172,7 +171,7 @@ namespace Models.CLEM.Groupings
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
             // allows for collapsed box and simple entry
             return "";
@@ -182,7 +181,7 @@ namespace Models.CLEM.Groupings
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
             // allows for collapsed box and simple entry
             return "";

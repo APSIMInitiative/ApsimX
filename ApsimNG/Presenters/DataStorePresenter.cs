@@ -187,9 +187,7 @@
                             NumberFrozenColumns = dataProvider.NumPriorityColumns
                         };
                         sheetWidget = new SheetWidget(sheet);
-#if NETFRAMEWORK
-                        sheet.RowHeight = 20;
-#endif
+
 
                         cellSelector = new SingleCellSelect(sheet, sheetWidget);
                         var scrollbars = new SheetScrollBars(sheet, sheetWidget);

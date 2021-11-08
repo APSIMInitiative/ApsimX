@@ -10868,7 +10868,7 @@ namespace Models
         /// </value>
         [Units("(mm/mm3)")]
         [JsonIgnore]
-        public double[] rlv
+        public IReadOnlyList<double> RootLengthDensity
             {
             get
                 {

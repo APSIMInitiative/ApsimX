@@ -40,6 +40,8 @@ namespace Models.CLEM.Activities
         [Link]
         private Clock clock = null;
 
+        private Dictionary<string, IIndividualAttribute> randomHerdAttributes = new Dictionary<string, IIndividualAttribute>();
+
         /// <summary>
         /// Artificial insemination in use (defined by presence of add-on component)
         /// </summary>
@@ -338,7 +340,7 @@ namespace Models.CLEM.Activities
                 // whole herd for activity including males
                 herd = CurrentHerd(true);
 
-            if (herd != null && herd.Count() > 0)
+            if (herd != null && herd.Any())
             {
                 // group by location
                 var breeders = from ind in herd
@@ -397,8 +399,17 @@ namespace Models.CLEM.Activities
                                     if(female.BreedParams.IncludedAttributeInheritanceWhenMating)
                                     {
                                         if (useControlledMating)
+                                        {
+                                            bool newJoining = needsNewJoiningMale(controlledMating.JoiningsPerMale, numberServiced);
+                                            if (!controlledMating.SireAttributes.Any() & (newJoining | !randomHerdAttributes.Any()))
+                                            {
+                                                // select random attributes from breeders
+                                                randomHerdAttributes = location.ElementAt(RandomNumberGenerator.Generator.Next(location.Count())).Attributes.Items;
+                                            }
+
                                             // save all male attributes
-                                            AddMalesAttributeDetails(female, controlledMating.SireAttributes, needsNewJoiningMale(controlledMating.JoiningsPerMale, numberServiced));
+                                            AddMalesAttributeDetails(female, controlledMating.SireAttributes, newJoining);
+                                        }
                                         else
                                         {
                                             male = maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count() - 1)];
@@ -469,10 +480,27 @@ namespace Models.CLEM.Activities
                 }
                 else
                 {
-                    if(attribute.Value != null)
-                       attribute.Value.StoredMateValue = null;
-                    if(female.BreedParams.IsMandatoryAttribute(attribute.Key))
-                        throw new ApsimXException(this, $"The sire attributes provided for [a={this.Name}] do not include the madatory attribute [{attribute.Key}]");
+                    // if there are random herd attributes available
+                    if (randomHerdAttributes.Any())
+                    {
+                        if (!randomHerdAttributes.TryGetValue(attribute.Key, out IIndividualAttribute randomAttribute))
+                            throw new ApsimXException(this, $"Unable to assign mandatory attribute from random herd selection for [a={this.Name}] and madatory attribute [{attribute.Key}]");
+                        else
+                        {
+                            if (attribute.Value != null && attribute.Value.InheritanceStyle != randomAttribute.InheritanceStyle)
+                                throw new ApsimXException(this, $"The inheritance style for attribute [{attribute.Key}] differs between the breeder and attributes supplied by random herd selection in [a={this.Name}]");
+
+                            if (attribute.Value != null)
+                                attribute.Value.StoredMateValue = randomAttribute.StoredValue;
+                        }
+                    }
+                    else
+                    {
+                        if (attribute.Value != null)
+                            attribute.Value.StoredMateValue = null;
+                        if (female.BreedParams.IsMandatoryAttribute(attribute.Key))
+                            throw new ApsimXException(this, $"The sire attributes provided for [a={this.Name}] do not include the madatory attribute [{attribute.Key}]");
+                    }
                 }
             }
         }
@@ -569,7 +597,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

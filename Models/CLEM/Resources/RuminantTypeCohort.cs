@@ -26,11 +26,14 @@ namespace Models.CLEM.Resources
     [ValidParent(ParentType = typeof(RuminantActivityTrade))]
     [ValidParent(ParentType = typeof(SpecifyRuminant))]
     [Description("Cohort component for specifying an individual during simulation or initalising the herd at the start")]
+    [Version(1, 0, 3, "Includes set previous conception specification")]
     [Version(1, 0, 2, "Includes attribute specification")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohort.htm")]
     public class RuminantTypeCohort : CLEMModel
     {
+        private SetPreviousConception setPreviousConception = null;
+
         /// <summary>
         /// Sex
         /// </summary>
@@ -88,6 +91,15 @@ namespace Models.CLEM.Resources
         public RuminantTypeCohort()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+        }
+
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseResource")]
+        private void OnCLEMInitialiseResource(object sender, EventArgs e)
+        {
+            setPreviousConception = this.FindChild<SetPreviousConception>();
         }
 
         /// <summary>
@@ -170,6 +182,9 @@ namespace Models.CLEM.Resources
                         RuminantFemale ruminantFemale = ruminant as RuminantFemale;
                         ruminantFemale.WeightAtConception = ruminant.Weight;
                         ruminantFemale.NumberOfBirths = 0;
+
+                        if (setPreviousConception != null)
+                            setPreviousConception.SetConceptionDetails(ruminantFemale);
                     }
 
                     // initialise attributes
@@ -189,19 +204,15 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary 
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             RuminantType rumType;
             bool specifyRuminantParent = false;
 
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (!formatForParentControl)
+                if (!FormatForParentControl)
                 {
                     rumType = FindAncestor<RuminantType>();
                     if(rumType is null)
@@ -254,7 +265,6 @@ namespace Models.CLEM.Resources
                             htmlWriter.Write(", but should weigh close to the normalised weight of <span class=\"errorlink\">" + normWtString + "</span> kg for their age");
                         htmlWriter.Write("</div>");
                     }
-                    htmlWriter.Write("</div>");
                 }
                 else
                 {
@@ -326,24 +336,54 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public override string ModelSummaryInnerClosingTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (formatForParentControl)
+                if (FormatForParentControl)
                 {
-                    RuminantType rumtype = FindAncestor<RuminantType>();                    
-                    if (rumtype != null)
+                    if (!(CurrentAncestorList.Count >= 3 && CurrentAncestorList[CurrentAncestorList.Count - 1] == typeof(RuminantInitialCohorts).Name))
                     {
-                        var newInd = Ruminant.Create(Sex, rumtype, Age);
-
-                        string normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
-                        if (Math.Abs(this.Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
+                        RuminantType rumtype = FindAncestor<RuminantType>();
+                        if (rumtype != null)
                         {
-                            normWtString = "<span class=\"errorlink\">" + normWtString + "</span>";
-                            (this.Parent as RuminantInitialCohorts).WeightWarningOccurred = true;
+                            var newInd = Ruminant.Create(Sex, rumtype, Age);
+
+                            string normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
+                            if (Math.Abs(this.Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
+                            {
+                                normWtString = "<span class=\"errorlink\">" + normWtString + "</span>";
+                                (this.Parent as RuminantInitialCohorts).WeightWarningOccurred = true;
+                            }
+                            htmlWriter.Write($"\r\n<tr{(this.Enabled ? "" : " class=\"disabled\"")}><td>" + this.Name + "</td><td><span class=\"setvalue\">" + this.Sex + "</span></td><td><span class=\"setvalue\">" + this.Age.ToString() + "</span></td><td><span class=\"setvalue\">" + this.Weight.ToString() + ((this.WeightSD > 0) ? " (" + this.WeightSD.ToString() + ")" : "") + "</spam></td><td>" + normWtString + "</td><td><span class=\"setvalue\">" + this.Number.ToString() + "</span></td><td" + ((this.Suckling) ? " class=\"fill\"" : "") + "></td><td" + ((this.Sire) ? " class=\"fill\"" : "") + "></td>");
+
+                            if ((Parent as RuminantInitialCohorts).ConceptionsFound)
+                            {
+                                var setConceptionFound = this.FindChild<SetPreviousConception>();
+                                if (setConceptionFound != null)
+                                    htmlWriter.Write($"<td class=\"fill\"><span class=\"setvalue\">{setConceptionFound.NumberMonthsPregnant}</span> mths</td>");
+                                else
+                                    htmlWriter.Write("<td></td>");
+                            }
+
+                            if ((Parent as RuminantInitialCohorts).AttributesFound)
+                            {
+                                var setAttributesFound = this.FindAllChildren<SetAttributeWithValue>();
+                                if (setAttributesFound.Any())
+                                {
+                                    htmlWriter.Write($"<td class=\"fill\">");
+                                    foreach (var attribute in setAttributesFound)
+                                    {
+                                        htmlWriter.Write($"<span class=\"setvalue\">{attribute.AttributeName}</span> ");
+                                    }
+                                    htmlWriter.Write($"</td>");
+                                }
+                                else
+                                    htmlWriter.Write("<td></td>");
+                            }
+
+                            htmlWriter.Write("</tr>");
                         }
-                        htmlWriter.Write("\r\n<tr><td>" + this.Name + "</td><td><span class=\"setvalue\">" + this.Sex + "</span></td><td><span class=\"setvalue\">" + this.Age.ToString() + "</span></td><td><span class=\"setvalue\">" + this.Weight.ToString() + ((this.WeightSD > 0) ? " (" + this.WeightSD.ToString() + ")" : "") + "</spam></td><td>" + normWtString + "</td><td><span class=\"setvalue\">" + this.Number.ToString() + "</span></td><td" + ((this.Suckling) ? " class=\"fill\"" : "") + "></td><td" + ((this.Sire) ? " class=\"fill\"" : "") + "></td></tr>");
                     }
                 }
                 else
@@ -354,21 +394,21 @@ namespace Models.CLEM.Resources
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryInnerOpeningTags()
         {
             return "";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
-            return !formatForParentControl ? base.ModelSummaryClosingTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryClosingTags() : "";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
-            return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
         }
 
         #endregion

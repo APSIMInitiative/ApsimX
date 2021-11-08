@@ -312,7 +312,7 @@
                 var descriptorsForDefinition = new List<SimulationDescription.Descriptor>();
                 foreach (var descriptor in simulationDescription.Descriptors)
                 {
-                    if (varyByFieldNames.Contains(descriptor.Name))
+                    if (varyByFieldNames.Contains(descriptor.Name) || NeedsDescriptor(descriptor))
                         descriptorsForDefinition.Add(descriptor);
                 }
 
@@ -335,6 +335,24 @@
             }
 
             return definitions;
+        }
+
+        /// <summary>
+        /// Check if the given descriptor is needed by the series definition.
+        /// </summary>
+        /// <param name="descriptor">The descriptor to be checked.</param>
+        private bool NeedsDescriptor(SimulationDescription.Descriptor descriptor)
+        {
+            // We need a simulation name descriptor if any child event names
+            // on graph components exist and require it.
+            // todo: should probably add this into the IGraphable interface.
+            if (descriptor.Name == "SimulationName")
+            {
+                EventNamesOnGraph events = FindChild<EventNamesOnGraph>();
+                if (events != null && !string.IsNullOrEmpty(events.SimulationName))
+                    return true;
+            }
+            return false;
         }
 
         /// <summary>

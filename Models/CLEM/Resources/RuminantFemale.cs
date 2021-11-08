@@ -267,7 +267,7 @@ namespace Models.CLEM.Resources
                 //(b) Is being milked
                 //and
                 //(c) Less than Milking days since last birth
-                return ((this.SucklingOffspringList.Count() > 0 | this.MilkingPerformed) && (this.Age - this.AgeAtLastBirth) * 30.4 <= this.BreedParams.MilkingDays);
+                return ((this.SucklingOffspringList.Any() | this.MilkingPerformed) && (this.Age - this.AgeAtLastBirth) * 30.4 <= this.BreedParams.MilkingDays);
             }            
         }
 

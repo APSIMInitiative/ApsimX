@@ -13,7 +13,7 @@ namespace APSIM.Shared.Utilities
     /// <summary>
     /// Some utilities for manipulating a data table.
     /// </summary>
-    public class DataTableUtilities
+    public static class DataTableUtilities
     {
         /// <summary>
         /// Add a value to the specified data table
@@ -450,7 +450,7 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Get a list of column names
         /// </summary>
-        static public string[] GetColumnNames(DataTable table)
+        static public string[] GetColumnNames(this DataTable table)
         {
             if (table != null)
             {

@@ -23,14 +23,11 @@
     using APSIM.Shared.Graphing;
     using APSIM.Interop.Graphing.Extensions;
     using APSIM.Interop.Graphing.CustomSeries;
-#if NETFRAMEWORK
-    using OxyLegendPosition = OxyPlot.LegendPosition;
-    using OxyLegendOrientation = OxyPlot.LegendOrientation;
-#else
+
     using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
     using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
     using LegendPlacement = OxyPlot.Legends.LegendPlacement;
-#endif
+
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
@@ -155,7 +152,7 @@
 
             
 
-#if NETCOREAPP
+
             // Not sure why but Oxyplot fonts are not scaled correctly on .net core on high DPI screens.
             // On my Surface Pro screen I'm using a 150% scaling which makes the fonts on graphs tiny.
             // I notice that the GTK3 ScaleFactor has a value of 80% in this situation. If the screen
@@ -163,7 +160,7 @@
             // For now I'll just scale all fonts by 2.0. Works on my various screens. Will need some testing.
             var font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
             fontSize = font.SizeIsAbsolute ? font.Size : Convert.ToInt32(font.Size / Pango.Scale.PangoScale) * 2;
-#endif
+
         }
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
@@ -199,8 +196,8 @@
                     }
                 }
                 Clear();
-                popup.Cleanup();
-                plot1.Cleanup();
+                popup.Dispose();
+                plot1.Dispose();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;
             }
@@ -254,6 +251,14 @@
         public int LeftRightPadding { get; set; }
 
         /// <summary>
+        /// Disable scrolling via mouse wheel on the graph.
+        /// </summary>
+        public void DisableScrolling()
+        {
+            plot1.ActualController.UnbindMouseWheel();
+        }
+
+        /// <summary>
         /// Controls the background colour of the graph.
         /// </summary>
         public OxyColor BackColor
@@ -293,11 +298,9 @@
         {
             get
             {
-#if NETFRAMEWORK
-                int preferredWidth = plot1.ChildRequisition.Width;
-#else
+
                 plot1.GetPreferredWidth(out int minWidth, out int preferredWidth);
-#endif
+
                 return plot1.Allocation.Width > 1 ? plot1.Allocation.Width : preferredWidth;
             }
             set
@@ -310,11 +313,9 @@
         {
             get
             {
-#if NETFRAMEWORK
-                int preferredHeight = plot1.ChildRequisition.Height;
-#else
+
                 plot1.GetPreferredHeight(out int minHeight, out int preferredHeight);
-#endif
+
                 return plot1.Allocation.Height > 1 ? plot1.Allocation.Height : preferredHeight;
             }
             set
@@ -1115,6 +1116,8 @@
         /// <param name="orientation">Orientation of items in the legend.</param>
         public void FormatLegend(APSIM.Shared.Graphing.LegendPosition legendPositionType, APSIM.Shared.Graphing.LegendOrientation orientation)
         {
+            if (!plot1.Model.Legends.Any())
+                plot1.Model.Legends.Add(new OxyPlot.Legends.Legend());
             OxyLegendPosition oxyLegendPosition;
             if (Enum.TryParse(legendPositionType.ToString(), out oxyLegendPosition))
             {
@@ -1222,7 +1225,7 @@
                     if (widget != label2)
                     {
                         expander1.Remove(widget);
-                        widget.Cleanup();
+                        widget.Dispose();
                     }
                 });
                 expander1.Add(editor);
@@ -1699,11 +1702,9 @@
                 Rectangle plotArea = new Rectangle((int)plotRect.X, (int)plotRect.Y, (int)plotRect.Width, (int)plotRect.Height);
 
                 IEnumerable<Cairo.Rectangle> legends;
-#if NETFRAMEWORK
-                legends = new[] { plot1.Model.LegendArea.ToRect(true) };
-#else
+
                 legends = plot1.Model.Legends.Select(l => l.LegendArea.ToRect(true));
-#endif
+
                 foreach (Cairo.Rectangle legendRect in legends)
                 {
                     Rectangle legendArea = new Rectangle((int)legendRect.X, (int)legendRect.Y, (int)legendRect.Width, (int)legendRect.Height);
@@ -1718,64 +1719,65 @@
                             args.SeriesIndex = seriesIndex;
                             args.ControlKeyPressed = e.IsControlDown;
                             this.OnLegendClick.Invoke(sender, args);
+                            return;
                         }
                     }
-                    else if (plotArea.Contains(location))
+                }
+                if (plotArea.Contains(location))
+                {
+                    bool userClickedOnAnnotation = false;
+                    foreach (var annotation in this.plot1.Model.Annotations)
                     {
-                        bool userClickedOnAnnotation = false;
-                        foreach (var annotation in this.plot1.Model.Annotations)
+                        var result = annotation.HitTest(new HitTestArguments(new ScreenPoint(location.X, location.Y), 10.0));
+                        if (result != null)
                         {
-                            var result = annotation.HitTest(new HitTestArguments(new ScreenPoint(location.X, location.Y), 10.0));
-                            if (result != null)
-                            {
-                                userClickedOnAnnotation = true;
-                                OnAnnotationClick?.Invoke(this, new EventArgs());
-                            }
+                            userClickedOnAnnotation = true;
+                            OnAnnotationClick?.Invoke(this, new EventArgs());
                         }
-
-                        if (!userClickedOnAnnotation && this.OnPlotClick != null)
-                            this.OnPlotClick.Invoke(sender, e);
                     }
-                    else
+
+                    if (!userClickedOnAnnotation && this.OnPlotClick != null)
+                        this.OnPlotClick.Invoke(sender, e);
+                }
+                else
+                {
+                    Rectangle leftAxisArea = new Rectangle(0, plotArea.Y, plotArea.X, plotArea.Height);
+                    Rectangle titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y);
+                    Rectangle topAxisArea = new Rectangle(plotArea.X, 0, plotArea.Width, 0);
+
+                    if (this.GetAxis(APSIM.Shared.Graphing.AxisPosition.Top) != null)
                     {
-                        Rectangle leftAxisArea = new Rectangle(0, plotArea.Y, plotArea.X, plotArea.Height);
-                        Rectangle titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y);
-                        Rectangle topAxisArea = new Rectangle(plotArea.X, 0, plotArea.Width, 0);
+                        titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y / 2);
+                        topAxisArea = new Rectangle(plotArea.X, plotArea.Y / 2, plotArea.Width, plotArea.Y / 2);
+                    }
 
-                        if (this.GetAxis(APSIM.Shared.Graphing.AxisPosition.Top) != null)
+                    Rectangle rightAxisArea = new Rectangle(plotArea.Right, plotArea.Top, MainWidget.Allocation.Width - plotArea.Right, plotArea.Height);
+                    Rectangle bottomAxisArea = new Rectangle(plotArea.Left, plotArea.Bottom, plotArea.Width, MainWidget.Allocation.Height - plotArea.Bottom);
+                    if (titleArea.Contains(location))
+                    {
+                        if (this.OnTitleClick != null)
                         {
-                            titleArea = new Rectangle(plotArea.X, 0, plotArea.Width, plotArea.Y / 2);
-                            topAxisArea = new Rectangle(plotArea.X, plotArea.Y / 2, plotArea.Width, plotArea.Y / 2);
+                            this.OnTitleClick(sender, e);
                         }
+                    }
 
-                        Rectangle rightAxisArea = new Rectangle(plotArea.Right, plotArea.Top, MainWidget.Allocation.Width - plotArea.Right, plotArea.Height);
-                        Rectangle bottomAxisArea = new Rectangle(plotArea.Left, plotArea.Bottom, plotArea.Width, MainWidget.Allocation.Height - plotArea.Bottom);
-                        if (titleArea.Contains(location))
+                    if (this.OnAxisClick != null)
+                    {
+                        if (leftAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Left) != null)
                         {
-                            if (this.OnTitleClick != null)
-                            {
-                                this.OnTitleClick(sender, e);
-                            }
+                            this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Left);
                         }
-
-                        if (this.OnAxisClick != null)
+                        else if (topAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Top) != null)
                         {
-                            if (leftAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Left) != null)
-                            {
-                                this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Left);
-                            }
-                            else if (topAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Top) != null)
-                            {
-                                this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Top);
-                            }
-                            else if (rightAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Right) != null)
-                            {
-                                this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Right);
-                            }
-                            else if (bottomAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Bottom) != null)
-                            {
-                                this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Bottom);
-                            }
+                            this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Top);
+                        }
+                        else if (rightAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Right) != null)
+                        {
+                            this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Right);
+                        }
+                        else if (bottomAxisArea.Contains(location) && GetAxis(APSIM.Shared.Graphing.AxisPosition.Bottom) != null)
+                        {
+                            this.OnAxisClick.Invoke(APSIM.Shared.Graphing.AxisPosition.Bottom);
                         }
                     }
                 }

@@ -5,13 +5,10 @@ using MarkerType = APSIM.Shared.Graphing.MarkerType;
 using LegendOrientation = APSIM.Shared.Graphing.LegendOrientation;
 using LegendPosition = APSIM.Shared.Graphing.LegendPosition;
 using OxyAxisPosition = OxyPlot.Axes.AxisPosition;
-#if NETCOREAPP
+
 using OxyLegendOrientation = OxyPlot.Legends.LegendOrientation;
 using OxyLegendPosition = OxyPlot.Legends.LegendPosition;
-#else
-using OxyLegendOrientation = OxyPlot.LegendOrientation;
-using OxyLegendPosition = OxyPlot.LegendPosition;
-#endif
+
 
 namespace APSIM.Interop.Graphing
 {

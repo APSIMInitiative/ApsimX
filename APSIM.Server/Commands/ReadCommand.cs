@@ -51,7 +51,9 @@ namespace APSIM.Server.Commands
             Result = storage.Reader.GetData(TableName, fieldNames: Parameters);
             if (Result == null)
                 throw new Exception($"Unable to read table {TableName} from datastore (cause unknown - but the table appears to exist)");
-
+            foreach (string param in Parameters)
+                if (Result.Columns[param] == null)
+                    throw new Exception($"Column {param} does not exist in table {TableName}");
             Result.TableName = TableName;
         }
 

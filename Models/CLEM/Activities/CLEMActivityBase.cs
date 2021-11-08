@@ -36,12 +36,14 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Category for transactions")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
+        [Models.Core.Display(Order = 500)]
         virtual public string TransactionCategory { get; set; }
 
         /// <summary>
         /// Insufficient resources available action
         /// </summary>
         [Description("Insufficient resources available action")]
+        [Models.Core.Display(Order = 1000)]
         public OnPartialResourcesAvailableActionTypes OnPartialResourcesAvailableAction { get; set; }
 
         /// <summary>
@@ -761,7 +763,7 @@ namespace Models.CLEM.Activities
 
             bool deficitFound = false;
             // report any resource defecits here
-            foreach (var item in resourceRequests.Where(a => (a.Available - a.Required) > 0.000001))
+            foreach (var item in resourceRequests.Where(a => (a.Required - a.Available) > 0.000001))
             {
                 ResourceRequestEventArgs rrEventArgs = new ResourceRequestEventArgs() { Request = item };
 
@@ -806,9 +808,9 @@ namespace Models.CLEM.Activities
                     resourcelist = resourcelist.Trim(',');
                     if (resourcelist.Length > 0)
                     {
-                        Summary.WriteError(this, String.Format("Ensure all resources are available or change OnPartialResourcesAvailableAction setting for activity [a={0}]", this.Name));
+                        Summary.WriteWarning(this, $"Ensure all resources are available or change OnPartialResourcesAvailableAction setting for activity [a={this.NameWithParent}]");
                         Status = ActivityStatus.Critical;
-                        throw new Exception(String.Format("@i:Insufficient resources [r={0}] for activity [a={1}]", resourcelist, this.Name));
+                        throw new Exception($"Insufficient resources [r={resourcelist}] for activity [a={this.NameWithParent}]");
                     }
                 }
 

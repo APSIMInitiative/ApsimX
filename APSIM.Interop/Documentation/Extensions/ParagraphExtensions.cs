@@ -1,15 +1,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System;
-#if NETCOREAPP
+
 using MigraDocCore.DocumentObjectModel;
 using Paragraph = MigraDocCore.DocumentObjectModel.Paragraph;
 using Image = MigraDocCore.DocumentObjectModel.Shapes.Image;
-#else
-using MigraDoc.DocumentObjectModel;
-using Paragraph = MigraDoc.DocumentObjectModel.Paragraph;
-using Image = MigraDoc.DocumentObjectModel.Shapes.Image;
-#endif
+
 
 namespace APSIM.Interop.Documentation.Extensions
 {

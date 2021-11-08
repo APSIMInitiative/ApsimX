@@ -481,15 +481,10 @@ namespace UserInterface.Views
                     if (CellPainter.PaintCell(columnIndex, rowIndex))
                     {
                         // Draw the filled in cell.
-#if NETCOREAPP
+
                         cr.State = CellPainter.GetCellState(columnIndex, rowIndex);
                         cr.DrawFilledRectangle(cellBounds.Left, cellBounds.Top, cellBounds.Width-5, cellBounds.Height-5);
-#else
-                        cr.SetColour(CellPainter.GetBackgroundColour(columnIndex, rowIndex));
-                        cr.DrawFilledRectangle();
-                        cr.SetColour(CellPainter.GetForegroundColour(columnIndex, rowIndex));
 
-#endif
 
                         // Draw cell outline.
                         if (ShowLines)
