@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 378,
+  "ExplorerWidth": 518,
   "Version": 144,
   "Name": "Simulations",
   "Children": [
@@ -6059,90 +6059,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.DivideFunction, Models",
-                  "Name": "LeafPartitioningCoefficient",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "One",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.AddFunction, Models",
-                      "Name": "AddFunction",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
-                          "Units": null,
-                          "Name": "One",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "MultiplyFunction",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].PartitionRate",
-                              "Name": "PartitionRate",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.PowerFunction, Models",
-                              "Exponent": 2.0,
-                              "Name": "PowerFunction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].LeafNo",
-                                  "Name": "LeafNumber",
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Memo, Models",
-                                  "Text": "LeafNumber is referring to NLeaves for copatitibility with old model.\nShould be CurrentLeafNo?",
-                                  "Name": "Memo",
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0182,
-                  "Units": null,
-                  "Name": "PartitionRate",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.SubtractFunction, Models",
                   "Name": "DMRemaining",
                   "Children": [
@@ -6423,10 +6339,69 @@
                                       "Name": "MultiplyFunction",
                                       "Children": [
                                         {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Leaf].LeafPartitioningCoefficient",
-                                          "Name": "LeafPartitionCoeff",
-                                          "Children": [],
+                                          "$type": "Models.Functions.DivideFunction, Models",
+                                          "Name": "LeafPartitioningCoefficient",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.Constant, Models",
+                                              "FixedValue": 1.0,
+                                              "Units": null,
+                                              "Name": "One",
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.AddFunction, Models",
+                                              "Name": "AddFunction",
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.Constant, Models",
+                                                  "FixedValue": 1.0,
+                                                  "Units": null,
+                                                  "Name": "One",
+                                                  "Children": [],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                                  "Name": "MultiplyFunction",
+                                                  "Children": [
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[Leaf].Parameters.PartitionRate",
+                                                      "Name": "PartitionRate",
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.PowerFunction, Models",
+                                                      "Exponent": 2.0,
+                                                      "Name": "PowerFunction",
+                                                      "Children": [
+                                                        {
+                                                          "$type": "Models.Functions.VariableReference, Models",
+                                                          "VariableName": "[Leaf].LeafNo",
+                                                          "Name": "LeafNumber",
+                                                          "Children": [],
+                                                          "Enabled": true,
+                                                          "ReadOnly": false
+                                                        }
+                                                      ],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    }
+                                                  ],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
@@ -7521,6 +7496,25 @@
                       "FixedValue": 0.00035,
                       "Units": null,
                       "Name": "LeafNoDeadSlope",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Folder, Models",
+                  "ShowInDocs": false,
+                  "GraphsPerPage": 6,
+                  "Name": "Parameters",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0182,
+                      "Units": null,
+                      "Name": "PartitionRate",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false

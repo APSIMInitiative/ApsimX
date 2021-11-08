@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 492,
+  "ExplorerWidth": 468,
   "Version": 144,
   "Name": "Simulations",
   "Children": [
@@ -4505,91 +4505,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.DivideFunction, Models",
-                  "Name": "LeafPartitioningCoefficient",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "One",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.AddFunction, Models",
-                      "Name": "AddFunction",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 1.0,
-                          "Units": null,
-                          "Name": "One",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.MultiplyFunction, Models",
-                          "Name": "MultiplyFunction",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Leaf].PartitionRate",
-                              "Name": "PartitionRate",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.PowerFunction, Models",
-                              "Exponent": 2.0,
-                              "Name": "PowerFunction",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Leaf].LeafNo",
-                                  "Name": "LeafNumber",
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.006,
-                  "Units": "(0-1)",
-                  "Name": "PartitionRate",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "coefficient of sigmoidal function between leaf partition fraction and internode no**2\n\npartition_rate_leaf in Classic\n\nreferenced in LeafPartitioningCoefficient\t",
-                      "Name": "Memo",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.SubtractFunction, Models",
                   "Name": "DMRemaining",
                   "Children": [
@@ -4895,10 +4810,69 @@
                                       "Name": "MultiplyFunction",
                                       "Children": [
                                         {
-                                          "$type": "Models.Functions.VariableReference, Models",
-                                          "VariableName": "[Leaf].LeafPartitioningCoefficient",
-                                          "Name": "LeafPartitionCoeff",
-                                          "Children": [],
+                                          "$type": "Models.Functions.DivideFunction, Models",
+                                          "Name": "LeafPartitioningCoefficient",
+                                          "Children": [
+                                            {
+                                              "$type": "Models.Functions.Constant, Models",
+                                              "FixedValue": 1.0,
+                                              "Units": null,
+                                              "Name": "One",
+                                              "Children": [],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            },
+                                            {
+                                              "$type": "Models.Functions.AddFunction, Models",
+                                              "Name": "AddFunction",
+                                              "Children": [
+                                                {
+                                                  "$type": "Models.Functions.Constant, Models",
+                                                  "FixedValue": 1.0,
+                                                  "Units": null,
+                                                  "Name": "One",
+                                                  "Children": [],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                },
+                                                {
+                                                  "$type": "Models.Functions.MultiplyFunction, Models",
+                                                  "Name": "MultiplyFunction",
+                                                  "Children": [
+                                                    {
+                                                      "$type": "Models.Functions.VariableReference, Models",
+                                                      "VariableName": "[Leaf].Parameters.PartitionRate",
+                                                      "Name": "PartitionRate",
+                                                      "Children": [],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    },
+                                                    {
+                                                      "$type": "Models.Functions.PowerFunction, Models",
+                                                      "Exponent": 2.0,
+                                                      "Name": "PowerFunction",
+                                                      "Children": [
+                                                        {
+                                                          "$type": "Models.Functions.VariableReference, Models",
+                                                          "VariableName": "[Leaf].LeafNo",
+                                                          "Name": "LeafNumber",
+                                                          "Children": [],
+                                                          "Enabled": true,
+                                                          "ReadOnly": false
+                                                        }
+                                                      ],
+                                                      "Enabled": true,
+                                                      "ReadOnly": false
+                                                    }
+                                                  ],
+                                                  "Enabled": true,
+                                                  "ReadOnly": false
+                                                }
+                                              ],
+                                              "Enabled": true,
+                                              "ReadOnly": false
+                                            }
+                                          ],
                                           "Enabled": true,
                                           "ReadOnly": false
                                         },
@@ -5860,7 +5834,26 @@
                   "ShowInDocs": false,
                   "GraphsPerPage": 6,
                   "Name": "Parameters",
-                  "Children": [],
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.006,
+                      "Units": "(0-1)",
+                      "Name": "PartitionRate",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "coefficient of sigmoidal function between leaf partition fraction and internode no**2\n\npartition_rate_leaf in Classic\n\nreferenced in LeafPartitioningCoefficient\t",
+                          "Name": "Memo",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -8757,7 +8750,7 @@
                         "[Phenology].PhotoModifier.XYPairs.Y[2] = 122",
                         "[Phenology].TTEndJuvToInit.FixedValue = 252",
                         "[Grain].DMPerSeed.FixedValue = 0.001427844",
-                        "[Leaf].PartitionRate.FixedValue = 0.018",
+                        "[Leaf].Parameters.PartitionRate.FixedValue = 0.018",
                         "[Arbitrator].NitrogenUptakeMethod.NUptakeCease.FixedValue = 10",
                         "[LeafCulms].NumberOfLeaves.leafInitRate.FixedValue = 26.1",
                         "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
@@ -8776,7 +8769,7 @@
                         "[Phenology].TTEndJuvToInit.FixedValue = 228",
                         "[Grain].DMPerSeed.FixedValue = 0.0015",
                         "[Leaf].Photosynthesis.RUE.FixedValue = 1.6",
-                        "[Leaf].PartitionRate.FixedValue = 0.018",
+                        "[Leaf].Parameters.PartitionRate.FixedValue = 0.018",
                         "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
                         "[LeafCulms].NumberOfLeaves.leafInitRate.FixedValue = 23.2"
                       ],
