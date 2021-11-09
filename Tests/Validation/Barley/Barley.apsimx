@@ -45780,7 +45780,7 @@
                             },
                             {
                               "$type": "Models.Factorial.Factor, Models",
-                              "Specification": "[SowingRule].Script.CultivarName = Alestar, Banks, Bass, Baudin, Biere, Capstan, Cassiopee, Commander, Compass, CSIROB1, CSIROB3, Dash, Fathom, Fleet, Flinders, Franklin, Gairdner, Granger, Grout, Keel, Lockyer, Mundah, Navigator, Oxford, RGT_Planet, Rosalind, Schooner, Scope, Shepherd, Spartacus_CL, Stirling, Unicorn, Urambie, Westminster, Yagan",
+                              "Specification": "[SowingRule].Script.CultivarName = Alestar, Banks, Bass, Baudin, Biere, Capstan, Cassiopee, Commander, Compass, CSIROB1, CSIROB3, Dash, Fathom, Fleet, Flinders, Franklin, Gairdner, Granger, Grout, Keel, Lockyer, Mundah, Navigator, Oxford, Planet, Rosalind, Schooner, Scope, Shepherd, Spartacus, Stirling, Unicorn, Urambie, Westminster, Yagan",
                               "Name": "Cv",
                               "Children": [],
                               "IncludeInDocumentation": false,
