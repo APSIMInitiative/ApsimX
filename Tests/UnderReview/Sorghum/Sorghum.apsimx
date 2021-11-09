@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 467,
   "Version": 144,
   "Name": "Simulations",
   "Children": [
@@ -413,7 +413,7 @@
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
-                  "Text": "\r\n<html><body>\r\nThe phenology model used in the APSIM sorghum model follows the approach used in earlier sorghum models(Jones and Kiniry (1986), Carberry and Arbrecht (1991), Carberry et al (1989).  \r\nThe model predicts development of primordia on the apex of the main stem and appearance of individual leaves to predict time to flag leaf.  Other stages use thermal time targets.  \r\n<br/>\r\n</body></html>",
+                  "Text": "The phenology model used in the APSIM sorghum model follows the approach used in earlier sorghum models(Jones and Kiniry (1986), Carberry and Arbrecht (1991), Carberry et al (1989).  \r\nThe model predicts development of primordia on the apex of the main stem and appearance of individual leaves to predict time to flag leaf.  Other stages use thermal time targets.  \r\n",
                   "Name": "memo",
                   "Children": [],
                   "Enabled": true,
@@ -528,7 +528,7 @@
                           "$type": "Models.Functions.PhaseLookupValue, Models",
                           "Start": "Sowing",
                           "End": "EndJuvenile",
-                          "Name": "TT",
+                          "Name": "SowingToEndJuvenile",
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
@@ -1034,18 +1034,18 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 761.0,
+                  "FixedValue": 160.0,
                   "Units": null,
-                  "Name": "TTFlowerToMaturity",
+                  "Name": "TTEndJuvToInit",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 160.0,
+                  "FixedValue": 761.0,
                   "Units": null,
-                  "Name": "TTEndJuvToInit",
+                  "Name": "TTFlowerToMaturity",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1188,28 +1188,34 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].FinalLeafNo",
-                  "Name": "FinalLeafNo",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "LeafNoAtEmergence",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 3.5,
-                  "Units": null,
-                  "Name": "LeafNoRateChange",
-                  "Children": [],
+                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                  "Name": "PhotoModifier",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.XYPairs, Models",
+                      "X": [
+                        11.5,
+                        13.5
+                      ],
+                      "Y": [
+                        0.0,
+                        23.0
+                      ],
+                      "XVariableName": null,
+                      "Name": "XYPairs",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Photoperiod",
+                      "Name": "XValue",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1227,7 +1233,7 @@
                           "Children": [
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].FinalLeafNo",
+                              "VariableName": "[Leaf].FinalLeafNo",
                               "Name": "FinalLeafNo",
                               "Children": [],
                               "Enabled": true,
@@ -1235,7 +1241,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].LeafNoAtEmergence",
+                              "VariableName": "[Leaf].Parameters.LeafNoAtEmergence",
                               "Name": "LeafNoAtEmergence",
                               "Children": [],
                               "Enabled": true,
@@ -1243,7 +1249,7 @@
                             },
                             {
                               "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[Phenology].LeafNoRateChange",
+                              "VariableName": "[LeafCulms].noRateChange1",
                               "Name": "LeafNoRateChange",
                               "Children": [],
                               "Enabled": true,
@@ -1254,9 +1260,8 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 41.0,
-                          "Units": null,
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[LeafCulms].appearanceRate1",
                           "Name": "LeafAppearanceRate1",
                           "Children": [],
                           "Enabled": true,
@@ -1271,9 +1276,8 @@
                       "Name": "LeafAppearingPhase2",
                       "Children": [
                         {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 20.0,
-                          "Units": null,
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[LeafCulms].appearanceRate2",
                           "Name": "LeafAppearanceRate2",
                           "Children": [],
                           "Enabled": true,
@@ -1281,13 +1285,69 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Phenology].LeafNoRateChange",
+                          "VariableName": "[LeafCulms].noRateChange1",
                           "Name": "LeafNoRateChange",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "TTEmergToFloralInit",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].Juvenile.Target",
+                      "Name": "TTTargetJuvenille",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Phenology].JuvenileToFloralInit.Target",
+                      "Name": "TTTargetJuvToFI",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.AddFunction, Models",
+                  "Name": "TTToFlowering",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Emerging].Target",
+                      "Name": "GerminatingTarget",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[TTEmergToFlagLeaf]",
+                      "Name": "TTEmergToFlagLeaf",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[FlagLeafToFlowering].Target",
+                      "Name": "FlagLeafToFlowering",
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -1342,21 +1402,20 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "TTEmergToFloralInit",
+                  "$type": "Models.Functions.AccumulateFunction, Models",
+                  "StartStageName": "StartGrainFill",
+                  "EndStageName": "Maturity",
+                  "ResetStageName": null,
+                  "FractionRemovedOnCut": 0.0,
+                  "FractionRemovedOnHarvest": 0.0,
+                  "FractionRemovedOnGraze": 0.0,
+                  "FractionRemovedOnPrune": 0.0,
+                  "Name": "TTFMSgfToMaturity",
                   "Children": [
                     {
                       "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Juvenile.Target",
-                      "Name": "TTTargetJuvenille",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].JuvenileToFloralInit.Target",
-                      "Name": "TTTargetJuvToFI",
+                      "VariableName": "[Phenology].CurrentPhase.ProgressionForTimeStep",
+                      "Name": "ThermalTime",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1391,109 +1450,6 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Arbitrator].SDRatio",
                       "Name": "XValue",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.AccumulateFunction, Models",
-                  "StartStageName": "StartGrainFill",
-                  "EndStageName": "Maturity",
-                  "ResetStageName": null,
-                  "FractionRemovedOnCut": 0.0,
-                  "FractionRemovedOnHarvest": 0.0,
-                  "FractionRemovedOnGraze": 0.0,
-                  "FractionRemovedOnPrune": 0.0,
-                  "Name": "TTFMSgfToMaturity",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].CurrentPhase.ProgressionForTimeStep",
-                      "Name": "ThermalTime",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "PhotoModifier",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        11.5,
-                        13.5
-                      ],
-                      "Y": [
-                        0.0,
-                        23.0
-                      ],
-                      "XVariableName": null,
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Phenology].Photoperiod",
-                      "Name": "XValue",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.AddFunction, Models",
-                  "Name": "TTToFlowering",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Emerging].Target",
-                      "Name": "GerminatingTarget",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Juvenile].Target",
-                      "Name": "EmergingTarget",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[JuvenileToFloralInit].Target",
-                      "Name": "JuvenileTarget",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[FloralInitToFlagLeaf].Target",
-                      "Name": "FloralInitTarget",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[FlagLeafToFlowering].Target",
-                      "Name": "FlagLeafTarget",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -5859,6 +5815,15 @@
                           "ReadOnly": false
                         }
                       ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "LeafNoAtEmergence",
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
