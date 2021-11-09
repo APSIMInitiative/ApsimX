@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 464,
   "Version": 144,
   "Name": "Simulations",
   "Children": [
@@ -5278,25 +5278,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "Start": "Germination",
-                  "End": "Maturity",
-                  "Name": "NitrogenRootCalcSwitch",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "Constant",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.MinimumFunction, Models",
                   "Name": "RootDepthStressFactor",
                   "Children": [
@@ -5452,24 +5433,6 @@
                       "$type": "Models.Functions.VariableReference, Models",
                       "VariableName": "[Soil].Physical.Thickness",
                       "Name": "dLayer",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": "",
-                  "Name": "RootFrontCalcSwitch",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Setting this to 0 will force C4Maize to use the generic uptake *and* root growth routines",
-                      "Name": "Memo",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -5701,24 +5664,6 @@
                   "Units": "",
                   "Name": "NUptakeCease",
                   "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1.0,
-                  "Units": null,
-                  "Name": "RootAreaCalcType",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "1 for maize, 0 for sorghum. This should be removed in the long run.",
-                      "Name": "Memo",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 },

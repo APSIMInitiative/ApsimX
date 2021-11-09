@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 467,
+  "ExplorerWidth": 500,
   "Version": 144,
   "Name": "Simulations",
   "Children": [
@@ -3838,25 +3838,6 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.PhaseLookupValue, Models",
-                  "Start": "Germination",
-                  "End": "Maturity",
-                  "Name": "NitrogenRootCalcSwitch",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "Constant",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
                   "$type": "Models.Functions.LinearInterpolationFunction, Models",
                   "Name": "RootDepthStressFactor",
                   "Children": [
@@ -4491,7 +4472,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "Referenced from DMDemands",
+                      "Text": "Referenced from Rachis DMDemands",
                       "Name": "Memo",
                       "Children": [],
                       "Enabled": true,
