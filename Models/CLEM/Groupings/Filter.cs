@@ -27,7 +27,7 @@ namespace Models.CLEM.Groupings
         /// </summary>
         [Description("Operator")]
         [Required]
-        [Display(Type = DisplayType.DropDown, Values = nameof(GetOperators))]
+        [Display(Type = DisplayType.DropDown, Values = nameof(GetOperators), Order = 2)]
         [System.ComponentModel.DefaultValueAttribute(ExpressionType.Equal)]
         public ExpressionType Operator { get; set; }
         
@@ -99,6 +99,7 @@ namespace Models.CLEM.Groupings
         /// Value to check for filter
         /// </summary>
         [Description("Value to compare")]
+        [Display(Order = 3)]
         public object Value { get; set; }
 
         /// <summary>

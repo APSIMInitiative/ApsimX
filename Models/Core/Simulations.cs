@@ -13,15 +13,12 @@ using Models.Storage;
 using Newtonsoft.Json.Serialization;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
-using System.Threading.Tasks;
+using APSIM.Shared.Documentation;
 
 namespace Models.Core
 {
     /// <summary>
-    /// # [Name]
-    /// Encapsulates a collection of simulations. It is responsible for creating this collection,
-    /// changing the structure of the components within the simulations, renaming components, adding
-    /// new ones, deleting components. The user interface talks to an instance of this class.
+    /// Encapsulates a collection of simulations. It is responsible for creating this collection, changing the structure of the components within the simulations, renaming components, adding new ones, deleting components. The user interface talks to an instance of this class.
     /// </summary>
     [Serializable]
     [ScopedModel]
@@ -103,7 +100,7 @@ namespace Models.Core
         /// <summary>
         /// Return the current APSIM version number.
         /// </summary>
-        public string ApsimVersion
+        public static string ApsimVersion
         {
             get
             {
@@ -250,6 +247,15 @@ namespace Models.Core
             return fileNames;
         }
 
+        /// <summary>
+        /// Get a list of tags which describe the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            foreach (ITag tag in Children.SelectMany(c => c.Document()))
+                yield return tag;
+        }
+
         /// <summary>Documents the specified model.</summary>
         /// <param name="modelNameToDocument">The model name to document.</param>
         /// <param name="tags">The auto doc tags.</param>
@@ -294,7 +300,8 @@ namespace Models.Core
                     if (modelToDocument == null)
                         throw new Exception("Cannot find model to document: " + modelNameToDocument);
 
-                    modelToDocument.IncludeInDocumentation = true;
+                    // resolve all links in cloned simulation.
+                    Links.Resolve(clonedSimulation, true);
 
                     // Document the model.
                     AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren:true);

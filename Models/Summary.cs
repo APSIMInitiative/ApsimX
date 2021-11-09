@@ -7,15 +7,6 @@
     using System.IO;
     using System.Reflection;
     using APSIM.Shared.Utilities;
-#if NETFRAMEWORK
-    using MigraDoc.DocumentObjectModel;
-    using MigraDoc.DocumentObjectModel.Tables;
-    using Row = MigraDoc.DocumentObjectModel.Tables.Row;
-#else
-    using MigraDocCore.DocumentObjectModel;
-    using MigraDocCore.DocumentObjectModel.Tables;
-    using Row = MigraDocCore.DocumentObjectModel.Tables.Row;
-#endif
     using Models.Core;
     using Models.Soils;
     using Models.Soils.Standardiser;
@@ -70,11 +61,6 @@
             /// HTML format
             /// </summary>
             html,
-
-            /// <summary>
-            /// RTF format
-            /// </summary>
-            rtf,
 
             /// <summary>
             /// Markdown format
@@ -310,8 +296,6 @@
             OutputType outtype,
             bool darkTheme)
         {
-            Document document = null;
-
             if (outtype == OutputType.html)
             {
                 writer.WriteLine("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
@@ -346,8 +330,6 @@
                 writer.WriteLine("<a href=\"#log\">Simulation log</a>");
 
             }
-            else if (outtype == OutputType.rtf)
-                throw new NotImplementedException();
 
             // Get the initial conditions table.            
             DataTable initialConditionsTable = storage.Reader.GetData(simulationNames: new string[] { simulationName }, tableName:"_InitialConditions");
@@ -365,25 +347,25 @@
                     if (tables[i].Rows.Count > 0 || tables[i + 1].Rows.Count > 0)
                     {
                         string heading = tables[i].TableName;
-                        WriteHeading(writer, heading, outtype, document);
+                        WriteHeading(writer, heading, outtype);
 
                         // Write the manager script.
                         if (tables[i].Rows.Count == 1 && tables[i].Rows[0][0].ToString() == "Script code: ")
                         {
-                            WriteScript(writer, tables[i].Rows[0], outtype, document);
+                            WriteScript(writer, tables[i].Rows[0], outtype);
                         }
                         else
                         {
                             // Write the properties table if we have any properties.
                             if (tables[i].Rows.Count > 0)
                             {
-                                WriteTable(writer, tables[i], outtype, "PropertyTable", document);
+                                WriteTable(writer, tables[i], outtype, "PropertyTable");
                             }
 
                             // Write the general data table if we have any data.
                             if (tables[i + 1].Rows.Count > 0)
                             {
-                                WriteTable(writer, tables[i + 1], outtype, "ApsimTable", document);
+                                WriteTable(writer, tables[i + 1], outtype, "ApsimTable");
                             }
                         }
 
@@ -394,17 +376,15 @@
             }
 
             // Write out all messages.
-            WriteHeading(writer, "Simulation log:", outtype, document, "log");
+            WriteHeading(writer, "Simulation log:", outtype, "log");
             DataTable messageTable = GetMessageTable(storage, simulationName);
-            WriteMessageTable(writer, messageTable, outtype, false, "MessageTable", document);
+            WriteMessageTable(writer, messageTable, outtype, false, "MessageTable");
 
             if (outtype == OutputType.html)
             {
                 writer.WriteLine("</body>");
                 writer.WriteLine("</html>");
             }
-            else if (outtype == OutputType.rtf)
-                throw new NotImplementedException();
         }
 
         /// <summary>
@@ -486,9 +466,8 @@
         /// <param name="writer">Text writer to write to</param>
         /// <param name="heading">The heading to write</param>
         /// <param name="outtype">Indicates the format to be produced</param>
-        /// <param name="document">Document object if using MigraDoc to generate output, null otherwise </param>
         /// <param name="id">Provides an id tag for the heading (html only; optional)</param>
-        private static void WriteHeading(TextWriter writer, string heading, OutputType outtype, Document document, string id = null)
+        private static void WriteHeading(TextWriter writer, string heading, OutputType outtype, string id = null)
         {
             if (outtype == OutputType.html)
             {
@@ -496,11 +475,6 @@
                 if (!String.IsNullOrEmpty(id))
                     writer.Write(" id='" + id + "'");
                 writer.WriteLine(">" + heading + "</h2>");
-            }
-            else if (outtype == OutputType.rtf)
-            {
-                Section section = document.LastSection;
-                Paragraph paragraph = section.AddParagraph(heading, "Heading2");
             }
             else if (outtype == OutputType.Markdown)
             {
@@ -520,8 +494,7 @@
         /// <param name="writer">Text writer to write to</param>
         /// <param name="row">The data table row containing the script</param>
         /// <param name="outtype">Indicates the format to be produced</param>
-        /// <param name="document">Document object if using MigraDoc to generate output, null otherwise </param>
-        private static void WriteScript(TextWriter writer, DataRow row, OutputType outtype, Document document)
+        private static void WriteScript(TextWriter writer, DataRow row, OutputType outtype)
         {
             string st = row[1].ToString();
             st = st.Replace("\t", "    ");
@@ -533,10 +506,6 @@
                 st = st.Replace(">", "&gt;");
                 writer.WriteLine(st);
                 writer.WriteLine("</pre>");
-            }
-            else if (outtype == OutputType.rtf)
-            {
-                Paragraph paragraph = document.LastSection.AddParagraph(st, "Monospace");
             }
             else if (outtype == OutputType.Markdown)
             {
@@ -558,8 +527,7 @@
         /// <param name="table">The table to write</param>
         /// <param name="outtype">Indicates the format to be produced</param>
         /// <param name="className">The class name of the generated html table</param>
-        /// <param name="document">Document object if using MigraDoc to generate output, null otherwise </param>
-        private static void WriteTable(TextWriter writer, DataTable table, OutputType outtype, string className, Document document)
+        private static void WriteTable(TextWriter writer, DataTable table, OutputType outtype, string className)
         {
             bool showHeadings = className != "PropertyTable";
             if (outtype == OutputType.html)
@@ -607,72 +575,6 @@
                 }
                 writer.WriteLine("</table><br/>");
             }
-            else if (outtype == OutputType.rtf)
-            {
-                Table tabl = new Table();
-                tabl.Borders.Width = 0.75;
-
-                foreach (DataColumn col in table.Columns)
-                {
-                    Column column = tabl.AddColumn(Unit.FromCentimeter(18.0 / table.Columns.Count));
-                }
-
-                if (showHeadings)
-                {
-                    Row row = tabl.AddRow();
-                    row.Shading.Color = Colors.PaleGoldenrod;
-                    tabl.Shading.Color = new Color(245, 245, 255);
-                    for (int i = 0; i < table.Columns.Count; i++)
-                    {
-                        Cell cell = row.Cells[i];
-                        Paragraph paragraph = cell.AddParagraph();
-                        if (i == 0)
-                            paragraph.Format.Alignment = ParagraphAlignment.Left;
-                        else
-                            paragraph.Format.Alignment = ParagraphAlignment.Right;
-                        paragraph.AddText(table.Columns[i].ColumnName);
-                    }
-                }
-
-                foreach (DataRow row in table.Rows)
-                {
-                    bool titleRow = Convert.IsDBNull(row[0]);
-                    string st;
-                    Row newRow = tabl.AddRow();
-
-                    for (int i = 0; i < table.Columns.Count; i++)
-                    {
-                        if (titleRow && i == 0)
-                        {
-                            st = "Total";
-                            newRow.Format.Font.Color = Colors.DarkOrange;
-                            newRow.Format.Font.Bold = true;
-                        }
-                        else
-                            st = row[i].ToString();
-
-                        Cell cell = newRow.Cells[i];
-                        Paragraph paragraph = cell.AddParagraph();
-                        if (!showHeadings)
-                        {
-                            cell.Borders.Style = BorderStyle.None;
-                            paragraph.Format.Alignment = ParagraphAlignment.Left;
-                        }
-                        else if (i == 0)
-                            paragraph.Format.Alignment = ParagraphAlignment.Left;
-                        else
-                            paragraph.Format.Alignment = ParagraphAlignment.Right;
-
-                        if (showHeadings && i == 0)
-                            paragraph.AddFormattedText(st, TextFormat.Bold);
-                        else
-                            paragraph.AddText(st);
-                    }
-                }
-
-                document.LastSection.Add(tabl);
-                document.LastSection.AddParagraph(); // Just to give a bit of spacing
-            }
             else if (outtype == OutputType.Markdown)
             {
                 writer.WriteLine(DataTableUtilities.ToMarkdown(table, true));
@@ -692,19 +594,13 @@
         /// <param name="outtype">Indicates the format to be produced</param>
         /// <param name="includeHeadings">Include headings in the html table produced?</param>
         /// <param name="className">The class name of the generated html table</param>
-        /// <param name="document">Document object if using MigraDoc to generate output, null otherwise </param>
-        private static void WriteMessageTable(TextWriter writer, DataTable table, OutputType outtype, bool includeHeadings, string className, Document document)
+        private static void WriteMessageTable(TextWriter writer, DataTable table, OutputType outtype, bool includeHeadings, string className)
         {
             foreach (DataRow row in table.Rows)
             {
                 if (outtype == OutputType.html)
                 {
                     writer.WriteLine("<h3>" + row[0] + "</h3>");
-                }
-                else if (outtype == OutputType.rtf)
-                {
-                    Section section = document.LastSection;
-                    Paragraph paragraph = section.AddParagraph(row[0].ToString(), "Heading3");
                 }
                 else if (outtype == OutputType.Markdown)
                     writer.WriteLine($"### {row[0]}");
@@ -725,15 +621,6 @@
                     st = st.Replace(">", "&gt;");
                     writer.WriteLine(st);
                     writer.WriteLine("</pre>");
-                }
-                else if (outtype == OutputType.rtf)
-                {
-                    Section section = document.LastSection;
-                    Paragraph paragraph = section.AddParagraph(st, "Monospace");
-                    if (st.Contains("WARNING:"))
-                        paragraph.Format.Font.Color = Colors.OrangeRed;
-                    else if (st.Contains("ERROR:"))
-                        paragraph.Format.Font.Color = Colors.Red;
                 }
                 else if (outtype == OutputType.Markdown)
                 {

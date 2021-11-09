@@ -125,26 +125,13 @@ namespace UserInterface.Views
             foreach (Widget child in newViewport.Children)
             {
                 newViewport.Remove(child);
-                child.Cleanup();
+                child.Dispose();
             }
             if (typeof(ViewBase).IsInstanceOfType(control))
             {
                 EventBox frame = new EventBox();
-#if NETFRAMEWORK
-                frame.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
-#endif
-                HBox hbox = new HBox();
-                uint border = 0;
-                if (tabName == "Properties")
-                {
-                    border = 5;
-                }
-                else if (tabName != "Display" & tabName != "Data")
-                {
-                    border = 10;
-                }
 
-                hbox.BorderWidth = border;
+                HBox hbox = new HBox();
 
                 ViewBase view = (ViewBase)control;
                 hbox.Add(view.MainWidget);

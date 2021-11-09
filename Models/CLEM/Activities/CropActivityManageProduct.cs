@@ -587,7 +587,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -623,13 +623,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
-            return base.ModelSummaryClosingTags(formatForParentControl); 
+            return base.ModelSummaryClosingTags(); 
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
             string html = "";
             // if first child of mixed 
@@ -646,7 +646,7 @@ namespace Models.CLEM.Activities
                 html += "\r\n<div class=\"cropmixedlabel\">Mixed crop</div>";
                 html += "\r\n<div class=\"cropmixedborder\">";
             }
-            html += base.ModelSummaryOpeningTags(formatForParentControl);
+            html += base.ModelSummaryOpeningTags();
             return html;
         } 
         #endregion

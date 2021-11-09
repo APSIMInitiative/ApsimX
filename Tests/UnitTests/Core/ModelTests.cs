@@ -20,6 +20,7 @@ namespace UnitTests.Core
     public class ModelTests
     {
         private interface IInterface { }
+        private class MockModel : Model { }
         private class MockModel1 : Model, IInterface { }
         private class MockModel2 : Model { }
 
@@ -39,7 +40,7 @@ namespace UnitTests.Core
         [SetUp]
         public void Initialise()
         {
-            simpleModel = new Model()
+            simpleModel = new MockModel()
             {
                 Name = "Test",
                 Children = new List<IModel>()
@@ -64,7 +65,7 @@ namespace UnitTests.Core
                         Name = "folder3",
                         Children = new List<IModel>()
                         {
-                            new Model()
+                            new MockModel()
                             {
                                 Name = "nosiblings"
                             }
@@ -117,7 +118,7 @@ namespace UnitTests.Core
                                 Name = "managerfolder",
                                 Children = new List<IModel>()
                                 {
-                                    new Model()
+                                    new MockModel()
                                     {
                                         Name = "manager"
                                     }
@@ -193,7 +194,7 @@ namespace UnitTests.Core
             // Many matches - expect first in depth-first search is returned.
             IModel folder4 = new MockModel2() { Parent = container, Name = "folder1" };
             container.Children.Add(folder4);
-            IModel folder5 = new Model() { Parent = folder1, Name = "folder1" };
+            IModel folder5 = new MockModel() { Parent = folder1, Name = "folder1" };
             folder1.Children.Add(folder5);
 
             Assert.AreEqual(folder1, simpleModel.FindDescendant("folder1"));
@@ -705,7 +706,7 @@ namespace UnitTests.Core
 
             // Many siblings.
             IModel folder4 = new Folder() { Name = "folder4", Parent = folder1.Parent };
-            IModel test = new Model() { Name = "test", Parent = folder1.Parent };
+            IModel test = new MockModel() { Name = "test", Parent = folder1.Parent };
             folder1.Parent.Children.Add(folder4);
             folder1.Parent.Children.Add(test);
             Assert.AreEqual(new[] { folder2, folder4, test }, folder1.FindAllSiblings().ToArray());
@@ -725,7 +726,7 @@ namespace UnitTests.Core
 
             // Many children.
             IModel folder4 = new Folder() { Name = "folder4", Parent = container };
-            IModel test = new Model() { Name = "test", Parent = container };
+            IModel test = new MockModel() { Name = "test", Parent = container };
             container.Children.Add(folder4);
             container.Children.Add(test);
             Assert.AreEqual(new[] { folder1, folder2, folder4, test }, container.FindAllChildren().ToArray());
@@ -848,7 +849,7 @@ namespace UnitTests.Core
 
             // Many siblings of correct type - expect first sibling which matches.
             IModel folder4 = new Folder() { Name = "folder4", Parent = folder1.Parent };
-            IModel test = new Model() { Name = "test", Parent = folder1.Parent };
+            IModel test = new MockModel() { Name = "test", Parent = folder1.Parent };
             folder1.Parent.Children.Add(folder4);
             folder1.Parent.Children.Add(test);
             Assert.AreEqual(new[] { folder2, folder4 }, folder1.FindAllSiblings<Folder>().ToArray());
@@ -874,7 +875,7 @@ namespace UnitTests.Core
 
             // Many children of correct type - expect first child which matches.
             IModel folder4 = new Folder() { Name = "folder4", Parent = container };
-            IModel test = new Model() { Name = "test", Parent = container };
+            IModel test = new MockModel() { Name = "test", Parent = container };
             container.Children.Add(folder4);
             container.Children.Add(test);
             Assert.AreEqual(new[] { folder1, folder2, folder4 }, container.FindAllChildren<Folder>().ToArray());
@@ -965,7 +966,7 @@ namespace UnitTests.Core
             // Many descendants with correct name - expect results in depth-first order.
             IModel folder4 = new MockModel2() { Parent = container, Name = "folder1" };
             container.Children.Add(folder4);
-            IModel folder5 = new Model() { Parent = folder1, Name = "folder1" };
+            IModel folder5 = new MockModel() { Parent = folder1, Name = "folder1" };
             folder1.Children.Add(folder5);
 
             Assert.AreEqual(new[] { folder1, folder5, folder4 }, simpleModel.FindAllDescendants("folder1").ToArray());
@@ -1396,18 +1397,18 @@ namespace UnitTests.Core
             // IFunctions can be added to anything.
             Assert.True(simpleModel.IsChildAllowable(typeof(SomeFunction)));
             Assert.True(new Simulations().IsChildAllowable(typeof(SomeFunction)));
-            Assert.True(new Model().IsChildAllowable(typeof(SomeFunction)));
+            Assert.True(new MockModel().IsChildAllowable(typeof(SomeFunction)));
 
             // Otherwise, the validity of a child model depends on it sspecific
             // valid parents, as defined in its valid parent attributes.
             Assert.True(new NoValidParents().IsChildAllowable(typeof(CanAddToNoValidParents)));
             Assert.True(new NoValidParents().IsChildAllowable(typeof(DropAnywhere)));
-            Assert.True(new Model().IsChildAllowable(typeof(DropAnywhere)));
+            Assert.True(new MockModel().IsChildAllowable(typeof(DropAnywhere)));
             Assert.False(new NoValidParents().IsChildAllowable(typeof(NoValidParents)));
-            Assert.False(new Model().IsChildAllowable(typeof(NoValidParents)));
+            Assert.False(new MockModel().IsChildAllowable(typeof(NoValidParents)));
             Assert.False(new CanAddToNoValidParents().IsChildAllowable(typeof(CanAddToNoValidParents)));
             Assert.True(new CanAddToNoValidParents().IsChildAllowable(typeof(DropAnywhere)));
-            Assert.True(new Model().IsChildAllowable(typeof(DropAnywhere)));
+            Assert.True(new MockModel().IsChildAllowable(typeof(DropAnywhere)));
         }
 
         /// <summary>

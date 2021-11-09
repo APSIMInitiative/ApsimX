@@ -9,6 +9,7 @@
     using System.Drawing;
     using System.Reflection;
     using Newtonsoft.Json;
+    using APSIM.Shared.Documentation;
 
     /// <summary>
     /// The manager model
@@ -24,7 +25,7 @@
     [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
     [ValidParent(ParentType = typeof(Factorial.Factor))]
     [ValidParent(ParentType = typeof(Soils.Soil))]
-    public class Manager : Model, IOptionallySerialiseChildren, ICustomDocumentation
+    public class Manager : Model, IOptionallySerialiseChildren
     {
         [NonSerialized]
         [Link]
@@ -230,18 +231,19 @@
             }
         }
 
-        /// <summary>Ovewrite default auto-doc.</summary>
-        /// <param name="tags"></param>
-        /// <param name="headingLevel"></param>
-        /// <param name="indent"></param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the script iff it overrides its Document() method.
+        /// Otherwise, return nothing.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // document children
-                foreach (IModel child in Children)
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
+            // Nasty!
+            IModel script = Children[0];
+
+            Type scriptType = script.GetType();
+            if (scriptType.GetMethod(nameof(Document)).DeclaringType == scriptType)
+                foreach (ITag tag in script.Document())
+                    yield return tag;
         }
     }
 }

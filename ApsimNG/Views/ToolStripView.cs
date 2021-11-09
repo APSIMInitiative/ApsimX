@@ -69,7 +69,7 @@
                     }
                 }
                 toolStrip.Remove(child);
-                child.Cleanup();
+                child.Dispose();
             }
         }
 
@@ -80,7 +80,7 @@
             foreach (Widget child in toolStrip.Children)
             {
                 toolStrip.Remove(child);
-                child.Cleanup();
+                child.Dispose();
             }
             foreach (MenuDescriptionArgs description in menuDescriptions)
             {

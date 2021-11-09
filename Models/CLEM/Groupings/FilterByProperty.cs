@@ -35,9 +35,10 @@ namespace Models.CLEM.Groupings
         /// </summary>
         [Description("Property or method")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Property or method required")]
-        [Display(Type = DisplayType.DropDown, Values = nameof(GetParameters))]
+        [Display(Type = DisplayType.DropDown, Values = nameof(GetParameters), Order = 1)]
         public string PropertyOfIndividual { get; set; }
-        private IEnumerable<string> GetParameters() => Parent.Parameters.OrderBy(k => k);
+        
+        private IEnumerable<string> GetParameters() => Parent?.Parameters.OrderBy(k => k);
 
         /// <summary>
         /// Constructor
@@ -566,7 +567,7 @@ namespace Models.CLEM.Groupings
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             return $"<div class=\"filter\" style=\"opacity: {((Enabled) ? "1" : "0.4")}\">{ToHTMLString()}</div>";
         }
@@ -575,7 +576,7 @@ namespace Models.CLEM.Groupings
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
             // allows for collapsed box and simple entry
             return "";
@@ -585,7 +586,7 @@ namespace Models.CLEM.Groupings
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
             // allows for collapsed box and simple entry
             return "";

@@ -240,10 +240,9 @@ namespace Models.CLEM.Activities
                     switch (OnPartialResourcesAvailableAction)
                     {
                         case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-                                Summary.WriteWarning(this, $"Insufficient [r={AccountName}] resource of type [r=FinanceType] for activity [a={this.NameWithParent}]");
                                 Summary.WriteWarning(this, $"Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity [a={this.NameWithParent}]");
                                 Status = ActivityStatus.Critical;
-                                throw new ApsimXException(this, $"@i:Insufficient resources [r={AccountName}] for activity [a={this.NameWithParent}]");
+                                throw new ApsimXException(this, $"Insufficient resources [r={AccountName}] for activity [a={this.NameWithParent}]");
                         case OnPartialResourcesAvailableActionTypes.SkipActivity:
                             this.Status = ActivityStatus.Ignored;
                             return;
@@ -337,7 +336,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

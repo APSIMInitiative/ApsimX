@@ -145,19 +145,34 @@ namespace Models.CLEM
             }
 
             return results;
-        } 
+        }
         #endregion
 
         #region descriptive summary
+
         /// <inheritdoc/>
-        public string GetFullSummary(object model, bool useFullDescription, string htmlString, Func<string, string> markdown2Html = null)
+        [JsonIgnore]
+        public List<string> CurrentAncestorList { get; set; } = new List<string>();
+
+        /// <inheritdoc/>
+        public bool FormatForParentControl { get { return CurrentAncestorList.Count > 1; } }
+
+        /// <inheritdoc/>
+        public string GetFullSummary(object model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
+                CLEMModel czm = model as CLEMModel;
+                czm.CurrentAncestorList = parentControls.ToList();
+                czm.CurrentAncestorList.Add(czm.GetType().Name);
+
                 htmlWriter.Write($"\r\n<div class=\"holdermain\" style=\"opacity: {((!this.Enabled) ? "0.4" : "1")}\">");
                 foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
-                    htmlWriter.Write(cm.GetFullSummary(cm, true, "", markdown2Html));
+                    htmlWriter.Write(cm.GetFullSummary(cm, czm.CurrentAncestorList, "", markdown2Html));
                 htmlWriter.Write("</div>");
+
+                czm.CurrentAncestorList = null;
+
                 return htmlWriter.ToString();
             }
         } 
