@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 518,
+  "ExplorerWidth": 454,
   "Version": 144,
   "Name": "Simulations",
   "Children": [
@@ -2077,6 +2077,46 @@
                           "$type": "Models.Functions.VariableReference, Models",
                           "VariableName": "[LeafCulms].leafNoCorrection",
                           "Name": "leafNoCorrection",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "slaMax",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.1,
+                            4.0
+                          ],
+                          "Y": [
+                            50000.0,
+                            25000.0
+                          ],
+                          "XVariableName": null,
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "x_lai and y_lai_sla_max in old maize",
+                          "Name": "Memo",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].LAI",
+                          "Name": "XValue",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false

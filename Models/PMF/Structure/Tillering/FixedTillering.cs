@@ -1,15 +1,12 @@
 ﻿using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Bibliography;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Interfaces;
+using Models.PMF.Organs;
 using Models.PMF.Phen;
-using PdfSharpCore.Pdf.Filters;
+using Models.Utilities;
 using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Models.PMF.Struct
 {
@@ -30,9 +27,17 @@ namespace Models.PMF.Struct
 		[Link]
 		LeafCulms culms = null;
 
+		/// <summary> Leaf organ</summary>
+		[Link]
+		SorghumLeaf leaf = null;
+
 		/// <summary> Culms on the leaf </summary>
 		[Link(Type = LinkType.Child, ByName = true)]
 		IFunction areaCalc = null;
+
+		/// <summary> Culms on the leaf </summary>
+		[Link(Type = LinkType.Child, ByName = true)]
+		IFunction slaMax = null;
 
 		/// <summary>The parent tilering class</summary>
 		[Link]
@@ -42,18 +47,18 @@ namespace Models.PMF.Struct
 		public double FertileTillerNumber { get; private set; }
 
 		private int floweringStage;
-		private int endJuvenileStage;
+		private int endJuvenilePhase;
 		private double tillersAdded;
 
         private bool beforeFlowering()
 {
-			if (floweringStage < 1) floweringStage = phenology.StartStagePhaseIndex("Flowering");
-			return phenology.Stage < floweringStage;
+			if (floweringStage < 1) floweringStage = phenology.EndStagePhaseIndex("Flowering");
+			return phenology.BeforePhase(floweringStage);
 		}
 		private bool beforeEndJuvenileStage()
 		{
-			if (endJuvenileStage < 1) endJuvenileStage = phenology.EndStagePhaseIndex("EndJuvenile");
-			return phenology.Stage < endJuvenileStage;
+			if (endJuvenilePhase < 1) endJuvenilePhase = phenology.StartStagePhaseIndex("EndJuvenile");
+			return phenology.BeforePhase(endJuvenilePhase);
 		}
 
 		/// <summary> Calculate number of leaves</summary>
@@ -64,14 +69,11 @@ namespace Models.PMF.Struct
 
 			var currentLeafNo = culms.Culms[0].CurrentLeafNo;
 			double dltLeafNoMainCulm = 0.0;
-			if (beforeFlowering())
+			if (beforeEndJuvenileStage())
 			{
-				//if (beforeEndJuvenileStage())
-				{
-					//ThermalTime Targets to EndJuv are not known until the end of the Juvenile Phase
-					//FinalLeafNo is not known until the TT Target is known - meaning the potential leaf sizes aren't known
-					culms.Culms.ForEach(c => c.UpdatePotentialLeafSizes(areaCalc as ICulmLeafArea));
-				}
+				//ThermalTime Targets to EndJuv are not known until the end of the Juvenile Phase
+				//FinalLeafNo is not known until the TT Target is known - meaning the potential leaf sizes aren't known
+				culms.Culms.ForEach(c => c.UpdatePotentialLeafSizes(areaCalc as ICulmLeafArea));
 			}
 
 			dltLeafNoMainCulm = calcLeafAppearance(culms.Culms[0]);
@@ -96,7 +98,18 @@ namespace Models.PMF.Struct
 			return 0.0;
 		}
 
-        private double calcLeafAppearance(Culm culm)
+		/// <summary> Calculate actual area - which is constrained by the SLA of the leaf</summary>
+		public double CalcActualLeafArea(double dltStressedLAI)
+		{
+			if (beforeEndJuvenileStage()) return dltStressedLAI;
+
+			double dltDmGreen = leaf.potentialDMAllocation.Structural;
+			if (dltDmGreen <= 0.0) return dltStressedLAI;
+
+			return Math.Min(dltStressedLAI, dltDmGreen * slaMax.Value().ConvertSqM2SqMM());
+		}
+
+		private double calcLeafAppearance(Culm culm)
 		{
 			var leavesRemaining = culms.FinalLeafNo - culm.CurrentLeafNo;
 			var leafAppearanceRate = culms.LeafAppearanceRate.ValueForX(leavesRemaining);

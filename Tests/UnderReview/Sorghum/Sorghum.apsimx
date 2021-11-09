@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 468,
+  "ExplorerWidth": 285,
   "Version": 144,
   "Name": "Simulations",
   "Children": [
@@ -1996,6 +1996,15 @@
                           "ReadOnly": false
                         }
                       ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 45000.0,
+                      "Units": null,
+                      "Name": "slaMax",
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }

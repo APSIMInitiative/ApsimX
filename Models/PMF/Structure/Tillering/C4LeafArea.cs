@@ -1,16 +1,8 @@
-﻿using APSIM.Shared.Utilities;
-using DocumentFormat.OpenXml.Spreadsheet;
-using Models.Core;
+﻿using Models.Core;
 using Models.Functions;
-using Models.PMF.Interfaces;
-using Models.PMF.Organs;
 using Models.PMF.Struct;
 using Models.Utilities;
-using Newtonsoft.Json;
-using PdfSharpCore.Pdf.Filters;
 using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Models.PMF
 {

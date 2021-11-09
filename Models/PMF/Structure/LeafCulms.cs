@@ -561,6 +561,16 @@ namespace Models.PMF.Struct
 			}
 
 		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public double CalculateActualArea()
+		{
+            return tillering.CalcActualLeafArea(dltStressedLAI);
+        }
+
+
 		/// <summary>
 		/// In old apsim, we update the stage variable of each plant part
 		/// immediately after the call to phenology::development();

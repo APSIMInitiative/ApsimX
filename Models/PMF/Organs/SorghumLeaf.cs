@@ -519,8 +519,13 @@ namespace Models.PMF.Organs
                 {
                     //areaActual in old model
                     // culms.AreaActual() will update this.DltLAI
-                    culms.AreaActual();
+                    DltLAI = culms.CalculateActualArea();
                     SenesceArea();
+
+                    double dltDmGreen = potentialDMAllocation.Structural;
+                    //if (Live.Wt + dltDmGreen > 0.0)
+                    //    sla = (LAI + DltStressedLAI) / (Live.Wt + dltDmGreen) * 10000;  // (cm^2/g)
+
                 }
             }
         }
@@ -968,6 +973,7 @@ namespace Models.PMF.Organs
                 Height = heightFunction.Value();
 
                 LAIDead = SenescedLai;
+                //UpdateArea();
             }
         }
 

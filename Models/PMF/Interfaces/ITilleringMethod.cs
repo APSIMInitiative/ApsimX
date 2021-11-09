@@ -1,4 +1,5 @@
 ﻿using Models.Core;
+using Models.PMF.Organs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,5 +18,8 @@ namespace Models.PMF.Interfaces
         double CalcLeafNumber();
         /// <summary> Calculate the potential leaf area for the tillers</summary>
         double CalcPotentialLeafArea();
+
+        /// <summary> Calculate the actual Area for the Culms</summary>
+        double CalcActualLeafArea(double dltStressedLAI);
     }
 }
