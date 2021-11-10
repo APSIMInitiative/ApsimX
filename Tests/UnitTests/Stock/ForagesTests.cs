@@ -11,12 +11,6 @@
     [TestFixture]
     public class ForagesTests
     {
-        // DONE: Check STOCK grazing a PMF plant model before and after forages model was created (i.e. old vs new).
-        // DONE: Why is SurfaceOrganicMatter not in the forages GUI?
-        // Check STOCK grazing a AgPasture model before and after forages model was created (i.e. old vs new).
-        // DONE: Check SimpleGrazing a AgPasture model before and after forages model was created (i.e. old vs new).
-        // Create some documentation on the Forages model - design, the user interface, how to write code to use it. How to report digestibility variables (limitation?). Put on web apsimdev.
-
         /// <summary>Make sure damageable biomasses are correctly matched to forage parameters.</summary>
         [Test]
         public void MatchBiomassToParameters()

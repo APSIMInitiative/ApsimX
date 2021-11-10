@@ -190,7 +190,7 @@ namespace Models.ForageDigestibility
                 if (!MathUtilities.FloatsAreEqual(defoliatedDM, amountToRemove))
                     throw new Exception("Removal of DM resulted in loss of mass balance");
                 else
-                    summary?.WriteMessage(forageModel as IModel, "Biomass removed from " + forageModel.Name + " by grazing: " + defoliatedDM.ToString("#0.0") + "kg/ha");
+                    summary?.WriteMessage(forageModel as IModel, "Biomass removed from " + forageModel.Name + " by grazing: " + (defoliatedDM*10).ToString("#0.0") + "kg/ha");
 
                 return new DigestibleBiomass(new DamageableBiomass(Name, new Biomass()
                 {
@@ -203,7 +203,7 @@ namespace Models.ForageDigestibility
 
         /// <summary>Removes plant material simulating a graze event.</summary>
         /// <param name="type">The type of amount being defined (SetResidueAmount or SetRemoveAmount)</param>
-        /// <param name="amount">The DM amount (kg/ha)</param>
+        /// <param name="amount">The DM amount (g/m2)</param>
         /// <param name="summary">Optional summary object.</param>
         public void RemoveBiomass(string type, double amount, ISummary summary = null)
         {

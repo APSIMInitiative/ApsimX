@@ -503,6 +503,11 @@
         /// <summary>Add dung to the soil surface.</summary>
         private void AddDungToSurface()
         {
+
+            if (clock.Today == new DateTime(1995, 7, 8))
+            {
+
+            }
             var SOMData = new BiomassRemovedType();
             SOMData.crop_type = "RuminantDung_PastureFed";
             SOMData.dm_type = new string[] { SOMData.crop_type };
@@ -518,6 +523,11 @@
         {
             if (DoUrineReturn == null)
             {
+
+                if (clock.Today == new DateTime(1995, 7, 8))
+                {
+
+                }
                 // We will do the urine return.
                 // find the layer that the fertilizer is to be added to.
                 int layer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, DepthUrineIsAdded);

@@ -427,6 +427,13 @@
             Array.Clear(mySoilNH4Uptake, 0, mySoilNH4Uptake.Length);
             Array.Clear(mySoilNO3Uptake, 0, mySoilNO3Uptake.Length);
 
+
+
+            if (myClock.Today == new DateTime(1995, 7, 8))
+            {
+
+            }
+
             foreach (ZoneWaterAndN zone in zones)
             {
                 PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
@@ -2740,6 +2747,10 @@
         {
             // get total N to allocate in new growth
             dNewGrowthN = fixedN + senescedNRemobilised + SoilUptakeN + luxuryNRemobilised;
+            if (double.IsNaN(dNewGrowthN))
+            {
+
+            }
 
             // get the limitation factor due to soil N deficiency
             double glfNit = 1.0;
