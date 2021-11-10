@@ -229,13 +229,13 @@ namespace Models.CLEM
         }
 
         /// <inheritdoc/>
-        public virtual string ModelSummary(bool formatForParentControl)
+        public virtual string ModelSummary()
         {
             return "";
         }
 
         /// <inheritdoc/>
-        public virtual string GetFullSummary(IModel model, List<IModel> parentControls, string htmlString, Func<string, string> markdown2Html = null)
+        public virtual string GetFullSummary(IModel model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -243,15 +243,15 @@ namespace Models.CLEM
                 {
                     CLEMModel cm = model as CLEMModel;
                     cm.CurrentAncestorList = parentControls.ToList();
-                    cm.CurrentAncestorList.Add(model);
+                    cm.CurrentAncestorList.Add(model.GetType().Name);
 
-                    htmlWriter.Write(cm.ModelSummaryOpeningTags(cm.FormatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryOpeningTags());
 
                     htmlWriter.Write(cm.ModelSummaryInnerOpeningTagsBeforeSummary());
 
-                    htmlWriter.Write(cm.ModelSummary(cm.FormatForParentControl));
+                    htmlWriter.Write(cm.ModelSummary());
 
-                    htmlWriter.Write(cm.ModelSummaryInnerOpeningTags(cm.FormatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryInnerOpeningTags());
 
                     bool reportMemosInPlace = false;
                     // think through the various model types that do not support memos being writen within children
@@ -280,9 +280,9 @@ namespace Models.CLEM
                         }
                     }
 
-                    htmlWriter.Write(cm.ModelSummaryInnerClosingTags(cm.FormatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryInnerClosingTags());
 
-                    htmlWriter.Write(cm.ModelSummaryClosingTags(cm.FormatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryClosingTags());
                 }
                 return htmlWriter.ToString(); 
             }
@@ -293,13 +293,13 @@ namespace Models.CLEM
         public virtual HTMLSummaryStyle ModelSummaryStyle { get; set; }
 
         /// <inheritdoc/>
-        public List<IModel> CurrentAncestorList { get; set; } = new List<IModel>();
+        public List<string> CurrentAncestorList { get; set; } = new List<string>();
 
         /// <inheritdoc/>
         public bool FormatForParentControl { get { return CurrentAncestorList.Count > 1; } }
 
         /// <inheritdoc/>
-        public virtual string ModelSummaryClosingTags(bool formatForParentControl)
+        public virtual string ModelSummaryClosingTags()
         {
             return "\r\n</div>\r\n</div>";
         }
@@ -326,7 +326,7 @@ namespace Models.CLEM
         }
 
         /// <inheritdoc/>
-        public virtual string ModelSummaryOpeningTags(bool formatForParentControl)
+        public virtual string ModelSummaryOpeningTags()
         {
             string overall = "activity";
             string extra = "";
@@ -378,7 +378,7 @@ namespace Models.CLEM
 
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + ";\">");
+                htmlWriter.Write("\r\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + ";\">");
                 htmlWriter.Write("\r\n<div class=\"clearfix " + overall + "banner" + extra + "\">" + this.ModelSummaryNameTypeHeader() + "</div>");
                 htmlWriter.Write("\r\n<div class=\"" + overall + "content" + ((extra != "") ? extra : "") + "\">");
 
@@ -387,13 +387,13 @@ namespace Models.CLEM
         }
 
         /// <inheritdoc/>
-        public virtual string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public virtual string ModelSummaryInnerClosingTags()
         {
             return "";
         }
 
         /// <inheritdoc/>
-        public virtual string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        public virtual string ModelSummaryInnerOpeningTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -681,13 +681,13 @@ namespace Models.CLEM
                 htmlWriter.Write("\r\n</div>");
 
                 if (modelToSummarise is ZoneCLEM)
-                    htmlWriter.Write((modelToSummarise as ZoneCLEM).GetFullSummary(modelToSummarise, new List<IModel>(), htmlWriter.ToString(), markdown2Html));
+                    htmlWriter.Write((modelToSummarise as ZoneCLEM).GetFullSummary(modelToSummarise, new List<string>(), htmlWriter.ToString(), markdown2Html));
                 else if (modelToSummarise is Market)
-                    htmlWriter.Write((modelToSummarise as Market).GetFullSummary(modelToSummarise, new List<IModel>(), htmlWriter.ToString(), markdown2Html));
+                    htmlWriter.Write((modelToSummarise as Market).GetFullSummary(modelToSummarise, new List<string>(), htmlWriter.ToString(), markdown2Html));
                 else if (modelToSummarise is CLEMModel)
-                    htmlWriter.Write((modelToSummarise as CLEMModel).GetFullSummary(modelToSummarise, new List<IModel>(), htmlWriter.ToString(), markdown2Html));
+                    htmlWriter.Write((modelToSummarise as CLEMModel).GetFullSummary(modelToSummarise, new List<string>(), htmlWriter.ToString(), markdown2Html));
                 else if (modelToSummarise is ICLEMDescriptiveSummary)
-                    htmlWriter.Write((modelToSummarise as ICLEMDescriptiveSummary).GetFullSummary(modelToSummarise, new List<IModel>(), htmlWriter.ToString(), markdown2Html));
+                    htmlWriter.Write((modelToSummarise as ICLEMDescriptiveSummary).GetFullSummary(modelToSummarise, new List<string>(), htmlWriter.ToString(), markdown2Html));
                 else
                     htmlWriter.Write("<b>This component has no descriptive summary</b>");
 

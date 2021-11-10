@@ -1006,7 +1006,20 @@ namespace APSIM.Shared.Utilities
                         result.m_name = "Invalid number of parameters in: " + name + ".";
                         result.m_type = ExpressionType.Error;
                     }
-                    break;				
+                    break;
+                case "ceil":
+                case "ceiling":
+                    if (args.Length == 1)
+                    {
+                        result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
+                        result.m_value = Math.Ceiling(((Symbol)args[0]).m_value);
+                    }
+                    else
+                    {
+                        result.m_name = "Invalid number of parameters in: " + name + ".";
+                        result.m_type = ExpressionType.Error;
+                    }
+                    break;
                 case "stddev":
                     if (args.Length == 1)
                     {

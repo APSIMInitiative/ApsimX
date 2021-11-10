@@ -635,7 +635,7 @@ namespace Models.CLEM.Activities
 
             // TODO: separate foster from real mother for genetics
             // check for death of mother with sucklings and try foster sucklings
-            IEnumerable<RuminantFemale> mothersWithCalf = died.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Count() > 0);
+            IEnumerable<RuminantFemale> mothersWithCalf = died.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Any());
             List<RuminantFemale> wetMothersAvailable = died.OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
             int wetMothersAssigned = 0;
             if (wetMothersAvailable.Any())
@@ -646,7 +646,7 @@ namespace Models.CLEM.Activities
                     {
                         foreach (var calf in deadMother.SucklingOffspringList)
                         {
-                            if(wetMothersAssigned < wetMothersAvailable.Count())
+                            if(wetMothersAssigned < wetMothersAvailable.Count)
                             {
                                 calf.Mother = wetMothersAvailable[wetMothersAssigned];
                                 wetMothersAssigned++;
@@ -665,7 +665,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

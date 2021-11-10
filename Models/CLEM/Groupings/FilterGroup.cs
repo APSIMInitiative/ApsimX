@@ -128,7 +128,7 @@ namespace Models.CLEM
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public override string ModelSummaryInnerClosingTags()
         {
             return "\r\n</div>";
         }
@@ -137,7 +137,7 @@ namespace Models.CLEM
         /// Provides the closing html tags for object
         /// </summary>
         /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryInnerOpeningTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

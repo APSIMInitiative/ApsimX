@@ -104,7 +104,7 @@ namespace Models.CLEM.Activities
         }
 
         ///<inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             return "\r\n<div class=\"activityentry\">Collect manure from all pasture</div>";
         }
