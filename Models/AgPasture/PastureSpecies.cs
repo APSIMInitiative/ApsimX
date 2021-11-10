@@ -427,13 +427,6 @@
             Array.Clear(mySoilNH4Uptake, 0, mySoilNH4Uptake.Length);
             Array.Clear(mySoilNO3Uptake, 0, mySoilNO3Uptake.Length);
 
-
-
-            if (myClock.Today == new DateTime(1995, 7, 8))
-            {
-
-            }
-
             foreach (ZoneWaterAndN zone in zones)
             {
                 PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
@@ -884,6 +877,14 @@
         /// <summary>Minimum root amount relative to minimum green Wt (>0.0).</summary>
         [Units("0-1")]
         public double MinimumGreenRootProp { get; set; } = 0.5;
+
+        /// <summary>Relative preference for live over dead material during graze (>0.0).</summary>
+        [Units("-")]
+        public double PreferenceForGreenOverDead { get; set; } = 1.0;
+
+        /// <summary>Relative preference for leaf over stem-stolon material during graze (>0.0).</summary>
+        [Units("-")]
+        public double PreferenceForLeafOverStems { get; set; } = 1.0;
 
         ////- Soil related (water and N uptake) >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2747,10 +2748,6 @@
         {
             // get total N to allocate in new growth
             dNewGrowthN = fixedN + senescedNRemobilised + SoilUptakeN + luxuryNRemobilised;
-            if (double.IsNaN(dNewGrowthN))
-            {
-
-            }
 
             // get the limitation factor due to soil N deficiency
             double glfNit = 1.0;
@@ -3642,6 +3639,158 @@
             EvaluateLAI();
             EvaluateDigestibility();
         }
+
+        /// <summary>Removes plant material simulating a graze event.</summary>
+        /// <param name="type">The type of amount being defined (SetResidueAmount or SetRemoveAmount)</param>
+        /// <param name="amount">The DM amount (kg/ha)</param>
+        /// <exception cref="System.Exception"> Type of amount to remove on graze not recognized (use 'SetResidueAmount' or 'SetRemoveAmount'</exception>
+        public void RemoveBiomass(string type, double amount)
+        {
+            if (isAlive && Harvestable.Wt > Epsilon)
+            {
+                // Get the amount required to remove
+                double amountRequired;
+                if (type.ToLower() == "setresidueamount")
+                {
+                    // Remove all DM above given residual amount
+                    amountRequired = Math.Max(0.0, AboveGroundWt - amount);
+                }
+                else if (type.ToLower() == "setremoveamount")
+                {
+                    // Remove a given amount
+                    amountRequired = Math.Max(0.0, amount);
+                }
+                else
+                {
+                    throw new ApsimXException(this, "Type of amount to remove on graze not recognized (use \'SetResidueAmount\' or \'SetRemoveAmount\'");
+                }
+
+                // Get the actual amount to remove
+                double amountToRemove = Math.Max(0.0, Math.Min(amountRequired, Harvestable.Wt));
+
+                // Do the actual removal
+                if (!MathUtilities.FloatsAreEqual(amountToRemove, 0, 0.0001))
+                    RemoveBiomass(amountToRemove);
+
+            }
+            else
+                mySummary.WriteWarning(this, " Could not graze due to lack of DM available");
+        }
+
+        /// <summary>Removes a given amount of biomass (and N) from the plant.</summary>
+        /// <param name="amountToRemove">The amount of biomass to remove (kg/ha)</param>
+        public Biomass RemoveBiomass(double amountToRemove)
+        {
+            // get existing DM and N amounts
+            double preRemovalDMShoot = AboveGroundWt;
+            double preRemovalNShoot = AboveGroundN;
+
+            if (amountToRemove > Epsilon)
+            {
+                // Compute the fraction of each tissue to be removed
+                double[] fracRemoving = new double[6];
+                if (amountToRemove - Harvestable.Wt > -Epsilon)
+                {
+                    // All existing DM is removed
+                    amountToRemove = Harvestable.Wt;
+                    fracRemoving[0] = MathUtilities.Divide(Leaf.DMLiveHarvestable, Harvestable.Wt, 0.0);
+                    fracRemoving[1] = MathUtilities.Divide(Stem.DMLiveHarvestable, Harvestable.Wt, 0.0);
+                    fracRemoving[2] = MathUtilities.Divide(Stolon.DMLiveHarvestable, Harvestable.Wt, 0.0);
+                    fracRemoving[3] = MathUtilities.Divide(Leaf.DMDeadHarvestable, Harvestable.Wt, 0.0);
+                    fracRemoving[4] = MathUtilities.Divide(Stem.DMDeadHarvestable, Harvestable.Wt, 0.0);
+                    fracRemoving[5] = MathUtilities.Divide(Stolon.DMDeadHarvestable, Harvestable.Wt, 0.0);
+                }
+                else
+                {
+                    // Initialise the fractions to be removed (these will be normalised later)
+                    fracRemoving[0] = Leaf.DMLiveHarvestable * PreferenceForGreenOverDead * PreferenceForLeafOverStems;
+                    fracRemoving[1] = Stem.DMLiveHarvestable * PreferenceForGreenOverDead;
+                    fracRemoving[2] = Stolon.DMLiveHarvestable * PreferenceForGreenOverDead;
+                    fracRemoving[3] = Leaf.DMDeadHarvestable * PreferenceForLeafOverStems;
+                    fracRemoving[4] = Stem.DMDeadHarvestable;
+                    fracRemoving[5] = Stolon.DMDeadHarvestable;
+
+                    // Get fraction potentially removable (maximum fraction of each tissue in the removing amount)
+                    double[] fracRemovable = new double[6];
+                    fracRemovable[0] = Leaf.DMLiveHarvestable / amountToRemove;
+                    fracRemovable[1] = Stem.DMLiveHarvestable / amountToRemove;
+                    fracRemovable[2] = Stolon.DMLiveHarvestable / amountToRemove;
+                    fracRemovable[3] = Leaf.DMDeadHarvestable / amountToRemove;
+                    fracRemovable[4] = Stem.DMDeadHarvestable / amountToRemove;
+                    fracRemovable[5] = Stolon.DMDeadHarvestable / amountToRemove;
+
+                    // Normalise the fractions of each tissue to be removed, they should add to one
+                    double totalFrac = fracRemoving.Sum();
+                    for (int i = 0; i < 6; i++)
+                        fracRemoving[i] = Math.Min(fracRemovable[i], fracRemoving[i] / totalFrac);
+
+                    // Iterate until sum of fractions to remove is equal to one
+                    //  The initial normalised fractions are based on preference and existing DM. Because the value of fracRemoving is limited
+                    //   to fracRemovable, the sum of fracRemoving may not be equal to one, as it should be. We need to iterate adjusting the
+                    //   values of fracRemoving until we get a sum close enough to one. The previous values are used as weighting factors for
+                    //   computing new ones at each iteration.
+                    int count = 1;
+                    totalFrac = fracRemoving.Sum();
+                    while (1.0 - totalFrac > Epsilon)
+                    {
+                        count += 1;
+                        for (int i = 0; i < 6; i++)
+                            fracRemoving[i] = Math.Min(fracRemovable[i], fracRemoving[i] / totalFrac);
+                        totalFrac = fracRemoving.Sum();
+                        if (count > 1000)
+                        {
+                            mySummary.WriteWarning(this, " AgPasture could not remove or graze all the DM required for " + Name);
+                            break;
+                        }
+                    }
+                }
+
+                // Get digestibility of DM being harvested (do this before updating pools)
+                double greenDigestibility = (Leaf.DigestibilityLive * fracRemoving[0]) + (Stem.DigestibilityLive * fracRemoving[1])
+                                            + (Stolon.DigestibilityLive * fracRemoving[2]);
+                double deadDigestibility = (Leaf.DigestibilityDead * fracRemoving[3]) + (Stem.DigestibilityDead * fracRemoving[4]) + (Stolon.DigestibilityDead * fracRemoving[5]);
+                DefoliatedDigestibility = greenDigestibility + deadDigestibility;
+
+                // Remove biomass from the organs.
+                Leaf.RemoveBiomass(
+                    new OrganBiomassRemovalType()
+                    {
+                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[0], Leaf.DMLive, 0.0)),
+                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[3], Leaf.DMDead, 0.0))
+                    });
+                Stem.RemoveBiomass(
+                    new OrganBiomassRemovalType()
+                    {
+                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[1], Stem.DMLive, 0.0)),
+                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[4], Stem.DMDead, 0.0))
+                    });
+                Stolon.RemoveBiomass(
+                    new OrganBiomassRemovalType()
+                    {
+                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[2], Stolon.DMLive, 0.0)),
+                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[5], Stolon.DMDead, 0.0))
+                    });
+
+                // Update LAI and herbage digestibility
+                EvaluateLAI();
+                EvaluateDigestibility();
+            }
+
+            // Set outputs and check balance
+            var defoliatedDM = preRemovalDMShoot - AboveGroundWt;
+            var defoliatedN = preRemovalNShoot - AboveGroundN;
+            if (!MathUtilities.FloatsAreEqual(defoliatedDM, amountToRemove))
+                throw new ApsimXException(this, "  AgPasture " + Name + " - removal of DM resulted in loss of mass balance");
+            else
+                mySummary.WriteMessage(this, " Biomass removed from " + Name + " by grazing: " + defoliatedDM.ToString("#0.0") + "kg/ha");
+
+            return new Biomass()
+            {
+                StructuralWt = defoliatedDM,
+                StructuralN = defoliatedN,
+            };
+        }
+
 
         #endregion  --------------------------------------------------------------------------------------------------------
 

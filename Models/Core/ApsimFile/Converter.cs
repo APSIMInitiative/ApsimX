@@ -3833,8 +3833,8 @@
                 if (stockModels.Any())
                     stock = stockModels.First();
 
-                var simpleGrazing = JsonUtilities.Children(simulation).Where(c => c["$type"].ToString().Contains("SimpleGrazing"));
-                if (stock != null || simpleGrazing != null)
+                var simpleGrazing = JsonUtilities.ChildrenRecursively(simulation).Where(c => c["$type"].ToString().Contains("SimpleGrazing"));
+                if (stock != null || simpleGrazing.Any())
                 {
                     // Add in a Forages model.
                     var forages = new JObject();

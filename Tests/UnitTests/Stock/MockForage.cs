@@ -16,7 +16,8 @@
         public MockForage(double liveWt)
         {
             var material = new List<DamageableBiomass>();
-            material.Add(new DamageableBiomass("", new Biomass() { StorageWt = liveWt }, true));
+            material.Add(new DamageableBiomass("MockForage", new Biomass() { StorageWt = liveWt }, true));
+            material.Add(new DamageableBiomass("MockForage", new Biomass() { StorageWt = 0 }, false));
             Material = material;
         }
 
