@@ -1,4 +1,8 @@
-﻿namespace UserInterface.Views
+﻿using System.Drawing;
+using Utility;
+using APSIM.Interop.Drawing;
+
+namespace UserInterface.Views
 {
     /// <summary>
     /// This cell painter will colour the column headings of a sheet and any selected cells.
@@ -53,58 +57,9 @@
             else
                 return States.Normal;
         }
-#if NETCOREAPP
-
-#else
-        /// <summary>Gets the foreground colour of a cell.</summary>
-        /// <param name="columnIndex">The column index of the cell.</param>
-        /// <param name="rowIndex">The row index of the cell.</param>
-        public (int Red, int Green, int Blue) GetForegroundColour(int columnIndex, int rowIndex)
-        {
-
-            if (Utility.Configuration.Settings.DarkTheme)
-            {
 
 
-                if (rowIndex < sheet.NumberFrozenRows)
-                    return (255, 255, 255); // white
-                else
-                    return (255, 255, 255); // white
-            }
-            else
-            {
-                if (rowIndex < sheet.NumberFrozenRows)
-                    return (255, 255, 255); // white
-                else
-                    return (0, 0, 0); // black
-            }
-        }
 
-        /// <summary>Gets the background colour of a cell.</summary>
-        /// <param name="columnIndex">The column index of the cell.</param>
-        /// <param name="rowIndex">The row index of the cell.</param>
-        public (int Red, int Green, int Blue) GetBackgroundColour(int columnIndex, int rowIndex)
-        {
-            if (Utility.Configuration.Settings.DarkTheme)
-            {
-                if (selection != null && selection.IsSelected(columnIndex, rowIndex))
-                    return (150, 150, 150);  // light grey
-                else if (rowIndex < sheet.NumberFrozenRows)
-                    return (102, 102, 102);  // dark grey
-                else
-                    return Utility.Colour.ToCairo(sheetWidget.Style.Background(Gtk.StateType.Normal));
-            }
-            else
-            {
-                if (selection != null && selection.IsSelected(columnIndex, rowIndex))
-                    return (198, 198, 198);  // light grey
-                else if (rowIndex < sheet.NumberFrozenRows)
-                    return (102, 102, 102);  // dark grey
-                else
-                    return (255, 255, 255); // white
-            }
-        }
-#endif
 
         /// <summary>Gets whether to use a bold font for a cell.</summary>
         /// <param name="columnIndex">The column index of the cell.</param>

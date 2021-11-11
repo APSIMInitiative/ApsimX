@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs payment of all hired labour in the time step.")]
+    [Description("Performs payment of all hired labour in the time step")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/PayHiredLabour.htm")]
     public class LabourActivityPayHired : CLEMActivityBase, IValidatableObject
@@ -203,7 +203,7 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

@@ -12,13 +12,13 @@ using System.Linq;
 namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Activity timer sequence
+    /// Activity timer for breeding to maintain best milk production
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityControlledMating))]
-    [Description("Time breeding and female selection for best continuous milk production")]
+    [Description("This timer controls breeding and female selection for best continuous milk production")]
     [HelpUri(@"Content/Features/Timers/ActivityTimerBreedForMilking.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerBreedForMilking : CLEMModel, IActivityTimer, IActivityPerformedNotifier
@@ -150,11 +150,11 @@ namespace Models.CLEM.Activities
             // get individuals in first lactation cycle of gestation
             double lactationCyclesInGestation = Math.Round((double)ShortenLactationMonths / pregnancyDuration, 2);
 
-            var firstCycleList = pregnantList.Where(a => a.Age - a.AgeAtLastConception <= lactationCyclesInGestation);
-            if (firstCycleList.Any() && (firstCycleList.Count() < maxBreedersPerCycle & firstCycleList.Max(a => a.Age - a.AgeAtLastConception) <= breedingSpreadMonths))
+            var firstCycleList = pregnantList.Where(a => a.Age - a.AgeAtLastConception <= lactationCyclesInGestation).ToList();
+            if (firstCycleList.Count > 0 && (firstCycleList.Count < maxBreedersPerCycle & firstCycleList.Max(a => a.Age - a.AgeAtLastConception) <= breedingSpreadMonths))
             {
                 // if where less than the spread months from the max pregnancy found
-                numberNeeded = maxBreedersPerCycle - firstCycleList.Count();
+                numberNeeded = maxBreedersPerCycle - firstCycleList.Count;
             }
 
             if(numberNeeded > 0)
@@ -205,7 +205,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -232,13 +232,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
             return "</div>";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -248,7 +248,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write(this.Name);
                 }
                 htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
                 return htmlWriter.ToString();
             }
         }

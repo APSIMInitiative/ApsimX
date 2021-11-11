@@ -7,6 +7,7 @@
     using System.Drawing;
     using Newtonsoft.Json;
     using Models.Core;
+    using APSIM.Shared.Graphing;
     using Models.Core.Run;
 
     /// <summary>
@@ -59,92 +60,6 @@
         /// A box and whisker plot
         /// </summary>
         Box
-    }
-
-    /// <summary>An enumeration for the different types of markers</summary>
-    public enum MarkerType 
-    {
-        /// <summary>A filled circle marker</summary>
-        FilledCircle,
-
-        /// <summary>A filled diamond marker</summary>
-        FilledDiamond,
-
-        /// <summary>A filled square marker</summary>
-        FilledSquare,
-
-        /// <summary>A filled triangle marker</summary>
-        FilledTriangle,
-
-        /// <summary>A circle marker</summary>
-        Circle,
-
-        /// <summary>A diamond marker</summary>
-        Diamond,
-
-        /// <summary>A square marker</summary>
-        Square,
-
-        /// <summary>A triangle marker</summary>
-        Triangle,
-
-        /// <summary>A cross marker</summary>
-        Cross,
-
-        /// <summary>A plus marker</summary>
-        Plus,
-
-        /// <summary>A star marker</summary>
-        Star,
-
-        /// <summary>No marker should be display</summary>
-        None
-    }
-
-    /// <summary>An enumeration for the different sizes of markers</summary>
-    public enum MarkerSizeType
-    {
-        /// <summary>Normal size markers.</summary>
-        Normal,
-
-        /// <summary>Small markers</summary>
-        Small,
-
-        /// <summary>Very small markers</summary>
-        VerySmall,
-
-        /// <summary>Large size markers.</summary>
-        Large,
-
-    }
-
-    /// <summary>An enumeration representing the different types of lines</summary>
-    public enum LineType 
-    {
-        /// <summary>A solid line</summary>
-        Solid,
-
-        /// <summary>A dashed line</summary>
-        Dash,
-
-        /// <summary>A dotted line</summary>
-        Dot,
-
-        /// <summary>A dash dot line</summary>
-        DashDot,
-
-        /// <summary>No line</summary>
-        None 
-    }
-
-    /// <summary>An enumeration for the different thicknesses of lines.</summary>
-    public enum LineThicknessType
-    {
-        /// <summary>Normal line thickness</summary>
-        Normal,
-
-        /// <summary>Thin line thickess</summary>
-        Thin
     }
 
     /// <summary>Base interface for all annotations</summary>
@@ -206,7 +121,7 @@
         public LineType type;
 
         /// <summary>Gets the line thickness</summary>
-        public LineThicknessType thickness;
+        public LineThickness thickness;
 
         /// <summary>Draw the annotation in front of series?</summary>
         public bool InFrontOfSeries { get; set; } = true;

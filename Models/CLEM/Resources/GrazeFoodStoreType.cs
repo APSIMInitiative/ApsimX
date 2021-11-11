@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
-    [Description("This resource represents a graze food store of native pasture (e.g. a specific paddock).")]
+    [Description("This resource represents a graze food store of native pasture (e.g. a specific paddock)")]
     [Version(1, 0, 2, "Grazing from pasture pools is fixed to reflect NABSA approach.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Graze food store/GrazeFoodStoreType.htm")]
@@ -889,12 +889,8 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -937,11 +933,8 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerOpeningTags()
         {
             return "";
         } 

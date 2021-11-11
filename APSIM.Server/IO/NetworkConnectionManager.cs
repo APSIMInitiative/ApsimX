@@ -32,7 +32,7 @@ namespace APSIM.Server.IO
         /// <param name="ipAddress">IP Address on which to listen for connections.</param>
         /// <param name="port">Port on which to listen for connections.</param>
         /// <param name="protocol">Communications protocol.</param>
-        public NetworkSocketConnection(bool verbose, string ipAddress, uint port, Protocol protocol)
+        public NetworkSocketConnection(bool verbose, string ipAddress, uint port, ushort backlog, Protocol protocol)
         {
             if (port > int.MaxValue)
                 throw new ArgumentOutOfRangeException($"Cannot listen on port {port} (port number is too high)");
@@ -51,7 +51,7 @@ namespace APSIM.Server.IO
 
             // For now, we set max # pending connections to 1.
             // todo: this should probably be a user parameter.
-            server.Listen(1);
+            server.Listen(backlog);
 
             if (verbose)
                 Console.WriteLine($"Listening on {endpoint}...");

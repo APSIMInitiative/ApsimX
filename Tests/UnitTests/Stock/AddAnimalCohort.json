@@ -882,7 +882,6 @@
     "Genotype": {
       "Name": "Small Merino",
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -1278,7 +1277,6 @@
     "MatedTo": {
       "Name": "Small Merino",
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -6384,7 +6382,6 @@
     "Genotype": {
       "Name": "Small Merino",
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -6780,7 +6777,6 @@
     "MatedTo": {
       "Name": "Small Merino",
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -11886,7 +11882,6 @@
     "Genotype": {
       "Name": "Small Merino",
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -12282,7 +12277,6 @@
     "MatedTo": {
       "Name": "Small Merino",
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -17388,7 +17382,6 @@
     "Genotype": {
       "Name": "Small Merino",
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -17784,7 +17777,6 @@
     "MatedTo": {
       "Name": "Small Merino",
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -22890,7 +22882,6 @@
     "Genotype": {
       "Name": "Small Merino",
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -23286,7 +23277,6 @@
     "MatedTo": {
       "Name": "Small Merino",
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -28392,7 +28382,6 @@
     "Genotype": {
       "Name": "Small Merino",
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",
@@ -28788,7 +28777,6 @@
     "MatedTo": {
       "Name": "Small Merino",
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false,
       "FullPath": ".Small Merino",

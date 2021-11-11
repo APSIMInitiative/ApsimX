@@ -12,13 +12,13 @@ using System.Threading.Tasks;
 namespace Models.CLEM.Activities
 {
     ///<summary>
-    /// Target for feed activity
+    /// Target for feed activity purchases
     ///</summary> 
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourActivityFeedToTargets))]
-    [Description("This component defines a food type for purchase towards targeted feeding")]
+    [Description("Defines a food type for purchase towards targeted feeding")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeedTargetPurchase.htm")]
 
@@ -55,7 +55,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

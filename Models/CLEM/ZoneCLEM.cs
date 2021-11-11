@@ -20,7 +20,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    [Description("This represents all CLEM farm resources and activities")]
+    [Description("This manages all resources and activities for a farm")]
     [HelpUri(@"Content/Features/CLEMComponent.htm")]
     [Version(1, 0, 4, "Random numbers and iteration property moved from this component to a stand-alone component\r\nChanges will be required to your setup")]
     [Version(1, 0, 3, "Updated filtering logic to improve performance")]
@@ -43,7 +43,6 @@ namespace Models.CLEM
         /// <summary>
         /// Multiplier from single farm to regional number of farms for market transactions
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, GreaterThanValue(0)]
         [Description("Farm multiplier to supply and receive from market")]
         public double FarmMultiplier { get; set; }
@@ -52,6 +51,7 @@ namespace Models.CLEM
         /// Index of the simulation Climate Region
         /// </summary>
         [Description("Region id")]
+        [System.ComponentModel.DataAnnotations.Display(Order = -9)]
         public int ClimateRegion { get; set; }
 
         /// <summary>
@@ -105,11 +105,6 @@ namespace Models.CLEM
         [JsonIgnore]
         public new double Altitude { get; set; } = 50;
 
-        /// <summary>
-        /// Summary style to use for this component
-        /// </summary>
-        public HTMLSummaryStyle ModelSummaryStyle { get; set; }
-
         private string wholeSimulationSummaryFile = "";
 
         /// <summary>
@@ -127,8 +122,6 @@ namespace Models.CLEM
         [EventSubscribe("Commencing")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            EcologicalIndicatorsCalculationInterval = 12;
-
             // remove the overall summary description file if present
             string[] filebits = (sender as Simulation).FileName.Split('.');
             wholeSimulationSummaryFile = filebits.First() + "." + "html";
@@ -352,12 +345,27 @@ namespace Models.CLEM
 
         #region Descriptive summary
 
+        /// <summary>
+        /// Summary style to use for this component
+        /// </summary>
+        public HTMLSummaryStyle ModelSummaryStyle { get; set; }
+
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public List<string> CurrentAncestorList { get; set; } = new List<string>();
+
+        /// <inheritdoc/>
+        public bool FormatForParentControl { get { return CurrentAncestorList.Count > 0; } }
+
         ///<inheritdoc/>
-        public string GetFullSummary(IModel model, bool useFullDescription, string htmlString, Func<string, string> markdown2Html = null)
+        public string GetFullSummary(IModel model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">");
+
+                CurrentAncestorList = parentControls.ToList();
+                CurrentAncestorList.Add(model.GetType().Name);
 
                 // get clock
                 IModel parentSim = FindAncestor<Simulation>();
@@ -367,14 +375,13 @@ namespace Models.CLEM
                 // create the summary box with properties of this component
                 if (this is ICLEMDescriptiveSummary)
                 {
-                    bool formatForParentControl = true;
-                    htmlWriter.Write(this.ModelSummaryOpeningTags(formatForParentControl));
+                    htmlWriter.Write(this.ModelSummaryOpeningTags());
                     htmlWriter.Write(this.ModelSummaryInnerOpeningTagsBeforeSummary());
-                    htmlWriter.Write(this.ModelSummary(formatForParentControl));
-                    // TODO: May need to implament Adding Memos for some Models with reduced display
-                    htmlWriter.Write(this.ModelSummaryInnerOpeningTags(formatForParentControl));
-                    htmlWriter.Write(this.ModelSummaryInnerClosingTags(formatForParentControl));
-                    htmlWriter.Write(this.ModelSummaryClosingTags(formatForParentControl));
+                    htmlWriter.Write(this.ModelSummary());
+                    // TODO: May need to implement Adding Memos for some Models with reduced display
+                    htmlWriter.Write(this.ModelSummaryInnerOpeningTags());
+                    htmlWriter.Write(this.ModelSummaryInnerClosingTags());
+                    htmlWriter.Write(this.ModelSummaryClosingTags());
                 }
 
                 // find random number generator
@@ -425,13 +432,16 @@ namespace Models.CLEM
                 }
 
                 foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
-                    htmlWriter.Write(cm.GetFullSummary(cm, true, ""));
+                    htmlWriter.Write(cm.GetFullSummary(cm, CurrentAncestorList, "", markdown2Html));
+                
+                CurrentAncestorList = null;
+
                 return htmlWriter.ToString(); 
             }
         }
 
         ///<inheritdoc/>
-        public string ModelSummary(bool formatForParentControl)
+        public string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -469,13 +479,13 @@ namespace Models.CLEM
         }
 
         ///<inheritdoc/>
-        public string ModelSummaryClosingTags(bool formatForParentControl)
+        public string ModelSummaryClosingTags()
         {
             return "\r\n</div>\r\n</div>";
         }
 
         ///<inheritdoc/>
-        public string ModelSummaryOpeningTags(bool formatForParentControl)
+        public string ModelSummaryOpeningTags()
         {
             string overall = "default";
             string extra = "";
@@ -491,13 +501,13 @@ namespace Models.CLEM
         }
 
         ///<inheritdoc/>
-        public string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public string ModelSummaryInnerClosingTags()
         {
             return "";
         }
 
         ///<inheritdoc/>
-        public string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        public string ModelSummaryInnerOpeningTags()
         {
             return "";
         }

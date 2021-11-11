@@ -21,7 +21,7 @@ namespace Models.CLEM.Reporting
     [PresenterName("UserInterface.Presenters.CLEMReportResultsPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
-    [Description("This component will generate statistics relating to an Attribute value from a specified tag .")]
+    [Description("This Report will generate statistics relating to an Attribute value from a specified tag")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/RuminantAttributeSummary.htm")]
     public class ReportRuminantAttributeSummary : CLEMModel, ICLEMUI, IValidatableObject
@@ -241,12 +241,8 @@ namespace Models.CLEM.Reporting
             return listStatistics;
         }
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             string html = "";
             return html;

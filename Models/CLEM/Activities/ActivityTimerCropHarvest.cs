@@ -19,7 +19,7 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityTask))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
-    [Description("This activity timer is used to determine whether an activity (and all sub activities) will be performed based on the harvest dates of the CropActivityManageProduct above.")]
+    [Description("This timer is related to the harvest dates of the CropActivityManageProduct above.")]
     [HelpUri(@"Content/Features/Timers/CropHarvest.htm")]
     [Version(1, 0, 3, "Accepts harvest tags for multiple harvests of single crop")]
     [Version(1, 0, 2, "Allows timer sequence to be added as child component")]
@@ -102,7 +102,7 @@ namespace Models.CLEM.Activities
                             }
                         };
                         // check if timer sequence ok
-                        if (sequenceTimerList.Count() > 0)
+                        if (sequenceTimerList.Count > 0)
                         {
                             // get month index in sequence
                             int sequenceIndex = today - month[0];
@@ -268,7 +268,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -317,13 +317,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
             return "</div>";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -333,7 +333,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write(this.Name);
                 }
                 htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
                 return htmlWriter.ToString(); 
             }
         } 

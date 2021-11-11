@@ -20,7 +20,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    [Description("This represents a shared market place for CLEM farms")]
+    [Description("A shared market place for CLEM farms")]
     [HelpUri(@"Content/Features/Market.htm")]
     [Version(1, 0, 2, "Tested and functioning for targeted feeding including transmutations but still needs movement of goods to market.")]
     [Version(1, 0, 1, "Early implementation of market place for multi-farm simulations. This is a major addition and is not checked for full functionality.")]
@@ -145,19 +145,34 @@ namespace Models.CLEM
             }
 
             return results;
-        } 
+        }
         #endregion
 
         #region descriptive summary
+
         /// <inheritdoc/>
-        public string GetFullSummary(object model, bool useFullDescription, string htmlString, Func<string, string> markdown2Html = null)
+        [JsonIgnore]
+        public List<string> CurrentAncestorList { get; set; } = new List<string>();
+
+        /// <inheritdoc/>
+        public bool FormatForParentControl { get { return CurrentAncestorList.Count > 1; } }
+
+        /// <inheritdoc/>
+        public string GetFullSummary(object model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
+                CLEMModel czm = model as CLEMModel;
+                czm.CurrentAncestorList = parentControls.ToList();
+                czm.CurrentAncestorList.Add(czm.GetType().Name);
+
                 htmlWriter.Write($"\r\n<div class=\"holdermain\" style=\"opacity: {((!this.Enabled) ? "0.4" : "1")}\">");
                 foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
-                    htmlWriter.Write(cm.GetFullSummary(cm, true, "", markdown2Html));
+                    htmlWriter.Write(cm.GetFullSummary(cm, czm.CurrentAncestorList, "", markdown2Html));
                 htmlWriter.Write("</div>");
+
+                czm.CurrentAncestorList = null;
+
                 return htmlWriter.ToString();
             }
         } 

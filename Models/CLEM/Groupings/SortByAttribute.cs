@@ -18,11 +18,8 @@ namespace Models.CLEM.Groupings
     [Serializable]
     [ViewName("UserInterface.Views.GridView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(RuminantFeedGroupMonthly))]
-    [ValidParent(ParentType = typeof(RuminantFeedGroup))]
-    [ValidParent(ParentType = typeof(RuminantGroup))]
-    [ValidParent(ParentType = typeof(AnimalPriceGroup))]
-    [Description("Defines a sort rule using the Attribute details of the individual")]
+    [ValidParent(ParentType = typeof(IFilterGroup))]
+    [Description("Defines a sort order using the Attribute details of the individual")]
     [Version(1, 0, 0, "")]
     public class SortByAttribute : CLEMModel, ISort
     {
@@ -94,20 +91,20 @@ namespace Models.CLEM.Groupings
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             return $"<div class=\"filter\" style=\"opacity: {((Enabled) ? "1" : "0.4")}\">{ToHTMLString()}</div>";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
             // allows for collapsed box and simple entry
             return "";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
             // allows for collapsed box and simple entry
             return "";

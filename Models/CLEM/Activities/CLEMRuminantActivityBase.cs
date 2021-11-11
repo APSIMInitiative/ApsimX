@@ -114,13 +114,13 @@ namespace Models.CLEM.Activities
 
             var herd = CurrentHerd(false);
             // check for multiple breeds
-            if (herd.Select(a => a.Breed).Distinct().Count() > 1)
+            if (herd.Select(a => a.Breed).Distinct().Skip(1).Any())
             {
                 if (!allowMultipleBreeds)
                     throw new ApsimXException(this, "Multiple breeds were detected in current herd for [a=" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single breed for this activity.");
                 PredictedHerdBreed = "Multiple";
             }
-            if (herd.Select(a => a.HerdName).Distinct().Count() > 1)
+            if (herd.Select(a => a.HerdName).Distinct().Skip(1).Any())
             {
                 if (!allowMultipleHerds)
                     throw new ApsimXException(this, "Multiple herd names were detected in current herd for [a=" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single herd for this activity.");
@@ -178,7 +178,7 @@ namespace Models.CLEM.Activities
             if (!allowMultipleBreeds)
             {
                 // check for multiple breeds
-                if (herd.Select(a => a.Breed).Distinct().Count() > 1)
+                if (herd.Select(a => a.Breed).Distinct().Skip(1).Any())
                     throw new ApsimXException(this, "Multiple breeds were detected in current herd for Manage Activity [a=" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single breed for this activity.");
 
                 // check for filter limited herd and set warning
@@ -192,7 +192,7 @@ namespace Models.CLEM.Activities
             if (!allowMultipleHerds)
             {
                 // check for multiple breeds
-                if (herd.Select(a => a.HerdName).Distinct().Count() > 1)
+                if (herd.Select(a => a.HerdName).Distinct().Skip(1).Any())
                     throw new ApsimXException(this, "Multiple herd types were detected in current herd for Manage Activity [a=" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single herd for this activity.");
 
                 // check for filter limited herd and set warning

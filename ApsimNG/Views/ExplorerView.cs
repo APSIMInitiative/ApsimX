@@ -60,7 +60,7 @@ namespace UserInterface.Views
                 if (child != (descriptionView as ViewBase)?.MainWidget)
                 {
                     rightHandView.Remove(child);
-                    child.Cleanup();
+                    child.Dispose();
                 }
             }
 
@@ -85,7 +85,7 @@ namespace UserInterface.Views
                 {
                     Widget descriptionWidget = (descriptionView as ViewBase).MainWidget;
                     rightHandView.Remove(descriptionWidget);
-                    descriptionWidget.Cleanup();
+                    descriptionWidget.Dispose();
                 }
                 descriptionView = null;
             }
@@ -103,20 +103,9 @@ namespace UserInterface.Views
         /// <summary>Get screenshot of right hand panel.</summary>
         public System.Drawing.Image GetScreenshotOfRightHandPanel()
         {
-#if NETFRAMEWORK
-            // Create a Bitmap and draw the panel
-            int width;
-            int height;
-            Gdk.Window panelWindow = CurrentRightHandView.MainWidget.GdkWindow;
-            panelWindow.GetSize(out width, out height);
-            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(panelWindow, panelWindow.Colormap, 0, 0, 0, 0, width, height);
-            byte[] buffer = screenshot.SaveToBuffer("png");
-            System.IO.MemoryStream stream = new System.IO.MemoryStream(buffer);
-            System.Drawing.Bitmap bitmap = new System.Drawing.Bitmap(stream);
-            return bitmap;
-#else
+
             throw new NotImplementedException();
-#endif
+
         }
 
         /// <summary>
@@ -159,7 +148,7 @@ namespace UserInterface.Views
                     foreach (Widget child in rightHandView.Children)
                     {
                         rightHandView.Remove(child);
-                        child.Cleanup();
+                        child.Dispose();
                     }
                 }
                 ToolStrip.Destroy();

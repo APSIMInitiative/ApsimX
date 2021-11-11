@@ -5,7 +5,6 @@
     using System;
 
     /// <summary>
-    /// # [Name]
     /// Encapsulates a nitrogen flow between mineral N pools.
     /// </summary>
     [Serializable]

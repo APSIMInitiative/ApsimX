@@ -28,7 +28,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(Market))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This component uses a pricing input file to manage prices throughout the simulation")]
+    [Description("Access to a pricing input file to manage prices")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/PriceDataReader.htm")]
     public class FilePricing : CLEMModel, IValidatableObject
@@ -284,12 +284,8 @@ namespace Models.CLEM
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

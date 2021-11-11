@@ -13,17 +13,16 @@ using System.Threading.Tasks;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant feed activity</summary>
+    /// <summary>Labour feed to specified targets activity</summary>
     /// <summary>This activity provides food to people from the whole available human food store based on defined nutritional targets</summary>
     /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs human feeding based on nutritional quality and desired daily targets. It also includes sales of excess food.")]
+    [Description("Perform human (labour) feeding based on nutritional quality and desired daily targets. This also includes sales of excess food.")]
     [Version(1, 0, 2, "This version implements the latest approach as outlines in the help system. Suitable for Ethiopian food security project")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeedToTargets.htm")]
@@ -446,15 +445,16 @@ namespace Models.CLEM.Activities
             // add all provided requests to the individuals intake pools.
 
             List<LabourType> group = people?.Items.Where(a => IncludeHiredLabour | a.Hired != true).ToList();
-            double aE = group.Sum(a => a.AdultEquivalent * a.Individuals);
             Status = ActivityStatus.NotNeeded;
-            if (group != null && group.Any())
+            if (group != null && group.Count > 0)
             {
                 var requests = ResourceRequestList.Where(a => a.ResourceType == typeof(HumanFoodStore));
                 if (requests.Any())
                 {
                     foreach (ResourceRequest request in requests)
                         if (request.Provided > 0)
+                        {
+                            double aE = group.Sum(a => a.AdultEquivalent * a.Individuals);
                             // add to individual intake
                             foreach (LabourType labour in group)
                                 labour.AddIntake(new LabourDietComponent()
@@ -462,6 +462,7 @@ namespace Models.CLEM.Activities
                                     AmountConsumed = request.Provided * (labour.AdultEquivalent / aE),
                                     FoodStore = request.Resource as HumanFoodStoreType
                                 });
+                        }
                 }
                 if (this.FindAllChildren<LabourActivityFeedTarget>().Where(a => !a.TargetMet).Any())
                     this.Status = ActivityStatus.Partial;
@@ -633,7 +634,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -676,13 +677,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public override string ModelSummaryInnerClosingTags()
         {
             return "\r\n</div>";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryInnerOpeningTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

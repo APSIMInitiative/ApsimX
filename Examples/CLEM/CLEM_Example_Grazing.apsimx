@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 300,
   "Version": 141,
   "ApsimVersion": "0.0.0.0",
   "Name": "Simulations",
@@ -22,7 +22,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "#CLEM Grazing simulation example\n##Grazing 10 Ruminants on native pasture and feeding hay \n\nIt is recommended that you use these simulations as examples, but build your simulation from scratch to best understand the processes included.\n\n#Help\nThe CLEM help system provides a model overview, user guide (how to) and a full description of every CLEM component, as well as in depth discussions on modelling various farm systems and what components to use. The Help documentation can be accessed by clicking the Help button beside the component name in the right hand information pane after selecting any CLEM component from your simulation tree or at [CLEM Help online](http://www.apsim.info/CLEM/Content/Home.htm).",
+          "Text": "# CLEM Grazing simulation example\n## Grazing 10 Ruminants on native pasture and feeding hay \n\nIt is recommended that you use these simulations as examples, but build your simulation from scratch to best understand the processes included.\n\n# Help\nThe CLEM help system provides a model overview, user guide (how to) and a full description of every CLEM component, as well as in depth discussions on modelling various farm systems and what components to use. The Help documentation can be accessed by clicking the Help button beside the component name in the right hand information pane after selecting any CLEM component from your simulation tree or at [CLEM Help online](http://www.apsim.info/CLEM/Content/Home.htm).",
           "Name": "Grazing example description",
           "Children": [],
           "IncludeInDocumentation": true,
@@ -37,7 +37,7 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "# Grazing Enterprise - simulated for 14 years - with 10 ruminants on native pasture and feeding hay\n\n### Native Pasture  \n- Native Pasture yield data - from an external dataset (from a Grass growth model) in an SQLite Database\n- Native Pasture is managed - land assigned, tracking pasture state, and calculate ecological factors\n### Hay purchased\n - 100kg Hay purchased as needed\n### Ruminants\n- 10 Ruminants (different Starting Ages and Weights) - Mustered to Native Pasture\n- Ruminants grazed on Pasture for the maximum 8 hours each day\n- Fed purchase hay to potential intake\n- Breeding by Artificial Insemination - every 12 months from March\n- Weaning - Individuals are weaned at 8 months or 100 kg - every 6 months from April\n- Manage numbers: every August\n - Breeding females: maintained between 2 and 10 - sold when over 180 months old - A maximum of 100% of the Maximum Breeders Kept can be purchased in a single transaction\n - Breeding males (sires/rams etc): A maximum of 2 will be kept - sold when over 96 months old\n - General herd: Males will be sold when 18 months old or 150 kg - Animals will be sold only when activity is due - Purchased individuals will be placed on Native Pasture\n- Buy and sell\n - Finances goes in and out of the General account\n\n\n",
+              "Text": "# Grazing \n- simulated for 14 years - with 10 ruminants on native pasture and feeding hay\n\n## Native Pasture  \n- Native Pasture yield data - from an external dataset (from a Grass growth model) using the \"Simple\" method with data provided in csv file\n- Native Pasture is managed - land assigned, tracking pasture state\n## Hay purchased\n - 100kg Hay purchased as needed\n## Ruminants\n- 10 Ruminants (different Starting Ages and Weights)\n- Moved to Native Pasture at start of simulation\n- Ruminants grazed on Pasture for the maximum 8 hours each day\n- Fed purchase hay to potential intake\n- Breeding by Controlled mating - every 12 months from March\n- Weaning - Individuals are weaned at 8 months or 100 kg - every 6 months from April\n- Manage numbers: every August\n - Breeding females: maintained between 2 and 10 - sold when over 180 months old - A maximum of 100% of the Maximum Breeders Kept can be purchased in a single transaction\n - Breeding males (sires/rams etc): A maximum of 2 will be kept - sold when over 96 months old\n - General herd: Males will be sold when 18 months old or 150 kg - Animals will be sold only when activity is due - Purchased individuals will be placed on Native Pasture\n- Buy and sell\n - Finances goes in and out of the General account\n\n\n",
               "Name": "Grazing 10Animals_PastureHay",
               "Children": [],
               "IncludeInDocumentation": true,
@@ -79,7 +79,7 @@
               "$type": "Models.CLEM.ZoneCLEM, Models",
               "FarmMultiplier": 1.0,
               "ClimateRegion": 0,
-              "EcologicalIndicatorsCalculationInterval": 0,
+              "EcologicalIndicatorsCalculationInterval": 12,
               "EcologicalIndicatorsCalculationMonth": 12,
               "AutoCreateDescriptiveSummary": false,
               "Area": 0.0,
@@ -100,7 +100,7 @@
                   "AmountColumnName": "AmtKg",
                   "PercentNitrogenColumnName": null,
                   "HarvestTypeColumnName": null,
-                  "SelectedTab": null,
+                  "SelectedTab": "Properties",
                   "Name": "FileForage",
                   "Children": [],
                   "IncludeInDocumentation": false,
@@ -882,6 +882,7 @@
                           "$type": "Models.CLEM.Activities.RuminantActivityManage, Models",
                           "MaximumBreedersKept": 10,
                           "MinimumBreedersKept": 2,
+                          "MaxBreedersMultiplierToStop": 2.0,
                           "MarkOldBreedersForSale": true,
                           "MaximumBreederAge": 120.0,
                           "MaximumProportionBreedersPerPurchase": 1.0,
@@ -1454,8 +1455,8 @@
                           "FactorToVaryColours": null,
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
-                          "Marker": 8,
-                          "MarkerSize": 1,
+                          "Marker": 4,
+                          "MarkerSize": 2,
                           "Line": 0,
                           "LineThickness": 0,
                           "TableName": "ReportResourceBalances",

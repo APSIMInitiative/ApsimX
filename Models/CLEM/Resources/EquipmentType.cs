@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Equipment))]
-    [Description("This resource represents an equipment store type (e.g. Tractor, bore).")]
+    [Description("This resource represents a piece of equipment (e.g. Tractor, bore)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Equipment/Equipmenttype.htm")]
     public class EquipmentType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType

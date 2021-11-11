@@ -20,7 +20,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.GridView")] 
     [PresenterName("UserInterface.Presenters.PropertyPresenter")] 
     [ValidParent(ParentType = typeof(FileSQLitePasture))]
-    [Description("This component shuffles rainfall years for reading pasture data as proxy for randomised rainfall")]
+    [Description("Shuffle rainfall years for reading pasture data as proxy for randomised rainfall")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/DataReaders/RainfallShuffler.htm")]
 
@@ -78,12 +78,9 @@ namespace Models.CLEM
         }
 
         #region descriptive summary
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

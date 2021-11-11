@@ -22,59 +22,43 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(CLEMRuminantActivityBase))]
-    [Description("This ruminant group is applied to all activities at or below this point in the simulation tree")]
+    [Description("Specify individuals applied to all activities at or below this point in the simulation tree")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantActivityGroup.htm")]
     public class RuminantActivityGroup : FilterGroup<Ruminant>
     {
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             string html = "<div class=\"filtername\">";
             html += "This filter is applied to this activity and all activities within this branch</div>";
             return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
         {
             return "";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
         {
             return "";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerClosingTags()
         {
             string html = "";
             html += "\r\n</div>";
             return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerOpeningTags()
         {
             string html = "";
             html += "\r\n<div class=\"filterborder filteractivityborder clearfix\">";

@@ -12,7 +12,7 @@ namespace Models.Core
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Cultivar))]
-    public class Alias : Model, ICustomDocumentation
+    public class Alias : Model
     {
         /// <summary>
         /// Document the model.

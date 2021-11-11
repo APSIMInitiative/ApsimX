@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity receives income")]
+    [Description("Define an income source")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Finances/Income.htm")]
     public class FinanceActivityIncome : CLEMActivityBase
@@ -73,7 +73,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

@@ -14,7 +14,7 @@ using Display = Models.Core.DisplayAttribute;
 namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Activity timer based on crop harvest
+    /// Activity timer based on resource
     /// </summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
-    [Description("This activity timer is used to determine whether a resource level meets a set criteria.")]
+    [Description("This timer is based on whether a resource level meets a set criteria.")]
     [HelpUri(@"Content/Features/Timers/ResourceLevel.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerResourceLevel: CLEMModel, IActivityTimer, IActivityPerformedNotifier
@@ -154,7 +154,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -202,13 +202,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
             return "</div>";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -216,7 +216,7 @@ namespace Models.CLEM.Activities
                 if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
                     htmlWriter.Write(this.Name);
                 htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
                 return htmlWriter.ToString(); 
             }
         } 

@@ -21,9 +21,9 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages labour supplied and income derived from an off-farm task.")]
+    [Description("Manages labour supplied and income derived from an off-farm task")]
     [HelpUri(@"Content/Features/Activities/Labour/OffFarmWork.htm")]
-    [Version(1, 0, 2, "Labour required and pricing  now implement in LabourRequirement component and LabourPricing from Resources used.")]
+    [Version(1, 0, 2, "Labour required and pricing now implement in LabourRequirement component and LabourPricing from Resources used.")]
     [Version(1, 0, 1, "")]
     public class LabourActivityOffFarm: CLEMActivityBase, IValidatableObject
     {
@@ -121,7 +121,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

@@ -6,15 +6,6 @@
   "Name": "Simulations",
   "Children": [
     {
-      "$type": "Models.Memo, Models",
-      "Text": "\r\n# The APSIM Oats Model\r\n \r\n_Allan Peake, Hamish Brown, Rob Zyskowski, Edmar I. Teixeira, Neil Huth_",
-      "Name": "TitlePage",
-      "Children": [],
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
       "$type": "Models.Core.Replacements, Models",
       "Name": "Replacements",
       "Children": [

@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity moves animals based upon the current herd filtering. It is also used to assign individuals to pastures (paddocks) at the start of the simulation.")]
+    [Description("Define the location (pastures) of specified individuals (move) and assign location at the start of the simulation")]
     [Version(1, 0, 2, "Now allows multiple RuminantFilterGroups to identify individuals to be moved")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMove.htm")]
@@ -176,7 +176,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

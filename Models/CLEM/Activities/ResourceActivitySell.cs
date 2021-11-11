@@ -18,7 +18,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages the sale of a specified resource.")]
+    [Description("Manages the sale of a specified resource")]
     [HelpUri(@"Content/Features/Activities/All resources/SellResource.htm")]
     [Version(1, 0, 3, "Added Proportion of last gain as selling style. Allows you to sell a proportion of the harvest")]
     [Version(1, 0, 2, "Automatically handles transactions with Marketplace if present")]
@@ -241,7 +241,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary 
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

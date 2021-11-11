@@ -44,10 +44,7 @@ namespace UserInterface.Views
             mainWidget = hpaned;
             rightHandView.BorderWidth = 7;
 
-#if NETFRAMEWORK
-            rightHandView.ModifyBg(StateType.Normal, mainWidget.Style.Base(StateType.Normal));
-            rightHandView.ShadowType = ShadowType.None ;
-#endif
+
 
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
@@ -77,7 +74,7 @@ namespace UserInterface.Views
                 foreach (Widget child in rightHandView.Children)
                 {
                     rightHandView.Remove(child);
-                    child.Cleanup();
+                    child.Dispose();
                 }
             }
             treeview1.CursorChanged -= OnAfterSelect;
@@ -151,7 +148,7 @@ namespace UserInterface.Views
             foreach (Widget child in rightHandView.Children)
             {
                 rightHandView.Remove(child);
-                child.Cleanup();
+                child.Dispose();
             }
             //create new Right Hand View
             ViewBase view = control as ViewBase;
@@ -165,11 +162,9 @@ namespace UserInterface.Views
         /// <summary>Get screenshot of right hand panel.</summary>
         public System.Drawing.Image GetScreenshotOfRightHandPanel()
         {
-#if NETFRAMEWORK
-            throw new NotImplementedException("This view does not support the saving of right hand to image");
-#else
+
             throw new NotImplementedException("tbi - gtk3 equivalent");
-#endif
+
         }
 
         /// <summary>Show the wait cursor</summary>
@@ -213,7 +208,7 @@ namespace UserInterface.Views
                 else
                 {
                     // Is there something else we could use as a default?
-                    pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png");
+                    pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.svg");
                 }
             }
 
@@ -367,7 +362,7 @@ namespace UserInterface.Views
                         Gdk.Rectangle rect = treeview1.GetCellArea(path, col);
                         if (e.Event.X > rect.X + 18)
                         {
-                            timer.Interval = treeview1.GetSettings().DoubleClickTime + 10;  // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
+                            timer.Interval = Settings.Default.DoubleClickTime + 10;  // We want this to be a bit longer than the double-click interval, which is normally 250 milliseconds
                             timer.AutoReset = false;
                             timer.Start();
                         }

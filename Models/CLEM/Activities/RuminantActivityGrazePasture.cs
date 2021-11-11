@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs grazing of all herds within a specified pasture (paddock) in the simulation.")]
+    [Description("Perform grazing of all herds within a specified pasture (paddock)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
     public class RuminantActivityGrazePasture : CLEMRuminantActivityBase
@@ -141,8 +141,6 @@ namespace Models.CLEM.Activities
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             IEnumerable<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == GrazeFoodStoreModel.Name);
-            int head = herd.Count();
-            double adultEqivalents = herd.Sum(a => a.AdultEquivalent);
             double daysNeeded = 0;
             double numberUnits = 0;
             switch (requirement.UnitType)
@@ -151,6 +149,7 @@ namespace Models.CLEM.Activities
                     daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHead:
+                    int head = herd.Count();
                     numberUnits = head / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
                     {
@@ -159,6 +158,7 @@ namespace Models.CLEM.Activities
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perAE:
+                    double adultEqivalents = herd.Sum(a => a.AdultEquivalent);
                     numberUnits = adultEqivalents / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
                     {
@@ -210,7 +210,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

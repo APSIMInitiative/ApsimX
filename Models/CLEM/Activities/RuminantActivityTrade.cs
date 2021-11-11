@@ -12,8 +12,7 @@ using System.IO;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Ruminant herd management activity</summary>
-    /// <summary>This activity will maintain a breeding herd at the desired levels of age/breeders etc</summary>
+    /// <summary>Manage trade herd activity</summary>
     /// <version>1.0</version>
     /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
@@ -22,7 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages trade individuals. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
+    [Description("Manage a herd of individuals as trade herd")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Includes improvements such as a relationship to define numbers purchased based on pasture biomass and allows placement of purchased individuals in a specified paddock")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantTrade.htm")]
@@ -223,7 +222,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Land))]
-    [Description("This resource represents a land type (e.g. Clay region.) This is not necessarily a paddock, but Bunded and interbund land areas must be separated into individual land types.")]
+    [Description("This resource represents a land type (e.g. clay region). Bunded and interbund land areas must be separated into individual land types, but paddocks are managed by activities")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Land/LandType.htm")]
     public class LandType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
@@ -291,12 +291,8 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -324,11 +320,8 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerOpeningTags()
         {
             return "";
         }

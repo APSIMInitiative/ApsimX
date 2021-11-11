@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ReportResourceBalances))]
     [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
     [ValidParent(ParentType = typeof(ReportRuminantHerd))]
-    [Description("This activity time defines a start month and interval upon which to perform activities.")]
+    [Description("This timer defines a start month and interval upon which to perform activities.")]
     [HelpUri(@"Content/Features/Timers/Interval.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerInterval: CLEMModel, IActivityTimer, IActivityPerformedNotifier
@@ -151,7 +151,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -186,13 +186,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
             return "</div>";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -201,7 +201,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write(this.Name);
 
                 htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
                 return htmlWriter.ToString(); 
             }
         } 

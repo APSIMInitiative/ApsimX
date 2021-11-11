@@ -8,7 +8,6 @@ using Models.Soils;
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
     /// Return soil temperature (oC) from a specified soil profile layer.
     /// The source of soil temperature array can be either SoilN ("st" property) or SoilTemp ("ave_soil_temp" property)
     /// </summary>

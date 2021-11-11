@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages ruminant stocking based on predicted seasonal outlooks. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
+    [Description("Manage ruminant stocking based on predicted seasonal outlooks")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPredictiveStockingENSO.htm")]
     public class RuminantActivityPredictiveStockingENSO: CLEMRuminantActivityBase, IValidatableObject
@@ -392,7 +392,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -484,7 +484,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public override string ModelSummaryInnerClosingTags()
         {
             return "</div>";
         }

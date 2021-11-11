@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs sales and purchases of ruminants. It requires activities such as RuminantActivityManage, RuminantActivityTrade and RuminantActivitySellDryBreeders to identify individuals to be bought or sold. It will use a pricing schedule if supplied for the herd and can include additional trucking rules and emissions settings.")]
+    [Description("Performs all sales and purchases of ruminants. This requires other herd management activities to identify individuals to be bought or sold. It uses any pricing schedule supplied and can include additional trucking rules and emissions settings")]
     [Version(1, 0, 2, "Allows for recording transactions by groups of individuals")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBuySell.htm")]
@@ -73,7 +73,7 @@ namespace Models.CLEM.Activities
                 var breeds = HerdResource.Herd.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).GroupBy(a => a.HerdName);
                 foreach (var herd in breeds)
                     if (!herd.FirstOrDefault().BreedParams.PricingAvailable())
-                        Summary.WriteWarning(this, String.Format("No pricing schedule has been provided for herd [r={0}]. No transactions will be recorded for activity [a={1}]", herd.Key, this.Name));
+                        Summary.WriteWarning(this, String.Format("No pricing schedule has been provided for herd [r={0}]. No financial transactions will be recorded for activity [a={1}]", herd.Key, this.Name));
             }
         }
 
@@ -116,7 +116,7 @@ namespace Models.CLEM.Activities
             }
 
             // no individuals to sell
-            if(herd.Count() == 0)
+            if(herd.Count == 0)
                 return;
 
             List<Ruminant> soldIndividuals = new List<Ruminant>();
@@ -249,7 +249,7 @@ namespace Models.CLEM.Activities
 
             // get current untrucked list of animal purchases
             List<Ruminant> herd = HerdResource.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).ToList();
-            if (herd.Count() > 0)
+            if (herd.Count > 0)
             {
                 if(this.Status!= ActivityStatus.Warning)
                     this.Status = ActivityStatus.Success;
@@ -360,7 +360,7 @@ namespace Models.CLEM.Activities
 
             // get current untrucked list of animal purchases
             List<Ruminant> herd = HerdResource.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).OrderByDescending(a => a.Weight).ToList();
-            if (herd.Count() == 0)
+            if (herd.Count == 0)
                 return;
 
             List<Ruminant> boughtIndividuals = new List<Ruminant>();
@@ -433,7 +433,7 @@ namespace Models.CLEM.Activities
 
                 if (Status != ActivityStatus.Warning)
                 {
-                    if(HerdResource.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).Count() == 0)
+                    if(HerdResource.PurchaseIndividuals.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).Any() == false)
                         SetStatusSuccess();
                     else
                         Status = ActivityStatus.Partial;
@@ -549,7 +549,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

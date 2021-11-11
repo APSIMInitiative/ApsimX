@@ -21,7 +21,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This component will generate a herd summary report. It uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
+    [Description("This component will generate summarised details for a herd summary report. It uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/RuminantHerdSummary.htm")]
     public class SummariseRuminantHerd: CLEMModel
@@ -227,12 +227,8 @@ namespace Models.CLEM
             }
         }
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             string html = "";
             return html;

@@ -19,7 +19,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
-    [Description("This resource group holds all labour types (people) for the simulation.")]
+    [Description("Resource group for all labour types (people) in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/Labour.htm")]
     public class Labour: ResourceBaseWithTransactions, IValidatableObject
@@ -433,12 +433,8 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

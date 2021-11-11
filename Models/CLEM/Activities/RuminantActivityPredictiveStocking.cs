@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages ruminant stocking during the dry season based upon wet season pasture biomass. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
+    [Description("Manage ruminant stocking during the dry season using predicted future pasture biomass")]
     [Version(1, 0, 3, "Avoids double accounting while removing individuals")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Updated assessment calculations and ability to report results")]
@@ -262,7 +262,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -296,13 +296,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public override string ModelSummaryInnerClosingTags()
         {
             return "\r\n</div>";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryInnerOpeningTags()
         {
             string html = "";
             html += "\r\n<div class=\"activitygroupsborder\">";

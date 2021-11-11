@@ -24,7 +24,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(CLEMFolder))]
     [ValidParent(ParentType = typeof(Folder))]
-    [Description("This report automatically generates a ledger of all shortfalls in CLEM Resource requests.")]
+    [Description("This report automatically generates a ledger of all shortfalls in resource requests")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/ResourceShortfalls.htm")]
     public class ReportResourceShortfalls: Models.Report

@@ -18,7 +18,7 @@ namespace Models.CLEM.Activities
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourActivityFeedToTargets))]
-    [Description("This component defines a target to be achieved when trying to feed people to set targets")]
+    [Description("Defines a target to be achieved when trying to feed people to set targets")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeedTarget.htm")]
     public class LabourActivityFeedTarget: CLEMModel
@@ -75,7 +75,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
 
             using (StringWriter htmlWriter = new StringWriter())

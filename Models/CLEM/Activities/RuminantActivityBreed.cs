@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages the breeding of ruminants based upon the current herd filtering.")]
+    [Description("Manages the breeding of ruminants based on the current herd filtering")]
     [Version(1, 0, 8, "Include passing inherited attributes from mating to newborn")]
     [Version(1, 0, 7, "Removed UseAI to a new ControlledMating add-on activity")]
     [Version(1, 0, 6, "Fixed period considered in infering pre simulation conceptions and spread of uncontrolled matings.")]
@@ -39,6 +39,8 @@ namespace Models.CLEM.Activities
     {
         [Link]
         private Clock clock = null;
+
+        private Dictionary<string, IIndividualAttribute> randomHerdAttributes = new Dictionary<string, IIndividualAttribute>();
 
         /// <summary>
         /// Artificial insemination in use (defined by presence of add-on component)
@@ -313,7 +315,8 @@ namespace Models.CLEM.Activities
 
                         // add attributes inherited from mother
                         foreach (var attribute in female.Attributes.Items)
-                            newCalfRuminant.Attributes.Add(attribute.Key, attribute.Value.GetInheritedAttribute() as IIndividualAttribute);
+                            if (attribute.Value != null)
+                                newCalfRuminant.Attributes.Add(attribute.Key, attribute.Value.GetInheritedAttribute() as IIndividualAttribute);
 
                         HerdResource.AddRuminant(newCalfRuminant, this);
 
@@ -337,7 +340,7 @@ namespace Models.CLEM.Activities
                 // whole herd for activity including males
                 herd = CurrentHerd(true);
 
-            if (herd != null && herd.Count() > 0)
+            if (herd != null && herd.Any())
             {
                 // group by location
                 var breeders = from ind in herd
@@ -391,21 +394,30 @@ namespace Models.CLEM.Activities
 
                                     if (useControlledMating)
                                         female.LastMatingStyle = MatingStyle.Controlled;
-                                    else
-                                    {
-                                        male = maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count() - 1)];
-                                        female.LastMatingStyle = ((male as RuminantMale).IsWildBreeder ? MatingStyle.WildBreeder : MatingStyle.Natural);
-                                    }
 
                                     // if mandatory attributes are present in the herd, save male value with female details.
                                     if(female.BreedParams.IncludedAttributeInheritanceWhenMating)
                                     {
-                                        if(useControlledMating)
+                                        if (useControlledMating)
+                                        {
+                                            bool newJoining = needsNewJoiningMale(controlledMating.JoiningsPerMale, numberServiced);
+                                            if (!controlledMating.SireAttributes.Any() & (newJoining | !randomHerdAttributes.Any()))
+                                            {
+                                                // select random attributes from breeders
+                                                randomHerdAttributes = location.ElementAt(RandomNumberGenerator.Generator.Next(location.Count())).Attributes.Items;
+                                            }
+
                                             // save all male attributes
-                                            AddMalesAttributeDetails(female, controlledMating.SireAttributes, needsNewJoiningMale(controlledMating.JoiningsPerMale, numberServiced));
+                                            AddMalesAttributeDetails(female, controlledMating.SireAttributes, newJoining);
+                                        }
                                         else
+                                        {
+                                            male = maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count() - 1)];
+                                            female.LastMatingStyle = ((male as RuminantMale).IsWildBreeder ? MatingStyle.WildBreeder : MatingStyle.Natural);
+
                                             // randomly select male
                                             AddMalesAttributeDetails(female, male as Ruminant);
+                                        }
                                     }
                                     status = Reporting.ConceptionStatus.Conceived;
                                     NumberConceived++;
@@ -468,10 +480,27 @@ namespace Models.CLEM.Activities
                 }
                 else
                 {
-                    if(attribute.Value != null)
-                       attribute.Value.StoredMateValue = null;
-                    if(female.BreedParams.IsMandatoryAttribute(attribute.Key))
-                        throw new ApsimXException(this, $"The sire attributes provided for [a={this.Name}] do not include the madatory attribute [{attribute.Key}]");
+                    // if there are random herd attributes available
+                    if (randomHerdAttributes.Any())
+                    {
+                        if (!randomHerdAttributes.TryGetValue(attribute.Key, out IIndividualAttribute randomAttribute))
+                            throw new ApsimXException(this, $"Unable to assign mandatory attribute from random herd selection for [a={this.Name}] and madatory attribute [{attribute.Key}]");
+                        else
+                        {
+                            if (attribute.Value != null && attribute.Value.InheritanceStyle != randomAttribute.InheritanceStyle)
+                                throw new ApsimXException(this, $"The inheritance style for attribute [{attribute.Key}] differs between the breeder and attributes supplied by random herd selection in [a={this.Name}]");
+
+                            if (attribute.Value != null)
+                                attribute.Value.StoredMateValue = randomAttribute.StoredValue;
+                        }
+                    }
+                    else
+                    {
+                        if (attribute.Value != null)
+                            attribute.Value.StoredMateValue = null;
+                        if (female.BreedParams.IsMandatoryAttribute(attribute.Key))
+                            throw new ApsimXException(this, $"The sire attributes provided for [a={this.Name}] do not include the madatory attribute [{attribute.Key}]");
+                    }
                 }
             }
         }
@@ -568,7 +597,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

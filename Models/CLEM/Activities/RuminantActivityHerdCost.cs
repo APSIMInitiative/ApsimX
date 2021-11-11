@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity will arange payment of a ruminant herd expense such as dips and drenches based on the current herd filtering.")]
+    [Description("Arrange payment of a ruminant herd expense with specified style")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantHerdCost.htm")]
     public class RuminantActivityHerdCost : CLEMRuminantActivityBase, IValidatableObject
@@ -133,8 +133,6 @@ namespace Models.CLEM.Activities
             {
                 // determine breed
                 // this is too much overhead for a simple reason field, especially given large herds.
-                //List<string> res = herd.Select(a => a.Breed).Distinct().ToList();
-                //string breedName = (res.Count() > 1) ? "Multiple breeds" : res.First();
                 string breedName = "Herd cost";
 
                 resourcesNeeded = new List<ResourceRequest>()
@@ -160,8 +158,6 @@ namespace Models.CLEM.Activities
         {
             // get all potential dry breeders
             IEnumerable<Ruminant> herd = this.CurrentHerd(false);
-            int head = herd.Count();
-            double animalEquivalents = herd.Sum(a => a.AdultEquivalent);
             double daysNeeded = 0;
             double numberUnits = 0;
             if (herd.Any())
@@ -172,6 +168,7 @@ namespace Models.CLEM.Activities
                         daysNeeded = requirement.LabourPerUnit;
                         break;
                     case LabourUnitType.perHead:
+                        int head = herd.Count();
                         numberUnits = head / requirement.UnitSize;
                         if (requirement.WholeUnitBlocks)
                             numberUnits = Math.Ceiling(numberUnits);
@@ -179,6 +176,7 @@ namespace Models.CLEM.Activities
                         daysNeeded = numberUnits * requirement.LabourPerUnit;
                         break;
                     case LabourUnitType.perAE:
+                        double animalEquivalents = herd.Sum(a => a.AdultEquivalent);
                         numberUnits = animalEquivalents / requirement.UnitSize;
                         if (requirement.WholeUnitBlocks)
                             numberUnits = Math.Ceiling(numberUnits);
@@ -195,7 +193,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

@@ -149,5 +149,11 @@ namespace Models.Core
         /// Specifies the name of a LifeCycle whose phases should be displayed.
         /// </summary>
         public string LifeCycleName { get; set; }
+
+        /// <summary>
+        /// Set the primary order of properties for display
+        /// Otherwise the line number of Description attribute is used for ordering
+        /// </summary>
+        public int Order { get; set; }
     }
 }

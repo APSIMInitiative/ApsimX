@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs human feeding based upon the current labour filtering and a feeding style.")]
+    [Description("Feed people (labour) as selected with a specified feeding style.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeed.htm")]
     public class LabourActivityFeed : CLEMActivityBase
@@ -246,7 +246,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

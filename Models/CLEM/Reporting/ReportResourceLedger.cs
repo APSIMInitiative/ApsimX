@@ -26,7 +26,7 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(CLEMFolder))]
     [ValidParent(ParentType = typeof(Folder))]
-    [Description("This report automatically generates a ledger of all shortfalls in CLEM Resource requests.")]
+    [Description("This report automatically generates a ledger of resource transactions")]
     [Version(1, 0, 4, "Report style property allows Type and Amount transaction reporting")]
     [Version(1, 0, 3, "Now includes Category and RelatesTo fields for grouping in analysis.")]
     [Version(1, 0, 2, "Updated to enable ResourceUnitsConverter to be used.")]

@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ProductStore))]
-    [Description("This resource represents a product store type (e.g. Cotton).")]
+    [Description("This resource represents a product store (e.g. cotton)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Products/ProductStoreType.htm")]
     public class ProductStoreType : CLEMResourceTypeBase, IResourceType, IResourceWithTransactionType
@@ -179,14 +179,10 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
-            string html = base.ModelSummary(formatForParentControl);
+            string html = base.ModelSummary();
 
             html += "\r\n<div class=\"activityentry\">";
             if (StartingAmount > 0)

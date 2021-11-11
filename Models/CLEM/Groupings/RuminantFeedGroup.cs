@@ -19,7 +19,7 @@ namespace Models.CLEM.Groupings
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityFeed))]
-    [Description("Selects specific individual ruminants with feeding values")]
+    [Description("Set feeding value for specified individual ruminants")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantFeedGroup.htm")]
     public class RuminantFeedGroup : FilterGroup<Ruminant>
@@ -40,12 +40,9 @@ namespace Models.CLEM.Groupings
         }
 
         #region descriptive summary
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

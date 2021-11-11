@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs the management of ruminant numbers based upon the current herd filtering. It requires a RuminantActivityBuySell to undertake the purchases and sales.")]
+    [Description("Overall management of ruminant numbers with multiple management actions")]
     [Version(1, 0, 9, "Allows details of breeders and sires for purchase to be specified")]
     [Version(1, 0, 8, "Reworking of rules to better allow small herd management")]
     [Version(1, 0, 7, "Added ability to turn on/off marking max age breeders and sires and age/weight males for sale and allow this action in other activities")]
@@ -63,6 +63,15 @@ namespace Models.CLEM.Activities
         [Description("Minimum number of female breeders to be kept")]
         [Required, GreaterThanEqualValue(0)]
         public int MinimumBreedersKept { get; set; }
+
+        /// <summary>
+        /// Stop model if breeder herd exceeds maximum breeders time this multiplier
+        /// </summary>
+        [Category("Herd size", "Breeding females")]
+        [Description("Stop model max breeders multiplier")]
+        [System.ComponentModel.DefaultValueAttribute(2)]
+        [Required, GreaterThanValue(0)]
+        public double MaxBreedersMultiplierToStop { get; set; }
 
         /// <summary>
         /// Include the marking for sale of old breeders in this activity
@@ -173,7 +182,7 @@ namespace Models.CLEM.Activities
         /// Male selling age (months)
         /// </summary>
         [Category("Grow out herd", "Males")]
-        [Description("Male selling age (months)")]
+        [Description("Grow out male selling age (months)")]
         [System.ComponentModel.DefaultValueAttribute(24)]
         [Required, GreaterThanEqualValue(0)]
         public double MaleSellingAge { get; set; }
@@ -182,7 +191,7 @@ namespace Models.CLEM.Activities
         /// Male selling weight (kg)
         /// </summary>
         [Category("Grow out herd", "Males")]
-        [Description("Male selling weight (kg)")]
+        [Description("Grow out male selling weight (kg)")]
         [Required, GreaterThanEqualValue(0)]
         public double MaleSellingWeight { get; set; }
 
@@ -198,7 +207,7 @@ namespace Models.CLEM.Activities
         /// Female selling age (months)
         /// </summary>
         [Category("Grow out herd", "Females")]
-        [Description("Female grow out selling age (months)")]
+        [Description("Grow out female selling age (months)")]
         [System.ComponentModel.DefaultValueAttribute(24)]
         [Required, GreaterThanEqualValue(0)]
         public double FemaleSellingAge { get; set; }
@@ -207,7 +216,7 @@ namespace Models.CLEM.Activities
         /// Female selling weight (kg)
         /// </summary>
         [Category("Grow out herd", "Females")]
-        [Description("Female grow out selling weight (kg)")]
+        [Description("Grow out female selling weight (kg)")]
         [Required, GreaterThanEqualValue(0)]
         public double FemaleSellingWeight { get; set; }
 
@@ -308,7 +317,7 @@ namespace Models.CLEM.Activities
 
                 // unknown entries
                 var unknownPurchases = purchaseDetails.Where(a => a.Label == "");
-                if (unknownPurchases.Count() > 0)
+                if (unknownPurchases.Any())
                 {
                     foreach (var item in unknownPurchases)
                     {
@@ -680,6 +689,11 @@ namespace Models.CLEM.Activities
                 // Number of females
                 // weaned, >breeding age, female
                 int numberFemaleBreedingInHerd = herd.OfType<RuminantFemale>().Where(a => a.SaleFlag == HerdChangeReason.None && a.IsBreeder).Count();
+
+                // prevent runaway population growth in idividual based model by a check against max breeders
+                if(numberFemaleBreedingInHerd > MaximumBreedersKept * MaxBreedersMultiplierToStop)
+                    throw new ApsimXException(this, $"The breeder herd [{numberFemaleBreedingInHerd}] has exceeded the maximum number of breeders [{MaximumBreedersKept}] x the stop model max breeders multiplier [{MaxBreedersMultiplierToStop}]{System.Environment.NewLine}This is a safety mechanism to limit runaway population growth in the individual-based ruminant model. Adjust [Maximum breeders kept] or the [Stop model max breeders multiplier] if this population was intended");
+
                 int numberFemaleTotalInHerd = herd.OfType<RuminantFemale>().Where(a => a.SaleFlag == HerdChangeReason.None).Count();
 
                 // these are the breeders already marked for sale
@@ -919,6 +933,7 @@ namespace Models.CLEM.Activities
                             foreach (RuminantFemale female in saleherd.Where(a => (a.Age - a.BreedParams.MinimumAge1stMating > -11)).OrderByDescending(a => a.Weight * a.Age).Take(femaleBreedersRequired))
                             {
                                 // keep by removing any tag for sale.
+                                female.Attributes.Remove("GrowOut"); // in case grow out heifer
                                 female.SaleFlag = HerdChangeReason.None;
                                 female.Location = grazeStoreBreeders;
                                 femaleBreedersRequired--;
@@ -1013,6 +1028,7 @@ namespace Models.CLEM.Activities
                             List<RuminantFemale> saleherd = herd.OfType<RuminantFemale>().Where(a => a.ReadyForSale && a.SaleFlag != HerdChangeReason.MaxAgeSale).ToList();
                             foreach (RuminantFemale female in saleherd.OrderByDescending(a => a.Weight * a.Age).Take(femaleBreedersRequired))
                             {
+                                female.Attributes.Remove("GrowOut");
                                 // keep by removing any tag for sale.
                                 female.SaleFlag = HerdChangeReason.None;
                                 female.Location = grazeStoreBreeders;
@@ -1116,7 +1132,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             string skippedMarkForSale = (!MarkAgeWeightMalesForSale | !MarkOldBreedersForSale | !MarkOldSiresForSale) ? "*" : "";
 
@@ -1212,7 +1228,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("</div>");
 
                 if (skippedMarkForSale.Length > 0)
-                    htmlWriter.Write("<br />* This activity is not marking all individuals for sale when conditions met. It is your responsibility to ensure old individuals and age or weight sales of young males are handled either by turning on the associated feature on in this activitiy or using a RuminantActivityMarkForSale activity.");
+                    htmlWriter.Write("<div class=\"warningbanner\">* This activity is not marking all individuals for sale when conditions met. It is your responsibility to ensure old individuals and age or weight sales of young males are handled either by turning on the associated feature on in this activitiy or using a RuminantActivityMarkForSale activity.</div>");
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("Purchased breeders will be placed in ");
@@ -1239,8 +1255,11 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write("</div>");
 
-                if (GrazeFoodStoreNameBreeders != "" && GrazeFoodStoreNameBreeders == GrazeFoodStoreNameSires)
-                    htmlWriter.Write($"<div class=\"warningbanner\">Uncontrolled mating will occur as soon as Breeders and Sires are placed in <span class=\"resourcelink\">{GrazeFoodStoreNameBreeders}</span> if using natural mating.</div>");
+                // does controlled mating exist in simulation
+                var zone = this.FindAncestor<Zone>();
+                bool cmate = zone?.FindDescendant<RuminantActivityControlledMating>() != null;
+                if (!cmate && GrazeFoodStoreNameBreeders != "" && GrazeFoodStoreNameBreeders == GrazeFoodStoreNameSires)
+                    htmlWriter.Write($"<div class=\"warningbanner\">Uncontrolled mating will occur as soon as Breeders and Sires are placed in <span class=\"resourcelink\">{GrazeFoodStoreNameBreeders}</span>.</div>");
 
                 if (MarkAgeWeightMalesForSale || MaleSellingAge + MaleSellingWeight > 0)
                 {
@@ -1262,7 +1281,7 @@ namespace Models.CLEM.Activities
                             htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreNameGrowOutFemales + "</span>");
                         htmlWriter.Write("</div>");
 
-                        if (GrazeFoodStoreNameGrowOutFemales != "" & !CastrateGrowOutMales && GrazeFoodStoreNameGrowOutFemales == GrazeFoodStoreNameGrowOutMales)
+                        if (!cmate && GrazeFoodStoreNameGrowOutFemales != "" & !CastrateGrowOutMales && GrazeFoodStoreNameGrowOutFemales == GrazeFoodStoreNameGrowOutMales)
                             htmlWriter.Write($"<div class=\"warningbanner\">Uncontrolled mating may occur in grow out females and males if allowed to mature before sales as they are placed in <span class=\"resourcelink\">{GrazeFoodStoreNameGrowOutFemales}</span> if using natural mating.</div>");
                     }
                 }
@@ -1278,13 +1297,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public override string ModelSummaryInnerClosingTags()
         {
             return "";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryInnerOpeningTags()
         {
             return "";
         } 

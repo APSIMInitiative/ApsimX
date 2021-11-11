@@ -21,7 +21,7 @@ namespace Models.CLEM
     [ValidParent(ParentType = typeof(RuminantActivityTrade))]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
-    [Description("This model component specifies a relationship to be used by supplying a series of x and y values.")]
+    [Description("Specifies a relationship to be used by supplying a series of x and y values.")]
     [Version(1, 0, 4, "Default 0,0 now applies")]
     [Version(1, 0, 3, "Graph of relationship displayed in Summary")]
     [Version(1, 0, 2, "Added RelationshipCalculationMethod to allow user to define fixed or linear solver")]
@@ -138,12 +138,9 @@ namespace Models.CLEM
         #endregion
 
         #region descriptive summary
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

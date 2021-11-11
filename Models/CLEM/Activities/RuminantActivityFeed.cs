@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs ruminant feeding based upon the current herd filtering and a feeding style.")]
+    [Description("Feed ruminants by a feeding style.")]
     [Version(1, 0, 4, "Added smart feeding switch to stop feeding when animals are satisfied and avoid overfeed wastage")]
     [Version(1, 0, 3, "User defined PotentialIntake modifer and reporting of trampling and overfed wastage in ledger")]
     [Version(1, 0, 2, "Manages feeding whole herd a specified daily amount or proportion of available feed")]
@@ -154,7 +154,7 @@ namespace Models.CLEM.Activities
                     IntakeMultiplier = usingPotentialIntakeMultiplier ? a.FirstOrDefault().BreedParams.OverfeedPotentialIntakeModifier : 1
                 }).ToList();
 
-                if (selectedIndividuals.Any())
+                if (selectedIndividuals.Count > 0)
                 {
                     var selectedIndividualsDetails = selectedIndividuals.FirstOrDefault();
 
@@ -255,7 +255,7 @@ namespace Models.CLEM.Activities
                         TotalAE = (requirement.UnitType == LabourUnitType.perAE) ? a.Sum(b => b.Weight) : 0
                     }).ToList();
 
-                    if (selectedIndividuals.Any())
+                    if (selectedIndividuals.Count > 0)
                     {
                         head += selectedIndividuals.FirstOrDefault().Count;
                         adultEquivalents += selectedIndividuals.FirstOrDefault().TotalAE;
@@ -469,7 +469,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

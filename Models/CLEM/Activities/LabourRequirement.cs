@@ -35,7 +35,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(PastureActivityCutAndCarry))]
     [ValidParent(ParentType = typeof(LabourActivityTask))]
     [ValidParent(ParentType = typeof(LabourActivityOffFarm))]
-    [Description("Defines the amount and type of labour required for an activity. This model component must have at least one LabourFilterGroup nested below in the UI tree structure")]
+    [Description("Defines the amount and type of labour required for an activity. This component must have at least one LabourFilterGroup as a child")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourRequirement.htm")]
     public class LabourRequirement: CLEMModel, IValidatableObject
@@ -155,7 +155,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -189,13 +189,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public override string ModelSummaryInnerClosingTags()
         {
             return "\r\n</div>";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryInnerOpeningTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

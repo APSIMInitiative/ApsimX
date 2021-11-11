@@ -18,7 +18,7 @@ namespace Models.CLEM.Resources
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
     [ValidParent(ParentType = typeof(AnimalFoodStore))]
-    [Description("This resource represents a common land food store.")]
+    [Description("This resource represents the pasture on common land")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Link to GrazeFoodStore implemented")]
     [HelpUri(@"Content/Features/Resources/AnimalFoodStore/CommonLandStoreType.htm")]
@@ -348,12 +348,8 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
