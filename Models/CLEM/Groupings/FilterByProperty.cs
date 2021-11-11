@@ -27,7 +27,7 @@ namespace Models.CLEM.Groupings
     {
         [NonSerialized]
         private PropertyInfo propertyInfo;
-        private bool useSimpleApporach = false;
+        private bool useSimpleApproach = false;
         private bool validOperator = true;
 
         /// <summary>
@@ -65,7 +65,7 @@ namespace Models.CLEM.Groupings
             if (PropertyOfIndividual != null && PropertyOfIndividual != "")
             {
                 propertyInfo = Parent.GetProperty(PropertyOfIndividual);
-                useSimpleApporach = IsSimpleRuminantProperty();
+                useSimpleApproach = IsSimpleRuminantProperty();
                 validOperator = CheckValidOperator(propertyInfo, out string _);
             }
         }
@@ -74,51 +74,53 @@ namespace Models.CLEM.Groupings
         public override Func<T, bool> Compile<T>()
         {
             if (!validOperator) return f => false;
-            if (useSimpleApporach)
+
+            return useSimpleApproach ? CompileSimple<T>() : CompileComplex<T>();
+        }
+
+        [NonSerialized]
+        private MethodInfo method = typeof(FilterByProperty)
+            .GetMethod("GetSimpleRuminantProperty", BindingFlags.NonPublic | BindingFlags.Instance);
+
+        private Func<T, bool> CompileSimple<T>()
+        {
+            var arg = Expression.Parameter(typeof(T));
+
+            // Try convert the Value into the same data type as the property
+            ConstantExpression compare = null;
+            if (propertyInfo.PropertyType.IsEnum)
             {
-                Func<T, bool> simple = t => {
-                    var simpleFilterParam = Expression.Parameter(typeof(T));
-                    var thisOperator = Operator;
-
-                    // Try convert the Value into the same data type as the property
-                    ConstantExpression simpleCompareVal = null;
-                    if (propertyInfo.PropertyType.IsEnum)
-                    {
-                        try
-                        {
-                            var testEnumOK = Enum.Parse(propertyInfo.PropertyType, Value.ToString(), true) != null;
-                        }
-                        catch
-                        {
-                            return (Operator == ExpressionType.NotEqual || Operator == ExpressionType.IsFalse);
-                        }
-                        simpleCompareVal = Expression.Constant(Enum.Parse(propertyInfo.PropertyType, Value.ToString()), propertyInfo.PropertyType);
-                    }
-                    else
-                        simpleCompareVal = Expression.Constant(Convert.ChangeType(Value ?? 0, propertyInfo.PropertyType));
-
-                    bool success = GetSimpleRuminantProperty(t, out ConstantExpression propertyValue);
-
-                    if (!success)
-                        return false;
-
-                    BinaryExpression simpleBinary;
-                    if (thisOperator == ExpressionType.IsTrue | thisOperator == ExpressionType.IsFalse)
-                    {
-                        // Allow for IsTrue and IsFalse operator
-                        if (propertyInfo.PropertyType == typeof(bool))
-                            simpleCompareVal = Expression.Constant((thisOperator == ExpressionType.IsTrue), typeof(bool));
-                        simpleBinary = Expression.MakeBinary(ExpressionType.Equal, propertyValue, simpleCompareVal);
-                    }
-                    else
-                        simpleBinary = Expression.MakeBinary(thisOperator, propertyValue, simpleCompareVal);
-
-                    var simpleLambda = Expression.Lambda<Func<T, bool>>(simpleBinary, simpleFilterParam).Compile();
-                    return simpleLambda(t);
-                };
-                return simple;
+                if (!Enum.TryParse(propertyInfo.PropertyType, Value.ToString(), true, out _))
+                    return _ => Operator == ExpressionType.NotEqual || Operator == ExpressionType.IsFalse;
+                
+                compare = Expression.Constant(Enum.Parse(propertyInfo.PropertyType, Value.ToString()), propertyInfo.PropertyType);
             }
+            else
+                compare = Expression.Constant(Convert.ChangeType(Value ?? 0, propertyInfo.PropertyType));
 
+            var value = Expression.Call(method, arg);            
+            
+            var simple = GetBinary(compare, value);                     
+
+            return Expression.Lambda<Func<T, bool>>(simple, arg).Compile();
+        }
+
+        private BinaryExpression GetBinary(ConstantExpression compare, MethodCallExpression value)
+        {
+            if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
+            {
+                // Allow for IsTrue and IsFalse operator
+                if (propertyInfo.PropertyType == typeof(bool))
+                    compare = Expression.Constant((Operator == ExpressionType.IsTrue), typeof(bool));
+
+                return Expression.MakeBinary(ExpressionType.Equal, value, compare);
+            }
+            else
+                return Expression.MakeBinary(Operator, value, compare);
+        }
+
+        private Func<T, bool> CompileComplex<T>()
+        {
             // Check that the filter applies to objects of type T
             var filterParam = Expression.Parameter(typeof(T));
 
@@ -132,12 +134,12 @@ namespace Models.CLEM.Groupings
             var key = Expression.Property(filterInherit, propertyInfo.Name);
 
             // Try convert the Value into the same data type as the property
-            var ce = propertyInfo.PropertyType.IsEnum ? Enum.Parse(propertyInfo.PropertyType, Value.ToString(), true) : Convert.ChangeType(Value??0, propertyInfo.PropertyType);
+            var ce = propertyInfo.PropertyType.IsEnum ? Enum.Parse(propertyInfo.PropertyType, Value.ToString(), true) : Convert.ChangeType(Value ?? 0, propertyInfo.PropertyType);
             var value = Expression.Constant(ce);
 
             // Create a lambda that compares the filter value to the property on T
             // using the provided operator
-            Expression binary; 
+            Expression binary;
             if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
             {
                 // Allow for IsTrue and IsFalse operator
@@ -227,11 +229,11 @@ namespace Models.CLEM.Groupings
             return false;
         }
 
-        private bool GetSimpleRuminantProperty(IFilterable individual, out ConstantExpression propertyValue)
+        private ConstantExpression GetSimpleRuminantProperty(IFilterable individual)
         {
-            propertyValue = null;
+            ConstantExpression propertyValue = null;
             if (!propertyInfo.DeclaringType.IsAssignableFrom(individual.GetType()))
-                return false;
+                return null;
 
             if (propertyInfo != null && (propertyInfo.DeclaringType == typeof(Ruminant) || propertyInfo.DeclaringType.IsSubclassOf(typeof(Ruminant))))
             {
@@ -380,7 +382,7 @@ namespace Models.CLEM.Groupings
                         break;
                 }
             }
-            return (propertyValue != null);
+            return propertyValue;
         }
 
         /// <summary>
