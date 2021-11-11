@@ -38,7 +38,7 @@ namespace Models.CLEM.Groupings
         public ExpressionType Operator { get; set; }
         
         /// <summary>
-        /// Method to return avaialble operators
+        /// Method to return available operators
         /// </summary>
         /// <returns></returns>
         protected object[] GetOperators() => new object[]
