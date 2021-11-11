@@ -3828,7 +3828,7 @@
         {
             foreach (JObject simulation in JsonUtilities.ChildrenRecursively(root, "Simulation"))
             {
-                var stockModels = JsonUtilities.Children(simulation).Where(c => c["$type"].ToString().Contains("Stock"));
+                var stockModels = JsonUtilities.ChildrenRecursively(simulation).Where(c => c["$type"].ToString().Contains("Stock"));
                 JObject stock = null;
                 if (stockModels.Any())
                     stock = stockModels.First();

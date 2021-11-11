@@ -933,10 +933,11 @@ namespace Models.GrazPlan
                 double propnRemoved = Math.Min(1.0, (totalRemoved / area) / (forage.TotalLive + forage.TotalDead + GrazType.Ungrazeable * 10.0)); //  calculations in kg /ha, needs more checking, would be good to use a variable for the unit conversion on ungrazeable
 
                 // calculations of proportions each organ of the total plant removed (in the native units)
-                double totalDM = ForageObj.Material.Sum(m => m.Consumable.Wt);
-                
+                double totalDM = ForageObj.Material.Sum(m => m.Total.Wt);
+                double consumableDM = ForageObj.Material.Sum(m => m.Consumable.Wt);
+
                 double amountRemoved = 0;
-                double amountToRemove = propnRemoved * totalDM;
+                double amountToRemove = propnRemoved * consumableDM;
                 var liveMaterial = ForageObj.Material.Where(m => m.IsLive).ToList();
                 foreach (var live in liveMaterial)
                 {
@@ -945,11 +946,11 @@ namespace Models.GrazPlan
                     if (dead == null)
                         throw new Exception($"Cannot find dead material for {live.Name}.");
 
-                    if (live.Consumable.Wt + dead.Consumable.Wt > 0)
+                    if (live.Total.Wt + dead.Total.Wt > 0)
                     {
-                        double propnOfPlantDM = (live.Consumable.Wt + dead.Consumable.Wt) / totalDM;
+                        double propnOfPlantDM = (live.Total.Wt + dead.Total.Wt) / totalDM;
                         double amountOfOrganToRemove = propnOfPlantDM * amountToRemove;
-                        double prpnOfOrganToRemove = amountOfOrganToRemove / (live.Consumable.Wt + dead.Consumable.Wt);
+                        double prpnOfOrganToRemove = amountOfOrganToRemove / (live.Total.Wt + dead.Total.Wt);
                         prpnOfOrganToRemove = Math.Min(prpnOfOrganToRemove, 1.0);
                         PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
                         removal.FractionDeadToRemove = prpnOfOrganToRemove;
@@ -965,9 +966,9 @@ namespace Models.GrazPlan
                     foreach (var dead in deadMaterial)
                     {
                         // This can happen for surface organic matter which only has dead material.
-                        double propnOfPlantDM = dead.Consumable.Wt / totalDM;
+                        double propnOfPlantDM = dead.Total.Wt / totalDM;
                         double amountOfOrganToRemove = propnOfPlantDM * amountToRemove;
-                        double prpnOfOrganToRemove = MathUtilities.Divide(amountOfOrganToRemove, dead.Consumable.Wt, 0);
+                        double prpnOfOrganToRemove = MathUtilities.Divide(amountOfOrganToRemove, dead.Total.Wt, 0);
                         prpnOfOrganToRemove = Math.Min(prpnOfOrganToRemove, 1.0);
                         PMF.OrganBiomassRemovalType removal = new PMF.OrganBiomassRemovalType();
                         removal.FractionDeadToRemove = prpnOfOrganToRemove;
