@@ -50,41 +50,43 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override Func<T, bool> Compile<T>()
         {
-            Func<T, bool> simple = t => {
-                var simpleFilterParam = Expression.Parameter(typeof(T));
+            var simpleFilterParam = Expression.Parameter(typeof(T));
 
-                bool exists = (t as IAttributable).Attributes.Exists(AttributeTag);
-                BinaryExpression simpleBinary;
-                if (FilterStyle == AttributeFilterStyle.Exists)
+            Expression<Func<T, bool>> exists = t => (t as IAttributable).Attributes.Exists(AttributeTag);
+
+            Expression simpleBinary;
+            if (FilterStyle == AttributeFilterStyle.Exists)
+            {
+                var simpleVal = Expression.Constant(Convert.ChangeType(Value ?? 0, typeof(bool)));
+                if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
                 {
-                    var simpleVal = Expression.Constant(Convert.ChangeType(Value ?? 0, typeof(bool)));
-                    if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
-                    {
-                        // Allow for IsTrue and IsFalse operator
-                        simpleVal = Expression.Constant((Operator == ExpressionType.IsTrue));
-                        simpleBinary = Expression.MakeBinary(ExpressionType.Equal, Expression.Constant(exists), simpleVal);
-                    }
-                    else
-                        simpleBinary = Expression.MakeBinary(Operator, Expression.Constant(exists), simpleVal);
+                    // Allow for IsTrue and IsFalse operator
+                    simpleVal = Expression.Constant(Operator == ExpressionType.IsTrue);
+                    simpleBinary = Expression.MakeBinary(ExpressionType.Equal, exists, simpleVal);
                 }
                 else
-                {
-                    if (!exists) return false;
-                    object attributeValue = (t as IAttributable).Attributes.GetValue(AttributeTag).StoredValue;
-                    var simpleVal = Expression.Constant(Convert.ChangeType(Value ?? 0, attributeValue.GetType()));
-                    var expAttributeVal = Expression.Constant(Convert.ChangeType(attributeValue, attributeValue.GetType()));
+                    simpleBinary = Expression.MakeBinary(Operator, exists, simpleVal);
+            }
+            else
+            {
+                if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
+                    throw new ApsimXException(this, $"Invalid FilterByAttribute operator [{OperatorToSymbol()}] in [f={this.NameWithParent}]");
 
-                    if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
-                    {
-                        throw new ApsimXException(this, $"Invalid FilterByAttribute operator [{OperatorToSymbol()}] in [f={this.NameWithParent}]");
-                    }
-                    else
-                        simpleBinary = Expression.MakeBinary(Operator, expAttributeVal, simpleVal);
-                }
-                var simpleLambda = Expression.Lambda<Func<T, bool>>(simpleBinary, simpleFilterParam).Compile();
-                return simpleLambda(t);
-            };
-            return simple;
+                Expression<Func<T, BinaryExpression>> check = t => CheckTag(t as IAttributable);
+                var invoke = Expression.Invoke(check, simpleFilterParam);
+                simpleBinary = Expression.IfThenElse(exists, invoke, Expression.Constant(false));
+            }
+            
+            return Expression.Lambda<Func<T, bool>>(simpleBinary, simpleFilterParam).Compile();
+        }
+
+        private BinaryExpression CheckTag(IAttributable t)
+        {
+            object attributeValue = t.Attributes.GetValue(AttributeTag).StoredValue;
+            var simpleVal = Expression.Constant(Convert.ChangeType(Value ?? 0, attributeValue.GetType()));
+            var expAttributeVal = Expression.Constant(Convert.ChangeType(attributeValue, attributeValue.GetType()));
+
+            return Expression.MakeBinary(Operator, expAttributeVal, simpleVal);
         }
 
         /// <summary>

@@ -23,6 +23,11 @@ namespace Models.CLEM.Groupings
         }
 
         /// <summary>
+        /// The filter rule
+        /// </summary>
+        public Func<IFilterable, bool> Rule { get; protected set; }
+
+        /// <summary>
         /// Filter operator
         /// </summary>
         [Description("Operator")]

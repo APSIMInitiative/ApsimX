@@ -33,7 +33,13 @@ namespace Models.CLEM
         public IEnumerable<string> Parameters => properties.Keys;
 
         /// <inheritdoc/>
-        public PropertyInfo GetProperty(string name) => properties[name];
+        public PropertyInfo GetProperty(string name) 
+        {
+            if (properties is null)
+                InitialiseFilters();
+
+            return properties[name]; 
+        }
 
         /// <summary>
         /// Constructor
@@ -93,15 +99,14 @@ namespace Models.CLEM
             if (source is null)
                 throw new NullReferenceException("Cannot filter a null object");
 
-            if (filterRules is null)
-                filterRules = FindAllChildren<Filter>().Select(filter => filter.Compile<IFilterable>());
+            filterRules ??= FindAllChildren<Filter>().Select(filter => filter.Rule);
 
             // calculate the specified number/proportion of the filtered group to take from group
             int number = source.Count();
             foreach (var take in FindAllChildren<TakeFromFiltered>())
                 number = take.NumberToTake(number);
 
-            var filtered = (filterRules.Any() ? source.Where(item => filterRules.All(rule => rule(item))) : source);
+            var filtered = filterRules.Any() ? source.Where(item => filterRules.All(rule => rule is null ? false : rule(item))) : source;
 
             if(sortList?.Any()??false)
                 // add sorting and take specified
@@ -116,10 +121,9 @@ namespace Models.CLEM
             if (item == null)
                 throw new NullReferenceException("Cannot filter a null object");
 
-            if (filterRules is null)
-                filterRules = FindAllChildren<Filter>().Select(filter => filter.Compile<IFilterable>());
+            filterRules ??= FindAllChildren<Filter>().Select(filter => filter.Rule);
 
-            return filterRules.All(rule => rule(item));
+            return filterRules.All(rule => rule is null ? false : rule(item));
         }
 
         #region descriptive summary
