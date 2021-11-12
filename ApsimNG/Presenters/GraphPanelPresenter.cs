@@ -261,7 +261,7 @@ namespace UserInterface.Presenters
                 GraphPresenter graphPresenter = new GraphPresenter();
                 GraphView graphView = new GraphView(view as ViewBase);
                 presenter.ApsimXFile.Links.Resolve(graphPresenter);
-                graphPresenter.Attach(graphs[0].Graphs[i].Graph, graphView, presenter);
+                graphPresenter.Attach(graphs[0].Graphs[i].Graph, graphView, presenter, panel.Cache.SelectMany(c => c.Value.SelectMany(v => v.Value)).ToList());
                 graphPresenter.DrawGraph(series);
 
                 Axis[] axes = graphView.Axes.ToArray(); // This should always be length 2
