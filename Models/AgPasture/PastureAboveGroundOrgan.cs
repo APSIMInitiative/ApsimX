@@ -247,12 +247,7 @@
         /// <param name="biomassToRemove">The fraction of the harvestable biomass to remove</param>
         public void RemoveBiomass(OrganBiomassRemovalType biomassToRemove)
         {
-            // The fractions passed in are based on the harvestable biomass. Convert these to
-            // fractions of total biomass so that we can pass these to the tissue RemoveBiomass methods.
-            //biomassToRemove.FractionLiveToRemove = MathUtilities.Divide(biomassToRemove.FractionLiveToRemove * DMLiveHarvestable, DMLive, 0);
-            //biomassToRemove.FractionDeadToRemove = MathUtilities.Divide(biomassToRemove.FractionDeadToRemove * DMDeadHarvestable, DMDead, 0);
-            //biomassToRemove.FractionLiveToResidue = MathUtilities.Divide(biomassToRemove.FractionLiveToResidue * DMLiveHarvestable, DMLive, 0);
-            //biomassToRemove.FractionDeadToResidue = MathUtilities.Divide(biomassToRemove.FractionDeadToResidue * DMDeadHarvestable, DMDead, 0);
+            // The fractions passed in are based on the total biomass
             var dm = Tissue.Sum(t => t.DM.Wt);
 
             // Live removal

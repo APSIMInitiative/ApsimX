@@ -263,7 +263,10 @@
         {
             get
             {
-                yield return new DamageableBiomass("Residue", new Biomass() // Should this be in live i.e. no live SOM
+                // Return an empty live material. Stock won't find the dead material unless there 
+                // is matching live material.
+                yield return new DamageableBiomass("Residue", new Biomass(), isLive:true);  
+                yield return new DamageableBiomass("Residue", new Biomass()
                 {
                     StructuralWt = (SurfOM.Sum(som => som.Standing.Sum(om => om.amount)) +
                                     SurfOM.Sum(som => som.Lying.Sum(om => om.amount))) / 10,  // kg/ha to g/m2
@@ -273,7 +276,7 @@
                     MetabolicN = 0.0,
                     StorageWt = 0.0,
                     StorageN = 0.0,
-                }, false);
+                }, isLive:false);
             }
         }
 

@@ -246,8 +246,8 @@ namespace Models.ForageDigestibility
                 Material = biomass;
                 Fraction = frac;
             }
-            public DigestibleBiomass Material;
-            public double Fraction;
+            public DigestibleBiomass Material { get; set; }
+            public double Fraction { get; set; }
         }
     }
 }

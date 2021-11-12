@@ -489,7 +489,7 @@
                     if ((forage as IModel) is IHasPopulationReducer populationReducer)
                         populationReducer.ReducePopulation(populationReducer.Population * (1.0 - FractionPopulationDecline));
                     else
-                        throw new Exception($"Model {(forage as IModel).Name} is unable to reduce its population due to grazing. Not implemented.");
+                        throw new Exception($"Model {forage.Name} is unable to reduce its population due to grazing. Not implemented.");
                 }
             }
 
@@ -503,11 +503,6 @@
         /// <summary>Add dung to the soil surface.</summary>
         private void AddDungToSurface()
         {
-
-            if (clock.Today == new DateTime(1995, 7, 8))
-            {
-
-            }
             var SOMData = new BiomassRemovedType();
             SOMData.crop_type = "RuminantDung_PastureFed";
             SOMData.dm_type = new string[] { SOMData.crop_type };
