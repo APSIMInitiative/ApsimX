@@ -3699,6 +3699,18 @@
         }
 
         /// <summary>
+        /// At the start of the simulation, initialise all the paddocks and forages and nitrogen returns.
+        /// </summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
+        [EventSubscribe("EndOfSimulation")]
+        private void OnEndOfSimulation(object sender, EventArgs e)
+        {
+            randFactory = new MyRandom(RandSeed);
+        }
+
+
+        /// <summary>
         /// Initialisation step
         /// </summary>
         /// <param name="sender">The sending object</param>
@@ -4124,10 +4136,6 @@
                 }
             }
 
-            if (systemClock.Today == new DateTime(2004,6,8))
-            {
-
-            }
             // now update the available forages
             for (int i = 0; i <= this.StockModel.ForagesAll.Count() - 1; i++)
             {

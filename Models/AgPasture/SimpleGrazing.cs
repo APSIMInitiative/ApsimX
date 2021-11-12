@@ -523,11 +523,6 @@
         {
             if (DoUrineReturn == null)
             {
-
-                if (clock.Today == new DateTime(1995, 7, 8))
-                {
-
-                }
                 // We will do the urine return.
                 // find the layer that the fertilizer is to be added to.
                 int layer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, DepthUrineIsAdded);
@@ -630,7 +625,7 @@
                 double totalWeightedHarvestableWt = 0.0;
                 for (int i = 0; i < allForages.Count; i++)
                 {
-                    var harvestableWt = allForages[i].Material.Sum(m => m.Consumable.Wt * 10);  // kg/ha
+                    var harvestableWt = allForages[i].Material.Sum(m => m.Consumable.Wt);  // g/m2
                     totalHarvestableWt += harvestableWt;
                     totalWeightedHarvestableWt += SpeciesCutProportions[i] * harvestableWt;
                 }
@@ -638,12 +633,12 @@
                 var grazedForages = new List<DigestibleBiomass>();
                 for (int i = 0; i < allForages.Count; i++)
                 {
-                    var harvestableWt = allForages[i].Material.Sum(m => m.Consumable.Wt * 10);  // kg/ha
+                    var harvestableWt = allForages[i].Material.Sum(m => m.Consumable.Wt);  // g/m2
                     var proportion = harvestableWt * SpeciesCutProportions[i] / totalWeightedHarvestableWt;
                     var amountToRemove = removeAmount * proportion;
                     if (amountToRemove > 0)
                     {
-                        var grazed = allForages[i].RemoveBiomass(amountToRemove / 10);  // pass g/m2 into RemoveBiomass.
+                        var grazed = allForages[i].RemoveBiomass(amountToRemove/10);
                         double grazedDigestibility = grazed.Digestibility;
                         var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazedDigestibility;
 
@@ -663,8 +658,8 @@
                 double returnedToSoilN = 0;
                 foreach (var grazedForage in grazedForages)
                 {
-                    returnedToSoilWt += (1 - grazedForage.Digestibility) * grazedForage.Total.Wt;
-                    returnedToSoilN += GetValueFromMonthArray(FractionDefoliatedNToSoil) * grazedForage.Total.N;
+                    returnedToSoilWt += (1 - grazedForage.Digestibility) * grazedForage.Total.Wt * 10;  // g/m2 to kg/ha
+                    returnedToSoilN += GetValueFromMonthArray(FractionDefoliatedNToSoil) * grazedForage.Total.N * 10;  // g/m2 to kg/ha
                 }
 
                 double dungNReturned;
@@ -676,9 +671,9 @@
                     dungNReturned = Math.Min(returnedToSoilN, returnedToSoilWt * CToDMRatio / CNRatioDung);
                 }
 
-                AmountDungNReturned += dungNReturned * 10;                        // g/m2 to kg/ha
-                AmountDungWtReturned += returnedToSoilWt * 10;                    // g/m2 to kg/ha
-                AmountUrineNReturned += (returnedToSoilN - dungNReturned) * 10;   // g/m2 to kg/ha
+                AmountDungNReturned += dungNReturned;
+                AmountDungWtReturned += returnedToSoilWt;
+                AmountUrineNReturned += returnedToSoilN - dungNReturned;
             }
         }
     }
