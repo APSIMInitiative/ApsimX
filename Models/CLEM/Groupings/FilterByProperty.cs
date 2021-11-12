@@ -29,6 +29,7 @@ namespace Models.CLEM.Groupings
         private PropertyInfo propertyInfo;
         private bool useSimpleApproach = false;
         private bool validOperator = true;
+        private IEnumerable<string> GetParameters() => Parent?.Parameters.OrderBy(k => k);
 
         /// <summary>
         /// The property or method to filter by
@@ -38,8 +39,6 @@ namespace Models.CLEM.Groupings
         [Display(Type = DisplayType.DropDown, Values = nameof(GetParameters), Order = 1)]
         public string PropertyOfIndividual { get; set; }
         
-        private IEnumerable<string> GetParameters() => Parent?.Parameters.OrderBy(k => k);
-
         /// <summary>
         /// Constructor
         /// </summary>
