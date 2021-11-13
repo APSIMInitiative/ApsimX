@@ -411,13 +411,14 @@ namespace Models.CLEM.Reporting
         public HTMLSummaryStyle ModelSummaryStyle { get; set; }
 
         /// <inheritdoc/>
-        public List<IModel> CurrentAncestorList { get; set; } = new List<IModel>();
+        [JsonIgnore]
+        public List<string> CurrentAncestorList { get; set; } = new List<string>();
 
         /// <inheritdoc/>
-        public bool FormatForParentControl { get { return CurrentAncestorList.Count == 1; } }
+        public bool FormatForParentControl { get { return CurrentAncestorList.Count > 1; } }
 
         ///<inheritdoc/>
-        public string ModelSummary(bool formatForParentControl)
+        public string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -447,51 +448,51 @@ namespace Models.CLEM.Reporting
         }
 
         ///<inheritdoc/>
-        public string GetFullSummary(IModel model, List<IModel> parentControls, string htmlString, Func<string, string> markdown2Html = null)
+        public string GetFullSummary(IModel model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                CurrentAncestorList = parentControls.ToList();
-                CurrentAncestorList.Add(this);
-
                 if (model is ICLEMDescriptiveSummary)
                 {
                     ICLEMDescriptiveSummary cm = model as ICLEMDescriptiveSummary;
-                    htmlWriter.Write(cm.ModelSummaryOpeningTags(FormatForParentControl));
+                    cm.CurrentAncestorList = parentControls.ToList();
+                    cm.CurrentAncestorList.Add(model.GetType().Name);
+
+                    htmlWriter.Write(cm.ModelSummaryOpeningTags());
 
                     htmlWriter.Write(cm.ModelSummaryInnerOpeningTagsBeforeSummary());
 
-                    htmlWriter.Write(cm.ModelSummary(FormatForParentControl));
+                    htmlWriter.Write(cm.ModelSummary());
 
-                    htmlWriter.Write(cm.ModelSummaryInnerOpeningTags(FormatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryInnerOpeningTags());
 
                     foreach (var item in (model as IModel).Children)
                     {
-                        htmlWriter.Write(GetFullSummary(item, CurrentAncestorList, htmlString, markdown2Html));
+                        htmlWriter.Write(GetFullSummary(item, cm.CurrentAncestorList, htmlString, markdown2Html));
                     }
-                    htmlWriter.Write(cm.ModelSummaryInnerClosingTags(FormatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryInnerClosingTags());
 
-                    htmlWriter.Write(cm.ModelSummaryClosingTags(FormatForParentControl));
+                    htmlWriter.Write(cm.ModelSummaryClosingTags());
                 }
                 return htmlWriter.ToString();
             }
         }
 
         ///<inheritdoc/>
-        public string ModelSummaryClosingTags(bool formatForParentControl)
+        public string ModelSummaryClosingTags()
         {
             return "\r\n</div>\r\n</div>";
         }
 
         ///<inheritdoc/>
-        public string ModelSummaryOpeningTags(bool formatForParentControl)
+        public string ModelSummaryOpeningTags()
         {
             string overall = "default";
             string extra = "";
 
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + ";\">");
+                htmlWriter.Write("\r\n<div class=\"holder" + ((extra == "") ? "main" : "sub") + " " + overall + "\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + ";\">");
                 htmlWriter.Write("\r\n<div class=\"clearfix " + overall + "banner" + extra + "\">" + this.ModelSummaryNameTypeHeader() + "</div>");
                 htmlWriter.Write("\r\n<div class=\"" + overall + "content" + ((extra != "") ? extra : "") + "\">");
 
@@ -503,13 +504,13 @@ namespace Models.CLEM.Reporting
         public double SummaryOpacity(bool formatForParent) => ((!this.Enabled & (!formatForParent | (formatForParent & this.Parent.Enabled))) ? 0.4 : 1.0);
 
         ///<inheritdoc/>
-        public string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public string ModelSummaryInnerClosingTags()
         {
             return "";
         }
 
         ///<inheritdoc/>
-        public string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        public string ModelSummaryInnerOpeningTags()
         {
             return "";
         }
