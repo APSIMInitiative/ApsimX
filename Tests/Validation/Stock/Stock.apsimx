@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 400,
   "Version": 145,
   "Name": "Simulations",
   "Children": [
@@ -69422,7 +69422,26 @@
             },
             {
               "$type": "Models.ForageDigestibility.Forages, Models",
-              "Parameters": null,
+              "Parameters": [
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "SurfaceOrganicMatter.Residue",
+                  "IsLive": true,
+                  "DigestibilityString": "0",
+                  "FractionConsumable": 0.0,
+                  "MinimumAmount": 0.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "SurfaceOrganicMatter.Residue",
+                  "IsLive": false,
+                  "DigestibilityString": "0",
+                  "FractionConsumable": 0.0,
+                  "MinimumAmount": 0.0,
+                  "UseDigestibilityFromModel": false
+                }
+              ],
               "Name": "Forages",
               "Children": [],
               "Enabled": true,
@@ -69484,60 +69503,7 @@
             {
               "$type": "Models.Manager, Models",
               "Code": "using Models.Soils.Nutrients;\nusing System;\nusing Models;\nusing Models.Core;\nusing Models.Utilities;\nusing Models.Interfaces;\nusing Models.GrazPlan;\nusing APSIM.Shared.Utilities;\nusing System.Xml.Serialization;\nusing Models.PMF;\nusing Models.PMF.Organs;\nusing Models.Soils;\r\nusing Models.Soils.Nutrients;\nusing System.Collections;\nusing System.Collections.Generic;\nusing System.Linq;\nusing Models.AgPasture;\nusing System.Diagnostics;\nusing Models.PMF.Interfaces;\nusing Models.Surface;\n\nnamespace Models\n{\n\n    [Serializable]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] IOrganDamage[] forages;\n        [Link] Stock animals;\n        [Link] Zone paddocks;\n        [Link] ISummary summary;\n        [Link] Simulation farm;\n        [Link] Supplement supplement;\n        [Link] SurfaceOrganicMatter som;\n        [Link(ByName=true)] ISolute urea;\n\n        public BiomassAndN StartOfDayPasture { get; set; }\n        public BiomassAndN EndOfDayPasture { get; set; }\n        public BiomassAndN StartOfDaySupplement { get; set; }\n        public BiomassAndN EndOfDaySupplement { get; set; }\n        public BiomassAndN StartOfDayAnimal { get; set; }\n        public BiomassAndN EndOfDayAnimal { get; set; }\n        public BiomassAndN PastureRemoved { get; set; }\n        public BiomassAndN SupplementRemoved { get; set; }\n        public BiomassAndN LiveWeightGain { get; set; }\n        public BiomassAndN Intake { get; set; }\n        public BiomassAndN Excreta { get; set; }\n       \n        public double LostN { get; set; } \n        public double LostWt { get; set; } \n\n\n\n        // Start of simulation\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnStart(object sender, EventArgs e)\n        {\n            forages = forages.Where(forage => forage.IsAboveGround && !(forage is SurfaceOrganicMatter)).ToArray();\n        }\n\n        // Start of day\n        [EventSubscribe(\"StartOfDay\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            StartOfDaySupplement = new BiomassAndN() \n            { \n                Wt = supplement.Stores.Sum(supp => supp.Stored),\n                N = supplement.Stores[1].CPConc / 6.25 * supplement.Stores.Sum(supp => supp.Stored),\n            };\n            StartOfDayPasture = new BiomassAndN() \n            { \n                Wt = forages.Sum(forage => forage.Live.Wt * 10),\n                N = forages.Sum(forage => forage.Live.N * 10),\n            };\n            StartOfDayAnimal = new BiomassAndN() \n            { \n                Wt = animals.WeightAll,\n                N = 0,\n            };\n        }\n\n        // End of day\n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void OnDoManagementCalculations(object sender, EventArgs e)\n        {\n            EndOfDaySupplement = new BiomassAndN() \n            { \n                Wt = supplement.Stores.Sum(supp => supp.Stored),\n                N = supplement.Stores[1].CPConc / 6.25 * supplement.Stores.Sum(supp => supp.Stored),\n            };\n            EndOfDayPasture = new BiomassAndN() \n            { \n                Wt = forages.Sum(forage => forage.Live.Wt * 10),\n                N = forages.Sum(forage => forage.Live.N * 10),\n            };\n            EndOfDayAnimal = new BiomassAndN() \n            { \n                Wt = animals.WeightAll,\n                N = animals.RetainedNAll,   // kg/d\n            };\n\n            Intake = new BiomassAndN()\n            {\n                Wt = animals.IntakeAll.Weight,\n                N = animals.IntakeAll.N,\n            };\n            Excreta = new BiomassAndN()\n            {\n                Wt = animals.FaecesAll.Weight,\n                N = animals.FaecesAll.N + animals.UrineNAll,\n            };\n\n            PastureRemoved = StartOfDayPasture - EndOfDayPasture;\n            SupplementRemoved = StartOfDaySupplement - EndOfDaySupplement;\n            LiveWeightGain = EndOfDayAnimal - StartOfDayAnimal;\n            //  do a balance calc\n            LostN = SupplementRemoved.N - (Excreta.N + LiveWeightGain.N);  \n            LostWt = SupplementRemoved.Wt - animals.IntakeAll.Weight; \n\n            if (!MathUtilities.FloatsAreEqual(LostWt, 0))\n                throw new Exception(\"Mass balance between supplement and stock has not been maintained: \" + LostWt.ToString());\n            if (!MathUtilities.FloatsAreEqual(LostN, 0))\n                throw new Exception(\"Nitrogen mass balance between supplement and stock has not been maintained: \" + LostN.ToString());\n\n            if (clock.Today.DayOfYear == 1)\n            {\n                if (!MathUtilities.FloatsAreEqual(animals.FaecesAll.Weight, som.Wt))\n                    throw new Exception(\"Mass balance error: The animal faeces weight on day 1 is not equal to surface organic matter weight.\");\n                if (!MathUtilities.FloatsAreEqual(animals.UrineNAll, MathUtilities.Sum(urea.kgha)))\n                    throw new Exception(\"Mass balance error: The animal urine on day 1 is not equal to soil urea amount.\");\n            }\n        }\n    }\n\n    // Helper class for containing a mass and and N concentration.\n    [Serializable]\n    public class BiomassAndN\n    {\n        public double Wt { get; set; }\n        public double N { get; set; }\n        public static BiomassAndN operator +(BiomassAndN a, BiomassAndN b)\n        {\n            return new BiomassAndN()\n            {\n                Wt = a.Wt + b.Wt,\n                N = a.N + b.N,\n            };\n\n        }\n        public static BiomassAndN operator -(BiomassAndN a, BiomassAndN b)\n        {\n            return new BiomassAndN()\n            {\n                Wt = a.Wt - b.Wt,\n                N = a.N - b.N,\n            };\n        }\n    }\n}\n",
-              "Parameters": [
-                {
-                  "Key": "StartOfDayPasture",
-                  "Value": ""
-                },
-                {
-                  "Key": "EndOfDayPasture",
-                  "Value": ""
-                },
-                {
-                  "Key": "StartOfDaySupplement",
-                  "Value": ""
-                },
-                {
-                  "Key": "EndOfDaySupplement",
-                  "Value": ""
-                },
-                {
-                  "Key": "StartOfDayAnimal",
-                  "Value": ""
-                },
-                {
-                  "Key": "EndOfDayAnimal",
-                  "Value": ""
-                },
-                {
-                  "Key": "PastureRemoved",
-                  "Value": ""
-                },
-                {
-                  "Key": "SupplementRemoved",
-                  "Value": ""
-                },
-                {
-                  "Key": "LiveWeightGain",
-                  "Value": ""
-                },
-                {
-                  "Key": "Intake",
-                  "Value": ""
-                },
-                {
-                  "Key": "Excreta",
-                  "Value": ""
-                },
-                {
-                  "Key": "LostN",
-                  "Value": "0"
-                },
-                {
-                  "Key": "LostWt",
-                  "Value": "0"
-                }
-              ],
+              "Parameters": [],
               "Name": "MassBalanceCalculations",
               "Enabled": true,
               "ReadOnly": false

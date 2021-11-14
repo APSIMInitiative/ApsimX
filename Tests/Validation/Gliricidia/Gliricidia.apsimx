@@ -50551,17 +50551,17 @@
                       "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
                       "Name": "SurfaceOrganicMatter.Residue",
                       "IsLive": true,
-                      "DigestibilityString": "0.7",
-                      "FractionConsumable": 1.0,
-                      "MinimumAmount": 100.0,
+                      "DigestibilityString": "0",
+                      "FractionConsumable": 0.0,
+                      "MinimumAmount": 0.0,
                       "UseDigestibilityFromModel": false
                     },
                     {
                       "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
                       "Name": "SurfaceOrganicMatter.Residue",
                       "IsLive": false,
-                      "DigestibilityString": "0.3",
-                      "FractionConsumable": 1.0,
+                      "DigestibilityString": "0",
+                      "FractionConsumable": 0.0,
                       "MinimumAmount": 0.0,
                       "UseDigestibilityFromModel": false
                     },
