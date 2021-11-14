@@ -97,7 +97,7 @@ namespace Models
         /// <summary>
         /// Zoom level
         /// </summary>
-        private Double _Zoom = 360;
+        private Double _Zoom = 1.0;
 
         /// <summary>
         /// Document the model.
