@@ -60,8 +60,11 @@ namespace APSIM.Interop.Graphing
         {
             using (Stream stream = new MemoryStream())
             {
-
-                PngExporter.Export(plot, stream, (int)width, (int)height);
+                PngExporter exporter = new PngExporter();
+                exporter.Height = (int)height;
+                exporter.Width = (int)width;
+                exporter.UseTextShaping = false;
+                exporter.Export(plot, stream);
                 stream.Seek(0, SeekOrigin.Begin);
                 return Image.FromStream(stream);
 

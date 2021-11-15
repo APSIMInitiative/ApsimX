@@ -224,7 +224,7 @@
         private void RefreshMap()
         {
             if (map != null)
-                image.Pixbuf = ImageToPixbuf(map.GetMap(defaultWidth));
+                image.Pixbuf = ImageToPixbuf(map.GetMap());
         }
 
         /// <summary>

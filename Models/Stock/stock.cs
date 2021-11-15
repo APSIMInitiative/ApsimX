@@ -3699,6 +3699,18 @@
         }
 
         /// <summary>
+        /// At the start of the simulation, initialise all the paddocks and forages and nitrogen returns.
+        /// </summary>
+        /// <param name="sender">The sending object</param>
+        /// <param name="e">The event arguments</param>
+        [EventSubscribe("EndOfSimulation")]
+        private void OnEndOfSimulation(object sender, EventArgs e)
+        {
+            randFactory = new MyRandom(RandSeed);
+        }
+
+
+        /// <summary>
         /// Initialisation step
         /// </summary>
         /// <param name="sender">The sending object</param>
@@ -4108,16 +4120,8 @@
                     {
                         if (forageProvider.ForageObj != null)
                         {
-                            foreach (IOrganDamage biomass in forageProvider.ForageObj.Organs)
-                            {
-                                if (biomass.IsAboveGround)
-                                {
-                                    if (biomass.Live.Wt > 0)
-                                    {
-                                        pastureGreen += biomass.Live.Wt;   // g/m^2
-                                    }
-                                }
-                            }
+                            pastureGreen = forageProvider.ForageObj.Material.Where(m => m.IsLive)
+                                                                            .Sum(m => m.Consumable.Wt); // g/m^2
                         }
                     }
                 }
