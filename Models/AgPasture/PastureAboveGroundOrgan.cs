@@ -11,7 +11,7 @@
 
     /// <summary>Describes a generic above ground organ of a pasture species.</summary>
     [Serializable]
-    public class PastureAboveGroundOrgan : Model, IOrganDamage
+    public class PastureAboveGroundOrgan : Model, IOrganDamage, IOrganDigestibility
     {
         /// <summary>The collection of tissues for this organ.</summary>
         [Link(Type = LinkType.Child)]
@@ -61,8 +61,14 @@
         /// <summary>Return live biomass. Used by STOCK (g/m2).</summary>
         public Biomass Live { get; private set; } = new Biomass();
 
+        /// <summary>Digestibility of live biomass. Used by STOCK (g/m2).</summary>
+        public double LiveDigestibility { get; private set; }
+
         /// <summary>Dead biomass. Used by STOCK (g/m2).</summary>
         public Biomass Dead { get; private set; } = new Biomass();
+
+        /// <summary>Digestibility of dead biomass. Used by STOCK (g/m2).</summary>
+        public double DeadDigestibility { get; private set; }
 
         /// <summary>Total dry matter in this organ (kg/ha).</summary>
         [Units("kg/ha")]
@@ -241,12 +247,8 @@
         /// <param name="biomassToRemove">The fraction of the harvestable biomass to remove</param>
         public void RemoveBiomass(OrganBiomassRemovalType biomassToRemove)
         {
-            // The fractions passed in are based on the harvestable biomass. Convert these to
-            // fractions of total biomass so that we can pass these to the tissue RemoveBiomass methods.
-            biomassToRemove.FractionLiveToRemove = MathUtilities.Divide(biomassToRemove.FractionLiveToRemove * DMLiveHarvestable, DMLive, 0);
-            biomassToRemove.FractionDeadToRemove = MathUtilities.Divide(biomassToRemove.FractionDeadToRemove * DMDeadHarvestable, DMDead, 0);
-            biomassToRemove.FractionLiveToResidue = MathUtilities.Divide(biomassToRemove.FractionLiveToResidue * DMLiveHarvestable, DMLive, 0);
-            biomassToRemove.FractionDeadToResidue = MathUtilities.Divide(biomassToRemove.FractionDeadToResidue * DMDeadHarvestable, DMDead, 0);
+            // The fractions passed in are based on the total biomass
+            var dm = Tissue.Sum(t => t.DM.Wt);
 
             // Live removal
             for (int t = 0; t < Tissue.Length - 1; t++)
@@ -382,13 +384,13 @@
             DigestibilityTotal = MathUtilities.Divide(totalDigestableDM, DMTotal, 0.0);
             StandingDigestibility = DigestibilityTotal * FractionStanding;
 
-            Live.StructuralWt = DMLiveHarvestable / 10.0;  // to g/m2
-            Live.StructuralN = NLiveHarvestable / 10.0;    // to g/m2
-            Live.DMDOfStructural = DigestibilityLive;
+            Live.StructuralWt = DMLive / 10.0;  // to g/m2
+            Live.StructuralN = NLive / 10.0;    // to g/m2
+            LiveDigestibility = DigestibilityLive;
 
-            Dead.StructuralWt = DMDeadHarvestable / 10.0;  // to g/m2
-            Dead.StructuralN = NDeadHarvestable / 10.0;    // to g/m2
-            Dead.DMDOfStructural = DigestibilityDead;
+            Dead.StructuralWt = DMDead / 10.0;  // to g/m2
+            Dead.StructuralN = NDead / 10.0;    // to g/m2
+            DeadDigestibility = DigestibilityDead;
         }
     }
 }
