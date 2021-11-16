@@ -58,12 +58,20 @@ namespace Models.CLEM.Activities
         public string StoreItemName { get; set; }
 
         /// <summary>
-        /// Percentage of the crop growth that is kept
+        /// Proportion of the crop harvest that is available
         /// </summary>
-        [Description("Proportion of harvest achieved")]
+        [Description("Harvest achieved multiplier")]
+        [System.ComponentModel.DefaultValueAttribute(1)]
+        [Required]
+        public double ProportionKept { get; set; }
+
+        /// <summary>
+        /// Proportion of the crop area (of parent ManageCrop) used
+        /// </summary>
+        [Description("Crop area multiplier")]
         [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, Proportion]
-        public double ProportionKept { get; set; }
+        public double PlantedMultiplier { get; set; }
 
         /// <summary>
         /// Number of Trees per Hectare 
@@ -578,6 +586,22 @@ namespace Models.CLEM.Activities
             {
                 string[] memberNames = new string[] { "Invalid nesting" };
                 results.Add(new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component (see rotational cropping) or below the CropActivityManageProduct immediately below the CropActivityManageCrop (see mixed cropping)", memberNames));
+            }
+
+            // ensure we don't try and change the crop area planeted when using unallocated land
+            if (PlantedMultiplier != 1)
+            {
+                var parentManageCrop = this.FindAncestor<CropActivityManageCrop>();
+                if (parentManageCrop != null && parentManageCrop.UseAreaAvailable)
+                {
+                    string[] memberNames = new string[] { "Invalid crop area" };
+                    results.Add(new ValidationResult($"You cannot alter the crop area planted for product [a={this.Name}] when the crop [a={parentManageCrop.NameWithParent}] is set to use all available land", memberNames));
+                }
+                if(Parent is CropActivityManageProduct)
+                {
+                    string[] memberNames = new string[] { "Invalid crop area" };
+                    results.Add(new ValidationResult($"You cannot alter the crop area planted for the mixed crop product (nested) [a={this.Name}] of the crop [a={parentManageCrop.NameWithParent}]", memberNames));
+                }
             }
             return results;
         }

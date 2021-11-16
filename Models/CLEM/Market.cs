@@ -162,16 +162,13 @@ namespace Models.CLEM
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                CLEMModel czm = model as CLEMModel;
-                czm.CurrentAncestorList = parentControls.ToList();
-                czm.CurrentAncestorList.Add(czm.GetType().Name);
+                var parents = parentControls.ToList();
+                parents.Add(model.GetType().Name);
 
                 htmlWriter.Write($"\r\n<div class=\"holdermain\" style=\"opacity: {((!this.Enabled) ? "0.4" : "1")}\">");
                 foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
-                    htmlWriter.Write(cm.GetFullSummary(cm, czm.CurrentAncestorList, "", markdown2Html));
+                    htmlWriter.Write(cm.GetFullSummary(cm, parents, "", markdown2Html));
                 htmlWriter.Write("</div>");
-
-                czm.CurrentAncestorList = null;
 
                 return htmlWriter.ToString();
             }
