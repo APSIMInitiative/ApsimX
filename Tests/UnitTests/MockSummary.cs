@@ -51,7 +51,21 @@ namespace UnitTests
 
         public void WriteMessage(IModel model, string message, MessageType messageType)
         {
-            throw new NotImplementedException();
+            switch (messageType)
+            {
+                case MessageType.Error:
+                    WriteError(model, message);
+                    break;
+                case MessageType.Warning:
+                    WriteWarning(model, message);
+                    break;
+                case MessageType.Information:
+                    WriteMessage(model, message);
+                    break;
+                default:
+                    messages.Add(message);
+                    break;
+            }
         }
     }
 }
