@@ -144,7 +144,7 @@ namespace Models.ForageDigestibility
                         totalFrac = totalFrac = fracRemoving.Sum(m => m.Fraction);
                         if (count > 1000)
                         {
-                            summary?.WriteWarning(forageModel as IModel, "SimpleGrazing could not remove or graze all the DM required for " + forageModel.Name);
+                            summary?.WriteMessage(forageModel as IModel, "SimpleGrazing could not remove or graze all the DM required for " + forageModel.Name, MessageType.Warning);
                             break;
                         }
                     }
@@ -190,7 +190,7 @@ namespace Models.ForageDigestibility
                 if (!MathUtilities.FloatsAreEqual(defoliatedDM, amountToRemove))
                     throw new Exception("Removal of DM resulted in loss of mass balance");
                 else
-                    summary?.WriteMessage(forageModel as IModel, "Biomass removed from " + forageModel.Name + " by grazing: " + (defoliatedDM*10).ToString("#0.0") + "kg/ha");
+                    summary?.WriteMessage(forageModel as IModel, "Biomass removed from " + forageModel.Name + " by grazing: " + (defoliatedDM*10).ToString("#0.0") + "kg/ha", MessageType.Information);
 
                 return new DigestibleBiomass(new DamageableBiomass(Name, new Biomass()
                 {
@@ -236,7 +236,7 @@ namespace Models.ForageDigestibility
 
             }
             else
-                summary.WriteWarning(forageModel as IModel, "Could not graze due to lack of DM available");
+                summary.WriteMessage(forageModel as IModel, "Could not graze due to lack of DM available", MessageType.Warning);
         }
 
         private class FractionDigestibleBiomass
