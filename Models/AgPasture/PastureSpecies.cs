@@ -22,7 +22,7 @@ namespace Models.AgPasture
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
-    public class PastureSpecies : ModelCollectionFromResource, IPlant, ICanopy, IUptake, IPlantDamage
+    public class PastureSpecies : ModelCollectionFromResource, IPlant, ICanopy, IUptake, IHasDamageableBiomass
     {
         #region Links, events and delegates  -------------------------------------------------------------------------------
 
@@ -886,6 +886,17 @@ namespace Models.AgPasture
         [Units("-")]
         public double PreferenceForLeafOverStems { get; set; } = 1.0;
 
+        ////- Soil related (water and N uptake) >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
+
+        /// <summary>Maximum fraction of water or N in the soil that is available to plants.</summary>
+        /// <remarks>This is used to limit the amount taken up and avoid issues with very small numbers</remarks>
+        [Units("0-1")]
+        public double MaximumFractionAvailable { get; set; } = 0.999;
+
+        /// <summary>Exponent of function determining soil extractable N.</summary>
+        [Units("-")]
+        public double NuptakeSWFactor { get; set; } = 0.25;
+
         ////- Parameters for annual species >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Day of year when seeds are allowed to germinate.</summary>
@@ -1226,7 +1237,7 @@ namespace Models.AgPasture
         private double myDefoliatedFraction;
 
         /// <summary>Digestibility of defoliated material (0-1).</summary>
-        private double defoliatedDigestibility;
+        public double DefoliatedDigestibility { get; private set; }
 
         #endregion  --------------------------------------------------------------------------------------------------------
 
@@ -2100,7 +2111,6 @@ namespace Models.AgPasture
                 Biomass mass = new Biomass();
                 mass.StructuralWt = (Leaf.StandingHerbageWt + Stem.StandingHerbageWt + Stolon.StandingHerbageWt) / 10.0; // to g/m2
                 mass.StructuralN = (Leaf.StandingHerbageN + Stem.StandingHerbageN + Stolon.StandingHerbageN) / 10.0;    // to g/m2
-                mass.DMDOfStructural = Leaf.DigestibilityLive;
                 return mass;
             }
         }
@@ -2114,7 +2124,6 @@ namespace Models.AgPasture
                 Biomass mass = new Biomass();
                 mass.StructuralWt = Harvestable.Wt / 10.0; // to g/m2
                 mass.StructuralN = Harvestable.N / 10.0;    // to g/m2
-                mass.DMDOfStructural = Harvestable.Digestibility;
                 return mass;
             }
         }
@@ -2239,14 +2248,14 @@ namespace Models.AgPasture
         [Units("0-1")]
         public double HarvestedDigestibility
         {
-            get { return defoliatedDigestibility; }
+            get { return DefoliatedDigestibility; }
         }
 
         /// <summary>Average metabolisable energy concentration of harvested material (MJ/kgDM).</summary>
         [Units("MJ/kg")]
         public double HarvestedME
         {
-            get { return PotentialMEOfHerbage * defoliatedDigestibility; }
+            get { return PotentialMEOfHerbage * DefoliatedDigestibility; }
         }
 
 
@@ -2278,6 +2287,21 @@ namespace Models.AgPasture
             {
                 var organsThatCanBeDamaged = new List<IOrganDamage>() { Leaf, Stem, Stolon };
                 return organsThatCanBeDamaged;
+            }
+        }
+
+
+        /// <summary>A list of material (biomass) that can be damaged.</summary>
+        public IEnumerable<DamageableBiomass> Material
+        {
+            get
+            {
+                yield return new DamageableBiomass("Leaf", Leaf?.Live, true, Leaf?.LiveDigestibility);
+                yield return new DamageableBiomass("Leaf", Leaf?.Dead, false, Leaf?.DeadDigestibility);
+                yield return new DamageableBiomass("Stem", Stem?.Live, true, Stem?.LiveDigestibility);
+                yield return new DamageableBiomass("Stem", Stem?.Dead, false, Stem?.DeadDigestibility);
+                yield return new DamageableBiomass("Stolon", Stolon?.Live, true, Stolon?.LiveDigestibility);
+                yield return new DamageableBiomass("Stolon", Stolon?.Dead, false, Stolon?.DeadDigestibility);
             }
         }
 
@@ -2555,7 +2579,7 @@ namespace Models.AgPasture
         {
             // reset variables for whole plant
             defoliatedFraction = 0.0;
-            defoliatedDigestibility = 0.0;
+            DefoliatedDigestibility = 0.0;
 
             grossPhotosynthesis = 0.0;
             dGrowthPot = 0.0;
@@ -3590,6 +3614,32 @@ namespace Models.AgPasture
             SetInitialState();
         }
 
+        /// <summary>
+        /// Remove biomass from an organ.
+        /// </summary>
+        /// <param name="organName">Name of organ.</param>
+        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
+        /// <param name="biomassToRemove">Biomass to remove.</param>
+        public void RemoveBiomass(string organName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
+        {
+            var organ = Organs.Find(o => o.Name == organName);
+            if (organ == null)
+            {
+                throw new Exception("Cannot find organ to remove biomass from. Organ: " + organName);
+            }
+            if (organ is PastureAboveGroundOrgan)
+            {
+                (organ as PastureAboveGroundOrgan).RemoveBiomass(biomassToRemove);
+            }
+            else if (organ is PastureBelowGroundOrgan)
+            {
+                (organ as PastureBelowGroundOrgan).RemoveBiomass(biomassRemoveType, biomassToRemove);
+            }
+            // Update LAI and herbage digestibility
+            EvaluateLAI();
+            EvaluateDigestibility();
+        }
+
         /// <summary>Removes plant material simulating a graze event.</summary>
         /// <param name="type">The type of amount being defined (SetResidueAmount or SetRemoveAmount)</param>
         /// <param name="amount">The DM amount (kg/ha)</param>
@@ -3699,26 +3749,26 @@ namespace Models.AgPasture
                 double greenDigestibility = (Leaf.DigestibilityLive * fracRemoving[0]) + (Stem.DigestibilityLive * fracRemoving[1])
                                             + (Stolon.DigestibilityLive * fracRemoving[2]);
                 double deadDigestibility = (Leaf.DigestibilityDead * fracRemoving[3]) + (Stem.DigestibilityDead * fracRemoving[4]) + (Stolon.DigestibilityDead * fracRemoving[5]);
-                defoliatedDigestibility = greenDigestibility + deadDigestibility;
+                DefoliatedDigestibility = greenDigestibility + deadDigestibility;
 
                 // Remove biomass from the organs.
                 Leaf.RemoveBiomass(
                     new OrganBiomassRemovalType()
                     {
-                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[0], Leaf.DMLiveHarvestable, 0.0)),
-                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[3], Leaf.DMDeadHarvestable, 0.0))
+                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[0], Leaf.DMLive, 0.0)),
+                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[3], Leaf.DMDead, 0.0))
                     });
                 Stem.RemoveBiomass(
                     new OrganBiomassRemovalType()
                     {
-                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[1], Stem.DMLiveHarvestable, 0.0)),
-                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[4], Stem.DMDeadHarvestable, 0.0))
+                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[1], Stem.DMLive, 0.0)),
+                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[4], Stem.DMDead, 0.0))
                     });
                 Stolon.RemoveBiomass(
                     new OrganBiomassRemovalType()
                     {
-                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[2], Stolon.DMLiveHarvestable, 0.0)),
-                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[5], Stolon.DMDeadHarvestable, 0.0))
+                        FractionLiveToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[2], Stolon.DMLive, 0.0)),
+                        FractionDeadToRemove = Math.Max(0.0, MathUtilities.Divide(amountToRemove * fracRemoving[5], Stolon.DMDead, 0.0))
                     });
 
                 // Update LAI and herbage digestibility
@@ -3729,7 +3779,6 @@ namespace Models.AgPasture
             // Set outputs and check balance
             var defoliatedDM = preRemovalDMShoot - AboveGroundWt;
             var defoliatedN = preRemovalNShoot - AboveGroundN;
-            defoliatedFraction = MathUtilities.Divide(defoliatedDM, preRemovalDMShoot, 0.0);
             if (!MathUtilities.FloatsAreEqual(defoliatedDM, amountToRemove))
                 throw new ApsimXException(this, "  AgPasture " + Name + " - removal of DM resulted in loss of mass balance");
             else
@@ -3739,32 +3788,9 @@ namespace Models.AgPasture
             {
                 StructuralWt = defoliatedDM,
                 StructuralN = defoliatedN,
-                DMDOfStructural = defoliatedDigestibility
             };
         }
 
-        /// <summary>
-        /// Remove biomass from an organ.
-        /// </summary>
-        /// <param name="organName">Name of organ.</param>
-        /// <param name="biomassRemoveType">Name of event that triggered this biomass remove call.</param>
-        /// <param name="biomassToRemove">Biomass to remove.</param>
-        public void RemoveBiomass(string organName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
-        {
-            var organ = Organs.Find(o => o.Name == organName);
-            if (organ == null)
-            {
-                throw new Exception("Cannot find organ to remove biomass from. Organ: " + organName);
-            }
-            if (organ is PastureAboveGroundOrgan)
-            {
-                (organ as PastureAboveGroundOrgan).RemoveBiomass(biomassToRemove);
-            }
-            else if (organ is PastureBelowGroundOrgan)
-            {
-                (organ as PastureBelowGroundOrgan).RemoveBiomass(biomassRemoveType, biomassToRemove);
-            }
-        }
 
         #endregion  --------------------------------------------------------------------------------------------------------
 

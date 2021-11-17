@@ -251,6 +251,14 @@
         public int LeftRightPadding { get; set; }
 
         /// <summary>
+        /// Disable scrolling via mouse wheel on the graph.
+        /// </summary>
+        public void DisableScrolling()
+        {
+            plot1.ActualController.UnbindMouseWheel();
+        }
+
+        /// <summary>
         /// Controls the background colour of the graph.
         /// </summary>
         public OxyColor BackColor

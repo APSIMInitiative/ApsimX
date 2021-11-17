@@ -67,7 +67,6 @@ namespace Models.CLEM.Activities
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             IEnumerable<Ruminant> herd = CurrentHerd(false);
-            int head = herd.Count();
             double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
 
             double daysNeeded = 0;
@@ -81,6 +80,7 @@ namespace Models.CLEM.Activities
                         daysNeeded = requirement.LabourPerUnit;
                         break;
                     case LabourUnitType.perHead:
+                        int head = herd.Count();
                         numberUnits = head / requirement.UnitSize;
                         if (requirement.WholeUnitBlocks)
                             numberUnits = Math.Ceiling(numberUnits);
@@ -205,7 +205,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             string html = "";
             html += "\r\n<div class=\"activityentry\">Shear selected herd and place clip in ";
