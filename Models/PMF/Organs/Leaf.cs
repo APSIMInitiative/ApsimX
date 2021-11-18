@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Models.Core;
@@ -1403,7 +1403,7 @@ namespace Models.PMF.Organs
             Structure.Clear();
             Leaves.Clear();
             needToRecalculateLiveDead = true;
-            Summary.WriteMessage(this, "Removing leaves from plant");
+            Summary.WriteMessage(this, "Removing leaves from plant", MessageType.Diagnostic);
         }
 
         /// <summary>Fractional interception "above" a given node position</summary>
@@ -1450,9 +1450,9 @@ namespace Models.PMF.Organs
                 Summary.WriteMessage(this, "Removing " + totalFractionToRemove.ToString("0.0")
                              + "% of " + Name.ToLower() + " biomass from " + parentPlant.Name
                              + ". Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
-                             + toResidue.ToString("0.0") + "% is returned to the surface organic matter.");
+                             + toResidue.ToString("0.0") + "% is returned to the surface organic matter.", MessageType.Diagnostic);
                 Summary.WriteMessage(this, "Removed " + Removed.Wt.ToString("0.0") + " g/m2 of dry matter weight and "
-                                         + Removed.N.ToString("0.0") + " g/m2 of N.");
+                                         + Removed.N.ToString("0.0") + " g/m2 of N.", MessageType.Diagnostic);
             }
         }
 
@@ -1952,7 +1952,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("RemoveLowestLeaf")]
         private void OnRemoveLowestLeaf()
         {
-            Summary.WriteMessage(this, "Removing lowest Leaf");
+            Summary.WriteMessage(this, "Removing lowest Leaf", MessageType.Diagnostic);
             Leaves.RemoveAt(0);
             needToRecalculateLiveDead = true;
         }
@@ -1977,7 +1977,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("KillLeaf")]
         private void OnKillLeaf(KillLeafType KillLeaf)
         {
-            Summary.WriteMessage(this, "Killing " + KillLeaf.KillFraction + " of leaves on plant");
+            Summary.WriteMessage(this, "Killing " + KillLeaf.KillFraction + " of leaves on plant", MessageType.Diagnostic);
             foreach (LeafCohort L in Leaves)
             {
                 L.DoKill(KillLeaf.KillFraction);

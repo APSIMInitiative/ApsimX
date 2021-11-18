@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Utilities;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -880,7 +880,7 @@ namespace Models.PMF.Organs
             if(MathUtilities.IsLessThanOrEqual(weather.MinT, frostKillSevere.Value()))
             {
                 // Temperature is below frostKillSevere parameter, senesce all LAI.
-                summary.WriteMessage(this, FrostSenescenceMessage(fatal: true));
+                summary.WriteMessage(this, FrostSenescenceMessage(fatal: true), MessageType.Diagnostic);
                 return LAI;
             }
             // Temperature is warmer than frostKillSevere, but cooler than frostKill.
@@ -890,13 +890,13 @@ namespace Models.PMF.Organs
             {
                 // The plant will survive but all of the leaf area is removed except a fraction.
                 // 3 degrees is a default for now - extract to a parameter to customise it.
-                summary.WriteMessage(this, FrostSenescenceMessage(fatal: false));
+                summary.WriteMessage(this, FrostSenescenceMessage(fatal: false), MessageType.Diagnostic);
                 return Math.Max(0, LAI - 0.1);
             }
             if (phenology.Between("FloralInitiation", "Flowering"))
             {
                 // Plant is between floral init and flowering - time to die.
-                summary.WriteMessage(this, FrostSenescenceMessage(fatal: true));
+                summary.WriteMessage(this, FrostSenescenceMessage(fatal: true), MessageType.Diagnostic);
                 return LAI; // rip
             }
 
@@ -1227,7 +1227,7 @@ namespace Models.PMF.Organs
                 if (LAI - DltSenescedLai < 0.1)
                 {
                     string message = "Crop failed due to loss of leaf area \r\n";
-                    summary.WriteMessage(this, message);
+                    summary.WriteMessage(this, message, MessageType.Diagnostic);
                     //scienceAPI.write(" ********** Crop failed due to loss of leaf area ********");
                     plant.EndCrop();
                     return;

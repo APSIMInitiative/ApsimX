@@ -1,4 +1,4 @@
-﻿namespace Models.Core.ApsimFile
+namespace Models.Core.ApsimFile
 {
     using APSIM.Shared.Utilities;
     using Models.Climate;
@@ -24,7 +24,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 145; } }
+        public static int LatestVersion { get { return 146; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3851,6 +3851,28 @@
             }
         }
 
+        /// <summary>
+        /// Fix API calls to summary.WriteX, and pass in an appropriate message type.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion146(JObject root, string fileName)
+        {
+            const string infoPattern = @"\.WriteMessage\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\);";
+            const string warningPattern = @"\.WriteWarning\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\);";
+            const string errorPattern = @"\.WriteError\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\);";
+            const string infoReplace = ".WriteMessage($1, MessageType.Diagnostic);";
+            const string warningReplace = ".WriteMessage($1, MessageType.Warning);";
+            const string errorReplace = ".WriteMessage($1, MessageType.Error);";
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                bool replace = manager.ReplaceRegex(infoPattern, infoReplace);
+                replace |= manager.ReplaceRegex(warningPattern, warningReplace);
+                replace |= manager.ReplaceRegex(errorPattern, errorReplace);
+                if (replace)
+                    manager.Save();
+            }
+        }
 
         /// <summary>
         /// Update the SoilNitrogen component to be a Nutrient
