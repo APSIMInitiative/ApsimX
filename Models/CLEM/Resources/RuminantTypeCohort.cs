@@ -110,13 +110,14 @@ namespace Models.CLEM.Resources
         /// <returns>List of ruminants</returns>
         public List<Ruminant> CreateIndividuals(List<ISetAttribute> initialAttributes, RuminantType ruminantType = null)
         {
+            List<ISetAttribute> localAttributes = new List<ISetAttribute>();
+            // add any whole herd attributes
+            if (initialAttributes != null)
+                localAttributes.AddRange(initialAttributes);
             // Add any attributes defined at the cohort level
-            if(initialAttributes is null)
-                initialAttributes = new List<ISetAttribute>();
+            localAttributes.AddRange(this.FindAllChildren<ISetAttribute>().ToList());
 
-            initialAttributes.AddRange(this.FindAllChildren<ISetAttribute>().ToList());
-
-            return CreateIndividuals(Convert.ToInt32(this.Number, CultureInfo.InvariantCulture), initialAttributes, ruminantType);
+            return CreateIndividuals(Convert.ToInt32(this.Number, CultureInfo.InvariantCulture), localAttributes, ruminantType);
         }
 
         /// <summary>
