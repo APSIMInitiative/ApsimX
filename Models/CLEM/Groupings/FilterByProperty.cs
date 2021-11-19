@@ -27,7 +27,6 @@ namespace Models.CLEM.Groupings
     {
         [NonSerialized]
         private PropertyInfo propertyInfo;
-        private bool useSimpleApproach = false;
         private bool validOperator = true;
         private IEnumerable<string> GetParameters() => Parent?.Parameters.OrderBy(k => k);
 
@@ -51,9 +50,13 @@ namespace Models.CLEM.Groupings
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Initialise();
-            if (!CheckValidOperator(propertyInfo, out string errorMessage))
-                throw new ApsimXException(this, errorMessage);
+            List<ValidationResult> results = new List<ValidationResult>();
+            ValidationContext context = new ValidationContext(this, null, null);
+            if (Validator.TryValidateObject(this, context, results, true))
+            {
+                Initialise();
+                Rule = Compile<IFilterable>();
+            }
         }
 
         /// <summary>
@@ -64,7 +67,7 @@ namespace Models.CLEM.Groupings
             if (PropertyOfIndividual != null && PropertyOfIndividual != "")
             {
                 propertyInfo = Parent.GetProperty(PropertyOfIndividual);
-                useSimpleApproach = IsSimpleRuminantProperty();
+//                useSimpleApproach = IsSimpleProperty();
                 validOperator = CheckValidOperator(propertyInfo, out string _);
             }
         }
@@ -73,49 +76,7 @@ namespace Models.CLEM.Groupings
         public override Func<T, bool> Compile<T>()
         {
             if (!validOperator) return f => false;
-
-            return useSimpleApproach ? CompileSimple<T>() : CompileComplex<T>();
-        }
-
-        [NonSerialized]
-        private MethodInfo method = typeof(FilterByProperty)
-            .GetMethod("GetSimpleRuminantProperty", BindingFlags.NonPublic | BindingFlags.Instance);
-
-        private Func<T, bool> CompileSimple<T>()
-        {
-            var arg = Expression.Parameter(typeof(T));
-
-            // Try convert the Value into the same data type as the property
-            ConstantExpression compare = null;
-            if (propertyInfo.PropertyType.IsEnum)
-            {
-                if (!Enum.TryParse(propertyInfo.PropertyType, Value.ToString(), true, out _))
-                    return _ => Operator == ExpressionType.NotEqual || Operator == ExpressionType.IsFalse;
-                
-                compare = Expression.Constant(Enum.Parse(propertyInfo.PropertyType, Value.ToString()), propertyInfo.PropertyType);
-            }
-            else
-                compare = Expression.Constant(Convert.ChangeType(Value ?? 0, propertyInfo.PropertyType));
-
-            var value = Expression.Call(method, arg);            
-            
-            var simple = GetBinary(compare, value);                     
-
-            return Expression.Lambda<Func<T, bool>>(simple, arg).Compile();
-        }
-
-        private BinaryExpression GetBinary(ConstantExpression compare, MethodCallExpression value)
-        {
-            if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
-            {
-                // Allow for IsTrue and IsFalse operator
-                if (propertyInfo.PropertyType == typeof(bool))
-                    compare = Expression.Constant((Operator == ExpressionType.IsTrue), typeof(bool));
-
-                return Expression.MakeBinary(ExpressionType.Equal, value, compare);
-            }
-            else
-                return Expression.MakeBinary(Operator, value, compare);
+            return CompileComplex<T>();
         }
 
         private Func<T, bool> CompileComplex<T>()
@@ -159,231 +120,6 @@ namespace Models.CLEM.Groupings
             return lambda;
         }
 
-        private bool IsSimpleRuminantProperty()
-        {
-            if (propertyInfo != null && (propertyInfo.DeclaringType == typeof(Ruminant) || propertyInfo.DeclaringType.IsSubclassOf(typeof(Ruminant))))
-            {
-                switch (propertyInfo.Name)
-                {
-                    case "Age":
-                    case "Weight":
-                    case "Sex":
-                    case "IsWeaner":
-                    case "IsSire":
-                    case "IsBreeder":
-                    case "IsAbleToBreed":
-                    case "IsHeifer":
-                    case "IsLactating":
-                    case "IsPreBreeder":
-                    case "IsPregnant":
-                    case "IsCalf":
-                    case "Breed":
-                    case "Class":
-                    case "EnergyBalance":
-                    case "HerdName":
-                    case "HighWeight":
-                    case "Location":
-                    case "ProportionOfHighWeight":
-                    case "ProportionOfNormalisedWeight":
-                    case "AdultEquivalent":
-                    case "HealthScore":
-                    case "ProportionOfSRW":
-                    case "ReadyForSale":
-                    case "RelativeCondition":
-                    case "RelativeSize":
-                    case "ReplacementBreeder":
-                    case "SaleFlag":
-                    case "Weaned":
-                    case "WeightGain":
-                    case "Cashmere":
-                    case "Wool":
-                    case "IsWildBreeder":
-                    case "DaysLactating":
-                    case "MonthsSinceLastBirth":
-                    case "NumberOfBirths":
-                    case "NumberOfBreedingMonths":
-                    case "NumberOfConceptions":
-                    case "NumberOfOffspring":
-                    case "NumberOfWeaned":
-                    case "SuccessfulPregnancy":
-                        return true;
-                    default:
-                        return false;
-                }
-            }
-            else if (propertyInfo != null && (propertyInfo.DeclaringType == typeof(LabourType)))
-            {
-                switch (propertyInfo.Name)
-                {
-                    case "Age":
-                    case "Sex":
-                    case "Hired":
-                    case "Name":
-                        return true;
-                    default:
-                        return false;
-
-                }
-            }
-            return false;
-        }
-
-        private ConstantExpression GetSimpleRuminantProperty(IFilterable individual)
-        {
-            ConstantExpression propertyValue = null;
-            if (!propertyInfo.DeclaringType.IsAssignableFrom(individual.GetType()))
-                return null;
-
-            if (propertyInfo != null && (propertyInfo.DeclaringType == typeof(Ruminant) || propertyInfo.DeclaringType.IsSubclassOf(typeof(Ruminant))))
-            {
-                switch (propertyInfo.Name)
-                {
-                    case "Age":
-                        propertyValue = Expression.Constant((individual as Ruminant).Age, propertyInfo.PropertyType);
-                        break;
-                    case "Weight":
-                        propertyValue = Expression.Constant((individual as Ruminant).Weight, propertyInfo.PropertyType);
-                        break;
-                    case "Sex":
-                        propertyValue = Expression.Constant((individual as Ruminant).Sex, propertyInfo.PropertyType);
-                        break;
-                    case "IsWeaner":
-                        propertyValue = Expression.Constant((individual as Ruminant).IsWeaner, propertyInfo.PropertyType);
-                        break;
-                    case "IsSire":
-                        propertyValue = Expression.Constant((individual as RuminantMale).IsSire, propertyInfo.PropertyType);
-                        break;
-                    case "IsAbleToBreed":
-                        propertyValue = Expression.Constant((individual as Ruminant).IsAbleToBreed, propertyInfo.PropertyType);
-                        break;
-                    case "IsHeifer":
-                        propertyValue = Expression.Constant((individual as RuminantFemale).IsHeifer, propertyInfo.PropertyType);
-                        break;
-                    case "IsLactating":
-                        propertyValue = Expression.Constant((individual as RuminantFemale).IsLactating, propertyInfo.PropertyType);
-                        break;
-                    case "IsPreBreeder":
-                        propertyValue = Expression.Constant((individual as RuminantFemale).IsPreBreeder, propertyInfo.PropertyType);
-                        break;
-                    case "IsPregnant":
-                        propertyValue = Expression.Constant((individual as RuminantFemale).IsPregnant, propertyInfo.PropertyType);
-                        break;
-                    case "IsCalf":
-                        propertyValue = Expression.Constant((individual as Ruminant).IsCalf, propertyInfo.PropertyType);
-                        break;
-                    case "Breed":
-                        propertyValue = Expression.Constant((individual as Ruminant).Breed, propertyInfo.PropertyType);
-                        break;
-                    case "Class":
-                        propertyValue = Expression.Constant((individual as Ruminant).Class, propertyInfo.PropertyType);
-                        break;
-                    case "EnergyBalance":
-                        propertyValue = Expression.Constant((individual as Ruminant).EnergyBalance, propertyInfo.PropertyType);
-                        break;
-                    case "HerdName":
-                        propertyValue = Expression.Constant((individual as Ruminant).HerdName, propertyInfo.PropertyType);
-                        break;
-                    case "HighWeight":
-                        propertyValue = Expression.Constant((individual as Ruminant).HighWeight, propertyInfo.PropertyType);
-                        break;
-                    case "Location":
-                        propertyValue = Expression.Constant((individual as Ruminant).Location, propertyInfo.PropertyType);
-                        break;
-                    case "ProportionOfHighWeight":
-                        propertyValue = Expression.Constant((individual as Ruminant).ProportionOfHighWeight, propertyInfo.PropertyType);
-                        break;
-                    case "ProportionOfNormalisedWeight":
-                        propertyValue = Expression.Constant((individual as Ruminant).ProportionOfNormalisedWeight, propertyInfo.PropertyType);
-                        break;
-                    case "AdultEquivalent":
-                        propertyValue = Expression.Constant((individual as Ruminant).AdultEquivalent, propertyInfo.PropertyType);
-                        break;
-                    case "HealthScore":
-                        propertyValue = Expression.Constant((individual as Ruminant).HealthScore, propertyInfo.PropertyType);
-                        break;
-                    case "ProportionOfSRW":
-                        propertyValue = Expression.Constant((individual as Ruminant).ProportionOfSRW, propertyInfo.PropertyType);
-                        break;
-                    case "ReadyForSale":
-                        propertyValue = Expression.Constant((individual as Ruminant).ReadyForSale, propertyInfo.PropertyType);
-                        break;
-                    case "RelativeCondition":
-                        propertyValue = Expression.Constant((individual as Ruminant).RelativeCondition, propertyInfo.PropertyType);
-                        break;
-                    case "RelativeSize":
-                        propertyValue = Expression.Constant((individual as Ruminant).RelativeSize, propertyInfo.PropertyType);
-                        break;
-                    case "ReplacementBreeder":
-                        propertyValue = Expression.Constant((individual as Ruminant).ReplacementBreeder, propertyInfo.PropertyType);
-                        break;
-                    case "SaleFlag":
-                        propertyValue = Expression.Constant((individual as Ruminant).SaleFlag, propertyInfo.PropertyType);
-                        break;
-                    case "Weaned":
-                        propertyValue = Expression.Constant((individual as Ruminant).Weaned, propertyInfo.PropertyType);
-                        break;
-                    case "WeightGain":
-                        propertyValue = Expression.Constant((individual as Ruminant).WeightGain, propertyInfo.PropertyType);
-                        break;
-                    case "Cashmere":
-                        propertyValue = Expression.Constant((individual as Ruminant).Cashmere, propertyInfo.PropertyType);
-                        break;
-                    case "Wool":
-                        propertyValue = Expression.Constant((individual as Ruminant).Wool, propertyInfo.PropertyType);
-                        break;
-                    case "IsWildBreeder":
-                        propertyValue = Expression.Constant((individual as RuminantMale).IsWildBreeder, propertyInfo.PropertyType);
-                        break;
-                    case "DaysLactating":
-                        propertyValue = Expression.Constant((individual as RuminantFemale).DaysLactating, propertyInfo.PropertyType);
-                        break;
-                    case "MonthsSinceLastBirth":
-                        propertyValue = Expression.Constant((individual as RuminantFemale).MonthsSinceLastBirth, propertyInfo.PropertyType);
-                        break;
-                    case "NumberOfBirths":
-                        propertyValue = Expression.Constant((individual as RuminantFemale).NumberOfBirths, propertyInfo.PropertyType);
-                        break;
-                    case "NumberOfBreedingMonths":
-                        propertyValue = Expression.Constant((individual as RuminantFemale).NumberOfBreedingMonths, propertyInfo.PropertyType);
-                        break;
-                    case "NumberOfConceptions":
-                        propertyValue = Expression.Constant((individual as RuminantFemale).NumberOfConceptions, propertyInfo.PropertyType);
-                        break;
-                    case "NumberOfOffspring":
-                        propertyValue = Expression.Constant((individual as RuminantFemale).NumberOfOffspring, propertyInfo.PropertyType);
-                        break;
-                    case "NumberOfWeaned":
-                        propertyValue = Expression.Constant((individual as RuminantFemale).NumberOfWeaned, propertyInfo.PropertyType);
-                        break;
-                    case "SuccessfulPregnancy":
-                        propertyValue = Expression.Constant((individual as RuminantFemale).SuccessfulPregnancy, propertyInfo.PropertyType);
-                        break;
-                    case "IsBreeder":
-                        propertyValue = Expression.Constant((individual as RuminantFemale).IsBreeder, propertyInfo.PropertyType);
-                        break;
-                }
-            }
-            else if (propertyInfo != null && (propertyInfo.DeclaringType == typeof(LabourType)))
-            {
-                switch (propertyInfo.Name)
-                {
-                    case "Age":
-                        propertyValue = Expression.Constant((individual as LabourType).Age, propertyInfo.PropertyType);
-                        break;
-                    case "Sex":
-                        propertyValue = Expression.Constant((individual as LabourType).Sex, propertyInfo.PropertyType);
-                        break;
-                    case "Hired":
-                        propertyValue = Expression.Constant((individual as LabourType).Hired, propertyInfo.PropertyType);
-                        break;
-                    case "Name":
-                        propertyValue = Expression.Constant((individual as LabourType).Name, propertyInfo.PropertyType);
-                        break;
-                }
-            }
-            return propertyValue;
-        }
-
         /// <summary>
         /// Check if the specified operator is valid for the selected property
         /// </summary>
@@ -400,6 +136,11 @@ namespace Models.CLEM.Groupings
                 case "String":
                     switch (Operator)
                     {
+                        case ExpressionType.Equal:
+                        case ExpressionType.NotEqual:
+                        case ExpressionType.IsTrue:
+                        case ExpressionType.IsFalse:
+                            break;
                         case ExpressionType.GreaterThan:
                         case ExpressionType.GreaterThanOrEqual:
                         case ExpressionType.LessThan:
@@ -407,11 +148,12 @@ namespace Models.CLEM.Groupings
                             errorMessage = $"Invalid operator of type [{OperatorToSymbol()}] for [{property.PropertyType.Name}] property [{property.Name}] in [{this.NameWithParent}] ";
                             return false;
                         default:
-                            break;
+                            errorMessage = $"Unsupported operator of type [{Operator}] for [{property.PropertyType.Name}] property [{property.Name}] in [{this.NameWithParent}] ";
+                            return false;
                     };
                     break;
-                case "int":
-                case "double":
+                case "Int32":
+                case "Double":
                 case "Single":
                     switch (Operator)
                     {
@@ -419,12 +161,21 @@ namespace Models.CLEM.Groupings
                         case ExpressionType.IsTrue:
                             errorMessage = $"Invalid operator of type [{OperatorToSymbol()}] for [{property.PropertyType.Name}] property [{property.Name}] in [{this.NameWithParent}] ";
                             return false;
-                        default:
+                        case ExpressionType.Equal:
+                        case ExpressionType.NotEqual:
+                        case ExpressionType.GreaterThan:
+                        case ExpressionType.GreaterThanOrEqual:
+                        case ExpressionType.LessThan:
+                        case ExpressionType.LessThanOrEqual:
                             break;
+                        default:
+                            errorMessage = $"Unsupported operator of type [{Operator}] for [{property.PropertyType.Name}] property [{property.Name}] in [{this.NameWithParent}] ";
+                            return false;
                     };
                     break;
                 default:
-                    break;
+                    errorMessage = $"Unsupported property type [{property.PropertyType.Name}] for property [{property.Name}] in [{this.NameWithParent}] ";
+                    return false;
             }
             return true;
         }
@@ -456,7 +207,7 @@ namespace Models.CLEM.Groupings
                 if (propertyInfo is null)
                 {
                     filterWriter.Write($"Filter:");
-                    string errorlink = (htmltags) ? "<span class=\"errorlink\">" : "";
+                    string errorlink = (htmltags) ? " <span class=\"errorlink\">" : " ";
                     string spanclose = (htmltags) ? "</span>" : "";
                     string message = (PropertyOfIndividual == null || PropertyOfIndividual == "") ? "Not Set" : $"Unknown: {PropertyOfIndividual}";
                     filterWriter.Write($"{errorlink}{message}{spanclose}");
@@ -482,7 +233,7 @@ namespace Models.CLEM.Groupings
                         {
                             string errorlink = (htmltags) ? "<span class=\"errorlink\">" : "";
                             string spanclose = (htmltags) ? "</span>" : "";
-                            filterWriter.Write($"{errorlink}{OperatorToSymbol()} is invalid for property {propertyInfo.PropertyType.Name}{spanclose}");
+                            filterWriter.Write($"{errorlink}invalid operator {OperatorToSymbol()}{spanclose}");
                         }
                         filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
                     }
@@ -499,7 +250,7 @@ namespace Models.CLEM.Groupings
                         {
                             string errorlink = (htmltags) ? "<span class=\"errorlink\">" : "";
                             string spanclose = (htmltags) ? "</span>" : "";
-                            filterWriter.Write($"{errorlink}{OperatorToSymbol()} is invalid for property {propertyInfo.PropertyType.Name}{spanclose}");
+                            filterWriter.Write($"{errorlink}invalid operator {OperatorToSymbol()}{propertyInfo.PropertyType.Name}{spanclose}");
                         }
                     }
                     else

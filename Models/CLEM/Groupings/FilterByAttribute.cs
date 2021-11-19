@@ -44,17 +44,32 @@ namespace Models.CLEM.Groupings
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Initialise();
+            List<ValidationResult> results = new List<ValidationResult>();
+            ValidationContext context = new ValidationContext(this, null, null);
+            if (Validator.TryValidateObject(this, context, results, true))
+            {
+                Initialise();
+                Rule = Compile<IFilterable>();
+            }
         }
 
         /// <inheritdoc/>
         public override Func<T, bool> Compile<T>()
         {
             var simpleFilterParam = Expression.Parameter(typeof(T));
+            var tag = Expression.Constant(AttributeTag, typeof(string));
 
-            Expression<Func<T, bool>> exists = t => (t as IAttributable).Attributes.Exists(AttributeTag);
+            var iattParam = Expression.TypeAs(simpleFilterParam, typeof(IAttributable));
+            var attProperty = Expression.Property(iattParam, "Attributes");
+            var attIsNull = Expression.Equal(attProperty, Expression.Constant(null));
+
+            var falseConstant = Expression.Constant(false, typeof(bool));
+
+            var existsmethod = typeof(IndividualAttributeList).GetMethod("Exists");
+            var exists = Expression.Call(attProperty, existsmethod, tag);
 
             Expression simpleBinary;
+            ConditionalExpression block;
             if (FilterStyle == AttributeFilterStyle.Exists)
             {
                 var simpleVal = Expression.Constant(Convert.ChangeType(Value ?? 0, typeof(bool)));
@@ -66,27 +81,56 @@ namespace Models.CLEM.Groupings
                 }
                 else
                     simpleBinary = Expression.MakeBinary(Operator, exists, simpleVal);
+
+                block = Expression.Condition(
+                        attIsNull,
+                        // false
+                        falseConstant,
+                        // true
+                        Expression.Condition(
+                            exists,
+                            // true
+                            simpleBinary,
+                            // false
+                            falseConstant
+                            )
+                    );
             }
             else
             {
                 if (Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse)
                     throw new ApsimXException(this, $"Invalid FilterByAttribute operator [{OperatorToSymbol()}] in [f={this.NameWithParent}]");
 
-                Expression<Func<T, BinaryExpression>> check = t => CheckTag(t as IAttributable);
-                var invoke = Expression.Invoke(check, simpleFilterParam);
-                simpleBinary = Expression.IfThenElse(exists, invoke, Expression.Constant(false));
+                var valueMethod = typeof(IndividualAttributeList).GetMethod("GetValue");
+                var valueVal = Expression.TypeAs(Expression.Call(attProperty, valueMethod, tag), typeof(IndividualAttribute));
+                var valueStored = Expression.Property(valueVal, "Value");
+                var valueStoredType = ((PropertyInfo)valueStored.Member).PropertyType;
+                //var valisnull = Expression.Equal(Express valueStored, Expression.Constant(null));
+                var value = Expression.Convert(valueStored, valueStoredType);
+
+                var simpleVal = Expression.Constant(Convert.ChangeType(Value ?? 0, valueStoredType));
+                simpleBinary = Expression.MakeBinary(Operator, value, simpleVal);
+                //var nullBinary = Expression.AndAlso(valisnull, Expression.Convert(binary, typeof(bool)));
+
+                //simpleBinary = Expression.Convert(Expression.IfThenElse(existsResult, nullBinary, Expression.Constant(false, typeof(bool))), typeof(bool));
+
+                block = Expression.Condition(
+                    // Attributes exist
+                        attIsNull,
+                        // false
+                        falseConstant,
+                        // true
+                        Expression.Condition(
+                            exists,
+                            // true
+                            simpleBinary,
+                            // false
+                            falseConstant
+                            )
+                    );
             }
-            
-            return Expression.Lambda<Func<T, bool>>(simpleBinary, simpleFilterParam).Compile();
-        }
 
-        private BinaryExpression CheckTag(IAttributable t)
-        {
-            object attributeValue = t.Attributes.GetValue(AttributeTag).StoredValue;
-            var simpleVal = Expression.Constant(Convert.ChangeType(Value ?? 0, attributeValue.GetType()));
-            var expAttributeVal = Expression.Constant(Convert.ChangeType(attributeValue, attributeValue.GetType()));
-
-            return Expression.MakeBinary(Operator, expAttributeVal, simpleVal);
+            return Expression.Lambda<Func<T, bool>>(block, simpleFilterParam).Compile();
         }
 
         /// <summary>
@@ -151,12 +195,44 @@ namespace Models.CLEM.Groupings
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if(FilterStyle == AttributeFilterStyle.ByValue)
+            string[] memberNames;
+            if (FilterStyle == AttributeFilterStyle.ByValue)
+            {
                 if ((Value is null || Value.ToString() == "") & !(Operator == ExpressionType.IsTrue | Operator == ExpressionType.IsFalse))
                 {
-                    string[] memberNames = new string[] { "Missing filter compare value" };
-                    results.Add(new ValidationResult($"A value to compare with the Attribute value is required for [f={Name}] in [f={Parent.Name}]", memberNames));
+                    memberNames = new string[] { "Missing filter compare value" };
+                    results.Add(new ValidationResult($"A value to compare with the Attribute tag is required for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]", memberNames));
                 }
+            }
+            else
+            {
+                switch (Operator)
+                {
+                    case ExpressionType.Equal:
+                    case ExpressionType.NotEqual:
+                        if (!(Value is null || Value.ToString() == ""))
+                            if (!bool.TryParse(Value.ToString(), out _))
+                            {
+                                memberNames = new string[] { "Invalid value" };
+                                results.Add(new ValidationResult($"The value [{Value}] is not valid for the [{Operator}] operator selected for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}].{Environment.NewLine}Expecting True or False", memberNames));
+                            }
+                        break;
+                    case ExpressionType.IsTrue:
+                    case ExpressionType.IsFalse:
+                        if (!(Value is null || Value.ToString() == ""))
+                            if (!bool.TryParse(Value.ToString(), out _))
+                            {
+                                memberNames = new string[] { "Invalid value" };
+                                results.Add(new ValidationResult($"The value [{Value}] is not valid for the [{Operator}] operator selected for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}].{Environment.NewLine}Expecting True or False, or blank entry", memberNames));
+                            }
+                        break;
+                    default:
+                        memberNames = new string[] { "Invalid operator" };
+                        results.Add(new ValidationResult($"The [{Operator}] operator is not valid for attribute filtering using the [Exists] style for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]{Environment.NewLine}Expecting [IsTrue], [IsFalse], [Equals] or [NotEquals]", memberNames));
+                        break;
+                }
+            }
+
             return results;
         }
         #endregion

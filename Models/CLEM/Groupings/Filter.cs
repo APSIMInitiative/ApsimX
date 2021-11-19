@@ -78,7 +78,7 @@ namespace Models.CLEM.Groupings
                 case ExpressionType.IsFalse:
                     return "not";
                 default:
-                    return "";
+                    return Operator.ToString();
             }
         }
 
