@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Models.Core;
 
 namespace Models.CLEM.Resources
 {
@@ -19,6 +20,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Is female weaned and of minimum breeding age and weight 
         /// </summary>
+        [Filter]
         public bool IsBreeder
         {
             get
@@ -47,6 +49,7 @@ namespace Models.CLEM.Resources
         /// The time (months) passed since last birth
         /// Returns 0 for pre-first birth females
         /// </summary>
+        [Filter]
         public double MonthsSinceLastBirth 
         { 
             get 
@@ -61,21 +64,25 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Number of births for the female (twins = 1 birth)
         /// </summary>
+        [Filter]
         public int NumberOfBirths { get; set; }
 
         /// <summary>
         /// Number of offspring for the female
         /// </summary>
+        [Filter]
         public int NumberOfOffspring { get; set; }
 
         /// <summary>
         /// Number of weaned offspring for the female
         /// </summary>
+        [Filter]
         public int NumberOfWeaned { get; set; }
 
         /// <summary>
         /// Number of conceptions for the female
         /// </summary>
+        [Filter]
         public int NumberOfConceptions { get; set; }
 
         /// <summary>
@@ -112,12 +119,14 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Store for the style of mating
         /// </summary>
+        [Filter]
         public MatingStyle LastMatingStyle { get; set; }
 
         /// <summary>
         /// Indicates if this female is a heifer
         /// Heifer equals less than min breed age and no offspring
         /// </summary>
+        [Filter]
         public bool IsHeifer
         {
             get
@@ -132,6 +141,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Indicates if this female is a weaned but less than age at first mating 
         /// </summary>
+        [Filter]
         public bool IsPreBreeder
         {
             get
@@ -203,6 +213,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Indicates if the individual is pregnant
         /// </summary>
+        [Filter]
         public bool IsPregnant
         {
             get
@@ -258,6 +269,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Indicates if the individual is lactating
         /// </summary>
+        [Filter]
         public bool IsLactating
         {
             get
@@ -292,6 +304,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Determines if milking has been performed on individual to increase milk production
         /// </summary>
+        [Filter]
         public bool MilkingPerformed { get; set; }
 
         /// <summary>

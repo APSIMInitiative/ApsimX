@@ -50,6 +50,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Sex")]
         [Required]
+        [Filter]
         public Sex Sex { get; set; }
 
         /// <summary>
@@ -62,6 +63,7 @@ namespace Models.CLEM.Resources
         /// Age in months.
         /// </summary>
         [JsonIgnore]
+        [Filter]
         public double AgeInMonths
         {
             get
@@ -85,6 +87,7 @@ namespace Models.CLEM.Resources
         /// Adult equivalent.
         /// </summary>
         [JsonIgnore]
+        [Filter]
         public double AdultEquivalent
         {
             get
@@ -202,6 +205,7 @@ namespace Models.CLEM.Resources
         /// Available Labour (in days) in the current month. 
         /// </summary>
         [JsonIgnore]
+        [Filter]
         public double AvailableDays { get; private set; }
 
         /// <summary>
