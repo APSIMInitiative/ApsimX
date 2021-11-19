@@ -1,4 +1,4 @@
-﻿using Models.CLEM.Activities;
+using Models.CLEM.Activities;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
@@ -330,7 +330,7 @@ namespace Models.CLEM
                     if (text != "")
                         error += String.Format(Environment.NewLine + "DESCRIPTION: " + text);
                     error += String.Format(Environment.NewLine + "PROBLEM: " + validateError.ErrorMessage + Environment.NewLine);
-                    summary.WriteWarning(parentZone, error);
+                    summary.WriteMessage(parentZone, error, MessageType.Warning);
                 }
             }
             foreach (var child in model.Children)

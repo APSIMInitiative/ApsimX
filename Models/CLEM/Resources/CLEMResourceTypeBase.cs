@@ -1,4 +1,4 @@
-﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -183,7 +183,7 @@ namespace Models.CLEM.Resources
                 {
                     string warning = "Unable to find the required unit converter [r=" + converterName + "] in resource [r=" + this.Name + "]";
                     Warnings.Add(warning);
-                    Summary.WriteWarning(this, warning);
+                    Summary.WriteMessage(this, warning, MessageType.Warning);
                     return null;
                 }
             }

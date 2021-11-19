@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -73,7 +73,7 @@ namespace Models.CLEM.Activities
             {
                 var filtergroup = current.Children.OfType<RuminantActivityGroup>();
                 if(filtergroup.Count() > 1)
-                    Summary.WriteWarning(this, "Multiple [f=RuminantActivityGroups] have been supplied for [a=" + current.Name +"]"+ Environment.NewLine + ". Only the first [f=RuminantActivityGroup] will be used.");
+                    Summary.WriteMessage(this, "Multiple [f=RuminantActivityGroups] have been supplied for [a=" + current.Name +"]"+ Environment.NewLine + ". Only the first [f=RuminantActivityGroup] will be used.", MessageType.Warning);
 
                 if (filtergroup.FirstOrDefault() != null)
                     HerdFilters.Insert(0, filtergroup.FirstOrDefault());
@@ -185,7 +185,7 @@ namespace Models.CLEM.Activities
                 IEnumerable<Ruminant> fullHerd = HerdResource.Herd.Where(a => a.Breed == PredictedHerdBreed);
                 if (fullHerd.Count() != herd.Count() && reportedRestrictedBreed)
                 {
-                    Summary.WriteWarning(this, String.Format("The herd being used for management Activity [a=" + this.Name + "] is a subset of the available herd for the breed." + Environment.NewLine + "Check that [f=RuminantFilterGroup] is not restricting the herd as the activity is not considering all individuals."));
+                    Summary.WriteMessage(this, String.Format("The herd being used for management Activity [a=" + this.Name + "] is a subset of the available herd for the breed." + Environment.NewLine + "Check that [f=RuminantFilterGroup] is not restricting the herd as the activity is not considering all individuals."), MessageType.Warning);
                     reportedRestrictedHerd = true;
                 }
             }
@@ -199,7 +199,7 @@ namespace Models.CLEM.Activities
                 IEnumerable<Ruminant> fullHerd = HerdResource.Herd.Where(a => a.HerdName == PredictedHerdName);
                 if (fullHerd.Count() != herd.Count() && !reportedRestrictedHerd)
                 {
-                    Summary.WriteWarning(this, String.Format("The herd being used for management Activity [a=" + this.Name + "] is a subset of the available herd for the herd name." + Environment.NewLine + "Check that [f=RuminantActivityGroup] above or [f=RuminantActivityGroup] are not restricting the herd as the activity is not considering all individuals."));
+                    Summary.WriteMessage(this, String.Format("The herd being used for management Activity [a=" + this.Name + "] is a subset of the available herd for the herd name." + Environment.NewLine + "Check that [f=RuminantActivityGroup] above or [f=RuminantActivityGroup] are not restricting the herd as the activity is not considering all individuals."), MessageType.Warning);
                     reportedRestrictedHerd = true;
                 }
             }

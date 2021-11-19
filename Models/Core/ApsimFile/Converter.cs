@@ -1,4 +1,4 @@
-﻿namespace Models.Core.ApsimFile
+namespace Models.Core.ApsimFile
 {
     using APSIM.Shared.Utilities;
     using Models.Climate;
@@ -24,7 +24,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 144; } }
+        public static int LatestVersion { get { return 146; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3815,6 +3815,62 @@
                         foreach (JToken arc in arcs)
                             arc["$type"] = "APSIM.Shared.Graphing.Arc, APSIM.Shared";
                 }
+            }
+        }
+
+        /// <summary>
+        /// Add in a Forages model at the simulation level if Stock or SimpleGrazing 
+        /// are in the simulation.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">Path to the .apsimx file.</param>
+        private static void UpgradeToVersion145(JObject root, string fileName)
+        {
+            foreach (JObject simulation in JsonUtilities.ChildrenRecursively(root, "Simulation"))
+            {
+                var stockModels = JsonUtilities.ChildrenRecursively(simulation).Where(c => c["$type"].ToString().Contains("Stock"));
+                JObject stock = null;
+                if (stockModels.Any())
+                    stock = stockModels.First();
+
+                var simpleGrazing = JsonUtilities.ChildrenRecursively(simulation).Where(c => c["$type"].ToString().Contains("SimpleGrazing"));
+                if (stock != null || simpleGrazing.Any())
+                {
+                    // Add in a Forages model.
+                    var forages = new JObject();
+                    forages["$type"] = "Models.ForageDigestibility.Forages, Models";
+                    forages["Name"] = "Forages";
+
+                    var simulationChildren = simulation["Children"] as JArray;
+                    int position = simulationChildren.IndexOf(stock);
+                    if (position == -1)
+                        simulationChildren.Add(forages);
+                    else
+                        simulationChildren.Insert(position+1, forages);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Fix API calls to summary.WriteX, and pass in an appropriate message type.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion146(JObject root, string fileName)
+        {
+            const string infoPattern = @"\.WriteMessage\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\);";
+            const string warningPattern = @"\.WriteWarning\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\);";
+            const string errorPattern = @"\.WriteError\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\);";
+            const string infoReplace = ".WriteMessage($1, MessageType.Diagnostic);";
+            const string warningReplace = ".WriteMessage($1, MessageType.Warning);";
+            const string errorReplace = ".WriteMessage($1, MessageType.Error);";
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                bool replace = manager.ReplaceRegex(infoPattern, infoReplace);
+                replace |= manager.ReplaceRegex(warningPattern, warningReplace);
+                replace |= manager.ReplaceRegex(errorPattern, errorReplace);
+                if (replace)
+                    manager.Save();
             }
         }
 

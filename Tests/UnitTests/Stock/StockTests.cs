@@ -4,6 +4,7 @@
     using Models;
     using Models.Climate;
     using Models.Core;
+    using Models.ForageDigestibility;
     using Models.GrazPlan;
     using Models.Soils;
     using Models.StockManagement;
@@ -201,6 +202,7 @@
                     new Clock(),
                     new Weather(),
                     new MockSummary(),
+                    new Forages(),
                     new Zone()
                     {
                         Name = "Field1",
@@ -234,7 +236,7 @@
             Utilities.ResolveLinks(stock);
 
             // Invoke start of simulation event. This should add the animal group to stock.
-            var animals = stock.Children[5] as Animals;
+            var animals = stock.Children[6] as Animals;
             Utilities.CallEvent(stock, "StartOfSimulation");
             Utilities.CallEvent(animals, "StartOfSimulation");
 
@@ -326,7 +328,8 @@
                         TypeOfDraft = Draft.DraftType.Fixed,
                         TagNumbers = new int[] { 1 },
                         PaddockNames = new string[] { "Field2" }
-                    }
+                    },
+                    new Forages()
                 }
             };
 
@@ -437,7 +440,8 @@
                         TagNumberPriority1 = new int[] { 2 },
                         TagNumberPriority2 = new int[] { 3 },
                         PaddockNames = new string[] { "Field2", "Field3", "Field4" }
-                    }
+                    },
+                    new Forages()
                 }
             };
 
@@ -464,8 +468,8 @@
             var animalGroup2 = stock.StockModel.Animals[2];
             var animalGroup3 = stock.StockModel.Animals[3];
             Assert.AreEqual("Field1", animalGroup1.PaddOccupied.Name);
-            Assert.AreEqual("Field3", animalGroup2.PaddOccupied.Name);
-            Assert.AreEqual("Field4", animalGroup3.PaddOccupied.Name);
+            Assert.AreEqual("Field2", animalGroup2.PaddOccupied.Name);
+            Assert.AreEqual("Field3", animalGroup3.PaddOccupied.Name);
         }
 
         /// <summary>Ensure a user can call Stock.Add method creating a cohort of animals.</summary>
@@ -479,6 +483,7 @@
                     new Clock() { StartDate = new DateTime(2020, 1, 1), EndDate = new DateTime(2020, 1, 2) },
                     new Weather(),
                     new MockSummary(),
+                    new Forages(),
                     new Zone()
                     {
                         Name = "Field1",
@@ -565,6 +570,7 @@
                         Weight = 600,
                         Tag = 2
                     },
+                    new Forages()
                 },
             };
             Utilities.ResolveLinks(stock);
@@ -621,6 +627,7 @@
                         Weight = 600,
                         Tag = 2
                     },
+                    new Forages()
                 },
             };
             Utilities.ResolveLinks(stock);
@@ -678,6 +685,7 @@
                         Weight = 600,
                         Tag = 2
                     },
+                    new Forages()
                 },
             };
             Utilities.ResolveLinks(stock);
@@ -732,6 +740,7 @@
                         Weight = 600,
                         Tag = 2
                     },
+                    new Forages()
                 },
             };
             Utilities.ResolveLinks(stock);
@@ -784,6 +793,7 @@
                         Weight = 600,
                         Tag = 2
                     },
+                    new Forages()
                 },
             };
             Utilities.ResolveLinks(stock);
@@ -846,6 +856,7 @@
                         YoungWt = 100,
                         Tag = 2
                     },
+                    new Forages()
                 },
             };
             Utilities.ResolveLinks(stock);
@@ -904,6 +915,7 @@
                         YoungWt = 100,
                         Tag = 2
                     },
+                    new Forages()
                 },
             };
             Utilities.ResolveLinks(stock);
@@ -962,6 +974,7 @@
                         Weight = 600,
                         Tag = 2
                     },
+                    new Forages()
                 },
             };
             Utilities.ResolveLinks(stock);
@@ -1004,6 +1017,7 @@
                         Weight = 600,
                         Tag = 2
                     },
+                    new Forages()
                 },
             };
             Utilities.ResolveLinks(stock);
@@ -1051,6 +1065,7 @@
                         Weight = 600,
                         Tag = 2
                     },
+                    new Forages()
                 },
             };
             Utilities.ResolveLinks(stock);
@@ -1098,6 +1113,7 @@
                         Weight = 600,
                         Tag = 2
                     },
+                    new Forages()
                 },
             };
             Utilities.ResolveLinks(stock);
@@ -1159,6 +1175,7 @@
                         Weight = 600,
                         Tag = 1
                     },
+                    new Forages()
                 },
             };
             Utilities.ResolveLinks(stock);

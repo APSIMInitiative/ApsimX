@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -127,7 +127,7 @@ namespace Models.CLEM.Reporting
                             // check it is a ResourceGroup
                             CLEMModel model = resources.FindResource<ResourceBaseWithTransactions>(this.ResourceGroupsToReport[i]);
                             if (model == null)
-                                summary.WriteWarning(this, $"Invalid resource group [r={this.ResourceGroupsToReport[i]}] in ReportResourceBalances [{this.Name}]{Environment.NewLine}Entry has been ignored");
+                                summary.WriteMessage(this, $"Invalid resource group [r={this.ResourceGroupsToReport[i]}] in ReportResourceBalances [{this.Name}]{Environment.NewLine}Entry has been ignored", MessageType.Warning);
                             else
                             {
                                 if (model is Labour)

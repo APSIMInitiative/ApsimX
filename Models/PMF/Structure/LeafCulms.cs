@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Utilities;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;
@@ -963,9 +963,9 @@ namespace Models.PMF.Struct
 				calculatedTillers = Math.Max(calculatedTillers, 0.0);
 				//	calculatedTillers = min(calculatedTillers, 5.0);
 
-				summary.WriteMessage(this, $"Calculated Tiller Number = {calculatedTillers}");
-				summary.WriteMessage(this, $"Calculated Supply = {supply}");
-				summary.WriteMessage(this, $"Calculated Demand = {demand}");
+				summary.WriteMessage(this, $"Calculated Tiller Number = {calculatedTillers}", MessageType.Diagnostic);
+				summary.WriteMessage(this, $"Calculated Supply = {supply}", MessageType.Diagnostic);
+				summary.WriteMessage(this, $"Calculated Demand = {demand}", MessageType.Diagnostic);
 
 				AddInitialTillers();
 			}

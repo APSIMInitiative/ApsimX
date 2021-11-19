@@ -17,6 +17,7 @@ namespace Utility
     using UserInterface.Extensions;
     using UserInterface.Presenters;
     using UserInterface.Views;
+    using MessageType = Gtk.MessageType;
 
     class WeatherDownloadDialog
     {

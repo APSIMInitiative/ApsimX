@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Phen;
@@ -262,7 +262,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("Cutting")]
         private void OnCutting(object sender, EventArgs e)
         {
-                Summary.WriteMessage(this, "Cutting " + Name + " from " + parentPlant.Name);
+                Summary.WriteMessage(this, "Cutting " + Name + " from " + parentPlant.Name, MessageType.Diagnostic);
 
                 Live.Clear();
                 Dead.Clear();

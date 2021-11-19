@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -100,7 +100,7 @@ namespace Models.CLEM.Resources
                     if (!parent.Warnings.Exists(warning))
                     {
                         parent.Warnings.Add(warning);
-                        parent.Summary.WriteWarning(this, warning);
+                        parent.Summary.WriteMessage(this, warning, MessageType.Warning);
                     }
                 }
                 return adultEquivalent??1;

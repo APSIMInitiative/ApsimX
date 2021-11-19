@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
@@ -84,7 +84,7 @@ namespace Models.CLEM
                 var filtergroup = current.Children.OfType<RuminantGroup>();
                 if (filtergroup.Count() > 1)
                 {
-                    Summary.WriteWarning(this, "Multiple ruminant filter groups have been supplied for [" + current.Name + "]" + Environment.NewLine + "Only the first filter group will be used.");
+                    Summary.WriteMessage(this, "Multiple ruminant filter groups have been supplied for [" + current.Name + "]" + Environment.NewLine + "Only the first filter group will be used.", MessageType.Warning);
                 }
                 if (filtergroup.FirstOrDefault() != null)
                 {

@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
@@ -809,7 +809,7 @@ namespace Models.CLEM.Activities
                     resourcelist = resourcelist.Trim(',');
                     if (resourcelist.Length > 0)
                     {
-                        Summary.WriteWarning(this, $"Ensure all resources are available or change OnPartialResourcesAvailableAction setting for activity [a={this.NameWithParent}]");
+                        Summary.WriteMessage(this, $"Ensure all resources are available or change OnPartialResourcesAvailableAction setting for activity [a={this.NameWithParent}]", MessageType.Warning);
                         Status = ActivityStatus.Critical;
                         throw new Exception($"Insufficient resources [r={resourcelist}] for activity [a={this.NameWithParent}]");
                     }
