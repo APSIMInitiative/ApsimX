@@ -1,4 +1,4 @@
-﻿namespace Models.PMF
+namespace Models.PMF
 {
     using Models.Core;
     using Models.Functions;
@@ -25,7 +25,7 @@
     [ValidParent(ParentType = typeof(Zone))]
     [Serializable]
     [ScopedModel]
-    public class Plant : ModelCollectionFromResource, IPlant, IPlantDamage
+    public class Plant : ModelCollectionFromResource, IPlant, IPlantDamage, IHasDamageableBiomass
     {
         /// <summary>The summary</summary>
         [Link]
@@ -229,6 +229,19 @@
         /// <summary>Amount of assimilate available to be damaged.</summary>
         public double AssimilateAvailable => 0;
 
+        /// <summary>A list of material (biomass) that can be damaged.</summary>
+        public IEnumerable<DamageableBiomass> Material
+        {
+            get
+            {
+                foreach (IOrganDamage organ in Children.Where(c => c is IOrganDamage))
+                {
+                    yield return new DamageableBiomass(organ.Name, organ.Live, true);
+                    yield return new DamageableBiomass(organ.Name, organ.Dead, false);
+                }
+            }
+        }
+
         /// <summary>Harvest the crop</summary>
         public void Harvest() { Harvest(null); }
 
@@ -284,7 +297,7 @@
                     message += "  LAI = " + Leaf.LAI.ToString("f2") + " (m^2/m^2)" + "\r\n";
                     message += "  Above Ground Biomass = " + AboveGround.Wt.ToString("f2") + " (g/m^2)" + "\r\n";
                 }
-                summary.WriteMessage(this, message);
+                summary.WriteMessage(this, message, MessageType.Diagnostic);
                 if (Phenology.CurrentPhase.Start == "Flowering" && Flowering != null)
                     Flowering.Invoke(this, null);
             }
@@ -384,7 +397,7 @@
             if (PlantSowing != null)
                 PlantSowing.Invoke(this, SowingData);
 
-            summary.WriteMessage(this, string.Format("A crop of " + PlantType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
+            summary.WriteMessage(this, string.Format("A crop of " + PlantType + " (cultivar = " + cultivar + ") was sown today at a population of " + Population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"), MessageType.Information);
         }
 
         /// <summary>Harvest the crop.</summary>
@@ -396,7 +409,7 @@
         /// <summary>Harvest the crop.</summary>
         public void RemoveBiomass(string biomassRemoveType, RemovalFractions removalData = null)
         {
-            summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType.TrimEnd('e') + "ing"));
+            summary.WriteMessage(this, string.Format("Biomass removed from crop " + Name + " by " + biomassRemoveType.TrimEnd('e') + "ing"), MessageType.Diagnostic);
 
             // Invoke specific defoliation events.
             if (biomassRemoveType == "Harvest" && Harvesting != null)
@@ -442,7 +455,7 @@
         {
             if (IsAlive == false)
                 throw new Exception("EndCrop method called when no crop is planted.  Either your planting rule is not working or your end crop is happening at the wrong time");
-            summary.WriteMessage(this, "Crop ending");
+            summary.WriteMessage(this, "Crop ending", MessageType.Information);
 
             // Invoke a plant ending event.
             if (PlantEnding != null)
@@ -507,46 +520,6 @@
             foreach (IModel child in Children)
                 if (child != introduction)
                     yield return new Section(child.Name, child.Document());
-        }
-
-        /// <summary>Removes a given amount of biomass (and N) from the plant.</summary>
-        /// <param name="amountToRemove">The amount of biomass to remove (kg/ha)</param>
-        public Biomass RemoveBiomass(double amountToRemove)
-        {
-            var defoliatedBiomass = new Biomass();
-            var preRemovalBiomass = AboveGround.Wt*10;
-            foreach (var organ in Organs.Cast<IOrganDamage>())
-            {
-                if (organ.IsAboveGround)
-                {
-                    // These calculations convert organ live weight from g/m2 to kg/ha
-                    var amountLiveToRemove = organ.Live.Wt * 10 / preRemovalBiomass * amountToRemove;
-                    var amountDeadToRemove = organ.Dead.Wt * 10 / preRemovalBiomass * amountToRemove;
-                    var fractionLiveToRemove = MathUtilities.Divide(amountLiveToRemove, (organ.Live.Wt * 10), 0);
-                    var fractionDeadToRemove = MathUtilities.Divide(amountDeadToRemove, (organ.Dead.Wt * 10), 0);
-                    var defoliatedDigestibility = organ.Live.DMDOfStructural * fractionLiveToRemove
-                                                + organ.Dead.DMDOfStructural * fractionDeadToRemove;
-                    var defoliatedDM = amountLiveToRemove + amountDeadToRemove;
-                    var defoliatedN = organ.Live.N * 10 * fractionLiveToRemove + organ.Dead.N * 10 * fractionDeadToRemove;
-                    if (defoliatedDM > 0)
-                    {
-                        RemoveBiomass(organ.Name, "Graze",
-                                      new OrganBiomassRemovalType()
-                                      {
-                                          FractionLiveToRemove = fractionLiveToRemove,
-                                          FractionDeadToRemove = fractionDeadToRemove
-                                      });
-
-                        defoliatedBiomass += new Biomass()
-                        {
-                            StructuralWt = defoliatedDM,
-                            StructuralN = defoliatedN,
-                            DMDOfStructural = defoliatedDigestibility
-                        };
-                    }
-                }
-            }
-            return defoliatedBiomass;
         }
 
         /// <summary>

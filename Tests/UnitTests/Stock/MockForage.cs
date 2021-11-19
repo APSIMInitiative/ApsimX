@@ -9,66 +9,37 @@
     using System.Text;
     using System.Threading.Tasks;
 
-    public class MockForage : Model, IPlantDamage
+    public class MockForage : Model, IHasDamageableBiomass
     {
+        
+        public MockForage() { }
         public MockForage(double liveWt)
         {
-            Organs.Add(new MockOrgan(liveWt));
-        }
-        public List<IOrganDamage> Organs { get; set; } = new List<MockOrgan>().Cast<IOrganDamage>().ToList();
-
-        public IBiomass AboveGround => throw new NotImplementedException();
-
-        public IBiomass AboveGroundHarvestable => throw new NotImplementedException();
-
-        public double Population => throw new NotImplementedException();
-
-        public double LAI => throw new NotImplementedException();
-
-        public double AssimilateAvailable => throw new NotImplementedException();
-
-        public void ReduceCanopy(double deltaLAI)
-        {
-            throw new NotImplementedException();
+            var material = new List<DamageableBiomass>();
+            material.Add(new DamageableBiomass("MockForage", new Biomass() { StorageWt = liveWt }, true));
+            material.Add(new DamageableBiomass("MockForage", new Biomass() { StorageWt = 0 }, false));
+            Material = material;
         }
 
-        public void ReducePopulation(double newPlantPopulation)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ReduceRootLengthDensity(double deltaRLD)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RemoveAssimilate(double deltaAssimilate)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Biomass RemoveBiomass(double amount)
-        {
-            throw new NotImplementedException();
-        }
+        public IEnumerable<DamageableBiomass> Material { get; set; }
 
         public void RemoveBiomass(string organName, string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
         {
             throw new NotImplementedException();
         }
 
-        public bool IsAlive { get; set; } = true;
     }
 
     public class MockOrgan : IOrganDamage
     {
-        public MockOrgan(double liveWt)
+        public MockOrgan(string name, double liveWt, double deadWt = 0)
         {
+            Name = name;
             Live = new Biomass() { StructuralWt = liveWt };
-            Dead = new Biomass();
+            Dead = new Biomass() { StructuralWt = deadWt };
         }
 
-        public string Name => throw new NotImplementedException();
+        public string Name { get; set; }
 
         public Biomass Live { get; set; }
 

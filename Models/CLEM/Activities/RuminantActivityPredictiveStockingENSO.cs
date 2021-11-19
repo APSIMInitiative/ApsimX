@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Utilities;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.CLEM.Resources;
 using System;
@@ -166,7 +166,7 @@ namespace Models.CLEM.Activities
                 }
             }
             else
-                Summary.WriteError(this, String.Format("Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, this.Name));
+                Summary.WriteMessage(this, String.Format("Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, this.Name), MessageType.Error);
 
             this.InitialiseHerd(false, true);
 
@@ -392,7 +392,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -484,7 +484,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public override string ModelSummaryInnerClosingTags()
         {
             return "</div>";
         }

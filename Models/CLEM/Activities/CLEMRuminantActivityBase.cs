@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -72,7 +72,7 @@ namespace Models.CLEM.Activities
             {
                 var filtergroup = current.Children.OfType<RuminantActivityGroup>();
                 if(filtergroup.Count() > 1)
-                    Summary.WriteWarning(this, "Multiple [f=RuminantActivityGroups] have been supplied for [a=" + current.Name +"]"+ Environment.NewLine + ". Only the first [f=RuminantActivityGroup] will be used.");
+                    Summary.WriteMessage(this, "Multiple [f=RuminantActivityGroups] have been supplied for [a=" + current.Name +"]"+ Environment.NewLine + ". Only the first [f=RuminantActivityGroup] will be used.", MessageType.Warning);
 
                 if (filtergroup.FirstOrDefault() != null)
                     HerdFilters.Insert(0, filtergroup.FirstOrDefault());
@@ -113,13 +113,13 @@ namespace Models.CLEM.Activities
 
             var herd = CurrentHerd(false);
             // check for multiple breeds
-            if (herd.Select(a => a.Breed).Distinct().Count() > 1)
+            if (herd.Select(a => a.Breed).Distinct().Skip(1).Any())
             {
                 if (!allowMultipleBreeds)
                     throw new ApsimXException(this, "Multiple breeds were detected in current herd for [a=" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single breed for this activity.");
                 PredictedHerdBreed = "Multiple";
             }
-            if (herd.Select(a => a.HerdName).Distinct().Count() > 1)
+            if (herd.Select(a => a.HerdName).Distinct().Skip(1).Any())
             {
                 if (!allowMultipleHerds)
                     throw new ApsimXException(this, "Multiple herd names were detected in current herd for [a=" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single herd for this activity.");
@@ -177,28 +177,28 @@ namespace Models.CLEM.Activities
             if (!allowMultipleBreeds)
             {
                 // check for multiple breeds
-                if (herd.Select(a => a.Breed).Distinct().Count() > 1)
+                if (herd.Select(a => a.Breed).Distinct().Skip(1).Any())
                     throw new ApsimXException(this, "Multiple breeds were detected in current herd for Manage Activity [a=" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single breed for this activity.");
 
                 // check for filter limited herd and set warning
                 IEnumerable<Ruminant> fullHerd = HerdResource.Herd.Where(a => a.Breed == PredictedHerdBreed);
                 if (fullHerd.Count() != herd.Count() && reportedRestrictedBreed)
                 {
-                    Summary.WriteWarning(this, String.Format("The herd being used for management Activity [a=" + this.Name + "] is a subset of the available herd for the breed." + Environment.NewLine + "Check that [f=RuminantFilterGroup] is not restricting the herd as the activity is not considering all individuals."));
+                    Summary.WriteMessage(this, String.Format("The herd being used for management Activity [a=" + this.Name + "] is a subset of the available herd for the breed." + Environment.NewLine + "Check that [f=RuminantFilterGroup] is not restricting the herd as the activity is not considering all individuals."), MessageType.Warning);
                     reportedRestrictedHerd = true;
                 }
             }
             if (!allowMultipleHerds)
             {
                 // check for multiple breeds
-                if (herd.Select(a => a.HerdName).Distinct().Count() > 1)
+                if (herd.Select(a => a.HerdName).Distinct().Skip(1).Any())
                     throw new ApsimXException(this, "Multiple herd types were detected in current herd for Manage Activity [a=" + this.Name + "]" + Environment.NewLine + "Use a Ruminant Filter Group to specify a single herd for this activity.");
 
                 // check for filter limited herd and set warning
                 IEnumerable<Ruminant> fullHerd = HerdResource.Herd.Where(a => a.HerdName == PredictedHerdName);
                 if (fullHerd.Count() != herd.Count() && !reportedRestrictedHerd)
                 {
-                    Summary.WriteWarning(this, String.Format("The herd being used for management Activity [a=" + this.Name + "] is a subset of the available herd for the herd name." + Environment.NewLine + "Check that [f=RuminantActivityGroup] above or [f=RuminantActivityGroup] are not restricting the herd as the activity is not considering all individuals."));
+                    Summary.WriteMessage(this, String.Format("The herd being used for management Activity [a=" + this.Name + "] is a subset of the available herd for the herd name." + Environment.NewLine + "Check that [f=RuminantActivityGroup] above or [f=RuminantActivityGroup] are not restricting the herd as the activity is not considering all individuals."), MessageType.Warning);
                     reportedRestrictedHerd = true;
                 }
             }

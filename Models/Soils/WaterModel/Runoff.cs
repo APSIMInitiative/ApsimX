@@ -1,4 +1,4 @@
-﻿namespace Models.WaterModel
+namespace Models.WaterModel
 {
     using APSIM.Shared.Utilities;
     using Core;
@@ -207,7 +207,7 @@
                 TillageCnCumWater = 0.0; 
                 TillageCnRed = 0.0;
 
-                summary.WriteMessage(this, "Tillage CN reduction finished");
+                summary.WriteMessage(this, "Tillage CN reduction finished", MessageType.Diagnostic);
             }
         }
     }

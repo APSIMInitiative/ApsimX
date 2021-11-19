@@ -1,4 +1,4 @@
-﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -182,7 +182,7 @@ namespace Models.CLEM.Resources
                 {
                     string warning = "Unable to find the required unit converter [r=" + converterName + "] in resource [r=" + this.Name + "]";
                     Warnings.Add(warning);
-                    Summary.WriteWarning(this, warning);
+                    Summary.WriteMessage(this, warning, MessageType.Warning);
                     return null;
                 }
             }
@@ -284,12 +284,8 @@ namespace Models.CLEM.Resources
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             string html = "";
             return html;

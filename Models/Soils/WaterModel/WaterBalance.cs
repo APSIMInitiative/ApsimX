@@ -1,4 +1,4 @@
-﻿namespace Models.WaterModel
+namespace Models.WaterModel
 {
     using APSIM.Shared.Utilities;
     using Interfaces;
@@ -770,7 +770,7 @@
         ///<summary>Perform a reset</summary>
         public void Reset()
         {
-            summary.WriteMessage(this, "Resetting Soil Water Balance");
+            summary.WriteMessage(this, "Resetting Soil Water Balance", MessageType.Diagnostic);
             Initialise();
         }
 
@@ -808,7 +808,7 @@
 
             var line = string.Format("Soil tilled. CN reduction = {0}. Cumulative rain = {1}", 
                                      reduction, Data.cn_rain);
-            summary.WriteMessage(this, line);
+            summary.WriteMessage(this, line, MessageType.Diagnostic);
         }
 
         ///<summary>Perform tillage</summary>

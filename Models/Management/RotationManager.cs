@@ -121,7 +121,7 @@ namespace Models.Management
         {
             CurrentState = InitialState;
             if (Verbose)
-                summary.WriteMessage(this, $"Initialised, state={CurrentState} (of {Nodes.Count} total)");
+                summary.WriteMessage(this, $"Initialised, state={CurrentState} (of {Nodes.Count} total)", MessageType.Diagnostic);
         }
 
         /// <summary>
@@ -162,7 +162,7 @@ namespace Models.Management
                         }
                         else
                             message = $"{arcName} is not possible. Weight = {score}";
-                        summary.WriteMessage(this, message);
+                        summary.WriteMessage(this, message, MessageType.Diagnostic);
                     }
 
                     if (score > bestScore)
@@ -188,7 +188,7 @@ namespace Models.Management
             try
             {
                 if (Verbose)
-                    summary.WriteMessage(this, $"Transitioning from {transition.SourceName} to {transition.DestinationName}");
+                    summary.WriteMessage(this, $"Transitioning from {transition.SourceName} to {transition.DestinationName}", MessageType.Diagnostic);
                 // Publish pre-transition events.
                 eventService.Publish($"TransitionFrom{CurrentState}", null);
                 Transition?.Invoke(this, EventArgs.Empty);
@@ -216,7 +216,7 @@ namespace Models.Management
                 }
                 eventService.Publish($"TransitionTo{CurrentState}", null);
                 if (Verbose)
-                    summary.WriteMessage(this, $"Current state is now {CurrentState}");
+                    summary.WriteMessage(this, $"Current state is now {CurrentState}", MessageType.Diagnostic);
             }
             catch (Exception err)
             {

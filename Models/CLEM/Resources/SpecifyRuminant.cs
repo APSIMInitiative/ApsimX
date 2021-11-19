@@ -127,7 +127,7 @@ namespace Models.CLEM.Resources
         private bool cohortFound;
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

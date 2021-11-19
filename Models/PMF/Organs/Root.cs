@@ -342,9 +342,11 @@
             {
                 if (Zones == null || Zones.Count == 0)
                     return null;
-                double[] uptake = (double[])Zones[0].WaterUptake.Clone();
-                for (int i = 1; i != Zones.Count; i++)
-                    uptake = MathUtilities.Add(uptake, Zones[i].NitUptake);
+                if (Zones.Count > 1)
+                    throw new Exception(this.Name + " Can't report layered Nuptake for multiple zones as they may not have the same size or number of layers");
+                double[] uptake = new double[Zones[0].Physical.Thickness.Length];
+                if (Zones[0].NitUptake != null)
+                        uptake = Zones[0].NitUptake;
                 return MathUtilities.Multiply_Value(uptake, -1); // convert to positive values.
             }
         }

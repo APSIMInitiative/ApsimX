@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -57,7 +57,7 @@ namespace Models.CLEM
         {
             if (!Exists(checkMessage) & summary != null)
             {
-                summary.WriteWarning(sender, (fullMessage.Any())?fullMessage:checkMessage);
+                summary.WriteMessage(sender, (fullMessage.Any())?fullMessage:checkMessage, MessageType.Warning);
                 Add(checkMessage);
             }
         }

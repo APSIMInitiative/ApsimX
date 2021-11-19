@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -97,7 +97,7 @@ namespace Models.CLEM.Resources
                     if (!parent.Warnings.Exists(warning))
                     {
                         parent.Warnings.Add(warning);
-                        parent.Summary.WriteWarning(this, warning);
+                        parent.Summary.WriteMessage(this, warning, MessageType.Warning);
                     }
                 }
                 return adultEquivalent??1;
@@ -398,16 +398,12 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (formatForParentControl == false)
+                if (!FormatForParentControl)
                 {
                     htmlWriter.Write("<div class=\"activityentry\">");
                     if (this.Individuals == 0)
@@ -430,28 +426,22 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
         {
-            if (formatForParentControl)
+            if (FormatForParentControl)
                 return "";
             else
-                return base.ModelSummaryClosingTags(formatForParentControl);
+                return base.ModelSummaryClosingTags();
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
         {
-            if (formatForParentControl)
+            if (FormatForParentControl)
                 return "";
             else
-                return base.ModelSummaryOpeningTags(formatForParentControl);
+                return base.ModelSummaryOpeningTags();
         }
 
         #endregion

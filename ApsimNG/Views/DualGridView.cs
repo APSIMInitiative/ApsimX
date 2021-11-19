@@ -13,6 +13,9 @@ namespace UserInterface.Views
 
         /// <summary>bottom grid in view.</summary>
         IGridView Grid2 { get; }
+
+        /// <summary>Show the 2nd grid?</summary>
+        void ShowGrid2(bool show);
     }
 
     /// <summary>A drop down view.</summary>
@@ -36,6 +39,13 @@ namespace UserInterface.Views
             panel.Pack2((Grid2 as GridView).MainWidget, true, true);
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
+
+        /// <summary>Show the 2nd grid?</summary>
+        public void ShowGrid2(bool show)
+        {
+            (Grid2 as GridView).MainWidget.Visible = show;
+        }
+
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {

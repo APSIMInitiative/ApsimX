@@ -11,11 +11,11 @@ namespace Models.Mapping
     {
         /// <summary>The latitude</summary>
         [Description("Latitude")]
-        public double Latitude { get; private set; }
+        public double Latitude { get; set; }
 
         /// <summary>The longitude</summary>
         [Description("Longitude")]
-        public double Longitude { get; private set; }
+        public double Longitude { get; set; }
 
         /// <summary>
         /// Convenience constructor.

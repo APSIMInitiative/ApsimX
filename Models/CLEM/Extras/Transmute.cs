@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
@@ -188,7 +188,7 @@ namespace Models.CLEM
                     object result = resources.FindResource<ResourceBaseWithTransactions>(TransmuteResourceTypeName.Split('.').First());
                     if (result == null)
                     {
-                        Summary.WriteWarning(this, $"Could not find resource group [r={TransmuteResourceTypeName.Split('.').First()}] in transmute [{this.Name}]{Environment.NewLine}The parent transmutation [{(this.Parent as CLEMModel).NameWithParent}] will not suceed without this resource and will not be performed");
+                        Summary.WriteMessage(this, $"Could not find resource group [r={TransmuteResourceTypeName.Split('.').First()}] in transmute [{this.Name}]{Environment.NewLine}The parent transmutation [{(this.Parent as CLEMModel).NameWithParent}] will not suceed without this resource and will not be performed", MessageType.Warning);
                     }
                     else
                     {
@@ -258,7 +258,7 @@ namespace Models.CLEM
         }
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

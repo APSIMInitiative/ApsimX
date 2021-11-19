@@ -102,7 +102,7 @@ namespace APSIM.Interop.Mapping
         {
             Map exported = map.ToSharpMap();
             exported.Size = new Size(width, width);
-            return exported.GetMap(width);
+            return exported.GetMap();
         }
 
         /// <summary>

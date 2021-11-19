@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -1044,7 +1044,7 @@ namespace Models.Soils
             if (ibbc != 0)
             {
                 ibbc = 0;
-                summary.WriteMessage(this, "Bottom boundary condition now constant gradient");
+                summary.WriteMessage(this, "Bottom boundary condition now constant gradient", MessageType.Diagnostic);
             }
         }
 
@@ -1058,7 +1058,7 @@ namespace Models.Soils
             if (ibbc != 1)
             {
                 ibbc = 1;
-                summary.WriteMessage(this, "Bottom boundary condition now constant potential");
+                summary.WriteMessage(this, "Bottom boundary condition now constant potential", MessageType.Diagnostic);
             }
         }
 
@@ -1072,7 +1072,7 @@ namespace Models.Soils
             if (ibbc != 3)
             {
                 ibbc = 3;
-                summary.WriteMessage(this, "Bottom boundary condition now a seepage potential");
+                summary.WriteMessage(this, "Bottom boundary condition now a seepage potential", MessageType.Diagnostic);
             }
         }
 
@@ -1265,7 +1265,7 @@ namespace Models.Soils
         public void Tillage(TillageType Tillage)
         {
             if (echo_directives != null && echo_directives.Trim() == "on")
-                summary.WriteMessage(this, "APSwim responding to tillage");
+                summary.WriteMessage(this, "APSwim responding to tillage", MessageType.Diagnostic);
             // THIS ISN'T RIGHT. 
             // I think the values for hm1, hm0, etc, are meant to be recovered from the event data,
             // but they aren't fields in the current TillageType structure.
@@ -1310,11 +1310,11 @@ namespace Models.Soils
             //+  Initial Data Values
             double[] psio = new double[num_psio] { -0.01, -10.0, -25.0, -100.0, -1000.0, -15000.0, -1.0e6, -1.0e7 };
 
-            summary.WriteMessage(this, "APSIM Soil Profile");
+            summary.WriteMessage(this, "APSIM Soil Profile", MessageType.Diagnostic);
 
-            summary.WriteMessage(this, "---------------------------------------------------------------");
-            summary.WriteMessage(this, " x    dlayer   BD   SW     LL15   DUL   SAT      Ks      Psi");
-            summary.WriteMessage(this, "---------------------------------------------------------------");
+            summary.WriteMessage(this, "---------------------------------------------------------------", MessageType.Diagnostic);
+            summary.WriteMessage(this, " x    dlayer   BD   SW     LL15   DUL   SAT      Ks      Psi", MessageType.Diagnostic);
+            summary.WriteMessage(this, "---------------------------------------------------------------", MessageType.Diagnostic);
 
             for (int layer = 0; layer <= n; layer++)
             {
@@ -1322,10 +1322,10 @@ namespace Models.Soils
                                            x[layer] * 10.0,
                                            soilPhysical.Thickness[layer], soilPhysical.BD[layer], th[layer],
                                            soilPhysical.LL15[layer], soilPhysical.DUL[layer], soilPhysical.SAT[layer], soilPhysical.KS[layer],
-                                           _psi[layer]));
+                                           _psi[layer]), MessageType.Diagnostic);
 
             }
-            summary.WriteMessage(this, "---------------------------------------------------------------");
+            summary.WriteMessage(this, "---------------------------------------------------------------", MessageType.Diagnostic);
 
             // calculate Theta and g%hk for each psio
 
@@ -1338,66 +1338,66 @@ namespace Models.Soils
                 }
             }
 
-            summary.WriteMessage(this, "Soil Moisture Characteristics");
-            summary.WriteMessage(this, "--------------------------------------------------------------------");
-            summary.WriteMessage(this, "                         Soil Water Potential (cm)");
-            summary.WriteMessage(this, "    x       0      10      25    100   1000  15000   10^6   10^7");
-            summary.WriteMessage(this, "--------------------------------------------------------------------");
+            summary.WriteMessage(this, "Soil Moisture Characteristics", MessageType.Diagnostic);
+            summary.WriteMessage(this, "--------------------------------------------------------------------", MessageType.Diagnostic);
+            summary.WriteMessage(this, "                         Soil Water Potential (cm)", MessageType.Diagnostic);
+            summary.WriteMessage(this, "    x       0      10      25    100   1000  15000   10^6   10^7", MessageType.Diagnostic);
+            summary.WriteMessage(this, "--------------------------------------------------------------------", MessageType.Diagnostic);
 
             for (int j = 0; j <= n; j++)
             {
                 summary.WriteMessage(this, String.Format("{0,6:F1} | {1,6:F4} {2,6:F4} {3,6:F4} {4,6:F4} {5,6:F4} {6,6:F4} {7,6:F4} {8,6:F4}",
-                    x[j] * 10.0, tho[j, 0], tho[j, 1], tho[j, 2], tho[j, 3], tho[j, 4], tho[j, 5], tho[j, 6], tho[j, 7]));
+                    x[j] * 10.0, tho[j, 0], tho[j, 1], tho[j, 2], tho[j, 3], tho[j, 4], tho[j, 5], tho[j, 6], tho[j, 7]), MessageType.Diagnostic);
             }
 
-            summary.WriteMessage(this, "--------------------------------------------------------------------");
-            summary.WriteMessage(this, "Soil Hydraulic Conductivity");
-            summary.WriteMessage(this, "-----------------------------------------------------------------------");
-            summary.WriteMessage(this, "                         Soil Water Potential (cm)");
-            summary.WriteMessage(this, "    x       0        10       25       100     1000    15000     10^6");
-            summary.WriteMessage(this, "-----------------------------------------------------------------------");
+            summary.WriteMessage(this, "--------------------------------------------------------------------", MessageType.Diagnostic);
+            summary.WriteMessage(this, "Soil Hydraulic Conductivity", MessageType.Diagnostic);
+            summary.WriteMessage(this, "-----------------------------------------------------------------------", MessageType.Diagnostic);
+            summary.WriteMessage(this, "                         Soil Water Potential (cm)", MessageType.Diagnostic);
+            summary.WriteMessage(this, "    x       0        10       25       100     1000    15000     10^6", MessageType.Diagnostic);
+            summary.WriteMessage(this, "-----------------------------------------------------------------------", MessageType.Diagnostic);
 
             for (int j = 0; j <= n; j++)
             {
                 summary.WriteMessage(this, String.Format("{0,6:F1} | {1,8:G3} {2,8:G3} {3,8:G3} {4,8:G3} {5,8:G3} {6,8:G3} {7,8:G3}",
                     x[j] * 10.0, hko[j, 0] * 24.0 * 10.0, hko[j, 1] * 24.0 * 10.0, hko[j, 2] * 24.0 * 10.0, hko[j, 3] * 24.0 * 10.0,
-                                 hko[j, 4] * 24.0 * 10.0, hko[j, 5] * 24.0 * 10.0, hko[j, 6] * 24.0 * 10.0));
+                                 hko[j, 4] * 24.0 * 10.0, hko[j, 5] * 24.0 * 10.0, hko[j, 6] * 24.0 * 10.0), MessageType.Diagnostic);
             }
 
-            summary.WriteMessage(this, "-----------------------------------------------------------------------");
-            summary.WriteMessage(this, Environment.NewLine);
+            summary.WriteMessage(this, "-----------------------------------------------------------------------", MessageType.Diagnostic);
+            summary.WriteMessage(this, Environment.NewLine, MessageType.Diagnostic);
 
             if (ibbc == 0)
                 summary.WriteMessage(this, String.Format("     bottom boundary condition = specified gradient ({0,10:F3})",
-                                  bbc_value));
+                                  bbc_value), MessageType.Diagnostic);
             else if (ibbc == 1)
-                summary.WriteMessage(this, "     bottom boundary condition = specified potential");
+                summary.WriteMessage(this, "     bottom boundary condition = specified potential", MessageType.Diagnostic);
             else if (ibbc == 2)
-                summary.WriteMessage(this, "     bottom boundary condition = zero flux");
+                summary.WriteMessage(this, "     bottom boundary condition = zero flux", MessageType.Diagnostic);
             else if (ibbc == 3)
-                summary.WriteMessage(this, "     bottom boundary condition = free drainage");
+                summary.WriteMessage(this, "     bottom boundary condition = free drainage", MessageType.Diagnostic);
             else if (ibbc == 4)
-                summary.WriteMessage(this, "     bottom boundary condition = water table");
+                summary.WriteMessage(this, "     bottom boundary condition = water table", MessageType.Diagnostic);
             else
                 throw new Exception("bad bottom boundary conditions switch");
 
             if (ivap)
-                summary.WriteMessage(this, "     vapour conductivity       = on");
+                summary.WriteMessage(this, "     vapour conductivity       = on", MessageType.Diagnostic);
             else
-                summary.WriteMessage(this, "     vapour conductivity       = off");
+                summary.WriteMessage(this, "     vapour conductivity       = off", MessageType.Diagnostic);
 
-            summary.WriteMessage(this, "     Evaporation Source        = " + evap_source + Environment.NewLine);
+            summary.WriteMessage(this, "     Evaporation Source        = " + evap_source + Environment.NewLine, MessageType.Diagnostic);
 
             if (subsurfaceDrain != null)
             {
-                summary.WriteMessage(this, " Subsurface Drain Model");
-                summary.WriteMessage(this, " ======================" + Environment.NewLine);
+                summary.WriteMessage(this, " Subsurface Drain Model", MessageType.Diagnostic);
+                summary.WriteMessage(this, " ======================" + Environment.NewLine, MessageType.Diagnostic);
 
-                summary.WriteMessage(this, string.Format("     Drain Depth (mm) ={0,10:F3}", subsurfaceDrain.DrainDepth));
-                summary.WriteMessage(this, string.Format("     Drain Spacing (mm) ={0,10:F3}", subsurfaceDrain.DrainSpacing));
-                summary.WriteMessage(this, string.Format("     Drain Radius (mm) ={0,10:F3}", subsurfaceDrain.DrainRadius));
-                summary.WriteMessage(this, string.Format("     Imperm Layer Depth (mm)  ={0,10:F3}", subsurfaceDrain.ImpermDepth));
-                summary.WriteMessage(this, string.Format("     Lateral Conductivity (mm/d)  ={0,10:F3}", subsurfaceDrain.Klat));
+                summary.WriteMessage(this, string.Format("     Drain Depth (mm) ={0,10:F3}", subsurfaceDrain.DrainDepth), MessageType.Diagnostic);
+                summary.WriteMessage(this, string.Format("     Drain Spacing (mm) ={0,10:F3}", subsurfaceDrain.DrainSpacing), MessageType.Diagnostic);
+                summary.WriteMessage(this, string.Format("     Drain Radius (mm) ={0,10:F3}", subsurfaceDrain.DrainRadius), MessageType.Diagnostic);
+                summary.WriteMessage(this, string.Format("     Imperm Layer Depth (mm)  ={0,10:F3}", subsurfaceDrain.ImpermDepth), MessageType.Diagnostic);
+                summary.WriteMessage(this, string.Format("     Lateral Conductivity (mm/d)  ={0,10:F3}", subsurfaceDrain.Klat), MessageType.Diagnostic);
             }
 
         }
@@ -1423,7 +1423,7 @@ namespace Models.Soils
             if (echo_directives != null && echo_directives.Trim() == "on")
             {
                 // flag this event in output file
-                summary.WriteMessage(this, "APSwim adding irrigation to log");
+                summary.WriteMessage(this, "APSwim adding irrigation to log", MessageType.Diagnostic);
             }
 
             string time_string = "00:00"; // Irrigated.time;
@@ -1809,11 +1809,11 @@ namespace Models.Soils
             }
 
 
-            summary.WriteMessage(this, "================================");
-            summary.WriteMessage(this, "     Error Report Status");
-            summary.WriteMessage(this, "================================");
-            summary.WriteMessage(this, String.Format("time = {0} {1} {2}", day, year, (t - _dt) % 24.0));
-            summary.WriteMessage(this, String.Format("dt= {0}", _dt * 2.0));
+            summary.WriteMessage(this, "================================", MessageType.Diagnostic);
+            summary.WriteMessage(this, "     Error Report Status", MessageType.Diagnostic);
+            summary.WriteMessage(this, "================================", MessageType.Diagnostic);
+            summary.WriteMessage(this, String.Format("time = {0} {1} {2}", day, year, (t - _dt) % 24.0), MessageType.Diagnostic);
+            summary.WriteMessage(this, String.Format("dt= {0}", _dt * 2.0), MessageType.Diagnostic);
             Console.Write("psi =");
             for (int i = 0; i <= n; i++)
                 Console.Write(String.Format(" {0}", t_psi[i]));
@@ -1822,9 +1822,9 @@ namespace Models.Soils
             for (int i = 0; i <= n; i++)
                 Console.Write(String.Format(" {0}", t_th[i]));
 
-            summary.WriteMessage(this, String.Format("h = {0}", _h));
-            summary.WriteMessage(this, String.Format("ron ={0}", ron));
-            summary.WriteMessage(this, "================================");
+            summary.WriteMessage(this, String.Format("h = {0}", _h), MessageType.Diagnostic);
+            summary.WriteMessage(this, String.Format("ron ={0}", ron), MessageType.Diagnostic);
+            summary.WriteMessage(this, "================================", MessageType.Diagnostic);
         }
 
         private void InitChangeUnits()
@@ -3295,12 +3295,25 @@ namespace Models.Soils
             const int maxIterations = 1000;
             const double tolerance = 1e-9;
             const double dpsi = 0.01;
+            double psiValue;
 
             if (theta == soilPhysical.SAT[node])
                 return 0.0;
             else
             {
-                double psiValue = -100.0; // Initial estimate
+                //
+                if (MathUtilities.FloatsAreEqual(_psi[node], 0.0))
+                {
+                    psiValue = -100.0; // Initial estimate
+                }
+                else
+                {
+                    psiValue = _psi[node]; // Initial estimate
+                }
+                
+
+
+
                 for (int iter = 0; iter < maxIterations; iter++)
                 {
                     double est = SimpleTheta(node, psiValue);
@@ -3601,7 +3614,7 @@ namespace Models.Soils
                         throw new Exception("SWIM failed to find a solution");
 
                     // Tell user that SWIM is changing dt
-                    summary.WriteMessage(this, "ApsimSwim|apswim_swim - Changing dt value from: " + String.Format("{0,15:F3}", _dt * 2.0) + " to: " + String.Format("{0,15:F3}", _dt));
+                    summary.WriteMessage(this, "ApsimSwim|apswim_swim - Changing dt value from: " + String.Format("{0,15:F3}", _dt * 2.0) + " to: " + String.Format("{0,15:F3}", _dt), MessageType.Diagnostic);
                     if (_dt >= dtiny)
                         goto retry;
                 }
@@ -3656,10 +3669,10 @@ namespace Models.Soils
         {
             if (Diagnostics)
             {
-                summary.WriteMessage(this, "     APSwim Numerical Diagnostics");
-                summary.WriteMessage(this, "     ------------------------------------------------------------------------------");
-                summary.WriteMessage(this, "      depth      Theta         psi        K           p          p*");
-                summary.WriteMessage(this, "     ------------------------------------------------------------------------------");
+                summary.WriteMessage(this, "     APSwim Numerical Diagnostics", MessageType.Diagnostic);
+                summary.WriteMessage(this, "     ------------------------------------------------------------------------------", MessageType.Diagnostic);
+                summary.WriteMessage(this, "      depth      Theta         psi        K           p          p*", MessageType.Diagnostic);
+                summary.WriteMessage(this, "     ------------------------------------------------------------------------------", MessageType.Diagnostic);
 
                 double k;
                 double dummy1, dummy2, dummy3, dummy4, dummy5 = 0.0, dummy6 = 0.0;
@@ -3672,9 +3685,9 @@ namespace Models.Soils
                                       _psi[layer],
                                       k,
                                       _p[layer],
-                                      pold[layer]));
+                                      pold[layer]), MessageType.Diagnostic);
                 }
-                summary.WriteMessage(this, "     ------------------------------------------------------------------------------");
+                summary.WriteMessage(this, "     ------------------------------------------------------------------------------", MessageType.Diagnostic);
             }
 
         }
@@ -3843,7 +3856,7 @@ namespace Models.Soils
                     {
                         //nh               call warning_error(Err_internal,
                         //nh     :            'swim will reduce timestep to solve water movement')
-                        summary.WriteMessage(this, "swim will reduce timestep to avoid error in water balance");
+                        summary.WriteMessage(this, "swim will reduce timestep to avoid error in water balance", MessageType.Diagnostic);
                         break;
                     }
 
@@ -3878,14 +3891,14 @@ namespace Models.Soils
                 }
 
                 var msg = it + ",psi," + StringUtilities.Build(_psi, ",") + ",th," + StringUtilities.Build(th, ",");
-                summary.WriteMessage(this, msg);
+                summary.WriteMessage(this, msg, MessageType.Diagnostic);
             }
             while (fail && it < itlim);
 
             if (fail)
             {
-                summary.WriteMessage(this, Clock.Today.ToString("dd_mmm_yyyy"));
-                summary.WriteMessage(this, "Maximum iterations reached - swim will reduce timestep");
+                summary.WriteMessage(this, Clock.Today.ToString("dd_mmm_yyyy"), MessageType.Diagnostic);
+                summary.WriteMessage(this, "Maximum iterations reached - swim will reduce timestep", MessageType.Diagnostic);
             }
 
             //     solve for solute movement
@@ -3896,7 +3909,7 @@ namespace Models.Soils
                     GetSol(solnum, ref a, ref b, ref c, ref d, ref rhs, ref dp, ref vbp, ref pondingData, ref fail);
                     if (fail)
                     {
-                        summary.WriteMessage(this, "swim will reduce timestep to solve solute movement");
+                        summary.WriteMessage(this, "swim will reduce timestep to solve solute movement", MessageType.Diagnostic);
                         break;
                     }
                 }
@@ -5689,7 +5702,7 @@ namespace Models.Soils
         /// <param name="warningText">The warning text.</param>
         private void IssueWarning(string warningText)
         {
-            summary.WriteWarning(this, warningText);
+            summary.WriteMessage(this, warningText, MessageType.Warning);
         }
 
         ///<summary>Remove water from the profile</summary>

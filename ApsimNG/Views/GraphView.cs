@@ -251,6 +251,14 @@
         public int LeftRightPadding { get; set; }
 
         /// <summary>
+        /// Disable scrolling via mouse wheel on the graph.
+        /// </summary>
+        public void DisableScrolling()
+        {
+            plot1.ActualController.UnbindMouseWheel();
+        }
+
+        /// <summary>
         /// Controls the background colour of the graph.
         /// </summary>
         public OxyColor BackColor
@@ -631,7 +639,7 @@
             {
                 double newDiff = x[i] - x[i - 1];
                 if (!MathUtilities.FloatsAreEqual(diff, newDiff))
-                    MasterView.ShowMessage($"WARNING: x data is not monotonic at index {i}; x = [..., {x[i - 2]}, {x[i - 1]}, {x[i]}, ...]", Models.Core.Simulation.ErrorLevel.Warning, withButton: false);
+                    MasterView.ShowMessage($"WARNING: x data is not monotonic at index {i}; x = [..., {x[i - 2]}, {x[i - 1]}, {x[i]}, ...]", Models.Core.MessageType.Warning, withButton: false);
             }
         }
 
