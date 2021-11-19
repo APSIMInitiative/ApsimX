@@ -165,7 +165,7 @@ namespace Models.CLEM.Resources
                         if(Age >= ((parent.NaturalWeaningAge == 0)?parent.GestationLength: parent.NaturalWeaningAge))
                         {
                             string limitstring = (parent.NaturalWeaningAge == 0) ? $"gestation length [{parent.GestationLength}]" : $"natural weaning age [{parent.NaturalWeaningAge}]";
-                            string warn = $"Individuals older than {limitstring} cannot be assigned as suckling [r={parent.Name}][r={this.Parent.Name}][r={this.Name}]{Environment.NewLine}These individuals have not been assigned suckling."
+                            string warn = $"Individuals older than {limitstring} cannot be assigned as suckling [r={parent.Name}][r={this.Parent.Name}][r={this.Name}]{Environment.NewLine}These individuals have not been assigned suckling.";
                             Warnings.CheckAndWrite(warn, Summary, this);
                         }
                         else
