@@ -67,7 +67,6 @@ namespace Models.CLEM.Groupings
             if (PropertyOfIndividual != null && PropertyOfIndividual != "")
             {
                 propertyInfo = Parent.GetProperty(PropertyOfIndividual);
-//                useSimpleApproach = IsSimpleProperty();
                 validOperator = CheckValidOperator(propertyInfo, out string _);
             }
         }
@@ -132,8 +131,6 @@ namespace Models.CLEM.Groupings
             switch (property.PropertyType.IsEnum?"enum":property.PropertyType.Name)
             {
                 case "Boolean":
-                case "enum":
-                case "String":
                     switch (Operator)
                     {
                         case ExpressionType.Equal:
@@ -152,9 +149,28 @@ namespace Models.CLEM.Groupings
                             return false;
                     };
                     break;
+                case "enum":
+                case "String":
+                    switch (Operator)
+                    {
+                        case ExpressionType.Equal:
+                        case ExpressionType.NotEqual:
+                            break;
+                        case ExpressionType.IsTrue:
+                        case ExpressionType.IsFalse:
+                        case ExpressionType.GreaterThan:
+                        case ExpressionType.GreaterThanOrEqual:
+                        case ExpressionType.LessThan:
+                        case ExpressionType.LessThanOrEqual:
+                            errorMessage = $"Invalid operator of type [{OperatorToSymbol()}] for [{property.PropertyType.Name}] property [{property.Name}] in [{this.NameWithParent}] ";
+                            return false;
+                        default:
+                            errorMessage = $"Unsupported operator of type [{Operator}] for [{property.PropertyType.Name}] property [{property.Name}] in [{this.NameWithParent}] ";
+                            return false;
+                    };
+                    break;
                 case "Int32":
                 case "Double":
-                case "Single":
                     switch (Operator)
                     {
                         case ExpressionType.IsFalse:
@@ -284,11 +300,7 @@ namespace Models.CLEM.Groupings
             // valid for enum
             if (propertyInfo.PropertyType.IsEnum)
             {
-                try
-                {
-                    Enum.Parse(propertyInfo.PropertyType, Value.ToString());
-                }
-                catch
+                if(!Enum.TryParse(propertyInfo.PropertyType, Value.ToString(), out _))
                 {
                     string[] memberNames = new string[] { "Invalid compare value" };
                     results.Add(new ValidationResult($"The value to compare [{Value}] provided for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] is not valid for the property type [{propertyInfo.Name}]{System.Environment.NewLine}Valid entries are [{String.Join(",", Enum.GetNames(propertyInfo.PropertyType))}]", memberNames));
@@ -299,19 +311,26 @@ namespace Models.CLEM.Groupings
             if (propertyInfo.PropertyType == typeof(bool))
             {
                 // blank entry is permitted if using isTrue or isFalse otherwise check value
-                if (!(Value is null & (Operator == ExpressionType.IsTrue || Operator == ExpressionType.IsFalse)))
+                if (Value != null)
                 {
-                    try
-                    {
-                        Boolean.Parse(Value.ToString());
-                    }
-                    catch
-                    {
+                    if(!bool.TryParse(Value.ToString(), out _))
+                    { 
                         string[] memberNames = new string[] { "Invalid compare value" };
                         results.Add(new ValidationResult($"The value to compare [{Value}] provided for [f={Name}] in [f={Parent.Name}] is not valid for the property type [Boolean]{System.Environment.NewLine}Valid entries are [True, true, False, false, 1, 0]", memberNames));
                     }
                 }
             }
+
+            // valid for istrue / isfalse
+            if (Value != null & IsOperatorTrueFalseTest())
+            {
+                if (!bool.TryParse(Value.ToString(), out _))
+                {
+                    string[] memberNames = new string[] { "Invalid compare value" };
+                    results.Add(new ValidationResult($"The value to compare [{Value}] provided for [f={Name}] in [f={Parent.Name}] is not valid for the property type [Boolean]{System.Environment.NewLine}Valid entries are [True, true, False, false, 1, 0]", memberNames));
+                }
+            }
+
             return results;
         }
         #endregion
