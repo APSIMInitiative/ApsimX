@@ -217,7 +217,7 @@ namespace Models.CLEM
                     if (transmutePricing is null)
                     {
                         string[] memberNames = new string[] { "Transmute resource pricing" };
-                        results.Add(new ValidationResult($"No resource pricing was found for [r={(TransmuteResourceType as CLEMModel).NameWithParent}] required for a price based transmute [{this.Name}]Provide a pricing for the transmute resource or use Direct transmute style", memberNames));
+                        results.Add(new ValidationResult($"No resource pricing was found for [r={(TransmuteResourceType as CLEMModel).NameWithParent}] required for a price based transmute [{this.Name}]{Environment.NewLine}Provide a pricing for the transmute resource or use Direct transmute style", memberNames));
                     }
                 }
             }
