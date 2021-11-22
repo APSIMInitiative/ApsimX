@@ -13,6 +13,7 @@
     using System.Linq;
     using System.Reflection;
     using System.Runtime.Serialization;
+    using System.Text.RegularExpressions;
     using System.Threading.Tasks;
     using Utility;
     using Views;
@@ -1121,8 +1122,13 @@
             }
             else
             {
-                string modelNamespace = modelType.FullName.Split('.')[1];
-                (exists, resourceNameForImage) = CheckIfIconExists($"{modelNamespace}.{modelType.Name}");
+                string modelNamespace = Regex.Replace(modelType.FullName, "^(Models.)", "");
+                string[] modelNamespaceParts = modelNamespace.Split(".");
+                string modelResourceString = modelNamespaceParts.First();
+                if(modelNamespaceParts.Count() >= 2)
+                    modelResourceString += $".{modelNamespaceParts.Last()}";
+                (exists, resourceNameForImage) = CheckIfIconExists(modelResourceString);
+
                 if (!exists)
                     (exists, resourceNameForImage) = CheckIfIconExists(modelType.Name);
             }
