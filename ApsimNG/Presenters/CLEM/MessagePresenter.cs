@@ -174,7 +174,7 @@ namespace UserInterface.Presenters
                             msgStr = msgStr.Replace("[z=", @"clem-**");
                             msgStr = msgStr.Replace("[l=", @".labour-**");
                             msgStr = msgStr.Replace("[=", ".**");
-                            msgStr = msgStr.Replace("[", ".**");
+                            msgStr = msgStr.Replace("[", "**");
                             msgStr = msgStr.Replace("\r\n", "  \r\n  \r\n");
                             msgStr = msgStr.Replace("<b>", "**");
                             msgStr = msgStr.Replace("</b>", "**");
