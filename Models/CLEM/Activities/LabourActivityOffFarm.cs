@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using System;
@@ -90,7 +90,7 @@ namespace Models.CLEM.Activities
         {
             var results = new List<ValidationResult>();
             if (bankType == null && Resources.FindResource<Finance>() != null)
-                Summary.WriteWarning(this, "No bank account has been specified for [a=" + this.Name + "]. No funds will be earned!");
+                Summary.WriteMessage(this, "No bank account has been specified for [a=" + this.Name + "]. No funds will be earned!", MessageType.Warning);
 
             // get check labour required
             if (labourRequired == null)

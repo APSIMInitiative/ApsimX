@@ -1,4 +1,4 @@
-﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -240,7 +240,7 @@ namespace Models.CLEM.Activities
                     switch (OnPartialResourcesAvailableAction)
                     {
                         case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-                                Summary.WriteWarning(this, $"Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity [a={this.NameWithParent}]");
+                                Summary.WriteMessage(this, $"Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity [a={this.NameWithParent}]", MessageType.Warning);
                                 Status = ActivityStatus.Critical;
                                 throw new ApsimXException(this, $"Insufficient resources [r={AccountName}] for activity [a={this.NameWithParent}]");
                         case OnPartialResourcesAvailableActionTypes.SkipActivity:

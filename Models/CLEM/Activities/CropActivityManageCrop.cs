@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
@@ -111,7 +111,7 @@ namespace Models.CLEM.Activities
             }
 
             if (Area == 0 && UseAreaAvailable)
-                Summary.WriteWarning(this, $"No area of [r={LinkedLandItem.NameWithParent}] has been assigned for [a={this.NameWithParent}] at the start of the simulation.\r\nThis is because you have selected to use unallocated land and all land is used by other activities.");
+                Summary.WriteMessage(this, $"No area of [r={LinkedLandItem.NameWithParent}] has been assigned for [a={this.NameWithParent}] at the start of the simulation.\r\nThis is because you have selected to use unallocated land and all land is used by other activities.", MessageType.Warning);
         }
 
         /// <summary>

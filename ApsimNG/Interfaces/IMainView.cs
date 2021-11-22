@@ -106,7 +106,7 @@ namespace UserInterface.Interfaces
         /// Whether or not a 'more info' button should be drawn under the message. 
         /// If the message is not an error, this parameter has no effect.
         /// </param>
-        void ShowMessage(string message, Models.Core.Simulation.ErrorLevel errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true);
+        void ShowMessage(string message, Models.Core.MessageType errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true);
 
         /// <summary>
         /// Clear the status panel.

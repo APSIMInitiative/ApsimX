@@ -338,7 +338,7 @@ namespace Models.Optimisation
             newRow[1] = relativeModelPath;
             newRow[2] = DateTime.Now;
             newRow[3] = message;
-            newRow[4] = Convert.ToInt32(Simulation.ErrorLevel.Information);
+            newRow[4] = Convert.ToInt32(MessageType.Information);
             messages.Rows.Add(newRow);
 
             // Messages table will be automatically cleaned, unless the simulations

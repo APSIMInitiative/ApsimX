@@ -1,4 +1,4 @@
-﻿namespace Models.Surface
+namespace Models.Surface
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
@@ -368,7 +368,7 @@
             summary.WriteMessage(this, string.Format(@"Residue removed " + Environment.NewLine +
                                                       "Fraction Incorporated = {0:0.0##}" + Environment.NewLine +
                                                       "Incorporated Depth    = {1:0.0##}",
-                                                      fraction, depth));
+                                                      fraction, depth), MessageType.Diagnostic);
         }
 
         /// <summary>Return the potential residue decomposition for today.</summary>
@@ -855,8 +855,8 @@
                 residue_no = GetResidueNumber(SOMDecomp.Pool[counter].Name);
 
                 if (MathUtilities.IsLessThan(totNDecomp, 0.0) || MathUtilities.IsGreaterThan(totNDecomp, nPotDecomp[residue_no]))
-                    summary.WriteWarning(this, string.Format(@"'Total n decomposition' out of bounds! {0} < {1} < {2}", 
-                                                             0.0, totNDecomp, nPotDecomp[residue_no]));
+                    summary.WriteMessage(this, string.Format(@"'Total n decomposition' out of bounds! {0} < {1} < {2}", 
+                                                             0.0, totNDecomp, nPotDecomp[residue_no]), MessageType.Warning);
 
                 SOMc = SurfOM[residue_no].Standing.Sum<OMFractionType>(x => x.C) + SurfOM[residue_no].Lying.Sum<OMFractionType>(x => x.C);
                 SOMn = SurfOM[residue_no].Standing.Sum<OMFractionType>(x => x.N) + SurfOM[residue_no].Lying.Sum<OMFractionType>(x => x.N);

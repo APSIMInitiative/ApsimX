@@ -458,20 +458,20 @@ namespace Models.PMF.Phen
         {
             Reset();
             Params = calcCAMPVrnRates.CalcCultivarParams(FLNparams, EnvData);
-            summary.WriteMessage(this, "The following FLN parameters were used for " + data.Cultivar);
-            summary.WriteMessage(this, "FLN LV = " + FLNparams.LV.ToString());
-            summary.WriteMessage(this, "FLN SV = " + FLNparams.SV.ToString());
-            summary.WriteMessage(this, "FLN LN = " + FLNparams.LN.ToString());
-            summary.WriteMessage(this, "FLN SN = " + FLNparams.SN.ToString());
-            summary.WriteMessage(this, "The following Vrn expression rate parameters have been calculated" );
-            summary.WriteMessage(this, "BaseDVrn1 = " + Params.BaseDVrn1.ToString());
-            summary.WriteMessage(this, "MaxDVrn1  = " + Params.MaxDVrn1.ToString());
-            summary.WriteMessage(this, "MaxIpVrn2 = " + Params.MaxIpVrn2.ToString());
-            summary.WriteMessage(this, "MaxDpVrn2 = " + Params.MaxDpVrn2.ToString());
-            summary.WriteMessage(this, "BaseDVrn3 = " + Params.BaseDVrn3.ToString());
-            summary.WriteMessage(this, "MaxDVrn3  = " + Params.MaxDVrn3.ToString());
-            summary.WriteMessage(this, "MaxDVrnX  = " + Params.MaxDVrnX.ToString());
-            summary.WriteMessage(this, "IntFLNvsTSHS     = " + Params.IntFLNvsTSHS.ToString());
+            summary.WriteMessage(this, "The following FLN parameters were used for " + data.Cultivar, MessageType.Diagnostic);
+            summary.WriteMessage(this, "FLN LV = " + FLNparams.LV.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "FLN SV = " + FLNparams.SV.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "FLN LN = " + FLNparams.LN.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "FLN SN = " + FLNparams.SN.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "The following Vrn expression rate parameters have been calculated", MessageType.Diagnostic);
+            summary.WriteMessage(this, "BaseDVrn1 = " + Params.BaseDVrn1.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "MaxDVrn1  = " + Params.MaxDVrn1.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "MaxIpVrn2 = " + Params.MaxIpVrn2.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "MaxDpVrn2 = " + Params.MaxDpVrn2.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "BaseDVrn3 = " + Params.BaseDVrn3.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "MaxDVrn3  = " + Params.MaxDVrn3.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "MaxDVrnX  = " + Params.MaxDVrnX.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "IntFLNvsTSHS     = " + Params.IntFLNvsTSHS.ToString(), MessageType.Diagnostic);
         }
 
         /// <summary>

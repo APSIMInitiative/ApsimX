@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 145,
+  "Version": 146,
   "Name": "Simulations",
   "Children": [
     {
@@ -4607,7 +4607,7 @@
                 },
                 {
                   "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Root].RWC",
+                  "VariableName": "[FineRoot].RWC",
                   "Name": "XValue",
                   "Children": [],
                   "IncludeInDocumentation": true,
@@ -4976,7 +4976,7 @@
             },
             {
               "$type": "Models.Functions.VariableReference, Models",
-              "VariableName": "[Root].MinimumNConc",
+              "VariableName": "[FineRoot].MinimumNConc",
               "Name": "CriticalNConc",
               "Children": [],
               "IncludeInDocumentation": true,

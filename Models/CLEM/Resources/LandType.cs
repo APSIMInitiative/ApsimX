@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -159,7 +159,7 @@ namespace Models.CLEM.Resources
                 {
                     amountAdded = this.UsableArea - this.areaAvailable;
                     string message = $"Tried to add more available land to [r={this.Name}] than exists.";
-                    Summary.WriteWarning(this, message);
+                    Summary.WriteMessage(this, message, MessageType.Warning);
                     this.areaAvailable = this.UsableArea;
                 }
                 else

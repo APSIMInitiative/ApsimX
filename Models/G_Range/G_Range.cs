@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 
 namespace Models
@@ -2055,18 +2055,18 @@ namespace Models
             double max = vLarge;
             if (Double.IsNaN(var))
             {
-                summary.WriteWarning(this, "Variable " + varName + " was NaN");
+                summary.WriteMessage(this, "Variable " + varName + " was NaN", MessageType.Warning);
                 return min;
             }
             else if (var < min)
             {
                 if (!varName.Contains("carbonSourceSink") &&!varName.Contains("holdingTank"))
-                    summary.WriteWarning(this, "The value " + var.ToString() + " for variable " + varName + " was below the minimum allowed value");
+                    summary.WriteMessage(this, "The value " + var.ToString() + " for variable " + varName + " was below the minimum allowed value", MessageType.Warning);
                 return min;
             }
             else if (var > max)
             {
-                summary.WriteWarning(this, "Variable " + varName + " was above the maximum allowed value");
+                summary.WriteMessage(this, "Variable " + varName + " was above the maximum allowed value", MessageType.Warning);
                 return max;
             }
             return Double.NaN;
