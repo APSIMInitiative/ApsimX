@@ -237,16 +237,7 @@ namespace Models.CLEM
             // each ZoneCLEM and Market will call this validation for all children
             // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
             if (!Validate(this, "", this, summary))
-            {
-                string error = ""; //"@i:Invalid parameters in model";
-
-                // get all validations 
-                if(summary.Messages() != null)
-                    foreach (DataRow item in summary.Messages().Rows)
-                        if (item[3].ToString().StartsWith("Invalid"))
-                            error += "\r\n" + item[3].ToString();
-                throw new ApsimXException(this, error.Replace("&shy;","."));
-            }
+                ReportInvalidParameters(this);
 
             if (clock.StartDate.Year > 1) // avoid checking if clock not set.
             if ((int)EcologicalIndicatorsCalculationMonth >= clock.StartDate.Month)
@@ -261,6 +252,31 @@ namespace Models.CLEM
                 EcologicalIndicatorsNextDueDate = new DateTime(clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, clock.StartDate.Day);
                 while (clock.StartDate > EcologicalIndicatorsNextDueDate)
                     EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
+            }
+        }
+
+        /// <summary>
+        /// Reports any validation errors to exception
+        /// </summary>
+        /// <param name="model"></param>
+        /// <exception cref="ApsimXException"></exception>
+        public static void ReportInvalidParameters(IModel model)
+        {
+            IModel simulation = model.FindAncestor<Simulation>();
+            var summary = simulation.FindDescendant<Summary>();
+
+            var errorsThisSim = summary.Messages().Rows.Cast<DataRow>().Where(a => a[4].ToString() == "0" && a[1].ToString().StartsWith(model.Name));
+
+            // get all validations 
+            string innerExceptionString = "";
+            foreach (DataRow error in errorsThisSim)
+                innerExceptionString += $"{error[3]}{Environment.NewLine}";
+
+            if (errorsThisSim.Any())
+            {
+                int invalidCount = errorsThisSim.Where(a => a[3].ToString().StartsWith("Invalid parameter ")).Count();
+                Exception innerException = new Exception(innerExceptionString);
+                throw new ApsimXException(model, $"{invalidCount} invalid entr{(invalidCount == 1 ? "y" : "ies")}.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details", innerException);
             }
         }
 
@@ -330,7 +346,7 @@ namespace Models.CLEM
                     if (text != "")
                         error += String.Format(Environment.NewLine + "DESCRIPTION: " + text);
                     error += String.Format(Environment.NewLine + "PROBLEM: " + validateError.ErrorMessage + Environment.NewLine);
-                    summary.WriteMessage(parentZone, error, MessageType.Warning);
+                    summary.WriteMessage(parentZone, error, MessageType.Error);
                 }
             }
             foreach (var child in model.Children)
