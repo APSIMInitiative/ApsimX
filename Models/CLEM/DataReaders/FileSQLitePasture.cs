@@ -502,7 +502,7 @@ namespace Models.CLEM
                 {
                     // add warning
                     string warn = $"The database [x={this.FileName.Replace("_", "\\_")}] specified in [x={this.Name}] has not been optimised for best performance in CLEM. Add the following index to your database using your chosen database management software (e.g. DB Browser) to significantly improve your simulation speed:\r\nCREATE INDEX CLEM\\_next\\_growth ON Native\\_Inputs (Region, Soil, GrassBA, LandCon, StkRate, Year, Month);\r\nThis index must be named CLEM\\_next\\_growth and should include the table and column names appropriate to your database.";
-                    Warnings.CheckAndWrite(warn, Summary, this);
+                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                 }
             }
 
@@ -548,7 +548,7 @@ namespace Models.CLEM
                         // add warning
                         string warn = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]";
                         string warnfull = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]\r\nValues in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nExpecting values between 1 and 100";
-                        Warnings.CheckAndWrite(warn, Summary, this, warnfull);
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
                     }
                     break;
                 case "GrassBasalArea":
@@ -559,7 +559,7 @@ namespace Models.CLEM
                         // add warning
                         string warn = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]";
                         string warnfull = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]\r\nValues in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nExpecting values between 0 and 10";
-                        Warnings.CheckAndWrite(warn, Summary, this, warnfull);
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
                     }
                     break;
                 case "LandCondition":
@@ -569,7 +569,7 @@ namespace Models.CLEM
                         // add warning
                         string warn = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]";
                         string warnfull = $"Suspicious values for [{category}] found in pasture database [x={this.Name}]\r\nValues in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nExpecting values between 1 and 11";
-                        Warnings.CheckAndWrite(warn, Summary, this, warnfull);
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
                     }
                     break;
                 default:
@@ -587,7 +587,7 @@ namespace Models.CLEM
                 // add warning
                 string warn = $"Unable to find a [{category}] value greater than the specified value in pasture database [x={this.Name}]";
                 string warnfull = $"Unable to find a [{category}] value greater than the specified [{value:0.##}] in pasture database [x={this.Name}]\r\nKnown values in database: [{string.Join("],[", valuesToUse.Select(a => a.ToString()).ToArray())}]\r\nUsed: [{valuesToUse.Last()}]\r\nFix: Ensure the pasture database includes a [{category}] greater than values produced in this simulation for optimal results.";
-                Warnings.CheckAndWrite(warn, Summary, this, warnfull);
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error, warnfull);
                 index = valuesToUse.Count() - 1;
             }
             return (index < 0) ? valuesToUse[~index] : valuesToUse[index];
@@ -703,7 +703,7 @@ namespace Models.CLEM
                     case OnMissingResourceActionTypes.ReportWarning:
                         // this is no longer an error to allow situations where there is no pasture production reported in a given period
                         string warn = $"No pasture production for was found for [{startMonth}/{startYear}] by [x={this.Name}]";
-                        Warnings.CheckAndWrite(warn, Summary, this);
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                         break;
                     default:
                         break;
@@ -761,7 +761,7 @@ namespace Models.CLEM
                         string warn = $"Missing pasture production entry for [{tempdate.Month}/{tempdate.Year}] in [x={this.Name}]";
                         string warnfull = warn + $"\r\nGiven Region id: [{region}], Land id: [{soil}], Grass Basal Area: [{grassBasalArea}], Land Condition: [{landCondition}] & Stocking Rate: [{stockingRate}]\r\nAssume [0] for pasture production and all associated values such as rainfall";
                         if (MissingDataAction == OnMissingResourceActionTypes.ReportWarning)
-                            Warnings.CheckAndWrite(warn, Summary, this, warnfull);
+                            Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
                         else if(MissingDataAction == OnMissingResourceActionTypes.ReportErrorAndStop)
                             throw new ApsimXException(this, warnfull);
                     }

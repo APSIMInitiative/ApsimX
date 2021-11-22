@@ -304,7 +304,7 @@ namespace Models.CLEM.Activities
                 if (MaximumSiresPerPurchase > 0 | MaximumProportionBreedersPerPurchase > 0)
                 {
                     string[] memberNames = new string[] { "Specify purchased individuals' details" };
-                    results.Add(new ValidationResult($"No purchase individuals' details have been specified by [r=SpecifyRuminant] components below [a={this.Name}]\r\nAdd [SpecifyRuminant] components or disable purchases by setting [MaximumSiresPerPurchase] and/or [MaximumProportionBreedersPerPurchase] to [0]", memberNames));
+                    results.Add(new ValidationResult($"No purchase individuals' details have been specified by [r=SpecifyRuminant] components below [a={this.Name}]{Environment.NewLine}Add [SpecifyRuminant] components or disable purchases by setting [MaximumSiresPerPurchase] and/or [MaximumProportionBreedersPerPurchase] to [0]", memberNames));
                 }
             }
             else
@@ -322,7 +322,7 @@ namespace Models.CLEM.Activities
                     foreach (var item in unknownPurchases)
                     {
                         string[] memberNames = new string[] { "Invalid purchase details provided" };
-                        results.Add(new ValidationResult($"The [r=SpecifyRuminant] component [r={item.SpecifyRuminantComponent.Name}] does not represent a breeding male or female in [a={this.Name}].\r\nCheck this component and remove from the list if unneeded", memberNames));
+                        results.Add(new ValidationResult($"The [r=SpecifyRuminant] component [r={item.SpecifyRuminantComponent.Name}] does not represent a breeding male or female in [a={this.Name}].{Environment.NewLine}Check this component and remove from the list if unneeded", memberNames));
                     }
                 }
             }
@@ -340,9 +340,7 @@ namespace Models.CLEM.Activities
                 if (MaximumSiresKept > 0 && MaximumSiresPerPurchase > 0)
                 {
                     string[] memberNames = new string[] { "No breeding males specified" };
-                    string error = "No purchases specified by [r=SpecifyRuminant] represent breeding males " +
-                        "required by this simulation.\r\nIf the purchase of males is not permitted then set " +
-                        "[MaximumSiresPerPurchase] to [0]";
+                    string error = $"No purchases specified by [r=SpecifyRuminant] in [a={this.Name}] represent breeding males required by this simulation.{Environment.NewLine}If the purchase of males is not permitted then set [MaximumSiresPerPurchase] to [0]";
 
                     return new ValidationResult(error, memberNames);
                 }
@@ -360,8 +358,7 @@ namespace Models.CLEM.Activities
                 if (sumProportions != 1)
                 {
                     string[] memberNames = new string[] { "Invalid proportions set" };
-                    string error = "The proportions set in each [r=SpecifyRuminant] representing breeding" +
-                        " males do not add up to 1.";
+                    string error = $"The proportions set in each [r=SpecifyRuminant] representing breeding males in [a={this.Name}] do not add up to 1.";
                     return new ValidationResult(error, memberNames);
                 }
             }
@@ -379,9 +376,7 @@ namespace Models.CLEM.Activities
             if (purchases.Count() <= 0 && MaximumProportionBreedersPerPurchase > 0)
             {
                 string[] memberNames = new string[] { "No breeding females specified" };
-                var error = "No purchases specified by [r=SpecifyRuminant] represent breeding " +
-                    "females required by this simulation.\r\nIf the purchase of females is not" +
-                    " permitted then set [MaximumProportionBreedersPerPurchase] to [0]";
+                var error = $"No purchases specified by [r=SpecifyRuminant] in [a={this.Name}] represent breeding females required by this simulation.{Environment.NewLine}If the purchase of females is not permitted then set [MaximumProportionBreedersPerPurchase] to [0]";
                 return new ValidationResult(error, memberNames);                
             }
             else
@@ -398,8 +393,7 @@ namespace Models.CLEM.Activities
                 if (sumProportions != 1)
                 {
                     string[] memberNames = new string[] { "Invalid proportions set" };
-                    var error = "The proportions set in each [r=SpecifyRuminant] representing breeding" +
-                        " females do not add up to 1.";
+                    var error = $"The proportions set in each [r=SpecifyRuminant] representing breeding females in [a={this.Name}] do not add up to 1.";
                     return new ValidationResult(error, memberNames);
                 }
             }
@@ -479,7 +473,7 @@ namespace Models.CLEM.Activities
                             {
                                 // add warning
                                 string warn = $"Unable to reduce breeders at the start of the simulation to number required [{maxBreeders}] using [a={this.Name}]";
-                                Warnings.CheckAndWrite(warn, Summary, this);
+                                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                             }
                             breederHerdSize = maxBreeders;
                         }
@@ -505,7 +499,7 @@ namespace Models.CLEM.Activities
                             {
                                 // add warning
                                 string warn = $"Unable to increase breeding sires at the start of the simulation to number required [{SiresKept}] using [a={this.Name}]\r\nNo representative sires are present in the initial herd. Future sire purchases will be used.";
-                                Warnings.CheckAndWrite(warn, Summary, this);
+                                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                             }
                             else
                             {
@@ -538,7 +532,7 @@ namespace Models.CLEM.Activities
                             {
                                 // add warning
                                 string warn = $"Unable to reduce breeding sires at the start of the simulation to number required [{SiresKept}] using [a={this.Name}]";
-                                Warnings.CheckAndWrite(warn, Summary, this);
+                                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                             }
                         }
                     }
@@ -888,14 +882,14 @@ namespace Models.CLEM.Activities
                                 {
                                     // warning trying to sell non-breeder to reduce breeder herd
                                     string warn = $"The [f={item.Name}] filter group used to reduce breeder numbers in [a={this.Name}] includes non-breeding females.\r\nThese individuals will be ignored.";
-                                    Warnings.CheckAndWrite(warn, Summary, this);
+                                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                                 }
                             }
                             else
                             {
                                 // warning trying to sell a male to reduce breeder herd
                                 string warn = $"The [f={item.Name}] filter group used to reduce breeder numbers in [a={this.Name}] includes males.\r\nThese individuals will be ignored.";
-                                Warnings.CheckAndWrite(warn, Summary, this);
+                                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                             }
                             cnt++;
                         }

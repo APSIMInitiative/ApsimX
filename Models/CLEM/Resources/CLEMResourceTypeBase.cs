@@ -102,7 +102,7 @@ namespace Models.CLEM.Resources
                     warn += "\r\nAdd [r=ResourcePricing] component to [r=" + market + this.Parent.Name + "." + this.Name + "] to include financial transactions for purchases and sales.";
 
                     if (Summary != null)
-                        Warnings.CheckAndWrite(warn, Summary, this);
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                 }
                 return new ResourcePricing() { PricePerPacket=0, PacketSize=1, UseWholePackets=true };
             }
@@ -161,7 +161,7 @@ namespace Models.CLEM.Resources
                         warn += $" in [o=ResourceLedger] as no [{((converterName.Contains("gain")) ? "purchase" : "sale")}] pricing has been provided.";
                         warn += $"\r\nInclude [r=ResourcePricing] component with [{((converterName.Contains("gain")) ? "purchases" : "sales")}] to resource to include all finance conversions";
                         if (Summary != null)
-                            Warnings.CheckAndWrite(warn, Summary, this);
+                            Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                     }
                 }
                 return null;
