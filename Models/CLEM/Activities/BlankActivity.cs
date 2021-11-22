@@ -5,14 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Models.CLEM.Resources;
-using Models.Core;
 
 namespace Models.CLEM.Activities
 {
     /// <summary>
     /// Blank activity for passing details
     /// </summary>
-    [ValidParent(Exclude = true)]
     public class BlankActivity : CLEMActivityBase
     {
         /// <inheritdoc/>

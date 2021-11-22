@@ -16,7 +16,6 @@ namespace Models.CLEM
     /// CLEM base model
     ///</summary> 
     [Serializable]
-    [ValidParent(Exclude = true)]
     [Description("This is the Base CLEM model and should not be used directly.")]
     public abstract class CLEMModel : Model, ICLEMUI, ICLEMDescriptiveSummary
     {
