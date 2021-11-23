@@ -82,7 +82,7 @@ namespace UserInterface.Views
             treeview1.Model = treemodel;
             TreeViewColumn column = new TreeViewColumn();
             CellRendererPixbuf iconRender = new Gtk.CellRendererPixbuf();
-            iconRender.SetPadding(2, 2);
+            iconRender.SetPadding(2, 1);
             column.PackStart(iconRender, false);
             textRender = new Gtk.CellRendererText();
             textRender.Editable = false;
