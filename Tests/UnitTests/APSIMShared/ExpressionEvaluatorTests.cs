@@ -34,7 +34,7 @@ namespace UnitTests.APSIMShared
         [TestCase("sin(pi/2)", 1)]
         [TestCase("cos(pi)", -1)]
         [TestCase("tan(pi/4)", 1)]
-        [TestCase("log(10)", 1)]
+        [TestCase("log10(10)", 1)]
         [TestCase("ln(e)", 1)]
         [TestCase("logn(2, 2)", 1)]
         [TestCase("sqrt(9)", 3)]
@@ -114,7 +114,7 @@ namespace UnitTests.APSIMShared
             TestElementwiseFunction("sinh(x)", Math.Sinh, inputs);
             TestElementwiseFunction("cosh(x)", Math.Cosh, inputs);
             TestElementwiseFunction("tanh(x)", Math.Tanh, inputs);
-            TestElementwiseFunction("log(x)", Math.Log10, getLogNInputs(10));
+            TestElementwiseFunction("log10(x)", Math.Log10, getLogNInputs(10));
             TestElementwiseFunction("ln(x)", Math.Log, getLogNInputs(Math.E));
             TestElementwiseFunction("logn(x, 2)", Math.Log2, getLogNInputs(2));
             TestElementwiseFunction("sqrt(x)", Math.Sqrt, inputs);

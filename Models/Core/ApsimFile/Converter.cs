@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 146; } }
+        public static int LatestVersion { get { return 147; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3871,6 +3871,23 @@ namespace Models.Core.ApsimFile
                 replace |= manager.ReplaceRegex(errorPattern, errorReplace);
                 if (replace)
                     manager.Save();
+            }
+        }
+
+        /// <summary>
+        /// Rename report function log to log10.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion147(JObject root, string fileName)
+        {
+            foreach (JObject report in JsonUtilities.ChildrenRecursively(root, "Report"))
+            {
+                JArray variables = report["VariableNames"] as JArray;
+                if (variables != null)
+                    foreach (JValue variable in variables)
+                        if (variable.Value is string)
+                            variable.Value = ((string)variable.Value).Replace("log(", "log10(");
             }
         }
 

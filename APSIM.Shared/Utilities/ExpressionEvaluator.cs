@@ -776,7 +776,7 @@ namespace APSIM.Shared.Utilities
                         result.m_type = ExpressionType.Error;
                     }
                     break;
-                case "log":
+                case "log10":
                     if (args.Length == 1)
                     {
                         result.m_name = name + "(" + ((Symbol)args[0]).m_value.ToString() + ")";
