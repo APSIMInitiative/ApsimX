@@ -236,6 +236,9 @@
         {
             IDataStore storage = this.storage ?? FindInScope<IDataStore>();
             DataTable messages = storage.Reader.GetData("_Messages", simulationNames: simulationName.ToEnumerable());
+            if (messages == null)
+                yield break;
+
             string simulationPath = FindInScope<Simulation>(simulationName)?.FullPath;
             foreach (DataRow row in messages.Rows)
             {
@@ -257,6 +260,9 @@
         {
             IDataStore storage = this.storage ?? FindInScope<IDataStore>();
             DataTable table = storage.Reader.GetData("_InitialConditions", simulationNames: simulationName.ToEnumerable());
+            if (table == null)
+                yield break;
+
             string simulationPath = FindInScope<Simulation>(simulationName)?.FullPath;
             foreach (IGrouping<string, DataRow> group in table.AsEnumerable().GroupBy(r => r["ModelPath"]?.ToString()))
             {
