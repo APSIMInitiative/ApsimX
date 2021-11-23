@@ -57,6 +57,7 @@ namespace Models.CLEM.Resources
         /// Age in years.
         /// </summary>
         [JsonIgnore]
+        [Filter]
         public double Age { get { return Math.Floor(AgeInMonths/12); } }
        
         /// <summary>
