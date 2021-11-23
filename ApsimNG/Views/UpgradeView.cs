@@ -552,6 +552,7 @@
                 Utility.Configuration.Settings.Email = emailBox.Text;
                 Utility.Configuration.Settings.Organisation = organisationBox.Text;
                 Utility.Configuration.Settings.Country = countryBox.GetActiveText();
+                Utility.Configuration.Settings.Save();
             }
             catch (Exception err)
             {

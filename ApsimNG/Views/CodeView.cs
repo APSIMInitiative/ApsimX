@@ -448,6 +448,7 @@
                     {
                         textEditor.Buffer.StyleScheme = styleChooser.StyleScheme;
                         Configuration.Settings.EditorStyleName = styleChooser.StyleScheme.Id;
+                        Configuration.Settings.Save();
                     }
                 }
             }
@@ -1014,6 +1015,7 @@
                 }
 
                 Utility.Configuration.Settings.EditorStyleName = caption;
+                Configuration.Settings.Save();
                 //textEditor.Options.ColorScheme = caption;
                 textEditor.QueueDraw();
 

@@ -109,6 +109,7 @@
         private void OnSplitterChanged(object sender, EventArgs e)
         {
             Configuration.Settings.ReportSplitterPosition = this.view.SplitterPosition;
+            Configuration.Settings.Save();
         }
 
         /// <summary>Detach the model from the view.</summary>
