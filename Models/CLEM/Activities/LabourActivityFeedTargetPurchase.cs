@@ -36,7 +36,7 @@ namespace Models.CLEM.Activities
         /// Proportional purchase
         /// </summary>
         [Description("Proportion of remaining target")]
-        [Proportion, GreaterThanValue(0)]
+        [Proportion, GreaterThanEqualValue(0)]
         public double TargetProportion { get; set; }
 
         /// <summary>

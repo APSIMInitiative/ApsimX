@@ -621,7 +621,8 @@ namespace Models.CLEM.Activities
             }
 
             // check purchases
-            if (this.FindAllChildren<LabourActivityFeedTargetPurchase>().Cast<LabourActivityFeedTargetPurchase>().Sum(a => a.TargetProportion) != 1)
+            double sumProps = this.FindAllChildren<LabourActivityFeedTargetPurchase>().Cast<LabourActivityFeedTargetPurchase>().Sum(a => a.TargetProportion);
+            if (Math.Abs(1.0 - sumProps) > 0.00001)
             {
                 string[] memberNames = new string[] { "LabourActivityFeedToTargetPurchases" };
                 results.Add(new ValidationResult(String.Format("The sum of all [LabourActivityFeedTargetPurchase] proportions should be 1 for the targeted feed activity [{0}]", this.Name), memberNames));
