@@ -84,14 +84,21 @@ namespace Models.CLEM
             {
                 ResourceGroup = (TransmuteResourceType as IModel).Parent as ResourceBaseWithTransactions;
 
-                var shortfallResourceType = (TransmuteResourceType as IModel).FindAncestor<IResourceType>();
+                var shortfallResourceType = (this as IModel).FindAncestor<IResourceType>();
                 shortfallPacketSize = (Parent as Transmutation).TransmutationPacketSize;
                 shortfallWholePackets = (Parent as Transmutation).UseWholePackets;
 
                 // get pricing of shortfall resource
                 if (shortfallResourceType != null && TransmuteStyle == TransmuteStyle.UsePricing)
                 {
-                    shortfallPricing = shortfallResourceType.Price(PurchaseOrSalePricingStyleType.Purchase);
+                    // get pricing
+                    if ((shortfallResourceType as CLEMResourceTypeBase).MarketStoreExists)
+                        if ((shortfallResourceType as CLEMResourceTypeBase).EquivalentMarketStore.PricingExists(PurchaseOrSalePricingStyleType.Purchase))
+                            shortfallPricing = (shortfallResourceType as CLEMResourceTypeBase).EquivalentMarketStore.Price(PurchaseOrSalePricingStyleType.Purchase);
+
+                    if(shortfallPricing is null)                    
+                        shortfallPricing = shortfallResourceType.Price(PurchaseOrSalePricingStyleType.Purchase);
+
                     shortfallPacketSize = shortfallPricing.PacketSize;
                     shortfallWholePackets = shortfallPricing.UseWholePackets;
 
