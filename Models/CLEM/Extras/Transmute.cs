@@ -110,6 +110,8 @@ namespace Models.CLEM
                             // link to first bank account
                             financeType = resources.FindResourceType<Finance, FinanceType>(this, FinanceTypeForTransactionsName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning);
                     }
+                    else
+                        transmutePricing = shortfallPricing;
                 }
             }
         }
