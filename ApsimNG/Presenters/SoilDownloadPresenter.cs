@@ -113,7 +113,10 @@ namespace UserInterface.Presenters
         public void Detach()
         {
             if (countryDropDown.SelectedValue != string.Empty)
+            {
                 Configuration.Settings.DownloadFromDataSourceCountry = countryDropDown.SelectedValue;
+                Configuration.Settings.Save();
+            }
 
             searchButton.Clicked -= OnSearchClicked;
             addSoilButton.Clicked -= OnAddSoilButtonClicked;

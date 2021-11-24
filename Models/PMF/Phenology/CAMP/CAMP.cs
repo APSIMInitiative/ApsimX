@@ -1,4 +1,4 @@
-using APSIM.Shared.Utilities;
+﻿using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
 using Models.Interfaces;

@@ -482,6 +482,7 @@
 
                     // Add to MRU list and update display
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(fileName));
+                    Configuration.Settings.Save();
                     this.UpdateMRUDisplay();
                 }
                 catch (Exception err)
@@ -693,6 +694,7 @@
                 {
                     this.OpenApsimXFileInTab(fileName, this.view.IsControlOnLeft(obj));
                     Utility.Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                    Configuration.Settings.Save();
                 }
             }
             catch (Exception err)
@@ -714,6 +716,7 @@
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     Utility.Configuration.Settings.DelMruFile(fileName);
+                    Configuration.Settings.Save();
                     this.UpdateMRUDisplay();
                 }
             }
@@ -739,6 +742,7 @@
                     {
                         Utility.Configuration.Settings.DelMruFile(fileName);
                     }
+                    Configuration.Settings.Save();
 
                     this.UpdateMRUDisplay();
                 }
@@ -769,6 +773,7 @@
                         {
                             File.Move(fileName, newName);
                             Utility.Configuration.Settings.RenameMruFile(fileName, newName);
+                            Configuration.Settings.Save();
                             this.UpdateMRUDisplay();
                         }
                         catch (Exception e)
@@ -805,6 +810,7 @@
                         {
                             File.Copy(fileName, copyName);
                             Configuration.Settings.AddMruFile(new ApsimFileMetadata(copyName));
+                            Configuration.Settings.Save();
                             this.UpdateMRUDisplay();
                         }
                         catch (Exception e)
@@ -838,6 +844,7 @@
                         {
                             File.Delete(fileName);
                             Utility.Configuration.Settings.DelMruFile(fileName);
+                            Configuration.Settings.Save();
                             this.UpdateMRUDisplay();
                         }
                         catch (Exception e)
@@ -997,6 +1004,7 @@
                 {
                     OpenApsimXFileInTab(fileName, onLeftTabControl);
                     Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                    Configuration.Settings.Save();
                 }
             }
             catch (Exception err)
