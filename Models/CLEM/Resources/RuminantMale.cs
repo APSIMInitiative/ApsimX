@@ -20,7 +20,7 @@ namespace Models.CLEM.Resources
         /// Indicates if individual is breeding sire
         /// Represents any uncastrated male of breeding age
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public bool IsSire 
         {
             get
@@ -39,7 +39,7 @@ namespace Models.CLEM.Resources
         /// Indicates if individual is breeding sire
         /// Represents any uncastrated male of breeding age that is assigned sire and therefroe may have improved genetics/price
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public bool IsWildBreeder
         {
             get
@@ -54,7 +54,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Indicates if individual is castrated
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public bool IsCastrated 
         { 
             get

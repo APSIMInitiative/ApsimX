@@ -61,19 +61,19 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Breed of individual
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public string Breed { get; set; }
 
         /// <summary>
         /// Herd individual belongs to
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public string HerdName { get; set; }
 
         /// <summary>
         /// Unique ID of individual
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public int ID { get; set; }
 
         /// <summary>
@@ -101,20 +101,20 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Sex of individual
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public abstract Sex Sex { get; }
 
         /// <summary>
         /// Marked as a replacement breeder
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public bool ReplacementBreeder { get; set; }
 
         /// <summary>
         /// Age (Months)
         /// </summary>
         /// <units>Months</units>
-        [Filter]
+        [FilterByProperty]
         public double Age
         {
             get
@@ -142,7 +142,7 @@ namespace Models.CLEM.Resources
         /// The age (months) this individual entered the simulation.
         /// </summary>
         /// <units>Months</units>
-        [Filter]
+        [FilterByProperty]
         public double AgeEnteredSimulation { get; private set; }
 
         /// <summary>
@@ -159,14 +159,14 @@ namespace Models.CLEM.Resources
         /// Purchase age (Months)
         /// </summary>
         /// <units>Months</units>
-        [Filter]
+        [FilterByProperty]
         public double PurchaseAge { get; set; }
 
         /// <summary>
         /// Weight (kg)
         /// </summary>
         /// <units>kg</units>
-        [Filter]
+        [FilterByProperty]
         public double Weight
         {
             get
@@ -196,13 +196,13 @@ namespace Models.CLEM.Resources
         /// Weight gain
         /// </summary>
         /// <units>kg</units>
-        [Filter]
+        [FilterByProperty]
         public double WeightGain { get { return Weight - PreviousWeight; } }
 
         /// <summary>
         /// The adult equivalent of this individual
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public double AdultEquivalent { get { return adultEquivalent; } }
         // TODO: Needs to include ind.Number*weight if ever added to this model
 
@@ -210,13 +210,13 @@ namespace Models.CLEM.Resources
         /// Highest previous weight
         /// </summary>
         /// <units>kg</units>
-        [Filter]
+        [FilterByProperty]
         public double HighWeight { get; private set; }
 
         /// <summary>
         /// The current weight as a proportion of High weight achieved
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public double ProportionOfHighWeight
         {
             get
@@ -228,7 +228,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The current weight as a proportion of High weight achieved
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public double ProportionOfNormalisedWeight
         {
             get
@@ -240,7 +240,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The current weight as a proportion of Standard Reference Weight
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public double ProportionOfSRW
         {
             get
@@ -252,7 +252,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The current health score -2 to 2 with 0 standard weight
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public int HealthScore
         {
             get
@@ -273,7 +273,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Determine the category of this individual
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public string Class
         {
             get
@@ -312,7 +312,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Determine the category of this individual with sex
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public string FullCategory
         {
             get
@@ -324,13 +324,13 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Is this individual a valid breeder and in condition
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public virtual bool IsAbleToBreed { get { return false; } }
 
         /// <summary>
         /// Determine if weaned and less that 12 months old. Weaner
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public bool IsWeaner
         {
             get
@@ -342,7 +342,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Determine if weaned and less that 12 months old. Weaner
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public bool IsCalf
         {
             get
@@ -390,7 +390,7 @@ namespace Models.CLEM.Resources
         /// Return intake as a proportion of the potential inake
         /// This includes milk for sucklings
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public double ProportionOfPotentialIntakeObtained
         {
             get
@@ -411,13 +411,13 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Number in this class (1 if individual model)
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public double Number { get; set; }
 
         /// <summary>
         /// Flag to identify individual ready for sale
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public HerdChangeReason SaleFlag { get; set; }
 
         /// <summary>
@@ -462,7 +462,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Is the individual currently marked for sale?
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public bool ReadyForSale { get { return SaleFlag != HerdChangeReason.None; } }
 
         /// <summary>
@@ -493,14 +493,14 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Indicates if this individual has died before removal from herd
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public bool Died { get; set; }
 
         /// <summary>
         /// Standard Reference Weight determined from coefficients and gender
         /// </summary>
         /// <units>kg</units>
-        [Filter]
+        [FilterByProperty]
         public double StandardReferenceWeight
         {
             get
@@ -516,7 +516,7 @@ namespace Models.CLEM.Resources
         /// Normalised animal weight
         /// </summary>
         /// <units>kg</units>
-        [Filter]
+        [FilterByProperty]
         public double NormalisedAnimalWeight
         {
             get
@@ -528,7 +528,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Relative size (normalised weight / standard reference weight)
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public double RelativeSize
         {
             get
@@ -540,7 +540,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Relative condition (base weight / normalised weight)
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public double RelativeCondition
         {
             get
@@ -588,7 +588,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Weaned individual flag
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public bool Weaned { get { return weaned; } }
 
         /// <summary>
@@ -632,19 +632,19 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Unique ID of the managed paddock the individual is located in.
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public string Location { get; set; }
 
         /// <summary>
         /// Amount of wool on individual
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public double Wool { get; set; }
 
         /// <summary>
         /// Amount of cashmere on individual
         /// </summary>
-        [Filter]
+        [FilterByProperty]
         public double Cashmere { get; set; }
 
         /// <summary>

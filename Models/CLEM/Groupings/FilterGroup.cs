@@ -66,7 +66,7 @@ namespace Models.CLEM
         {
             properties = typeof(TFilter)
                 .GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
-                .Where(prop => Attribute.IsDefined(prop, typeof(FilterAttribute)))
+                .Where(prop => Attribute.IsDefined(prop, typeof(FilterByPropertyAttribute)))
                 .ToDictionary(prop => prop.Name, prop => prop);
 
             var types = Assembly.GetExecutingAssembly()
@@ -77,7 +77,7 @@ namespace Models.CLEM
             foreach (var type in types)
             {
                 var props = type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
-                                    .Where(prop => Attribute.IsDefined(prop, typeof(FilterAttribute)));
+                                    .Where(prop => Attribute.IsDefined(prop, typeof(FilterByPropertyAttribute)));
                 foreach (var prop in props)
                 {
                     string key = prop.DeclaringType.Name;
