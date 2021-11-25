@@ -19,6 +19,7 @@ namespace Models.AgPasture
     /// Describes a pasture species.
     /// </summary>
     [Serializable]
+    [ScopedModel]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]

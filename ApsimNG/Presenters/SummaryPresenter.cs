@@ -59,8 +59,16 @@
             SetSimulationNamesInView();
 
             string simulationName = summaryView.SimulationDropDown.SelectedValue;
-            messages[simulationName] = summaryModel.GetMessages(simulationName)?.ToArray();
-            initialConditions[simulationName] = summaryModel.GetInitialConditions(simulationName).ToArray();
+
+            try
+            {
+                messages[simulationName] = summaryModel.GetMessages(simulationName)?.ToArray();
+                initialConditions[simulationName] = summaryModel.GetInitialConditions(simulationName).ToArray();
+            }
+            catch (Exception error)
+            {
+                explorerPresenter.MainPresenter.ShowError(error);
+            }
 
             UpdateView();
 
