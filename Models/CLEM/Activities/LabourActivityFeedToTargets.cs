@@ -306,7 +306,7 @@ namespace Models.CLEM.Activities
                     ResourcePricing price = item.Key.Price(PurchaseOrSalePricingStyleType.Sale);
                     if (bankAccount != null && item.Key.Parent.Parent.Parent == Market && price.PricePerPacket > 0)
                     {
-                        // if shortfall reduce purchase
+                        // finance transaction to buy food from market
                         ResourceRequest marketRequest = new ResourceRequest
                         {
                             ActivityModel = this,
@@ -354,7 +354,7 @@ namespace Models.CLEM.Activities
                     foreach (LabourActivityFeedTargetPurchase purchase in this.FindAllChildren<LabourActivityFeedTargetPurchase>())
                     {
                         HumanFoodStoreType foodtype = resourcesHolder.FindResourceType<HumanFoodStore, HumanFoodStoreType>(this, purchase.FoodStoreName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
-                        if (foodtype != null && (foodtype.TransmutationDefined & intake < intakeLimit))
+                        if (purchase.TargetProportion > 0 && foodtype != null && (foodtype.TransmutationDefined & intake < intakeLimit))
                         {
                             LabourActivityFeedTarget targetUnfilled = labourActivityFeedTargets.Where(a => !a.TargetMet).FirstOrDefault();
                             if (targetUnfilled != null)
@@ -384,7 +384,6 @@ namespace Models.CLEM.Activities
                                     ResourcePricing price = foodtype.Price(PurchaseOrSalePricingStyleType.Sale);
                                     if (bankAccount != null && price.PricePerPacket > 0)
                                     {
-                                        // if shortfall reduce purchase
                                         ResourceRequest marketRequest = new ResourceRequest
                                         {
                                             ActivityModel = this,
@@ -469,13 +468,17 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
-            // reduce by the smallest of finance and labour limits
+            // reduce by the smallest of finance and labour limits 
             // The other resource will not be retuned but is lost in transactions
-            double limiter = Math.Min(LabourLimitProportion, LimitProportion(typeof(Finance)));
-            if(limiter < 1)
-                foreach (ResourceRequest item in ResourceRequestList)
-                    if(item.ResourceType != typeof(HumanFoodStoreType))
-                        item.Provided *= limiter;
+            var financeLimit = LimitProportion(typeof(Finance));
+            if (LabourLimitProportion < 1 || financeLimit < 1)
+            {
+                double limiter = Math.Min(LabourLimitProportion, financeLimit);
+                if (limiter < 1)
+                    foreach (ResourceRequest item in ResourceRequestList)
+                        if (item.ResourceType != typeof(HumanFoodStoreType))
+                            item.Provided *= limiter;
+            }
             return;
         }
 
