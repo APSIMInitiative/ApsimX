@@ -52,12 +52,13 @@ namespace Models.CLEM
         /// <param name="checkMessage">The warning message to check if it exists</param>
         /// <param name="summary">The summary model to write to</param>
         /// <param name="sender">The activity sending the warning</param>
+        /// <param name="messageType">The type of message to write</param>
         /// <param name="fullMessage">A full message to report if check message does not exist, otherwise use check message</param>
-        public void CheckAndWrite(string checkMessage, ISummary summary, IModel sender, string fullMessage = "")
+        public void CheckAndWrite(string checkMessage, ISummary summary, IModel sender, MessageType messageType, string fullMessage = "")
         {
             if (!Exists(checkMessage) & summary != null)
             {
-                summary.WriteMessage(sender, (fullMessage.Any())?fullMessage:checkMessage, MessageType.Warning);
+                summary.WriteMessage(sender, (fullMessage.Any())?fullMessage:checkMessage, messageType);
                 Add(checkMessage);
             }
         }

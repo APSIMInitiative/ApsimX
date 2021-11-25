@@ -71,20 +71,13 @@ namespace UserInterface.Presenters
                 {
                     int errorCol = dataRows[0].Table.Columns["MessageType"].Ordinal;
                     int msgCol = dataRows[0].Table.Columns["Message"].Ordinal;
-                    dataRows = dataRows.OrderBy(a => a[errorCol].ToString()).ToArray();
-
-                    foreach (DataRow dr in dataRows)
-                    {
-                        // convert invalid parameter warnings to errors
-                        if (dr[msgCol].ToString().StartsWith("Invalid parameter value in model"))
-                            dr[errorCol] = "0";
-                    }
+                    dataRows = dataRows.OrderBy(a => a[errorCol]).ToArray();
 
                     foreach (DataRow dr in dataRows.Take(maxErrors))
                     {
                         bool ignore = false;
                         string msgStr = dr[msgCol].ToString();
-                        if (msgStr.Contains("@i:"))
+                        if (msgStr.Contains("] Messages tab for details"))
                             ignore = true;
 
                         if (!ignore)
@@ -108,23 +101,13 @@ namespace UserInterface.Presenters
 
                             foreach (string start in starters)
                                 if (msgStr.Contains(start))
-                                    msgStr = msgStr.Substring(start.Length);
+                                    msgStr = msgStr.Substring(msgStr.IndexOf(start)+start.Length);
 
-                            string title = "Message";
-                            switch (dr[errorCol].ToString())
+                            string title = "Unknown";
+                            switch (dr[errorCol])
                             {
-                                case "2":
+                                case 0:
                                     title = "Error";
-                                    if (dr[msgCol].ToString().Contains("Invalid parameter value in"))
-                                        msgStr = "Invalid parameter values provided";
-                                    else
-                                    {
-                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
-                                        if (msgStr.Contains("\r\n   --- End of inner"))
-                                            msgStr = msgStr.Substring(0, msgStr.IndexOf("\r\n   --- End of inner"));
-                                    }
-                                    break;
-                                case "1":
                                     if (dr[msgCol].ToString().StartsWith("Invalid parameter value in"))
                                     {
                                         title = "Validation error";
@@ -133,10 +116,23 @@ namespace UserInterface.Presenters
                                         msgStr = msgStr.Replace("PROBLEM:", "__Problem:__");
                                     }
                                     else
+                                    {
+                                        msgStr = msgStr.Substring(msgStr.IndexOf(':') + 1);
+                                        if (msgStr.Contains("\r\n   --- End of inner"))
+                                            msgStr = msgStr.Substring(0, msgStr.IndexOf("\r\n   --- End of inner"));
+                                    }
+                                    break;
+                                case 1:
                                         title = "Warning";
                                     break;
-                                default:
+                                case 2:
+                                    title = "Information";
                                     break;
+                                case 3:
+                                        title = "Diagnostic";
+                                        break;
+                                default:
+                                        break;
                             }
                             if (msgStr.Contains("terminated normally"))
                             {
@@ -172,11 +168,12 @@ namespace UserInterface.Presenters
                             msgStr = msgStr.Replace("[f=", @".filter-**");
                             msgStr = msgStr.Replace("[g=", @".group-**");
                             msgStr = msgStr.Replace("[t=", @".timer-**");
-                            msgStr = msgStr.Replace("[x=", "**");
-                            msgStr = msgStr.Replace("[o=", "**");
+                            msgStr = msgStr.Replace("[x=", ".**");
+                            msgStr = msgStr.Replace("[o=", ".**");
                             msgStr = msgStr.Replace("[m=", @".market-**");
                             msgStr = msgStr.Replace("[z=", @"clem-**");
                             msgStr = msgStr.Replace("[l=", @".labour-**");
+                            msgStr = msgStr.Replace("[=", ".**");
                             msgStr = msgStr.Replace("[", "**");
                             msgStr = msgStr.Replace("\r\n", "  \r\n  \r\n");
                             msgStr = msgStr.Replace("<b>", "**");

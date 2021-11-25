@@ -90,23 +90,9 @@ namespace Models.CLEM
         private void OnCLEMValidate(object sender, EventArgs e)
         {
             // validation is performed here
-            // this event fires after Activity and Resource validation so that resources are available to check in the validation.
-            // commencing is too early as Summary has not been created for reporting.
-            // some values assigned in commencing will not be checked before processing, but will be caught here
-            // each ZoneCLEM and Market will call this validation for all children
-            // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
+            // see ZoneCLEM OnCLEMValidate for more details
             if (!ZoneCLEM.Validate(this, "", this, summary))
-            {
-                string error = "@i:Invalid parameters in model";
-
-                // get all validations 
-                if (summary.Messages() != null)
-                    foreach (DataRow item in summary.Messages().Rows)
-                        if (item[3].ToString().StartsWith("Invalid"))
-                            error += "\r\n" + item[3].ToString();
-
-                throw new ApsimXException(this, error.Replace("&shy;", "."));
-            }
+                ZoneCLEM.ReportInvalidParameters(this);
         }
 
         #region validation
