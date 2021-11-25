@@ -188,7 +188,7 @@ namespace UserInterface.Presenters
                     if (dataRows.Count() > maxErrors)
                     {
                         markdownWriter.Write("## Warning limit reached");
-                        markdownWriter.Write("  \r\n  \r\nIn excess of " + maxErrors + " errors and warnings were generated. Only the first " + maxErrors + " are displayes here. PLease refer to the SummaryInformation for the full list of issues.");
+                        markdownWriter.Write("  \r\n  \r\nIn excess of " + maxErrors + " errors and warnings were generated. Only the first " + maxErrors + " are displayed here. Please refer to the SummaryInformation for the full list of issues.");
                     }
                 }
                 else
@@ -399,7 +399,7 @@ namespace UserInterface.Presenters
                         htmlWriter.Write("\n<div class=\"holdermain\">");
                         htmlWriter.Write("\n <div class=\"warningbanner\">Warning limit reached</div>");
                         htmlWriter.Write("\n <div class=\"warningcontent\">");
-                        htmlWriter.Write("\n  <div class=\"activityentry\">In excess of " + maxErrors + " errors and warnings were generated. Only the first " + maxErrors + " are displayes here. PLease refer to the SummaryInformation for the full list of issues.");
+                        htmlWriter.Write("\n  <div class=\"activityentry\">In excess of " + maxErrors + " errors and warnings were generated. Only the first " + maxErrors + " are displayed here. Please refer to the SummaryInformation for the full list of issues.");
                         htmlWriter.Write("\n  </div>");
                         htmlWriter.Write("\n </div>");
                         htmlWriter.Write("\n</div>");
