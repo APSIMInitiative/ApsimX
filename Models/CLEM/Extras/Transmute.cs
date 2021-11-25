@@ -125,7 +125,14 @@ namespace Models.CLEM
                     request.Required = shortfallPacketsNeeded * AmountPerPacket;
                     break;
                 case TransmuteStyle.UsePricing:
-                    request.Required = (shortfallPacketsNeeded * shortfallPricing.CurrentPrice) / transmutePricing.CurrentPrice;
+                    if (shortfallPricing.CurrentPrice > 0)
+                        if (transmutePricing.CurrentPrice > 0)
+                            // no value of transmute resource
+                            request.Required = 0;
+                        else
+                            request.Required = (shortfallPacketsNeeded * shortfallPricing.CurrentPrice) / transmutePricing.CurrentPrice;
+                    // else, there is no conversion, so assume the required is provided.
+
                     // check that sell whole packets are honoured
                     if (transmutePricing.UseWholePackets)
                     {
