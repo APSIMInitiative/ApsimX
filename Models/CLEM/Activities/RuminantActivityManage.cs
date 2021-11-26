@@ -460,7 +460,7 @@ namespace Models.CLEM.Activities
                         {
                             int reduceBy = Math.Max(0, initialBreeders - maxBreeders - heifers);
                             // reduce initial herd size
-                            // randomly select the individuals to remove form the breeder herd
+                            // randomly select the individuals to remove from the breeder herd
                             var breeders = individuals.Where(a => a.Sex == Sex.Female && a.Age > breedParams.MinimumAge1stMating && a.Age < this.MaximumBreederAge).OrderBy(x => Guid.NewGuid()).Take(reduceBy);
                             foreach (var item in breeders)
                             {
@@ -684,7 +684,7 @@ namespace Models.CLEM.Activities
                 // weaned, >breeding age, female
                 int numberFemaleBreedingInHerd = herd.OfType<RuminantFemale>().Where(a => a.SaleFlag == HerdChangeReason.None && a.IsBreeder).Count();
 
-                // prevent runaway population growth in idividual based model by a check against max breeders
+                // prevent runaway population growth in individual based model by a check against max breeders
                 if(numberFemaleBreedingInHerd > MaximumBreedersKept * MaxBreedersMultiplierToStop)
                     throw new ApsimXException(this, $"The breeder herd [{numberFemaleBreedingInHerd}] has exceeded the maximum number of breeders [{MaximumBreedersKept}] x the stop model max breeders multiplier [{MaxBreedersMultiplierToStop}]{System.Environment.NewLine}This is a safety mechanism to limit runaway population growth in the individual-based ruminant model. Adjust [Maximum breeders kept] or the [Stop model max breeders multiplier] if this population was intended");
 
