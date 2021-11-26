@@ -301,11 +301,11 @@ namespace Models.CLEM.Activities
                 else
                 {
                     // need to check for mandatory attributes
-                    var mandatoryAttributes = this.FindAncestor<Zone>().FindAllDescendants<SetAttributeWithValue>().Where(a => a.Mandatory);
+                    var mandatoryAttributes = this.FindAncestor<Zone>().FindAllDescendants<SetAttributeWithValue>().Where(a => a.Mandatory).Select(a => a.AttributeName).Distinct();
                     if (mandatoryAttributes.Any())
                     {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                        htmlWriter.Write($"The mandatory attributes [{string.Join("],[", mandatoryAttributes)}] required from the breeding males will be randomally selected from the herd");
+                        htmlWriter.Write($"The mandatory attributes <span class=\"setvalue\">{string.Join("</span>,<span class=\"setvalue\">", mandatoryAttributes)}</span> required from the breeding males will be randomally selected from the herd");
                         htmlWriter.Write("</div>");
                     }
                 }
