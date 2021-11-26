@@ -1,12 +1,1 @@
-<?xml version="1.0" standalone="no"?>
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.0//EN" "http://www.w3.org/TR/2001/REC-SVG-20010904/DTD/svg10.dtd">
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" id="body_1" width="20" height="20">
-
-<g transform="matrix(0.35701534 0 0 0.35701534 0.0017854581 -0)">
-    <path d="M0.03 0.07L55.91 0.07L55.91 56.02L0.03 56.02z" stroke="none" fill="none" />
-    <path d="M0 0L26.88 0L26.88 26.94L0 26.94z" stroke="none" fill="#996633" fill-rule="nonzero" />
-    <path d="M0.07 28.94L26.949999 28.94L26.949999 55.92L0.07 55.92z" stroke="none" fill="#CC33CC" fill-rule="nonzero" />
-    <path d="M29.21 29.01L55.97 29.01L55.97 55.95L29.21 55.95z" stroke="none" fill="#339933" fill-rule="nonzero" />
-    <path d="M29.17 0.04L56.010002 0.04L56.010002 26.87L29.17 26.87z" stroke="none" fill="#198596" fill-rule="nonzero" />
-</g>
-</svg>
+<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 56 56"><defs><style>.a{fill:none;}.b{fill:#963;}.c{fill:#c3c;}.d{fill:#393;}.e{fill:#198596;}</style></defs><rect class="a" x="0.03" y="0.06" width="55.88" height="55.95"/><rect class="b" width="25.91" height="25.97"/><rect class="c" x="0.07" y="29.9" width="25.91" height="26.01"/><rect class="d" x="30.16" y="29.96" width="25.8" height="25.97"/><rect class="e" x="30.12" y="0.04" width="25.88" height="25.87"/></svg>
