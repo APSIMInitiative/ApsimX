@@ -3828,20 +3828,20 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject simulation in JsonUtilities.ChildrenRecursively(root, "Simulation"))
             {
-                var stockModels = JsonUtilities.ChildrenRecursively(simulation).Where(c => c["$type"].ToString().Contains("Stock"));
+                List<JObject> stockModels = JsonUtilities.ChildrenRecursively(simulation, "Stock");
                 JObject stock = null;
                 if (stockModels.Any())
                     stock = stockModels.First();
 
-                var simpleGrazing = JsonUtilities.ChildrenRecursively(simulation).Where(c => c["$type"].ToString().Contains("SimpleGrazing"));
+                List<JObject> simpleGrazing = JsonUtilities.ChildrenRecursively(simulation, "SimpleGrazing");
                 if (stock != null || simpleGrazing.Any())
                 {
                     // Add in a Forages model.
-                    var forages = new JObject();
+                    JObject forages = new JObject();
                     forages["$type"] = "Models.ForageDigestibility.Forages, Models";
                     forages["Name"] = "Forages";
 
-                    var simulationChildren = simulation["Children"] as JArray;
+                    JArray simulationChildren = simulation["Children"] as JArray;
                     int position = simulationChildren.IndexOf(stock);
                     if (position == -1)
                         simulationChildren.Add(forages);
