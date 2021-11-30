@@ -59,7 +59,10 @@ namespace UserInterface.Presenters
                 if (ds == null)
                     return markdownWriter.ToString();
 
-                DataTable dataTable = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages");
+                DataTable dataTable = null;
+                if(ds.Reader.TableNames.Any())
+                    dataTable = ds.Reader.GetData(simulationNames: new string[] { simulation.Name }, tableName: "_Messages");
+
                 if (dataTable == null)
                 {
                     markdownWriter.Write("### Datastore is empty");
