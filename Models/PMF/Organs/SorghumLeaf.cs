@@ -201,8 +201,16 @@ namespace Models.PMF.Organs
         public double Gsmax350 { get; set; }
 
         /// <summary>Gets or sets the R50.</summary>
-        [Description("R50")]
+        [Description("R50: solar radiation at which stomatal conductance decreases to 50 % (W / m ^ 2)")]
         public double R50 { get; set; }
+
+        /// <summary>Gets or sets the R50.</summary>
+        [Description("Use MicroClimate: 0 = No, 1 = yes")]
+        public int MicroClimateSetting { get; set; }
+
+        /// <summary>Gets the MicroClimate setting.</summary>
+        [JsonIgnore]
+        public bool UseMicroClimate => MicroClimateSetting > 0;
 
         /// <summary>The Stage that leaves are initialised on</summary>
         [Description("The Stage that leaves are initialised on")]
@@ -302,10 +310,33 @@ namespace Models.PMF.Organs
         public double LAIDead { get; set; }
 
 
-        /// <summary>Gets the total radiation intercepted.</summary>
+        ///// <summary>Gets the total radiation intercepted.</summary>
+        //[Units("MJ/m^2/day")]
+        //public double RadiationIntercepted => CoverGreen * metData.Radn;
+
+        /// <summary>
+        /// Intercepted radiation value that is passed to the RUE class to calculate DM supply.
+        /// </summary>
         [Units("MJ/m^2/day")]
         [Description("This is the intercepted radiation value that is passed to the RUE class to calculate DM supply")]
-        public double RadiationIntercepted => CoverGreen * metData.Radn;
+        public double RadiationIntercepted
+        {
+            get
+            {
+                if (UseMicroClimate)
+                {
+                    if (LightProfile == null)
+                        return 0;
+
+                    double totalRadn = 0;
+                    for (int i = 0; i < LightProfile.Length; i++)
+                        totalRadn += LightProfile[i].AmountOnGreen;
+                    return totalRadn;
+                }
+                return CoverGreen * metData.Radn;
+            }
+        }
+
 
         /// <summary>Nitrogen Photosynthesis Stress.</summary>
         public double NitrogenPhotoStress { get; set; }
@@ -502,12 +533,12 @@ namespace Models.PMF.Organs
         /// <summary>Calculates the water demand.</summary>
         public double CalculateWaterDemand()
         {
+            if(UseMicroClimate) return WaterDemand;
+
             if (waterDemandFunction != null)
                 return waterDemandFunction.Value();
-            else
-            {
-                return WaterDemand;
-            }
+
+            return WaterDemand;
         }
 
         /// <summary>Update area.</summary>
