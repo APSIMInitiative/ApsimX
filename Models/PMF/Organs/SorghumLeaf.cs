@@ -1032,7 +1032,7 @@ namespace Models.PMF.Organs
                 if (LAI - DltSenescedLai < 0.1)
                 {
                     string message = "Crop failed due to loss of leaf area \r\n";
-                    summary.WriteMessage(this, message);
+                    summary.WriteMessage(this, message, MessageType.Diagnostic);
                     //scienceAPI.write(" ********** Crop failed due to loss of leaf area ********");
                     plant.EndCrop();
                     return;

@@ -52,7 +52,7 @@ namespace Models.Functions
             if (MathUtilities.IsLessThanOrEqual(weather.MinT, frostKillSevere.Value()))
             {
                 // Temperature is below frostKillSevere parameter, senesce all LAI.
-                summary.WriteMessage(this, FrostSenescenceMessage(fatal: true));
+                summary.WriteMessage(this, FrostSenescenceMessage(fatal: true), MessageType.Diagnostic);
                 return leaf.LAI;
             }
 
@@ -62,14 +62,14 @@ namespace Models.Functions
             {
                 // The plant will survive but all of the leaf area is removed except a fraction.
                 // 3 degrees is a default for now - extract to a parameter to customise it.
-                summary.WriteMessage(this, FrostSenescenceMessage(fatal: false));
+                summary.WriteMessage(this, FrostSenescenceMessage(fatal: false), MessageType.Diagnostic);
                 return Math.Max(0, leaf.LAI - 0.1);
             }
 
             if (leaf.phenology.Between("FloralInitiation", "Flowering"))
             {
                 // Plant is between floral init and flowering - time to die.
-                summary.WriteMessage(this, FrostSenescenceMessage(fatal: true));
+                summary.WriteMessage(this, FrostSenescenceMessage(fatal: true), MessageType.Diagnostic);
                 return leaf.LAI; // rip
             }
 
