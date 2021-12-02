@@ -56,7 +56,7 @@ namespace Models.CLEM.Resources
             List<ISetAttribute> initialCohortAttributes = this.FindAllChildren<ISetAttribute>().ToList();
             List<Ruminant> individuals = new List<Ruminant>();
             foreach (RuminantTypeCohort cohort in this.FindAllChildren<RuminantTypeCohort>())
-                individuals.AddRange(cohort.CreateIndividuals(initialCohortAttributes));
+                individuals.AddRange(cohort.CreateIndividuals(initialCohortAttributes.ToList()));
 
             return individuals;
         }

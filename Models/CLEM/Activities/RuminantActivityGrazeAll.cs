@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
@@ -105,7 +105,7 @@ namespace Models.CLEM.Activities
                 }
             }
             else
-                Summary.WriteWarning(this, $"No GrazeFoodStore is available for the ruminant grazing activity [a={this.Name}]!");
+                Summary.WriteMessage(this, $"No GrazeFoodStore is available for the ruminant grazing activity [a={this.Name}]!", MessageType.Warning);
         }
 
         /// <summary>

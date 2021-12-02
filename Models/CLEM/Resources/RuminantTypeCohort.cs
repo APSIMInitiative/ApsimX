@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -110,13 +110,14 @@ namespace Models.CLEM.Resources
         /// <returns>List of ruminants</returns>
         public List<Ruminant> CreateIndividuals(List<ISetAttribute> initialAttributes, RuminantType ruminantType = null)
         {
+            List<ISetAttribute> localAttributes = new List<ISetAttribute>();
+            // add any whole herd attributes
+            if (initialAttributes != null)
+                localAttributes.AddRange(initialAttributes);
             // Add any attributes defined at the cohort level
-            if(initialAttributes is null)
-                initialAttributes = new List<ISetAttribute>();
+            localAttributes.AddRange(this.FindAllChildren<ISetAttribute>().ToList());
 
-            initialAttributes.AddRange(this.FindAllChildren<ISetAttribute>().ToList());
-
-            return CreateIndividuals(Convert.ToInt32(this.Number, CultureInfo.InvariantCulture), initialAttributes, ruminantType);
+            return CreateIndividuals(Convert.ToInt32(this.Number, CultureInfo.InvariantCulture), localAttributes, ruminantType);
         }
 
         /// <summary>
@@ -161,7 +162,14 @@ namespace Models.CLEM.Resources
                     ruminant.SaleFlag = HerdChangeReason.None;
 
                     if (Suckling)
-                        ruminant.SetUnweaned();
+                        if(Age >= ((parent.NaturalWeaningAge == 0)?parent.GestationLength: parent.NaturalWeaningAge))
+                        {
+                            string limitstring = (parent.NaturalWeaningAge == 0) ? $"gestation length [{parent.GestationLength}]" : $"natural weaning age [{parent.NaturalWeaningAge}]";
+                            string warn = $"Individuals older than {limitstring} cannot be assigned as suckling [r={parent.Name}][r={this.Parent.Name}][r={this.Name}]{Environment.NewLine}These individuals have not been assigned suckling.";
+                            Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+                        }
+                        else
+                            ruminant.SetUnweaned();
 
                     if (Sire)
                     {
@@ -171,7 +179,10 @@ namespace Models.CLEM.Resources
                             ruminantMale.Attributes.Add("Sire");
                         }
                         else
-                            Summary.WriteWarning(this, "Breeding sire switch is not valid for individual females [r=" + parent.Name + "].[r=" + this.Parent.Name + "].[r=" + this.Name + "]");
+                        {
+                            string warn = $"Breeding sire switch is not valid for individual females [r={parent.Name}][r={this.Parent.Name}][r={this.Name}]{Environment.NewLine}These individuals have not been assigned sires. Change Sex to Male to create sires in initial herd.";
+                            Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+                        }
                     }
 
                     // if weight not provided use normalised weight

@@ -170,7 +170,7 @@ namespace Models.CLEM
                         if (components.Count() > 1)
                         {
                             string warn = $"Multiple resource [r=PricingComponents] named [{column}] were found when applying pricing by [a={this.Name}]. \r\n Ensure input price applies to all these components or provide unique component names";
-                            Warnings.CheckAndWrite(warn, Summary, this);
+                            Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                         }
                         foreach (IResourcePricing resourcePricing in components)
                             resourcePricing.SetPrice(res, this);

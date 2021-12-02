@@ -20,9 +20,7 @@ namespace UnitTests
         {
             Simulations sims = Utilities.GetRunnableSim();
             Summary summary = sims.FindInScope<Summary>();
-            summary.CaptureErrors = false;
-            summary.CaptureWarnings = false;
-            summary.CaptureSummaryText = false;
+            summary.Verbosity = MessageType.Error;
 
             var runner = new Runner(sims);
             List<Exception> errors = runner.Run();

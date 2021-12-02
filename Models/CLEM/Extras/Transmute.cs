@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
@@ -188,7 +188,7 @@ namespace Models.CLEM
                     object result = resources.FindResource<ResourceBaseWithTransactions>(TransmuteResourceTypeName.Split('.').First());
                     if (result == null)
                     {
-                        Summary.WriteWarning(this, $"Could not find resource group [r={TransmuteResourceTypeName.Split('.').First()}] in transmute [{this.Name}]{Environment.NewLine}The parent transmutation [{(this.Parent as CLEMModel).NameWithParent}] will not suceed without this resource and will not be performed");
+                        Summary.WriteMessage(this, $"Could not find resource group [r={TransmuteResourceTypeName.Split('.').First()}] in transmute [{this.Name}]{Environment.NewLine}The parent transmutation [{(this.Parent as CLEMModel).NameWithParent}] will not suceed without this resource and will not be performed", MessageType.Warning);
                     }
                     else
                     {
@@ -217,7 +217,7 @@ namespace Models.CLEM
                     if (transmutePricing is null)
                     {
                         string[] memberNames = new string[] { "Transmute resource pricing" };
-                        results.Add(new ValidationResult($"No resource pricing was found for [r={(TransmuteResourceType as CLEMModel).NameWithParent}] required for a price based transmute [{this.Name}]Provide a pricing for the transmute resource or use Direct transmute style", memberNames));
+                        results.Add(new ValidationResult($"No resource pricing was found for [r={(TransmuteResourceType as CLEMModel).NameWithParent}] required for a price based transmute [{this.Name}]{Environment.NewLine}Provide a pricing for the transmute resource or use Direct transmute style", memberNames));
                     }
                 }
             }

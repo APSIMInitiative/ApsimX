@@ -141,7 +141,7 @@ namespace Models.CLEM.Reporting
         public DataTable GenerateTable()
         {
             if (Name.Any(c => c == ' '))
-                throw new Exception($"Invalid name: {Name}\nNames cannot contain spaces.");
+                throw new ApsimXException(this, $"Invalid name: {Name}\nNames cannot contain spaces.");
 
             // Find the data
             var storage = FindInScope<IDataStore>() ?? datastore;
@@ -149,6 +149,8 @@ namespace Models.CLEM.Reporting
 
             // Check sensibility
             if (report is null || Row is null || Column is null || Value is null || Aggregator is null)
+                return null;
+            if (report.Columns.Count == 0)
                 return null;
 
             // Set up date handling

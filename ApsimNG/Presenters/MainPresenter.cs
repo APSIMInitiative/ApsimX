@@ -222,12 +222,12 @@
         /// <param name="overwrite">Overwrite existing messages?</param>
         public void ShowMessage(string message, Simulation.MessageType messageType, bool overwrite = true)
         {
-            Simulation.ErrorLevel errorType = Simulation.ErrorLevel.Information;
+            MessageType errorType = MessageType.Information;
 
             if (messageType == Simulation.MessageType.Information)
-                errorType = Simulation.ErrorLevel.Information;
+                errorType = MessageType.Information;
             else if (messageType == Simulation.MessageType.Warning)
-                errorType = Simulation.ErrorLevel.Warning;
+                errorType = MessageType.Warning;
 
             this.view.ShowMessage(message, errorType, overwrite);
         }
@@ -245,12 +245,12 @@
         /// <param name="messageType"></param>
         public void ShowMessage(List<string> messages, Simulation.MessageType messageType)
         {
-            Simulation.ErrorLevel errorType = Simulation.ErrorLevel.Information;
+            MessageType errorType = MessageType.Information;
 
             if (messageType == Simulation.MessageType.Information)
-                errorType = Simulation.ErrorLevel.Information;
+                errorType = MessageType.Information;
             else if (messageType == Simulation.MessageType.Warning)
-                errorType = Simulation.ErrorLevel.Warning;
+                errorType = MessageType.Warning;
 
             foreach (string msg in messages)
             {
@@ -266,7 +266,7 @@
         public void ShowError(string error)
         {
             LastError.Clear();
-            view.ShowMessage(error, Simulation.ErrorLevel.Error, withButton : false);
+            view.ShowMessage(error, MessageType.Error, withButton : false);
         }
 
         /// <summary>
@@ -288,7 +288,7 @@
                 else
                 {
                     LastError.Add(error.ToString());
-                    view.ShowMessage(GetInnerException(error).Message, Simulation.ErrorLevel.Error, overwrite: overwrite, addSeparator: !overwrite);
+                    view.ShowMessage(GetInnerException(error).Message, MessageType.Error, overwrite: overwrite, addSeparator: !overwrite);
                 }
             }
         }
@@ -310,7 +310,7 @@
                         ShowError(aggregate.InnerExceptions.ToList(), overwrite && i == 0);
                     else
                         // only overwrite other messages the first time through the loop
-                        view.ShowMessage(GetInnerException(errors[i]).Message, Simulation.ErrorLevel.Error, overwrite && i == 0, true);
+                        view.ShowMessage(GetInnerException(errors[i]).Message, MessageType.Error, overwrite && i == 0, true);
                 }
             }
             else
@@ -482,6 +482,7 @@
 
                     // Add to MRU list and update display
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(fileName));
+                    Configuration.Settings.Save();
                     this.UpdateMRUDisplay();
                 }
                 catch (Exception err)
@@ -693,6 +694,7 @@
                 {
                     this.OpenApsimXFileInTab(fileName, this.view.IsControlOnLeft(obj));
                     Utility.Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                    Configuration.Settings.Save();
                 }
             }
             catch (Exception err)
@@ -714,6 +716,7 @@
                 if (!string.IsNullOrEmpty(fileName))
                 {
                     Utility.Configuration.Settings.DelMruFile(fileName);
+                    Configuration.Settings.Save();
                     this.UpdateMRUDisplay();
                 }
             }
@@ -739,6 +742,7 @@
                     {
                         Utility.Configuration.Settings.DelMruFile(fileName);
                     }
+                    Configuration.Settings.Save();
 
                     this.UpdateMRUDisplay();
                 }
@@ -769,6 +773,7 @@
                         {
                             File.Move(fileName, newName);
                             Utility.Configuration.Settings.RenameMruFile(fileName, newName);
+                            Configuration.Settings.Save();
                             this.UpdateMRUDisplay();
                         }
                         catch (Exception e)
@@ -805,6 +810,7 @@
                         {
                             File.Copy(fileName, copyName);
                             Configuration.Settings.AddMruFile(new ApsimFileMetadata(copyName));
+                            Configuration.Settings.Save();
                             this.UpdateMRUDisplay();
                         }
                         catch (Exception e)
@@ -838,6 +844,7 @@
                         {
                             File.Delete(fileName);
                             Utility.Configuration.Settings.DelMruFile(fileName);
+                            Configuration.Settings.Save();
                             this.UpdateMRUDisplay();
                         }
                         catch (Exception e)
@@ -997,6 +1004,7 @@
                 {
                     OpenApsimXFileInTab(fileName, onLeftTabControl);
                     Configuration.Settings.PreviousFolder = Path.GetDirectoryName(fileName);
+                    Configuration.Settings.Save();
                 }
             }
             catch (Exception err)
@@ -1140,7 +1148,7 @@
             {
                 bool onLeftTabControl = view.IsControlOnLeft(sender);
                 // Clear the message window
-                view.ShowMessage(" ", Simulation.ErrorLevel.Information);
+                view.ShowMessage(" ", MessageType.Information);
                 CreateNewTab("View Cloud Jobs", null, onLeftTabControl, "ApsimNG.Resources.Glade.CloudJobView.glade", "UserInterface.Presenters.CloudJobPresenter");
             }
             catch (Exception err)
@@ -1242,9 +1250,9 @@
                     var converter = Converter.DoConvert(contents, version, file);
                     if (converter.DidConvert)
                         File.WriteAllText(file, converter.Root.ToString());
-                    view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), Simulation.ErrorLevel.Information, false);
+                    view.ShowMessage(string.Format("Successfully upgraded {0} to version {1}.", file, version), MessageType.Information, false);
                 }
-                view.ShowMessage("Successfully upgraded all files.", Simulation.ErrorLevel.Information);
+                view.ShowMessage("Successfully upgraded all files.", MessageType.Information);
             }
             catch (Exception err)
             {

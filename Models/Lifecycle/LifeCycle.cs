@@ -113,7 +113,7 @@
         {
             LifeCyclePhase InfestingPhase = FindChild<LifeCyclePhase>(InfestationInfo.LifeCyclePhase);
             InfestingPhase.NewCohort(InfestationInfo);
-            mySummary.WriteMessage(this, "An infestation of  " + InfestationInfo.Population + " " + FullPath + " " + InfestationInfo.LifeCyclePhase + "'s occured today, just now :-)");
+            mySummary.WriteMessage(this, "An infestation of  " + InfestationInfo.Population + " " + FullPath + " " + InfestationInfo.LifeCyclePhase + "'s occured today, just now :-)", MessageType.Diagnostic);
         }
     }
 }

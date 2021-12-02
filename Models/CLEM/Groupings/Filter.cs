@@ -23,6 +23,11 @@ namespace Models.CLEM.Groupings
         }
 
         /// <summary>
+        /// The filter rule
+        /// </summary>
+        public Func<IFilterable, bool> Rule { get; protected set; }
+
+        /// <summary>
         /// Filter operator
         /// </summary>
         [Description("Operator")]
@@ -32,7 +37,7 @@ namespace Models.CLEM.Groupings
         public ExpressionType Operator { get; set; }
         
         /// <summary>
-        /// Method to return avaialble operators
+        /// Method to return available operators
         /// </summary>
         /// <returns></returns>
         protected object[] GetOperators() => new object[]
@@ -72,7 +77,7 @@ namespace Models.CLEM.Groupings
                 case ExpressionType.IsFalse:
                     return "not";
                 default:
-                    return "";
+                    return Operator.ToString();
             }
         }
 

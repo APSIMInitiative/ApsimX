@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Models.Core;
@@ -814,7 +814,7 @@ namespace Models.PMF.OilPalm
             if (Sowing != null)
                 Sowing.Invoke(this, new EventArgs());
 
-            Summary.WriteMessage(this, string.Format("A crop of "+SowingData.Cultivar+" OilPalm was sown today at a population of " + population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"));
+            Summary.WriteMessage(this, string.Format("A crop of "+SowingData.Cultivar+" OilPalm was sown today at a population of " + population + " plants/m2 with " + budNumber + " buds per plant at a row spacing of " + rowSpacing + " and a depth of " + depth + " mm"), MessageType.Diagnostic);
         }
 
         /// <summary>Harvest the crop.</summary>

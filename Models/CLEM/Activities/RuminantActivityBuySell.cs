@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using System;
@@ -59,7 +59,7 @@ namespace Models.CLEM.Activities
             if (Resources.ResourceItemsExist<Finance>())
             {
                 if (BankAccountName == "")
-                    Summary.WriteWarning(this, $"No bank account has been specified in [a={this.Name}] while Finances are available in the simulation. No financial transactions will be recorded for the purchase and sale of animals.");
+                    Summary.WriteMessage(this, $"No bank account has been specified in [a={this.Name}] while Finances are available in the simulation. No financial transactions will be recorded for the purchase and sale of animals.", MessageType.Warning);
             }
             if (BankAccountName != "")
                 bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
@@ -73,7 +73,7 @@ namespace Models.CLEM.Activities
                 var breeds = HerdResource.Herd.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).GroupBy(a => a.HerdName);
                 foreach (var herd in breeds)
                     if (!herd.FirstOrDefault().BreedParams.PricingAvailable())
-                        Summary.WriteWarning(this, String.Format("No pricing schedule has been provided for herd [r={0}]. No financial transactions will be recorded for activity [a={1}]", herd.Key, this.Name));
+                        Summary.WriteMessage(this, String.Format("No pricing schedule has been provided for herd [r={0}]. No financial transactions will be recorded for activity [a={1}]", herd.Key, this.Name), MessageType.Warning);
             }
         }
 
@@ -172,7 +172,7 @@ namespace Models.CLEM.Activities
                         }
                         if (nonloaded)
                         {
-                            Summary.WriteWarning(this, String.Format("There was a problem loading the sale truck as sale individuals did not meet the loading criteria for breed [r={0}]", this.PredictedHerdBreed));
+                            Summary.WriteMessage(this, String.Format("There was a problem loading the sale truck as sale individuals did not meet the loading criteria for breed [r={0}]", this.PredictedHerdBreed), MessageType.Warning);
                             break;
                         }
                         herd = this.CurrentHerd(false).Where(a => a.SaleFlag != HerdChangeReason.None).OrderByDescending(a => a.Weight).ToList();
@@ -422,7 +422,7 @@ namespace Models.CLEM.Activities
                     }
                     if (nonloaded)
                     {
-                        Summary.WriteWarning(this, String.Format("There was a problem loading the purchase truck as purchase individuals did not meet the loading criteria for breed [r={0}]", this.PredictedHerdBreed));
+                        Summary.WriteMessage(this, String.Format("There was a problem loading the purchase truck as purchase individuals did not meet the loading criteria for breed [r={0}]", this.PredictedHerdBreed), MessageType.Warning);
                         break;
                     }
                     if (shortfall > 0)

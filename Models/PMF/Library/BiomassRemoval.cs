@@ -1,4 +1,4 @@
-﻿namespace Models.PMF.Library
+namespace Models.PMF.Library
 {
     using Models.Core;
     using Models.Interfaces;
@@ -90,9 +90,9 @@
                         summary.WriteMessage(Parent, "Removing " + totalFractionToRemove.ToString("0.0")
                                                  + "% of " + Parent.Name.ToLower() + " biomass from " + plant.Name
                                                  + ". Of this " + removedOff.ToString("0.0") + "% is removed from the system and "
-                                                 + toResidue.ToString("0.0") + "% is returned to the surface organic matter.");
+                                                 + toResidue.ToString("0.0") + "% is returned to the surface organic matter.", MessageType.Diagnostic);
                         summary.WriteMessage(Parent, "Removed " + Removed.Wt.ToString("0.0") + " g/m2 of dry matter weight and "
-                                                 + Removed.N.ToString("0.0") + " g/m2 of N.");
+                                                 + Removed.N.ToString("0.0") + " g/m2 of N.", MessageType.Diagnostic);
                     }
                     return remainingLiveFraction;
                 }

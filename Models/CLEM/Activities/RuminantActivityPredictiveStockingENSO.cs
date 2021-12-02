@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Utilities;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.CLEM.Resources;
 using System;
@@ -166,7 +166,7 @@ namespace Models.CLEM.Activities
                 }
             }
             else
-                Summary.WriteError(this, String.Format("Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, this.Name));
+                Summary.WriteMessage(this, String.Format("Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, this.Name), MessageType.Error);
 
             this.InitialiseHerd(false, true);
 
@@ -257,7 +257,7 @@ namespace Models.CLEM.Activities
                     {
                         string warn = $"No pasture biomass to herd change proportion [Relationship] provided for {((forecastEnsoState== ENSOState.ElNino)? "El Niño":"La Niña")} phase in [a={this.Name}]\r\nNo stock management will be performed in this phase.";
                         this.Status = ActivityStatus.Warning;
-                        Warnings.CheckAndWrite(warn, Summary, this);
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                     }
 
                     if (herdChange> 1.0)
@@ -309,7 +309,7 @@ namespace Models.CLEM.Activities
             {
                 string warn = $"No [f=FilterGroup]s with a [Destock] Reason were provided in [a={this.Name}]\r\nNo destocking will be performed.";
                 this.Status = ActivityStatus.Warning;
-                Warnings.CheckAndWrite(warn, Summary, this);
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
             }
 
             foreach (var item in destockGroups)
@@ -355,7 +355,7 @@ namespace Models.CLEM.Activities
                 {
                     string warn = $"No [f=SpecifyRuminant]s were provided in [a={this.Name}]\r\nNo restocking will be performed.";
                     this.Status = ActivityStatus.Warning;
-                    Warnings.CheckAndWrite(warn, Summary, this);
+                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                 }
 
                 // buy animals specified in restock ruminant groups

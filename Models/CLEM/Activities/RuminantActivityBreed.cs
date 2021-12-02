@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using StdUnits;
@@ -84,7 +84,7 @@ namespace Models.CLEM.Activities
 
             // report what is happening with timing when uncontrolled mating
             if (!useControlledMating & this.TimingExists)
-                Summary.WriteWarning(this, $"Uncontrolled/natural breeding should occur every month. The timer associated with [a={this.Name}] may restrict uncontrolled mating regardless of whether males and females of breeding condition are located together.\r\nYou can also seperate genders by moving to different paddocks to manage the timing of natural mating or add a [a=RuminantActivityControlledMating] component to define controlled mating");
+                Summary.WriteMessage(this, $"Uncontrolled/natural breeding should occur every month. The timer associated with [a={this.Name}] may restrict uncontrolled mating regardless of whether males and females of breeding condition are located together.\r\nYou can also seperate genders by moving to different paddocks to manage the timing of natural mating or add a [a=RuminantActivityControlledMating] component to define controlled mating", MessageType.Warning);
 
             // set up pre start conception status of breeders
             IEnumerable<Ruminant> herd = CurrentHerd(true);
@@ -437,7 +437,7 @@ namespace Models.CLEM.Activities
                     if (numberServiced > 0 & !useControlledMating)
                     {
                         string warning = $"Natural (uncontrolled) mating ocurred in [r={(location.Key ?? "Not specified - general yards")}]";
-                        Warnings.CheckAndWrite(warning, Summary, this);
+                        Warnings.CheckAndWrite(warning, Summary, this, MessageType.Warning);
                     }
                 }
             }

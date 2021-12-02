@@ -1,4 +1,4 @@
-﻿namespace Models.Soils.Nutrients
+namespace Models.Soils.Nutrients
 {
     using Interfaces;
     using Models.Core;
@@ -446,7 +446,7 @@
                         FOMLignin.N[layer] += FOMdata.Layer[layer].FOM.N * 0.1;
                     }
                     else
-                        Summary.WriteMessage(this, " Number of FOM values given is larger than the number of layers, extra values will be ignored");
+                        Summary.WriteMessage(this, " Number of FOM values given is larger than the number of layers, extra values will be ignored", MessageType.Diagnostic);
                 }
             }
         }
