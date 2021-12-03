@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 500,
-  "Version": 144,
+  "ExplorerWidth": 363,
+  "Version": 147,
   "Name": "Simulations",
   "Children": [
     {
@@ -2166,7 +2166,6 @@
               "potentialDMAllocation": null,
               "Live": {
                 "$type": "Models.PMF.Biomass, Models",
-                "DMDOfStructural": 0.6,
                 "Name": "Biomass",
                 "Children": [],
                 "Enabled": true,
@@ -2174,7 +2173,6 @@
               },
               "Dead": {
                 "$type": "Models.PMF.Biomass, Models",
-                "DMDOfStructural": 0.6,
                 "Name": "Biomass",
                 "Children": [],
                 "Enabled": true,
@@ -4187,6 +4185,7 @@
               "Albedo": 0.0,
               "Gsmax350": 0.009,
               "R50": 0.0,
+              "MicroClimateSetting": 0,
               "LeafInitialisationStage": "Emergence",
               "BaseHeight": 0.0,
               "Width": 0.0,
@@ -9915,9 +9914,7 @@
                     },
                     {
                       "$type": "Models.Summary, Models",
-                      "CaptureErrors": true,
-                      "CaptureWarnings": true,
-                      "CaptureSummaryText": true,
+                      "Verbosity": 100,
                       "Name": "Summary",
                       "Children": [],
                       "Enabled": true,
@@ -9981,8 +9978,16 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; }\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration + 1);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; }\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
+                                {
+                                  "Key": "Cultivar",
+                                  "Value": "QL41xQL36"
+                                },
+                                {
+                                  "Key": "Ftn",
+                                  "Value": "0"
+                                },
                                 {
                                   "Key": "Date",
                                   "Value": "01/09/1997 00:00:00"
@@ -9996,20 +10001,12 @@
                                   "Value": "30"
                                 },
                                 {
-                                  "Key": "Cultivar",
-                                  "Value": "QL41xQL36"
-                                },
-                                {
                                   "Key": "RowSpacing",
                                   "Value": "500"
                                 },
                                 {
                                   "Key": "RowConfiguration",
                                   "Value": "solid"
-                                },
-                                {
-                                  "Key": "Ftn",
-                                  "Value": "0"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -17538,9 +17535,7 @@
                     },
                     {
                       "$type": "Models.Summary, Models",
-                      "CaptureErrors": true,
-                      "CaptureWarnings": true,
-                      "CaptureSummaryText": true,
+                      "Verbosity": 100,
                       "Name": "Summary",
                       "Children": [],
                       "Enabled": true,
@@ -17604,7 +17599,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; }\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration + 1);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; }\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -18375,9 +18370,7 @@
                     },
                     {
                       "$type": "Models.Summary, Models",
-                      "CaptureErrors": true,
-                      "CaptureWarnings": true,
-                      "CaptureSummaryText": true,
+                      "Verbosity": 100,
                       "Name": "Summary",
                       "Children": [],
                       "Enabled": true,
@@ -18441,7 +18434,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; }\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration + 1);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; }\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -19225,9 +19218,7 @@
                     },
                     {
                       "$type": "Models.Summary, Models",
-                      "CaptureErrors": true,
-                      "CaptureWarnings": true,
-                      "CaptureSummaryText": true,
+                      "Verbosity": 100,
                       "Name": "Summary",
                       "Children": [],
                       "Enabled": true,
@@ -19291,7 +19282,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; }\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration + 1);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; }\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -20085,9 +20076,7 @@
                     },
                     {
                       "$type": "Models.Summary, Models",
-                      "CaptureErrors": true,
-                      "CaptureWarnings": true,
-                      "CaptureSummaryText": true,
+                      "Verbosity": 100,
                       "Name": "Summary",
                       "Children": [],
                       "Enabled": true,
@@ -20151,7 +20140,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration + 1);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -20934,9 +20923,7 @@
                     },
                     {
                       "$type": "Models.Summary, Models",
-                      "CaptureErrors": true,
-                      "CaptureWarnings": true,
-                      "CaptureSummaryText": true,
+                      "Verbosity": 100,
                       "Name": "Summary",
                       "Children": [],
                       "Enabled": true,
@@ -21000,7 +20987,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration + 1);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -21834,9 +21821,7 @@
                     },
                     {
                       "$type": "Models.Summary, Models",
-                      "CaptureErrors": true,
-                      "CaptureWarnings": true,
-                      "CaptureSummaryText": true,
+                      "Verbosity": 100,
                       "Name": "Summary",
                       "Children": [],
                       "Enabled": true,
@@ -21900,8 +21885,16 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration + 1);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
+                                {
+                                  "Key": "Cultivar",
+                                  "Value": "Buster"
+                                },
+                                {
+                                  "Key": "Ftn",
+                                  "Value": "0"
+                                },
                                 {
                                   "Key": "Date",
                                   "Value": "11/27/1997 00:00:00"
@@ -21915,20 +21908,12 @@
                                   "Value": "15"
                                 },
                                 {
-                                  "Key": "Cultivar",
-                                  "Value": "Buster"
-                                },
-                                {
                                   "Key": "RowSpacing",
                                   "Value": "500"
                                 },
                                 {
                                   "Key": "RowConfiguration",
                                   "Value": "solid"
-                                },
-                                {
-                                  "Key": "Ftn",
-                                  "Value": "0"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -22680,9 +22665,7 @@
                     },
                     {
                       "$type": "Models.Summary, Models",
-                      "CaptureErrors": true,
-                      "CaptureWarnings": true,
-                      "CaptureSummaryText": true,
+                      "Verbosity": 100,
                       "Name": "Summary",
                       "Children": [],
                       "Enabled": true,
@@ -22746,8 +22729,16 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration + 1);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
+                                {
+                                  "Key": "Cultivar",
+                                  "Value": "Buster"
+                                },
+                                {
+                                  "Key": "Ftn",
+                                  "Value": "0"
+                                },
                                 {
                                   "Key": "Date",
                                   "Value": "11/27/1997 00:00:00"
@@ -22761,20 +22752,12 @@
                                   "Value": "15"
                                 },
                                 {
-                                  "Key": "Cultivar",
-                                  "Value": "Buster"
-                                },
-                                {
                                   "Key": "RowSpacing",
                                   "Value": "500"
                                 },
                                 {
                                   "Key": "RowConfiguration",
                                   "Value": "solid"
-                                },
-                                {
-                                  "Key": "Ftn",
-                                  "Value": "0"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -23652,9 +23635,7 @@
                     },
                     {
                       "$type": "Models.Summary, Models",
-                      "CaptureErrors": true,
-                      "CaptureWarnings": true,
-                      "CaptureSummaryText": true,
+                      "Verbosity": 100,
                       "Name": "Summary",
                       "Children": [],
                       "Enabled": true,
@@ -23719,7 +23700,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date )\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration + 1);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date )\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -24661,9 +24642,7 @@
                     },
                     {
                       "$type": "Models.Summary, Models",
-                      "CaptureErrors": true,
-                      "CaptureWarnings": true,
-                      "CaptureSummaryText": true,
+                      "Verbosity": 100,
                       "Name": "Summary",
                       "Children": [],
                       "Enabled": true,
@@ -24726,7 +24705,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration + 1);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -25944,9 +25923,7 @@
                     },
                     {
                       "$type": "Models.Summary, Models",
-                      "CaptureErrors": true,
-                      "CaptureWarnings": true,
-                      "CaptureSummaryText": true,
+                      "Verbosity": 100,
                       "Name": "Summary",
                       "Children": [],
                       "Enabled": true,
@@ -26010,8 +25987,16 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration + 1);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
+                                {
+                                  "Key": "Cultivar",
+                                  "Value": "Buster"
+                                },
+                                {
+                                  "Key": "Ftn",
+                                  "Value": "0"
+                                },
                                 {
                                   "Key": "Date",
                                   "Value": "11/29/1995 00:00:00"
@@ -26025,20 +26010,12 @@
                                   "Value": "20"
                                 },
                                 {
-                                  "Key": "Cultivar",
-                                  "Value": "Buster"
-                                },
-                                {
                                   "Key": "RowSpacing",
                                   "Value": "500"
                                 },
                                 {
                                   "Key": "RowConfiguration",
                                   "Value": "solid"
-                                },
-                                {
-                                  "Key": "Ftn",
-                                  "Value": "0"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -26658,9 +26635,7 @@
                     },
                     {
                       "$type": "Models.Summary, Models",
-                      "CaptureErrors": true,
-                      "CaptureWarnings": true,
-                      "CaptureSummaryText": true,
+                      "Verbosity": 100,
                       "Name": "Summary",
                       "Children": [],
                       "Enabled": true,
@@ -26723,7 +26698,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration + 1);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -27425,9 +27400,7 @@
                     },
                     {
                       "$type": "Models.Summary, Models",
-                      "CaptureErrors": true,
-                      "CaptureWarnings": true,
-                      "CaptureSummaryText": true,
+                      "Verbosity": 100,
                       "Name": "Summary",
                       "Children": [],
                       "Enabled": true,
@@ -27490,7 +27463,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration + 1);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Date",
@@ -28279,9 +28252,7 @@
                     },
                     {
                       "$type": "Models.Summary, Models",
-                      "CaptureErrors": true,
-                      "CaptureWarnings": true,
-                      "CaptureSummaryText": true,
+                      "Verbosity": 100,
                       "Name": "Summary",
                       "Children": [],
                       "Enabled": true,
@@ -28344,7 +28315,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration + 1);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Cultivar",
@@ -29320,9 +29291,7 @@
                     },
                     {
                       "$type": "Models.Summary, Models",
-                      "CaptureErrors": true,
-                      "CaptureWarnings": true,
-                      "CaptureSummaryText": true,
+                      "Verbosity": 100,
                       "Name": "Summary",
                       "Children": [],
                       "Enabled": true,
@@ -29385,7 +29354,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration + 1);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Cultivar",
@@ -30083,9 +30052,7 @@
                     },
                     {
                       "$type": "Models.Summary, Models",
-                      "CaptureErrors": true,
-                      "CaptureWarnings": true,
-                      "CaptureSummaryText": true,
+                      "Verbosity": 100,
                       "Name": "Summary",
                       "Children": [],
                       "Enabled": true,
@@ -30148,7 +30115,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\n    \t[Link(ByName = true)] private Operations fertiliserSchedule;\n    \t[Link] private ISummary summary;\n\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        public double Ftn\n        {\n            get\n            {\n                if (fertiliserSchedule.Operation.Count == 3)\n                {\n\t\t\t\t\tif (Cultivar == \"A35xQL36\")\n\t\t\t\t\t\treturn 0.2;\n\t\t\t\t\telse\n\t\t\t\t\t\treturn 0.9;                \n                }\n                else\n                \treturn 0;\n            }\n        }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration + 1);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\n    \t[Link(ByName = true)] private Operations fertiliserSchedule;\n    \t[Link] private ISummary summary;\n\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        public double Ftn\n        {\n            get\n            {\n                if (fertiliserSchedule.Operation.Count == 3)\n                {\n\t\t\t\t\tif (Cultivar == \"A35xQL36\")\n\t\t\t\t\t\treturn 0.2;\n\t\t\t\t\telse\n\t\t\t\t\t\treturn 0.9;                \n                }\n                else\n                \treturn 0;\n            }\n        }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Cultivar",
@@ -33634,9 +33601,7 @@
             },
             {
               "$type": "Models.Summary, Models",
-              "CaptureErrors": true,
-              "CaptureWarnings": true,
-              "CaptureSummaryText": true,
+              "Verbosity": 100,
               "Name": "Summary",
               "Children": [],
               "Enabled": true,
@@ -33700,7 +33665,7 @@
                   "Children": [
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd-MMM) : \")]\r\n        public string Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.DatesEqual(Date, clock.Today))\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration + 1);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd-MMM) : \")]\r\n        public string Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (DateUtilities.DatesEqual(Date, clock.Today))\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "Date",
@@ -41313,9 +41278,7 @@
                     },
                     {
                       "$type": "Models.Summary, Models",
-                      "CaptureErrors": true,
-                      "CaptureWarnings": true,
-                      "CaptureSummaryText": true,
+                      "Verbosity": 100,
                       "Name": "summaryfile",
                       "Children": [],
                       "Enabled": true,
@@ -42223,9 +42186,7 @@
                 },
                 {
                   "$type": "Models.Summary, Models",
-                  "CaptureErrors": true,
-                  "CaptureWarnings": true,
-                  "CaptureSummaryText": true,
+                  "Verbosity": 100,
                   "Name": "SummaryFile",
                   "Children": [],
                   "Enabled": true,
@@ -43229,9 +43190,7 @@
                 },
                 {
                   "$type": "Models.Summary, Models",
-                  "CaptureErrors": true,
-                  "CaptureWarnings": false,
-                  "CaptureSummaryText": true,
+                  "Verbosity": 100,
                   "Name": "summaryfile",
                   "Children": [],
                   "Enabled": true,
@@ -43761,7 +43720,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary; \r\n\r\n        public double CumulativeSowFert  {get; set;} \r\n\r\n        [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n       [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                CumulativeSowFert += Amount;\r\n                Summary.WriteMessage(this, \"Fertilising!! applying \" + Amount.ToString()); \r\n        }\r\n        \r\n    }\r\n}\r\n",
+                      "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Summary Summary; \r\n\r\n        public double CumulativeSowFert  {get; set;} \r\n\r\n        [Description(\"Type of fertiliser to apply? \")] public Fertiliser.Types FertiliserType { get; set; }\r\n\r\n       [Description(\"Amount of fertiliser to be applied (kg/ha)\")]\r\n        public double Amount { get; set; }\r\n        \r\n        [EventSubscribe(\"Sowing\")]\r\n        private void OnSowing(object sender, EventArgs e)\r\n        {\r\n                Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\r\n                CumulativeSowFert += Amount;\r\n                Summary.WriteMessage(this, \"Fertilising!! applying \" + Amount.ToString(), MessageType.Diagnostic); \r\n        }\r\n        \r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "CumulativeSowFert",

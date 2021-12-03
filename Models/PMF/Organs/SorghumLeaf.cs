@@ -982,6 +982,40 @@ namespace Models.PMF.Organs
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        [EventSubscribe("PlantSowing")]
+        private void OnPlantSowing(object sender, EventArgs e)
+        {
+            var sowingData = e as SowingParameters;
+            //overriding SkipDensityScale as it was calculated differently for sorghum in Classic
+            //currently assumes row spacing as 500, 750 or 1500 - needs a lookup function
+
+            switch(sowingData.SkipRow)
+            {
+                case 0: //solid
+                    {
+                        //very wide rows (1500mm) will be treated the same as single skip
+                        sowingData.SkipDensityScale = sowingData.RowSpacing == 1500 ? 1.5 : 1.0;
+                    }
+                    break;
+                case 1: //single skip
+                    {
+                        sowingData.SkipDensityScale = sowingData.RowSpacing == 750 ? 1.285714 : 1.5;
+                    }
+                    break;
+                case 2: //double skip
+                    {
+                        sowingData.SkipDensityScale = sowingData.RowSpacing == 750 ? 1.714286 : 2.0;
+                    }
+                    break;
+                default: throw new ApsimXException(this, $"Invalid SkipRow Configuration for '{plant.Name}'");
+            }
+        }
+
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -1038,14 +1072,13 @@ namespace Models.PMF.Organs
                     return;
                 }
             }
-            LAIDead = SenescedLai; // drew todo
+            LAIDead = SenescedLai;
             SLN = MathUtilities.Divide(Live.N, LAI, 0);
 
-            CoverGreen = MathUtilities.Bound(1.0 - Math.Exp(-extinctionCoefficientFunction.Value() * LAI), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
-            CoverDead = MathUtilities.Bound(1.0 - Math.Exp(-extinctionCoefficientFunction.Value() * LAIDead), 0.0, 0.999999999);
-            //var photoStress = (2.0 / (1.0 + Math.Exp(-6.05 * (SLN - 0.41))) - 1.0);
+            CoverGreen = MathUtilities.Bound(MathUtilities.Divide(1.0 - Math.Exp(-extinctionCoefficientFunction.Value() * LAI), plant.SowingData.SkipDensityScale, 0.0), 0.0, 0.999999999);// limiting to within 10^-9, so MicroClimate doesn't complain
+            CoverDead = MathUtilities.Bound(1.0 - Math.Exp(-KDead * LAIDead), 0.0, 0.999999999);
 
-            NitrogenPhotoStress = nPhotoStressFunction.Value(); // Math.Max(photoStress, 0.0);
+            NitrogenPhotoStress = nPhotoStressFunction.Value();
 
             NitrogenPhenoStress = 1.0;
             if (phenology.Between("Emergence", "Flowering"))
