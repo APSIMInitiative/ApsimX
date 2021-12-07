@@ -66,10 +66,6 @@ namespace APSIM.Cli
             foreach (string file in files)
             {
                 Simulations sims = FileFormat.ReadFromFile<Simulations>(file, e => throw e, false);
-                if (Path.GetExtension(file) == ".json")
-                {
-                    sims.Links.Resolve(sims, true, true, false);
-                }
 
                 Runner runner = new Runner(sims);
                 List<Exception> errors = runner.Run();
