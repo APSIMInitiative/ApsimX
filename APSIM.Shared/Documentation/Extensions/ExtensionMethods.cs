@@ -19,6 +19,16 @@ namespace APSIM.Shared.Documentation.Extensions
         }
 
         /// <summary>
+        /// Create an <see cref="IReadOnlyList{T}"/> instance containing a single item.
+        /// </summary>
+        /// <param name="item">The item which the list should contain.</param>
+        /// <typeparam name="T">The item's type.</typeparam>
+        public static IReadOnlyList<T> ToReadOnlyList<T>(this T item)
+        {
+            return new List<T>(1) { item };
+        }
+
+        /// <summary>
         /// Count the number of items in a non-generic IEnumerable collection.
         /// </summary>
         /// <param name="collection">The collection.</param>
