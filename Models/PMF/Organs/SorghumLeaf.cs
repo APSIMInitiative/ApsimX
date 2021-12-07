@@ -188,6 +188,11 @@ namespace Models.PMF.Organs
         [Description("Slope for N Dilutions")]
         public double NDilutionSlope { get; set; } = 0.0043;
 
+        /// <summary>Maximum canopy width - used to calcuate cover under skip row configurations</summary>
+        [Description("Max Canopy Width")]
+        [Units("mm")]
+        public double CanopyWidth { get; set; } = 1000.0;
+
         /// <summary>Albedo.</summary>
         [Description("Albedo")]
         public double Albedo { get; set; }
@@ -991,29 +996,22 @@ namespace Models.PMF.Organs
         private void OnPlantSowing(object sender, EventArgs e)
         {
             var sowingData = e as SowingParameters;
-            //overriding SkipDensityScale as it was calculated differently for sorghum in Classic
-            //currently assumes row spacing as 500, 750 or 1500 - needs a lookup function
+            
+            if (sowingData.SkipRow < 0 || sowingData.SkipRow > 2)
+                throw new ApsimXException(this, $"Invalid SkipRow Configuration for '{plant.Name}'");
 
-            switch(sowingData.SkipRow)
-            {
-                case 0: //solid
-                    {
-                        //very wide rows (1500mm) will be treated the same as single skip
-                        sowingData.SkipDensityScale = sowingData.RowSpacing == 1500 ? 1.5 : 1.0;
-                    }
-                    break;
-                case 1: //single skip
-                    {
-                        sowingData.SkipDensityScale = sowingData.RowSpacing == 750 ? 1.285714 : 1.5;
-                    }
-                    break;
-                case 2: //double skip
-                    {
-                        sowingData.SkipDensityScale = sowingData.RowSpacing == 750 ? 1.714286 : 2.0;
-                    }
-                    break;
-                default: throw new ApsimXException(this, $"Invalid SkipRow Configuration for '{plant.Name}'");
-            }
+            //overriding SkipDensityScale as it was calculated differently for sorghum in Classic
+            var outerSkips = sowingData.SkipRow > 0 ? 2 : 0;
+            var nonSkipCover = Math.Min(sowingData.RowSpacing, CanopyWidth) * 2.0;
+            
+            //outerSkipCovered is > 0 only if canopy width is wider than rowSpacing
+            var outerSkipCovered = Math.Max(0, (CanopyWidth - sowingData.RowSpacing) / 2) * outerSkips;
+            
+            var totalWidth = sowingData.RowSpacing * 2 + sowingData.RowSpacing * sowingData.SkipRow;
+            var totalCover = nonSkipCover + outerSkipCovered;
+
+            sowingData.SkipDensityScale = MathUtilities.Divide(totalWidth, totalCover, 1.0);
+
         }
 
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>

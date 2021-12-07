@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 363,
+  "ExplorerWidth": 326,
   "Version": 147,
   "Name": "Simulations",
   "Children": [
@@ -400,6 +400,40 @@
                   "VariableName": "[Arbitrator].WaterUptakeMethod.WatSupply",
                   "Name": "WatSupply",
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.BoundFunction, Models",
+                  "Name": "SDRatioBound",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Arbitrator].WaterUptakeMethod.SDRatio",
+                      "Name": "SDRatio",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0,
+                      "Units": null,
+                      "Name": "Lower",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.1,
+                      "Units": null,
+                      "Name": "Upper",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -1431,8 +1465,8 @@
                     {
                       "$type": "Models.Functions.XYPairs, Models",
                       "X": [
-                        0.1,
-                        0.6,
+                        0.0,
+                        0.7,
                         1.0
                       ],
                       "Y": [
@@ -4182,6 +4216,7 @@
               "SenescedLeafSLN": 0.3,
               "NDilutionIntercept": -0.0017,
               "NDilutionSlope": 0.0043,
+              "CanopyWidth": 1000.0,
               "Albedo": 0.0,
               "Gsmax350": 0.009,
               "R50": 0.0,
@@ -4239,9 +4274,9 @@
                         {
                           "$type": "Models.Functions.XYPairs, Models",
                           "X": [
-                            0.2,
-                            0.5,
-                            1.0
+                            200.0,
+                            500.0,
+                            1000.0
                           ],
                           "Y": [
                             0.7,
@@ -9129,6 +9164,7 @@
             "[Arbitrator].N.UptakeSupply",
             "[Arbitrator].N.Uptake",
             "[Arbitrator].SDRatio",
+            "[Arbitrator].SDRatioBound",
             "[Arbitrator].WatSupply",
             "",
             "[Grain].Live.Wt",
@@ -9303,7 +9339,7 @@
                   "Position": 3,
                   "Inverted": false,
                   "CrossesAtZero": false,
-                  "Minimum": null,
+                  "Minimum": 0.0,
                   "Maximum": null,
                   "Interval": null
                 },
@@ -9312,9 +9348,9 @@
                   "Title": null,
                   "Position": 0,
                   "Inverted": false,
-                  "CrossesAtZero": false,
-                  "Minimum": null,
-                  "Maximum": null,
+                  "CrossesAtZero": true,
+                  "Minimum": 0.0,
+                  "Maximum": "NaN",
                   "Interval": null
                 }
               ],
