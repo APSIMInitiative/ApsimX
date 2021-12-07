@@ -282,6 +282,8 @@ namespace Models.Optimisation
         private string PathToModels()
         {
             if (RDocker.UseDocker())
+            // This is the expected path to the models executable in the docker
+            // image. Nasty stuff.
                 return "/opt/apsim/Models";
             return typeof(IModel).Assembly.Location;
         }
@@ -449,6 +451,9 @@ namespace Models.Optimisation
 
             if (RDocker.UseDocker())
             {
+                // todo: we should really be reporting warnings/errors here.
+                // However any summary file will not have its links connected,
+                // due to the way that CroptimizR is run. This needs further thought.
                 IR client = new RDocker(
                     outputHandler: OnOutputReceived
                     // warningHandler: w => FindInScope<ISummary>()?.WriteMessage(this, w, MessageType.Warning),
@@ -462,6 +467,7 @@ namespace Models.Optimisation
                 }
                 catch (AggregateException errors)
                 {
+                    // Don't propagate task canceled exceptions.
                     if (errors.InnerExceptions.Count == 1 && errors.InnerExceptions[0] is TaskCanceledException)
                         return;
                     throw;
