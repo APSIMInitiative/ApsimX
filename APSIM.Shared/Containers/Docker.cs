@@ -53,7 +53,26 @@ namespace APSIM.Shared.Containers
         }
 
         /// <summary>
-        /// Run a container.
+        /// Pull an image from dockerhub.
+        /// </summary>
+        /// <param name="image">Name of the image (owner/organisation).</param>
+        /// <param name="tag">Tag to be pulled.</param>
+        /// <param name="cancelToken">Cancellation token.</param>
+        public async Task PullImageAsync(string image, string tag, CancellationToken cancelToken)
+        {
+            ImagesCreateParameters imageParams = new ImagesCreateParameters()
+            {
+                FromImage = image,
+                Tag = tag,
+            };
+            AuthConfig auth = new AuthConfig();
+            IProgress<JSONMessage> progress = new Progress<JSONMessage>(m => Console.WriteLine(m.Status));
+            await client.Images.CreateImageAsync(imageParams, auth, progress, cancelToken);
+        }
+
+        /// <summary>
+        /// Run a container. Does NOT pull the container - the assumption is that
+        /// the container already exists..
         /// </summary>
         /// <param name="image"></param>
         /// <param name="entrypoint"></param>

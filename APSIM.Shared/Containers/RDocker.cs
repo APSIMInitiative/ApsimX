@@ -73,6 +73,7 @@ namespace APSIM.Shared.Containers
             };
 
             Docker docker = new Docker(outputHandler, warningHandler, errorHandler);
+            await docker.PullImageAsync(apsimCompleteImageName, "latest", cancelToken);
             await docker.RunContainerAsync(apsimCompleteImageName, "Rscript", arguments.Prepend(scriptPath), volume.ToReadOnlyList(), env, cancelToken);
         }
 
