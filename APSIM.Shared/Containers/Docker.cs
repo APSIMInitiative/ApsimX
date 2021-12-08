@@ -46,7 +46,7 @@ namespace APSIM.Shared.Containers
         public Docker(Action<string> outputHandler = null, Action<string> warningHandler = null, Action<string> errorHandler = null)
         {
             Uri uri = new Uri("unix:///var/run/docker.sock");
-            client = new DockerClientConfiguration(uri).CreateClient();
+            client = new DockerClientConfiguration().CreateClient();
             this.outputHandler = outputHandler;
             this.warningHandler = warningHandler;
             this.errorHandler = errorHandler;
