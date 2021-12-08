@@ -45,7 +45,6 @@ namespace APSIM.Shared.Containers
         /// <param name="errorHandler">Callback for stderr from the container.</param>
         public Docker(Action<string> outputHandler = null, Action<string> warningHandler = null, Action<string> errorHandler = null)
         {
-            Uri uri = new Uri("unix:///var/run/docker.sock");
             client = new DockerClientConfiguration().CreateClient();
             this.outputHandler = outputHandler;
             this.warningHandler = warningHandler;
