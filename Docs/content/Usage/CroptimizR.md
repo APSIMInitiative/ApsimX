@@ -5,7 +5,7 @@ draft: false
 
 APSIM provides access to several parameter optimisation algorithms from within the user interface. These function as a wrapper around the [CroptimizR](https://sticsrpacks.github.io/CroptimizR/) R package. For detailed questions regarding the optimiser or the R code it may be worth consulting the package's [documentation](https://sticsrpacks.github.io/CroptimizR/) or [bug tracker](https://github.com/SticsRPacks/CroptimizR/issues).
 
-APSIM will by default run a CroptimizR simulation by using docker. This behaviour can be set by starting apsim with the environment variable `APSIM_NO_DOCKER=1`.
+APSIM will by default run a CroptimizR simulation by using docker. This behaviour can be disabled by starting apsim with the environment variable `APSIM_NO_DOCKER=1`.
 
 ---
 
