@@ -246,6 +246,7 @@ namespace Models.Optimisation
             StringBuilder contents = new StringBuilder();
 
             contents.AppendLine($"variable_names <- c({string.Join(", ", VariableNames.Select(x => $"'{x.Trim()}'").ToArray())})");
+            apsimxFileName = Path.GetFileName(apsimxFileName);
 
             // If we're reading from the PredictedObserved table, need to fix
             // Predicted./Observed. suffix for the observed variables.
@@ -447,7 +448,7 @@ namespace Models.Optimisation
                 Directory.CreateDirectory(outputPath);
 
             string apsimxFileName = GenerateApsimXFile();
-            GenerateRScript(fileName, outputPath, apsimxFileName);
+            GenerateRScript(fileName, ".", apsimxFileName);
 
             if (RDocker.UseDocker())
             {

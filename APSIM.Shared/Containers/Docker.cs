@@ -79,9 +79,10 @@ namespace APSIM.Shared.Containers
         /// <param name="args"></param>
         /// <param name="volumes"></param>
         /// <param name="environment"></param>
+        /// <param name="workingDir"></param>
         /// <param name="cancelToken"></param>
         /// <returns></returns>
-        public async Task RunContainerAsync(string image, string entrypoint, IEnumerable<string> args, IReadOnlyList<Volume> volumes, Dictionary<string, string> environment, CancellationToken cancelToken)
+        public async Task RunContainerAsync(string image, string entrypoint, IEnumerable<string> args, IReadOnlyList<Volume> volumes, Dictionary<string, string> environment, string workingDir, CancellationToken cancelToken)
         {
             CreateContainerParameters parameters = new CreateContainerParameters()
             {
@@ -92,7 +93,8 @@ namespace APSIM.Shared.Containers
                 HostConfig = new HostConfig()
                 {
                     Binds = volumes.Select(v => $"{v.SourcePath}:{v.DestinationPath}").ToList()
-                }
+                },
+                WorkingDir = workingDir
             };
 
             // Create the container.
