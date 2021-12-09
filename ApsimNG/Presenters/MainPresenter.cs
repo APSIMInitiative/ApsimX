@@ -288,7 +288,7 @@
                 else
                 {
                     LastError.Add(error.ToString());
-                    view.ShowMessage(GetInnerException(error).Message, MessageType.Error, overwrite: overwrite, addSeparator: !overwrite);
+                    view.ShowMessage(GetExceptionMessage(error), MessageType.Error, overwrite: overwrite, addSeparator: !overwrite);
                 }
             }
         }
@@ -310,7 +310,7 @@
                         ShowError(aggregate.InnerExceptions.ToList(), overwrite && i == 0);
                     else
                         // only overwrite other messages the first time through the loop
-                        view.ShowMessage(GetInnerException(errors[i]).Message, MessageType.Error, overwrite && i == 0, true);
+                        view.ShowMessage(GetExceptionMessage(errors[i]), MessageType.Error, overwrite && i == 0, true);
                 }
             }
             else
@@ -318,6 +318,30 @@
                 LastError.Clear();
                 ShowError(new NullReferenceException("Attempted to display a null error"));
             }
+        }
+
+        /// <summary>
+        /// Get an exception's message along with the messages of any inner
+        /// exceptions in a format suitable for display in the GUI.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        private string GetExceptionMessage(Exception exception)
+        {
+            if (exception.InnerException == null)
+                return exception.Message;
+
+            string innerMessage = GetExceptionMessage(exception.InnerException);
+
+            if (string.IsNullOrEmpty(exception.Message))
+                return innerMessage;
+
+            // AggregateExceptions will include all inner exceptions' messages
+            // in their message. Therefore we don't need to fetch the inner
+            // exceptions' messages in such cases.
+            if (string.IsNullOrEmpty(innerMessage) || exception is AggregateException)
+                return exception.Message;
+
+            return $"{exception.Message} --> {innerMessage}";
         }
 
         /// <summary>
