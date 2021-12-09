@@ -115,7 +115,7 @@ namespace Models.CLEM.Groupings
             if (Value == 0)
             {
                 string[] memberNames = new string[] { "Invalid value to take from filter" };
-                results.Add(new ValidationResult($"Provide a {((TakeStyle == TakeFromFilterStyle.Proportion)?"proportion":"number of individuals")} greater than 0 for [f={Name}] in [f={Parent.Name}]", memberNames));
+                results.Add(new ValidationResult($"Provide a {((TakeStyle == TakeFromFilterStyle.Proportion)?"proportion":"number of individuals")} greater than 0 for [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}]", memberNames));
             }
 
             if (TakeStyle == TakeFromFilterStyle.Proportion)
@@ -123,7 +123,7 @@ namespace Models.CLEM.Groupings
                 if (Value > 1)
                 {
                     string[] memberNames = new string[] { "Invalid proportion to take from filter" };
-                    results.Add(new ValidationResult($"The proportion to take from [f={Name}] in [f={Parent.Name}] must be less than or equal to 1", memberNames));
+                    results.Add(new ValidationResult($"The proportion to take from [f={Name}] in [f={(Parent as CLEMModel).NameWithParent}] must be less than or equal to 1", memberNames));
                 }
             }
             return results;

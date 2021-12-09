@@ -350,35 +350,27 @@ namespace UserInterface.Presenters
             root.Name =  model.Name;
 
             // find namespace and image name needed to find image file in the Resources of UserInterface project
-            string nameSpace = model.GetType().FullName.Split('.')[1];
-            string imageName = model.GetType().Name;
-            root.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages." + nameSpace + "." + imageName + ".png";
+            string nameSpace = model.GetType().FullName;
+            nameSpace = nameSpace.Substring(7);
+            root.ResourceNameForImage = $"ApsimNG.Resources.TreeViewImages.{nameSpace}.svg";
 
             foreach (CategoryItem cat in categoryTree.CategoryItems)
             {
                 TreeViewNode description = new TreeViewNode();
                 description.Name = cat.Name;
-                description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.ActivityFolder.png";
+                description.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.Category.svg";
                 description.Children = new List<TreeViewNode>();
                 foreach (string subcat in cat.SubcategoryNames)
                 {
                     TreeViewNode child = new TreeViewNode();
                     child.Name = subcat;
-                    if (subcat.ToLower().Contains("pasture"))
-                        child.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.PastureTreeItem.png";
-                    else if (subcat.ToLower().Contains("unspecif"))
-                        child.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.UnspecifiedTreeItem.png";
-                    else if (model.GetType().Name.ToLower().Contains("ruminant"))
-                        child.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.RuminantGroup.png";
-                    else
-                        child.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.UnspecifiedTreeItem.png";
+                    child.ResourceNameForImage = "ApsimNG.Resources.TreeViewImages.CLEM.CategoryItem.svg";
                     description.Children.Add(child);
                 }
                 root.Children.Add(description);
             }
             return root;
         }
-
 
         protected bool IsPropertySelected(PropertyInfo property)
         {
