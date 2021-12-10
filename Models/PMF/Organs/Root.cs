@@ -944,46 +944,6 @@
             return supply;
         }
 
-        /// <summary>Plant Avaliable water supply used by sorghum.</summary>
-        /// <summary>It adds an extra layer proportion calc to extractableWater calc.</summary>
-        public double PlantAvailableWaterSupply()
-        {
-            double[] LL = soilCrop.LL;
-            double[] KL = soilCrop.KL;
-            double[] SWmm = PlantZone.WaterBalance.SWmm;
-            double[] DZ = PlantZone.Physical.Thickness;
-            double[] available = new double[PlantZone.Physical.Thickness.Length];
-            double[] supply = new double[PlantZone.Physical.Thickness.Length];
-
-            var currentLayer = SoilUtilities.LayerIndexOfDepth(PlantZone.Physical.Thickness, Depth);
-            var layertop = MathUtilities.Sum(PlantZone.Physical.Thickness, 0, Math.Max(0, currentLayer - 1));
-            var layerBottom = MathUtilities.Sum(PlantZone.Physical.Thickness, 0, currentLayer);
-            var layerProportion = Math.Min(MathUtilities.Divide(Depth - layertop, layerBottom - layertop, 0.0), 1.0);
-
-            for (int layer = 0; layer < LL.Length; layer++)
-            {
-                if (layer <= currentLayer)
-                {
-                    available[layer] = Math.Max(0.0, SWmm[layer] - LL[layer] * DZ[layer] * PlantZone.LLModifier[layer]);
-                }
-            }
-            available[currentLayer] *= layerProportion;
-
-            double supplyTotal = 0;
-            for (int layer = 0; layer < LL.Length; layer++)
-            {
-                if (layer <= currentLayer)
-                {
-                    supply[layer] = Math.Max(0.0, available[layer] * KL[layer] * klModifier.Value(layer) * KLModiferDueToDamage(layer) *
-                        PlantZone.RootProportions[layer]);
-
-                    supplyTotal += supply[layer];
-                }
-            }
-            return supplyTotal;
-        }
-
-
         /// <summary>Document this model.</summary>
         public override IEnumerable<ITag> Document()
         {

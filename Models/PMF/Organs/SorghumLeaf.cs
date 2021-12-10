@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using APSIM.Shared.Documentation;
+using Models.Utilities;
 
 namespace Models.PMF.Organs
 {
@@ -43,9 +44,7 @@ namespace Models.PMF.Organs
         [Link]
         private ISummary summary = null;
 
-        /// <summary>
-        /// Culms on the leaf
-        /// </summary>
+        /// <summary> Culms on the leaf controls tillering</summary>
         [Link]
         public LeafCulms culms = null;
 
@@ -141,9 +140,6 @@ namespace Models.PMF.Organs
         private double nDeadLeaves;
         private double dltDeadLeaves;
         
-        /// <summary> The SMM2SM </summary>
-        private const double smm2sm = 1.0 / 1000000.0;      //! conversion factor of mm^2 to m^2
-
         /// <summary>Tolerance for biomass comparisons</summary>
         protected double biomassToleranceValue = 0.0000000001;
 
@@ -314,11 +310,6 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the lai dead.</summary>
         public double LAIDead { get; set; }
 
-
-        ///// <summary>Gets the total radiation intercepted.</summary>
-        //[Units("MJ/m^2/day")]
-        //public double RadiationIntercepted => CoverGreen * metData.Radn;
-
         /// <summary>
         /// Intercepted radiation value that is passed to the RUE class to calculate DM supply.
         /// </summary>
@@ -341,7 +332,6 @@ namespace Models.PMF.Organs
                 return CoverGreen * metData.Radn;
             }
         }
-
 
         /// <summary>Nitrogen Photosynthesis Stress.</summary>
         public double NitrogenPhotoStress { get; set; }
@@ -557,11 +547,6 @@ namespace Models.PMF.Organs
                     // culms.AreaActual() will update this.DltLAI
                     DltLAI = culms.CalculateActualArea();
                     SenesceArea();
-
-                    double dltDmGreen = potentialDMAllocation.Structural;
-                    //if (Live.Wt + dltDmGreen > 0.0)
-                    //    sla = (LAI + DltStressedLAI) / (Live.Wt + dltDmGreen) * 10000;  // (cm^2/g)
-
                 }
             }
         }
@@ -906,7 +891,6 @@ namespace Models.PMF.Organs
             return MathUtilities.Divide(nGreenToday, laiToday, 0.0);
         }
 
-
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -979,7 +963,7 @@ namespace Models.PMF.Organs
 
                 Live.StructuralWt = InitialDMWeight * SowingDensity;
                 Live.StorageWt = 0.0;
-                LAI = InitialLAI * smm2sm * SowingDensity;
+                LAI = InitialLAI * SowingDensity.ConvertSqM2SqMM();
                 SLN = InitialSLN;
 
                 Live.StructuralN = LAI * SLN;
@@ -1102,6 +1086,7 @@ namespace Models.PMF.Organs
         private void SetNSupply(object sender, EventArgs e)
         {
             UpdateArea(); //must be calculated before potential N partitioning
+            
             var availableLaiN = DltLAI * NewLeafSLN;
 
             double laiToday = CalcLAI();

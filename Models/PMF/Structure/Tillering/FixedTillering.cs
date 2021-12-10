@@ -129,41 +129,32 @@ namespace Models.PMF.Struct
 			//if there are still more tillers to add and the newleaf is greater than 3
 			if (tillersAdded >= FertileTillerNumber) return;
 
+			//tiller emergence is more closely aligned with tip apearance, but we don't track tip, so will use ligule appearance
+			//could also use Thermal Time calcs if needed
+			//Environmental & Genotypic Control of Tillering in Sorghum ppt - Hae Koo Kim
+			//T2=L3, T3=L4, T4=L5, T5=L6
 
+			//logic to add new tillers depends on which tiller, which is defined by FTN (fertileTillerNo)
+			//this should be provided at sowing
+			//2 tillers = T3 + T4
+			//3 tillers = T2 + T3 + T4
+			//4 tillers = T2 + T3 + T4 + T5
+			//more than that is too many tillers - but will assume existing pattern for 3 and 4
+			//5 tillers = T2 + T3 + T4 + T5 + T6
+
+			double leafAppearance = culms.Culms.Count + 2; //first culm added will equal 3
+			double fraction = 1.0;
+
+			if (FertileTillerNumber > 2 && FertileTillerNumber < 3 && leafAppearance < 4)
 			{
-				//tiller emergence is more closely aligned with tip apearance, but we don't track tip, so will use ligule appearance
-				//could also use Thermal Time calcs if needed
-				//Environmental & Genotypic Control of Tillering in Sorghum ppt - Hae Koo Kim
-				//T2=L3, T3=L4, T4=L5, T5=L6
-
-				//logic to add new tillers depends on which tiller, which is defined by FTN (fertileTillerNo)
-				//this should be provided at sowing  //what if fertileTillers == 1?
-				//2 tillers = T3 + T4
-				//3 tillers = T2 + T3 + T4
-				//4 tillers = T2 + T3 + T4 + T5
-				//more than that is too many tillers - but will assume existing pattern for 3 and 4
-				//5 tillers = T2 + T3 + T4 + T5 + T6
-
-				//tiller 2 emergences with leaf 3, and then adds 1 each time
-				//not sure what I'm supposed to do with tiller 1
-				//if there are only 2 tillers, then t2 is not present - T3 & T4 are
-				//if there is a fraction - between 2 and 3, 
-				//this can be interpreted as a proportion of plants that have 2 and a proportion that have 3. 
-				//to keep it simple, the fraction will be applied to the 2nd tiller
-				double leafAppearance = culms.Culms.Count + 2; //first culm added will equal 3
-				double fraction = 1.0;
-
-				if (FertileTillerNumber > 2 && FertileTillerNumber < 3 && leafAppearance < 4)
-				{
-					fraction = FertileTillerNumber % 1;
-				}
-				else
-				{
-					if (FertileTillerNumber - tillersAdded < 1)
-						fraction = FertileTillerNumber - tillersAdded;
-				}
-				AddTiller(leafAppearance, currentLeafNo, fraction);
+				fraction = FertileTillerNumber % 1;
 			}
+			else
+			{
+				if (FertileTillerNumber - tillersAdded < 1)
+					fraction = FertileTillerNumber - tillersAdded;
+			}
+			AddTiller(leafAppearance, currentLeafNo, fraction);
 		}
 		/// <summary>
 		/// Add a tiller.
