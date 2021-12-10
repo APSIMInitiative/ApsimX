@@ -73,7 +73,10 @@ namespace Models.CLEM.Activities
                 var breeds = HerdResource.Herd.Where(a => a.BreedParams.Breed == this.PredictedHerdBreed).GroupBy(a => a.HerdName);
                 foreach (var herd in breeds)
                     if (!herd.FirstOrDefault().BreedParams.PricingAvailable())
-                        Summary.WriteMessage(this, String.Format("No pricing schedule has been provided for herd [r={0}]. No financial transactions will be recorded for activity [a={1}]", herd.Key, this.Name), MessageType.Warning);
+                    {
+                        string warn = $"No pricing schedule has been provided for herd [r={herd.Key}]. No financial transactions will be recorded for activity [a={this.Name}]";
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+                    }
             }
         }
 

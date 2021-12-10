@@ -42,5 +42,10 @@ namespace Models.CLEM
         /// </summary>
         public int Total { get; set; }
 
+        /// <summary>
+        /// number of individuals with Mate value
+        /// </summary>
+        public int TotalMate { get; set; }
+
     }
 }
