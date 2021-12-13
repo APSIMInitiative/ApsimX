@@ -380,7 +380,8 @@ namespace Models.CLEM.Activities
                     numberServiced = 0;
                     lastJoinIndex = -1;
                     int cnt = 0;
-                    var notPregnantFemales = location.OfType<RuminantFemale>().Where(a => !a.IsPregnant).ToList();
+                    // shuffle the not pregnant females when obtained to avoid any inherant order by creation of individuals affecting which individuals are available first 
+                    var notPregnantFemales = location.OfType<RuminantFemale>().Where(a => !a.IsPregnant).OrderBy(a => RandomNumberGenerator.Generator.Next()).ToList();
                     int totalToBreed = notPregnantFemales.Count;
                     while(cnt < totalToBreed)
                     {
@@ -453,7 +454,7 @@ namespace Models.CLEM.Activities
                     if (numberServiced > 0 & !useControlledMating)
                     {
                         string warning = $"Natural (uncontrolled) mating ocurred in [r={(location.Key ?? "Not specified - general yards")}]";
-                        Warnings.CheckAndWrite(warning, Summary, this, MessageType.Warning);
+                        Warnings.CheckAndWrite(warning, Summary, this, MessageType.Information);
                     }
                 }
             }
