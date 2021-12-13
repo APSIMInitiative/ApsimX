@@ -24,7 +24,7 @@ namespace Models.Core.ApsimFile
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 146; } }
+        public static int LatestVersion { get { return 147; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3828,20 +3828,20 @@ namespace Models.Core.ApsimFile
         {
             foreach (JObject simulation in JsonUtilities.ChildrenRecursively(root, "Simulation"))
             {
-                var stockModels = JsonUtilities.ChildrenRecursively(simulation).Where(c => c["$type"].ToString().Contains("Stock"));
+                List<JObject> stockModels = JsonUtilities.ChildrenRecursively(simulation, "Stock");
                 JObject stock = null;
                 if (stockModels.Any())
                     stock = stockModels.First();
 
-                var simpleGrazing = JsonUtilities.ChildrenRecursively(simulation).Where(c => c["$type"].ToString().Contains("SimpleGrazing"));
+                List<JObject> simpleGrazing = JsonUtilities.ChildrenRecursively(simulation, "SimpleGrazing");
                 if (stock != null || simpleGrazing.Any())
                 {
                     // Add in a Forages model.
-                    var forages = new JObject();
+                    JObject forages = new JObject();
                     forages["$type"] = "Models.ForageDigestibility.Forages, Models";
                     forages["Name"] = "Forages";
 
-                    var simulationChildren = simulation["Children"] as JArray;
+                    JArray simulationChildren = simulation["Children"] as JArray;
                     int position = simulationChildren.IndexOf(stock);
                     if (position == -1)
                         simulationChildren.Add(forages);
@@ -3871,6 +3871,23 @@ namespace Models.Core.ApsimFile
                 replace |= manager.ReplaceRegex(errorPattern, errorReplace);
                 if (replace)
                     manager.Save();
+            }
+        }
+
+        /// <summary>
+        /// Rename report function log to log10.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion147(JObject root, string fileName)
+        {
+            foreach (JObject report in JsonUtilities.ChildrenRecursively(root, "Report"))
+            {
+                JArray variables = report["VariableNames"] as JArray;
+                if (variables != null)
+                    foreach (JValue variable in variables)
+                        if (variable.Value is string)
+                            variable.Value = ((string)variable.Value).Replace("log(", "log10(");
             }
         }
 

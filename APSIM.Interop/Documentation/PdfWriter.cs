@@ -99,8 +99,6 @@ namespace APSIM.Interop.Documentation
             PdfBuilder builder = new PdfBuilder(document, PdfOptions.Default);
             builder.AppendImage(Image.LoadFromResource("AIBanner.png"));
             document.LastSection.AddParagraph();
-            builder.AppendText($"Document generated with APSIM v{Models.Core.Simulations.ApsimVersion}", Markdown.TextStyle.Normal);
-            document.LastSection.AddParagraph();
 
             return document;
         }

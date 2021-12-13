@@ -319,6 +319,11 @@ namespace Models.PMF.Phen
             else
                 return false;
         }
+        /// <summary> A utility function to return true if the simulation is at or past the specified startstage.</summary>
+        public bool BeyondPhase(int phaseIndex) => currentPhaseIndex > phaseIndex;
+
+        /// <summary> A utility function to return true if the simulation is before the specified phaseIndex.</summary>
+        public bool BeforePhase(int phaseIndex) => currentPhaseIndex < phaseIndex;
 
         /// <summary>A utility function to return the phenological phase that starts with the specified start stage name.</summary>
         public IPhase PhaseStartingWith(String start)
