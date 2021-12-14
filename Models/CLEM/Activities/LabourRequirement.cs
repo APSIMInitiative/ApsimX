@@ -58,7 +58,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Days labour required per unit or fixed (days)
         /// </summary>
-        [Description("Days labour required [per unit or fixed] (days)")]
+        [Description("Days labour required [per unit or fixed]")]
         [Required, GreaterThanEqualValue(0)]
         public double LabourPerUnit { get; set; }
 
@@ -83,6 +83,22 @@ namespace Models.CLEM.Activities
         public LabourUnitType UnitType { get; set; }
 
         /// <summary>
+        /// Labour limit style
+        /// </summary>
+        [Description("Limit style")]
+        [System.ComponentModel.DefaultValueAttribute(LabourLimitType.ProportionOfDaysRequired)]
+        [Required]
+        public LabourLimitType LimitStyle { get; set; }
+
+        /// <summary>
+        /// Maximum labour allocated per labour group
+        /// </summary>
+        [Description("Maximum per group for task")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValueAttribute(1)]
+        public double MaximumPerGroup { get; set; }
+
+        /// <summary>
         /// Minimum labour allocated per person for task
         /// </summary>
         [Description("Minimum per person for task")]
@@ -93,7 +109,7 @@ namespace Models.CLEM.Activities
         /// Maximum labour allocated per person for task
         /// </summary>
         [Description("Maximum per person for task")]
-        [Required, GreaterThanValue(0), GreaterThan("MinimumPerPerson", ErrorMessage ="Maximum per task must be greater than minimum per task is Labour Required")]
+        [Required, GreaterThanValue(0), GreaterThan("MinimumPerPerson", ErrorMessage ="Maximum per individual must be greater than minimum per individual in Labour Required")]
         public double MaximumPerPerson { get; set; }
 
         /// <summary>

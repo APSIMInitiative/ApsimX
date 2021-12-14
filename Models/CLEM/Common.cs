@@ -326,6 +326,40 @@ namespace Models.CLEM
     }
 
     /// <summary>
+    /// Labour limit type calculation type
+    /// </summary>
+    public enum LabourLimitType
+    {
+        /// <summary>
+        /// Represents a rate or fixed days specified
+        /// </summary>
+        AsDaysRequired,
+        /// <summary>
+        /// Relates to the total days allowed
+        /// </summary>
+        AsTotalAllowed,
+        /// <summary>
+        /// As proportion of the days required
+        /// </summary>
+        ProportionOfDaysRequired,
+    }
+
+    /// <summary>
+    /// Style to calculate hired labour payment
+    /// </summary>
+    public enum PayHiredLabourCalculationStyle
+    {
+        /// <summary>
+        /// Use labour available in LabourAvailability for all hired labour
+        /// </summary>
+        ByAvailableLabour,
+        /// <summary>
+        /// Use the hired labour used in timestep
+        /// </summary>
+        ByLabourUsedInTimeStep
+    }
+
+    /// <summary>
     /// Ruminant feeding styles
     /// </summary>
     public enum RuminantFeedActivityTypes
