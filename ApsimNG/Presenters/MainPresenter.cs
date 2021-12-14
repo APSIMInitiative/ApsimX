@@ -1295,7 +1295,7 @@
             {
                 // Get the version of the current assembly.
                 Version version = Assembly.GetExecutingAssembly().GetName().Version;
-                if (version.Revision == 0)
+                if (version.Build == 0)
                 {
                     ShowError("You are on a custom build. You cannot upgrade.");
                 }
