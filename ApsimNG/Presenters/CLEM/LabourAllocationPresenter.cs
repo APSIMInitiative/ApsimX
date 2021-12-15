@@ -281,49 +281,47 @@ namespace UserInterface.Presenters
             // create row
             using (StringWriter tblstr = new StringWriter())
             {
-                // can row be included?
                 if (validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
                 {
-                    LabourRequirement labourRequirement = model.FindChild<LabourRequirement>();
-                    tblstr.Write("<tr" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + "><td" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + ">" + model.Name + "</td>");
-
-                    // does activity have a Labour Requirement
-                    if (!(labourRequirement == null))
+                    if (model.FindAllChildren<LabourRequirement>().Any())
                     {
-                        // for each labour type
-                        foreach (LabourType lt in labourList)
+                        foreach (LabourRequirement labourRequirement in model.FindAllChildren<LabourRequirement>())
                         {
-                            tblstr.WriteLine("<td>");
-                            // for each filter group
-                            foreach (var item in labourRequirement.FindAllChildren<LabourFilterGroup>())
+                            tblstr.Write("<tr" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + "><td" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + ">" + model.Name + "</td>");
+                            // for each labour type
+                            foreach (LabourType lt in labourList)
                             {
-                                tblstr.Write("<div>");
-                                int level = 0;
-                                // while nested 
-                                var nested = labourRequirement.FindChild<LabourFilterGroup>();
-                                bool found = false;
-                                while (nested != null)
+                                tblstr.WriteLine("<td>");
+                                // for each filter group
+                                foreach (var item in labourRequirement.FindAllChildren<LabourFilterGroup>())
                                 {
-                                    nested.InitialiseFilters();
-                                    level++;
-                                    if (nested.Filter(lt))
+                                    tblstr.Write("<div>");
+                                    int level = 0;
+                                    // while nested 
+                                    var nested = labourRequirement.FindChild<LabourFilterGroup>();
+                                    bool found = false;
+                                    while (nested != null)
                                     {
-                                        found = true;
-                                        break;
+                                        nested.InitialiseFilters();
+                                        level++;
+                                        if (nested.Filter(lt))
+                                        {
+                                            found = true;
+                                            break;
+                                        }
+                                        nested = nested.FindAllChildren<LabourFilterGroup>().FirstOrDefault();
                                     }
-                                    nested = nested.FindAllChildren<LabourFilterGroup>().FirstOrDefault();
+                                    if (found)
+                                        tblstr.Write($"<span class=\"dot dot{((level < 5) ? level.ToString() : "4")}\"></span>");
+                                    tblstr.Write("</div>");
                                 }
-                                if (found)
-                                    tblstr.Write($"<span class=\"dot dot{((level < 5) ? level.ToString() : "4")}\"></span>");
-                                tblstr.Write("</div>");
+                                tblstr.WriteLine("</td>");
                             }
-                            tblstr.WriteLine("</td>");
+                            tblstr.WriteLine("</tr>");
                         }
                     }
                     else
-                        tblstr.Write(CreateRowHTML("", numberLabourTypes));
-
-                    tblstr.WriteLine("</tr>");
+                        tblstr.Write($"<tr class=\"disabled\"><td class=\"disabled\">{model.Name}</td>{CreateRowHTML("", numberLabourTypes)}</tr>");
                 }
 
                 // add all rows for children
@@ -449,44 +447,44 @@ namespace UserInterface.Presenters
                 // can row be included?
                 if (validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
                 {
-                    var labourRequirement = model.FindChild<LabourRequirement>();
-                    string emph = (labourRequirement == null) ? "_" : "";
-
-                    // does activity have a Labour Requirement
-                    if (!(labourRequirement == null))
+                    string emph = "_";
+                    if (model.FindAllChildren<LabourRequirement>().Any())
                     {
-                        tblstr.Write($"| {emph}{model.Name.Replace("_", " ")}{emph} |");
-                        // for each labour type
-                        foreach (LabourType lt in labourList)
+                        foreach (LabourRequirement labourRequirement in model.FindAllChildren<LabourRequirement>())
                         {
-                            // for each filter group
-                            foreach (var item in labourRequirement.FindAllChildren<LabourFilterGroup>())
+                            emph = "";
+                            tblstr.Write($"| {emph}{model.Name.Replace("_", " ")}{emph} |");
+                            // for each labour type
+                            foreach (LabourType lt in labourList)
                             {
-                                string levelstring = "";
-                                bool found = false
-;                                int level = 0;
-                                // while nested 
-                                var nested = item;
-                                while (nested != null)
+                                // for each filter group
+                                foreach (var item in labourRequirement.FindAllChildren<LabourFilterGroup>())
                                 {
-                                    nested.InitialiseFilters();
-                                    level++;
-                                    levelstring = (level < 5) ? level.ToString() : "4";
-                                    if (nested.Filter(lt))
+                                    string levelstring = "";
+                                    bool found = false;
+                                    int level = 0;
+                                    // while nested 
+                                    var nested = item;
+                                    while (nested != null)
                                     {
-                                        found = true;
-                                        break;
+                                        nested.InitialiseFilters();
+                                        level++;
+                                        levelstring = (level < 5) ? level.ToString() : "4";
+                                        if (nested.Filter(lt))
+                                        {
+                                            found = true;
+                                            break;
+                                        }
+                                        nested = nested.FindChild<LabourFilterGroup>();
                                     }
-                                    nested = nested.FindChild<LabourFilterGroup>();
+                                    tblstr.Write($" {(found ? levelstring : "0")} |");
                                 }
-                                tblstr.Write($" {(found?levelstring:"0")} |");
                             }
+                            tblstr.Write("  \n");
                         }
                     }
                     else
-                        tblstr.Write($"| {emph}{model.Name.Replace("_", " ")}{emph} | " + CreateRowMarkdown("", numberLabourTypes));
-
-                    tblstr.Write("  \n");
+                        tblstr.Write($"| {emph}{model.Name.Replace("_", " ")}{emph} | {CreateRowMarkdown("", numberLabourTypes)}  \n");
                 }
 
                 // add all rows for children
@@ -496,7 +494,6 @@ namespace UserInterface.Presenters
                 return tblstr.ToString(); 
             }
         }
-
 
         private string CreateRowMarkdown(string text, int columns)
         {
