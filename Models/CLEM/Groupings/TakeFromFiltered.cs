@@ -32,13 +32,13 @@ namespace Models.CLEM.Groupings
         /// </summary>
         [Description("From")]
         [Required]
-        [System.ComponentModel.DefaultValueAttribute(ReduceFilterPositionStyle.Start)]
-        public ReduceFilterPositionStyle TakePositionStyle { get; set; }
+        [System.ComponentModel.DefaultValueAttribute(TakeFromFilteredPositionStyle.Start)]
+        public TakeFromFilteredPositionStyle TakePositionStyle { get; set; }
 
         /// <summary>
         /// Value to take
         /// </summary>
-        [Description("Take/Skip")]
+        [Description("Value")]
         [System.ComponentModel.DefaultValueAttribute(1.0f)]
         public float Value { get; set; }
 
