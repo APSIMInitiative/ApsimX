@@ -28,6 +28,11 @@ namespace Models.CLEM.Groupings
         public Func<IFilterable, bool> Rule { get; protected set; }
 
         /// <summary>
+        /// Clear any rules created
+        /// </summary>
+        public void ClearRule() { Rule = null; }
+
+        /// <summary>
         /// Filter operator
         /// </summary>
         [Description("Operator")]
@@ -116,5 +121,10 @@ namespace Models.CLEM.Groupings
         /// A method to initialise this filter
         /// </summary>
         public abstract void Initialise();
+
+        /// <summary>
+        /// A method to build rules for this filter
+        /// </summary>
+        public abstract void BuildRule();
     }
 }

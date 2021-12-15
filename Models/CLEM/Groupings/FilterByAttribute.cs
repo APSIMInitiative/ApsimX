@@ -49,6 +49,7 @@ namespace Models.CLEM.Groupings
             if (Validator.TryValidateObject(this, context, results, true))
             {
                 Initialise();
+                BuildRule();
             }
         }
 
@@ -128,14 +129,18 @@ namespace Models.CLEM.Groupings
             return Expression.Lambda<Func<T, bool>>(block, simpleFilterParam).Compile();
         }
 
-        /// <summary>
-        /// Initialise this filter by property 
-        /// </summary>
+        /// <inheritdoc/>
         public override void Initialise()
+        {
+        }
+
+        /// <inheritdoc/>
+        public override void BuildRule()
         {
             if (Rule is null)
                 Rule = Compile<IFilterable>();
         }
+
 
         /// <summary>
         /// Constructor

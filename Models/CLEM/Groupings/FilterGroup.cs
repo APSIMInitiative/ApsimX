@@ -42,12 +42,21 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// Clear all rules
+        /// </summary>
+        public void ClearRules()
+        {
+            foreach (Filter filter in FindAllChildren<Filter>())
+                filter.ClearRule();
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public FilterGroup()
         {
             // needed for UI to access property lists
-            InitialiseFilters();
+           // InitialiseFilters();
         }
 
         ///<inheritdoc/>
@@ -86,10 +95,11 @@ namespace Models.CLEM
                     properties.Add($"{key}.{prop.Name}", prop);
                 }
             }
-            var tt = FindAllChildren().Where(a => a.GetType().IsSubclassOf(typeof(Filter)));
+
             foreach (Filter filter in FindAllChildren<Filter>())
             {
                 filter.Initialise();
+                filter.BuildRule();
             }
 
             sortList = FindAllChildren<ISort>();
@@ -102,11 +112,6 @@ namespace Models.CLEM
                 throw new NullReferenceException("Cannot filter a null object");
 
             filterRules ??= FindAllChildren<Filter>().Select(filter => filter.Rule);
-
-            // calculate the specified number/proportion of the filtered group to take from group
-            //int number = source.Count();
-            //foreach (var take in FindAllChildren<TakeFromFiltered>())
-            //    number = take.NumberToTake(number);
 
             var filtered = filterRules.Any() ? source.Where(item => filterRules.All(rule => rule is null ? false : rule(item))) : source;
 
@@ -133,14 +138,14 @@ namespace Models.CLEM
                 {
                     case TakeFromFilterStyle.TakeProportion:
                     case TakeFromFilterStyle.TakeIndividuals:
-                        if (take.TakePositionStyle == ReduceFilterPositionStyle.Start)
+                        if (take.TakePositionStyle == TakeFromFilteredPositionStyle.Start)
                             filtered = filtered.Take(number);
                         else
                             filtered = filtered.TakeLast(number);
                         break;
                     case TakeFromFilterStyle.SkipProportion:
                     case TakeFromFilterStyle.SkipIndividuals:
-                        if (take.TakePositionStyle == ReduceFilterPositionStyle.Start)
+                        if (take.TakePositionStyle == TakeFromFilteredPositionStyle.Start)
                             filtered = filtered.Skip(number);
                         else
                             filtered = filtered.SkipLast(number);

@@ -55,21 +55,25 @@ namespace Models.CLEM.Groupings
             if (Validator.TryValidateObject(this, context, results, true))
             {
                 Initialise();
+                BuildRule();
             }
         }
 
-        /// <summary>
-        /// Initialise this filter by property 
-        /// </summary>
+        /// <inheritdoc/>
         public override void Initialise()
         {
             if (PropertyOfIndividual != null && PropertyOfIndividual != "")
             {
                 propertyInfo = Parent.GetProperty(PropertyOfIndividual);
                 validOperator = CheckValidOperator(propertyInfo, out string _);
-                if(Rule is null)
-                    Rule = Compile<IFilterable>();
             }
+        }
+
+        /// <inheritdoc/>
+        public override void BuildRule()
+        {
+            if (Rule is null)
+                Rule = Compile<IFilterable>();
         }
 
         /// <inheritdoc/>

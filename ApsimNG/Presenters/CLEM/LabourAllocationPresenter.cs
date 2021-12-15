@@ -309,6 +309,7 @@ namespace UserInterface.Presenters
                                             found = true;
                                             break;
                                         }
+                                        nested.ClearRules();
                                         nested = nested.FindAllChildren<LabourFilterGroup>().FirstOrDefault();
                                     }
                                     if (found)
@@ -475,6 +476,7 @@ namespace UserInterface.Presenters
                                             found = true;
                                             break;
                                         }
+                                        nested.ClearRules();
                                         nested = nested.FindChild<LabourFilterGroup>();
                                     }
                                     tblstr.Write($" {(found ? levelstring : "0")} |");
