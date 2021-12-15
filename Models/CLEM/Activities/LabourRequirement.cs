@@ -9,6 +9,7 @@ using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using Models.Core.Attributes;
 using System.IO;
+using System.Text.Json.Serialization;
 
 namespace Models.CLEM.Activities
 {
@@ -45,6 +46,9 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Link]
         public ResourcesHolder Resources = null;
+        private double maximumDaysPerPerson = 0;
+        private double maximumDaysPerGroup = 0;
+        private double minimumDaysPerPerson = 0;
 
         /// <summary>
         /// Constructor
@@ -137,6 +141,54 @@ namespace Models.CLEM.Activities
         [Category("Labour", "Rate")]
         public bool ApplyToAll { get; set; }
 
+        /// <summary>
+        /// Get the calculated maximum days per person for activity from CalculateLimits
+        /// </summary>
+        [JsonIgnore]
+        public double MaximumDaysPerPerson { get { return maximumDaysPerPerson; } }
+
+        /// <summary>
+        /// Get the calculated maximum days per person for activity from CalculateLimits
+        /// </summary>
+        [JsonIgnore]
+        public double MaximumDaysPerGroup { get { return maximumDaysPerGroup; } }
+
+        /// <summary>
+        /// Get the calculated maximum days per person for activity from CalculateLimits
+        /// </summary>
+        [JsonIgnore]
+        public double MinimumDaysPerPerson { get { return minimumDaysPerPerson; } }
+
+
+        /// <summary>
+        /// Calcuate the limits for people and groups using the style
+        /// </summary>
+        public void CalculateLimits(double amountRequested)
+        {
+            switch (LimitStyle)
+            {
+                case LabourLimitType.AsDaysRequired:
+                    double units = amountRequested / UnitSize / LabourPerUnit;
+                    maximumDaysPerPerson = units * MaximumPerPerson;
+                    maximumDaysPerGroup = units * MaximumPerGroup;
+                    minimumDaysPerPerson = units * MinimumPerPerson;
+                    break;
+                case LabourLimitType.AsTotalAllowed:
+                    maximumDaysPerPerson = MaximumPerPerson;
+                    maximumDaysPerGroup = MaximumPerGroup;
+                    minimumDaysPerPerson = MinimumPerPerson;
+                    break;
+                case LabourLimitType.ProportionOfDaysRequired:
+                    maximumDaysPerPerson = amountRequested * MaximumPerPerson;
+                    maximumDaysPerGroup = amountRequested * MaximumPerGroup;
+                    minimumDaysPerPerson = amountRequested * MinimumPerPerson;
+                    break;
+                default:
+                    break;
+            }
+            return;            
+        }
+
         #region validation
 
         /// <summary>
@@ -187,25 +239,43 @@ namespace Models.CLEM.Activities
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\"><span class=\"setvalue\">");
                 // get amount
-                htmlWriter.Write(LabourPerUnit.ToString() + "</span> days labour is required");
+                htmlWriter.Write($"{LabourPerUnit}</span> days labour is required");
                 if (UnitType != LabourUnitType.Fixed)
                 {
                     if (UnitSize == 1)
                         htmlWriter.Write(" for each ");
                     else
-                        htmlWriter.Write(" for every <span class=\"setvalue\">" + UnitSize.ToString("#,##0.##") + "</span>");
+                        htmlWriter.Write($" for every <span class=\"setvalue\">{UnitSize:#,##0.##}</span>");
 
-                    htmlWriter.Write("<span class=\"setvalue\">" + UnitType2HTML() + "</span>");
+                    htmlWriter.Write($"<span class=\"setvalue\">{UnitType2HTML()}</span>");
                     if (WholeUnitBlocks)
                         htmlWriter.Write(" and will be supplied in blocks");
                 }
                 htmlWriter.Write("</div>");
+                htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will be limited ");
+                switch (LimitStyle)
+                {
+                    case LabourLimitType.AsDaysRequired:
+                        htmlWriter.Write($"as the days required</div>");
+                        break;
+                    case LabourLimitType.AsTotalAllowed:
+                        htmlWriter.Write($"as the total days permitted in the month</div>");
+                        break;
+                    case LabourLimitType.ProportionOfDaysRequired:
+                        htmlWriter.Write($"as a proportion of the days required and therefore total required</div>");
+                        break;
+                    default:
+                        break;
+                }
+
+                if (MaximumPerGroup > 0)
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will be supplied for each filter group up to <span class=\"setvalue\">{MaximumPerGroup}</span> day{((MaximumPerGroup == 1) ? "" : "s")} is required</div>");
 
                 if (MinimumPerPerson > 0)
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Labour will not be supplied if less than <span class=\"setvalue\">" + MinimumPerPerson.ToString() + "</span> day" + ((MinimumPerPerson == 1) ? "" : "s") + " is required</div>");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">Labour will not be supplied if less than <span class=\"setvalue\">{MinimumPerPerson}</span> day{((MinimumPerPerson == 1) ? "" : "s")} is required</div>");
 
                 if (MaximumPerPerson > 0 && MaximumPerPerson < 30)
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">No individual can provide more than <span class=\"setvalue\">" + MaximumPerPerson.ToString() + "</span> days</div>");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\">No individual can provide more than <span class=\"setvalue\">{MaximumPerPerson}</span> days</div>");
 
                 if (ApplyToAll)
                     htmlWriter.Write("\r\n<div class=\"activityentry\">All people matching the below criteria (first level) will perform this task. (e.g. all children)</div>");

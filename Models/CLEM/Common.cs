@@ -341,7 +341,7 @@ namespace Models.CLEM
         /// <summary>
         /// As proportion of the days required
         /// </summary>
-        ProportionOfDaysRequired,
+        ProportionOfDaysRequired
     }
 
     /// <summary>
@@ -908,7 +908,7 @@ namespace Models.CLEM
     /// <summary>
     /// Position for reducing individuals from a filter group
     /// </summary>
-    public enum ReduceFilterPositionStyle
+    public enum TakeFromFilteredPositionStyle
     {
         /// <summary>
         /// Take/Skip from start
