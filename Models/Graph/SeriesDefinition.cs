@@ -310,6 +310,8 @@
                 {
                     var simulationIds = reader.ToSimulationIDs(simulationNameFilter);
                     var simulationIdsCSV = StringUtilities.Build(simulationIds, ",");
+                    if (string.IsNullOrEmpty(simulationIdsCSV))
+                        return;
                     if (fieldsThatExist.Contains("SimulationID"))
                         filter = AddToFilter(filter, $"SimulationID in ({simulationIdsCSV})");
                 }

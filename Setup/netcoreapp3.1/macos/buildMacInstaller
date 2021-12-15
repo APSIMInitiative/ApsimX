@@ -14,6 +14,7 @@ set -euo pipefail
 usage="Usage: $0 <Version> [outfile]"
 test $# -ge 1 || (echo $usage; exit 1)
 version=$1
+revision=$(echo $version | cut -d. -f3)
 
 # Get apsimx path (path of repository root)
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )"
@@ -47,7 +48,7 @@ sed -i -e "s/@Version/$version/g" "$plist"
 # Delete MacBundle directory if it already exists.
 test -d MacBundle && rm -rf MacBundle
 
-appdir=MacBundle/APSIM$version.app/Contents
+appdir=MacBundle/APSIM$revision.app/Contents
 template="$apsimx/Setup/osx/Template"
 copy() {  rsync -aq --mkpath --exclude='*.db' --exclude='*.db-wal' --exclude='*.db-shm' $@; }
 copy "$DIR/launcher.sh" $appdir/MacOS/ApsimNG

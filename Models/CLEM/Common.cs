@@ -592,18 +592,84 @@ namespace Models.CLEM
     }
 
     /// <summary>
-    /// Style of ruminant tag application
+    /// Style to identify different ruminant groups needed by activities
     /// </summary>
-    public enum RuminantStockGroupStyle
+    public enum RuminantGroupStyle
     {
         /// <summary>
-        /// Animals to select
+        /// No style specified
         /// </summary>
-        Select = 0,
+        NotSpecified = 0,
+
         /// <summary>
-        /// Animals to destock
+        /// Remove
         /// </summary>
-        Destock = 5,
+        Remove = 5,
+
+        /// <summary>
+        /// Select females to remove
+        /// </summary>
+        RemoveFemales = 10,
+
+        /// <summary>
+        /// Female breeders to remove
+        /// </summary>
+        RemoveFemaleBreeders = 12,
+
+        /// <summary>
+        /// Female pre-breeders to remove
+        /// </summary>
+        RemoveFemalePreBreeders = 14,
+
+        /// <summary>
+        /// Select males to remove
+        /// </summary>
+        RemoveMales = 20,
+
+        /// <summary>
+        /// Male breeders to remove
+        /// </summary>
+        RemoveMaleBreeders = 22,
+
+        /// <summary>
+        /// Male pre-breeders to remove
+        /// </summary>
+        RemoveMalePreBreeders = 24,
+
+        /// <summary>
+        /// Select
+        /// </summary>
+        Select = 55,
+
+        /// <summary>
+        /// Select females
+        /// </summary>
+        SelectFemales = 60,
+
+        /// <summary>
+        /// Select female breeders
+        /// </summary>
+        SelectFemaleBreeders = 62,
+
+        /// <summary>
+        /// Select female pre-breeders
+        /// </summary>
+        SelectFemalePreBreeders = 64,
+
+        /// <summary>
+        /// Select females
+        /// </summary>
+        SelectMales = 70,
+
+        /// <summary>
+        /// Select female breeders
+        /// </summary>
+        SelectMaleBreeders = 72,
+
+        /// <summary>
+        /// Select female pre-breeders
+        /// </summary>
+        SelectMalePreBreeders = 74,
     }
 
     /// <summary>

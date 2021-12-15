@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -89,11 +89,7 @@ namespace Models.CLEM.Resources
         {
             double value = 0;
             foreach (LabourType ind in Items.Where(a => includeHiredLabour | (a.Hired == false)))
-                value += ind.GetDietDetails(metric)*ind.Individuals;
-
-            if(reportPerAE)
-                value /= (AdultEquivalents(includeHiredLabour));
-
+                value += ind.GetDietDetails(metric) * (reportPerAE?ind.AdultEquivalent:1);
             return value;
         }
 
@@ -128,7 +124,7 @@ namespace Models.CLEM.Resources
                 if (!warningsNotFound.Contains(warningString))
                 {
                     warningsNotFound.Add(warningString);
-                    Summary.WriteWarning(this, warningString);
+                    Summary.WriteMessage(this, warningString, MessageType.Warning);
                 }
             }
             return results;
@@ -336,7 +332,7 @@ namespace Models.CLEM.Resources
                 if (!warningsNotFound.Contains(warningString))
                 {
                     warningsNotFound.Add(warningString);
-                    Summary.WriteWarning(this, warningString);
+                    Summary.WriteMessage(this, warningString, MessageType.Warning);
                 }
             }
             return 0;
@@ -386,7 +382,7 @@ namespace Models.CLEM.Resources
                             if (!warningsMultipleEntry.Contains(criteria))
                             {
                                 warningsMultipleEntry.Add(criteria);
-                                Summary.WriteWarning(this, $"Multiple specific pay rate entries were found where [{property}]{(value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")}\r\nOnly the first entry will be used. Pay [{matchCriteria.Value.ToString("#,##0.##")}].");
+                                Summary.WriteMessage(this, $"Multiple specific pay rate entries were found where [{property}]{(value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".")}\r\nOnly the first entry will be used. Pay [{matchCriteria.Value.ToString("#,##0.##")}].", MessageType.Warning);
                             }
                         }
                     }
@@ -404,12 +400,12 @@ namespace Models.CLEM.Resources
                         price = matchIndividual.Value;
                     }
                     else
-                        Summary.WriteWarning(this, "\r\nNo alternate pay rate for individuals could be found for the individuals. Add a new [r=LabourPriceGroup] entry in the [r=LabourPricing]");
+                        Summary.WriteMessage(this, "\r\nNo alternate pay rate for individuals could be found for the individuals. Add a new [r=LabourPriceGroup] entry in the [r=LabourPricing]", MessageType.Warning);
 
                     if (!warningsNotFound.Contains(criteria))
                     {
                         warningsNotFound.Add(criteria);
-                        Summary.WriteWarning(this, warningString);
+                        Summary.WriteMessage(this, warningString, MessageType.Warning);
                     }
                 }
                 else

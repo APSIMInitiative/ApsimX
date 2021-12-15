@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Reflection;
 using System.Collections.Generic;
 using Newtonsoft.Json;
@@ -139,7 +139,7 @@ namespace Models.Soils
             // get the changes of state and publish (let other component to know)
             SendDeltaState();
 
-            mySummary.WriteWarning(this, "Re - setting SoilNitrogen state variables");
+            mySummary.WriteMessage(this, "Re - setting SoilNitrogen state variables", MessageType.Warning);
         }
 
         /// <summary>
@@ -232,8 +232,8 @@ namespace Models.Soils
                 ph = new double[nLayers];
                 for (int layer = 0; layer < nLayers; ++layer)
                     ph[layer] = DefaultInitialpH;
-                mySummary.WriteWarning(this, "Soil pH was not supplied to SoilNitrogen, the default value (" 
-                    + DefaultInitialpH.ToString("0.00") + ") will be used for all layers");
+                mySummary.WriteMessage(this, "Soil pH was not supplied to SoilNitrogen, the default value (" 
+                    + DefaultInitialpH.ToString("0.00") + ") will be used for all layers", MessageType.Warning);
             }
             
             // Check whether C:N values have been supplied. If not use average C:N ratio in all pools
@@ -277,39 +277,39 @@ namespace Models.Soils
         {
             // ensure that array for initial OC have a value for each layer
             if (reset_oc.Length < nLayers)
-                mySummary.WriteWarning(this, "Values supplied for the initial OC content do not cover all layers - zeroes will be assumed");
+                mySummary.WriteMessage(this, "Values supplied for the initial OC content do not cover all layers - zeroes will be assumed", MessageType.Warning);
             else if (reset_oc.Length > nLayers)
-                mySummary.WriteWarning(this, "More values were supplied for the initial OC content than the number of layers - excess will ignored");
+                mySummary.WriteMessage(this, "More values were supplied for the initial OC content than the number of layers - excess will ignored", MessageType.Warning);
 
             Array.Resize(ref reset_oc, nLayers);
 
             // ensure that array for initial urea content have a value for each layer
             if (reset_ureappm == null)
-                mySummary.WriteWarning(this, "No values were supplied for the initial content of urea - zero will be assumed");
+                mySummary.WriteMessage(this, "No values were supplied for the initial content of urea - zero will be assumed", MessageType.Warning);
             else if (reset_ureappm.Length < nLayers)
-                mySummary.WriteWarning(this, "Values supplied for the initial content of urea do not cover all layers - zeroes will be assumed");
+                mySummary.WriteMessage(this, "Values supplied for the initial content of urea do not cover all layers - zeroes will be assumed", MessageType.Warning);
             else if (reset_ureappm.Length > nLayers)
-                mySummary.WriteWarning(this, "More values were supplied for the initial content of urea than the number of layers - excess will ignored");
+                mySummary.WriteMessage(this, "More values were supplied for the initial content of urea than the number of layers - excess will ignored", MessageType.Warning);
 
             Array.Resize(ref reset_ureappm, nLayers);
 
             // ensure that array for initial content of NH4 have a value for each layer
             if (reset_nh4ppm == null)
-                mySummary.WriteWarning(this, "No values were supplied for the initial content of nh4 - zero will be assumed");
+                mySummary.WriteMessage(this, "No values were supplied for the initial content of nh4 - zero will be assumed", MessageType.Warning);
             else if (reset_nh4ppm.Length < nLayers)
-                mySummary.WriteWarning(this, "Values supplied for the initial content of nh4 do not cover all layers - zeroes will be assumed");
+                mySummary.WriteMessage(this, "Values supplied for the initial content of nh4 do not cover all layers - zeroes will be assumed", MessageType.Warning);
             else if (reset_nh4ppm.Length > nLayers)
-                mySummary.WriteWarning(this, "More values were supplied for the initial content of nh4 than the number of layers - excess will ignored");
+                mySummary.WriteMessage(this, "More values were supplied for the initial content of nh4 than the number of layers - excess will ignored", MessageType.Warning);
 
             Array.Resize(ref reset_nh4ppm, nLayers);
 
             // ensure that array for initial content of NO3 have a value for each layer
             if (reset_no3ppm == null)
-                mySummary.WriteWarning(this, "No values were supplied for the initial content of no3 - zero will be assumed");
+                mySummary.WriteMessage(this, "No values were supplied for the initial content of no3 - zero will be assumed", MessageType.Warning);
             else if (reset_no3ppm.Length < nLayers)
-                mySummary.WriteWarning(this, "Values supplied for the initial content of no3 do not cover all layers - zeroes will be assumed");
+                mySummary.WriteMessage(this, "Values supplied for the initial content of no3 do not cover all layers - zeroes will be assumed", MessageType.Warning);
             else if (reset_no3ppm.Length > nLayers)
-                mySummary.WriteWarning(this, "More values were supplied for the initial content of no3 than the number of layers - excess will ignored");
+                mySummary.WriteMessage(this, "More values were supplied for the initial content of no3 than the number of layers - excess will ignored", MessageType.Warning);
 
             Array.Resize(ref reset_no3ppm, nLayers);
 
@@ -727,7 +727,7 @@ namespace Models.Soils
                     }
                 }
                 else
-                    mySummary.WriteWarning(this, "Information passed contained more layers than the soil, these will be ignored");
+                    mySummary.WriteMessage(this, "Information passed contained more layers than the soil, these will be ignored", MessageType.Warning);
             }
 
             // If any FOM was passed, make the partition into FOM pools
@@ -789,7 +789,7 @@ namespace Models.Soils
                 else
                     aMessage = "no amount was given";
 
-                mySummary.WriteWarning(this, "FOM addition was not carried out because " + aMessage);
+                mySummary.WriteMessage(this, "FOM addition was not carried out because " + aMessage, MessageType.Warning);
             }
         }
 
@@ -828,7 +828,7 @@ namespace Models.Soils
                     }
                 }
                 else
-                    mySummary.WriteMessage(this, " Information passed contained more layers than the soil, these will be ignored");
+                    mySummary.WriteMessage(this, " Information passed contained more layers than the soil, these will be ignored", MessageType.Diagnostic);
             }
 
             // actually add the FOM to soil, if valid
@@ -846,7 +846,7 @@ namespace Models.Soils
                 else
                     aMessage = "no amount was given";
 
-                mySummary.WriteWarning(this, "FOM addition was not carried out because " + aMessage);
+                mySummary.WriteMessage(this, "FOM addition was not carried out because " + aMessage, MessageType.Warning);
             }
         }
 
@@ -1076,12 +1076,12 @@ namespace Models.Soils
             {
                 if (PatchtoAdd.AffectedPatches_id.Length == 0 && PatchtoAdd.AffectedPatches_nm.Length == 0)
                 {
-                    mySummary.WriteMessage(this, " Command to add patch did not supply a valid patch to be used as base for the new one. Command will be ignored.");
+                    mySummary.WriteMessage(this, " Command to add patch did not supply a valid patch to be used as base for the new one. Command will be ignored.", MessageType.Diagnostic);
                     isDataOK = false;
                 }
                 else if (PatchtoAdd.AreaNewPatch <= 0.0)
                 {
-                    mySummary.WriteMessage(this, " Command to add patch did not supply a valid area fraction for the new patch. Command will be ignored.");
+                    mySummary.WriteMessage(this, " Command to add patch did not supply a valid area fraction for the new patch. Command will be ignored.", MessageType.Diagnostic);
                     isDataOK = false;
                 }
             }
@@ -1089,7 +1089,7 @@ namespace Models.Soils
             {
                 if (PatchtoAdd.AffectedPatches_id.Length == 0 && PatchtoAdd.AffectedPatches_nm.Length == 0)
                 {
-                    mySummary.WriteMessage(this, " Command to add patch did not supply a valid patch to be used as base for the new one. Command will be ignored.");
+                    mySummary.WriteMessage(this, " Command to add patch did not supply a valid patch to be used as base for the new one. Command will be ignored.", MessageType.Diagnostic);
                     isDataOK = false;
                 }
             }
@@ -1097,7 +1097,7 @@ namespace Models.Soils
             {
                 if (PatchtoAdd.AreaNewPatch <= 0.0)
                 {
-                    mySummary.WriteMessage(this, " Command to add patch did not supply a valid area fraction for the new patch. Command will be ignored.");
+                    mySummary.WriteMessage(this, " Command to add patch did not supply a valid area fraction for the new patch. Command will be ignored.", MessageType.Diagnostic);
                     isDataOK = false;
                 }
             }
@@ -1107,7 +1107,7 @@ namespace Models.Soils
             }
             else
             {
-                mySummary.WriteMessage(this, " Command to add patch did not supply a valid DepositionType. Command will be ignored.");
+                mySummary.WriteMessage(this, " Command to add patch did not supply a valid DepositionType. Command will be ignored.", MessageType.Diagnostic);
                 isDataOK = false;
             }
 
@@ -1244,7 +1244,7 @@ namespace Models.Soils
                                  + ") below the warning threshold (" + WarningNegativeThreshold.ToString()
                                  + ". Value will be reset to zero.";
                 TheValue = 0.0;
-                mySummary.WriteWarning(this, myMessage);
+                mySummary.WriteMessage(this, myMessage, MessageType.Warning);
             }
             else if (TheValue < 0.0)
             {

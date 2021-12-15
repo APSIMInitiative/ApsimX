@@ -14,6 +14,7 @@
     using global::UserInterface.Extensions;
     using System.Text;
     using Utility;
+    using MessageType = Models.Core.MessageType;
 
     /// <summary>An enum type for the AskQuestion method.</summary>
     public enum QuestionResponseEnum { Yes, No, Cancel }
@@ -363,7 +364,8 @@
                 tabLabel.Text = text;
             HBox headerBox = new HBox();
             Button closeBtn = new Button();
-            Gtk.Image closeImg = new Gtk.Image(new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Close.svg", 12, 12));
+            string imageName = Utility.Configuration.Settings.DarkTheme ? "Close.dark.svg" : "Close.light.svg";
+            Gtk.Image closeImg = new Gtk.Image(new Gdk.Pixbuf(null, $"ApsimNG.Resources.TreeViewImages.{imageName}", 12, 12));
 
             closeBtn.Image = closeImg;
             closeBtn.Relief = ReliefStyle.None;
@@ -763,7 +765,7 @@
         /// <param name="message">The message to show the user.</param>
         public QuestionResponseEnum AskQuestion(string message)
         {
-            MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Question, ButtonsType.YesNo, message);
+            MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, Gtk.MessageType.Question, ButtonsType.YesNo, message);
             md.Title = "Save changes";
             int result = md.Run();
             md.Dispose();
@@ -797,7 +799,7 @@
         /// <param name="addSeparator">Add a separator beneath the message?</param>
         /// <param name="withButton">Add a 'more info' button?</param>
         /// <remarks>This is kind of a cludge. This method could probably be extracted to its own class.</remarks>
-        public void ShowMessage(string message, Simulation.ErrorLevel errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true)
+        public void ShowMessage(string message, MessageType errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true)
         {
             Application.Invoke(delegate
             {
@@ -812,11 +814,11 @@
                 {
                     string tagName;
                     // Output the message
-                    if (errorLevel == Simulation.ErrorLevel.Error)
+                    if (errorLevel == MessageType.Error)
                     {
                         tagName = "error";
                     }
-                    else if (errorLevel == Simulation.ErrorLevel.Warning)
+                    else if (errorLevel == MessageType.Warning)
                     {
                         tagName = "warning";
                     }
@@ -833,7 +835,7 @@
                         insertIter = statusWindow.Buffer.EndIter;
 
                     statusWindow.Buffer.InsertWithTagsByName(ref insertIter, message, tagName);
-                    if (errorLevel == Simulation.ErrorLevel.Error && withButton)
+                    if (errorLevel == MessageType.Error && withButton)
                         AddButtonToStatusWindow("More Information", numberOfButtons++);
                     if (addSeparator)
                     {
@@ -936,6 +938,7 @@
 
                 Pango.FontDescription newFont = Pango.FontDescription.FromString(fontName);
                 Utility.Configuration.Settings.FontName = newFont.ToString();
+                Configuration.Settings.Save();
                 ChangeFont(newFont);
                 if (args.ResponseId != ResponseType.Apply)
                     fontDialog.Dispose();

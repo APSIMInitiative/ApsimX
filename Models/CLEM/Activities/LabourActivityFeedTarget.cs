@@ -34,7 +34,7 @@ namespace Models.CLEM.Activities
         /// Target level
         /// </summary>
         [Description("Target level")]
-        [Units("units per Ae per day")]
+        [Units("units per AE per day")]
         [GreaterThanValue(0)]
         public double TargetValue { get; set; }
 

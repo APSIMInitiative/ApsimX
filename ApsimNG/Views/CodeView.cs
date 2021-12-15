@@ -27,6 +27,20 @@
     public class EditorView : ViewBase, IEditorView
     {
         /// <summary>
+        /// Default style for dark mode, used when the user has either
+        /// not selected a style, or has selected a style which cannot
+        /// be loaded.
+        /// </summary>
+        private const string defaultDarkStyle = "oblivion";
+
+        /// <summary>
+        /// Default style for light mode, used when the user has either
+        /// not selected a style, or has selected a style which cannot
+        /// be loaded.
+        /// </summary>
+        private const string defaultLightStyle = "Classic";
+
+        /// <summary>
         /// The find-and-replace form
         /// </summary>
         private FindAndReplaceForm findForm = new FindAndReplaceForm();
@@ -348,12 +362,8 @@
             StyleScheme style = StyleSchemeManager.Default.GetScheme(Configuration.Settings.EditorStyleName);
             if (style == null)
             {
-                // If there's no style scheme specified in user settings (or if it's an unknown
-                // scheme), then fallback to adwaita, or adwaita-dark if dark mode is active.
-                if (Configuration.Settings.DarkTheme)
-                    style = StyleSchemeManager.Default.GetScheme("Adwaita-dark");
-                else
-                    style = StyleSchemeManager.Default.GetScheme("Adwaita");
+                string defaultStyle = Configuration.Settings.DarkTheme ? defaultDarkStyle : defaultLightStyle;
+                style = StyleSchemeManager.Default.GetScheme(defaultStyle);
             }
             if (style != null)
                 textEditor.Buffer.StyleScheme = style;
@@ -448,6 +458,7 @@
                     {
                         textEditor.Buffer.StyleScheme = styleChooser.StyleScheme;
                         Configuration.Settings.EditorStyleName = styleChooser.StyleScheme.Id;
+                        Configuration.Settings.Save();
                     }
                 }
             }
@@ -1014,6 +1025,7 @@
                 }
 
                 Utility.Configuration.Settings.EditorStyleName = caption;
+                Configuration.Settings.Save();
                 //textEditor.Options.ColorScheme = caption;
                 textEditor.QueueDraw();
 

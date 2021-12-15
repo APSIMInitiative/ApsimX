@@ -1,4 +1,4 @@
-﻿using Models.CLEM.Groupings;
+using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -75,7 +75,7 @@ namespace Models.CLEM.Activities
 
             // check that timer exists for controlled mating
             if (!this.TimingExists)
-                Summary.WriteWarning(this, $"Breeding with controlled mating [a={this.Parent.Name}].[a={this.Name}] requires a Timer otherwise breeding will be undertaken every time-step");
+                Summary.WriteMessage(this, $"Breeding with controlled mating [a={this.Parent.Name}].[a={this.Name}] requires a Timer otherwise breeding will be undertaken every time-step", MessageType.Warning);
 
             // get details from parent breeding activity
             breedingParent = this.Parent as RuminantActivityBreed;
@@ -297,6 +297,17 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write($"The Attributes of the sire are {(attributeSetters.Any()? "specified below" : "selected at random ofrm the herd")} to ensure inheritance to offpsring");
                     htmlWriter.Write("</div>");
+                }
+                else
+                {
+                    // need to check for mandatory attributes
+                    var mandatoryAttributes = this.FindAncestor<Zone>().FindAllDescendants<SetAttributeWithValue>().Where(a => a.Mandatory).Select(a => a.AttributeName).Distinct();
+                    if (mandatoryAttributes.Any())
+                    {
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                        htmlWriter.Write($"The mandatory attributes <span class=\"setvalue\">{string.Join("</span>,<span class=\"setvalue\">", mandatoryAttributes)}</span> required from the breeding males will be randomally selected from the herd");
+                        htmlWriter.Write("</div>");
+                    }
                 }
                 return htmlWriter.ToString();
             }

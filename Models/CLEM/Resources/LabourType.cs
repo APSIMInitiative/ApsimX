@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
@@ -50,18 +50,21 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Sex")]
         [Required]
+        [FilterByProperty]
         public Sex Sex { get; set; }
 
         /// <summary>
         /// Age in years.
         /// </summary>
         [JsonIgnore]
+        [FilterByProperty]
         public double Age { get { return Math.Floor(AgeInMonths/12); } }
        
         /// <summary>
         /// Age in months.
         /// </summary>
         [JsonIgnore]
+        [FilterByProperty]
         public double AgeInMonths
         {
             get
@@ -85,6 +88,7 @@ namespace Models.CLEM.Resources
         /// Adult equivalent.
         /// </summary>
         [JsonIgnore]
+        [FilterByProperty]
         public double AdultEquivalent
         {
             get
@@ -97,7 +101,7 @@ namespace Models.CLEM.Resources
                     if (!parent.Warnings.Exists(warning))
                     {
                         parent.Warnings.Add(warning);
-                        parent.Summary.WriteWarning(this, warning);
+                        parent.Summary.WriteMessage(this, warning, MessageType.Warning);
                     }
                 }
                 return adultEquivalent??1;
@@ -202,6 +206,7 @@ namespace Models.CLEM.Resources
         /// Available Labour (in days) in the current month. 
         /// </summary>
         [JsonIgnore]
+        [FilterByProperty]
         public double AvailableDays { get; private set; }
 
         /// <summary>

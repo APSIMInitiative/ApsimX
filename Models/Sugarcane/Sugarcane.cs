@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -1508,7 +1508,7 @@ namespace Models
 
                 if (g_current_stage > emerg)
                     {
-                    Summary.WriteWarning(this, "You have updated plant number after emergence");
+                    Summary.WriteMessage(this, "You have updated plant number after emergence", MessageType.Warning);
                     }
 
                 bound_check_real_var(value, 0.0, 1000.0, "plants");
@@ -2314,7 +2314,7 @@ namespace Models
 
             //            //! zero pools etc.
 
-            //Summary.WriteMessage(this, "ZERO DAILY VARIABLES");
+            //Summary.WriteMessage(this, "ZERO DAILY VARIABLES", MessageType.Diagnostic);
 
             ZeroArray(ref g_dlt_dm_green);
             ZeroArray(ref g_dlt_dm_green_retrans);
@@ -3292,8 +3292,8 @@ namespace Models
             //force A to stay between the MinVal and the MaxVal. Set A to the MaxVal or MinVal if it exceeds them.
             if (MinVal > MaxVal)
                 {
-                Summary.WriteWarning(this, "Lower bound " + MinVal + " is > upper bound " + MaxVal + Environment.NewLine
-                                   + "        Variable is not constrained");
+                Summary.WriteMessage(this, "Lower bound " + MinVal + " is > upper bound " + MaxVal + Environment.NewLine
+                                   + "        Variable is not constrained", MessageType.Warning);
                 return A;
                 }
 
@@ -3462,12 +3462,12 @@ namespace Models
             if (Variable > UpperBound)
                 {
                 warningMsg = "The variable: \'" + VariableName + "\' is above the expected upper bound of: " + UpperBound;
-                Summary.WriteWarning(this, warningMsg);
+                Summary.WriteMessage(this, warningMsg, MessageType.Warning);
                 }
             if (Variable < LowerBound)
                 {
                 warningMsg = "The variable: \'" + VariableName + "\' is below the expected lower bound of: " + LowerBound;
-                Summary.WriteWarning(this, warningMsg);
+                Summary.WriteMessage(this, warningMsg, MessageType.Warning);
                 }
 
             }
@@ -3518,7 +3518,7 @@ namespace Models
         //        {
         //        Console.Write(" , " + A[i]);
         //        }
-        //    //Summary.WriteMessage(this, );
+        //    //Summary.WriteMessage(this, , MessageType.Diagnostic);
         //    }
 
 
@@ -4560,19 +4560,19 @@ namespace Models
                 if (l_ll + error_margin(l_ll) < c_minsw)
                     {
                     l_err_messg = " lower limit of " + l_ll + " in layer " + ob(layer) + Environment.NewLine + "         is below acceptable value of " + c_minsw;
-                    Summary.WriteMessage(this, l_err_messg);
+                    Summary.WriteMessage(this, l_err_messg, MessageType.Diagnostic);
                     }
 
                 if (l_dul + error_margin(l_dul) < l_ll)
                     {
                     l_err_messg = " Drained upper limit of " + l_dul + " in layer " + ob(layer) + Environment.NewLine + "         is below lower limit of " + ll;
-                    Summary.WriteMessage(this, l_err_messg);
+                    Summary.WriteMessage(this, l_err_messg, MessageType.Diagnostic);
                     }
 
                 if (l_sw + error_margin(l_sw) < c_minsw)
                     {
                     l_err_messg = " Soil water of " + l_sw + " in layer " + ob(layer) + Environment.NewLine + "         is below acceptable value of " + c_minsw;
-                    Summary.WriteMessage(this, l_err_messg);
+                    Summary.WriteMessage(this, l_err_messg, MessageType.Diagnostic);
                     }
                 }
 
@@ -8829,7 +8829,7 @@ namespace Models
             if (stage_is_between(sowing, sprouting, i_current_stage) && (sum_between_zb(zb(sowing), zb(now), i_days_tot) >= c_days_germ_limit))
                 {
                 o_dlt_plants = -i_plants;
-                Summary.WriteWarning(this, " crop failure because of lack of" + "/n" + "         germination within" + c_days_germ_limit + " days of sowing");
+                Summary.WriteMessage(this, " crop failure because of lack of" + "/n" + "         germination within" + c_days_germ_limit + " days of sowing", MessageType.Warning);
                 }
 
             else
@@ -8867,7 +8867,7 @@ namespace Models
             if (stage_is_between(sprouting, emerg, i_current_stage) && (sum_between_zb(zb(sprouting), zb(now), i_tt_tot) > c_tt_emerg_limit))
                 {
                 o_dlt_plants = -i_plants;
-                Summary.WriteWarning(this, " failed emergence due to deep planting");
+                Summary.WriteMessage(this, " failed emergence due to deep planting", MessageType.Warning);
                 }
             else
                 {
@@ -8904,7 +8904,7 @@ namespace Models
                 o_dlt_plants = -i_plants;
                 i_lai = 0.0;
 
-                Summary.WriteWarning(this, " crop failure because of total leaf senescence.");
+                Summary.WriteMessage(this, " crop failure because of total leaf senescence.", MessageType.Warning);
                 }
             else
                 {
@@ -8958,7 +8958,7 @@ namespace Models
                 l_killfr = bound(l_killfr, 0.0, 1.0);
                 o_dlt_plants = -i_plants * l_killfr;
 
-                Summary.WriteWarning(this,"plant_kill." + Math.Truncate(l_killfr * 100.0) + "% failure because of water stress.");
+                Summary.WriteMessage(this,"plant_kill." + Math.Truncate(l_killfr * 100.0) + "% failure because of water stress.", MessageType.Warning);
                 }
 
             else
@@ -9960,7 +9960,7 @@ namespace Models
                 l_x_stage_code = 0.0;
 
                 l_warn_message = "Invalid lookup table - number of values =" + i_numvals;
-                Summary.WriteWarning(this, l_warn_message);
+                Summary.WriteMessage(this, l_warn_message, MessageType.Warning);
                 }
 
             return l_x_stage_code;
@@ -10021,7 +10021,7 @@ namespace Models
                 l_returnValue_ob = 0;
 
                 l_warn_message = "Stage code not found in code list." + " Code number =" + i_stage_code;
-                Summary.WriteWarning(this, l_warn_message);
+                Summary.WriteMessage(this, l_warn_message, MessageType.Warning);
 
                 }
 
@@ -10250,14 +10250,14 @@ namespace Models
             ////sv- I added this to mimic what the fortran infrastructure does.
             ////"13 July 1991(Day of year=194), sugar: ");
             ////http://msdn.microsoft.com/en-us/library/8kb3ddd4.aspx
-            //Summary.WriteMessage(this, string.Format("{0}{1}{2}{3}", Clock.Today.ToString("d MMMM yyy").ToString(), "(Day of year=", g_day_of_year, "), Sugarcane: "));
+            //Summary.WriteMessage(this, string.Format("{0}{1}{2}{3}", Clock.Today.ToString("d MMMM yyy").ToString(), "(Day of year=", g_day_of_year, "), Sugarcane: "), MessageType.Diagnostic);
 
 
             l_stage_no = (int)i_current_stage;
             if (on_day_of(l_stage_no, i_current_stage))
                 {
                 //! new phase has begun.
-                Summary.WriteMessage(this, string.Format("{0}{1,6:F1} {2}", " stage ", c_stage_code_list[zb(l_stage_no)], c_stage_names[zb(l_stage_no)]));
+                Summary.WriteMessage(this, string.Format("{0}{1,6:F1} {2}", " stage ", c_stage_code_list[zb(l_stage_no)], c_stage_names[zb(l_stage_no)]), MessageType.Diagnostic);
 
                 //write (string, '(a, f6.1, 1x, a)') ' stage ', c_stage_code_list(stage_no), c_stage_names(stage_no)
 
@@ -10283,8 +10283,8 @@ namespace Models
 
                 if (stage_is_between(emerg, crop_end, i_current_stage))
                     {
-                    Summary.WriteMessage(this, string.Format("{0}{1,16:F7}{2}{3,16:F7}", "                     biomass =       ", l_biomass, "   lai = ", i_lai));
-                    Summary.WriteMessage(this, string.Format("{0}{1,16:F7}{2}{3,16:F7}", "                     stover N conc = ", l_N_green_conc_percent, "   extractable sw =", l_pesw_tot));
+                    Summary.WriteMessage(this, string.Format("{0}{1,16:F7}{2}{3,16:F7}", "                     biomass =       ", l_biomass, "   lai = ", i_lai), MessageType.Diagnostic);
+                    Summary.WriteMessage(this, string.Format("{0}{1,16:F7}{2}{3,16:F7}", "                     stover N conc = ", l_N_green_conc_percent, "   extractable sw =", l_pesw_tot), MessageType.Diagnostic);
 
                     //       write (string, '(2(a, g16.7e2), a, 2(a, g16.7e2))')
                     //:              '                     biomass =       '
@@ -12349,7 +12349,7 @@ namespace Models
             sugar_zero_variables();
             //sugar_zero_soil_globals();
 
-            Summary.WriteMessage(this, " Initialising");
+            Summary.WriteMessage(this, " Initialising", MessageType.Diagnostic);
 
             //! initialize crop variables
 
@@ -12399,7 +12399,7 @@ namespace Models
             g_year = Clock.Today.Year;
             sugar_zero_daily_variables();
 
-            //Summary.WriteMessage(this, "day of year: " + g_day_of_year);
+            //Summary.WriteMessage(this, "day of year: " + g_day_of_year, MessageType.Diagnostic);
 
 
 
@@ -12662,9 +12662,9 @@ namespace Models
                     accumulate_ob(g_dlt_tt, ref g_tt_tot, g_previous_stage, g_dlt_stage);
 
                     accumulate_ob(1.0, ref g_days_tot, g_previous_stage, g_dlt_stage);
-                    //Summary.WriteMessage(this, "das: " + sum_between_zb(zb(sowing), zb(now), g_days_tot));
+                    //Summary.WriteMessage(this, "das: " + sum_between_zb(zb(sowing), zb(now), g_days_tot), MessageType.Diagnostic);
                     //PrintArray("days_tot: ", g_days_tot);
-                    //Summary.WriteMessage(this, "dlt_stage: " + g_dlt_stage);
+                    //Summary.WriteMessage(this, "dlt_stage: " + g_dlt_stage, MessageType.Diagnostic);
 
                     //End - cproc_phenology1 ()
 
@@ -13081,7 +13081,7 @@ namespace Models
                     //call sugar_get_met_variables ()
                     sugar_get_soil_variables(ref g_no3gsm, ref g_no3gsm_min, ref g_nh4gsm, ref g_nh4gsm_min);
 
-                    Summary.WriteMessage(this, "Sowing initiate");
+                    Summary.WriteMessage(this, "Sowing initiate", MessageType.Diagnostic);
 
 
                     if (Sowing != null)
@@ -13103,27 +13103,27 @@ namespace Models
 
                     //! report
 
-                    Summary.WriteMessage(this, Environment.NewLine + Environment.NewLine);
+                    Summary.WriteMessage(this, Environment.NewLine + Environment.NewLine, MessageType.Diagnostic);
 
-                    Summary.WriteMessage(this, "                 Crop Sowing Data");
+                    Summary.WriteMessage(this, "                 Crop Sowing Data", MessageType.Diagnostic);
 
-                    Summary.WriteMessage(this, "    ------------------------------------------------");
+                    Summary.WriteMessage(this, "    ------------------------------------------------", MessageType.Diagnostic);
 
-                    Summary.WriteMessage(this, "    Sowing  Depth Plants Cultivar");
+                    Summary.WriteMessage(this, "    Sowing  Depth Plants Cultivar", MessageType.Diagnostic);
 
-                    Summary.WriteMessage(this, "    Day no   mm     m^2    Name   ");
+                    Summary.WriteMessage(this, "    Day no   mm     m^2    Name   ", MessageType.Diagnostic);
 
-                    Summary.WriteMessage(this, "    ------------------------------------------------");
+                    Summary.WriteMessage(this, "    ------------------------------------------------", MessageType.Diagnostic);
 
                     //http://msdn.microsoft.com/en-us/library/dwhawy9k.aspx
 
-                    Summary.WriteMessage(this, string.Format("{0}{1,7:D}{2,7:F1}{3,7:F1}{4}{5,-10}", "   ", g_day_of_year, g_sowing_depth, g_plants, " ", l_cultivar));  //parameters are zero based.
+                    Summary.WriteMessage(this, string.Format("{0}{1,7:D}{2,7:F1}{3,7:F1}{4}{5,-10}", "   ", g_day_of_year, g_sowing_depth, g_plants, " ", l_cultivar), MessageType.Diagnostic);  //parameters are zero based.
                     //    write (string, '(3x, i7, 2f7.1, 1x, a10)')
                     //:                   g%day_of_year, g%sowing_depth
                     //:                 , g%Population, cultivar
 
 
-                    Summary.WriteMessage(this, "    ------------------------------------------------");
+                    Summary.WriteMessage(this, "    ------------------------------------------------", MessageType.Diagnostic);
 
 
                     //! get cultivar parameters
@@ -13183,12 +13183,12 @@ namespace Models
 
             if (CropType == "plant_crop")
                 {
-                Summary.WriteMessage(this, "\n" + "    - Reading constants from " + "plant_crop");
+                Summary.WriteMessage(this, "\n" + "    - Reading constants from " + "plant_crop", MessageType.Diagnostic);
                 l_crop = plant;
                 }
             else
                 {
-                Summary.WriteMessage(this, "\n" + "    - Reading constants from " + "ratoon_crop");
+                Summary.WriteMessage(this, "\n" + "    - Reading constants from " + "ratoon_crop", MessageType.Diagnostic);
                 l_crop = ratoon;
                 }
 
@@ -13205,7 +13205,7 @@ namespace Models
         /// <exception cref="ApsimXException">Could not find in the Sugarcane ini file a cultivar called:  + Name</exception>
         CultivarConstants sugar_read_cultivar_params(string Name)
             {
-            Summary.WriteMessage(this, "\n" + "    - Reading constants from " + Name);
+            Summary.WriteMessage(this, "\n" + "    - Reading constants from " + Name, MessageType.Diagnostic);
 
             foreach (CultivarConstants c in cultivars)
                 {
@@ -13276,7 +13276,7 @@ namespace Models
                 //        g_ll_dep[layer] = Soil.SoilWater.LL15[layer] * dlayer[layer];
                 //        }
                 //    Array.Resize(ref g_ll_dep, num_layers);
-                    Summary.WriteMessage(this, "Using externally supplied Lower Limit (ll15)");
+                    Summary.WriteMessage(this, "Using externally supplied Lower Limit (ll15)", MessageType.Diagnostic);
                     }
                 else
                     {
@@ -13305,29 +13305,29 @@ namespace Models
             //write out to the summary file what optional values you have read in.
             //--------------------------------------------------------------------
 
-            Summary.WriteMessage(this, "\n" + "   - Reading root profile parameters");
+            Summary.WriteMessage(this, "\n" + "   - Reading root profile parameters", MessageType.Diagnostic);
 
 
             if (uptake_source == "calc")
                 {
                 //! report
-                //Summary.WriteMessage(this, "\n" + "\n");
-                Summary.WriteMessage(this, "Sugar module is calculating its own soil uptakes");
-                //Summary.WriteMessage(this, "\n" + "\n");
+                //Summary.WriteMessage(this, "\n" + "\n", MessageType.Diagnostic);
+                Summary.WriteMessage(this, "Sugar module is calculating its own soil uptakes", MessageType.Diagnostic);
+                //Summary.WriteMessage(this, "\n" + "\n", MessageType.Diagnostic);
                 }
             else if (uptake_source == "apsim")
                 {
                 //! report
-                //Summary.WriteMessage(this, "\n" + "\n");
-                Summary.WriteMessage(this, "Sugar module is using uptakes" + " provided from another module");
-                //Summary.WriteMessage(this, "\n" + "\n");
+                //Summary.WriteMessage(this, "\n" + "\n", MessageType.Diagnostic);
+                Summary.WriteMessage(this, "Sugar module is using uptakes" + " provided from another module", MessageType.Diagnostic);
+                //Summary.WriteMessage(this, "\n" + "\n", MessageType.Diagnostic);
                 }
             else if (uptake_source == "swim3")
                 {
                 //! report
-                //Summary.WriteMessage(this, "\n" + "\n");
-                Summary.WriteMessage(this, "Sugar module is using water uptake" + " provided from Swim3");
-                //Summary.WriteMessage(this, "\n" + "\n");
+                //Summary.WriteMessage(this, "\n" + "\n", MessageType.Diagnostic);
+                Summary.WriteMessage(this, "Sugar module is using water uptake" + " provided from Swim3", MessageType.Diagnostic);
+                //Summary.WriteMessage(this, "\n" + "\n", MessageType.Diagnostic);
                 }
             else
                 {
@@ -13340,19 +13340,19 @@ namespace Models
             string line;
 
             line = "                    Root Profile";
-            Summary.WriteMessage(this, line);
+            Summary.WriteMessage(this, line, MessageType.Diagnostic);
 
             line = "  -----------------------------------------------------------------------";
-            Summary.WriteMessage(this, line);
+            Summary.WriteMessage(this, line, MessageType.Diagnostic);
 
             line = "    Layer depth   rlv_init  root_length Lower limit       KL         XF    ";
-            Summary.WriteMessage(this, line);
+            Summary.WriteMessage(this, line, MessageType.Diagnostic);
 
             line = "         (mm)      (mm/mm)     (mm)       (mm/mm)         ()       (0-1)";
-            Summary.WriteMessage(this, line);
+            Summary.WriteMessage(this, line, MessageType.Diagnostic);
 
             line = "  -----------------------------------------------------------------------";
-            Summary.WriteMessage(this, line);
+            Summary.WriteMessage(this, line, MessageType.Diagnostic);
 
             //create an rlv_init with a value for every layer in the soil rather than just the layers the user entered.
             //do this so the loop below here does not crash when it gets past rlv_int[more layers then were user entered]
@@ -13363,17 +13363,17 @@ namespace Models
             for (int layer = 0; layer < num_layers; layer++)
                 {
                 Summary.WriteMessage(this, string.Format(" {0,12:F0}{1,12:0.000}{2,12:0.000}{3,12:0.000}{4,12:0.000}{5,12:0.000}",
-                    dlayer[layer], l_rlv_init[layer], g_root_length[layer], ll[layer], kl[layer], xf[layer]));
+                    dlayer[layer], l_rlv_init[layer], g_root_length[layer], ll[layer], kl[layer], xf[layer]), MessageType.Diagnostic);
                 }
 
             line = "   ----------------------------------------------------------------------";
-            Summary.WriteMessage(this, line);
-            Summary.WriteMessage(this, "           nb. Initial root_length = rlv_init x Layer depth");
-            //Summary.WriteMessage(this, "\n");
+            Summary.WriteMessage(this, line, MessageType.Diagnostic);
+            Summary.WriteMessage(this, "           nb. Initial root_length = rlv_init x Layer depth", MessageType.Diagnostic);
+            //Summary.WriteMessage(this, "\n", MessageType.Diagnostic);
 
 
-            Summary.WriteMessage(this, string.Format("  {0}{1,5:0.0}{2}", "  Crop factor for bounding water use is set to ", eo_crop_factor, " times Eo"));
-            //Summary.WriteMessage(this, "\n" + "\n");
+            Summary.WriteMessage(this, string.Format("  {0}{1,5:0.0}{2}", "  Crop factor for bounding water use is set to ", eo_crop_factor, " times Eo"), MessageType.Diagnostic);
+            //Summary.WriteMessage(this, "\n" + "\n", MessageType.Diagnostic);
 
             }
 
@@ -13458,39 +13458,39 @@ namespace Models
 
             l_N_total = l_N_green + l_N_senesced + l_N_dead;
 
-            //Summary.WriteMessage(this, );
-            //Summary.WriteMessage(this, );
+            //Summary.WriteMessage(this, , MessageType.Diagnostic);
+            //Summary.WriteMessage(this, , MessageType.Diagnostic);
 
-            Summary.WriteMessage(this, string.Format("{0}{1,4}", " flowering day  = ", g_isdate));
+            Summary.WriteMessage(this, string.Format("{0}{1,4}", " flowering day  = ", g_isdate), MessageType.Diagnostic);
             //write (string, '(a,i4)')
 
-            Summary.WriteMessage(this, string.Format("{0}{1,6:F3}", " maximum lai =", g_lai_max));
+            Summary.WriteMessage(this, string.Format("{0}{1,6:F3}", " maximum lai =", g_lai_max), MessageType.Diagnostic);
             //write (string, '(a,f6.3)')
 
-            Summary.WriteMessage(this, string.Format("{0}{1,10:F1}", " total above ground biomass (kg/ha) =", l_dm));
+            Summary.WriteMessage(this, string.Format("{0}{1,10:F1}", " total above ground biomass (kg/ha) =", l_dm), MessageType.Diagnostic);
             //write (string, '(a,f10.1)')
 
-            Summary.WriteMessage(this, string.Format("{0}{1,10:F1}", " (green + senesced) above ground biomass (kg/ha) =", l_biomass_green + l_biomass_senesced));
+            Summary.WriteMessage(this, string.Format("{0}{1,10:F1}", " (green + senesced) above ground biomass (kg/ha) =", l_biomass_green + l_biomass_senesced), MessageType.Diagnostic);
             //write (string, '(a,f10.1)')
 
-            Summary.WriteMessage(this, string.Format("{0}{1,10:F1}", " green above ground biomass (kg/ha) =", l_biomass_green));
+            Summary.WriteMessage(this, string.Format("{0}{1,10:F1}", " green above ground biomass (kg/ha) =", l_biomass_green), MessageType.Diagnostic);
             //write (string, '(a,f10.1)')
 
-            Summary.WriteMessage(this,string.Format( "{0}{1,10:F1}", " senesced above ground biomass (kg/ha) =", l_biomass_senesced));
+            Summary.WriteMessage(this,string.Format( "{0}{1,10:F1}", " senesced above ground biomass (kg/ha) =", l_biomass_senesced), MessageType.Diagnostic);
             //write (string, '(a,f10.1)')
 
-            Summary.WriteMessage(this, string.Format("{0}{1,10:F1}", " dead above ground biomass (kg/ha) =", l_biomass_dead));
+            Summary.WriteMessage(this, string.Format("{0}{1,10:F1}", " dead above ground biomass (kg/ha) =", l_biomass_dead), MessageType.Diagnostic);
             //write (string, '(a,f10.1)')
 
-            Summary.WriteMessage(this, string.Format("{0}{1,6:F1}", " number of leaves =", l_leaf_no));
+            Summary.WriteMessage(this, string.Format("{0}{1,6:F1}", " number of leaves =", l_leaf_no), MessageType.Diagnostic);
             //write (string, '(a,f6.1)')
 
-            Summary.WriteMessage(this, string.Format("{0}{1,10:F2}{2}{3}{4,10:F2}", " total N content (kg/ha) =", l_N_total, "    ", " senesced N content (kg/ha) =", l_N_senesced));
+            Summary.WriteMessage(this, string.Format("{0}{1,10:F2}{2}{3}{4,10:F2}", " total N content (kg/ha) =", l_N_total, "    ", " senesced N content (kg/ha) =", l_N_senesced), MessageType.Diagnostic);
             //write (string, '(a,f10.2,t40,a,f10.2)')
             //sv- to compensate for t40 (tab to column 40) I just added four spaces. (26 + 10 = 36) + 4 = 40
 
 
-            Summary.WriteMessage(this, string.Format("{0}{1,10:F2}{2}{3}{4,10:F2}", " green N content (kg/ha) =", l_N_green, "    ", " dead N content (kg/ha) =", l_N_dead));
+            Summary.WriteMessage(this, string.Format("{0}{1,10:F2}{2}{3}{4,10:F2}", " green N content (kg/ha) =", l_N_green, "    ", " dead N content (kg/ha) =", l_N_dead), MessageType.Diagnostic);
             //write (string, '(a,f10.2,t40,a,f10.2)')
             //sv- to compensate for t40 (tab to column 40) I just added two spaces. (26 + 10 = 36) + 4 = 40
 
@@ -13502,15 +13502,15 @@ namespace Models
                 l_si2 = MathUtilities.Divide(g_cswd_expansion[l_phase], g_days_tot[l_phase], 0.0);
                 l_si4 = MathUtilities.Divide(g_cnd_photo[l_phase], g_days_tot[l_phase], 0.0);
 
-                //Summary.WriteMessage(this, );
-                //Summary.WriteMessage(this, );
+                //Summary.WriteMessage(this, , MessageType.Diagnostic);
+                //Summary.WriteMessage(this, , MessageType.Diagnostic);
 
-                Summary.WriteMessage(this, " stress indices for " + crop.stage_names[l_phase]);
+                Summary.WriteMessage(this, " stress indices for " + crop.stage_names[l_phase], MessageType.Diagnostic);
 
-                Summary.WriteMessage(this, string.Format("{0}{1,16:E2}{2}{3,16:E2}", " water stress 1 =", l_si1, "   nitrogen stress 1 =", l_si4));
+                Summary.WriteMessage(this, string.Format("{0}{1,16:E2}{2}{3,16:E2}", " water stress 1 =", l_si1, "   nitrogen stress 1 =", l_si4), MessageType.Diagnostic);
                 //write (string,'(2(a, g16.7e2))')
 
-                Summary.WriteMessage(this, string.Format("{0}{1,16:E2}", " water stress 2 =", l_si2));
+                Summary.WriteMessage(this, string.Format("{0}{1,16:E2}", " water stress 2 =", l_si2), MessageType.Diagnostic);
                 //write (string,'(a, g16.7e2)')
                 }
 
@@ -13569,10 +13569,10 @@ namespace Models
 
                 string l_40spaces = "                                        ";
 
-                Summary.WriteMessage(this, string.Format("{0}{1}{2,7:F1}{3}", l_40spaces, "  straw residue =", l_dm_residue * gm2kg / sm2ha, " kg/ha"));
-                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  straw N = ", l_N_residue * gm2kg / sm2ha, " kg/ha"));
-                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  root residue = ", l_dm_root * gm2kg / sm2ha, " kg/ha"));
-                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  root N = ", l_N_root * gm2kg / sm2ha, " kg/ha"));
+                Summary.WriteMessage(this, string.Format("{0}{1}{2,7:F1}{3}", l_40spaces, "  straw residue =", l_dm_residue * gm2kg / sm2ha, " kg/ha"), MessageType.Diagnostic);
+                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  straw N = ", l_N_residue * gm2kg / sm2ha, " kg/ha"), MessageType.Diagnostic);
+                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  root residue = ", l_dm_root * gm2kg / sm2ha, " kg/ha"), MessageType.Diagnostic);
+                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  root N = ", l_N_root * gm2kg / sm2ha, " kg/ha"), MessageType.Diagnostic);
 
                 //    write (string, '(40x, a, f7.1, a, 3(a, 40x, a, f6.1, a))')
                 //:                  '  straw residue ='
@@ -13718,7 +13718,7 @@ namespace Models
 
                 //! report
 
-                Summary.WriteMessage(this, " crop_kill. Standing above-ground dm = " + l_biomass + " (kg/ha)");
+                Summary.WriteMessage(this, " crop_kill. Standing above-ground dm = " + l_biomass + " (kg/ha)", MessageType.Diagnostic);
 
                 }
 
@@ -13819,10 +13819,10 @@ namespace Models
 
                 string l_40spaces = "                                        ";
 
-                Summary.WriteMessage(this, string.Format("{0}{1}{2,7:F1}{3}", l_40spaces, "  straw residue =", l_dm_residue * gm2kg / sm2ha, " kg/ha"));
-                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  straw N = ", l_N_residue * gm2kg / sm2ha, " kg/ha"));
-                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  root residue = ", l_dm_root * gm2kg / sm2ha, " kg/ha"));
-                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  root N = ", l_N_root * gm2kg / sm2ha, " kg/ha"));
+                Summary.WriteMessage(this, string.Format("{0}{1}{2,7:F1}{3}", l_40spaces, "  straw residue =", l_dm_residue * gm2kg / sm2ha, " kg/ha"), MessageType.Diagnostic);
+                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  straw N = ", l_N_residue * gm2kg / sm2ha, " kg/ha"), MessageType.Diagnostic);
+                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  root residue = ", l_dm_root * gm2kg / sm2ha, " kg/ha"), MessageType.Diagnostic);
+                Summary.WriteMessage(this, string.Format("{0}{1}{2,6:F1}{3}", l_40spaces, "  root N = ", l_N_root * gm2kg / sm2ha, " kg/ha"), MessageType.Diagnostic);
 
 
                 //    write (string, '(40x, a, f7.1, a, 3(a, 40x, a, f6.1, a))')
@@ -13942,7 +13942,7 @@ namespace Models
         public void LodgeTheCane()
             {
             g_lodge_flag = true;
-            Summary.WriteMessage(this, Clock.Today.ToString("d MMM yyyy") + " - " + "Sugarcane crop is lodging");
+            Summary.WriteMessage(this, Clock.Today.ToString("d MMM yyyy") + " - " + "Sugarcane crop is lodging", MessageType.Diagnostic);
             }
 
 
@@ -13956,8 +13956,8 @@ namespace Models
         /// <param name="TopsFr">Fraction of Leaves and Cabbage that is buried</param>
         public void HillUpTheSoil(double CaneFr, double TopsFr)
             {
-            Summary.WriteMessage(this, Clock.Today.ToString("d MMM yyyy") + " - " + "Sugarcane module is doing Hill Up");
-            Summary.WriteMessage(this, "CaneFr = " + CaneFr + " , TopsFr = " + TopsFr);
+            Summary.WriteMessage(this, Clock.Today.ToString("d MMM yyyy") + " - " + "Sugarcane module is doing Hill Up", MessageType.Diagnostic);
+            Summary.WriteMessage(this, "CaneFr = " + CaneFr + " , TopsFr = " + TopsFr, MessageType.Diagnostic);
             sugar_hill_up(CaneFr, TopsFr);    //see "Events sent to Change Other Modules" section because hill_up manager event sends an IncorpFOM event to surfaceOM module.
             }
 

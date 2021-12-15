@@ -149,7 +149,7 @@ namespace Models.CLEM.Resources
                     case OnMissingResourceActionTypes.ReportErrorAndStop:
                         throw new ApsimXException(this, errorMsg);
                     case OnMissingResourceActionTypes.ReportWarning:
-                        Warnings.CheckAndWrite(errorMsg, Summary, this);
+                        Warnings.CheckAndWrite(errorMsg, Summary, this, MessageType.Warning);
                         break;
                     default:
                         break;
@@ -161,7 +161,7 @@ namespace Models.CLEM.Resources
                 if (!resGroupNameMatch)
                 {
                     errorMsg = $"Unable to locate resource named [r={nameParts.First()}] for [a={requestingModel.Name}] but a [{typeof(R).Name}] resource was found and will be used.";
-                    Warnings.CheckAndWrite(errorMsg, Summary, this);
+                    Warnings.CheckAndWrite(errorMsg, Summary, this, MessageType.Warning);
                 }
             }
 
@@ -173,7 +173,7 @@ namespace Models.CLEM.Resources
                     case OnMissingResourceActionTypes.ReportErrorAndStop:
                         throw new ApsimXException(this, errorMsg);
                     case OnMissingResourceActionTypes.ReportWarning:
-                        Warnings.CheckAndWrite(errorMsg, Summary, this);
+                        Warnings.CheckAndWrite(errorMsg, Summary, this, MessageType.Warning);
                         break;
                     default:
                         break;
@@ -247,8 +247,8 @@ namespace Models.CLEM.Resources
             {
                 // add warning the market is not currently trading in this resource
                 string zoneName = FindAncestor<Zone>().Name;
-                string warn = $"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().Name}]\r\nOnly resources groups provided in the [r=ResourceHolder] in the simulation tree will be traded.";
-                Warnings.CheckAndWrite(warn, Summary, this);
+                string warn = $"[{zoneName}] is currently not accepting resources of type [r={parent.GetType().Name}]\r\nOnly resources groups provided in the [r=ResourceHolder] in the CLEM component will be traded.";
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                 return null;
             }
 
@@ -265,7 +265,7 @@ namespace Models.CLEM.Resources
             {
                 // add warning the market does not have the resource
                 string warn = $"The resource [r={resourceType.Parent.Name}.{resourceType.Name}] does not exist in [m={this.Parent.Name}].\r\nAdd resource and associated components to the market to permit trading.";
-                Warnings.CheckAndWrite(warn, Summary, this);
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                 return null;
             }
 

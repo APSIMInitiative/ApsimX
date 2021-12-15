@@ -37,9 +37,9 @@ namespace Models.CLEM.Groupings
         /// The reason for this filter group
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(0)]
-        [Description("Reason")]
+        [Description("Style of group")]
         [Required]
-        public RuminantStockGroupStyle Reason { get; set; }
+        public RuminantGroupStyle Reason { get; set; }
 
         /// <summary>
         /// Constructor to apply defaults
@@ -55,17 +55,29 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override string ModelSummary()
         {
+            return "";
+        }
+
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
+        {
+            return "";
+        }
+
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
+        {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("<div class=\"filtername\">");
                 if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                {
-                    htmlWriter.Write(this.Name);
-                }
+                    htmlWriter.Write($"{Name} - {Reason}");
+
                 htmlWriter.Write($"</div>");
-                return htmlWriter.ToString(); 
+                return htmlWriter.ToString();
             }
         }
+
 
         #endregion
 

@@ -90,23 +90,9 @@ namespace Models.CLEM
         private void OnCLEMValidate(object sender, EventArgs e)
         {
             // validation is performed here
-            // this event fires after Activity and Resource validation so that resources are available to check in the validation.
-            // commencing is too early as Summary has not been created for reporting.
-            // some values assigned in commencing will not be checked before processing, but will be caught here
-            // each ZoneCLEM and Market will call this validation for all children
-            // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
+            // see ZoneCLEM OnCLEMValidate for more details
             if (!ZoneCLEM.Validate(this, "", this, summary))
-            {
-                string error = "@i:Invalid parameters in model";
-
-                // get all validations 
-                if (summary.Messages() != null)
-                    foreach (DataRow item in summary.Messages().Rows)
-                        if (item[3].ToString().StartsWith("Invalid"))
-                            error += "\r\n" + item[3].ToString();
-
-                throw new ApsimXException(this, error.Replace("&shy;", "."));
-            }
+                ZoneCLEM.ReportInvalidParameters(this);
         }
 
         #region validation
@@ -162,16 +148,13 @@ namespace Models.CLEM
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                CLEMModel czm = model as CLEMModel;
-                czm.CurrentAncestorList = parentControls.ToList();
-                czm.CurrentAncestorList.Add(czm.GetType().Name);
+                var parents = parentControls.ToList();
+                parents.Add(model.GetType().Name);
 
                 htmlWriter.Write($"\r\n<div class=\"holdermain\" style=\"opacity: {((!this.Enabled) ? "0.4" : "1")}\">");
                 foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
-                    htmlWriter.Write(cm.GetFullSummary(cm, czm.CurrentAncestorList, "", markdown2Html));
+                    htmlWriter.Write(cm.GetFullSummary(cm, parents, "", markdown2Html));
                 htmlWriter.Write("</div>");
-
-                czm.CurrentAncestorList = null;
 
                 return htmlWriter.ToString();
             }

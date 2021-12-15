@@ -214,7 +214,10 @@
             try
             {
                 if (File.Exists(ApsimXFile.FileName))
+                {
                     Configuration.Settings.SetExpandedNodes(ApsimXFile.FileName, view.Tree.GetExpandedNodes());
+                    Configuration.Settings.Save();
+                }
             }
             catch
             {
@@ -346,6 +349,7 @@
                     WriteSimulation(newFileName);
                     MainPresenter.ChangeTabText(this.view, Path.GetFileNameWithoutExtension(newFileName), newFileName);
                     Configuration.Settings.AddMruFile(new ApsimFileMetadata(newFileName, view.Tree.GetExpandedNodes()));
+                    Configuration.Settings.Save();
                     MainPresenter.UpdateMRUDisplay();
                     MainPresenter.ShowMessage(string.Format("Successfully saved to {0}", newFileName), Simulation.MessageType.Information);
                     return true;
@@ -1107,6 +1111,7 @@
             // We need to find an icon for this model. If the model is a ModelCollectionFromResource, we attempt to find 
             // an image with the same resource name as the model (e.g. Wheat). If this fails, try the model type name.
             // Otherwise, we attempt to find an icon with the same name as the model's type.
+            // lie112 made the namespace type lookup first as this is most appropriate, before modeltype
             // e.g. A Graph called Biomass should use an icon called Graph.png
             // e.g. A Plant called Wheat should use an icon called Wheat.png
             // e.g. A plant called Wheat with a resource name of Maize (don't do this) should use an icon called Maize.png.
@@ -1120,12 +1125,13 @@
             }
             else
             {
-                (exists, resourceNameForImage) = CheckIfIconExists(modelType.Name);
+                string modelNamespace = modelType.FullName;
+                if (modelNamespace.StartsWith("Models."))
+                    modelNamespace = modelNamespace.Substring(7);
+                (exists, resourceNameForImage) = CheckIfIconExists(modelNamespace);
+
                 if (!exists)
-                {
-                    string modelNamespace = modelType.FullName.Split('.')[1];
-                    (exists, resourceNameForImage) = CheckIfIconExists($"{modelNamespace}.{modelType.Name}");
-                }
+                    (exists, resourceNameForImage) = CheckIfIconExists(modelType.Name);
             }
 
             if (!exists)
