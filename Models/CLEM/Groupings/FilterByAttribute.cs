@@ -49,7 +49,6 @@ namespace Models.CLEM.Groupings
             if (Validator.TryValidateObject(this, context, results, true))
             {
                 Initialise();
-                Rule = Compile<IFilterable>();
             }
         }
 
@@ -105,14 +104,10 @@ namespace Models.CLEM.Groupings
                 var valueVal = Expression.TypeAs(Expression.Call(attProperty, valueMethod, tag), typeof(IndividualAttribute));
                 var valueStored = Expression.Property(valueVal, "Value");
                 var valueStoredType = ((PropertyInfo)valueStored.Member).PropertyType;
-                //var valisnull = Expression.Equal(Express valueStored, Expression.Constant(null));
                 var value = Expression.Convert(valueStored, valueStoredType);
 
                 var simpleVal = Expression.Constant(Convert.ChangeType(Value ?? 0, valueStoredType));
                 simpleBinary = Expression.MakeBinary(Operator, value, simpleVal);
-                //var nullBinary = Expression.AndAlso(valisnull, Expression.Convert(binary, typeof(bool)));
-
-                //simpleBinary = Expression.Convert(Expression.IfThenElse(existsResult, nullBinary, Expression.Constant(false, typeof(bool))), typeof(bool));
 
                 block = Expression.Condition(
                     // Attributes exist
@@ -138,6 +133,8 @@ namespace Models.CLEM.Groupings
         /// </summary>
         public override void Initialise()
         {
+            if (Rule is null)
+                Rule = Compile<IFilterable>();
         }
 
         /// <summary>

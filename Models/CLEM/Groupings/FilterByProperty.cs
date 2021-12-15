@@ -55,7 +55,6 @@ namespace Models.CLEM.Groupings
             if (Validator.TryValidateObject(this, context, results, true))
             {
                 Initialise();
-                Rule = Compile<IFilterable>();
             }
         }
 
@@ -68,6 +67,8 @@ namespace Models.CLEM.Groupings
             {
                 propertyInfo = Parent.GetProperty(PropertyOfIndividual);
                 validOperator = CheckValidOperator(propertyInfo, out string _);
+                if(Rule is null)
+                    Rule = Compile<IFilterable>();
             }
         }
 
