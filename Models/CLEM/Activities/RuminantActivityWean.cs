@@ -138,6 +138,13 @@ namespace Models.CLEM.Activities
                         if (ind.Mother != null)
                             // report conception status changed when offspring weaned.
                             ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, clock.Today));
+                        else
+                        {
+                            // report dead mother stats to at least report the wean event
+                            RuminantFemale deadMother = new RuminantFemale(ind.BreedParams, -1, 999) { ID = ind.MotherID };
+                            ind.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, deadMother, clock.Today));
+                        }
+
                     }
 
                     // stop if labour limited individuals reached and LabourShortfallAffectsActivity
