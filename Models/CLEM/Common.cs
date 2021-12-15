@@ -890,10 +890,34 @@ namespace Models.CLEM
         /// <summary>
         /// Take a proportion of the group selected
         /// </summary>
-        Proportion,
+        TakeProportion,
         /// <summary>
         /// Take a set number of individuals
         /// </summary>
-        Individuals
+        TakeIndividuals,
+        /// <summary>
+        /// Skip a proportion of the group selected and return the remainder
+        /// </summary>
+        SkipProportion,
+        /// <summary>
+        /// Skip a set number of individuals and return the remainder
+        /// </summary>
+        SkipIndividuals
     }
+
+    /// <summary>
+    /// Position for reducing individuals from a filter group
+    /// </summary>
+    public enum ReduceFilterPositionStyle
+    {
+        /// <summary>
+        /// Take/Skip from start
+        /// </summary>
+        Start,
+        /// <summary>
+        /// Take/Skip from end
+        /// </summary>
+        End
+    }
+
 }
