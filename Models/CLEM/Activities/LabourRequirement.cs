@@ -16,8 +16,8 @@ namespace Models.CLEM.Activities
     /// Defines the labour required for an activity
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.PropertyView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
+    [ViewName("UserInterface.Views.PropertyCategorisedView")]
+    [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
     [ValidParent(ParentType = typeof(CropActivityTask))]
     [ValidParent(ParentType = typeof(RuminantActivityGrazeAll))]
@@ -60,6 +60,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Days labour required [per unit or fixed]")]
         [Required, GreaterThanEqualValue(0)]
+        [Category("Labour", "Rate")]
         public double LabourPerUnit { get; set; }
 
         /// <summary>
@@ -67,18 +68,21 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Number of units")]
         [Required, GreaterThanEqualValue(0)]
+        [Category("Labour", "Units")]
         public double UnitSize { get; set; }
 
         /// <summary>
         /// Whole unit blocks only
         /// </summary>
         [Description("Request as whole unit blocks only")]
+        [Category("Labour", "Units")]
         public bool WholeUnitBlocks { get; set; }
 
         /// <summary>
         /// Labour unit type
         /// </summary>
         [Description("Units to use")]
+        [Category("Labour", "Units")]
         [Required]
         public LabourUnitType UnitType { get; set; }
 
@@ -87,6 +91,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Limit style")]
         [System.ComponentModel.DefaultValueAttribute(LabourLimitType.ProportionOfDaysRequired)]
+        [Category("Labour", "Limits")]
         [Required]
         public LabourLimitType LimitStyle { get; set; }
 
@@ -95,6 +100,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Maximum per group for task")]
         [Required, GreaterThanValue(0)]
+        [Category("Labour", "Limits")]
         [System.ComponentModel.DefaultValueAttribute(1)]
         public double MaximumPerGroup { get; set; }
 
@@ -103,6 +109,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Minimum per person for task")]
         [Required, GreaterThanEqualValue(0)]
+        [Category("Labour", "Limits")]
         public double MinimumPerPerson { get; set; }
 
         /// <summary>
@@ -110,6 +117,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Maximum per person for task")]
         [Required, GreaterThanValue(0), GreaterThan("MinimumPerPerson", ErrorMessage ="Maximum per individual must be greater than minimum per individual in Labour Required")]
+        [Category("Labour", "Limits")]
         public double MaximumPerPerson { get; set; }
 
         /// <summary>
@@ -118,6 +126,7 @@ namespace Models.CLEM.Activities
         [Description("Allow labour shortfall to affect activity")]
         [Required]
         [System.ComponentModel.DefaultValueAttribute(false)]
+        [Category("Labour", "General")]
         public bool LabourShortfallAffectsActivity { get; set; }
 
         /// <summary>
@@ -125,6 +134,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Apply to all matching (everyone performs activity)")]
         [Required]
+        [Category("Labour", "Rate")]
         public bool ApplyToAll { get; set; }
 
         #region validation
