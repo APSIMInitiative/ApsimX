@@ -3310,20 +3310,22 @@ namespace Models.Soils
                 {
                     psiValue = _psi[node]; // Initial estimate
                 }
-                
 
 
 
-                for (int iter = 0; iter < maxIterations; iter++)
+                int iter = 0;
+                double est = 0.0;
+
+                for (iter = 0; iter < maxIterations; iter++)
                 {
-                    double est = SimpleTheta(node, psiValue);
+                    est = SimpleTheta(node, psiValue);
                     double m = (SimpleTheta(node, psiValue + dpsi) - est) / dpsi;
 
                     if (Math.Abs(est - theta) < tolerance)
                         break;
                     psiValue -= Math.Min(-dpsi,(est - theta) / m);
-                    //psiValue -= (est - theta) / m;
                 }
+                //summary.WriteMessage(this, $"We want this stuff, {(est - theta)}, {iter}, {psiValue}", MessageType.Diagnostic);
                 return psiValue;
             }
         }
