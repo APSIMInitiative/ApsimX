@@ -347,7 +347,7 @@ namespace Models.CLEM.Activities
                                select grp;
 
                 // identify not ready for reporting and tracking
-                var notReadyBreeders = herd.Where(a => a.Sex == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsBreeder && !a.IsAbleToBreed && !a.IsPregnant).GroupBy(a => a.Location);
+                var notReadyBreeders = herd.Where(a => a.Sex == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsBreeder && !a.IsAbleToBreed && !a.IsPregnant);
                 foreach (RuminantFemale female in notReadyBreeders)
                     female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.NotReady, female, clock.Today));
 
