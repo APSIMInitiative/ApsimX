@@ -42,12 +42,21 @@ namespace Models.CLEM
         }
 
         /// <summary>
+        /// Clear all rules
+        /// </summary>
+        public void ClearRules()
+        {
+            foreach (Filter filter in FindAllChildren<Filter>())
+                filter.ClearRule();
+        }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public FilterGroup()
         {
             // needed for UI to access property lists
-            InitialiseFilters();
+           // InitialiseFilters();
         }
 
         ///<inheritdoc/>
@@ -90,6 +99,7 @@ namespace Models.CLEM
             foreach (Filter filter in FindAllChildren<Filter>())
             {
                 filter.Initialise();
+                filter.BuildRule();
             }
 
             sortList = FindAllChildren<ISort>();
@@ -103,18 +113,46 @@ namespace Models.CLEM
 
             filterRules ??= FindAllChildren<Filter>().Select(filter => filter.Rule);
 
-            // calculate the specified number/proportion of the filtered group to take from group
-            int number = source.Count();
-            foreach (var take in FindAllChildren<TakeFromFiltered>())
-                number = take.NumberToTake(number);
-
             var filtered = filterRules.Any() ? source.Where(item => filterRules.All(rule => rule is null ? false : rule(item))) : source;
 
             if(sortList?.Any()??false)
                 // add sorting and take specified
-                return filtered.Sort(sortList).Take(number); 
-            else
-                return filtered.Take(number);
+                filtered = filtered.Sort(sortList);
+
+            // do all takes and skips
+            foreach (var take in FindAllChildren<TakeFromFiltered>())
+            {
+                int number = 0;
+                switch (take.TakeStyle)
+                {
+                    case TakeFromFilterStyle.TakeProportion:
+                    case TakeFromFilterStyle.SkipProportion:
+                        number = take.NumberToTake(filtered.Count());
+                        break;
+                    case TakeFromFilterStyle.TakeIndividuals:
+                    case TakeFromFilterStyle.SkipIndividuals:
+                        number = take.NumberToTake(0);
+                        break;
+                }
+                switch (take.TakeStyle)
+                {
+                    case TakeFromFilterStyle.TakeProportion:
+                    case TakeFromFilterStyle.TakeIndividuals:
+                        if (take.TakePositionStyle == TakeFromFilteredPositionStyle.Start)
+                            filtered = filtered.Take(number);
+                        else
+                            filtered = filtered.TakeLast(number);
+                        break;
+                    case TakeFromFilterStyle.SkipProportion:
+                    case TakeFromFilterStyle.SkipIndividuals:
+                        if (take.TakePositionStyle == TakeFromFilteredPositionStyle.Start)
+                            filtered = filtered.Skip(number);
+                        else
+                            filtered = filtered.SkipLast(number);
+                        break;
+                }
+            }
+            return filtered;
         }
 
         ///<inheritdoc/>
@@ -154,8 +192,6 @@ namespace Models.CLEM
                 return htmlWriter.ToString();
             }
         }
-
-
         #endregion
     }
 }

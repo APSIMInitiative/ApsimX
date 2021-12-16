@@ -326,6 +326,40 @@ namespace Models.CLEM
     }
 
     /// <summary>
+    /// Labour limit type calculation type
+    /// </summary>
+    public enum LabourLimitType
+    {
+        /// <summary>
+        /// Represents a rate or fixed days specified
+        /// </summary>
+        AsDaysRequired,
+        /// <summary>
+        /// Relates to the total days allowed
+        /// </summary>
+        AsTotalAllowed,
+        /// <summary>
+        /// As proportion of the days required
+        /// </summary>
+        ProportionOfDaysRequired
+    }
+
+    /// <summary>
+    /// Style to calculate hired labour payment
+    /// </summary>
+    public enum PayHiredLabourCalculationStyle
+    {
+        /// <summary>
+        /// Use labour available in LabourAvailability for all hired labour
+        /// </summary>
+        ByAvailableLabour,
+        /// <summary>
+        /// Use the hired labour used in timestep
+        /// </summary>
+        ByLabourUsedInTimeStep
+    }
+
+    /// <summary>
     /// Ruminant feeding styles
     /// </summary>
     public enum RuminantFeedActivityTypes
@@ -856,10 +890,34 @@ namespace Models.CLEM
         /// <summary>
         /// Take a proportion of the group selected
         /// </summary>
-        Proportion,
+        TakeProportion,
         /// <summary>
         /// Take a set number of individuals
         /// </summary>
-        Individuals
+        TakeIndividuals,
+        /// <summary>
+        /// Skip a proportion of the group selected and return the remainder
+        /// </summary>
+        SkipProportion,
+        /// <summary>
+        /// Skip a set number of individuals and return the remainder
+        /// </summary>
+        SkipIndividuals
     }
+
+    /// <summary>
+    /// Position for reducing individuals from a filter group
+    /// </summary>
+    public enum TakeFromFilteredPositionStyle
+    {
+        /// <summary>
+        /// Take/Skip from start
+        /// </summary>
+        Start,
+        /// <summary>
+        /// Take/Skip from end
+        /// </summary>
+        End
+    }
+
 }

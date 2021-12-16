@@ -27,6 +27,7 @@ namespace Models.CLEM
         public ISummary Summary = null;
 
         private Guid id = Guid.NewGuid();
+        [NonSerialized]
         private IEnumerable<IActivityTimer> activityTimers = null;
 
         /// <summary>
@@ -103,6 +104,7 @@ namespace Models.CLEM
         /// <summary>
         /// A list of activity timers for this activity
         /// </summary>
+        [JsonIgnore]
         public IEnumerable<IActivityTimer> ActivityTimers
         {
             get
