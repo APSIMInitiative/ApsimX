@@ -88,7 +88,7 @@
             listview1.Model = listmodel;
 
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            if (version.Revision == 0)
+            if (version.Build == 0)
             {
                 button1.Sensitive = false;
                 table2.Hide();
@@ -202,7 +202,7 @@
             if (File.Exists(tempLicenseFileName))
                 File.Delete(tempLicenseFileName);
 
-            if (version.Revision == 0)
+            if (version.Build == 0)
             {
                 button1.Sensitive = false;
                 table2.Hide();

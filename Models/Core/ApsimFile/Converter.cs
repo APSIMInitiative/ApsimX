@@ -3735,11 +3735,23 @@ namespace Models.Core.ApsimFile
         /// <param name="fileName">Path to the .apsimx file.</param>
         private static void UpgradeToVersion143(JObject root, string fileName)
         {
+            if (JsonUtilities.Type(root) == "Graph")
+                FixGraph(root);
             foreach (JObject graph in JsonUtilities.ChildrenRecursively(root, "Graph"))
+                FixGraph(graph);
+
+            foreach (JObject folder in JsonUtilities.ChildrenRecursively(root, "Folder"))
+            {
+                JToken showInDocs = folder["ShowPageOfGraphs"];
+                bool show = showInDocs != null && showInDocs.Value<bool>();
+                folder["ShowInDocs"] = show && ShouldShowInDocs(folder);
+            }
+
+            void FixGraph(JObject graph)
             {
                 JToken axes = graph["Axis"];
                 if (axes == null)
-                    continue;
+                    return;
                 foreach (JObject axis in axes)
                 {
                     // Class moved into APSIM.Shared.Graphing namespace.
@@ -3750,20 +3762,19 @@ namespace Models.Core.ApsimFile
 
                     // Min/Max/Interval properties are now nullable doubles.
                     // null is used to indicate no value, rather than NaN.
-                    if (axis["Minimum"].Value<string>() == "NaN")
-                        axis["Minimum"] = null;
-                    if (axis["Maximum"].Value<string>() == "NaN")
-                        axis["Maximum"] = null;
-                    if (axis["Interval"].Value<string>() == "NaN")
-                        axis["Interval"] = null;
+                    RemoveAxisNaNs(axis, "Minimum");
+                    RemoveAxisNaNs(axis, "Maximum");
+                    RemoveAxisNaNs(axis, "Interval");
                 }
             }
 
-            foreach (JObject folder in JsonUtilities.ChildrenRecursively(root, "Folder"))
+            void RemoveAxisNaNs(JObject axis, string propertyName)
             {
-                JToken showInDocs = folder["ShowPageOfGraphs"];
-                bool show = showInDocs != null && showInDocs.Value<bool>();
-                folder["ShowInDocs"] = show && ShouldShowInDocs(folder);
+                JToken value = axis[propertyName];
+                if (value == null)  
+                    return;
+                if (value.Value<string>() == "NaN")
+                    axis[propertyName] = null;
             }
 
             bool ShouldShowInDocs(JObject folder)

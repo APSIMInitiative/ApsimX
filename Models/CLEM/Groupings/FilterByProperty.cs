@@ -55,13 +55,11 @@ namespace Models.CLEM.Groupings
             if (Validator.TryValidateObject(this, context, results, true))
             {
                 Initialise();
-                Rule = Compile<IFilterable>();
+                BuildRule();
             }
         }
 
-        /// <summary>
-        /// Initialise this filter by property 
-        /// </summary>
+        /// <inheritdoc/>
         public override void Initialise()
         {
             if (PropertyOfIndividual != null && PropertyOfIndividual != "")
@@ -69,6 +67,13 @@ namespace Models.CLEM.Groupings
                 propertyInfo = Parent.GetProperty(PropertyOfIndividual);
                 validOperator = CheckValidOperator(propertyInfo, out string _);
             }
+        }
+
+        /// <inheritdoc/>
+        public override void BuildRule()
+        {
+            if (Rule is null)
+                Rule = Compile<IFilterable>();
         }
 
         /// <inheritdoc/>
