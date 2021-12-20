@@ -53,6 +53,8 @@ namespace UserInterface.Presenters
         /// </summary>
         private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
+        private DateTime startTime;
+
         /// <summary>
         /// Attaches the model to the view.
         /// </summary>
@@ -84,6 +86,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private Task StartWork()
         {
+            startTime = DateTime.Now;
             return Task.Run(WorkerThread).ContinueWith(_ => OnProcessingFinished());
         }
 
@@ -148,11 +151,12 @@ namespace UserInterface.Presenters
                     if (panel.SameXAxes || panel.SameYAxes)
                     {
                         presenter.MainPresenter.ShowWaitCursor(true);
-                        StandardiseAxes();
+                        // StandardiseAxes();
                         presenter.MainPresenter.ShowWaitCursor(false);
                     }
                     int numGraphs = graphs.SelectMany(g => g.Graphs).Count();
-                    presenter.MainPresenter.ShowMessage($"{panel.Name}: finished loading {numGraphs} graphs.", Simulation.MessageType.Information);
+                    TimeSpan elapsed = DateTime.Now - startTime;
+                    presenter.MainPresenter.ShowMessage($"{panel.Name}: finished loading {numGraphs} graphs in {elapsed.TotalSeconds}s.", Simulation.MessageType.Information);
                 }
             }
             catch (Exception err)
@@ -173,52 +177,70 @@ namespace UserInterface.Presenters
 
         private void CreatePageOfGraphs(string sim, Graph[] graphs)
         {
+            if (!panel.Cache.ContainsKey(sim))
+                panel.Cache.Add(sim, new Dictionary<int, List<SeriesDefinition>>());
+
             IStorageReader storage = GetStorage();
-            GraphTab tab = new GraphTab(sim, this.presenter);
-            for (int i = 0; i < graphs.Length; i++)
+            GraphPage graphPage = new GraphPage();
+
+            // If any sims in this tab are missing from the cache, then populate
+            // the cache via the GraphPage instance.
+            if (panel.Cache[sim].Count != graphs.Length)
             {
-                Graph graph = ReflectionUtilities.Clone(graphs[i]) as Graph;
-                graph.Parent = panel;
-                graph.ParentAllDescendants();
-
-                if (panel.LegendOutsideGraph)
-                    graph.LegendOutsideGraph = true;
-
-                if (panel.LegendOrientation != GraphPanel.LegendOrientationType.Default)
-                    graph.LegendOrientation = (LegendOrientation)Enum.Parse(typeof(LegendOrientation), panel.LegendOrientation.ToString());
-
-                if (graph != null && graph.Enabled)
+                for (int i = 0; i < graphs.Length; i++)
                 {
-                    // Apply transformation to graph.
-                    panel.Script.TransformGraph(graph, sim);
-
-                    if (panel.LegendPosition != GraphPanel.LegendPositionType.Default)
-                        graph.LegendPosition = (LegendPosition)Enum.Parse(typeof(LegendPosition), panel.LegendPosition.ToString());
-
-                    // Create and fill cache entry if it doesn't exist.
-                    if (!panel.Cache.ContainsKey(sim) || panel.Cache[sim].Count <= i)
+                    Graph graph = ReflectionUtilities.Clone(graphs[i]) as Graph;
+                    if (graph != null && graph.Enabled)
                     {
-                        if (!storage.TryGetSimulationID(sim, out int _))
-                            throw new Exception($"Illegal simulation name: '{sim}'. Try running the simulation, and if that doesn't fix it, there is a problem with your config script.");
+                        graph.Parent = panel;
+                        graph.ParentAllDescendants();
 
-                        var graphPage = new GraphPage();
+                        if (panel.LegendOutsideGraph)
+                            graph.LegendOutsideGraph = true;
+
+                        if (panel.LegendOrientation != GraphPanel.LegendOrientationType.Default)
+                            graph.LegendOrientation = (LegendOrientation)Enum.Parse(typeof(LegendOrientation), panel.LegendOrientation.ToString());
+
+                        // Apply transformation to graph.
+                        panel.Script.TransformGraph(graph, sim);
+
+                        if (panel.LegendPosition != GraphPanel.LegendPositionType.Default)
+                            graph.LegendPosition = (LegendPosition)Enum.Parse(typeof(LegendPosition), panel.LegendPosition.ToString());
+
                         graphPage.Graphs.Add(graph);
-                        var definitions = graphPage.GetAllSeriesDefinitions(panel, storage, new List<string>() { sim }).ToList();
-
-                        if (!panel.Cache.ContainsKey(sim))
-                            panel.Cache.Add(sim, new Dictionary<int, List<SeriesDefinition>>());
-
-                        panel.Cache[sim][i] = definitions[0].SeriesDefinitions;
                     }
-                    tab.AddGraph(graph, panel.Cache[sim][i]);
+
+                    if (cts.Token.IsCancellationRequested)
+                        return;
                 }
 
-                if (cts.Token.IsCancellationRequested)
-                    return;
+                IReadOnlyList<GraphPage.GraphDefinitionMap> definitions = graphPage.GetAllSeriesDefinitions(panel, storage, new List<string>() { sim }).ToList();
+                // Definitions should - in theory - be the same length as the
+                // graphs array.
+                for (int i = 0; i < graphs.Length; i++)
+                {
+                    GraphPage.GraphDefinitionMap definition = definitions[i];
+                    panel.Cache[sim][i] = definition.SeriesDefinitions;
+                    if (cts.Token.IsCancellationRequested)
+                        return;
+                }
             }
+
+            // Finally, add the graphs to the tab.
+            GraphTab tab = new GraphTab(sim, this.presenter);
+            for (int i = 0; i < graphs.Length; i++)
+                tab.AddGraph(graphs[i], panel.Cache[sim][i]);
 
             this.graphs.Add(tab);
             view.AddTab(tab, panel.NumCols);
+        }
+
+        private GraphPage.GraphDefinitionMap FindMatchingDefinition(IReadOnlyList<GraphPage.GraphDefinitionMap> allDefinitions, Graph graph)
+        {
+            GraphPage.GraphDefinitionMap match = allDefinitions.FirstOrDefault(m => m.Graph == graph);
+            if (match == null)
+                throw new KeyNotFoundException($"Graph {graph.Name} not found. Programming error...");
+            return match;
         }
 
         /// <summary>
