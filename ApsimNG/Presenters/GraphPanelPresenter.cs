@@ -4,7 +4,6 @@ using Models;
 using Models.Storage;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,6 +12,7 @@ using UserInterface.Views;
 using ApsimNG.EventArguments;
 using APSIM.Shared.Graphing;
 using Models.Core.Run;
+using System.Threading;
 
 namespace UserInterface.Presenters
 {
@@ -46,9 +46,12 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Background thread responsible for refreshing the view.
         /// </summary>
-        private BackgroundWorker processingThread;
+        private Task processingThread;
 
-        private WorkerStatus status = new WorkerStatus();
+        /// <summary>
+        /// Cancellation token used to cancel the work.
+        /// </summary>
+        private readonly CancellationTokenSource cts = new CancellationTokenSource();
 
         /// <summary>
         /// Attaches the model to the view.
@@ -72,12 +75,16 @@ namespace UserInterface.Presenters
             properties = new PropertyPresenter();
             properties.Attach(panel, this.view.PropertiesView, presenter);
 
-            processingThread = new BackgroundWorker();
-            processingThread.DoWork += WorkerThread;
-            processingThread.RunWorkerCompleted += OnProcessingFinished;
-            processingThread.WorkerSupportsCancellation = true;
+            processingThread = StartWork();
+        }
 
-            processingThread.RunWorkerAsync();
+        /// <summary>
+        /// Start drawing graphs in a background thread and return a task
+        /// instance representing this task.
+        /// </summary>
+        private Task StartWork()
+        {
+            return Task.Run(WorkerThread).ContinueWith(_ => OnProcessingFinished());
         }
 
         /// <summary>
@@ -85,8 +92,8 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            processingThread.CancelAsync();
-            processingThread.DoWork -= WorkerThread;
+            cts.Cancel();
+            processingThread.Wait();
 
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
             this.view.GraphViewCreated -= ModifyGraphView;
@@ -96,23 +103,13 @@ namespace UserInterface.Presenters
 
         private void Refresh()
         {
-            lock (status)
-            {
-                if (status.IsWorking)
-                {
-                    status.Restart = true;
-                    processingThread.CancelAsync();
-                }
-                else
-                    processingThread.RunWorkerAsync();
-            }
+            cts.Cancel();
+            processingThread.Wait();
+            processingThread = StartWork();
         }
 
-        private void WorkerThread(object sender, DoWorkEventArgs e)
+        private void WorkerThread()
         {
-            lock (status)
-                status.IsWorking = true;
-
             ClearGraphs();
             Graph[] graphs = panel.FindAllChildren<Graph>().Cast<Graph>().ToArray();
 
@@ -127,37 +124,20 @@ namespace UserInterface.Presenters
                     {
                         CreatePageOfGraphs(sim, graphs);
 
-                        if (processingThread.CancellationPending)
-                        {
-                            e.Cancel = true;
+                        if (cts.Token.IsCancellationRequested)
                             return;
-                        }
                     }
                 }
             }
         }
 
-        private void OnProcessingFinished(object sender, RunWorkerCompletedEventArgs e)
+        private void OnProcessingFinished()
         {
             try
             {
-                bool restart = false;
-                lock (status)
-                {
-                    status.IsWorking = false;
-
-                    if (status.Restart)
-                    {
-                        restart = true;
-                        status.Restart = false;
-                    }
-                }
-
-                if (restart)
-                    processingThread.RunWorkerAsync();
-                else if (e.Error != null)
-                    presenter.MainPresenter.ShowError(e.Error);
-                else if (!e.Cancelled)
+                if (processingThread.Exception != null)
+                    presenter.MainPresenter.ShowError(processingThread.Exception);
+                else if (!cts.Token.IsCancellationRequested)
                 {
                     // The worker thread has finished. Now standardise the axes (if necessary).
                     // This will freeze the UI thread while working, but it's easier than the
@@ -189,7 +169,6 @@ namespace UserInterface.Presenters
                         graphPresenter?.Detach();
 
             graphs.Clear();
-            view.RemoveGraphTabs();
         }
 
         private void CreatePageOfGraphs(string sim, Graph[] graphs)
@@ -234,7 +213,7 @@ namespace UserInterface.Presenters
                     tab.AddGraph(graph, panel.Cache[sim][i]);
                 }
 
-                if (processingThread.CancellationPending)
+                if (cts.Token.IsCancellationRequested)
                     return;
             }
 
@@ -337,12 +316,6 @@ namespace UserInterface.Presenters
         {
             if (processingThread != null)
                 processingThread.Dispose();
-        }
-
-        private class WorkerStatus
-        {
-            public bool IsWorking { get; set; }
-            public bool Restart { get; set; }
         }
 
         public class PanelGraph
