@@ -18,22 +18,21 @@
         [STAThread]
         public static int Main(string[] args)
         {
-            LoadTheme();
-
-            Task.Run(() => Intellisense.CodeCompletionService.Init());
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
-
-
-            Gtk.Application.Init();
-
-            Gtk.Settings.Default.SetProperty("gtk-overlay-scrolling", new GLib.Value(0));
-
-            IntellisensePresenter.Init();
-            MainView mainForm = new MainView();
-            MainPresenter mainPresenter = new MainPresenter();
-
             try
             {
+                LoadTheme();
+
+                Task.Run(() => Intellisense.CodeCompletionService.Init());
+                Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+
+                Gtk.Application.Init();
+
+                Gtk.Settings.Default.SetProperty("gtk-overlay-scrolling", new GLib.Value(0));
+
+                IntellisensePresenter.Init();
+                MainView mainForm = new MainView();
+                MainPresenter mainPresenter = new MainPresenter();
+
                 mainPresenter.Attach(mainForm, args);
                 mainForm.MainWidget.ShowAll();
                 if (args.Length == 0 || Path.GetExtension(args[0]) != ".cs")
