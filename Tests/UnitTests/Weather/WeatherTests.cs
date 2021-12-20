@@ -75,7 +75,6 @@ namespace UnitTests.Weather
                     {
                         new Clock(),
                         new MockSummary(),
-                        new DataStore(database),
                         new Models.Climate.Weather()
                         {
                             FullFileName = metFile
@@ -102,6 +101,7 @@ namespace UnitTests.Weather
                 {
                     Children = new List<IModel>()
                     {
+                        new DataStore(database),
                         sim
                     }
                 };
