@@ -77,17 +77,17 @@ namespace UserInterface.Presenters
             properties = new PropertyPresenter();
             properties.Attach(panel, this.view.PropertiesView, presenter);
 
-            processingThread = StartWork();
+            (processingThread, startTime) = StartWork();
         }
 
         /// <summary>
         /// Start drawing graphs in a background thread and return a task
         /// instance representing this task.
         /// </summary>
-        private Task StartWork()
+        private (Task, DateTime) StartWork()
         {
-            startTime = DateTime.Now;
-            return Task.Run(WorkerThread).ContinueWith(_ => OnProcessingFinished());
+            Task task = Task.Run(WorkerThread).ContinueWith(_ => OnProcessingFinished());
+            return (task, DateTime.Now);
         }
 
         /// <summary>
@@ -108,7 +108,7 @@ namespace UserInterface.Presenters
         {
             cts.Cancel();
             processingThread.Wait();
-            processingThread = StartWork();
+            (processingThread, startTime) = StartWork();
         }
 
         private void WorkerThread()
@@ -143,17 +143,17 @@ namespace UserInterface.Presenters
                 else if (!cts.Token.IsCancellationRequested)
                 {
                     // The worker thread has finished. Now standardise the axes (if necessary).
-                    // This will freeze the UI thread while working, but it's easier than the
-                    // alternative which is to have certain parts of this running on the main
-                    // thread, and certain parts running on the worker thread. In such an
-                    // implementation, large chunks of functionality would need to be moved
-                    // into the view and the synchronisation would be a nightmare.
+                    // There are a few complications here:
+                    // - This must be run on the UI thread
+                    // - This must not run until after the graph panel view has
+                    //   finished processing all graph tabs (ie it has set the
+                    //   view objects to GraphView instances).
+                    // I've opted for the simple approach of Gtk.Application.Invoke().
+                    // Arguably we shouldn't be relying on the Gtk API here but
+                    // this is going to be much simpler than the alternatives.
                     if (panel.SameXAxes || panel.SameYAxes)
-                    {
-                        presenter.MainPresenter.ShowWaitCursor(true);
-                        // StandardiseAxes();
-                        presenter.MainPresenter.ShowWaitCursor(false);
-                    }
+                        Gtk.Application.Invoke((_, __) => StandardiseAxes());
+
                     int numGraphs = graphs.SelectMany(g => g.Graphs).Count();
                     TimeSpan elapsed = DateTime.Now - startTime;
                     presenter.MainPresenter.ShowMessage($"{panel.Name}: finished loading {numGraphs} graphs in {elapsed.TotalSeconds}s.", Simulation.MessageType.Information);
@@ -249,38 +249,93 @@ namespace UserInterface.Presenters
         /// </summary>
         private void StandardiseAxes()
         {
+            if (!panel.Cache.Any())
+                return;
+
             // Loop over each graph. ie if each tab contains five
             // graphs, then loop over these five graphs.
             int graphsPerPage = panel.Cache.First().Value.Count;
             for (int i = 0; i < graphsPerPage; i++)
             {
-                // Get all graph series for this graph from each simulation.
-                // ie. get the data behind each lai graph in each simulation.
-                List<SeriesDefinition> series = panel.Cache.Values.SelectMany(v => v[i]).ToList();
-
-                // Now draw all these series onto a single graph.
-                GraphPresenter graphPresenter = new GraphPresenter();
-                GraphView graphView = new GraphView(view as ViewBase);
-                presenter.ApsimXFile.Links.Resolve(graphPresenter);
-                graphPresenter.Attach(graphs[0].Graphs[i].Graph, graphView, presenter, panel.Cache.SelectMany(c => c.Value.SelectMany(v => v.Value)).ToList());
-                graphPresenter.DrawGraph(series);
-
-                Axis[] axes = graphView.Axes.ToArray(); // This should always be length 2
-                Axis[] xAxes = axes.Where(a => a.Position == AxisPosition.Bottom || a.Position == AxisPosition.Top).ToArray();
-                Axis[] yAxes = axes.Where(a => a.Position == AxisPosition.Left|| a.Position == AxisPosition.Right).ToArray();
-
-                foreach (GraphTab tab in graphs)
+                if (panel.SameXAxes)
                 {
-                    if (tab.Graphs[i].View != null)
-                    {
-                        if (panel.SameXAxes)
-                            FormatAxes(tab.Graphs[i].View, xAxes);
-                        if (panel.SameYAxes)
-                            FormatAxes(tab.Graphs[i].View, yAxes);
-                    }
+                    StandardiseAxis(AxisPosition.Bottom, i);
+                    StandardiseAxis(AxisPosition.Top, i);
+                }
+
+                if (panel.SameYAxes)
+                {
+                    StandardiseAxis(AxisPosition.Left, i);
+                    StandardiseAxis(AxisPosition.Right, i);
                 }
             }
         }
+
+        /// <summary>
+        /// Modify the nth graph in each tab such that it has the same axis
+        /// max and min on the given axis.
+        /// </summary>
+        /// <param name="axisType">The axis to be modified.</param>
+        /// <param name="index">The index of the graph in each tab to be modified.</param>
+        private void StandardiseAxis(AxisPosition axisType, int index)
+        {
+            double max = GetAxisMax(axisType, index);
+            if (!double.IsNaN(max))
+                SetAxisMax(axisType, index, max);
+
+            double min = GetAxisMin(axisType, index);
+            if (!double.IsNaN(min))
+                SetAxisMin(axisType, index, min);
+        }
+
+        /// <summary>
+        /// Set the axis minimum for the nth graph in each graph tab.
+        /// </summary>
+        /// <param name="axisType">The type of axis to be modified.</param>
+        /// <param name="graphIndex">The index of the graph in each tab to be modified.</param>
+        /// <param name="value">The new axis minimum value.</param>
+        private void SetAxisMin(AxisPosition axisType, int graphIndex, double value)
+        {
+            foreach (GraphView view in GetGraphViews(graphIndex))
+                view.SetAxisMin(value, axisType);
+        }
+
+        /// <summary>
+        /// Set the axis maximum for the nth graph in each graph tab.
+        /// </summary>
+        /// <param name="axisType">The type of axis to be modified.</param>
+        /// <param name="graphIndex">The index of the graph in each tab to be modified.</param>
+        /// <param name="value">The new axis maximum value.</param>
+        private void SetAxisMax(AxisPosition axisType, int graphIndex, double value)
+        {
+            foreach (GraphView view in GetGraphViews(graphIndex))
+                view.SetAxisMax(value, axisType);
+        }
+
+        /// <summary>
+        /// Get the graph view instances for the nth graph in each tab.
+        /// </summary>
+        /// <param name="index">Index of the graph in each tab.</param>
+        private IEnumerable<GraphView> GetGraphViews(int index)
+        {
+            return graphs.Select(t => t.Graphs[index].View);
+        }
+
+        /// <summary>
+        /// Get the smallest value on the given axis of the given graph across
+        /// all tabs.
+        /// </summary>
+        /// <param name="axisType">The axis type (e.g. top, left, ...).</param>
+        /// <param name="graphIndex">The index of the graph to be examined in each tab.</param>
+        private double GetAxisMin(AxisPosition axisType, int graphIndex) => graphs.Max(t => t.Graphs[graphIndex].View.AxisMaximum(axisType));
+
+        /// <summary>
+        /// Get the largest value on the given axis of the given graph across
+        /// all tabs.
+        /// </summary>
+        /// <param name="axisType">The axis type (e.g. top, left, ...).</param>
+        /// <param name="graphIndex">The index of the graph to be examined in each tab.</param>
+        private double GetAxisMax(AxisPosition axisType, int graphIndex) => graphs.Min(t => t.Graphs[graphIndex].View.AxisMaximum(axisType));
 
         /// <summary>
         /// Force a graph to use a given set of axes.
