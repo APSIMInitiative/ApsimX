@@ -327,7 +327,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="axisType">The axis type (e.g. top, left, ...).</param>
         /// <param name="graphIndex">The index of the graph to be examined in each tab.</param>
-        private double GetAxisMin(AxisPosition axisType, int graphIndex) => graphs.Max(t => t.Graphs[graphIndex].View.AxisMaximum(axisType));
+        private double GetAxisMin(AxisPosition axisType, int graphIndex) => graphs.Min(t => t.Graphs[graphIndex].View.AxisMinimum(axisType));
 
         /// <summary>
         /// Get the largest value on the given axis of the given graph across
@@ -335,7 +335,7 @@ namespace UserInterface.Presenters
         /// </summary>
         /// <param name="axisType">The axis type (e.g. top, left, ...).</param>
         /// <param name="graphIndex">The index of the graph to be examined in each tab.</param>
-        private double GetAxisMax(AxisPosition axisType, int graphIndex) => graphs.Min(t => t.Graphs[graphIndex].View.AxisMaximum(axisType));
+        private double GetAxisMax(AxisPosition axisType, int graphIndex) => graphs.Max(t => t.Graphs[graphIndex].View.AxisMaximum(axisType));
 
         /// <summary>
         /// Force a graph to use a given set of axes.
