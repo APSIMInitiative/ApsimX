@@ -174,6 +174,7 @@ namespace UserInterface.Presenters
                         graphPresenter?.Detach();
 
             graphs.Clear();
+            view.RemoveGraphTabs();
         }
 
         private void CreatePageOfGraphs(string sim, Graph[] graphs)
