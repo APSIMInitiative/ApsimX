@@ -51,7 +51,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Cancellation token used to cancel the work.
         /// </summary>
-        private readonly CancellationTokenSource cts = new CancellationTokenSource();
+        private CancellationTokenSource cts = new CancellationTokenSource();
 
         private DateTime startTime;
 
@@ -86,6 +86,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private (Task, DateTime) StartWork()
         {
+            cts = new CancellationTokenSource();
             Task task = Task.Run(WorkerThread).ContinueWith(_ => OnProcessingFinished());
             return (task, DateTime.Now);
         }
