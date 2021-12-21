@@ -115,7 +115,7 @@ namespace UserInterface.Presenters
         private void WorkerThread()
         {
             ClearGraphs();
-            Graph[] graphs = panel.FindAllChildren<Graph>().Cast<Graph>().ToArray();
+            Graph[] graphs = panel.FindAllChildren<Graph>().ToArray();
 
             IGraphPanelScript script = panel.Script;
             if (script != null)
@@ -185,40 +185,25 @@ namespace UserInterface.Presenters
             IStorageReader storage = GetStorage();
             GraphPage graphPage = new GraphPage();
 
+            // Configure graphs by applying user overrides.
+            for (int i = 0; i < graphs.Length; i++)
+            {
+                if (graphs[i] != null && graphs[i].Enabled)
+                    graphPage.Graphs.Add(ConfigureGraph(graphs[i], sim));
+
+                if (cts.Token.IsCancellationRequested)
+                    return;
+            }
+
             // If any sims in this tab are missing from the cache, then populate
             // the cache via the GraphPage instance.
             if (panel.Cache[sim].Count != graphs.Length)
             {
-                for (int i = 0; i < graphs.Length; i++)
-                {
-                    Graph graph = ReflectionUtilities.Clone(graphs[i]) as Graph;
-                    if (graph != null && graph.Enabled)
-                    {
-                        graph.Parent = panel;
-                        graph.ParentAllDescendants();
-
-                        if (panel.LegendOutsideGraph)
-                            graph.LegendOutsideGraph = true;
-
-                        if (panel.LegendOrientation != GraphPanel.LegendOrientationType.Default)
-                            graph.LegendOrientation = (LegendOrientation)Enum.Parse(typeof(LegendOrientation), panel.LegendOrientation.ToString());
-
-                        // Apply transformation to graph.
-                        panel.Script.TransformGraph(graph, sim);
-
-                        if (panel.LegendPosition != GraphPanel.LegendPositionType.Default)
-                            graph.LegendPosition = (LegendPosition)Enum.Parse(typeof(LegendPosition), panel.LegendPosition.ToString());
-
-                        graphPage.Graphs.Add(graph);
-                    }
-
-                    if (cts.Token.IsCancellationRequested)
-                        return;
-                }
-
+                // Read data from storage.
                 IReadOnlyList<GraphPage.GraphDefinitionMap> definitions = graphPage.GetAllSeriesDefinitions(panel, storage, new List<string>() { sim }).ToList();
-                // Definitions should - in theory - be the same length as the
-                // graphs array.
+
+                // Now populate the cache for this simulation. The definitions
+                // should - in theory - be the same length as the graphs array.
                 for (int i = 0; i < graphs.Length; i++)
                 {
                     GraphPage.GraphDefinitionMap definition = definitions[i];
@@ -230,11 +215,31 @@ namespace UserInterface.Presenters
 
             // Finally, add the graphs to the tab.
             GraphTab tab = new GraphTab(sim, this.presenter);
-            for (int i = 0; i < graphs.Length; i++)
-                tab.AddGraph(graphs[i], panel.Cache[sim][i]);
+            for (int i = 0; i < graphPage.Graphs.Count; i++)
+                tab.AddGraph(graphPage.Graphs[i], panel.Cache[sim][i]);
 
             this.graphs.Add(tab);
             view.AddTab(tab, panel.NumCols);
+        }
+
+        private Graph ConfigureGraph(Graph graph, string simulationName)
+        {
+            graph = (Graph)ReflectionUtilities.Clone(graph);
+            graph.Parent = panel;
+            graph.ParentAllDescendants();
+
+            // Apply transformation to graph.
+            panel.Script.TransformGraph(graph, simulationName);
+
+            if (panel.LegendOutsideGraph)
+                graph.LegendOutsideGraph = true;
+
+            if (panel.LegendOrientation != GraphPanel.LegendOrientationType.Default)
+                graph.LegendOrientation = (LegendOrientation)Enum.Parse(typeof(LegendOrientation), panel.LegendOrientation.ToString());
+
+            if (panel.LegendPosition != GraphPanel.LegendPositionType.Default)
+                graph.LegendPosition = (LegendPosition)Enum.Parse(typeof(LegendPosition), panel.LegendPosition.ToString());
+            return graph;
         }
 
         private GraphPage.GraphDefinitionMap FindMatchingDefinition(IReadOnlyList<GraphPage.GraphDefinitionMap> allDefinitions, Graph graph)
