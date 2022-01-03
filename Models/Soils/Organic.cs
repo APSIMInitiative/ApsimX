@@ -4,6 +4,7 @@
     using APSIM.Shared.Utilities;
     using Models.Core;
     using System;
+    using Newtonsoft.Json;
 
     /// <summary>A model for capturing soil organic parameters</summary>
     [Serializable]
@@ -15,6 +16,7 @@
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Description("Depth")]
         [Units("cm")]
+        [JsonIgnore]
         public string[] Depth
         {
             get
