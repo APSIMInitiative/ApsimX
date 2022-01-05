@@ -470,8 +470,7 @@
             string lowerBounds = StringUtilities.Build(Parameters.Select(p => p.LowerBound), ",");
             string upperBounds = StringUtilities.Build(Parameters.Select(p => p.UpperBound), ",");
             string script = GetMorrisRScript();
-            script += string.Format
-            ("apsimMorris$X <- read.csv(\"{0}\")" + Environment.NewLine +
+            script += string.Format("apsimMorris$X <- read.csv(\"{0}\")" + Environment.NewLine +
             "values = read.csv(\"{1}\", check.names = F)" + Environment.NewLine +
             "allEE <- data.frame()" + Environment.NewLine +
             "allStats <- data.frame()" + Environment.NewLine +
@@ -519,8 +518,7 @@
             string paramNames = StringUtilities.Build(Parameters.Select(p => p.Name), ",", "\"", "\"");
             string lowerBounds = StringUtilities.Build(Parameters.Select(p => p.LowerBound), ",");
             string upperBounds = StringUtilities.Build(Parameters.Select(p => p.UpperBound), ",");
-            string script = string.Format
-            ($".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
+            string script = string.Format($".libPaths(c('{R.PackagesDirectory}', .libPaths()))" + Environment.NewLine +
             $"library('sensitivity')" + Environment.NewLine +
             "params <- c({0})" + Environment.NewLine +
             "apsimMorris<-morris(model=NULL" + Environment.NewLine +

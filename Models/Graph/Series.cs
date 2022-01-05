@@ -401,8 +401,7 @@
             if (FactorToVaryColours != null)
             {
                 if (FactorToVaryLines == FactorToVaryColours && FactorToVaryMarkers == FactorToVaryColours)
-                    painter = new SequentialPainter
-                        (this, FactorToVaryColours,
+                    painter = new SequentialPainter(this, FactorToVaryColours,
                          ColourUtilities.Colours.Length,
                          Enum.GetValues(typeof(MarkerType)).Length - 1, // minus 1 to avoid None type
                          Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type
@@ -410,21 +409,18 @@
                          SeriesDefinition.SetMarker,
                          SeriesDefinition.SetLineType);
                 else if (FactorToVaryLines == FactorToVaryColours)
-                    painter = new SequentialPainter
-                        (this, FactorToVaryColours,
+                    painter = new SequentialPainter(this, FactorToVaryColours,
                          ColourUtilities.Colours.Length, Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type
                          SeriesDefinition.SetColour,
                          SeriesDefinition.SetLineType);
                 else if (FactorToVaryMarkers == FactorToVaryColours)
-                    painter = new SequentialPainter
-                       (this, FactorToVaryColours,
+                    painter = new SequentialPainter(this, FactorToVaryColours,
                         ColourUtilities.Colours.Length,
                         Enum.GetValues(typeof(MarkerType)).Length - 1,// minus 1 to avoid None type
                         SeriesDefinition.SetColour,
                         SeriesDefinition.SetMarker);
                 else if (FactorToVaryLines != null && FactorToVaryMarkers != null)
-                    painter = new MultiDescriptorPainter
-                       (FactorToVaryColours, FactorToVaryLines, FactorToVaryMarkers,
+                    painter = new MultiDescriptorPainter(FactorToVaryColours, FactorToVaryLines, FactorToVaryMarkers,
                         ColourUtilities.Colours.Length,
                         Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type
                         Enum.GetValues(typeof(MarkerType)).Length - 1, // minus 1 to avoid None type
@@ -433,38 +429,33 @@
                         SeriesDefinition.SetMarker);
 
                 else if (FactorToVaryLines != null)
-                    painter = new MultiDescriptorPainter
-                       (FactorToVaryColours,
+                    painter = new MultiDescriptorPainter(FactorToVaryColours,
                         FactorToVaryLines,
                         ColourUtilities.Colours.Length,
                         Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type
                         SeriesDefinition.SetColour,
                         SeriesDefinition.SetLineType);
                 else if (FactorToVaryMarkers != null)
-                    painter = new MultiDescriptorPainter
-                       (FactorToVaryColours,
+                    painter = new MultiDescriptorPainter(FactorToVaryColours,
                         FactorToVaryMarkers,
                         ColourUtilities.Colours.Length,
                         Enum.GetValues(typeof(MarkerType)).Length - 1,// minus 1 to avoid None type
                         SeriesDefinition.SetColour,
                         SeriesDefinition.SetMarker);
                 else
-                    painter = new SequentialPainter
-                       (this, FactorToVaryColours,
+                    painter = new SequentialPainter(this, FactorToVaryColours,
                         ColourUtilities.Colours.Length,
                         SeriesDefinition.SetColour);
             }
             else if (FactorToVaryLines != null)
             {
-                painter = new SequentialPainter
-                   (this, FactorToVaryLines,
+                painter = new SequentialPainter(this, FactorToVaryLines,
                     Enum.GetValues(typeof(LineType)).Length - 1, // minus 1 to avoid None type   
                     SeriesDefinition.SetLineType);
             }
             else if (FactorToVaryMarkers != null)
             {
-                painter = new SequentialPainter
-                   (this, FactorToVaryMarkers,
+                painter = new SequentialPainter(this, FactorToVaryMarkers,
                     Enum.GetValues(typeof(MarkerType)).Length - 1,// minus 1 to avoid None type
                     SeriesDefinition.SetMarker);
             }

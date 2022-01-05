@@ -190,8 +190,7 @@ namespace Models
                 double lowestAxisScale = Math.Min(minimumX, minimumY);
                 double largestAxisScale = Math.Max(maximumX, maximumY);
 
-                var regressionDefinition = new SeriesDefinition
-                    (title, colour,
+                var regressionDefinition = new SeriesDefinition(title, colour,
                      new double[] { minimumX, maximumX },
                      new double[] { stat.Slope * minimumX + stat.Intercept, stat.Slope * maximumX + stat.Intercept });
                 return regressionDefinition;
@@ -208,8 +207,7 @@ namespace Models
             double lowestAxisScale = Math.Min(minX, minY);
             double largestAxisScale = Math.Max(maxX, maxY);
 
-            return new SeriesDefinition
-                ("1:1 line", Color.Empty,
+            return new SeriesDefinition("1:1 line", Color.Empty,
                 new double[] { lowestAxisScale, largestAxisScale },
                 new double[] { lowestAxisScale, largestAxisScale },
                 LineType.Dash, MarkerType.None);
