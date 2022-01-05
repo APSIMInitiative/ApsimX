@@ -267,7 +267,6 @@ namespace Models.CLEM.Resources
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 if (this.InterestRateCharged + this.InterestRatePaid == 0)
                     htmlWriter.Write("No interest rates included");
-
                 else
                 {
                     htmlWriter.Write("Interest rate of ");

@@ -88,7 +88,6 @@ namespace Models.PMF.Phen
                     doGermination(ref proceedToNextPhase, ref propOfDayToUse);
                 }
             }
-
             else if (!phenology.OnStartDayOf("Sowing") && waterBalance.SWmm[SowLayer] > soilPhysical.LL15mm[SowLayer])
             {
                 doGermination(ref proceedToNextPhase, ref propOfDayToUse);

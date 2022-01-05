@@ -2621,7 +2621,6 @@ namespace Models.Soils
 
                             Ctot = 0.0;
                         }
-
                         else if (Ctot < 0.0)
                         {
                             // Ctot is negative and a fatal error is thrown. Should not happen as it has been tested on apswim_freundlich
@@ -4613,7 +4612,6 @@ namespace Models.Soils
                     Cw = MathUtilities.Divide(Ctot, th[node], 0.0, divideTolerance);
                     solved = true;
                 }
-
                 else if (MathUtilities.FloatsAreEqual(fip[solnum][node], 0.0, floatComparisonTolerance))
                 {
                     // Full adsorption, solute is immobile:
@@ -4621,7 +4619,6 @@ namespace Models.Soils
                     Cw = 0.0;
                     solved = true;
                 }
-
                 else if (MathUtilities.FloatsAreEqual(fip[solnum][node], 1.0, floatComparisonTolerance))
                 {
                     // Linear adsorption:
@@ -4667,7 +4664,6 @@ namespace Models.Soils
                     //                derivative is too large, so Cw must be zero - this is a solution too
                     //               Cw = 0d0
                     //               solved = .true.
-
                     else
                     {
                         // Iterate until a solution is found or max_iterations is reached
@@ -4715,7 +4711,6 @@ namespace Models.Soils
 
                     Cw = 0.0;
                 }
-
                 else if (Cw < 0)
                 {
                     // Cw is negative, this is a fatal error.
@@ -4733,7 +4728,6 @@ namespace Models.Soils
                 // Publish the computed value
                 return Cw;
             }
-
             else
             {
                 // A solution was not found

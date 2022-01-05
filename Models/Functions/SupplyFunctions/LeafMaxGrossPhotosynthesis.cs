@@ -82,7 +82,6 @@ namespace Models.Functions.SupplyFunctions
                 CO2Func = CO2/ (CO2 + 150) * (CO2ref + 150)/CO2ref;
 
             }
-
             else
                 throw new ApsimXException(this, "Need to be C3 or C4");
 

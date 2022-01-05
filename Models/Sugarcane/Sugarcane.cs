@@ -5633,7 +5633,6 @@ namespace Models
                     io_current_stage = 1.0;
                     }
                 }
-
             else
                 {
                 io_current_stage = l_new_stage;
@@ -6801,7 +6800,6 @@ namespace Models
                 //! Put the excess dry matter in sstem
                 o_dlt_dm_green[sstem] = o_partition_xs;
                 }
-
             else if (stage_is_between(begcane, crop_end, i_current_stage))
                 {
                 //! if leaf component makes leaves too thick extra goes to sstem
@@ -6836,7 +6834,6 @@ namespace Models
                     o_partition_xs = l_dlt_cane - l_dlt_cane_min;
                     }
                 }
-
             else
                 {
                 //! no partitioning
@@ -7812,7 +7809,6 @@ namespace Models
                                 g_sw_avail_pot, g_sw_avail,
                                 g_current_stage, crop.n_fix_rate, l_fixation_determinant, g_swdef_fixation, ref g_n_fix_pot);
                 }
-
             else
                 {
                 throw new ApsimXException(this, "Invalid template option");
@@ -8467,7 +8463,6 @@ namespace Models
                 l_NO3gsm_mflow = u_bound(l_NO3gsm_mflow, l_N_max_tot);
                 l_NO3gsm_diffn = 0.0;
                 }
-
             else
                 {
                 l_NO3gsm_mflow = l_NO3gsm_mflow_supply;
@@ -8831,7 +8826,6 @@ namespace Models
                 o_dlt_plants = -i_plants;
                 Summary.WriteMessage(this, " crop failure because of lack of" + "/n" + "         germination within" + c_days_germ_limit + " days of sowing", MessageType.Warning);
                 }
-
             else
                 {
                 o_dlt_plants = 0.0;
@@ -8960,7 +8954,6 @@ namespace Models
 
                 Summary.WriteMessage(this,"plant_kill." + Math.Truncate(l_killfr * 100.0) + "% failure because of water stress.", MessageType.Warning);
                 }
-
             else
                 {
                 o_dlt_plants = 0.0;
@@ -12513,7 +12506,6 @@ namespace Models
                 sugar_nit_demand_est(g_dm_green, g_dlt_dm_pot_rue_pot, g_n_conc_crit, g_n_green, ref g_n_demand);
 
                 }
-
             else
                 {
                 sugar_get_soil_variables(ref g_no3gsm, ref g_no3gsm_min, ref g_nh4gsm, ref g_nh4gsm_min);

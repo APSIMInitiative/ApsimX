@@ -431,7 +431,6 @@
                         SeriesDefinition.SetColour,
                         SeriesDefinition.SetLineType,
                         SeriesDefinition.SetMarker);
-
                 else if (FactorToVaryLines != null)
                     painter = new MultiDescriptorPainter
                        (FactorToVaryColours,
