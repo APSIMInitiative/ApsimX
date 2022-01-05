@@ -140,4 +140,3 @@ namespace Models.Agroforestry
         public double CalculateSunSet(){return 12 + CalculateDayLength(-6) / 2;}
     }
 }
-

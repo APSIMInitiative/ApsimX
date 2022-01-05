@@ -19,7 +19,3 @@ namespace Models.PMF.Interfaces
         bool IsAboveGround { get; }
     }
 }
-
-
-
-   

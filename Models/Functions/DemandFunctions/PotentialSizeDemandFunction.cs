@@ -81,5 +81,3 @@ namespace Models.Functions.DemandFunctions
 
     }
 }
-
-
