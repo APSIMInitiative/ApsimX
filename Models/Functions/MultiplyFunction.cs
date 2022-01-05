@@ -70,17 +70,17 @@ namespace Models.Functions
 
         private static bool NameEqualsValue(string name, double value)
         {
-            return name.Equals("zero", StringComparison.InvariantCultureIgnoreCase) && value == 0 || 
-                   name.Equals("one", StringComparison.InvariantCultureIgnoreCase) && value == 1 ||
-                   name.Equals("two", StringComparison.InvariantCultureIgnoreCase) && value == 2 ||
-                   name.Equals("three", StringComparison.InvariantCultureIgnoreCase) && value == 3 ||
-                   name.Equals("four", StringComparison.InvariantCultureIgnoreCase) && value == 4 ||
-                   name.Equals("five", StringComparison.InvariantCultureIgnoreCase) && value == 5 ||
-                   name.Equals("six", StringComparison.InvariantCultureIgnoreCase) && value == 6 ||
-                   name.Equals("seven", StringComparison.InvariantCultureIgnoreCase) && value == 7 ||
-                   name.Equals("eight", StringComparison.InvariantCultureIgnoreCase) && value == 8 ||
-                   name.Equals("nine", StringComparison.InvariantCultureIgnoreCase) && value == 9 ||
-                   name.Equals("ten", StringComparison.InvariantCultureIgnoreCase) && value == 10 ||
+            return (name.Equals("zero", StringComparison.InvariantCultureIgnoreCase) && value == 0) || 
+                   (name.Equals("one", StringComparison.InvariantCultureIgnoreCase) && value == 1) ||
+                   (name.Equals("two", StringComparison.InvariantCultureIgnoreCase) && value == 2) ||
+                   (name.Equals("three", StringComparison.InvariantCultureIgnoreCase) && value == 3) ||
+                   (name.Equals("four", StringComparison.InvariantCultureIgnoreCase) && value == 4) ||
+                   (name.Equals("five", StringComparison.InvariantCultureIgnoreCase) && value == 5) ||
+                   (name.Equals("six", StringComparison.InvariantCultureIgnoreCase) && value == 6) ||
+                   (name.Equals("seven", StringComparison.InvariantCultureIgnoreCase) && value == 7) ||
+                   (name.Equals("eight", StringComparison.InvariantCultureIgnoreCase) && value == 8) ||
+                   (name.Equals("nine", StringComparison.InvariantCultureIgnoreCase) && value == 9) ||
+                   (name.Equals("ten", StringComparison.InvariantCultureIgnoreCase) && value == 10) ||
                    name.Equals("constant", StringComparison.InvariantCultureIgnoreCase);
         }
     }
