@@ -255,6 +255,7 @@
                     {
                         Thickness = new double[] { 100, 200 },
                         PH = new double[] { 6.4, double.NaN },
+                        Name = "Sample2"
                     }
                 }
             };
