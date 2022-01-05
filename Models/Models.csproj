@@ -13,6 +13,7 @@
 	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <ServerGarbageCollection>true</ServerGarbageCollection>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <CodeAnalysisRuleSet>../.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
 
   <ItemGroup>
@@ -31,6 +32,10 @@
     <PackageReference Include="MigraDocCore.DocumentObjectModel" Version="0.1.1" />
     <PackageReference Include="MigraDocCore.Rendering" Version="0.1.0" />
     <PackageReference Include="PdfSharpCore" Version="1.2.11" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.2.0-beta.376">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+  </PackageReference>
 
     <EmbeddedResource Include="Resources\**" />
     <None Remove="Resources\**" />
