@@ -361,17 +361,20 @@ namespace Models.PMF.Struct
 					if (plant.SowingData.SkipRow > 1.9)
 					{
 						// Double (2.0).
-						intercept = 0.5786; slope = -0.0521;
+						intercept = 0.5786;
+						slope = -0.0521;
 					}
 					else if (plant.SowingData.SkipRow > 1.4)
 					{
 						// Single (1.5).
-						intercept = 0.8786; slope = -0.0696;
+						intercept = 0.8786;
+						slope = -0.0696;
 					}
 					else
 					{
 						// Solid (1.0).
-						intercept = 1.1786; slope = -0.0871;
+						intercept = 1.1786;
+						slope = -0.0871;
 					}
 				}
 				else
@@ -380,17 +383,20 @@ namespace Models.PMF.Struct
 					if (plant.SowingData.SkipRow > 1.9)
 					{
 						// Double (2.0).
-						intercept = 0.4786; slope = -0.0421;
+						intercept = 0.4786;
+						slope = -0.0421;
 					}
 					else if (plant.SowingData.SkipRow > 1.4)
 					{
 						// Single (1.5)
-						intercept = 0.6393; slope = -0.0486;
+						intercept = 0.6393;
+						slope = -0.0486;
 					}
 					else
 					{
 						// Solid (1.0).
-						intercept = 0.8000; slope = -0.0550;
+						intercept = 0.8000;
+						slope = -0.0550;
 					}
 				}
 			}
@@ -403,17 +409,20 @@ namespace Models.PMF.Struct
 					if (plant.SowingData.SkipRow > 1.9)
 					{
 						// Double  (2.0).
-						intercept = 1.1571; slope = -0.1043;
+						intercept = 1.1571;
+						slope = -0.1043;
 					}
 					else if (plant.SowingData.SkipRow > 1.4)
 					{
 						// Single (1.5).
-						intercept = 1.7571; slope = -0.1393;
+						intercept = 1.7571;
+						slope = -0.1393;
 					}
 					else
 					{
 						// Solid (1.0).
-						intercept = 2.3571; slope = -0.1743;
+						intercept = 2.3571;
+						slope = -0.1743;
 					}
 				}
 				else
@@ -422,17 +431,20 @@ namespace Models.PMF.Struct
 					if (plant.SowingData.SkipRow > 1.9)
 					{
 						// Double (2.0).
-						intercept = 0.6786; slope = -0.0621;
+						intercept = 0.6786;
+						slope = -0.0621;
 					}
 					else if (plant.SowingData.SkipRow > 1.4)
 					{
 						// Single (1.5).
-						intercept = 1.1679; slope = -0.0957;
+						intercept = 1.1679;
+						slope = -0.0957;
 					}
 					else
 					{
 						// Solid (1.0).
-						intercept = 1.6571; slope = -0.1293;
+						intercept = 1.6571;
+						slope = -0.1293;
 					}
 				}
 			}
@@ -445,17 +457,20 @@ namespace Models.PMF.Struct
 					if (plant.SowingData.SkipRow > 1.9)
 					{
 						// Double (2.0).
-						intercept = 1.3571; slope = -0.1243;
+						intercept = 1.3571;
+						slope = -0.1243;
 					}
 					else if (plant.SowingData.SkipRow > 1.4)
 					{
 						// Single (1.5).
-						intercept = 2.2357; slope = -0.1814;
+						intercept = 2.2357;
+						slope = -0.1814;
 					}
 					else
 					{
 						// Solid (1.0).
-						intercept = 3.1143; slope = -0.2386;
+						intercept = 3.1143;
+						slope = -0.2386;
 					}
 				}
 				else if (clock.Today.DayOfYear > 349 || clock.Today.DayOfYear < 182)
@@ -464,17 +479,20 @@ namespace Models.PMF.Struct
 					if (plant.SowingData.SkipRow > 1.9)
 					{
 						// Double (2.0).
-						intercept = 0.4000; slope = -0.0400;
+						intercept = 0.4000;
+						slope = -0.0400;
 					}
 					else if (plant.SowingData.SkipRow > 1.4)
 					{
 						// Single (1.5).
-						intercept = 1.0571; slope = -0.0943;
+						intercept = 1.0571;
+						slope = -0.0943;
 					}
 					else
 					{
 						// Solid (1.0).
-						intercept = 1.7143; slope = -0.1486;
+						intercept = 1.7143;
+						slope = -0.1486;
 					}
 				}
 				else
@@ -483,17 +501,20 @@ namespace Models.PMF.Struct
 					if (plant.SowingData.SkipRow > 1.9)
 					{
 						// Double (2.0).
-						intercept = 0.8786; slope = -0.0821;
+						intercept = 0.8786;
+						slope = -0.0821;
 					}
 					else if (plant.SowingData.SkipRow > 1.4)
 					{
 						// Single (1.5).
-						intercept = 1.6464; slope = -0.1379;
+						intercept = 1.6464;
+						slope = -0.1379;
 					}
 					else
 					{
 						// Solid (1.0).
-						intercept = 2.4143; slope = -0.1936;
+						intercept = 2.4143;
+						slope = -0.1936;
 					}
 				}
 			}

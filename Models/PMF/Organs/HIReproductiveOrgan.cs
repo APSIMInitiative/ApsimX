@@ -230,7 +230,8 @@ namespace Models.PMF.Organs
         /// <summary>Sets the dry matter allocation.</summary>
         public void SetDryMatterAllocation(BiomassAllocationType dryMatter)
         {
-            Live.StructuralWt += dryMatter.Structural; DailyGrowth = dryMatter.Structural;
+            Live.StructuralWt += dryMatter.Structural;
+            DailyGrowth = dryMatter.Structural;
         }
 
         /// <summary>Sets the n allocation.</summary>

@@ -52,7 +52,11 @@
         public int NumPaths
         {
             get { return _numPaths; }
-            set { _numPaths = value; ParametersHaveChanged = true; }
+            set
+            {
+                _numPaths = value;
+                ParametersHaveChanged = true;
+            }
         }
 
         /// <summary>Name of the table containing predicted data.</summary>
