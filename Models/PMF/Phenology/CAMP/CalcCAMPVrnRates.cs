@@ -109,7 +109,6 @@ namespace Models.PMF.Phen
         /// <returns>CultivarRateParams</returns>
         public CultivarRateParams CalcCultivarParams(
             FinalLeafNumberSet FLNset, FLNParameterEnvironment EnvData)
-
         {
             //////////////////////////////////////////////////////////////////////////////////////
             // Get some parameters organized and set up structure for results
