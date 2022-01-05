@@ -1,6 +1,4 @@
-﻿
-
-namespace Models.Soils.Nutrients
+﻿namespace Models.Soils.Nutrients
 {
     using Core;
     using Interfaces;

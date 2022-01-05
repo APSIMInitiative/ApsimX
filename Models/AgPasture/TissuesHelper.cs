@@ -1,5 +1,4 @@
-﻿
-namespace Models.AgPasture
+﻿namespace Models.AgPasture
 {
     using Models.Core;
     using System;
