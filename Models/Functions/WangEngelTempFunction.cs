@@ -30,11 +30,9 @@ namespace Models.Functions
         [Description("Maximum Temperature")]
         public double MaxTemp { get; set; }
         /// <summary>The met data</summary>
-
         [Description("Reference Temperature (MinTemp<RefTemp<MaxTemp)")]
         public double RefTemp { get; set; }
         /// <summary>The met data</summary>
-
         [Link]
         protected IWeather MetData = null;
         

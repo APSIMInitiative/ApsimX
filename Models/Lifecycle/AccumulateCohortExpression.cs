@@ -7,7 +7,6 @@ namespace Models.LifeCycle
     /// <summary>
     /// Iterates through each cohort and adds the value of the Expression: 
     /// </summary>
-
     [Serializable]
     [Description("Iterates through each cohort and adds the value of the Expression")]
     [ViewName("UserInterface.Views.PropertyView")]

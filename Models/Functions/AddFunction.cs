@@ -7,7 +7,6 @@ using Models.Core;
 namespace Models.Functions
 {
     /// <summary>A class that returns the sum of its child functions.</summary>
-
     [Serializable]
     [Description("Add the values of all child functions")]
     public class AddFunction : Model, IFunction

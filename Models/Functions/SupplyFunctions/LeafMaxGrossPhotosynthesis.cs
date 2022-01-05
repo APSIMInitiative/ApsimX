@@ -39,7 +39,6 @@ namespace Models.Functions.SupplyFunctions
         /// <param name="Fact"></param>
         /// <returns></returns>
         /// 
-
         public double Value(double CO2, double Fact)
         {
             double TempFunc, CO2I, CO2I340, CO2Func, PmaxGross;

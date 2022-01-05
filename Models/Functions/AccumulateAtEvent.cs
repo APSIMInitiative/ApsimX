@@ -29,7 +29,6 @@ namespace Models.Functions
 
         /// Private fields
         /// -----------------------------------------------------------------------------------------------------------
-
         private double accumulatedValue = 0;
 
         private IEnumerable<IFunction> childFunctions;

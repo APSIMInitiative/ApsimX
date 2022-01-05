@@ -26,7 +26,6 @@ namespace Models.Functions
 
         /// Private class members
         /// -----------------------------------------------------------------------------------------------------------
-
         private int startStageIndex;
 
         private int endStageIndex;

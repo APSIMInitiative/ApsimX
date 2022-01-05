@@ -19,8 +19,7 @@ namespace Models.Functions
     public class AccumulateResetAtStage : Model, IFunction
     {        
         /// Private class members
-        /// -----------------------------------------------------------------------------------------------------------
-                   
+        /// -----------------------------------------------------------------------------------------------------------                   
         private double AccumulatedValue = 0;
 
         private IEnumerable<IFunction> ChildFunctions;

@@ -153,7 +153,10 @@ namespace Models.AgPasture
         /// <remarks>This contains the intercepted radiation for each layer of the canopy.</remarks>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile
         {
-            get { return myLightProfile; }
+            get
+            {
+                return myLightProfile;
+            }
             set
             {
                 InterceptedRadn = 0.0;
@@ -588,7 +591,10 @@ namespace Models.AgPasture
                 else
                     return YesNoAnswer.no;
             }
-            set { usingColdStressFactor = (value == YesNoAnswer.yes); }
+            set
+            {
+                usingColdStressFactor = (value == YesNoAnswer.yes);
+            }
         }
 
         /// <summary>Onset temperature for cold effects on photosynthesis (oC).</summary>

@@ -112,7 +112,6 @@
         // ------------------ Properties for young animals ------------------
 
         /// <summary>Number of suckling young.</summary>
-
         [Separator("Young animals")]
 
         [Description("Number of suckling young")]
