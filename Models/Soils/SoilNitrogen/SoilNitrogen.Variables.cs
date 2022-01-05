@@ -22,7 +22,6 @@ namespace Models.Soils
     public partial class SoilNitrogen
     {
 
-        #region Links to other modules
 
         /// <summary>Link to APSIM's Clock (time information).</summary>
         [Link]
@@ -63,13 +62,9 @@ namespace Models.Soils
         [Link]
         ISoilTemperature soilTemperature = null;
 
-        #endregion
 
-        #region Parameters and inputs provided by the user or APSIM
 
-        #region Parameters used on initialisation only
 
-        #region General setting parameters
 
         /// <summary>
         /// Soil parameterisation set to use.
@@ -169,9 +164,7 @@ namespace Models.Soils
         [JsonIgnore]
         public double FatalNegativeThreshold = -0.000001;
 
-        #endregion general settings
 
-        #region Parameters for setting up soil organic matter
 
         /// <summary>
         /// The C:N ratio of the soil humus (active + inert).
@@ -211,9 +204,7 @@ namespace Models.Soils
         [JsonIgnore]
         public double[] FInert = { 0.5, 0.95 };
 
-        #endregion params for OM setup
 
-        #region Parameters for setting up fresh organic matter (FOM)
 
         /// <summary>
         /// Initial amount of FOM in the soil (kgDM/ha).
@@ -308,11 +299,8 @@ namespace Models.Soils
         [Units("g/g")]
         public double[] fract_lign = { 0.1, 0.4, 0.09, 0.06, 0.08, 0.9 };
 
-        #endregion  params for FOM setup
 
-        #region Parameters for the decomposition process of FOM and SurfaceOM
 
-        #region Surface OM
 
         /// <summary>
         /// Fraction of residue C mineralised lost to atmopshere due to respiration (g/g).
@@ -341,9 +329,7 @@ namespace Models.Soils
         [JsonIgnore]
         public double ResiduesDecompDepth = 100;
 
-        #endregion
 
-        #region Fresh OM
 
         /// <summary>
         /// Optimum rate for decomposition of FOM pool 1 [carbohydrate], aerobic and anaerobic conditions (/day).
@@ -388,7 +374,6 @@ namespace Models.Soils
         [JsonIgnore]
         public double FOMFractionIntoBiomass = 0.9;
 
-        #region Limiting factors
 
         /// <summary>
         /// Coefficient for the exponential phase of C:N effects on decomposition of FOM.
@@ -471,13 +456,9 @@ namespace Models.Soils
         public double[] FOMDecomp_MoistureFactors
         { set { FOMDecomp_MoistureFactorData.yVals = value; } }
 
-        #endregion
 
-        #endregion FOM
 
-        #endregion params for SurfOM + FOM decomposition
 
-        #region Parameters for SOM mineralisation/immobilisation process
 
         /// <summary>
         /// Potential rate of soil biomass mineralisation, aerobic and anaerobic conditions (/day).
@@ -522,7 +503,6 @@ namespace Models.Soils
         [JsonIgnore]
         public double AHumusRespirationFactor = 0.6;
 
-        #region Limiting factors
 
         /// <summary>
         /// Data to calculate the temperature effect on soil OM mineralisation.
@@ -595,11 +575,8 @@ namespace Models.Soils
             set { SOMMiner_MoistureFactorData.yVals = value; }
         }
 
-        #endregion
 
-        #endregion params for OM decomposition
 
-        #region Parameters for urea hydrolysis process
 
         /// <summary>
         /// Minimum potential hydrolysis rate for urea (/day).
@@ -637,7 +614,6 @@ namespace Models.Soils
         [JsonIgnore]
         public double UreaHydrol_parmD = -0.155;
 
-        #region limiting factors
 
         /// <summary>
         /// Parameters to calculate the temperature effect on urea hydrolysis.
@@ -711,11 +687,8 @@ namespace Models.Soils
             set { UreaHydrolysis_MoistureFactorData.yVals = value; }
         }
 
-        #endregion
 
-        #endregion params for hydrolysis
 
-        #region Parameters for nitrification process
 
         /// <summary>
         /// Maximum soil nitrification potential, Michaelis-Menten dynamics (ug NH4/g soil/day).
@@ -847,7 +820,6 @@ namespace Models.Soils
             set { Nitrification_pHFactorData.yVals = value; }
         }
 
-        #region Parameters for Nitritation + Nitration processes
 
         /// <summary>
         /// Maximum soil potential nitritation rate (ug NH4/g soil/day).
@@ -1039,11 +1011,8 @@ namespace Models.Soils
             set { Nitratation_pHFactorData.yVals = value; }
         }
 
-        #endregion params for nitritation+nitratation
 
-        #endregion params for nitrification
 
-        #region Parameters for codenitrification and N2O emission processes
 
         /// <summary>
         /// Denitrification rate coefficient (kg soil/mg C/day).
@@ -1183,9 +1152,7 @@ namespace Models.Soils
             set { Codenitrification_NH3NO2FactorData.yVals = value; }
         }
 
-        #endregion params for codenitrification
 
-        #region Parameters for denitrification and N2O emission processes
 
         /// <summary>
         /// Denitrification rate coefficient (kg/mg).
@@ -1295,7 +1262,6 @@ namespace Models.Soils
             set { Denitrification_MoistureFactorData.yVals = value; }
         }
 
-        #region Parameters for N2:N2O partition
 
         /// <summary>
         /// Parameter k1 from Thorburn et al (2010) for N2O model.
@@ -1348,15 +1314,10 @@ namespace Models.Soils
             set { Denitrification_WFPSFactorData.yVals = value; }
         }
 
-        #endregion
 
-        #endregion params for denitrification
 
-        #endregion params for initialisation
 
-        #region Parameters that do or may change during simulation
 
-        #region Parameter for handling patches
 
         /// <summary>
         /// Layer thickness to consider when N partition between patches is BasedOnSoilConcentration (mm).
@@ -1438,7 +1399,6 @@ namespace Models.Soils
             }
         }
 
-        #region Parameter for amalgamating patches
 
         /// <summary>
         /// Approach to use when comparing patches for AutoAmalagamation.
@@ -1660,11 +1620,8 @@ namespace Models.Soils
         [JsonIgnore]
         public double DiffAdjustFactor = 0.5;
 
-        #endregion amalgamating patches
 
-        #endregion
 
-        #region Soil pH data
 
         /// <summary>
         /// pH of soil (assumed equivalent to a 1:1 soil-water slurry).
@@ -1673,9 +1630,7 @@ namespace Models.Soils
         [JsonIgnore]
         public double[] ph = { 6, 6 };
 
-        #endregion ph data
 
-        #region Values for soil organic matter (som)
 
         /// <summary>
         /// Total soil organic carbon content (%).
@@ -1717,9 +1672,7 @@ namespace Models.Soils
             }
         }
 
-        #endregion soil organic matter data
 
-        #region Values for soil mineral N
         /// <summary>
         /// 
         /// </summary>
@@ -1807,8 +1760,6 @@ namespace Models.Soils
                     mySummary.WriteMessage(this, "An external module attempted to change the value of NO3 during simulation, the command will be ignored", MessageType.Diagnostic);
             }
         }
-        #endregion  mineral N data
-        #region Soil loss data
 
         //// NOTE: it is assumed any changes in soil profile are due to erosion
         //// this should be done via an event
@@ -1827,9 +1778,7 @@ namespace Models.Soils
         [JsonIgnore]
         public double soil_loss;
 
-        #endregion
 
-        #region Pond data
 
         /// <summary>
         /// Flag for whether pond is active or not (yes/no).
@@ -1856,9 +1805,7 @@ namespace Models.Soils
         [JsonIgnore]
         public double pond_hum_C;
 
-        #endregion
 
-        #region Inhibitors data
 
         /// <summary>
         /// Factor reducing nitrification due to the presence of a inhibitor.
@@ -1894,9 +1841,7 @@ namespace Models.Soils
             }
         }
 
-        #endregion
 
-        #region Plant data
 
         /// <summary>
         /// Current depth of root zone (mm).
@@ -1917,17 +1862,11 @@ namespace Models.Soils
             set { rootDepth = value; }
         }
 
-        #endregion
 
-        #endregion params that may change
 
-        #endregion params and inputs
 
-        #region Outputs we make available to other components
 
-        #region Outputs for Nitrogen
 
-        #region Changes for today - deltas
 
         /// <summary>
         /// N carried out in sediment via runoff/erosion
@@ -2393,9 +2332,7 @@ namespace Models.Soils
             }
         }
 
-        #endregion deltas
 
-        #region Amounts in solute forms
 
         /// <summary>
         /// Soil urea nitrogen amount (kgN/ha)
@@ -2712,9 +2649,7 @@ namespace Models.Soils
         }
 
 
-        #endregion
 
-        #region Amounts in various pools
 
         /// <summary>
         /// Total nitrogen in FOM
@@ -2917,9 +2852,7 @@ namespace Models.Soils
             }
         }
 
-        #endregion
 
-        #region Nitrogen balance
 
         /// <summary>
         /// SoilN balance for nitrogen: deltaN - losses
@@ -2940,13 +2873,9 @@ namespace Models.Soils
             }
         }
 
-        #endregion
 
-        #endregion
 
-        #region Outputs for Carbon
 
-        #region General values
 
         /// <summary>
         /// Carbohydrate fraction of FOM (0-1)
@@ -2972,9 +2901,7 @@ namespace Models.Soils
         public double fr_lign
         { get { return fract_lign[fom_type]; } }
 
-        #endregion
 
-        #region Changes for today - deltas
 
         /// <summary>
         /// Carbon loss in sediment, via runoff/erosion
@@ -3295,9 +3222,7 @@ namespace Models.Soils
             }
         }
 
-        #endregion
 
-        #region Amounts in various pools
 
         /// <summary>
         /// Fresh organic C - FOM
@@ -3470,9 +3395,7 @@ namespace Models.Soils
             }
         }
 
-        #endregion
 
-        #region Carbon Balance
 
         /// <summary>
         /// Balance of C in soil: deltaC - losses
@@ -3499,11 +3422,8 @@ namespace Models.Soils
             }
         }
 
-        #endregion
 
-        #endregion
 
-        #region Factors and other outputs
 
         /// <summary>
         /// amount of P coverted by residue mineralisation (needed by SoilP)
@@ -3522,11 +3442,8 @@ namespace Models.Soils
             }
         }
 
-        #endregion
 
-        #region Outputs related to internal patches    * * * * * * * * * * * * * *
 
-        #region General variables
 
         /// <summary>
         /// Number of internal patches
@@ -3585,13 +3502,9 @@ namespace Models.Soils
             }
         }
 
-        #endregion
 
-        #region Outputs for Nitrogen
 
-        #region Changes for today - deltas
 
-        #region Totals (whole profile)
 
         /// <summary>
         /// N carried out for each patch in sediment via runoff/erosion
@@ -4105,9 +4018,7 @@ namespace Models.Soils
         }
 
         // --------------------------------------------------------------------------------------------
-        #endregion
 
-        #region Values for each soil layer
 
         /// <summary>
         /// Net N mineralisation from residue decomposition for each patch
@@ -4740,11 +4651,8 @@ namespace Models.Soils
 
         // ----------------------------------------------------------------------------------------------------------------
 
-        #endregion
 
-        #endregion deltas
 
-        #region Amounts in solute forms
 
         /// <summary>
         /// Amount of urea N in each internal patch
@@ -4979,9 +4887,7 @@ namespace Models.Soils
             }
         }
 
-        #endregion
 
-        #region Amounts in various pools
 
         /// <summary>
         /// Total nitrogen in FOM for each patch
@@ -5288,9 +5194,7 @@ namespace Models.Soils
             }
         }
 
-        #endregion
 
-        #region Nitrogen balance
 
         /// <summary>
         /// SoilN balance for nitrogen, for each patch: deltaN - losses
@@ -5317,13 +5221,9 @@ namespace Models.Soils
             }
         }
 
-        #endregion
 
-        #endregion
 
-        #region Outputs for Carbon
 
-        #region Changes for today - deltas
 
         /// <summary>
         /// Carbon loss in sediment for each patch, via runoff/erosion
@@ -5811,9 +5711,7 @@ namespace Models.Soils
             }
         }
 
-        #endregion
 
-        #region Amounts in various pools
 
         /// <summary>
         /// Fresh organic C - FOM for each patch
@@ -6073,9 +5971,7 @@ namespace Models.Soils
             }
         }
 
-        #endregion
 
-        #region Carbon Balance
 
         /// <summary>
         /// Balance of C in soil,  for each patch: deltaC - losses
@@ -6107,15 +6003,10 @@ namespace Models.Soils
             }
         }
 
-        #endregion
 
-        #endregion
 
-        #endregion outputs from patches      * * * * * * * * * * * * * * * * * *
 
-        #endregion outputs
 
-        #region Useful constants
 
         /// <summary>
         /// Value to evaluate precision against floating point variables.
@@ -6123,11 +6014,8 @@ namespace Models.Soils
         private readonly double epsilon = 0.000000000001;
         ////private double epsilon = Math.Pow(2, -24);
 
-        #endregion constants
 
-        #region Internal variables
 
-        #region Components
 
         /// <summary>
         /// List of all existing patches (internal instances of C and N processes).
@@ -6135,9 +6023,7 @@ namespace Models.Soils
         [JsonIgnore]
         public List<soilCNPatch> Patch;
 
-        #endregion components
 
-        #region Soil physics data
 
         /// <summary>
         /// Soil layers' thichness (mm).
@@ -6150,9 +6036,7 @@ namespace Models.Soils
         /// </summary>
         private int nLayers;
 
-        #endregion
 
-        #region Initial C and N amounts
 
         /// <summary>
         /// The initial OC content for each layer of the soil (%). Also used onReset.
@@ -6174,13 +6058,9 @@ namespace Models.Soils
         /// </summary>
         private double[] reset_no3ppm = { 5, 2 };
 
-        #endregion
 
-        #region Mineral N amounts
 
-        #endregion
 
-        #region Deltas in mineral nitrogen
 
         /// <summary>
         /// Variations in urea as given by another component.
@@ -6227,9 +6107,7 @@ namespace Models.Soils
             }
         }
 
-        #endregion
 
-        #region Decision auxiliary variables
 
         /// <summary>
         /// Marker for whether initialisation has been finished or not.
@@ -6249,9 +6127,7 @@ namespace Models.Soils
         /// </remarks>
         private bool organicSolutesAllowed = false;
 
-        #endregion
 
-        #region Residue decomposition information
 
         /// <summary>
         /// Name of residues decomposing.
@@ -6278,9 +6154,7 @@ namespace Models.Soils
         /// </summary>
         private double[] pot_p_decomp;
 
-        #endregion
 
-        #region Miscelaneous
 
         /// <summary>
         /// Total C content at the beginning of the day.
@@ -6324,9 +6198,7 @@ namespace Models.Soils
         /// </summary>
         private double[] inhibitionFactor_Nitrification = null;
 
-        #endregion
 
-        #region CNpatch related variables
 
         /// <summary>
         /// Minimum allowable relative area for a CNpatch (0-1).
@@ -6393,11 +6265,8 @@ namespace Models.Soils
         /// </summary>
         private double maxTotalNAvailableToPlants = 9999.9;
 
-        #endregion
 
-        #endregion internal variables
 
-        #region Types and structures
 
         /// <summary>
         /// The parameters to compute a exponential type function (used for example for temperature factor)
@@ -6436,7 +6305,6 @@ namespace Models.Soils
             public double[] yVals;
         }
 
-        #endregion
 
         /// <summary>The inert pool.</summary>
         public INutrientPool Inert { get { return new NutrientPool() { C = InertC, N = InertN }; } }
@@ -6509,9 +6377,7 @@ namespace Models.Soils
         }
     }
 
-    #region classes for organising data
 
-    #region CNPatches
 
     /// <summary>
     /// CNPatchPoolVariablePatchPool
@@ -6700,9 +6566,7 @@ namespace Models.Soils
         public Double[] FOM_N;
     }
 
-    #endregion
 
-    #region Organic matter types
 
     /// <summary>
     /// FOMType
@@ -6873,9 +6737,7 @@ namespace Models.Soils
     /// <param name="Data">The data.</param>
     public delegate void SoilOrganicMaterialDelegate(SoilOrganicMaterialType Data);
 
-    #endregion
 
-    #region Apsim stuff
 
     /// <summary>
     /// NitrogenChangedType
@@ -6953,7 +6815,5 @@ namespace Models.Soils
         public double SW;
     }
 
-    #endregion
 
-    #endregion
 }

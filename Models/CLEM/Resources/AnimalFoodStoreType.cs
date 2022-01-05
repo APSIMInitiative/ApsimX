@@ -91,7 +91,6 @@ namespace Models.CLEM.Resources
                 Add(StartingAmount, this, NameWithParent, "Starting value");
         }
 
-        #region Transactions
 
         /// <summary>
         /// Add to food store
@@ -224,9 +223,7 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -256,7 +253,6 @@ namespace Models.CLEM.Resources
         {
             return "";
         } 
-        #endregion
 
     }
 }

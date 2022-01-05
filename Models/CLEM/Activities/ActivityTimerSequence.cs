@@ -78,7 +78,6 @@ namespace Models.CLEM.Activities
             return sequence[index] == '1';
         }
 
-        #region validation
 
         /// <summary>
         /// Validate model
@@ -97,9 +96,7 @@ namespace Models.CLEM.Activities
             }
             return results;
         }
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -140,6 +137,5 @@ namespace Models.CLEM.Activities
         {
             return "";
         } 
-        #endregion
     }
 }

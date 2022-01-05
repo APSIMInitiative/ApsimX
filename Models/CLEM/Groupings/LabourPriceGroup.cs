@@ -38,7 +38,6 @@ namespace Models.CLEM.Groupings
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -114,6 +113,5 @@ namespace Models.CLEM.Groupings
         {
             return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
         } 
-        #endregion
     }
 }

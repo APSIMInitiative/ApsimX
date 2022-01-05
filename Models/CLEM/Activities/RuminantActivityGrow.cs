@@ -662,7 +662,6 @@ namespace Models.CLEM.Activities
             ruminantHerd.RemoveRuminant(died, this);
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -686,7 +685,6 @@ namespace Models.CLEM.Activities
                 return htmlWriter.ToString(); 
             }
         } 
-        #endregion
 
     }
 }

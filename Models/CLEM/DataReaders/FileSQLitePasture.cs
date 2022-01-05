@@ -380,7 +380,6 @@ namespace Models.CLEM
             return results;
         }
 
-        #region Properties and Methods for populating the User Interface with data
 
         /// <summary>
         /// Gets or sets the full file name (with path). The user interface uses this. 
@@ -475,9 +474,7 @@ namespace Models.CLEM
             }
         }
 
-        #endregion
 
-        #region Event Handlers for Running Simulation
 
         /// <summary>An event handler to allow us to initialise</summary>
         /// <param name="sender">The sender.</param>
@@ -799,9 +796,7 @@ namespace Models.CLEM
             return pasturedata;
         }
 
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -926,6 +921,5 @@ namespace Models.CLEM
                 return htmlWriter.ToString(); 
             }
         } 
-        #endregion
     }
 }

@@ -95,7 +95,6 @@ namespace Models.CLEM
                 ZoneCLEM.ReportInvalidParameters(this);
         }
 
-        #region validation
         /// <summary>
         /// Validate object
         /// </summary>
@@ -132,9 +131,7 @@ namespace Models.CLEM
 
             return results;
         }
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         [JsonIgnore]
@@ -159,7 +156,6 @@ namespace Models.CLEM
                 return htmlWriter.ToString();
             }
         } 
-        #endregion
 
 
     }

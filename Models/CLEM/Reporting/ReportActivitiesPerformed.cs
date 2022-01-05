@@ -89,7 +89,6 @@ namespace Models.CLEM.Reporting
             SubscribeToEvents();
         }
 
-        #region create html report
 
         /// <summary>
         /// Get the data for display
@@ -403,9 +402,7 @@ namespace Models.CLEM.Reporting
             }
         }
 
-        #endregion
 
-        #region descriptive summary
 
         ///<inheritdoc/>
         public HTMLSummaryStyle ModelSummaryStyle { get; set; }
@@ -543,6 +540,5 @@ namespace Models.CLEM.Reporting
         {
             return this.Name;
         }
-        #endregion
     }
 }

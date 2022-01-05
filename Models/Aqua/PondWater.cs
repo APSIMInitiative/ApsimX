@@ -27,7 +27,6 @@ namespace Models.Aqua
 
         //See "Simulation of temperature and salinity in a fully mixed pond" by Jiacai Gao and Nooel P. Merrick, 2007
 
-        #region Links
 
 
         ///// <summary>The clock</summary>
@@ -50,12 +49,10 @@ namespace Models.Aqua
         private ISummary Summary = null;
 
 
-        #endregion
 
 
         //MODULE CONSTANTS
 
-        #region Constants
 
         /// <summary>
         /// Suface Area of the Pond (m^2)
@@ -79,13 +76,11 @@ namespace Models.Aqua
         public double Kpan { get; set; }
 
 
-        #endregion
 
 
 
         //CONSTRUCTOR
 
-        #region Constructor
 
         /// <summary>
         /// Constructor
@@ -97,7 +92,6 @@ namespace Models.Aqua
             }
 
 
-        #endregion
 
 
 
@@ -105,7 +99,6 @@ namespace Models.Aqua
         //OUTPUTS
 
 
-        #region Outputs
 
 
         /// <summary>
@@ -208,14 +201,12 @@ namespace Models.Aqua
             }
 
 
-        #endregion
 
 
 
         //LOCAL VARIABALES
 
 
-        #region local variables
 
         private double mm2m = 0.001;  //convert mm to meters
         private double m2mm = 1000;
@@ -227,7 +218,6 @@ namespace Models.Aqua
 
         private double pondEvap;
 
-        #endregion
 
 
 
@@ -235,7 +225,6 @@ namespace Models.Aqua
         //MODEL
 
 
-        #region Add Water to Pond
 
 
         private void AddWater(double Volume, WaterProperties addedProps)
@@ -320,11 +309,9 @@ namespace Models.Aqua
             }
 
 
-        #endregion
 
 
 
-        #region Remove Water from Pond
 
 
         /// <summary>
@@ -347,11 +334,9 @@ namespace Models.Aqua
 
 
 
-        #endregion
 
 
 
-        #region Evaporate Water from Pond
 
 
         private void EvaporateWater(double EvapAmount_mm)
@@ -425,11 +410,9 @@ namespace Models.Aqua
             }
 
 
-        #endregion
 
 
 
-        #region Calculate Evaporation
 
 
         private double CalcEvap()
@@ -506,12 +489,10 @@ namespace Models.Aqua
         //    }
 
 
-        #endregion
 
 
 
 
-        #region Calculate Heat Change
 
         /// <summary>
         /// Fraction of sunlight reflected from the water surface.
@@ -719,7 +700,6 @@ namespace Models.Aqua
             }
 
 
-        #endregion
 
 
 
@@ -728,7 +708,6 @@ namespace Models.Aqua
 
         //EVENT HANDLERS
 
-        #region Clock Event Handlers
 
 
         [EventSubscribe("StartOfSimulation")]
@@ -774,7 +753,6 @@ namespace Models.Aqua
 
 
 
-        #endregion
 
 
 
@@ -782,7 +760,6 @@ namespace Models.Aqua
 
         //MANAGER COMMANDS
 
-        #region Manager Commands
 
         /// <summary>
         /// Fill the Pond with a given volume of water.
@@ -822,7 +799,6 @@ namespace Models.Aqua
             RemoveWater(Volume);
             }
 
-        #endregion
 
 
         }

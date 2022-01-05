@@ -74,7 +74,6 @@ namespace Models.CLEM.Activities
             relatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
         }
 
-        #region validation
         /// <summary>
         /// Validate model
         /// </summary>
@@ -95,7 +94,6 @@ namespace Models.CLEM.Activities
             }
             return results;
         }
-        #endregion
 
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
@@ -150,7 +148,6 @@ namespace Models.CLEM.Activities
             return null;
         }
 
-        #region descriptive summary
         /// <inheritdoc/>
         public override string ModelSummary()
         {
@@ -182,7 +179,6 @@ namespace Models.CLEM.Activities
                 return htmlWriter.ToString(); 
             }
         } 
-        #endregion
 
     }
 }

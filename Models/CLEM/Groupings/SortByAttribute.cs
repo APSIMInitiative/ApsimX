@@ -117,7 +117,6 @@ namespace Models.CLEM.Groupings
             }
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -138,6 +137,5 @@ namespace Models.CLEM.Groupings
             // allows for collapsed box and simple entry
             return "";
         }
-        #endregion
     }
 }

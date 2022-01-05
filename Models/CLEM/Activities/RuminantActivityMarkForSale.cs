@@ -183,7 +183,6 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.Ignored;
         }
 
-        #region validation
 
         /// <summary>
         /// Validate this model
@@ -201,15 +200,12 @@ namespace Models.CLEM.Activities
             return results;
         }
 
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
         {
             return $"\r\n<div class=\"activityentry\">Flag individuals for sale as [{SaleFlagToUse}] in the following groups:</div>";
         } 
-        #endregion
     }
 }

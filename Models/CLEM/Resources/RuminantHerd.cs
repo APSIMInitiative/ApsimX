@@ -348,7 +348,6 @@ namespace Models.CLEM.Resources
         }
 
 
-        #region group tracking
 
         /// <summary>
         /// Overrides the base class method to allow for changes before end of month reporting
@@ -454,9 +453,7 @@ namespace Models.CLEM.Resources
             return groupedInd;
         }
 
-        #endregion 
 
-        #region weaning event
 
         /// <summary>
         /// Override base event
@@ -477,9 +474,7 @@ namespace Models.CLEM.Resources
             OnWeanOccurred(e);
         }
 
-        #endregion
 
-        #region breeding female left herd event
 
         /// <summary>
         /// Override base event
@@ -500,9 +495,7 @@ namespace Models.CLEM.Resources
             OnFinalFemaleOccurred(e);
         }
 
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -527,7 +520,6 @@ namespace Models.CLEM.Resources
             return html;
         }
 
-        #endregion
     }
 
     /// <summary>

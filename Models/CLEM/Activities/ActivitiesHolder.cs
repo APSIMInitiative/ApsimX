@@ -218,7 +218,6 @@ namespace Models.CLEM.Activities
             UnBindEvents(FindAllChildren<IModel>());
         }
 
-        #region validation
 
         /// <summary>
         /// Validate model
@@ -238,9 +237,7 @@ namespace Models.CLEM.Activities
             return results;
         }
 
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -259,6 +256,5 @@ namespace Models.CLEM.Activities
         {
             return "\r\n</div>";
         } 
-        #endregion
     }
 }

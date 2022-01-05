@@ -25,7 +25,6 @@ namespace Models.AgPasture
     [ValidParent(ParentType = typeof(Zone))]
     public class PastureSpecies : ModelCollectionFromResource, IPlant, ICanopy, IUptake, IHasDamageableBiomass
     {
-        #region Links, events and delegates  -------------------------------------------------------------------------------
 
         ////- Links >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -62,9 +61,7 @@ namespace Models.AgPasture
         /// <summary>Occurs when plant is detaching dead tissues, litter.</summary>
         public event BiomassRemovedDelegate BiomassRemoved;
 
-        #endregion  --------------------------------------------------------------------------------------------------------  --------------------------------------------------------------------------------------------------------
 
-        #region ICanopy implementation  ------------------------------------------------------------------------------------
 
         /// <summary>Canopy albedo, fraction of sun light reflected (0-1).</summary>
         [Units("0-1")]
@@ -185,9 +182,7 @@ namespace Models.AgPasture
             }
         }
 
-        #endregion  --------------------------------------------------------------------------------------------------------
 
-        #region ICrop implementation  --------------------------------------------------------------------------------------
 
         /// <summary>Flag indicating the type of plant (currently the name of the species)</summary>
         /// <remarks>
@@ -278,9 +273,7 @@ namespace Models.AgPasture
             phenologicStage = -1;
         }
 
-        #endregion  --------------------------------------------------------------------------------------------------------
 
-        #region IUptake implementation  ------------------------------------------------------------------------------------
 
         /// <summary>Gets the potential plant water uptake for each layer (mm).</summary>
         /// <remarks>The model can only handle one root zone at present.</remarks>
@@ -441,9 +434,7 @@ namespace Models.AgPasture
             }
         }
 
-        #endregion  --------------------------------------------------------------------------------------------------------
 
-        #region Model parameters  ------------------------------------------------------------------------------------------
 
         // NOTE: default parameters describe a generic perennial ryegrass species
 
@@ -932,9 +923,7 @@ namespace Models.AgPasture
             = new LinearInterpolationFunction(x: new double[] { 0.0, 10.0, 50.0 },
                                               y: new double[] { 1.0, 1.0, 1.0 });
 
-        #endregion  --------------------------------------------------------------------------------------------------------
 
-        #region Private variables  -----------------------------------------------------------------------------------------
 
         ////- Plant parts and state >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -1240,9 +1229,7 @@ namespace Models.AgPasture
         /// <summary>Digestibility of defoliated material (0-1).</summary>
         public double DefoliatedDigestibility { get; private set; }
 
-        #endregion  --------------------------------------------------------------------------------------------------------
 
-        #region Constants and enums  ---------------------------------------------------------------------------------------
 
         /// <summary>Average carbon content in plant dry matter (kg/kg).</summary>
         internal const double CarbonFractionInDM = 0.4;
@@ -1295,9 +1282,7 @@ namespace Models.AgPasture
             C4
         }
 
-        #endregion  --------------------------------------------------------------------------------------------------------
 
-        #region Model outputs  ---------------------------------------------------------------------------------------------
 
         ////- General properties >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2260,7 +2245,6 @@ namespace Models.AgPasture
         }
 
 
-        #region Tissue outputs  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Emerging tissues from all above ground organs.</summary>
         [JsonIgnore]
@@ -2313,11 +2297,8 @@ namespace Models.AgPasture
         [JsonIgnore]
         public double AssimilateAvailable => throw new NotImplementedException();
 
-        #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        #endregion  --------------------------------------------------------------------------------------------------------
 
-        #region Initialisation methods  ------------------------------------------------------------------------------------
 
         private List<RootZone> RootZonesInitialisations = new List<RootZone>();
 
@@ -2558,9 +2539,7 @@ namespace Models.AgPasture
             allocationIncreaseRepro = ReproSeasonMaxAllocationIncrease / (1.0 + reproAux);
         }
 
-        #endregion  --------------------------------------------------------------------------------------------------------
 
-        #region Daily processes  -------------------------------------------------------------------------------------------
 
         /// <summary>EventHandler - preparation before the main daily processes.</summary>
         /// <param name="sender">The sender model</param>
@@ -2694,7 +2673,6 @@ namespace Models.AgPasture
             }
         }
 
-        #region - Plant growth processes  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Computes the daily progress through germination.</summary>
         /// <returns>The fraction of the germination phase completed (0-1)</returns>
@@ -3212,9 +3190,7 @@ namespace Models.AgPasture
             }
         }
 
-        #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        #region - Water uptake processes  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Computes the potential plant water uptake.</summary>
         internal void EvaluateSoilWaterUptake()
@@ -3234,9 +3210,7 @@ namespace Models.AgPasture
             mySoilWaterUptake = MathUtilities.Multiply_Value(mySoilWaterAvailable, fractionUsed);
         }
 
-        #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        #region - Nitrogen uptake processes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Performs the nitrogen uptake calculations.</summary>
         internal void DoNitrogenCalculations()
@@ -3395,9 +3369,7 @@ namespace Models.AgPasture
             }
         }
 
-        #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        #region - Organic matter processes  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Adds a given amount of detached plant material (DM and N) to the surface organic matter.</summary>
         /// <param name="amountDM">The DM amount to send (kg/ha)</param>
@@ -3426,9 +3398,7 @@ namespace Models.AgPasture
             }
         }
 
-        #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        #region - DM allocation and related processes - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Gets the allocations into shoot and leaves of today's growth.</summary>
         internal void GetAllocationFractions()
@@ -3573,11 +3543,8 @@ namespace Models.AgPasture
             deadLAI = (Leaf.DMDead / 10000.0) * SpecificLeafArea;
         }
 
-        #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        #endregion  --------------------------------------------------------------------------------------------------------
 
-        #region Intermittent processes  ------------------------------------------------------------------------------------
 
         /// <summary>Kills a fraction of this plant.</summary>
         /// <param name="fractionToKill">The fraction of crop to be killed (0-1)</param>
@@ -3793,9 +3760,7 @@ namespace Models.AgPasture
         }
 
 
-        #endregion  --------------------------------------------------------------------------------------------------------
 
-        #region Auxiliary functions and processes  -------------------------------------------------------------------------
 
         /// <summary>Computes a growth factor for annual species, related to phenology/population.</summary>
         /// <returns>A growth factor (0-1)</returns>
@@ -4347,6 +4312,5 @@ namespace Models.AgPasture
             throw new Exception("AgPasture does not simulate a plant population and so plant population cannot be reduced.");
         }
 
-        #endregion  --------------------------------------------------------------------------------------------------------
     }
 }

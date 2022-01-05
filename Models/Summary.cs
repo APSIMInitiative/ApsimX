@@ -206,7 +206,6 @@
             storage.Writer.WriteTable(initConditions, false);
         }
         
-        #region Static summary report generation
 
         /// <summary>
         /// Write a single sumary file for all simulations.
@@ -837,7 +836,6 @@
             }
         }
 
-        #endregion
 
     }
 }

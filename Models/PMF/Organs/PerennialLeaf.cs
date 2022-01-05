@@ -88,7 +88,6 @@ namespace Models.PMF.Organs
         [JsonIgnore]
         public Biomass Detached { get; set; }
 
-        #region Canopy interface
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get { return Plant.PlantType; } }
@@ -185,9 +184,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
-        #endregion
 
-        #region Parameters
         /// <summary>The FRGR function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction FRGRFunction = null;   
@@ -250,9 +247,7 @@ namespace Models.PMF.Organs
         [Link(IsOptional = true)]
         public Phenology Phenology = null;
 
-        #endregion
 
-        #region States and variables
 
         /// <summary>Calculate the water demand.</summary>
         public double CalculateWaterDemand()
@@ -325,9 +320,7 @@ namespace Models.PMF.Organs
         /// <summary>Apex number by age</summary>
         /// <param name="age">Threshold age</param>
         public double ApexNumByAge(double age) { return 0; }
-        #endregion
 
-        #region Arbitrator Methods
 
         /// <summary>Calculate and return the dry matter supply (g/m2)</summary>
         [EventSubscribe("SetDMSupply")]
@@ -373,9 +366,7 @@ namespace Models.PMF.Organs
         /// <summary>Gets or sets the water allocation.</summary>
         [JsonIgnore]
         public double WaterAllocation { get; set; }
-        #endregion
 
-        #region Events
 
 
         /// <summary>Called when [do daily initialisation].</summary>
@@ -389,9 +380,7 @@ namespace Models.PMF.Organs
                     if (Structure != null)
                         Structure.LeafTipsAppeared = 1.0;
         }
-        #endregion
 
-        #region Component Process Functions
 
         /// <summary>Clears this instance.</summary>
         protected void Clear()
@@ -415,20 +404,14 @@ namespace Models.PMF.Organs
                 Structure.LeafTipsAppeared = 0;
 
         }
-        #endregion
-
-        #region Top Level time step functions
 
 
-        #endregion
+
 
         // ============================================================
-        #region Class Structures
         /// <summary>The start live</summary>
         private Biomass StartLive = new Biomass();
-        #endregion
 
-        #region Class Parameter Function Links
         /// <summary>The n reallocation factor</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/d")]
@@ -466,9 +449,7 @@ namespace Models.PMF.Organs
         /// <summary>Dry matter conversion efficiency</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         public IFunction DMConversionEfficiency = null;
-        #endregion
 
-        #region States
         /// <summary>The start n retranslocation supply</summary>
         private double StartNRetranslocationSupply = 0;
         /// <summary>The start n reallocation supply</summary>
@@ -476,18 +457,14 @@ namespace Models.PMF.Organs
         /// <summary>The dry matter potentially being allocated</summary>
         public BiomassPoolType potentialDMAllocation { get; set; }
         
-        #endregion
 
-        #region Class properties
 
         /// <summary>Gets or sets the live f wt.</summary>
         [JsonIgnore]
         [Units("g/m^2")]
         public double LiveFWt { get; set; }
 
-        #endregion
 
-        #region Arbitrator methods
 
         /// <summary>Sets the dry matter potential allocation.</summary>
         public void SetDryMatterPotentialAllocation(BiomassPoolType dryMatter)
@@ -545,9 +522,7 @@ namespace Models.PMF.Organs
         [Units("g/m2")]
         public double N { get { return Total.N; } }
 
-        #endregion
 
-        #region Events and Event Handlers
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -641,7 +616,6 @@ namespace Models.PMF.Organs
             }
         }
 
-        #endregion
 
         /// <summary>Called when crop is ending</summary>
         [EventSubscribe("PlantEnding")]

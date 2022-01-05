@@ -81,7 +81,6 @@ namespace Models.CLEM
             Value = StartingValue;
         }
 
-        #region validation
 
         /// <summary>
         /// Validate this object
@@ -99,9 +98,7 @@ namespace Models.CLEM
             return results;
         }
 
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -120,6 +117,5 @@ namespace Models.CLEM
                 return htmlWriter.ToString(); 
             }
         } 
-        #endregion
     }
 }

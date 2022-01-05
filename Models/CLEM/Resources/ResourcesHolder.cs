@@ -402,7 +402,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-        #region Report pricing change
 
         /// <inheritdoc/>
         [JsonIgnore]
@@ -426,9 +425,7 @@ namespace Models.CLEM.Resources
             OnPriceChanged(e as PriceChangeEventArgs);
         }
 
-        #endregion
 
-        #region validation
 
         /// <summary>
         /// Validate object
@@ -456,9 +453,7 @@ namespace Models.CLEM.Resources
             return results;
         }
 
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -478,6 +473,5 @@ namespace Models.CLEM.Resources
             return "\r\n</div>";
         }
 
-        #endregion
     }
 }

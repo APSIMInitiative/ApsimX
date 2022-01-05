@@ -60,7 +60,6 @@ namespace Models.CLEM.Activities
             amountUsedThisMonth = 0;
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -101,7 +100,6 @@ namespace Models.CLEM.Activities
         {
             return "";
         } 
-        #endregion
 
     }
 }

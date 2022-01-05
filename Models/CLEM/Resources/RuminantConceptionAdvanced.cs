@@ -98,7 +98,6 @@ namespace Models.CLEM.Resources
             return rate / 100;
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -107,6 +106,5 @@ namespace Models.CLEM.Resources
         }
 
 
-        #endregion
     }
 }

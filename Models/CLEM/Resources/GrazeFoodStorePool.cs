@@ -121,7 +121,6 @@ namespace Models.CLEM.Resources
             throw new NotImplementedException();
         }
 
-        #region transactions
 
         /// <summary>
         /// Add to Resource method.
@@ -190,7 +189,6 @@ namespace Models.CLEM.Resources
         {
             this.amount = Math.Max(0, newAmount);
         } 
-        #endregion
 
     }
 }

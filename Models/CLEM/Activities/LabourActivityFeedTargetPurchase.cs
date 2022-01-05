@@ -52,7 +52,6 @@ namespace Models.CLEM.Activities
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -72,7 +71,6 @@ namespace Models.CLEM.Activities
                 return htmlWriter.ToString(); 
             }
         } 
-        #endregion
 
     }
 }

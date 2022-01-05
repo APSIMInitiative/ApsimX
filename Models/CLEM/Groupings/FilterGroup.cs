@@ -166,7 +166,6 @@ namespace Models.CLEM
             return filterRules.All(rule => rule is null ? false : rule(item));
         }
 
-        #region descriptive summary
 
         /// <summary>
         /// Provides the closing html tags for object
@@ -192,6 +191,5 @@ namespace Models.CLEM
                 return htmlWriter.ToString();
             }
         }
-        #endregion
     }
 }

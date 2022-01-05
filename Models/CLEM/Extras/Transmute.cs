@@ -182,7 +182,6 @@ namespace Models.CLEM
             return unitsNeeded;
         }
 
-        #region validation
 
         /// <summary>
         /// Validate this object
@@ -240,9 +239,7 @@ namespace Models.CLEM
 
             return results;
         }
-        #endregion
 
-        #region descriptive summary
 
         ///<inheritdoc/>
         public override string ModelSummaryNameTypeHeaderText()
@@ -300,7 +297,6 @@ namespace Models.CLEM
             }
         }
 
-        #endregion
     }
 
 }

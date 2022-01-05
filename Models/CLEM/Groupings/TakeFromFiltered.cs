@@ -116,7 +116,6 @@ namespace Models.CLEM.Groupings
             }
         }
 
-        #region validation
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
@@ -140,9 +139,7 @@ namespace Models.CLEM.Groupings
             }
             return results;
         }
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -169,7 +166,6 @@ namespace Models.CLEM.Groupings
             // allows for collapsed box and simple entry
             return "";
         }
-        #endregion
     }
 
 }

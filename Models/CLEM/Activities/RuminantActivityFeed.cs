@@ -447,7 +447,6 @@ namespace Models.CLEM.Activities
                 Status = ActivityStatus.NotNeeded;
         }
 
-        #region validation
         /// <summary>
         /// Validate model
         /// </summary>
@@ -464,9 +463,7 @@ namespace Models.CLEM.Activities
             }
             return results;
         }
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -481,6 +478,5 @@ namespace Models.CLEM.Activities
                 return htmlWriter.ToString(); 
             }
         } 
-        #endregion
     }
 }

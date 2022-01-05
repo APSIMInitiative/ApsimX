@@ -21,7 +21,6 @@ namespace Models
     [ValidParent(ParentType = typeof(Zone))]
     public partial class G_Range : Model, IPlant, ICanopy, IUptake
     {
-        #region Links
 
         /// <summary>Link to APSIM summary (logs the messages raised during model run).</summary>
         [Link]
@@ -54,9 +53,7 @@ namespace Models
         //[ScopedLinkByName]
         //private ISolute NH4 = null;
 
-        #endregion
 
-        #region IPlant interface
 
         /// <summary>The plant type.</summary>
         public string PlantType { get => "NativePasture"; }
@@ -115,9 +112,7 @@ namespace Models
         /// <summary>Daily nitrogen uptake from each soil layer (kg/ha).</summary>
         public IReadOnlyList<double> NitrogenUptake => throw new NotImplementedException("Uptake isn't calculated in GRange.");
 
-        #endregion
 
-        #region ICanopy interface
 
         /// <summary>Albedo.</summary>
         public double Albedo { get { return 0.15; } } // This is canopy albedo, not soil albedo
@@ -168,9 +163,7 @@ namespace Models
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
-        #endregion
 
-        #region IUptake
 
         /// <summary>
         /// Calculate the potential sw uptake for today. Should return null if crop is not in the ground.
@@ -204,7 +197,6 @@ namespace Models
             // Needs to be implemented
         }
 
-        #endregion
 
         /// <summary>Constructor</summary>
         public G_Range()
@@ -212,7 +204,6 @@ namespace Models
             Name = "G_Range";
         }
 
-        #region Elements from Fortran code
 
         /// <summary>
         ///  Stores parameters unique to each landscape unit
@@ -1263,7 +1254,6 @@ namespace Models
         private bool doingSpinUp;    // Flags that we are doing a spinup
 #endif
 
-#endregion
 
         /// <summary>
         /// An enumeration of possible data source mechanisms for initialising soil properties

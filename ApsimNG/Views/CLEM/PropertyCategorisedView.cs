@@ -181,7 +181,6 @@ namespace UserInterface.Views
             set { treeview1.WidthRequest = value; }
         }
 
-#region Protected & Privates
 
         /// <summary>
         /// Configure the specified tree node using the fields in 'Description'.
@@ -290,9 +289,7 @@ namespace UserInterface.Views
             return result;         
         }
 
-#endregion
 
-#region Events
         /// <summary>User has selected a node. Raise event for presenter.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The event arguments instance containing the event data.</param>
@@ -424,6 +421,5 @@ namespace UserInterface.Views
             cb.Text = text;            
         }
 
-#endregion
     }
 }

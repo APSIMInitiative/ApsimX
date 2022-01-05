@@ -34,7 +34,6 @@ namespace Models.CLEM.Resources
             this.SetDefaults();
         }
 
-        #region validation
 
         /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
@@ -54,9 +53,7 @@ namespace Models.CLEM.Resources
             return results;
         }
 
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -85,7 +82,6 @@ namespace Models.CLEM.Resources
 
             return html;
         } 
-        #endregion
 
     }
 }

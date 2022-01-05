@@ -140,7 +140,6 @@ namespace Models.GrazPlan
         /// </summary>
         internal const int UNKNOWN = -1;
 
-        #region Class links
         /// <summary>
         /// The simulation clock
         /// </summary>
@@ -166,7 +165,6 @@ namespace Models.GrazPlan
         [Link]
         private List<Zone> paddocks = null;
 
-        #endregion
 
         /// <summary>
         /// The Stock class constructor
@@ -181,7 +179,6 @@ namespace Models.GrazPlan
             this.excretionInfo = new ExcretionInfo();
         }
 
-        #region Initialisation properties ====================================================
 
         /// <summary>
         /// The seed for the random number generator. Used when computing numbers of animals dying and conceiving from the equations for mortality and conception rates.
@@ -205,9 +202,7 @@ namespace Models.GrazPlan
         /// <param name="tag">Tag number of animal groups to return.</param>
         public IEnumerable<AnimalGroup> ByTag(int tag) { return AnimalGroups.Where(animalGroup => animalGroup.Tag == tag); }
 
-        #endregion
 
-        #region Readable properties ====================================================
         /// <summary>Mass of grazers per unit area</summary>
         [Units("kg/ha")]
         public double Trampling
@@ -3676,9 +3671,7 @@ namespace Models.GrazPlan
             }
         }
 
-        #endregion readable properties
 
-        #region Subscribed events ====================================================
 
         /// <summary>
         /// At the start of the simulation, initialise all the paddocks and forages and nitrogen returns.
@@ -3803,9 +3796,7 @@ namespace Models.GrazPlan
                 }
             }
         }
-        #endregion
 
-        #region Management methods ============================================
         // ............................................................................
         // Management methods                                                         
         // ............................................................................
@@ -4096,9 +4087,7 @@ namespace Models.GrazPlan
             StockModel.Sort();
         }
 
-        #endregion ============================================
 
-        #region Private functions ============================================
 
         /// <summary>
         /// Do a request for all the biomasses in every paddock
@@ -4211,7 +4200,6 @@ namespace Models.GrazPlan
             return result;
         }
 
-        #endregion
 
     }
 }

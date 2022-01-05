@@ -16,12 +16,9 @@ namespace Models.Soils
     [ValidParent(ParentType = typeof(Soil))]
     public class HydraulicProperties : Model
     {
-        #region External links
         [Link]
         private Physical Water = null;
-        #endregion
 
-        #region Internal States
         ///// <summary>The de lk</summary>
         /// <summary>
         /// The de lk
@@ -84,9 +81,7 @@ namespace Models.Soils
         const double psi0 = -0.6e7;
 
 
-        #endregion
 
-        #region Parameters
         /// <summary>
         /// psidul
         /// </summary>
@@ -111,9 +106,7 @@ namespace Models.Soils
         [Description("The hydraulic conductivity when the soil is at DUL")]
         [Units("mm/d")]
         public double[] kdul { get; set; }
-        #endregion
 
-        #region public methods
         /// <summary>
         /// Simples the theta.
         /// </summary>
@@ -212,9 +205,7 @@ namespace Models.Soils
             SetupThetaCurve();
             SetupKCurve();
         }
-        #endregion
 
-        #region Internal methods
         /// <summary>
         /// Simples the s.
         /// </summary>
@@ -301,7 +292,6 @@ namespace Models.Soils
                 MacroP[layer] = Math.Log10(Kdula[layer] / 99.0 / (Water.KS[layer] - MicroKs[layer])) / Math.Log10(Sdul);
             }
         }
-        #endregion
 
     }
 }

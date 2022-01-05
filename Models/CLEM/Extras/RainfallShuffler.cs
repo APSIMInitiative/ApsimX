@@ -77,7 +77,6 @@ namespace Models.CLEM
             }
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -103,7 +102,6 @@ namespace Models.CLEM
             }
         }
 
-        #endregion
     }
 
     /// <summary>

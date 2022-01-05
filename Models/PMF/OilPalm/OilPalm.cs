@@ -28,7 +28,6 @@ namespace Models.PMF.OilPalm
     [ValidParent(ParentType = typeof(Zone))]
     public class OilPalm : ModelCollectionFromResource, IPlant, ICanopy, IUptake
     {
-        #region Canopy interface
         /// <summary>Canopy type</summary>
         public string CanopyType { get { return "OilPalm"; } }
 
@@ -114,7 +113,6 @@ namespace Models.PMF.OilPalm
         [JsonIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
 
-        #endregion
 
         /// <summary>
         /// Is the plant alive?

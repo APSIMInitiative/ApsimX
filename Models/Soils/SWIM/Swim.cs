@@ -63,7 +63,6 @@ namespace Models.Soils
         /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>
         public double PrecipitationInterception { get; set; }
 
-        #region "Global" variables
         double[] _swf;
 
         //[Input(IsOptional = true)]
@@ -231,9 +230,7 @@ namespace Models.Soils
         double[] Kdula;
         double[] MacroP;
 
-        #endregion
 
-        #region parameters
 
         //[Param]
         string evap_source = "calc";
@@ -338,9 +335,7 @@ namespace Models.Soils
         double[] reset_psi = null;
         double[] reset_theta = null;
 
-        #endregion
 
-        #region "Constants" (actually they are parameters)
 
         ////[Param(MinVal = 0, MaxVal = 1e10)]
         //[Units("kg/ha")]
@@ -477,7 +472,6 @@ namespace Models.Soils
 
         double[] slos;
         double[] d0;
-        #endregion
 
         /// <summary>
         /// 
@@ -550,7 +544,6 @@ namespace Models.Soils
             }
         }
 
-        #region variables we own and make available to other modules (gettable)
         [Units("/h")]
         //[Description("Conductivity")]
         private double scon
@@ -1002,7 +995,6 @@ namespace Models.Soils
             }
         }
 
-        #endregion
 
         /// <summary>
         /// Runoff calculated by curve number - no ponding allowed.
@@ -1111,7 +1103,6 @@ namespace Models.Soils
 
 
 
-        #region Events sent by this Module
 
         //Events
         /// <summary>
@@ -1149,9 +1140,7 @@ namespace Models.Soils
         //public event RunoffEventDelegate RunoffEvent;
 
 
-        #endregion
 
-        #region Event Handlers
 
         /// <summary>
         /// Start of simulation event handler
@@ -1662,7 +1651,6 @@ namespace Models.Soils
        //     }
        // }
 
-        #endregion
 
         private void ZeroVariables()
         {

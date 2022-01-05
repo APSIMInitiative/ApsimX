@@ -21,9 +21,7 @@ namespace Models.Soils
         public partial class soilCNPatch
         {
 
-            #region >>  The soil C and N processes
 
-            #region »   OM processes
 
             /// <summary>
             /// Calculate rate of nitrogen mineralisation/immobilisation of surface residues
@@ -477,9 +475,7 @@ namespace Models.Soils
                 }
             }
 
-            #endregion OM processes
 
-            #region »   N processes
 
             /// <summary>
             /// Check and compute the amount of urea converted to NH4 via hydrolysis
@@ -947,9 +943,7 @@ namespace Models.Soils
                 return result;
             }
 
-            #endregion
 
-            #region Old FOM auxiliary functions
 
             private double[] FOMTurnOverRate(int pool)
             {
@@ -962,9 +956,7 @@ namespace Models.Soils
                 }
             }
 
-            #endregion  old functions
 
-            #region >>  Environmental factors
 
             /// <summary>
             /// Calculate a temperature factor (0-1) for C and N processes
@@ -1090,9 +1082,7 @@ namespace Models.Soils
                 return Math.Max(0.0, Math.Min(1.0, Math.Exp(-rateCN * (cnr - OptCN) / OptCN)));
             }
 
-            #endregion Envmt factors
 
-            #endregion C and N processes
         }
     }
 }

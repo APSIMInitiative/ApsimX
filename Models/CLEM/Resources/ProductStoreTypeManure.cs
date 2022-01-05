@@ -182,7 +182,6 @@ namespace Models.CLEM.Resources
             this.amount = 0;
         }
 
-        #region transactions
 
         /// <summary>
         /// Back account transaction occured
@@ -275,9 +274,7 @@ namespace Models.CLEM.Resources
             amount = newAmount;
         }
 
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -293,7 +290,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-        #endregion
     }
 
     /// <summary>

@@ -27,7 +27,6 @@ namespace Models.CLEM.Groupings
     [HelpUri(@"Content/Features/Filters/Groups/RuminantActivityGroup.htm")]
     public class RuminantActivityGroup : FilterGroup<Ruminant>
     {
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -67,7 +66,6 @@ namespace Models.CLEM.Groupings
             
             return html;
         } 
-        #endregion
 
     }
 }

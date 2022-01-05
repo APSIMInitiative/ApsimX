@@ -80,7 +80,6 @@ namespace Models.Soils
             Patch[0].PatchName = "base";
         }
 
-        #region >>  Events which we publish
 
         /// <summary>
         /// Event to communicate other modules of C and/or N changes to/from outside the simulation
@@ -96,9 +95,7 @@ namespace Models.Soils
         /// </summary>
         public delegate void SurfaceOrganicMatterDecompDelegate(SurfaceOrganicMatterDecompType Data);
 
-        #endregion events published
 
-        #region >>  Setup events handlers and methods
 
         /// <summary>Performs the initial checks and setup</summary>
         /// <param name="sender">The sender.</param>
@@ -467,11 +464,8 @@ namespace Models.Soils
             SendExternalMassFlowC(dltC);
         }
 
-        #endregion setup events
 
-        #region >>  Process events handlers and methods
 
-        #region »   Recurrent processes (each timestep)
 
         /// <summary>
         /// Sets the procedures for the beginning of each time-step
@@ -576,9 +570,7 @@ namespace Models.Soils
             }
         }
 
-        #endregion recurrent processes
 
-        #region »   Sporadic processes (not necessarily every timestep)
 
         /// <summary>
         /// Passes the information about the potential decomposition of surface residues
@@ -1203,11 +1195,8 @@ namespace Models.Soils
             }
         }
 
-        #endregion sporadic processes
 
-        #endregion processes events
 
-        #region >>  Auxiliary functions
 
         /// <summary>
         /// Checks whether the variable is significantly negative, considering thresholds
@@ -1360,6 +1349,5 @@ namespace Models.Soils
             return result;
         }
 
-        #endregion Aux functions
     }
 }

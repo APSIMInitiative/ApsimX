@@ -62,7 +62,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-        #region transactions
 
         /// <summary>
         /// Resource transaction occured
@@ -175,9 +174,7 @@ namespace Models.CLEM.Resources
             amount = newAmount;
         }
 
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -191,7 +188,6 @@ namespace Models.CLEM.Resources
             return html;
         }
 
-        #endregion
 
     }
 }

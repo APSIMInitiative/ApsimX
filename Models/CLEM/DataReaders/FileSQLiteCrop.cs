@@ -316,7 +316,6 @@ namespace Models.CLEM
             return cropdata;
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -395,7 +394,6 @@ namespace Models.CLEM
             }
 
         } 
-        #endregion
     }
 
 }

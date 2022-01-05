@@ -17,7 +17,6 @@ namespace Models.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class DailyMeanVPD : Model, IFunction
     {
-        #region Class Data Members
 
         /// <summary>The maximum temperature weighting</summary>
         [Description("The weight of 'VPD at daily maximum temperature' in daily mean VPD")]
@@ -27,7 +26,6 @@ namespace Models.Functions
         [Link]
         protected IWeather MetData = null;
         
-        #endregion
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>

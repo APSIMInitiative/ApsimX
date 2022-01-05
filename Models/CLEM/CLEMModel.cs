@@ -172,7 +172,6 @@ namespace Models.CLEM
             return (parents.Where(a => a.ParentType.Name == this.Parent.GetType().Name).Count() > 0);
         }
 
-        #region descriptive summary
 
         /// <summary>
         /// Create a html snippet
@@ -725,6 +724,5 @@ namespace Models.CLEM
             }
         }
 
-        #endregion
     }
 }

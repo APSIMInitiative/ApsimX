@@ -136,7 +136,6 @@ namespace Models.CLEM.Resources
             PriceChangeOccurred?.Invoke(this, e);
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -188,6 +187,5 @@ namespace Models.CLEM.Resources
             }
         }
 
-        #endregion
     }
 }

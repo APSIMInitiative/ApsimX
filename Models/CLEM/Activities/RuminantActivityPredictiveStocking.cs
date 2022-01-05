@@ -91,7 +91,6 @@ namespace Models.CLEM.Activities
             TransactionCategory = "Livestock.Destock";
         }
 
-        #region validation
 
         /// <summary>
         /// Validate this model
@@ -116,7 +115,6 @@ namespace Models.CLEM.Activities
 
             return results;
         } 
-        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -259,7 +257,6 @@ namespace Models.CLEM.Activities
             ReportStatus?.Invoke(this, e);
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -312,7 +309,6 @@ namespace Models.CLEM.Activities
                 html += "\r\n<div class=\"errorlink\">No ruminant filter groups provided</div>";
             return html;
         } 
-        #endregion
 
     }
 }

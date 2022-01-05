@@ -17,7 +17,6 @@ namespace Models.Functions
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class WeightedTemperatureFunction : Model, IFunction
     {
-        #region Class Data Members
         /// <summary>Gets the xy pairs.</summary>
         /// <value>The xy pairs.</value>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -31,7 +30,6 @@ namespace Models.Functions
         [Link]
         protected IWeather MetData = null;
         
-        #endregion
 
         /// <summary>Gets the value.</summary>
         /// <value>The value.</value>

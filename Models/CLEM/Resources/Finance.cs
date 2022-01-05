@@ -23,7 +23,6 @@ namespace Models.CLEM.Resources
         [Description("Name of currency")]
         public string CurrencyName { get; set; }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -32,7 +31,6 @@ namespace Models.CLEM.Resources
             return html;
         } 
 
-        #endregion
 
     }
 }

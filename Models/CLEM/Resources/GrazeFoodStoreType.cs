@@ -615,7 +615,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-        #region transactions
 
         /// <summary>
         /// Graze food add method.
@@ -857,9 +856,7 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public ResourceTransaction LastTransaction { get; set; }
 
-        #endregion
 
-        #region validation
 
         /// <summary>
         /// Validate model
@@ -885,9 +882,7 @@ namespace Models.CLEM.Resources
             }
             return results;
         }
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -938,7 +933,6 @@ namespace Models.CLEM.Resources
         {
             return "";
         } 
-        #endregion
 
     }
 

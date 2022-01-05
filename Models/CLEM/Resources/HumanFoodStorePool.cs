@@ -37,7 +37,6 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public int Age { get; set; }
 
-        #region transactions
 
         /// <summary>
         /// Add to Resource method.
@@ -73,6 +72,5 @@ namespace Models.CLEM.Resources
             this.amount -= removeAmount;
             return removeAmount;
         } 
-        #endregion
     }
 }

@@ -41,7 +41,6 @@ namespace Models.CLEM.Groupings
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
-        #region validation
 
         /// <summary>
         /// Validate model
@@ -62,9 +61,7 @@ namespace Models.CLEM.Groupings
             return results;
         }
 
-        #endregion
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -172,7 +169,6 @@ namespace Models.CLEM.Groupings
             }
         }
 
-        #endregion
 
     }
 }

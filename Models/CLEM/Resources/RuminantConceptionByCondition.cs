@@ -56,7 +56,6 @@ namespace Models.CLEM.Resources
             return (female.RelativeCondition >= ConditionCutOff) ? MaximumConceptionProbability : 0;
         }
 
-        #region descriptive summary 
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -74,6 +73,5 @@ namespace Models.CLEM.Resources
             }
         }
 
-        #endregion
     }
 }

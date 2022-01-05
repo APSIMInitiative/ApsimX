@@ -213,7 +213,6 @@ namespace Models.CLEM.Resources
             return individuals;
         }
 
-        #region descriptive summary 
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -426,7 +425,6 @@ namespace Models.CLEM.Resources
             return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
         }
 
-        #endregion
     }
 }
 

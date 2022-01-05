@@ -73,7 +73,6 @@ namespace Models.CLEM.Resources
             Items = null;
         }
 
-        #region Ecological Indicators calculated
 
         private void Resource_EcologicalIndicatorsCalculated(object sender, EventArgs e)
         {
@@ -95,6 +94,5 @@ namespace Models.CLEM.Resources
         [JsonIgnore]
         public EcologicalIndicators LastEcologicalIndicators { get; set; }
 
-        #endregion
     }
 }

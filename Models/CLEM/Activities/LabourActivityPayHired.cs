@@ -211,7 +211,6 @@ namespace Models.CLEM.Activities
             return resourcesNeeded;
         }
 
-        #region validation
         /// <summary>
         /// Validate model
         /// </summary>
@@ -246,9 +245,7 @@ namespace Models.CLEM.Activities
             }
             return results;
         }
-        #endregion
 
-        #region descriptive summary
         /// <inheritdoc/>
         public override string ModelSummary()
         {
@@ -260,7 +257,6 @@ namespace Models.CLEM.Activities
                 return htmlWriter.ToString();
             }
         } 
-        #endregion
 
     }
 }

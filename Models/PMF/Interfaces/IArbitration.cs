@@ -73,7 +73,6 @@
     }
 
 
-    #region Arbitrator data types
     /// <summary>
     /// 
     /// </summary>
@@ -184,6 +183,5 @@
         /// <value>The fixation.</value>
         public double Fixation { get; set; }
     }
-    #endregion
 
 }

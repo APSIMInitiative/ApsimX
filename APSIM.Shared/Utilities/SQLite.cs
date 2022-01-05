@@ -180,7 +180,6 @@ namespace APSIM.Shared.Utilities
         /// <summary>The sqlit e_ ope n_ wal</summary>
         private const int SQLITE_OPEN_WAL = 0x00080000; /* VFS only */
 
-        #region Externals
         //When using sqlite3 without .dll the platforms are intelligent enough to add the OS specific details.
         //On Linux-Mono the lib .so artifacts appear to be accounted for.
         /// <summary>Sqlite3_opens the specified filename.</summary>
@@ -351,7 +350,6 @@ namespace APSIM.Shared.Utilities
         /// <param name="sqlite3_mutex">The sqlite3_mutex.</param>
         [DllImport("sqlite3", CallingConvention = CallingConvention.Cdecl)]
         private static extern void sqlite3_mutex_leave(IntPtr sqlite3_mutex);
-        #endregion
 
         /// <summary>The _DB</summary>
         [NonSerialized]

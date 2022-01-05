@@ -61,7 +61,6 @@ namespace Models.CLEM.Resources
             return individuals;
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -88,7 +87,6 @@ namespace Models.CLEM.Resources
             return $"<table><tr><th>Name</th><th>Sex</th><th>Age</th><th>Weight</th><th>Norm.Wt.</th><th>Number</th><th>Suckling</th><th>Sire</th>{(ConceptionsFound? "<th>Pregnant</th>" : "")}{(AttributesFound ? "<th>Attributes</th>" : "")}</tr>";
         }
 
-        #endregion
     }
 }
 

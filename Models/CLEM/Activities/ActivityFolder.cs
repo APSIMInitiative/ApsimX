@@ -38,7 +38,6 @@ namespace Models.CLEM.Activities
             TransactionCategory = "Folder";
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -57,7 +56,6 @@ namespace Models.CLEM.Activities
         {
             return "\r\n<div class=\"activityborder\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + ";\">";
         } 
-        #endregion
 
     }
 }

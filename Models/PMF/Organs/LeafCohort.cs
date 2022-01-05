@@ -47,7 +47,6 @@ namespace Models.PMF.Organs
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class LeafCohort : Model
     {
-        #region Paramater Input Classes
 
         /// <summary>The plant</summary>
         [Link]
@@ -87,9 +86,7 @@ namespace Models.PMF.Organs
         /// <summary>The live start</summary>
         public Biomass LiveStart = null;
 
-        #endregion
 
-        #region Class Fields
 
         /// <summary>The rank</summary>
         [Description("Rank")]
@@ -344,9 +341,7 @@ namespace Models.PMF.Organs
         /// <summary>The metabolic dm allocation</summary>
         public double MetabolicDMAllocation;
 
-        #endregion
 
-        #region Class Properties
 
         /// <summary>Has the leaf chort been initialised?</summary>
         [JsonIgnore]
@@ -454,9 +449,7 @@ namespace Models.PMF.Organs
 
         /// <summary>MaintenanceRespiration</summary>
         public double MaintenanceRespiration { get; private set; }
-        #endregion
 
-        #region Arbitration methods
 
         /// <summary>Gets the structural dm demand.</summary>
         /// <value>The structural dm demand.</value>
@@ -696,9 +689,7 @@ namespace Models.PMF.Organs
                     PotentialMetabolicDMAllocation = value.Metabolic;
             }
         }
-        #endregion
 
-        #region Functions
         /// <summary>Constructor</summary>
         public LeafCohort()
         {
@@ -1260,7 +1251,6 @@ namespace Models.PMF.Organs
             return fracDetach;
         }
 
-        #endregion
 
         /// <summary>
         /// Document the model.

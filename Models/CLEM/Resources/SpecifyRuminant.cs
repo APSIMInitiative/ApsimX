@@ -95,7 +95,6 @@ namespace Models.CLEM.Resources
             ExampleIndividual = Details.CreateIndividuals(null, BreedParams).FirstOrDefault();
         }
 
-        #region validation
         /// <summary>
         /// Validate this model
         /// </summary>
@@ -120,9 +119,7 @@ namespace Models.CLEM.Resources
             }
             return results;
         }
-        #endregion
 
-        #region descriptive summary
 
         private bool cohortFound;
 
@@ -150,7 +147,6 @@ namespace Models.CLEM.Resources
             }
         }
 
-        #endregion
 
 
     }

@@ -179,7 +179,6 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.Ignored;
         }
 
-        #region descriptive summary
 
         /// <inheritdoc/>
         public override string ModelSummary()
@@ -187,6 +186,5 @@ namespace Models.CLEM.Activities
             string tagstring = CLEMModel.DisplaySummaryValueSnippet(TagLabel, "Not set");
             return $"\r\n<div class=\"activityentry\">{ApplicationStyle} the tag {tagstring} {((ApplicationStyle == TagApplicationStyle.Add)?"to":"from")} all individuals in the following groups</div>";
         }
-        #endregion
     }
 }
