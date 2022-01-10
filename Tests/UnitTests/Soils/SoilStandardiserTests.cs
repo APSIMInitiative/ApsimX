@@ -62,7 +62,8 @@
                     {
                         Thickness = new double[] { 1000 },
                         OC = new double[] { 1.35 },
-                        SWUnits = Sample.SWUnitsEnum.Volumetric
+                        SWUnits = Sample.SWUnitsEnum.Volumetric,
+                        Name = "Sample1"
                     }
                 }
             };
@@ -135,7 +136,8 @@
                     {
                         Thickness = new double[] { 1000 },
                         OC = new double[] { 1.35 },
-                        SWUnits = Sample.SWUnitsEnum.Volumetric
+                        SWUnits = Sample.SWUnitsEnum.Volumetric,
+                        Name = "Sample1"
                     },
                     new LayerStructure
                     {
