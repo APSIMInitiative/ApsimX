@@ -342,7 +342,7 @@
                 IAnnotation annotation = annotations.ElementAt(i);
                 if (annotation is TextAnnotation textAnnotation)
                 {
-                    double interval = (maximumY - lowestAxisScale) / 15; // fit 8 annotations on graph.
+                    double interval = (maximumY - lowestAxisScale) / 8; // fit 8 annotations on graph.
 
                     object x, y;
                     bool leftAlign = textAnnotation.leftAlign;
