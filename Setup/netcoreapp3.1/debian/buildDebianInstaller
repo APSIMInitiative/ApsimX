@@ -47,7 +47,7 @@ bin=data/usr/local/bin
 mkdir $bin
 echo exec dotnet $inst/bin/Models.dll '"$@"' >$bin/Models
 echo exec dotnet $inst/bin/ApsimNG.dll '"$@"' >$bin/apsim
-chmod u+x $bin/*
+chmod 755 $bin/*
 
 # Get estimated disk usage of installed package
 size=$(du -sk data | cut -f 1)
