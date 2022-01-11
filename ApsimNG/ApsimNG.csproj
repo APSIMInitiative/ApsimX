@@ -56,7 +56,7 @@
     <PackageReference Include="Microsoft.Toolkit.Parsers" Version="6.1.1" />
     <PackageReference Include="Markdig" Version="0.22.1" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="5.0.0.0" />
-    <PackageReference Include="GtkSharp" Version="3.22.*" />
+    <PackageReference Include="GtkSharp" Version="3.24.24.34" />
     <PackageReference Include="GtkSourceSharp" Version="3.22.*" />
     <PackageReference Include="OxyPlot.Core" Version="2.1.0-Preview1" />
     <PackageReference Include="OxyPlot.GtkSharp3" Version="2.0.3-netcorebeta" />
