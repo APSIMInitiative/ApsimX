@@ -15,7 +15,9 @@ where each factor defines one or more treatments (levels) of the experiment.
 When run, the experiment will generate one simulation for each factor level. The
 factors and factor levels are defined by the factor configurations under the
 Factors node. There are different types of factors, and they can be combined as
-needed. The different types of factors are described below.
+needed. The different types of factors are described below, and examples of each
+type of factor are given in the factorial example file (Factorial.apsimx) which
+is included with APSIM installations.
 
 ## Factor
 
