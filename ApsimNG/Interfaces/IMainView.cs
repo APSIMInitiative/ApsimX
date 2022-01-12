@@ -173,8 +173,9 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Close a tab.
         /// </summary>
-        /// <param name="o">A widget appearing on the tab</param>
-        void CloseTabContaining(object o);
+        /// <param name="index">Index of the tab to be removed.</param>
+        /// <param name="onLeft">Remove from the left (true) tab control or the right (false) tab control.</param>
+        void RemoveTab(int index, bool onLeft);
 
         /// <summary>
         /// Select a tab.
