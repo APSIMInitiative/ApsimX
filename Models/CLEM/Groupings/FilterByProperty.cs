@@ -55,6 +55,7 @@ namespace Models.CLEM.Groupings
             if (Validator.TryValidateObject(this, context, results, true))
             {
                 Initialise();
+                // rules can only be built on commence not during use in UI (Descriptive summaries)
                 BuildRule();
             }
         }
@@ -239,7 +240,7 @@ namespace Models.CLEM.Groupings
                 bool truefalse = IsOperatorTrueFalseTest();
                 if (truefalse | (propertyInfo != null && propertyInfo.PropertyType.IsEnum))
                 {
-                    if(propertyInfo.PropertyType == typeof(bool))
+                    if (propertyInfo.PropertyType == typeof(bool))
                     {
                         if (Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false")
                             filterWriter.Write(" not");

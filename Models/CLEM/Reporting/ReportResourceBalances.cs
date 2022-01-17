@@ -33,13 +33,13 @@ namespace Models.CLEM.Reporting
         private ResourcesHolder resources = null;
         [Link]
         private Summary summary = null;
+
         private IEnumerable<IActivityTimer> timers;
 
         /// <summary>
         /// Gets or sets report groups for outputting
         /// </summary>
         [Description("Resource groups")]
-        //[Display(Type = DisplayType.MultiLineText)]
         [Category("General", "Resources")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "At least one Resource group must be provided for the Balances Report")]
         public string[] ResourceGroupsToReport { get; set; }
