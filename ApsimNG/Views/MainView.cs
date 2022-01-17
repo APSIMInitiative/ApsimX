@@ -1135,6 +1135,24 @@
             Clipboard cb = Clipboard.Get(modelClipboard);
             cb.Text = text;
         }
+
+        /// <inheritdoc />
+        public (int, bool) GetCurrentTab()
+        {
+            Notebook notebook = GetCurrentNotebook();
+            if (notebook == null)
+                return (-1, false);
+
+            bool onLeft = notebook.Name == notebook1.Name;
+            return (notebook.CurrentPage, onLeft);
+        }
+
+        private Notebook GetCurrentNotebook()
+        {
+            if (!notebook2.Visible)
+                return notebook1;
+            return hpaned1.FocusChild as Notebook;
+        }
     }
 
     /// <summary>An event argument structure with a string.</summary>

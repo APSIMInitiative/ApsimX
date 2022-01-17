@@ -13,6 +13,7 @@
     public class ToolStripView : ViewBase, IToolStripView
     {
         private Toolbar toolStrip = null;
+        private AccelGroup accelerators;
 
         /// <summary>Constructor.</summary>
         public ToolStripView()
@@ -53,6 +54,15 @@
         /// <summary>Destroy the toolstrip</summary>
         public void Destroy()
         {
+            if (accelerators != null)
+            {
+                Window mainWindow = GetMainWindow();
+                if (mainWindow != null)
+                    mainWindow.RemoveAccelGroup(accelerators);
+                accelerators.Dispose();
+                accelerators = null;
+            }
+
             foreach (Widget child in toolStrip.Children)
             {
                 if (child is ToolButton)
@@ -77,6 +87,7 @@
         /// <param name="menuDescriptions">Descriptions for each item.</param>
         public void Populate(List<MenuDescriptionArgs> menuDescriptions)
         {
+            accelerators = new AccelGroup();
             foreach (Widget child in toolStrip.Children)
             {
                 toolStrip.Remove(child);
@@ -115,11 +126,24 @@
                     button.Homogeneous = false;
                     button.LabelWidget = new Label(description.Name);
                     button.Clicked += description.OnClick;
+                    if (!string.IsNullOrWhiteSpace(description.ShortcutKey))
+                    {
+                        (Gdk.Key key, Gdk.ModifierType modifier) = GtkExtensions.ParseHotkey(description.ShortcutKey);
+                        button.AddAccelerator("clicked", accelerators, (uint)key, modifier, AccelFlags.Visible);
+                    }
                     item = button;
                 }
                 toolStrip.Add(item);
             }
+            Window mainWindow = GetMainWindow();
+            if (mainWindow != null)
+                mainWindow.AddAccelGroup(accelerators);
             toolStrip.ShowAll();
+        }
+
+        private Window GetMainWindow()
+        {
+            return ((ViewBase)MasterView).MainWidget.Toplevel as Window;
         }
     }
 }

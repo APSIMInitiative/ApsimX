@@ -150,7 +150,7 @@
             this.ApsimXFile = model as Simulations;
             this.view = view as IExplorerView;
             this.CommandHistory = new CommandHistory(this.view.Tree);
-            this.mainMenu = new MainMenu(this);
+            this.mainMenu = new MainMenu(MainPresenter);
             this.ContextMenu = new ContextMenu(this);
             ApsimXFile.Links.Resolve(ContextMenu);
 
@@ -889,6 +889,7 @@
 
                     EventHandler handler = (EventHandler)Delegate.CreateDelegate(typeof(EventHandler), this.mainMenu, method);
                     desc.OnClick = handler;
+                    desc.ShortcutKey = mainMenuName.Hotkey;
 
                     descriptions.Add(desc);
                 }
