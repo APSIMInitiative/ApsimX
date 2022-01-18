@@ -11,122 +11,154 @@
       "Name": "DataStore",
       "Children": [
         {
-          "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileNames": [
-            "obs\\Observed.xlsx"
-          ],
-          "SheetNames": [
-            "Observed"
-          ],
-          "Name": "ExcelInput",
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PostSimulationTools.ExcelInput, Models",
-          "FileNames": [
-            "obs\\DailyObserved.xlsx"
-          ],
-          "SheetNames": [
-            "DailyObserved"
-          ],
-          "Name": "DailyObserved",
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
-          "PredictedTableName": "HarvestReport",
-          "ObservedTableName": "Observed",
-          "FieldNameUsedForMatch": "Stage",
-          "FieldName2UsedForMatch": null,
-          "FieldName3UsedForMatch": null,
-          "AllColumns": false,
-          "Name": "PredictedObserved",
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PostSimulationTools.PredictedObserved, Models",
-          "PredictedTableName": "DailyReport",
-          "ObservedTableName": "DailyObserved",
-          "FieldNameUsedForMatch": "Date",
-          "FieldName2UsedForMatch": null,
-          "FieldName3UsedForMatch": null,
-          "AllColumns": false,
-          "Name": "DailyPredictedObserved",
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PostSimulationTools.Probability, Models",
-          "TableName": "BugeseraSensibility",
-          "Exceedence": false,
-          "FieldToSplitOn": "SimulationName",
-          "Name": "Probability",
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PostSimulationTools.Probability, Models",
-          "TableName": "WaterByNSensibilityReport",
-          "Exceedence": false,
-          "FieldToSplitOn": "SimulationName",
-          "Name": "WaterByNProbability",
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PostSimulationTools.Input, Models",
-          "FileNames": [
-            "old\\combined_fixed.csv"
-          ],
-          "Name": "OldApsimFixed",
+          "$type": "Models.PostSimulationTools.ParallelPostSimulationTool, Models",
+          "Name": "ParallelPostSimulationTool",
           "Children": [
             {
-              "$type": "Models.Memo, Models",
-              "Text": "Daily outputs from the old apsim test set using fixed/static tillering (via fertile tiller number supplied in the sowing rule).",
-              "Name": "Memo",
+              "$type": "Models.PostSimulationTools.SerialPostSimulationTool, Models",
+              "Name": "PredictedObserved",
+              "Children": [
+                {
+                  "$type": "Models.PostSimulationTools.ParallelPostSimulationTool, Models",
+                  "Name": "ReadInputs",
+                  "Children": [
+                    {
+                      "$type": "Models.PostSimulationTools.ExcelInput, Models",
+                      "FileNames": [
+                        "obs\\Observed.xlsx"
+                      ],
+                      "SheetNames": [
+                        "Observed"
+                      ],
+                      "Name": "ExcelInput",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PostSimulationTools.ExcelInput, Models",
+                      "FileNames": [
+                        "obs\\DailyObserved.xlsx"
+                      ],
+                      "SheetNames": [
+                        "DailyObserved"
+                      ],
+                      "Name": "DailyObserved",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PostSimulationTools.ParallelPostSimulationTool, Models",
+                  "Name": "MergeWithPredictions",
+                  "Children": [
+                    {
+                      "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+                      "PredictedTableName": "HarvestReport",
+                      "ObservedTableName": "Observed",
+                      "FieldNameUsedForMatch": "Stage",
+                      "FieldName2UsedForMatch": null,
+                      "FieldName3UsedForMatch": null,
+                      "AllColumns": false,
+                      "Name": "PredictedObserved",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.PostSimulationTools.PredictedObserved, Models",
+                      "PredictedTableName": "DailyReport",
+                      "ObservedTableName": "DailyObserved",
+                      "FieldNameUsedForMatch": "Date",
+                      "FieldName2UsedForMatch": null,
+                      "FieldName3UsedForMatch": null,
+                      "AllColumns": false,
+                      "Name": "DailyPredictedObserved",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PostSimulationTools.Probability, Models",
+              "TableName": "BugeseraSensibility",
+              "Exceedence": false,
+              "FieldToSplitOn": "SimulationName",
+              "Name": "Probability",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PostSimulationTools.Probability, Models",
+              "TableName": "WaterByNSensibilityReport",
+              "Exceedence": false,
+              "FieldToSplitOn": "SimulationName",
+              "Name": "WaterByNProbability",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PostSimulationTools.Input, Models",
+              "FileNames": [
+                "old\\combined_fixed.csv"
+              ],
+              "Name": "OldApsimFixed",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Daily outputs from the old apsim test set using fixed/static tillering (via fertile tiller number supplied in the sowing rule).",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PostSimulationTools.Input, Models",
+              "FileNames": [
+                "old\\combined_dynamic.csv"
+              ],
+              "Name": "OldApsimDynamic",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "Daily outputs from the old apsim test set using dynamic tillering.",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.PostSimulationTools.Input, Models",
+              "FileNames": [
+                "old\\multiyear_he1_t1.out"
+              ],
+              "Name": "Multiyear_HE1_T1",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PostSimulationTools.Input, Models",
-          "FileNames": [
-            "old\\combined_dynamic.csv"
-          ],
-          "Name": "OldApsimDynamic",
-          "Children": [
-            {
-              "$type": "Models.Memo, Models",
-              "Text": "Daily outputs from the old apsim test set using dynamic tillering.",
-              "Name": "Memo",
-              "Children": [],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.PostSimulationTools.Input, Models",
-          "FileNames": [
-            "old\\multiyear_he1_t1.out"
-          ],
-          "Name": "Multiyear_HE1_T1",
-          "Children": [],
           "Enabled": true,
           "ReadOnly": false
         }
