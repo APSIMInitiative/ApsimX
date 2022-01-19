@@ -36,7 +36,7 @@ namespace Models.CLEM
         public PropertyInfo GetProperty(string name) 
         {
             if (properties is null)
-                InitialiseFilters();
+                InitialiseFilters(false);
 
             return properties[name]; 
         }
@@ -48,15 +48,6 @@ namespace Models.CLEM
         {
             foreach (Filter filter in FindAllChildren<Filter>())
                 filter.ClearRule();
-        }
-
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public FilterGroup()
-        {
-            // needed for UI to access property lists
-           // InitialiseFilters();
         }
 
         ///<inheritdoc/>
@@ -71,7 +62,7 @@ namespace Models.CLEM
         /// <summary>
         /// Initialise filter rules and dropdown lists of properties available for TFilter
         /// </summary>
-        public void InitialiseFilters()
+        public void InitialiseFilters(bool includeBuildRules = true)
         {
             properties = typeof(TFilter)
                 .GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
@@ -99,7 +90,8 @@ namespace Models.CLEM
             foreach (Filter filter in FindAllChildren<Filter>())
             {
                 filter.Initialise();
-                filter.BuildRule();
+                if (includeBuildRules)
+                    filter.BuildRule();
             }
 
             sortList = FindAllChildren<ISort>();

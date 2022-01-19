@@ -33,13 +33,13 @@ namespace Models.CLEM.Reporting
         private ResourcesHolder resources = null;
         [Link]
         private Summary summary = null;
+
         private IEnumerable<IActivityTimer> timers;
 
         /// <summary>
         /// Gets or sets report groups for outputting
         /// </summary>
         [Description("Resource groups")]
-        //[Display(Type = DisplayType.MultiLineText)]
         [Category("General", "Resources")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "At least one Resource group must be provided for the Balances Report")]
         public string[] ResourceGroupsToReport { get; set; }
@@ -174,7 +174,7 @@ namespace Models.CLEM.Reporting
                                                 if (ReportAnimalWeight)
                                                     variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").TotalWeight as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.TotalWeight");
                                                 if (ReportValue)
-                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").TotalValue as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.TotalPrice");
+                                                    variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.GetRuminantReportGroup(\"{(item as IModel).Name}\",\"{category}\").TotalPrice as {item.Name.Replace(" ", "_")}{(((model as RuminantHerd).TransactionStyle != RuminantTransactionsGroupingStyle.Combined) ? $".{category.Replace(" ", "_")}" : "")}.TotalPrice");
                                             }
                                         }
                                         else
@@ -182,7 +182,7 @@ namespace Models.CLEM.Reporting
                                             if (ReportAmount)
                                                 variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.{ item.Name}.{ amountStr } as { item.Name.Replace(" ", "_") }_Amount");
                                             if (ReportValue & item.GetType() != typeof(FinanceType))
-                                                variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.{ item.Name}.CalculateValue({ $"[Resources].{this.ResourceGroupsToReport[i]}.{ item.Name}.{ amountStr }" }, False) as { item.Name.Replace(" ", "_") }_Value");
+                                                variableNames.Add($"[Resources].{this.ResourceGroupsToReport[i]}.{item.Name}.Value as { item.Name.Replace(" ", "_") }_DollarValue");
                                         }
                                     }
                                 }
