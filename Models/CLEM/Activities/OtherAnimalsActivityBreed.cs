@@ -67,7 +67,7 @@ namespace Models.CLEM.Activities
         public OtherAnimalsType SelectedOtherAnimalsType;
 
         /// <summary>
-        /// Month this overhead is next due.
+        /// Month this timer is next due.
         /// </summary>
         [JsonIgnore]
         public DateTime NextDueDate { get; set; }
