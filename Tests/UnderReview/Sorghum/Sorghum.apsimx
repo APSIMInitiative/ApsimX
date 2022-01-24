@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 300,
   "Version": 147,
   "Name": "Simulations",
   "Children": [
@@ -10579,10 +10579,10 @@
                                 0.01
                               ],
                               "FInert": [
+                                0.3,
                                 0.45,
                                 0.6,
                                 0.75,
-                                0.9,
                                 0.9,
                                 0.9,
                                 0.9,
@@ -17670,6 +17670,14 @@
                               "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; }\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
+                                  "Key": "Cultivar",
+                                  "Value": "QL41xQL36"
+                                },
+                                {
+                                  "Key": "Ftn",
+                                  "Value": "0"
+                                },
+                                {
                                   "Key": "Date",
                                   "Value": "01/09/1997 00:00:00"
                                 },
@@ -17682,20 +17690,12 @@
                                   "Value": "30"
                                 },
                                 {
-                                  "Key": "Cultivar",
-                                  "Value": "QL41xQL36"
-                                },
-                                {
                                   "Key": "RowSpacing",
                                   "Value": "500"
                                 },
                                 {
                                   "Key": "RowConfiguration",
                                   "Value": "solid"
-                                },
-                                {
-                                  "Key": "Ftn",
-                                  "Value": "0"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -18188,10 +18188,10 @@
                                 0.01
                               ],
                               "FInert": [
+                                0.3,
                                 0.45,
                                 0.6,
                                 0.75,
-                                0.9,
                                 0.9,
                                 0.9,
                                 0.9,
@@ -18245,16 +18245,16 @@
                                 200.0
                               ],
                               "NO3N": [
-                                10.4,
-                                1.6329999999999996,
-                                1.2330000000000008,
-                                0.9,
-                                1.1,
-                                1.4670000000000005,
-                                3.6329999999999996,
-                                5.667000000000001,
-                                5.8,
-                                7.267000000000003
+                                0.1,
+                                0.026,
+                                0.05,
+                                0.058,
+                                0.394,
+                                0.187,
+                                0.512,
+                                0.762,
+                                0.719,
+                                0.7
                               ],
                               "NH4N": [
                                 0.1,
@@ -18320,7 +18320,18 @@
                                 200.0,
                                 200.0
                               ],
-                              "NO3": null,
+                              "NO3": [
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN",
+                                "NaN"
+                              ],
                               "NH4": null,
                               "LabileP": null,
                               "UnavailableP": null,
@@ -18505,6 +18516,14 @@
                               "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; }\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
+                                  "Key": "Cultivar",
+                                  "Value": "QL41xQL36"
+                                },
+                                {
+                                  "Key": "Ftn",
+                                  "Value": "0"
+                                },
+                                {
                                   "Key": "Date",
                                   "Value": "01/09/1997 00:00:00"
                                 },
@@ -18517,20 +18536,12 @@
                                   "Value": "15"
                                 },
                                 {
-                                  "Key": "Cultivar",
-                                  "Value": "QL41xQL36"
-                                },
-                                {
                                   "Key": "RowSpacing",
                                   "Value": "500"
                                 },
                                 {
                                   "Key": "RowConfiguration",
                                   "Value": "solid"
-                                },
-                                {
-                                  "Key": "Ftn",
-                                  "Value": "0"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -18993,10 +19004,10 @@
                                 0.01
                               ],
                               "FInert": [
+                                0.3,
                                 0.45,
                                 0.6,
                                 0.75,
-                                0.9,
                                 0.9,
                                 0.9,
                                 0.9,
@@ -19353,6 +19364,14 @@
                               "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; }\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
+                                  "Key": "Cultivar",
+                                  "Value": "QL41xQL36"
+                                },
+                                {
+                                  "Key": "Ftn",
+                                  "Value": "0"
+                                },
+                                {
                                   "Key": "Date",
                                   "Value": "01/09/1997 00:00:00"
                                 },
@@ -19365,20 +19384,12 @@
                                   "Value": "30"
                                 },
                                 {
-                                  "Key": "Cultivar",
-                                  "Value": "QL41xQL36"
-                                },
-                                {
                                   "Key": "RowSpacing",
                                   "Value": "500"
                                 },
                                 {
                                   "Key": "RowConfiguration",
                                   "Value": "solid"
-                                },
-                                {
-                                  "Key": "Ftn",
-                                  "Value": "0"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -19852,10 +19863,10 @@
                                 0.01
                               ],
                               "FInert": [
+                                0.3,
                                 0.45,
                                 0.6,
                                 0.75,
-                                0.9,
                                 0.9,
                                 0.9,
                                 0.9,
@@ -20741,10 +20752,10 @@
                                 0.01
                               ],
                               "FInert": [
+                                0.3,
                                 0.45,
                                 0.6,
                                 0.75,
-                                0.9,
                                 0.9,
                                 0.9,
                                 0.9,
@@ -21956,14 +21967,6 @@
                               "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
-                                  "Key": "Cultivar",
-                                  "Value": "Buster"
-                                },
-                                {
-                                  "Key": "Ftn",
-                                  "Value": "0"
-                                },
-                                {
                                   "Key": "Date",
                                   "Value": "11/27/1997 00:00:00"
                                 },
@@ -21976,12 +21979,20 @@
                                   "Value": "15"
                                 },
                                 {
+                                  "Key": "Cultivar",
+                                  "Value": "Buster"
+                                },
+                                {
                                   "Key": "RowSpacing",
                                   "Value": "500"
                                 },
                                 {
                                   "Key": "RowConfiguration",
                                   "Value": "solid"
+                                },
+                                {
+                                  "Key": "Ftn",
+                                  "Value": "0"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -22420,10 +22431,10 @@
                                 0.01
                               ],
                               "FInert": [
+                                0.3,
                                 0.45,
                                 0.6,
                                 0.75,
-                                0.9,
                                 0.9,
                                 0.9,
                                 0.9,
@@ -22800,14 +22811,6 @@
                               "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
-                                  "Key": "Cultivar",
-                                  "Value": "Buster"
-                                },
-                                {
-                                  "Key": "Ftn",
-                                  "Value": "0"
-                                },
-                                {
                                   "Key": "Date",
                                   "Value": "11/27/1997 00:00:00"
                                 },
@@ -22820,12 +22823,20 @@
                                   "Value": "15"
                                 },
                                 {
+                                  "Key": "Cultivar",
+                                  "Value": "Buster"
+                                },
+                                {
                                   "Key": "RowSpacing",
                                   "Value": "500"
                                 },
                                 {
                                   "Key": "RowConfiguration",
                                   "Value": "solid"
+                                },
+                                {
+                                  "Key": "Ftn",
+                                  "Value": "0"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -23264,10 +23275,10 @@
                                 0.01
                               ],
                               "FInert": [
+                                0.3,
                                 0.45,
                                 0.6,
                                 0.75,
-                                0.9,
                                 0.9,
                                 0.9,
                                 0.9,
@@ -26769,6 +26780,14 @@
                               "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
+                                  "Key": "Cultivar",
+                                  "Value": "Buster"
+                                },
+                                {
+                                  "Key": "Ftn",
+                                  "Value": "0.4"
+                                },
+                                {
                                   "Key": "Date",
                                   "Value": "10/11/1996 00:00:00"
                                 },
@@ -26781,20 +26800,12 @@
                                   "Value": "20"
                                 },
                                 {
-                                  "Key": "Cultivar",
-                                  "Value": "Buster"
-                                },
-                                {
                                   "Key": "RowSpacing",
                                   "Value": "500"
                                 },
                                 {
                                   "Key": "RowConfiguration",
                                   "Value": "solid"
-                                },
-                                {
-                                  "Key": "Ftn",
-                                  "Value": "0.4"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -26856,14 +26867,6 @@
                           "$type": "Models.Manager, Models",
                           "Code": "using Models.Interfaces;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] private Zone zone;\n        [Link] private Irrigation irrigation;\n        [Link] private Soil soil;\n        [Link]\n        private IPhysical soilPhysical;\n        [Link]\n        private ISoilWater waterBalance;\n        public double FASW { get; set; }\n        public double WaterDeficit  { get; set; }\n    \n        \n        [Description(\"Auto irrigation on?\")]\n        public bool AutoIrrigationOn { get; set; }\n\n        [Description(\"Threshold fraction available water (0-1)\")]\n        public double FASWThreshold { get; set; }\n\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\n        public double FASWDepth { get; set; }\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            CalculateFASW();\n            if (AutoIrrigationOn)\n            {\n                if (FASW < FASWThreshold)\n                {\n                    double amount = 10;\n                    irrigation.Apply(WaterDeficit, depth: 0);\n                }\n            }\n        }\n        \n        private void CalculateFASW()\n        {\n            double[] LL15 = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);\n            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);\n        \n            int nlayr = GetLayerIndex();\n            double cumdep = MathUtilities.Sum(soilPhysical.Thickness, 0, nlayr, 0.0);\n\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soilPhysical.Thickness[nlayr], 0.0);\n\n            // note that results may be strange if swdep < ll15\n            double avail_sw = (MathUtilities.Sum(waterBalance.SWmm, 0, nlayr, 0.0)\n                              - excess_fr * waterBalance.SWmm[nlayr])\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\n                              - excess_fr * LL15[nlayr]);\n\n\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\n                                  - excess_fr * DUL[nlayr])\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\n                                  - excess_fr * LL15[nlayr]);\n\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\n        }\n\n        private int GetLayerIndex()\n        {\n            double[] cumThickness = soilPhysical.ThicknessCumulative;\n            for (int i = 1; i < cumThickness.Length; i++)\n            {\n                if (FASWDepth < cumThickness[i])\n                    return i - 1;\n            }\n            \n            return cumThickness.Length - 1;\n        }\n\n    }\n}\n       \n",
                           "Parameters": [
-                            {
-                              "Key": "FASW",
-                              "Value": "0"
-                            },
-                            {
-                              "Key": "WaterDeficit",
-                              "Value": "0"
-                            },
                             {
                               "Key": "AutoIrrigationOn",
                               "Value": "True"
@@ -27534,6 +27537,14 @@
                               "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        [Description(\"Enter Fertile Tiller No. : \")]\r\n        public double Ftn { get; set; }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
+                                  "Key": "Cultivar",
+                                  "Value": "Buster"
+                                },
+                                {
+                                  "Key": "Ftn",
+                                  "Value": "0.5"
+                                },
+                                {
                                   "Key": "Date",
                                   "Value": "01/06/1997 00:00:00"
                                 },
@@ -27546,20 +27557,12 @@
                                   "Value": "25"
                                 },
                                 {
-                                  "Key": "Cultivar",
-                                  "Value": "Buster"
-                                },
-                                {
                                   "Key": "RowSpacing",
                                   "Value": "500"
                                 },
                                 {
                                   "Key": "RowConfiguration",
                                   "Value": "solid"
-                                },
-                                {
-                                  "Key": "Ftn",
-                                  "Value": "0.5"
                                 }
                               ],
                               "Name": "SowingRule",
@@ -28257,8 +28260,7 @@
                         {
                           "$type": "Models.Factorial.CompositeFactor, Models",
                           "Specifications": [
-                            "[SowingRule].Script.Cultivar = Buster",
-                            "[AutoIrrigation].Script.AutoIrrigationOn = false"
+                            "[SowingRule].Script.Cultivar = Buster"
                           ],
                           "Paths": null,
                           "Values": null,
@@ -28270,9 +28272,7 @@
                         {
                           "$type": "Models.Factorial.CompositeFactor, Models",
                           "Specifications": [
-                            "[SowingRule].Script.Cultivar = M35-1",
-                            "[Chemical].NO3N = 17.363, 8.078, 21.758, 21.236, 22.809, 22.437, 10.35",
-                            "[AutoIrrigation].Script.AutoIrrigationOn = false"
+                            "[SowingRule].Script.Cultivar = M35-1"
                           ],
                           "Paths": null,
                           "Values": null,
@@ -28284,9 +28284,7 @@
                         {
                           "$type": "Models.Factorial.CompositeFactor, Models",
                           "Specifications": [
-                            "[SowingRule].Script.Cultivar = CSH13R",
-                            "[Chemical].NO3N = 17.363, 8.078, 21.758, 21.236, 22.809, 22.437, 10.35",
-                            "[AutoIrrigation].Script.AutoIrrigationOn = true"
+                            "[SowingRule].Script.Cultivar = CSH13R"
                           ],
                           "Paths": null,
                           "Values": null,
@@ -28391,7 +28389,7 @@
                                 },
                                 {
                                   "Key": "Ftn",
-                                  "Value": "1"
+                                  "Value": "0"
                                 },
                                 {
                                   "Key": "Date",
@@ -28889,13 +28887,13 @@
                                 300.0
                               ],
                               "NO3N": [
-                                17.363,
-                                8.078,
-                                21.757999999999996,
-                                21.235999999999997,
-                                22.809,
-                                22.43700000000001,
-                                10.35
+                                5.187,
+                                2.413,
+                                6.5,
+                                6.344,
+                                6.814,
+                                6.703,
+                                3.092
                               ],
                               "NH4N": [
                                 0.1,
@@ -28997,14 +28995,6 @@
                           "$type": "Models.Manager, Models",
                           "Code": "using Models.Interfaces;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] private Zone zone;\n        [Link] private Irrigation irrigation;\n        [Link] private Soil soil;\n        [Link]\n        private IPhysical soilPhysical;\n        [Link]\n        private ISoilWater waterBalance;\n        public double FASW { get; set; }\n        public double WaterDeficit  { get; set; }\n    \n        \n        [Description(\"Auto irrigation on?\")]\n        public bool AutoIrrigationOn { get; set; }\n\n        [Description(\"Threshold fraction available water (0-1)\")]\n        public double FASWThreshold { get; set; }\n\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\n        public double FASWDepth { get; set; }\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            CalculateFASW();\n            if (AutoIrrigationOn)\n            {\n                if (FASW < FASWThreshold)\n                {\n                    double amount = 10;\n                    irrigation.Apply(WaterDeficit, depth: 0);\n                }\n            }\n        }\n        \n        private void CalculateFASW()\n        {\n            double[] LL15 = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);\n            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);\n        \n            int nlayr = GetLayerIndex();\n            double cumdep = MathUtilities.Sum(soilPhysical.Thickness, 0, nlayr, 0.0);\n\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soilPhysical.Thickness[nlayr], 0.0);\n\n            // note that results may be strange if swdep < ll15\n            double avail_sw = (MathUtilities.Sum(waterBalance.SWmm, 0, nlayr, 0.0)\n                              - excess_fr * waterBalance.SWmm[nlayr])\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\n                              - excess_fr * LL15[nlayr]);\n\n\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\n                                  - excess_fr * DUL[nlayr])\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\n                                  - excess_fr * LL15[nlayr]);\n\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\n        }\n\n        private int GetLayerIndex()\n        {\n            double[] cumThickness = soilPhysical.ThicknessCumulative;\n            for (int i = 1; i < cumThickness.Length; i++)\n            {\n                if (FASWDepth < cumThickness[i])\n                    return i - 1;\n            }\n            \n            return cumThickness.Length - 1;\n        }\n\n    }\n}\n       \n",
                           "Parameters": [
-                            {
-                              "Key": "FASW",
-                              "Value": "0"
-                            },
-                            {
-                              "Key": "WaterDeficit",
-                              "Value": "0"
-                            },
                             {
                               "Key": "AutoIrrigationOn",
                               "Value": "False"
@@ -29495,14 +29485,6 @@
                           "$type": "Models.Manager, Models",
                           "Code": "using Models.Interfaces;\nusing System;\nusing Models.Core;\nusing System.Collections.Generic;\nusing System.Text;\nusing Models.Soils;\nusing Models.PMF;\nusing Models;\nusing System.Xml.Serialization;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable] \n    public class Script : Model\n    {\n        [Link] private Zone zone;\n        [Link] private Irrigation irrigation;\n        [Link] private Soil soil;\n        [Link]\n        private IPhysical soilPhysical;\n        [Link]\n        private ISoilWater waterBalance;\n        public double FASW { get; set; }\n        public double WaterDeficit  { get; set; }\n    \n        \n        [Description(\"Auto irrigation on?\")]\n        public bool AutoIrrigationOn { get; set; }\n\n        [Description(\"Threshold fraction available water (0-1)\")]\n        public double FASWThreshold { get; set; }\n\n        [Description(\"Soil depth (mm) to which fraction available water is calculated\")]\n        public double FASWDepth { get; set; }\n\n        [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n        {\n            CalculateFASW();\n            if (AutoIrrigationOn)\n            {\n                if (FASW < FASWThreshold)\n                {\n                    double amount = 10;\n                    irrigation.Apply(WaterDeficit, depth: 0);\n                }\n            }\n        }\n        \n        private void CalculateFASW()\n        {\n            double[] LL15 = MathUtilities.Multiply(soilPhysical.LL15, soilPhysical.Thickness);\n            double[] DUL = MathUtilities.Multiply(soilPhysical.DUL, soilPhysical.Thickness);\n        \n            int nlayr = GetLayerIndex();\n            double cumdep = MathUtilities.Sum(soilPhysical.Thickness, 0, nlayr, 0.0);\n\n            double excess_fr = MathUtilities.Divide((cumdep - FASWDepth), soilPhysical.Thickness[nlayr], 0.0);\n\n            // note that results may be strange if swdep < ll15\n            double avail_sw = (MathUtilities.Sum(waterBalance.SWmm, 0, nlayr, 0.0)\n                              - excess_fr * waterBalance.SWmm[nlayr])\n                              - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\n                              - excess_fr * LL15[nlayr]);\n\n\n            double pot_avail_sw = (MathUtilities.Sum(DUL, 0, nlayr, 0.0)\n                                  - excess_fr * DUL[nlayr])\n                                  - (MathUtilities.Sum(LL15, 0, nlayr, 0.0)\n                                  - excess_fr * LL15[nlayr]);\n\n            FASW = MathUtilities.Divide(avail_sw, pot_avail_sw, 0.0);\n            WaterDeficit = MathUtilities.Constrain(pot_avail_sw - avail_sw, 0.0, 100000);\n        }\n\n        private int GetLayerIndex()\n        {\n            double[] cumThickness = soilPhysical.ThicknessCumulative;\n            for (int i = 1; i < cumThickness.Length; i++)\n            {\n                if (FASWDepth < cumThickness[i])\n                    return i - 1;\n            }\n            \n            return cumThickness.Length - 1;\n        }\n\n    }\n}\n       \n",
                           "Parameters": [
-                            {
-                              "Key": "FASW",
-                              "Value": "0"
-                            },
-                            {
-                              "Key": "WaterDeficit",
-                              "Value": "0"
-                            },
                             {
                               "Key": "AutoIrrigationOn",
                               "Value": "True"
@@ -30183,7 +30165,7 @@
                           "Children": [
                             {
                               "$type": "Models.Manager, Models",
-                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\n    \t[Link(ByName = true)] private Operations fertiliserSchedule;\n    \t[Link] private ISummary summary;\n\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        public double Ftn\n        {\n            get\n            {\n                if (fertiliserSchedule.Operation.Count == 3)\n                {\n\t\t\t\t\tif (Cultivar == \"A35xQL36\")\n\t\t\t\t\t\treturn 0.2;\n\t\t\t\t\telse\n\t\t\t\t\t\treturn 0.9;                \n                }\n                else\n                \treturn 0;\n            }\n        }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                              "Code": "using APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\n    \t[Link(ByName = true)] private Operations fertiliserSchedule;\n    \t[Link] private ISummary summary;\n\r\n        [Description(\"Enter sowing date (dd/mm/yyyy) : \")]\r\n        public DateTime Date { get; set; }\r\n\r\n        [Description(\"Enter sowing density  (plants/m2) : \")]\r\n        public double Density { get; set; }\r\n\r\n        [Description(\"Enter sowing depth  (mm) : \")]\r\n        public double Depth { get; set; }\r\n\r\n        [Description(\"Enter cultivar : \")]\r\n        [Display(Type = DisplayType.CultivarName)]\r\n        public string Cultivar { get; set; } // QL41xQL36\r\n\r\n        [Description(\"Enter row spacing (mm) : \")]\r\n        public double RowSpacing { get; set; }\r\n\r\n        [Description(\"Enter skip row configuration : \")]\r\n        public RowConfigurationType RowConfiguration { get; set; }\r\n\r\n        public double Ftn\n        {\n            get\n            {\n                if (fertiliserSchedule.Operation.Count == 3)\n                {\n\t\t\t\t\tif (Cultivar == \"CSH13R\")\n\t\t\t\t\t\treturn 0.2;\n\t\t\t\t\telse\n\t\t\t\t\t\treturn 0.9;                \n                }\n                else\n                \treturn 0;\n            }\n        }\r\n\r\n        public enum RowConfigurationType \r\n        {\r\n            solid, single, _double /*replaces double*/\r\n        }\r\n\r\n        [Link]\r\n        private Zone paddock;\r\n\r\n        [Link]\r\n        private Clock clock;\r\n\r\n        [Link]\r\n        private IPlant crop;\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == Date /* && isFallow */)\r\n            {\r\n                double population = Density * paddock.Area;\r\n                crop.Sow(Cultivar, population, Depth, RowSpacing, budNumber: Ftn, rowConfig: (double)RowConfiguration);\r\n                /*\r\n                if (paddock_is_fallow() = 1 and today = date('[date]')) then\r\n                      [crop] sow plants =[density], sowing_depth = [depth], cultivar = [cultivar], row_spacing = [row_spacing], skip = [RowConfiguration], tiller_no_fertile = [ftn] ()\r\n                endif\r\n                */\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                               "Parameters": [
                                 {
                                   "Key": "Cultivar",
