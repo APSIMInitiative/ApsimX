@@ -117,7 +117,7 @@ namespace Models.CLEM.Activities
             peopleList.Select(a => { a.FeedToTargetIntake = 0; return a; }).ToList();
 
             // determine AEs to be fed
-            double aE = peopleList.Sum(a => a.AdultEquivalent * a.Individuals);
+            double aE = peopleList.Sum(a => a.TotalAdultEquivalents);
 
             if(aE <= 0)
             {
@@ -153,7 +153,7 @@ namespace Models.CLEM.Activities
                     foreach (var person in peopleList)
                     {
                         LabourDietComponent outsideEat = new LabourDietComponent();
-                        outsideEat.AddOtherSource(target.Metric, target.OtherSourcesValue * person.AdultEquivalent * person.Individuals * daysInMonth);
+                        outsideEat.AddOtherSource(target.Metric, target.OtherSourcesValue * person.TotalAdultEquivalents * daysInMonth);
                         person.AddIntake(outsideEat);
                     }
                 }
@@ -429,13 +429,13 @@ namespace Models.CLEM.Activities
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             var group = people?.Items.Where(a => a.Hired != true);
-            int head = 0;
+            decimal head = 0;
             double adultEquivalents = 0;
             foreach (var child in FindAllChildren<LabourFeedGroup>())
             {
                 var subgroup = child.Filter(group);
                 head += subgroup.Sum(a => a.Individuals);
-                adultEquivalents += subgroup.Sum(a => a.AdultEquivalent * a.Individuals);
+                adultEquivalents += subgroup.Sum(a => a.TotalAdultEquivalents);
             }
 
             double daysNeeded = 0;
@@ -446,7 +446,7 @@ namespace Models.CLEM.Activities
                     daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHead:
-                    numberUnits = head / requirement.UnitSize;
+                    numberUnits = Convert.ToDouble(head, System.Globalization.CultureInfo.InvariantCulture) / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
                         numberUnits = Math.Ceiling(numberUnits);
 
@@ -497,12 +497,12 @@ namespace Models.CLEM.Activities
                     foreach (ResourceRequest request in requests)
                         if (request.Provided > 0)
                         {
-                            double aE = group.Sum(a => a.AdultEquivalent * a.Individuals);
+                            double aE = group.Sum(a => a.TotalAdultEquivalents);
                             // add to individual intake
                             foreach (LabourType labour in group)
                                 labour.AddIntake(new LabourDietComponent()
                                 {
-                                    AmountConsumed = request.Provided * (labour.AdultEquivalent * labour.Individuals / aE),
+                                    AmountConsumed = request.Provided * (labour.TotalAdultEquivalents / aE),
                                     FoodStore = request.Resource as HumanFoodStoreType
                                 });
                         }
