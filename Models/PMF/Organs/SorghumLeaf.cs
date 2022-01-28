@@ -662,7 +662,7 @@ namespace Models.PMF.Organs
             if (phenology.Between("Germination", "Flowering"))
             {
                 // pre anthesis, get N from dilution, decreasing dltLai and senescence
-                double nProvided = Math.Min(dilutionN, requiredN / 2.0);
+                double nProvided = Math.Min(dilutionN, requiredN / 3.0);
                 DltRetranslocatedN -= nProvided;
                 nGreenToday -= nProvided; //jkb
                 requiredN -= nProvided;
@@ -676,7 +676,7 @@ namespace Models.PMF.Organs
                     // If the RequiredN is large enough, it will result in 0 new growth
                     // Stem and Rachis can technically get to this point, but it doesn't occur in all of the validation data sets
                     double n = DltLAI * NewLeafSLN;
-                    double laiN = Math.Min(n, requiredN / 2.0);
+                    double laiN = Math.Min(n, requiredN);
                     // dh - we don't make this check in old apsim
                     if (MathUtilities.IsPositive(laiN))
                     {
@@ -1063,10 +1063,10 @@ namespace Models.PMF.Organs
             NitrogenPhotoStress = nPhotoStressFunction.Value();
 
             NitrogenPhenoStress = 1.0;
-            if (phenology.Between("Emergence", "Flowering"))
+            if (phenology.Between("Emergence", "FlagLeaf"))
             {
-                var phenoStress = (1.0 / 0.7) * SLN * 1.25 - (3.0 / 7.0);
-                NitrogenPhenoStress = MathUtilities.Bound(phenoStress, 0.0, 1.0);
+                var phenoStress = (0.5 + 0.5 / 0.3 * (SLN - 0.7));
+                NitrogenPhenoStress = MathUtilities.Bound(phenoStress, 0.5, 1.0);
             }
         }
 
