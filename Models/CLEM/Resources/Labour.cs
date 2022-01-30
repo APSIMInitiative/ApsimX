@@ -89,8 +89,8 @@ namespace Models.CLEM.Resources
         {
             double value = 0;
             foreach (LabourType ind in Items.Where(a => includeHiredLabour | (a.Hired == false)))
-                value += ind.GetDietDetails(metric) / (reportPerAE?ind.TotalAdultEquivalents:1);
-            return value;
+                value += ind.GetDietDetails(metric); // / (reportPerAE?ind.TotalAdultEquivalents:1);
+            return value / (reportPerAE ? AdultEquivalents(includeHiredLabour) : 1);
         }
 
         /// <summary>

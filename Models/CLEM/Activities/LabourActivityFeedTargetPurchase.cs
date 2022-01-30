@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Models.CLEM.Activities
@@ -42,7 +43,15 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// The final proportion to use. 
         /// </summary>
+        [JsonIgnore]
         public double ProportionToPurchase { get; set; }
+
+
+        /// <summary>
+        /// The human food store linked to this target purchase
+        /// </summary>
+        [JsonIgnore]
+        public HumanFoodStoreType FoodStore { get; set; }
 
         /// <summary>
         /// Constructor
