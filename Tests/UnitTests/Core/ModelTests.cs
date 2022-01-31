@@ -23,6 +23,10 @@ namespace UnitTests.Core
         private class MockModel : Model { }
         private class MockModel1 : Model, IInterface { }
         private class MockModel2 : Model { }
+        private class MockModel3 : Model
+        {
+            public MockModel3(string name) => Name = name;
+        }
 
         private IModel simpleModel;
         private IModel scopedSimulation;
@@ -1458,6 +1462,32 @@ namespace UnitTests.Core
             Assert.Null(simpleModel.FindByPath("x"));
             Assert.Null(simpleModel.FindByPath(""));
             Assert.Null(simpleModel.FindByPath(null));
+        }
+
+        /// <summary>
+        /// Ensure that duplicate models (ie siblings with the same name) cause
+        /// an exception to be thrown.
+        /// </summary>
+        [Test]
+        public void TestDuplicateModelDetection()
+        {
+            MockModel3 model = new MockModel3("Parent");
+            model.Children.Add(new MockModel3("Child"));
+            model.Children.Add(new MockModel3("Child"));
+            Assert.Throws<Exception>(() => model.OnCreated());
+        }
+
+        /// <summary>
+        /// Ensure that duplicate models (ie siblings with the same name) but
+        /// with different types cause an exception to be thrown.
+        /// </summary>
+        [Test]
+        public void TestDuplicateModelsWithDifferentTypes()
+        {
+            MockModel3 model = new MockModel3("Some model");
+            model.Children.Add(new MockModel3("A child"));
+            model.Children.Add(new MockModel2() { Name = "A child" });
+            Assert.Throws<Exception>(() => model.OnCreated());
         }
     }
 }

@@ -78,7 +78,7 @@ namespace Models.CLEM
         public bool AutoCreateDescriptiveSummary { get; set; }
 
         /// <summary>
-        /// Month this overhead is next due.
+        /// Month this cecological indicators calculation is next due.
         /// </summary>
         [JsonIgnore]
         public DateTime EcologicalIndicatorsNextDueDate { get; set; }

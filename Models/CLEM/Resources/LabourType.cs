@@ -109,6 +109,20 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Adult equivalents of all individuals.
+        /// </summary>
+        [JsonIgnore]
+        [FilterByProperty]
+        public double TotalAdultEquivalents
+        {
+            get
+            {
+                return (adultEquivalent ?? 1)*Convert.ToDouble(Individuals, System.Globalization.CultureInfo.InvariantCulture);
+            }
+        }
+
+
+        /// <summary>
         /// Total value of resource
         /// </summary>
         public double? Value
@@ -176,7 +190,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Number of individuals")]
         [Required, GreaterThanEqualValue(0)]
-        public int Individuals { get; set; }
+        public decimal Individuals { get; set; }
 
         /// <summary>
         /// Hired labour switch

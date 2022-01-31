@@ -31,6 +31,7 @@ namespace Models.CLEM.Activities
         private Labour people = null;
         private HumanFoodStore food = null;
         private FinanceType bankAccount;
+        private ResourcesHolder resourcesHolder = null;
 
         [Link]
         private Clock clock = null;
@@ -103,6 +104,53 @@ namespace Models.CLEM.Activities
             bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
 
             Market = food.FindAncestor<ResourcesHolder>().FoundMarket;
+
+            resourcesHolder = base.Resources;
+            // if market is present point to market to find the resource
+            if (Market != null)
+                resourcesHolder = Market.FindChild<ResourcesHolder>();
+
+            // set the food store linked in any TargetPurchase if target proportion set > 0
+            // check that all purchase resources have transmutation or recalulate the proportion
+            var targetPurchases = this.FindAllChildren<LabourActivityFeedTargetPurchase>().Where(a => a.TargetProportion > 0).ToList();
+            if (targetPurchases.Any())
+            {
+                double checkPropAvailable = 0;
+                double totPropAvailable = 0;
+                bool adjusted = false;
+                foreach (var item in targetPurchases)
+                {
+                    checkPropAvailable += item.TargetProportion;
+                    item.FoodStore = resourcesHolder.FindResourceType<HumanFoodStore, HumanFoodStoreType>(this, item.FoodStoreName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
+                    if (item.FoodStore.TransmutationDefined)
+                    {
+                        totPropAvailable += item.TargetProportion;
+                        item.ProportionToPurchase = item.TargetProportion;
+                    }
+                    else
+                    {
+                        string warn = $"The HumanFoodStoreType [r={item.FoodStore.FullPath}] does not have a Transmutation required to be a LabourActivityFeedTargetPurchase [a={item.FullPath}] of [a={this.FullPath}]{Environment.NewLine}This HumanFoodStore will not be allocated and the remaining purchase proportions have been adjusted";
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+                        adjusted = true;
+                        item.ProportionToPurchase = 0;
+                    }
+                }
+
+                if(Math.Abs(1 - checkPropAvailable) < 0.0001)
+                {
+                    if (!adjusted)
+                    {
+                        string warn = $"The TargetProportions provided for [a=LabourActivityFeedTargetPurchase] provided for [a={this.FullPath}] do not sum to 1.{Environment.NewLine}These purchase proportions have been adjusted";
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+                    }
+                    adjusted = true;
+                }
+
+                // recalculate proportions to buy based on transmuation of resource allowed
+                if (adjusted)
+                    foreach (var item in targetPurchases.Where(a => a.FoodStore.TransmutationDefined))
+                        item.ProportionToPurchase = item.TargetProportion / totPropAvailable;
+            }
         }
 
         /// <inheritdoc/>
@@ -117,7 +165,7 @@ namespace Models.CLEM.Activities
             peopleList.Select(a => { a.FeedToTargetIntake = 0; return a; }).ToList();
 
             // determine AEs to be fed
-            double aE = peopleList.Sum(a => a.AdultEquivalent * a.Individuals);
+            double aE = peopleList.Sum(a => a.TotalAdultEquivalents);
 
             if(aE <= 0)
             {
@@ -145,7 +193,7 @@ namespace Models.CLEM.Activities
                 target.CurrentAchieved = target.OtherSourcesValue * aE * daysInMonth;
 
                 // calculate current level from previous intake this month (LabourActivityFeed)
-                target.CurrentAchieved += people.GetDietaryValue(target.Metric, IncludeHiredLabour, true) * aE * daysInMonth;
+                target.CurrentAchieved += people.GetDietaryValue(target.Metric, IncludeHiredLabour, false); // * aE; // * daysInMonth;
 
                 // add sources outside of this activity to peoples' diets
                 if (target.OtherSourcesValue > 0)
@@ -153,7 +201,7 @@ namespace Models.CLEM.Activities
                     foreach (var person in peopleList)
                     {
                         LabourDietComponent outsideEat = new LabourDietComponent();
-                        outsideEat.AddOtherSource(target.Metric, target.OtherSourcesValue * person.AdultEquivalent * person.Individuals * daysInMonth);
+                        outsideEat.AddOtherSource(target.Metric, target.OtherSourcesValue * person.TotalAdultEquivalents * daysInMonth);
                         person.AddIntake(outsideEat);
                     }
                 }
@@ -217,6 +265,7 @@ namespace Models.CLEM.Activities
             }
 
             int parcelIndex = 0;
+            double metricneeded = 0;
             double intake = otherIntake;
             // start eating food from list from that about to expire first
             while(parcelIndex < foodParcels.Count)
@@ -238,7 +287,7 @@ namespace Models.CLEM.Activities
                         if (targetUnfilled != null)
                         {
                             // calculate reduction to metric target
-                            double metricneeded = Math.Max(0, targetUnfilled.Target - targetUnfilled.CurrentAchieved);
+                            metricneeded = Math.Max(0, targetUnfilled.Target - targetUnfilled.CurrentAchieved);
                             double amountneeded = metricneeded / foodParcels[parcelIndex].FoodStore.ConversionFactor(targetUnfilled.Metric);
 
                             propToTarget = Math.Min(1, amountneeded / (foodParcels[parcelIndex].FoodStore.EdibleProportion * foodParcels[parcelIndex].Pool.Amount));
@@ -304,7 +353,8 @@ namespace Models.CLEM.Activities
                     double financeLimit = 1;
                     // if obtained from the market make financial transaction before taking
                     ResourcePricing price = item.Key.Price(PurchaseOrSalePricingStyleType.Sale);
-                    if (bankAccount != null && item.Key.Parent.Parent.Parent == Market && price.PricePerPacket > 0)
+                    bool marketIsSource = item.Key.Parent.Parent.Parent == Market;
+                    if (bankAccount != null && marketIsSource && price.PricePerPacket > 0)
                     {
                         // finance transaction to buy food from market
                         ResourceRequest marketRequest = new ResourceRequest
@@ -312,12 +362,14 @@ namespace Models.CLEM.Activities
                             ActivityModel = this,
                             Required = amount / price.PacketSize * price.PricePerPacket,
                             AllowTransmutation = false,
-                            Category = TransactionCategory,
+                            Category = $"{TransactionCategory}.PurchaseFood",
                             MarketTransactionMultiplier = 1,
                             RelatesToResource = item.Key.NameWithParent
                         };
                         bankAccount.Remove(marketRequest);
                     }
+
+                    // is this a market 
 
                     requests.Add(new ResourceRequest()
                     {
@@ -327,7 +379,7 @@ namespace Models.CLEM.Activities
                         Required = amount * financeLimit,
                         ResourceTypeName = item.Key.NameWithParent,
                         ActivityModel = this,
-                        Category = TransactionCategory
+                        Category = $"{TransactionCategory}{(marketIsSource?".FromMarket":".FromHousehold")}"
                     });
                 }
             }
@@ -336,91 +388,93 @@ namespace Models.CLEM.Activities
             // This will force the market or private sources to purchase more food to meet demand if transmutation available.
             // if no market is present it will look to transmutating from its own stores if possible.
             // this means that other than a purchase from market (above) this activity doesn't need to worry about financial tranactions.
-            if (intake < intakeLimit && (labourActivityFeedTargets.Where(a => !a.TargetMet).Count() > 0) && fundsAvailable > 0)
+            int testType = 0;
+            while (testType < 2 && intake < intakeLimit && (labourActivityFeedTargets.Where(a => !a.TargetMet).Any()) && fundsAvailable > 0)
             {
-                ResourcesHolder resourcesHolder = base.Resources;
-                // if market is present point to market to find the resource
-                if (Market != null)
-                    resourcesHolder = Market.FindChild<ResourcesHolder>();
-
                 // don't worry about money anymore. The over request will be handled by the transmutation.
                 // move through specified purchase list
                 // 1. to assign based on energy
                 // 2. if still need food assign based on intake still needed
-                int testType = 0;
-                while (testType < 2)
+
+                metricneeded = 0;
+                LabourActivityFeedTarget targetUnfilled = labourActivityFeedTargets.Where(a => !a.TargetMet).FirstOrDefault();
+                if (targetUnfilled != null)
                 {
+                    metricneeded = Math.Max(0, (targetUnfilled.Target - targetUnfilled.CurrentAchieved));
                     double amountToFull = intakeLimit - intake;
+
                     foreach (LabourActivityFeedTargetPurchase purchase in this.FindAllChildren<LabourActivityFeedTargetPurchase>())
                     {
-                        HumanFoodStoreType foodtype = resourcesHolder.FindResourceType<HumanFoodStore, HumanFoodStoreType>(this, purchase.FoodStoreName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
-                        if (purchase.TargetProportion > 0 && foodtype != null && (foodtype.TransmutationDefined & intake < intakeLimit))
+                        HumanFoodStoreType foodtype = purchase.FoodStore;
+                        if (purchase.ProportionToPurchase > 0 && foodtype != null && (foodtype.TransmutationDefined & intake < intakeLimit))
                         {
-                            LabourActivityFeedTarget targetUnfilled = labourActivityFeedTargets.Where(a => !a.TargetMet).FirstOrDefault();
-                            if (targetUnfilled != null)
+                            double amountEaten = 0;
+                            if (testType == 0)
+                                // metric target based on purchase proportion
+                                amountEaten = metricneeded / foodtype.ConversionFactor(targetUnfilled.Metric) * purchase.ProportionToPurchase;
+                            else
+                                // amount to satisfy limited by proportion of purchases
+                                amountEaten = amountToFull * purchase.ProportionToPurchase;
+
+                            if (intake + amountEaten > intakeLimit)
+                                amountEaten = intakeLimit - intake;
+
+                            if (amountEaten > 0)
                             {
-                                // calculate reduction to metric target
-                                double metricneeded = Math.Max(0, (targetUnfilled.Target - targetUnfilled.CurrentAchieved));
-                                // mount needed limited by proportion of purchases
-                                double amountEaten = 0;
-                                if (testType == 0)
+                                targetUnfilled.CurrentAchieved += amountEaten * foodtype.ConversionFactor(targetUnfilled.Metric);
+                                double amountPurchased = amountEaten / foodtype.EdibleProportion;
+
+                                // update intake.. needed is the amount edible, not the amount purchased.
+                                intake += amountEaten;
+
+                                // add financial transactions to purchase from market
+                                // if obtained from the market make financial transaction before taking
+                                ResourcePricing price = foodtype.Price(PurchaseOrSalePricingStyleType.Sale);
+                                if (bankAccount != null)
                                 {
-                                    amountEaten = metricneeded / foodtype.ConversionFactor(targetUnfilled.Metric) * purchase.TargetProportion;
-                                    if (intake + amountEaten > intakeLimit)
-                                        amountEaten = intakeLimit - intake;
-                                }
-                                else
-                                    amountEaten = amountToFull * purchase.TargetProportion;
-
-                                if (amountEaten > 0)
-                                {
-                                    double amountPurchased = amountEaten / foodtype.EdibleProportion;
-
-                                    // update intake.. needed is the amount edible, not the amount purhased.
-                                    intake += amountEaten;
-
-                                    // add financial transactions to purchase from market
-                                    // if obtained from the market make financial transaction before taking
-                                    ResourcePricing price = foodtype.Price(PurchaseOrSalePricingStyleType.Sale);
-                                    if (bankAccount != null && price.PricePerPacket > 0)
+                                    if (price.PricePerPacket > 0)
                                     {
                                         ResourceRequest marketRequest = new ResourceRequest
                                         {
                                             ActivityModel = this,
                                             Required = amountPurchased / price.PacketSize * price.PricePerPacket,
                                             AllowTransmutation = false,
-                                            Category = TransactionCategory,
+                                            Category = "Import",
                                             MarketTransactionMultiplier = 1,
                                             RelatesToResource = foodtype.NameWithParent
                                         };
                                         bankAccount.Remove(marketRequest);
                                     }
-
-                                    // find in requests or create a new one
-                                    ResourceRequest foodRequestFound = requests.Find(a => a.Resource == foodtype);
-                                    if (foodRequestFound is null)
-                                        requests.Add(new ResourceRequest()
-                                        {
-                                            Resource = foodtype,
-                                            ResourceType = typeof(HumanFoodStore),
-                                            AllowTransmutation = true,
-                                            Required = amountPurchased,
-                                            ResourceTypeName = purchase.FoodStoreName, //.Split('.')[1],
-                                            ActivityModel = this,
-                                            Category = TransactionCategory
-                                        });
                                     else
                                     {
-                                        foodRequestFound.Required += amountPurchased;
-                                        foodRequestFound.AllowTransmutation = true;
+                                        string warn = $"No price set [{price.PricePerPacket}] for [r={foodtype.Name}] at time of transaction for [a={this.Name}]{Environment.NewLine}No financial transactions will occur.{Environment.NewLine}Ensure price is set or resource pricing file contains entries before this transaction or start of simulation.";
+                                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                                     }
+                                }
+
+                                // find in requests or create a new one
+                                ResourceRequest foodRequestFound = requests.Find(a => a.Resource == foodtype);
+                                if (foodRequestFound is null)
+                                    requests.Add(new ResourceRequest()
+                                    {
+                                        Resource = foodtype,
+                                        ResourceType = typeof(HumanFoodStore),
+                                        AllowTransmutation = true,
+                                        Required = amountPurchased,
+                                        ResourceTypeName = purchase.FoodStoreName,
+                                        ActivityModel = this,
+                                        Category = $"{TransactionCategory}.FromImports"
+                                    });
+                                else
+                                {
+                                    foodRequestFound.Required += amountPurchased;
+                                    foodRequestFound.AllowTransmutation = true;
                                 }
                             }
                         }
                     }
                     testType++;
                 }
-                // NOTE: proportions of purchased food are not modified if the sum does not add up to 1 or some of the food types are not available. 
             }
             return requests;
         }
@@ -429,13 +483,13 @@ namespace Models.CLEM.Activities
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             var group = people?.Items.Where(a => a.Hired != true);
-            int head = 0;
+            decimal head = 0;
             double adultEquivalents = 0;
             foreach (var child in FindAllChildren<LabourFeedGroup>())
             {
                 var subgroup = child.Filter(group);
                 head += subgroup.Sum(a => a.Individuals);
-                adultEquivalents += subgroup.Sum(a => a.AdultEquivalent * a.Individuals);
+                adultEquivalents += subgroup.Sum(a => a.TotalAdultEquivalents);
             }
 
             double daysNeeded = 0;
@@ -446,7 +500,7 @@ namespace Models.CLEM.Activities
                     daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHead:
-                    numberUnits = head / requirement.UnitSize;
+                    numberUnits = Convert.ToDouble(head, System.Globalization.CultureInfo.InvariantCulture) / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
                         numberUnits = Math.Ceiling(numberUnits);
 
@@ -494,18 +548,15 @@ namespace Models.CLEM.Activities
                 var requests = ResourceRequestList.Where(a => a.ResourceType == typeof(HumanFoodStore));
                 if (requests.Any())
                 {
-                    foreach (ResourceRequest request in requests)
-                        if (request.Provided > 0)
-                        {
-                            double aE = group.Sum(a => a.AdultEquivalent * a.Individuals);
-                            // add to individual intake
-                            foreach (LabourType labour in group)
-                                labour.AddIntake(new LabourDietComponent()
-                                {
-                                    AmountConsumed = request.Provided * (labour.AdultEquivalent * labour.Individuals / aE),
-                                    FoodStore = request.Resource as HumanFoodStoreType
-                                });
-                        }
+                    double aE = group.Sum(a => a.TotalAdultEquivalents);
+                    foreach (ResourceRequest request in requests.Where(a => a.Provided > 0))
+                        // add to individual intake
+                        foreach (LabourType labour in group)
+                            labour.AddIntake(new LabourDietComponent()
+                            {
+                                AmountConsumed = request.Provided * (labour.TotalAdultEquivalents / aE),
+                                FoodStore = request.Resource as HumanFoodStoreType
+                            });
                 }
                 if (this.FindAllChildren<LabourActivityFeedTarget>().Where(a => !a.TargetMet).Any())
                     this.Status = ActivityStatus.Partial;
@@ -531,21 +582,26 @@ namespace Models.CLEM.Activities
                 double[] target = new double[MonthsStorage + 1];
                 int[] daysInMonth = new int[MonthsStorage + 1];
 
-                // determine AEs to be fed - NOTE does not account ofr aging in reserve calcualtion
-                double aE = people.Items.Where(a => IncludeHiredLabour || a.Hired == false).Sum(a => a.AdultEquivalent);
+                // determine AEs to be fed - NOTE does not account for aging in reserve calcualtion
+                double aE = people.AdultEquivalents(IncludeHiredLabour);
 
                 LabourActivityFeedTarget feedTarget = this.FindAllChildren<LabourActivityFeedTarget>().FirstOrDefault();
 
+                // amount to store
+                //double amountToStore = daysInMonth[i] * aE * (feedTarget.TargetValue - feedTarget.OtherSourcesValue);
+                
                 for (int i = 1; i <= MonthsStorage; i++)
                 {
                     DateTime month = clock.Today.AddMonths(i);
                     daysInMonth[i] = DateTime.DaysInMonth(month.Year, month.Month);
-                    target[i] = daysInMonth[i] * aE * feedTarget.TargetValue;
+                    target[i] = daysInMonth[i] * aE * (feedTarget.TargetValue - feedTarget.OtherSourcesValue);
                 }
+
+                double amountStored = 0; // reset here to make store based on all food types
 
                 foreach (HumanFoodStoreType foodStore in food.FindAllChildren<HumanFoodStoreType>().ToList())
                 {
-                    double amountStored = 0;
+                    // double amountStored = 0; reset here to make store based on each food type
                     double amountAvailable = foodStore.Pools.Sum(a => a.Amount);
 
                     if (amountAvailable > 0)
@@ -603,7 +659,7 @@ namespace Models.CLEM.Activities
                                 ActivityModel = this,
                                 Required = units * priceToUse.PacketSize,
                                 AllowTransmutation = false,
-                                Category = TransactionCategory,
+                                Category = $"{TransactionCategory}.SellToMarket",
                                 RelatesToResource = foodStore.NameWithParent,
                                 MarketTransactionMultiplier = this.FarmMultiplier
                             };
@@ -617,7 +673,7 @@ namespace Models.CLEM.Activities
                                     ActivityModel = this,
                                     Required = units * priceToUse.PacketSize,
                                     AllowTransmutation = false,
-                                    Category = TransactionCategory,
+                                    Category = $"{TransactionCategory}.Sales",
                                     RelatesToResource = foodStore.NameWithParent,
                                     MarketTransactionMultiplier = this.FarmMultiplier
                                 };
@@ -661,14 +717,6 @@ namespace Models.CLEM.Activities
             {
                 string[] memberNames = new string[] { "LabourActivityFeedToTargets" };
                 results.Add(new ValidationResult(String.Format("At least one [LabourActivityFeedTarget] component is required below the feed activity [{0}]", this.Name), memberNames));
-            }
-
-            // check purchases
-            double sumProps = this.FindAllChildren<LabourActivityFeedTargetPurchase>().Cast<LabourActivityFeedTargetPurchase>().Sum(a => a.TargetProportion);
-            if (Math.Abs(1.0 - sumProps) > 0.00001)
-            {
-                string[] memberNames = new string[] { "LabourActivityFeedToTargetPurchases" };
-                results.Add(new ValidationResult(String.Format("The sum of all [LabourActivityFeedTargetPurchase] proportions should be 1 for the targeted feed activity [{0}]", this.Name), memberNames));
             }
 
             return results;

@@ -629,6 +629,21 @@
         }
 
         /// <summary>
+        /// Close a tab.
+        /// </summary>
+        /// <param name="index">Index of the tab to be removed.</param>
+        /// <param name="onLeft">Remove from the left (true) tab control or the right (false) tab control.</param>
+        public void RemoveTab(int index, bool onLeft)
+        {
+            Notebook notebook = onLeft ? notebook1 : notebook2;
+            if (index >= notebook.NPages)
+                throw new InvalidOperationException($"Cannot remove tab {index} from {(onLeft ? "left" : "right")} tab control: only {notebook.NPages} tabs are open");
+            if (index == 0)
+                throw new InvalidOperationException($"Cannot remove home tab");
+            notebook.RemovePage(index);
+        }
+
+        /// <summary>
         /// Looks for the tab holding the specified user interface object, and makes that the active tab
         /// </summary>
         /// <param name="o">The interface object being sought; normally will be a Gtk Widget</param>

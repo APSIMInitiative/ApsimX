@@ -3,6 +3,7 @@
     using APSIM.Shared.APSoil;
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Newtonsoft.Json;
     using System;
 
     /// <summary>This class captures chemical soil data</summary>
@@ -15,6 +16,7 @@
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Description("Depth")]
         [Units("cm")]
+        [JsonIgnore]
         public string[] Depth
         {
             get

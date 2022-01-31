@@ -72,7 +72,7 @@ namespace UserInterface.Views
             Pango.CairoHelper.ShowLayout(cr, CreateTextLayout(text, bold, italics));
         }
 
-        public (int Left, int Right, int Width, int Height) GetPixelExtents(string text, bool bold, bool italics)
+        public (int Left, int Top, int Width, int Height) GetPixelExtents(string text, bool bold, bool italics)
         {
             var layout = CreateTextLayout(text, bold, italics);
             layout.GetPixelExtents(out Pango.Rectangle inkRectangle, out Pango.Rectangle logicalRectangle);

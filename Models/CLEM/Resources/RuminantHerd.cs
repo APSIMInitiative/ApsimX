@@ -431,7 +431,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="individuals">Individuals to summarize</param>
         /// <param name="priceStyle">Price style to use</param>
-        /// <param name="warningMessage">A custom warning message used if prices cannot be found otherwise the stand messge will be reported for each unique missing price</param>
+        /// <param name="warningMessage">A custom warning message used if prices cannot be found otherwise the standard messge will be reported for each unique missing price</param>
         /// <returns>A grouped summary of individuals</returns>
         public IEnumerable<RuminantReportTypeDetails> SummarizeIndividualsByGroups(IEnumerable<Ruminant> individuals, PurchaseOrSalePricingStyleType priceStyle, string warningMessage = "")
         {

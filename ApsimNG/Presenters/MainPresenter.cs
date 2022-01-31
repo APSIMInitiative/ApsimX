@@ -575,15 +575,6 @@
         }
 
         /// <summary>
-        /// Closes the tab containing a specified object.
-        /// </summary>
-        /// <param name="o">The object (normally a Gtk Widget) being sought.</param>
-        public void CloseTabContaining(object o)
-        {
-            this.view.CloseTabContaining(o);
-        }
-
-        /// <summary>
         /// Gets the inner-most exception of an exception.
         /// </summary>
         /// <param name="error">An exception.</param>
@@ -1081,16 +1072,14 @@
         /// <param name="onLeft">Is the tab in the left tab control?</param>
         public void CloseTab(int index, bool onLeft)
         {
-            if (onLeft)
-            {
-                Presenters1[index].Detach();
-                Presenters1.RemoveAt(index);
-            }
-            else
-            {
-                presenters2[index].Detach();
-                presenters2.RemoveAt(index);
-            }
+            List<IPresenter> presenters = onLeft ? Presenters1 : presenters2;
+            presenters[index].Detach();
+            presenters.RemoveAt(index);
+
+            // Need to add an offset to account for the home tab. E.g. presenter
+            // 0 (ie .apsimx file 0) will be the second tab in the notebook (ie
+            // index 1).
+            view.RemoveTab(index + 1, onLeft);
 
             // We've just closed Simulations
             // This is a good time to force garbage collection 

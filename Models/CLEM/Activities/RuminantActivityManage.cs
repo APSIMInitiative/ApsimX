@@ -429,7 +429,7 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(false, true);
             breedParams = Resources.FindResourceType<RuminantHerd, RuminantType>(this, this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
 
-            decimal breederHerdSize = 0;
+            int breederHerdSize = 0;
 
             IEnumerable<Ruminant> individuals = this.CurrentHerd(false);
             if (individuals.Any())
@@ -441,12 +441,14 @@ namespace Models.CLEM.Activities
 
                 if (cohorts != null)
                 {
+                    int heifers = 0;
+                    var cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Sex == Sex.Female && a.Age >= breedParams.MinimumAge1stMating);
+                    int initialBreeders = Convert.ToInt32(cohortList.Sum(a => a.Number), CultureInfo.InvariantCulture);
+                    breederHerdSize = initialBreeders;
+
                     if (AdjustBreedingFemalesAtStartup)
                     {
                         // breeders
-                        int heifers = 0;// Convert.ToInt32(cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= 12 & a.Age < breedParams.MinimumAge1stMating)).Sum(a => a.Number));
-                        var cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Sex == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age <= this.MaximumBreederAge));
-                        int initialBreeders = Convert.ToInt32(cohortList.Sum(a => a.Number), CultureInfo.InvariantCulture);
                         if (initialBreeders < (minBreeders - heifers))
                         {
                             double scaleFactor = (minBreeders - heifers) / Convert.ToDouble(initialBreeders);
@@ -464,7 +466,7 @@ namespace Models.CLEM.Activities
                             if (numberAdded == 0)
                                 throw new ApsimXException(this, $"Unable to scale breeding female population up to the maximum breeders kept at startup\r\nNo cohorts representing breeders were found in the initial herd structure [r=InitialCohorts] for [r={breedParams.Name}]\r\nAdd at least one initial cohort that meets the breeder criteria of age at first mating and max age kept");
 
-                            breederHerdSize = initialBreeders + numberAdded;
+                            breederHerdSize += numberAdded;
                         }
                         else if (initialBreeders > (maxBreeders - heifers))
                         {
@@ -491,7 +493,7 @@ namespace Models.CLEM.Activities
 
                     // max sires
                     if (MaximumSiresKept < 1 & MaximumSiresKept > 0)
-                        SiresKept = Convert.ToInt32(Math.Ceiling(maxBreeders * breederHerdSize), CultureInfo.InvariantCulture);
+                        SiresKept = Convert.ToInt32(Math.Ceiling(breederHerdSize * MaximumSiresKept), CultureInfo.InvariantCulture);
                     else
                         SiresKept = Convert.ToInt32(Math.Truncate(MaximumSiresKept), CultureInfo.InvariantCulture);
 
@@ -499,7 +501,7 @@ namespace Models.CLEM.Activities
                     if (AdjustBreedingMalesAtStartup)
                     {
                         // get number in herd
-                        List<RuminantTypeCohort> cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Sex == Sex.Male & a.Sire == true).ToList();
+                        cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Sex == Sex.Male & a.Sire == true).ToList();
                         int numberPresent = Convert.ToInt32(cohortList.Sum(a => a.Number));
                         // expand from those in herd
                         if (numberPresent < SiresKept)
