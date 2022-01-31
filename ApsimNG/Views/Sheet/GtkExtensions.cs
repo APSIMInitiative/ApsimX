@@ -1,7 +1,4 @@
 ﻿using Gdk;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 
 namespace UserInterface.Views
 {
