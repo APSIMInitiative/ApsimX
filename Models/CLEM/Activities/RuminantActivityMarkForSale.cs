@@ -35,8 +35,9 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Sale reason to apply")]
         [System.ComponentModel.DefaultValueAttribute("MarkedSale")]
-        [GreaterThanEqualValue(4, ErrorMessage = "A sale reason must be provided")]
-        public MarkForSaleReason SaleFlagToUse { get; set; }
+        [GreaterThanValue(0, ErrorMessage = "A sale reason must be provided")]
+        [HerdSaleReason("sale", ErrorMessage = "The herd change reason provided must relate to a sale")]
+        public HerdChangeReason SaleFlagToUse { get; set; }
 
         /// <summary>
         /// Overwrite any currently recorded sale flag
@@ -47,7 +48,6 @@ namespace Models.CLEM.Activities
 
         private int numberToTag = 0;
         private bool labourShortfall = false;
-        private HerdChangeReason changeReason;
 
         /// <summary>
         /// Constructor
@@ -65,7 +65,6 @@ namespace Models.CLEM.Activities
         {
             // get all ui tree herd filters that relate to this activity
             this.InitialiseHerd(true, true);
-            changeReason = (HerdChangeReason)SaleFlagToUse;
         }
 
         /// <inheritdoc/>
@@ -162,7 +161,8 @@ namespace Models.CLEM.Activities
                         foreach (Ruminant ind in item.Filter(herd).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
                         {
                             this.Status = (labourShortfall)?ActivityStatus.Partial:ActivityStatus.Success;
-                            ind.SaleFlag = changeReason;
+
+                            ind.SaleFlag = SaleFlagToUse;
                             numberToTag--;
                         }
                     }
@@ -171,7 +171,7 @@ namespace Models.CLEM.Activities
                         foreach (Ruminant ind in herd.Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
                         {
                             this.Status = (labourShortfall) ? ActivityStatus.Partial : ActivityStatus.Success;
-                            ind.SaleFlag = changeReason;
+                            ind.SaleFlag = SaleFlagToUse;
                             numberToTag--;
                         }
                     }

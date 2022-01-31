@@ -93,6 +93,7 @@
         /// </summary>
         public override void OnCreated()
         {
+            base.OnCreated();
             Validate();
             base.OnCreated();
         }

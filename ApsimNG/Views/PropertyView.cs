@@ -95,20 +95,14 @@ namespace UserInterface.Views
         /// <param name="properties">Properties to be displayed/edited.</param>
         public virtual void DisplayProperties(PropertyGroup properties)
         {
+            // Get the row/column indices of the child widget with focus.
+            (int row, int col) = GetFocusChildIndices(propertyTable);
 
-            int row = 0;
-            int col = 0;
-
-            bool widgetIsFocused = false;
-            int entryPos = -1;
-            int entrySelectionStart = 0;
-            int entrySelectionEnd = 0;
-
+            // Dispose of current properties table.
             box.Remove(propertyTable);
-
             propertyTable.Dispose();
 
-
+            // Construct a new properties table.
             propertyTable = new Grid();
             //propertyTable.RowHomogeneous = true;
             propertyTable.RowSpacing = 5;
@@ -116,9 +110,9 @@ namespace UserInterface.Views
             propertyTable.Destroyed += OnWidgetDestroyed;
             box.Add(propertyTable);
 
-
             int nrow = 0;
 
+            // Add the properties to the new properties table.
             AddPropertiesToTable(ref propertyTable, properties, ref nrow, 0);
 
             if (nrow > 0)
@@ -127,17 +121,11 @@ namespace UserInterface.Views
                 mainWidget.Hide();
 
             // If a widget was previously focused, then try to give it focus again.
-            if (widgetIsFocused)
+            if (row >= 0 && col >= 0)
             {
-                Widget widget = propertyTable.GetChildAt(row, col);
+                Widget widget = propertyTable.GetChildAt(col, row);
                 if (widget is Entry entry)
-                {
                     entry.GrabFocus();
-                    if (entrySelectionStart >= 0 && entrySelectionStart < entrySelectionEnd && entrySelectionEnd <= entry.Text.Length)
-                        entry.SelectRegion(entrySelectionStart, entrySelectionEnd);
-                    else if (entryPos > -1 && entry.Text.Length >= entryPos)
-                        entry.Position = entryPos;
-                }
             }
         }
 
@@ -148,9 +136,7 @@ namespace UserInterface.Views
         /// <param name="properties">Property group to be modified.</param>
         /// <param name="startRow">The row to which the first property will be added (used for recursive calls).</param>
         /// <param name="columnOffset">The number of columns to offset for this propertygroup (0 = single. >0 multiply models reported as columns).</param>
-
         protected void AddPropertiesToTable(ref Grid table, PropertyGroup properties, ref int startRow, int columnOffset)
-
         {
             // Using a regular for loop is not practical because we can
             // sometimes have multiple rows per property (e.g. if it has separators).
@@ -174,7 +160,6 @@ namespace UserInterface.Views
 
                     label.MarginEnd = 10;
                     propertyTable.Attach(label, 0, startRow, 1, 1);
-
                 }
 
                 if (!string.IsNullOrEmpty(property.Tooltip))
@@ -189,10 +174,8 @@ namespace UserInterface.Views
                 inputWidget.Name = property.ID.ToString();
                 inputWidget.TooltipText = property.Tooltip;
 
-
                 propertyTable.Attach(inputWidget, 2 + columnOffset, startRow, 1, 1);
                 inputWidget.Hexpand = true;
-
 
                 startRow++;
             }
@@ -464,6 +447,32 @@ namespace UserInterface.Views
             {
                 ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// Get the row and column indices of the child of the grid which has
+        /// focus. Return (-1, -1) if no children have focus.
+        /// </summary>
+        /// <param name="row">Row index of the child with focus, or -1 if no children have focus.</param>
+        /// <param name="grid">Column index of the child with focus, or -1 if no children have focus.</param>
+        private (int row, int col) GetFocusChildIndices(Grid grid)
+        {
+            // Check if a widget currently has the focus. If so, we should
+            // attempt to give focus back to this widget after rebuilding the
+            // properties table.
+            if (propertyTable.FocusChild != null)
+            {
+                object topAttach = propertyTable.ChildGetProperty(propertyTable.FocusChild, "top-attach").Val;
+                object leftAttach = propertyTable.ChildGetProperty(propertyTable.FocusChild, "left-attach").Val;
+                if (topAttach.GetType() == typeof(int) && leftAttach.GetType() == typeof(int))
+                {
+                    int row = (int)topAttach;
+                    int col = (int)leftAttach;
+                    return (row, col);
+                }
+            }
+
+            return (-1, -1);
         }
 
         /// <summary>

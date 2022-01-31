@@ -35,7 +35,7 @@ namespace APSIM.Interop.Drawing
         void SetLineWidth(double lineWidth);
 
         States State { get; set; }
-        (int Left, int Right, int Width, int Height) GetPixelExtents(string text, bool bold, bool italics);
+        (int Left, int Top, int Width, int Height) GetPixelExtents(string text, bool bold, bool italics);
 
         /// <summary>
         /// Adds a closed sub-path rectangle of the given size to the current path at position

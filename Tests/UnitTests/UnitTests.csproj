@@ -17,6 +17,7 @@
     <EmbeddedResource Include="**\*.apsim" />
     <EmbeddedResource Include="**\*.apsimx" />
     <EmbeddedResource Include="Weather\WeatherTestsExcelFile.xlsx" />
+    <EmbeddedResource Include="**\*.met" />
     <EmbeddedResource Include="**\*.Expected.txt" />
   </ItemGroup>
 
