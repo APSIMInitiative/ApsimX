@@ -1002,9 +1002,12 @@
         /// </summary>
         public void HideProgressBar()
         {
-            progressBar.Visible = false;
-            stopButton.Visible = false;
-            lblStatus.Hide();
+            Application.Invoke(delegate
+            {
+                progressBar.Visible = false;
+                stopButton.Visible = false;
+                lblStatus.Hide();
+            });
         }
 
         /// <summary>User is trying to close the application - allow that to happen?</summary>
