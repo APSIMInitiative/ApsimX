@@ -29,7 +29,7 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [MainMenu("Save", "Ctrl + s")]
+        [MainMenu("Save", "<Ctrl>s")]
         public void OnSaveClick(object sender, EventArgs e)
         {
             try
@@ -49,7 +49,7 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [MainMenu("Save As", "Ctrl + Shift + s")]
+        [MainMenu("Save As", "<Ctrl><Shift>s")]
         public void OnSaveAsClick(object sender, EventArgs e)
         {
             try
@@ -69,7 +69,7 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [MainMenu("Undo", "Ctrl + z")]
+        [MainMenu("Undo", "<Ctrl>z")]
         public void OnUndoClick(object sender, EventArgs e)
         {
             try
@@ -89,7 +89,7 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [MainMenu("Redo", "Ctrl + y")]
+        [MainMenu("Redo", "<Ctrl>y")]
         public void OnRedoClick(object sender, EventArgs e)
         {
             try
@@ -109,7 +109,7 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [MainMenu("Split Screen")]
+        [MainMenu("Split Screen", "<Ctrl>t")]
         public void ToggleSecondExplorerViewVisible(object sender, EventArgs e)
         {
             try
@@ -127,7 +127,7 @@
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event arguments.</param>
-        [MainMenu("Clear Status")]
+        [MainMenu("Clear Status", "<Ctrl>g")]
         public void ClearStatusPanel(object sender, EventArgs args)
         {
             try
@@ -145,7 +145,7 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [MainMenu("Help")]
+        [MainMenu("Help", "F1")]
         public void OnHelp(object sender, EventArgs e)
         {
             try

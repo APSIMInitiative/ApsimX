@@ -36,27 +36,5 @@ namespace UserInterface.Views
             buttonParams.Y = (int)evnt.Y;
             return buttonParams;
         }
-
-        internal static (Gdk.Key, Gdk.ModifierType) ParseHotkey(string shortcut)
-        {
-            string keyName = string.Empty;
-            Gdk.ModifierType modifier = Gdk.ModifierType.None;
-            IEnumerable<string> keyNames = shortcut.Split(new char[] { '+' }).Select(x => x.Trim());
-            foreach (string name in keyNames)
-            {
-                if (name == "Ctrl")
-                    modifier |= Gdk.ModifierType.ControlMask;
-                else if (name == "Shift")
-                    modifier |= Gdk.ModifierType.ShiftMask;
-                else if (name == "Alt")
-                    modifier |= Gdk.ModifierType.Mod1Mask;
-                else if (name == "Del")
-                    keyName = "Delete";
-                else
-                    keyName = name;
-            }
-            Gdk.Key accelKey = (Gdk.Key)Enum.Parse(typeof(Gdk.Key), keyName, false);
-            return (accelKey, modifier);
-        }
     }
 }

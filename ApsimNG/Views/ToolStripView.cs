@@ -1,6 +1,5 @@
 ﻿namespace UserInterface.Views
 {
-    using Extensions;
     using Gtk;
     using Interfaces;
     using System;
@@ -128,8 +127,8 @@
                     button.Clicked += description.OnClick;
                     if (!string.IsNullOrWhiteSpace(description.ShortcutKey))
                     {
-                        (Gdk.Key key, Gdk.ModifierType modifier) = GtkExtensions.ParseHotkey(description.ShortcutKey);
-                        button.AddAccelerator("clicked", accelerators, (uint)key, modifier, AccelFlags.Visible);
+                        Gtk.Accelerator.Parse(description.ShortcutKey, out uint key, out Gdk.ModifierType modifier);
+                        button.AddAccelerator("clicked", accelerators, key, modifier, AccelFlags.Visible);
                     }
                     item = button;
                 }
