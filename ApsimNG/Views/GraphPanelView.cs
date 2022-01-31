@@ -64,6 +64,7 @@ namespace UserInterface.Views
                         GraphView view = new GraphView();
                         presenter.Attach(tab.Graphs[n].Graph, view, tab.Presenter, tab.Graphs[n].Cache);
                         GraphViewCreated?.Invoke(this, new CustomDataEventArgs<IGraphView>(view));
+                        view.ShowControls(false);
 
                         tab.Graphs[n].Presenter = presenter;
                         tab.Graphs[n].View = view;
