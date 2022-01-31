@@ -7,6 +7,7 @@ using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace Models.CLEM.Activities
@@ -36,13 +37,21 @@ namespace Models.CLEM.Activities
         /// Proportional purchase
         /// </summary>
         [Description("Proportion of remaining target")]
-        [Proportion, GreaterThanValue(0)]
+        [Proportion, GreaterThanEqualValue(0)]
         public double TargetProportion { get; set; }
 
         /// <summary>
         /// The final proportion to use. 
         /// </summary>
+        [JsonIgnore]
         public double ProportionToPurchase { get; set; }
+
+
+        /// <summary>
+        /// The human food store linked to this target purchase
+        /// </summary>
+        [JsonIgnore]
+        public HumanFoodStoreType FoodStore { get; set; }
 
         /// <summary>
         /// Constructor

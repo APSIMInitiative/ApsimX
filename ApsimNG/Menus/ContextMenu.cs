@@ -143,6 +143,8 @@
             {
                 GraphPanel panel = explorerPresenter.CurrentNode as GraphPanel;
                 panel.Cache.Clear();
+                explorerPresenter.HideRightHandPanel();
+                explorerPresenter.ShowRightHandPanel();
             }
             catch (Exception err)
             {

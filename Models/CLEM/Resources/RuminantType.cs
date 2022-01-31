@@ -856,7 +856,7 @@ namespace Models.CLEM.Resources
         /// Proportion of SRW for zero calving/lambing rate
         /// </summary>
         [Category("Advanced", "Breeding")]
-        [Description("Proportion of SRW for zero Calving/lambing rate")]
+        [Description("Proportion of SRW required before conception possible (min size for mating)")]
         [Required, Proportion]
         public double CriticalCowWeight { get; set; }
 

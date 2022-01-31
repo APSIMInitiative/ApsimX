@@ -45,24 +45,43 @@ namespace APSIM.Shared.Containers
         /// <param name="errorHandler">Callback for stderr from the container.</param>
         public Docker(Action<string> outputHandler = null, Action<string> warningHandler = null, Action<string> errorHandler = null)
         {
-            Uri uri = new Uri("unix:///var/run/docker.sock");
-            client = new DockerClientConfiguration(uri).CreateClient();
+            client = new DockerClientConfiguration().CreateClient();
             this.outputHandler = outputHandler;
             this.warningHandler = warningHandler;
             this.errorHandler = errorHandler;
         }
 
         /// <summary>
-        /// Run a container.
+        /// Pull an image from dockerhub.
+        /// </summary>
+        /// <param name="image">Name of the image (owner/organisation).</param>
+        /// <param name="tag">Tag to be pulled.</param>
+        /// <param name="cancelToken">Cancellation token.</param>
+        public async Task PullImageAsync(string image, string tag, CancellationToken cancelToken)
+        {
+            ImagesCreateParameters imageParams = new ImagesCreateParameters()
+            {
+                FromImage = image,
+                Tag = tag,
+            };
+            AuthConfig auth = new AuthConfig();
+            IProgress<JSONMessage> progress = new Progress<JSONMessage>(m => Console.WriteLine(m.Status));
+            await client.Images.CreateImageAsync(imageParams, auth, progress, cancelToken);
+        }
+
+        /// <summary>
+        /// Run a container. Does NOT pull the container - the assumption is that
+        /// the container already exists..
         /// </summary>
         /// <param name="image"></param>
         /// <param name="entrypoint"></param>
         /// <param name="args"></param>
         /// <param name="volumes"></param>
         /// <param name="environment"></param>
+        /// <param name="workingDir"></param>
         /// <param name="cancelToken"></param>
         /// <returns></returns>
-        public async Task RunContainerAsync(string image, string entrypoint, IEnumerable<string> args, IReadOnlyList<Volume> volumes, Dictionary<string, string> environment, CancellationToken cancelToken)
+        public async Task RunContainerAsync(string image, string entrypoint, IEnumerable<string> args, IReadOnlyList<Volume> volumes, Dictionary<string, string> environment, string workingDir, CancellationToken cancelToken)
         {
             CreateContainerParameters parameters = new CreateContainerParameters()
             {
@@ -73,7 +92,8 @@ namespace APSIM.Shared.Containers
                 HostConfig = new HostConfig()
                 {
                     Binds = volumes.Select(v => $"{v.SourcePath}:{v.DestinationPath}").ToList()
-                }
+                },
+                WorkingDir = workingDir
             };
 
             // Create the container.

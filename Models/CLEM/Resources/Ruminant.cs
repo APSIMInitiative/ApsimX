@@ -34,7 +34,7 @@ namespace Models.CLEM.Resources
                 case RuminantTransactionsGroupingStyle.Combined:
                     return "All";
                 case RuminantTransactionsGroupingStyle.ByPriceGroup:
-                    return BreedParams.ValueofIndividual(this, pricingStyle).Name;
+                    return BreedParams.ValueofIndividual(this, pricingStyle)?.Name??$"{pricingStyle}NotSet";
                 case RuminantTransactionsGroupingStyle.ByClass:
                     return this.Class;
                 case RuminantTransactionsGroupingStyle.BySexAndClass:

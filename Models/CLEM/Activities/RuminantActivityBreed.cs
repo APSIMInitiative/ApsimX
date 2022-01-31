@@ -124,13 +124,11 @@ namespace Models.CLEM.Activities
                                        group ind by ind.Location into grp
                                        select grp;
 
-                        int breedersCount = breeders.Count();
-
                         // must be breeders to bother checking any further
                         // must be either uncontrolled mating or the timing of controlled mating
-                        if (breedersCount > 0 & (!useControlledMating || this.TimingCheck(previousDate)))
+                        if (breeders.Count() > 0 & (!useControlledMating || this.TimingCheck(previousDate)))
                         {
-                            int numberPossible = breedersCount;
+                            int numberPossible = 0;
                             int numberServiced = 1;
                             double limiter = 1;
                             List<Ruminant> maleBreeders = new List<Ruminant>();
@@ -348,8 +346,12 @@ namespace Models.CLEM.Activities
                                group ind by ind.Location into grp
                                select grp;
 
-                int breedersCount = breeders.Count();
-                int numberPossible = breedersCount;
+                // identify not ready for reporting and tracking
+                var notReadyBreeders = herd.Where(a => a.Sex == Sex.Female).Cast<RuminantFemale>().Where(a => a.IsBreeder && !a.IsAbleToBreed && !a.IsPregnant);
+                foreach (RuminantFemale female in notReadyBreeders)
+                    female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.NotReady, female, clock.Today));
+
+                int numberPossible = breeders.Sum(a => a.Count());
                 int numberServiced = 1;
                 List<Ruminant> maleBreeders = new List<Ruminant>();
 
@@ -377,50 +379,63 @@ namespace Models.CLEM.Activities
 
                     numberServiced = 0;
                     lastJoinIndex = -1;
-                    foreach (RuminantFemale female in location.OfType<RuminantFemale>().Where(a => !a.IsPregnant))
+                    int cnt = 0;
+                    // shuffle the not pregnant females when obtained to avoid any inherant order by creation of individuals affecting which individuals are available first 
+                    var notPregnantFemales = location.OfType<RuminantFemale>().Where(a => !a.IsPregnant).OrderBy(a => RandomNumberGenerator.Generator.Next()).ToList();
+                    int totalToBreed = notPregnantFemales.Count;
+                    while(cnt < totalToBreed)
                     {
+                        RuminantFemale female = notPregnantFemales.ElementAt(cnt);
                         Reporting.ConceptionStatus status = Reporting.ConceptionStatus.NotMated;
                         if (numberServiced < numberPossible)
                         {
                             // calculate conception
                             double conceptionRate = ConceptionRate(female, out status);
+
+                            // if mandatory attributes are present in the herd, save male value with female details.
+                            // update male for both successful and failed matings (next if statement
+                            if (female.BreedParams.IncludedAttributeInheritanceWhenMating)
+                            {
+                                object male = null;
+
+                                if (useControlledMating)
+                                {
+                                    bool newJoining = needsNewJoiningMale(controlledMating.JoiningsPerMale, numberServiced);
+                                    if (!controlledMating.SireAttributes.Any() & (newJoining | !randomHerdAttributes.Any()))
+                                    {
+                                        // select random attributes from breeders
+                                        IEnumerable<RuminantFemale> onlyBreedersList = location.OfType<RuminantFemale>();
+                                        randomHerdAttributes = onlyBreedersList.ElementAt(RandomNumberGenerator.Generator.Next(onlyBreedersList.Count())).Attributes.Items;
+                                    }
+
+                                    // save all male attributes
+                                    AddMalesAttributeDetails(female, controlledMating.SireAttributes, newJoining);
+                                }
+                                else
+                                {
+                                    male = maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count() - 1)];
+                                    female.LastMatingStyle = ((male as RuminantMale).IsWildBreeder ? MatingStyle.WildBreeder : MatingStyle.Natural);
+
+                                    // randomly select male
+                                    AddMalesAttributeDetails(female, male as Ruminant);
+                                }
+                            }
+
                             if (conceptionRate > 0)
                             {
                                 if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                                 {
                                     female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
 
-                                    object male = null;
-
                                     if (useControlledMating)
                                         female.LastMatingStyle = MatingStyle.Controlled;
 
-                                    // if mandatory attributes are present in the herd, save male value with female details.
-                                    if(female.BreedParams.IncludedAttributeInheritanceWhenMating)
-                                    {
-                                        if (useControlledMating)
-                                        {
-                                            bool newJoining = needsNewJoiningMale(controlledMating.JoiningsPerMale, numberServiced);
-                                            if (!controlledMating.SireAttributes.Any() & (newJoining | !randomHerdAttributes.Any()))
-                                            {
-                                                // select random attributes from breeders
-                                                randomHerdAttributes = location.ElementAt(RandomNumberGenerator.Generator.Next(location.Count())).Attributes.Items;
-                                            }
-
-                                            // save all male attributes
-                                            AddMalesAttributeDetails(female, controlledMating.SireAttributes, newJoining);
-                                        }
-                                        else
-                                        {
-                                            male = maleBreeders[RandomNumberGenerator.Generator.Next(0, maleBreeders.Count() - 1)];
-                                            female.LastMatingStyle = ((male as RuminantMale).IsWildBreeder ? MatingStyle.WildBreeder : MatingStyle.Natural);
-
-                                            // randomly select male
-                                            AddMalesAttributeDetails(female, male as Ruminant);
-                                        }
-                                    }
                                     status = Reporting.ConceptionStatus.Conceived;
                                     NumberConceived++;
+                                }
+                                else
+                                {
+                                    status = Reporting.ConceptionStatus.Unsuccessful;
                                 }
                             }
                             numberServiced++;
@@ -431,13 +446,15 @@ namespace Models.CLEM.Activities
                         // do not report for -1 (controlled mating outside timing)
                         if (numberPossible >= 0 && status != Reporting.ConceptionStatus.NotAvailable)
                             female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(status, female, clock.Today));
+
+                        cnt++;
                     }
 
                     // report a natural mating locations for transparency via a message
                     if (numberServiced > 0 & !useControlledMating)
                     {
                         string warning = $"Natural (uncontrolled) mating ocurred in [r={(location.Key ?? "Not specified - general yards")}]";
-                        Warnings.CheckAndWrite(warning, Summary, this, MessageType.Warning);
+                        Warnings.CheckAndWrite(warning, Summary, this, MessageType.Information);
                     }
                 }
             }

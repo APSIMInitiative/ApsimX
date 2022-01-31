@@ -14,7 +14,6 @@ set -e
 usage="Usage: $0 <Version> [outfile]"
 test $# -ge 1 || (echo $usage; exit 1)
 version=$1
-revision=$(echo $version | cut -d. -f3)
 
 # Get apsimx path (path of repository root)
 cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null
@@ -28,7 +27,7 @@ cp "$apsimx/Models/Properties/AssemblyVersion.cs" "$apsimx/ApsimNG/Properties/"
 dotnet publish --nologo -f netcoreapp3.1 -c Release --no-self-contained -r linux-x64 "$apsimx/ApsimX.sln"
 
 # Create data directory. (Delete if it already exists.)
-inst="/usr/local/lib/apsim/$revision"
+inst="/usr/local/lib/apsim/$version"
 apsimx_inst="data$inst"
 if [[ -d $apsimx_inst ]];
 then
@@ -47,7 +46,7 @@ bin=data/usr/local/bin
 mkdir $bin
 echo exec dotnet $inst/bin/Models.dll '"$@"' >$bin/Models
 echo exec dotnet $inst/bin/ApsimNG.dll '"$@"' >$bin/apsim
-chmod u+x $bin/*
+chmod 755 $bin/*
 
 # Get estimated disk usage of installed package
 size=$(du -sk data | cut -f 1)

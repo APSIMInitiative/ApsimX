@@ -55,13 +55,12 @@ namespace Models.CLEM.Groupings
             if (Validator.TryValidateObject(this, context, results, true))
             {
                 Initialise();
-                Rule = Compile<IFilterable>();
+                // rules can only be built on commence not during use in UI (Descriptive summaries)
+                BuildRule();
             }
         }
 
-        /// <summary>
-        /// Initialise this filter by property 
-        /// </summary>
+        /// <inheritdoc/>
         public override void Initialise()
         {
             if (PropertyOfIndividual != null && PropertyOfIndividual != "")
@@ -69,6 +68,13 @@ namespace Models.CLEM.Groupings
                 propertyInfo = Parent.GetProperty(PropertyOfIndividual);
                 validOperator = CheckValidOperator(propertyInfo, out string _);
             }
+        }
+
+        /// <inheritdoc/>
+        public override void BuildRule()
+        {
+            if (Rule is null)
+                Rule = Compile<IFilterable>();
         }
 
         /// <inheritdoc/>
@@ -234,7 +240,7 @@ namespace Models.CLEM.Groupings
                 bool truefalse = IsOperatorTrueFalseTest();
                 if (truefalse | (propertyInfo != null && propertyInfo.PropertyType.IsEnum))
                 {
-                    if(propertyInfo.PropertyType == typeof(bool))
+                    if (propertyInfo.PropertyType == typeof(bool))
                     {
                         if (Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false")
                             filterWriter.Write(" not");

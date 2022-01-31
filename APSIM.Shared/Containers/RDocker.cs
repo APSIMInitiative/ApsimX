@@ -62,7 +62,13 @@ namespace APSIM.Shared.Containers
         public async Task RunScriptAsync(string scriptPath, IEnumerable<string> arguments, CancellationToken cancelToken)
         {
             string hostScriptDirectory = Path.GetDirectoryName(scriptPath);
-            Volume volume = new Volume(hostScriptDirectory, hostScriptDirectory);
+            const string mountPath = "/inputs";
+            Volume volume = new Volume(hostScriptDirectory, mountPath);
+
+            string scriptName = Path.GetFileName(scriptPath);
+
+            // Don't use Path.Combine(), as this will insert backslashes on windows.
+            string entrypoint = $"{mountPath}/{scriptName}";
 
             // Set the APSIM_NO_DOCKER environment variable in the container,
             // to ensure that the container doesn't attempt to recursively use
@@ -73,7 +79,8 @@ namespace APSIM.Shared.Containers
             };
 
             Docker docker = new Docker(outputHandler, warningHandler, errorHandler);
-            await docker.RunContainerAsync(apsimCompleteImageName, "Rscript", arguments.Prepend(scriptPath), volume.ToReadOnlyList(), env, cancelToken);
+            await docker.PullImageAsync(apsimCompleteImageName, "latest", cancelToken);
+            await docker.RunContainerAsync(apsimCompleteImageName, "Rscript", arguments.Prepend(entrypoint), volume.ToReadOnlyList(), env, mountPath, cancelToken);
         }
 
         /// <summary>

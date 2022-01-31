@@ -133,6 +133,10 @@
                     double ThisThickness = Thickness[i] / 10; // to cm
                     double TopOfLayer = DepthSoFar;
                     double BottomOfLayer = DepthSoFar + ThisThickness;
+
+                    TopOfLayer = Math.Round(TopOfLayer, 1);
+                    BottomOfLayer = Math.Round(BottomOfLayer, 1);
+
                     Strings[i] = TopOfLayer.ToString() + "-" + BottomOfLayer.ToString();
                     DepthSoFar = BottomOfLayer;
                 }

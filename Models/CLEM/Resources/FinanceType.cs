@@ -221,7 +221,7 @@ namespace Models.CLEM.Resources
 
             // send to market if needed
             if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
-                (EquivalentMarketStore as FinanceType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, this.NameWithParent,  "Farm purchases");
+                (EquivalentMarketStore as FinanceType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, (request.RelatesToResource!=""?request.RelatesToResource: this.NameWithParent),  "Household purchase");
 
             request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction

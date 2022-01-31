@@ -247,6 +247,15 @@ namespace Models.Optimisation
 
             contents.AppendLine($"variable_names <- c({string.Join(", ", VariableNames.Select(x => $"'{x.Trim()}'").ToArray())})");
 
+            // In theory, it would be better to always use relative path to
+            // the input file, by setting the working directory of the R
+            // process appropriately. Unfortunately, this will require some
+            // refactoring of the R wrapper which I don't really want to do
+            // right now. So for now I'm going to just use relative path if
+            // using docker.
+            if (RDocker.UseDocker())
+                apsimxFileName = Path.GetFileName(apsimxFileName);
+
             // If we're reading from the PredictedObserved table, need to fix
             // Predicted./Observed. suffix for the observed variables.
             string escapedOutputPath = outputPath.Replace(@"\", "/");
@@ -447,7 +456,13 @@ namespace Models.Optimisation
                 Directory.CreateDirectory(outputPath);
 
             string apsimxFileName = GenerateApsimXFile();
-            GenerateRScript(fileName, outputPath, apsimxFileName);
+
+            // If running with docker, all references to the output path must
+            // be relative (ie '.'). It would be nice to be able to do this with
+            // native R runner as well but that will require some refactoring work.
+            string outputReferencePath = RDocker.UseDocker() ? "." : outputPath;
+
+            GenerateRScript(fileName, outputReferencePath, apsimxFileName);
 
             if (RDocker.UseDocker())
             {

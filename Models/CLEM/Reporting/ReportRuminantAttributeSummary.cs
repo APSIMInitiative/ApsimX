@@ -52,6 +52,13 @@ namespace Models.CLEM.Reporting
         public bool ReportMateValues { get; set; }
 
         /// <summary>
+        /// Number of months since mating to report last mate
+        /// </summary>
+        [Description("Maximum months since mating to report last mate")]
+        [System.ComponentModel.DefaultValue(12)]
+        public int MaxMonthsToReportMate { get; set; }
+
+        /// <summary>
         /// Report item was generated event handler
         /// </summary>
         public event EventHandler OnReportItemGenerated;
@@ -108,6 +115,7 @@ namespace Models.CLEM.Reporting
                 $"[{Name}].LastStatistics.Statistics.Total as Individuals",
                 $"[{Name}].LastStatistics.Statistics.Average as Average",
                 $"[{Name}].LastStatistics.Statistics.StandardDeviation as SD",
+                $"[{Name}].LastStatistics.Statistics.TotalMate as MatedIndividuals",
                 $"[{Name}].LastStatistics.Statistics.AverageMate as MateAverage",
                 $"[{Name}].LastStatistics.Statistics.StandardDeviationMate as MateSD"
             };
@@ -218,25 +226,40 @@ namespace Models.CLEM.Reporting
             else
                 herd = ruminantHerd.Herd;
 
-            var values = herd.Where(a => (ignoreNotFound & a.Attributes.GetValue(tag) == null) ? false : true).Select(a => new Tuple<float, float>(Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredValue), Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredMateValue))).ToList();
+            // do not report mate if greater than max months since conception
+            // if not valid report NAN that is filtered out in calculations below 
+            var values = herd.Where(a => (ignoreNotFound & a.Attributes.GetValue(tag) == null) ? false : true).Select(a => new Tuple<float, float>(
+                (a.Attributes.GetValue(tag)?.StoredValue is null) ? Single.NaN: Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredValue),
+                (a.Sex == Sex.Female && a.Age - (a as RuminantFemale).AgeAtLastConception <= MaxMonthsToReportMate) ? Single.NaN : (a.Attributes.GetValue(tag)?.StoredMateValue is null) ? Single.NaN : Convert.ToSingle(a.Attributes.GetValue(tag)?.StoredMateValue))
+                ).ToList();
             if (values.Count() == 0)
                 return listStatistics;
 
             double sd = 0;
-            Single mean = values.Average(a => a.Item1);
-            Single sum = values.Sum(d => Convert.ToSingle(Math.Pow(d.Item1 - mean, 2)));
-            sd = Math.Sqrt((sum) / values.Count() - 1);
-            listStatistics.Average = mean;
-            listStatistics.StandardDeviation = sd;
+            Single mean = 0;
+            Single sum = 0;
+            var valuesPresent = values.Where(a => !float.IsNaN(a.Item1));
+            if (valuesPresent.Count() > 0)
+            {
+                mean = valuesPresent.Average(a => a.Item1);
+                sum = valuesPresent.Sum(d => Convert.ToSingle(Math.Pow(d.Item1 - mean, 2)));
+                sd = Math.Sqrt((sum) / valuesPresent.Count() - 1);
+                listStatistics.Average = mean;
+                listStatistics.StandardDeviation = sd;
+                listStatistics.Total = valuesPresent.Count();
+            }
 
-            mean = values.Average(a => a.Item2);
-            sum = values.Sum(d => Convert.ToSingle(Math.Pow(d.Item2 - mean, 2)));
-            sd = (sum==0)?0:Math.Sqrt((sum) / values.Count() - 1);
-            listStatistics.AverageMate = mean;
-            listStatistics.StandardDeviationMate = sd;
-
+            valuesPresent = values.Where(a => !float.IsNaN(a.Item2));
+            if (valuesPresent.Count() > 0)
+            {
+                mean = valuesPresent.Average(a => a.Item2);
+                sum = valuesPresent.Sum(d => Convert.ToSingle(Math.Pow(d.Item2 - mean, 2)));
+                sd = (sum == 0) ? 0 : Math.Sqrt((sum) / valuesPresent.Count() - 1);
+                listStatistics.AverageMate = mean;
+                listStatistics.StandardDeviationMate = sd;
+                listStatistics.TotalMate = valuesPresent.Count();
+            }
             listStatistics.Count = values.Count();
-            listStatistics.Total = herd.Count();
 
             return listStatistics;
         }

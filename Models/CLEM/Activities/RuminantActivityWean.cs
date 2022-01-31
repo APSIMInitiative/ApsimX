@@ -135,9 +135,9 @@ namespace Models.CLEM.Activities
                         ind.Wean(true, reason);
                         ind.Location = grazeStore;
                         weanedCount++;
-                        if (ind.Mother != null)
-                            // report conception status changed when offspring weaned.
-                            ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, clock.Today));
+
+                        // report wean. If mother has died create temp female with the mother's ID for reporting only
+                        ind.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother?? new RuminantFemale(ind.BreedParams, -1, 999) { ID = ind.MotherID }, clock.Today, ind));
                     }
 
                     // stop if labour limited individuals reached and LabourShortfallAffectsActivity
