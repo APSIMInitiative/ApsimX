@@ -11,17 +11,17 @@
     public class MainMenu
     {
         /// <summary>
-        /// Reference to the ExplorerPresenter.
+        /// Reference to the main presenter.
         /// </summary>
-        private ExplorerPresenter explorerPresenter;
+        private MainPresenter presenter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="MainMenu" /> class.
         /// </summary>
-        /// <param name="explorerPresenter">The explorer presenter to work with</param>
-        public MainMenu(ExplorerPresenter explorerPresenter)
+        /// <param name="mainPresenter">The presenter to work with</param>
+        public MainMenu(MainPresenter mainPresenter)
         {
-            this.explorerPresenter = explorerPresenter;
+            presenter = mainPresenter;
         }
 
         /// <summary>
@@ -29,16 +29,18 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [MainMenu(MenuName = "Save")]
+        [MainMenu("Save", "<Ctrl>s")]
         public void OnSaveClick(object sender, EventArgs e)
         {
             try
             {
-                explorerPresenter.Save();
+                ExplorerPresenter explorer = presenter.GetCurrentExplorerPresenter();
+                if (explorer != null)
+                    explorer.Save();
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowError(err);
+                presenter.ShowError(err);
             }
         }
 
@@ -47,16 +49,18 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [MainMenu(MenuName = "Save As")]
+        [MainMenu("Save As", "<Ctrl><Shift>s")]
         public void OnSaveAsClick(object sender, EventArgs e)
         {
             try
             {
-                explorerPresenter.SaveAs();
+                ExplorerPresenter explorer = presenter.GetCurrentExplorerPresenter();
+                if (explorer != null)
+                    explorer.SaveAs();
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowError(err);
+                presenter.ShowError(err);
             }
         }
 
@@ -65,16 +69,18 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [MainMenu(MenuName = "Undo")]
+        [MainMenu("Undo", "<Ctrl>z")]
         public void OnUndoClick(object sender, EventArgs e)
         {
             try
             {
-                this.explorerPresenter.CommandHistory.Undo();
+                ExplorerPresenter explorer = presenter.GetCurrentExplorerPresenter();
+                if (explorer != null)
+                    explorer.CommandHistory.Undo();
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowError(err);
+                presenter.ShowError(err);
             }
         }
 
@@ -83,16 +89,18 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [MainMenu(MenuName = "Redo")]
+        [MainMenu("Redo", "<Ctrl>y")]
         public void OnRedoClick(object sender, EventArgs e)
         {
             try
             {
-                explorerPresenter.CommandHistory.Redo();
+                ExplorerPresenter explorer = presenter.GetCurrentExplorerPresenter();
+                if (explorer != null)
+                    explorer.CommandHistory.Redo();
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowError(err);
+                presenter.ShowError(err);
             }
         }
 
@@ -101,16 +109,16 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [MainMenu(MenuName = "Split Screen")]
+        [MainMenu("Split Screen", "<Ctrl>t")]
         public void ToggleSecondExplorerViewVisible(object sender, EventArgs e)
         {
             try
             {
-                explorerPresenter.MainPresenter.ToggleSecondExplorerViewVisible();
+                presenter.ToggleSecondExplorerViewVisible();
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowError(err);
+                presenter.ShowError(err);
             }
         }
 
@@ -119,16 +127,16 @@
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event arguments.</param>
-        [MainMenu(MenuName = "Clear Status")]
+        [MainMenu("Clear Status", "<Ctrl>g")]
         public void ClearStatusPanel(object sender, EventArgs args)
         {
             try
             {
-                explorerPresenter.MainPresenter.ClearStatusPanel();
+                presenter.ClearStatusPanel();
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowError(err);
+                presenter.ShowError(err);
             }
         }
 
@@ -137,7 +145,7 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [MainMenu(MenuName = "Help")]
+        [MainMenu("Help", "F1")]
         public void OnHelp(object sender, EventArgs e)
         {
             try
@@ -146,7 +154,7 @@
             }
             catch (Exception err)
             {
-                explorerPresenter.MainPresenter.ShowError(err);
+                presenter.ShowError(err);
             }
         }
     }
