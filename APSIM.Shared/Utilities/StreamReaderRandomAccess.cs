@@ -99,9 +99,9 @@ namespace APSIM.Shared.Utilities
             g_lineBuffer.Length = 0;
 
             char ch = '\0';
-            bool flag = false;
+            bool endOfLine = false;
 
-            while (!flag)
+            while (!endOfLine)
             {
 
                 ch = g_buffer[g_position];
@@ -111,7 +111,7 @@ namespace APSIM.Shared.Utilities
 
                 else if (ch == '\n')
                 {
-                    flag = true;
+                    endOfLine = true;
                 }
                 else
                 {
@@ -124,19 +124,14 @@ namespace APSIM.Shared.Utilities
                 {
                     if (!LoadBuffer())
                     {
-                        break; // TODO: might not be correct. Was : Exit While
+                        // End of file.
+                        endOfLine = true;
                     }
                 }
             }
 
-
-            if (flag)
-            {
-                g_offset = g_bufferOffset + g_position;
-                return g_lineBuffer.ToString();
-            }
-
-            return "";
+            g_offset = g_bufferOffset + g_position;
+            return g_lineBuffer.ToString();
         }
 
         private bool LoadBuffer()
