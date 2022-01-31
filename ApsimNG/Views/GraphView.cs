@@ -639,7 +639,7 @@
             {
                 double newDiff = x[i] - x[i - 1];
                 if (!MathUtilities.FloatsAreEqual(diff, newDiff))
-                    MasterView.ShowMessage($"WARNING: x data is not monotonic at index {i}; x = [..., {x[i - 2]}, {x[i - 1]}, {x[i]}, ...]", Models.Core.Simulation.ErrorLevel.Warning, withButton: false);
+                    MasterView.ShowMessage($"WARNING: x data is not monotonic at index {i}; x = [..., {x[i - 2]}, {x[i - 1]}, {x[i]}, ...]", Models.Core.MessageType.Warning, withButton: false);
             }
         }
 
@@ -1822,6 +1822,9 @@
             }
         }
 
+        public void SetAxisMax(double value, APSIM.Shared.Graphing.AxisPosition axisType) => GetAxis(axisType).Maximum = value;
+        public void SetAxisMin(double value, APSIM.Shared.Graphing.AxisPosition axisType) => GetAxis(axisType).Minimum = value;
+
         /// <summary>
         /// Gets the maximum scale of the specified axis.
         /// </summary>
@@ -1830,13 +1833,18 @@
             OxyPlot.Axes.Axis axis = GetAxis(axisType);
             if (axis != null)
             {
-                if (double.IsNaN(axis.Maximum))
-                    return axis.ActualMaximum;
-                else
-                    return axis.Maximum;
+                return AxisMaximum(axis);
             }
             else
                 return double.NaN;
+        }
+
+        private double AxisMaximum(OxyPlot.Axes.Axis axis)
+        {
+            if (double.IsNaN(axis.Maximum))
+                return axis.ActualMaximum;
+            else
+                return axis.Maximum;
         }
 
         /// <summary>

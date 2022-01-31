@@ -122,45 +122,6 @@ namespace Models.CLEM
     }
 
     /// <summary>
-    /// Reasons link to herd change for use with manual mark for sale
-    /// </summary>
-    public enum MarkForSaleReason
-    {
-        /// <summary>
-        /// Reason not provided
-        /// </summary>
-        NotProvided = 0,
-        /// <summary>
-        /// Individual sold as marked for sale
-        /// </summary>
-        MarkedSale = 4,
-        /// <summary>
-        /// Individual reached sale weight or age
-        /// </summary>
-        AgeWeightSale = 12,
-        /// <summary>
-        /// Individual consumed by household
-        /// </summary>
-        Consumed = 15,
-        /// <summary>
-        /// Destocking sale
-        /// </summary>
-        DestockSale = 16,
-        /// <summary>
-        /// Dry breeder sold
-        /// </summary>
-        DryBreederSale = 6,
-        /// <summary>
-        /// Individual reached maximim age and sold
-        /// </summary>
-        MaxAgeSale = 10,
-        /// <summary>
-        /// Trade individual sold weight/age
-        /// </summary>
-        TradeSale = 5 
-    }
-
-    /// <summary>
     /// Mustering timing type
     /// </summary>
     public enum MusterTimingType
@@ -323,6 +284,40 @@ namespace Models.CLEM
         /// Labour per unit
         /// </summary>
         perUnit = 6,
+    }
+
+    /// <summary>
+    /// Labour limit type calculation type
+    /// </summary>
+    public enum LabourLimitType
+    {
+        /// <summary>
+        /// Represents a rate or fixed days specified
+        /// </summary>
+        AsDaysRequired,
+        /// <summary>
+        /// Relates to the total days allowed
+        /// </summary>
+        AsTotalAllowed,
+        /// <summary>
+        /// As proportion of the days required
+        /// </summary>
+        ProportionOfDaysRequired
+    }
+
+    /// <summary>
+    /// Style to calculate hired labour payment
+    /// </summary>
+    public enum PayHiredLabourCalculationStyle
+    {
+        /// <summary>
+        /// Use labour available in LabourAvailability for all hired labour
+        /// </summary>
+        ByAvailableLabour,
+        /// <summary>
+        /// Use the hired labour used in timestep
+        /// </summary>
+        ByLabourUsedInTimeStep
     }
 
     /// <summary>
@@ -592,18 +587,84 @@ namespace Models.CLEM
     }
 
     /// <summary>
-    /// Style of ruminant tag application
+    /// Style to identify different ruminant groups needed by activities
     /// </summary>
-    public enum RuminantStockGroupStyle
+    public enum RuminantGroupStyle
     {
         /// <summary>
-        /// Animals to select
+        /// No style specified
         /// </summary>
-        Select = 0,
+        NotSpecified = 0,
+
         /// <summary>
-        /// Animals to destock
+        /// Remove
         /// </summary>
-        Destock = 5,
+        Remove = 5,
+
+        /// <summary>
+        /// Select females to remove
+        /// </summary>
+        RemoveFemales = 10,
+
+        /// <summary>
+        /// Female breeders to remove
+        /// </summary>
+        RemoveFemaleBreeders = 12,
+
+        /// <summary>
+        /// Female pre-breeders to remove
+        /// </summary>
+        RemoveFemalePreBreeders = 14,
+
+        /// <summary>
+        /// Select males to remove
+        /// </summary>
+        RemoveMales = 20,
+
+        /// <summary>
+        /// Male breeders to remove
+        /// </summary>
+        RemoveMaleBreeders = 22,
+
+        /// <summary>
+        /// Male pre-breeders to remove
+        /// </summary>
+        RemoveMalePreBreeders = 24,
+
+        /// <summary>
+        /// Select
+        /// </summary>
+        Select = 55,
+
+        /// <summary>
+        /// Select females
+        /// </summary>
+        SelectFemales = 60,
+
+        /// <summary>
+        /// Select female breeders
+        /// </summary>
+        SelectFemaleBreeders = 62,
+
+        /// <summary>
+        /// Select female pre-breeders
+        /// </summary>
+        SelectFemalePreBreeders = 64,
+
+        /// <summary>
+        /// Select females
+        /// </summary>
+        SelectMales = 70,
+
+        /// <summary>
+        /// Select female breeders
+        /// </summary>
+        SelectMaleBreeders = 72,
+
+        /// <summary>
+        /// Select female pre-breeders
+        /// </summary>
+        SelectMalePreBreeders = 74,
     }
 
     /// <summary>
@@ -790,10 +851,34 @@ namespace Models.CLEM
         /// <summary>
         /// Take a proportion of the group selected
         /// </summary>
-        Proportion,
+        TakeProportion,
         /// <summary>
         /// Take a set number of individuals
         /// </summary>
-        Individuals
+        TakeIndividuals,
+        /// <summary>
+        /// Skip a proportion of the group selected and return the remainder
+        /// </summary>
+        SkipProportion,
+        /// <summary>
+        /// Skip a set number of individuals and return the remainder
+        /// </summary>
+        SkipIndividuals
     }
+
+    /// <summary>
+    /// Position for reducing individuals from a filter group
+    /// </summary>
+    public enum TakeFromFilteredPositionStyle
+    {
+        /// <summary>
+        /// Take/Skip from start
+        /// </summary>
+        Start,
+        /// <summary>
+        /// Take/Skip from end
+        /// </summary>
+        End
+    }
+
 }

@@ -1,4 +1,4 @@
-﻿namespace Models.AgPasture
+namespace Models.AgPasture
 {
     using System;
     using System.Collections.Generic;
@@ -19,6 +19,7 @@
     /// Describes a pasture species.
     /// </summary>
     [Serializable]
+    [ScopedModel]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Zone))]
@@ -224,13 +225,13 @@
         public void Sow(string cultivar, double population, double depth, double rowSpacing, double maxCover = 1, double budNumber = 1, double rowConfig = 1)
         {
             if (isAlive)
-                mySummary.WriteWarning(this, " Cannot sow the pasture species \"" + Name + "\", as it is already growing");
+                mySummary.WriteMessage(this, " Cannot sow the pasture species \"" + Name + "\", as it is already growing", MessageType.Warning);
             else
             {
                 RefreshVariables();
                 isAlive = true;
                 phenologicStage = 0;
-                mySummary.WriteMessage(this, " The pasture species \"" + Name + "\" has been sown today");
+                mySummary.WriteMessage(this, " The pasture species \"" + Name + "\" has been sown today", MessageType.Diagnostic);
             }
         }
 
@@ -3674,7 +3675,7 @@
 
             }
             else
-                mySummary.WriteWarning(this, " Could not graze due to lack of DM available");
+                mySummary.WriteMessage(this, " Could not graze due to lack of DM available", MessageType.Warning);
         }
 
         /// <summary>Removes a given amount of biomass (and N) from the plant.</summary>
@@ -3739,7 +3740,7 @@
                         totalFrac = fracRemoving.Sum();
                         if (count > 1000)
                         {
-                            mySummary.WriteWarning(this, " AgPasture could not remove or graze all the DM required for " + Name);
+                            mySummary.WriteMessage(this, " AgPasture could not remove or graze all the DM required for " + Name, MessageType.Warning);
                             break;
                         }
                     }
@@ -3782,7 +3783,7 @@
             if (!MathUtilities.FloatsAreEqual(defoliatedDM, amountToRemove))
                 throw new ApsimXException(this, "  AgPasture " + Name + " - removal of DM resulted in loss of mass balance");
             else
-                mySummary.WriteMessage(this, " Biomass removed from " + Name + " by grazing: " + defoliatedDM.ToString("#0.0") + "kg/ha");
+                mySummary.WriteMessage(this, " Biomass removed from " + Name + " by grazing: " + defoliatedDM.ToString("#0.0") + "kg/ha", MessageType.Diagnostic);
 
             return new Biomass()
             {

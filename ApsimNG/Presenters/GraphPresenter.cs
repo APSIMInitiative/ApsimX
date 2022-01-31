@@ -94,6 +94,9 @@
 
         public void DrawGraph()
         {
+            if (graph.Parent is GraphPanel)
+                return;
+
             graphView.Clear();
             if (storage == null)
                 storage = graph.FindInScope<IDataStore>();

@@ -166,11 +166,11 @@ namespace Models.CLEM
                     if (!column.ToString().Equals(DateColumnName, StringComparison.OrdinalIgnoreCase) && double.TryParse(priceFileAsRows[0][cnt].ToString(), out double res))
                     {
                         // update
-                        var components = pricingComonentsFound.Where(a => (a as IModel).Name == column.ToString());
+                        var components = pricingComonentsFound.Where(a => (a as IModel).Parent.Name == column.ToString());
                         if (components.Count() > 1)
                         {
                             string warn = $"Multiple resource [r=PricingComponents] named [{column}] were found when applying pricing by [a={this.Name}]. \r\n Ensure input price applies to all these components or provide unique component names";
-                            Warnings.CheckAndWrite(warn, Summary, this);
+                            Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                         }
                         foreach (IResourcePricing resourcePricing in components)
                             resourcePricing.SetPrice(res, this);

@@ -201,6 +201,7 @@
         /// <summary>Object has been created.</summary>
         public override void OnCreated()
         {
+            base.OnCreated();
             if (connection == null)
                 Open();
         }

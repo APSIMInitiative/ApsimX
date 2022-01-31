@@ -1,4 +1,4 @@
-﻿namespace Models.Core.ApsimFile
+namespace Models.Core.ApsimFile
 {
     using APSIM.Shared.Utilities;
     using Models.Climate;
@@ -24,7 +24,7 @@
     public class Converter
     {
         /// <summary>Gets the latest .apsimx file format version.</summary>
-        public static int LatestVersion { get { return 145; } }
+        public static int LatestVersion { get { return 148; } }
 
         /// <summary>Converts a .apsimx string to the latest version.</summary>
         /// <param name="st">XML or JSON string to convert.</param>
@@ -3735,11 +3735,23 @@
         /// <param name="fileName">Path to the .apsimx file.</param>
         private static void UpgradeToVersion143(JObject root, string fileName)
         {
+            if (JsonUtilities.Type(root) == "Graph")
+                FixGraph(root);
             foreach (JObject graph in JsonUtilities.ChildrenRecursively(root, "Graph"))
+                FixGraph(graph);
+
+            foreach (JObject folder in JsonUtilities.ChildrenRecursively(root, "Folder"))
+            {
+                JToken showInDocs = folder["ShowPageOfGraphs"];
+                bool show = showInDocs != null && showInDocs.Value<bool>();
+                folder["ShowInDocs"] = show && ShouldShowInDocs(folder);
+            }
+
+            void FixGraph(JObject graph)
             {
                 JToken axes = graph["Axis"];
                 if (axes == null)
-                    continue;
+                    return;
                 foreach (JObject axis in axes)
                 {
                     // Class moved into APSIM.Shared.Graphing namespace.
@@ -3750,20 +3762,19 @@
 
                     // Min/Max/Interval properties are now nullable doubles.
                     // null is used to indicate no value, rather than NaN.
-                    if (axis["Minimum"].Value<string>() == "NaN")
-                        axis["Minimum"] = null;
-                    if (axis["Maximum"].Value<string>() == "NaN")
-                        axis["Maximum"] = null;
-                    if (axis["Interval"].Value<string>() == "NaN")
-                        axis["Interval"] = null;
+                    RemoveAxisNaNs(axis, "Minimum");
+                    RemoveAxisNaNs(axis, "Maximum");
+                    RemoveAxisNaNs(axis, "Interval");
                 }
             }
 
-            foreach (JObject folder in JsonUtilities.ChildrenRecursively(root, "Folder"))
+            void RemoveAxisNaNs(JObject axis, string propertyName)
             {
-                JToken showInDocs = folder["ShowPageOfGraphs"];
-                bool show = showInDocs != null && showInDocs.Value<bool>();
-                folder["ShowInDocs"] = show && ShouldShowInDocs(folder);
+                JToken value = axis[propertyName];
+                if (value == null)  
+                    return;
+                if (value.Value<string>() == "NaN")
+                    axis[propertyName] = null;
             }
 
             bool ShouldShowInDocs(JObject folder)
@@ -3828,20 +3839,20 @@
         {
             foreach (JObject simulation in JsonUtilities.ChildrenRecursively(root, "Simulation"))
             {
-                var stockModels = JsonUtilities.ChildrenRecursively(simulation).Where(c => c["$type"].ToString().Contains("Stock"));
+                List<JObject> stockModels = JsonUtilities.ChildrenRecursively(simulation, "Stock");
                 JObject stock = null;
                 if (stockModels.Any())
                     stock = stockModels.First();
 
-                var simpleGrazing = JsonUtilities.ChildrenRecursively(simulation).Where(c => c["$type"].ToString().Contains("SimpleGrazing"));
+                List<JObject> simpleGrazing = JsonUtilities.ChildrenRecursively(simulation, "SimpleGrazing");
                 if (stock != null || simpleGrazing.Any())
                 {
                     // Add in a Forages model.
-                    var forages = new JObject();
+                    JObject forages = new JObject();
                     forages["$type"] = "Models.ForageDigestibility.Forages, Models";
                     forages["Name"] = "Forages";
 
-                    var simulationChildren = simulation["Children"] as JArray;
+                    JArray simulationChildren = simulation["Children"] as JArray;
                     int position = simulationChildren.IndexOf(stock);
                     if (position == -1)
                         simulationChildren.Add(forages);
@@ -3851,6 +3862,59 @@
             }
         }
 
+        /// <summary>
+        /// Fix API calls to summary.WriteX, and pass in an appropriate message type.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion146(JObject root, string fileName)
+        {
+            const string infoPattern = @"\.WriteMessage\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\);";
+            const string warningPattern = @"\.WriteWarning\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\);";
+            const string errorPattern = @"\.WriteError\(((?>\((?<c>)|[^()]+|\)(?<-c>))*(?(c)(?!)))\);";
+            const string infoReplace = ".WriteMessage($1, MessageType.Diagnostic);";
+            const string warningReplace = ".WriteMessage($1, MessageType.Warning);";
+            const string errorReplace = ".WriteMessage($1, MessageType.Error);";
+            foreach (ManagerConverter manager in JsonUtilities.ChildManagers(root))
+            {
+                bool replace = manager.ReplaceRegex(infoPattern, infoReplace);
+                replace |= manager.ReplaceRegex(warningPattern, warningReplace);
+                replace |= manager.ReplaceRegex(errorPattern, errorReplace);
+                if (replace)
+                    manager.Save();
+            }
+        }
+
+        /// <summary>
+        /// Rename report function log to log10.
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion147(JObject root, string fileName)
+        {
+            foreach (JObject report in JsonUtilities.ChildrenRecursively(root, "Report"))
+            {
+                JArray variables = report["VariableNames"] as JArray;
+                if (variables != null)
+                    foreach (JValue variable in variables)
+                        if (variable.Value is string)
+                            variable.Value = ((string)variable.Value).Replace("log(", "log10(");
+            }
+        }
+
+        /// <summary>
+        /// Remove all graphs which are children of XYPairs. An older version
+        /// contained a bug which inserted duplicate graphs here. (Duplicate
+        /// models will now cause a file to fail to run.)
+        /// </summary>
+        /// <param name="root">Root node.</param>
+        /// <param name="fileName">File name.</param>
+        private static void UpgradeToVersion148(JObject root, string fileName)
+        {
+            foreach (JObject xyPairs in JsonUtilities.ChildrenRecursively(root, "XYPairs"))
+                foreach (JObject graph in JsonUtilities.ChildrenOfType(xyPairs, "Graph"))
+                    JsonUtilities.RemoveChild(xyPairs, JsonUtilities.Name(graph));
+        }
 
         /// <summary>
         /// Update the SoilNitrogen component to be a Nutrient

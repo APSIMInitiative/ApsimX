@@ -102,9 +102,9 @@ namespace Models.CLEM.Activities
                 if (ind.Age >= weaningAge)
                 {
                     ind.Wean(true, "Natural");
-                    if (ind.Mother != null)
-                        // report conception status changed when offspring weans.
-                        ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, clock.Today));
+
+                    // report wean. If mother has died create temp female with the mother's ID for reporting only
+                    ind.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, -1, 999) { ID = ind.MotherID }, clock.Today, ind));
                 }
             }
         }
@@ -372,13 +372,13 @@ namespace Models.CLEM.Activities
                 {
                     string warn = $"individuals of [r={breed}] not fed";
                     string warnfull = $"Some individuals of [r={breed}] were not fed in some months (e.g. [{unfed}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
-                    Warnings.CheckAndWrite(warn, Summary, this, warnfull);
+                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
                 }
                 if (unfedcalves > 0)
                 {
                     string warn = $"calves of [r={breed}] not fed";
                     string warnfull = $"Some calves of [r={breed}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
-                    Warnings.CheckAndWrite(warn, Summary, this, warnfull);
+                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
                 }
 
                 if (methaneEmissions != null)

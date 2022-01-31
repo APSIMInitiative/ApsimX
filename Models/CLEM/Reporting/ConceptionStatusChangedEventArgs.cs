@@ -36,7 +36,8 @@ namespace Models.CLEM.Reporting
         /// <param name="status">Change status</param>
         /// <param name="female">Individual being reported</param>
         /// <param name="dateTime">Current clock</param>
-        public ConceptionStatusChangedEventArgs(ConceptionStatus status, RuminantFemale female, DateTime dateTime)
+        /// <param name="offspring">The offspring related to</param>
+        public ConceptionStatusChangedEventArgs(ConceptionStatus status, RuminantFemale female, DateTime dateTime, Ruminant offspring = null)
         {
             Status = status;
             Female = female;
@@ -47,8 +48,13 @@ namespace Models.CLEM.Reporting
                 case ConceptionStatus.Conceived:
                 case ConceptionStatus.Failed:
                 case ConceptionStatus.Birth:
-                case ConceptionStatus.Weaned:
                     ConceptionDate = dateTime.AddMonths(-1 * Convert.ToInt32(female.Age - female.AgeAtLastConception, CultureInfo.InvariantCulture));
+                    ConceptionDate = new DateTime(ConceptionDate.Year, ConceptionDate.Month, DateTime.DaysInMonth(ConceptionDate.Year, ConceptionDate.Month));
+                    break;
+                case ConceptionStatus.Weaned:
+                    if (offspring is null)
+                        throw new ArgumentException("Code logice error: An offspring must be supplied in ConceptionStatusChangedEventArgs when status is Weaned");
+                    ConceptionDate = dateTime.AddMonths(-1 * Convert.ToInt32(offspring.Age + female.BreedParams.GestationLength, CultureInfo.InvariantCulture));
                     ConceptionDate = new DateTime(ConceptionDate.Year, ConceptionDate.Month, DateTime.DaysInMonth(ConceptionDate.Year, ConceptionDate.Month));
                     break;
                 case ConceptionStatus.Unsuccessful:

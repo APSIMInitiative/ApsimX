@@ -116,7 +116,7 @@ namespace Models.CLEM.Activities
                 {
                     resHolder = clemParent.FindAllChildren<ResourcesHolder>().FirstOrDefault() as ResourcesHolder;
                     finance = resHolder.FindResourceGroup<Finance>();
-                    if (!finance.Enabled)
+                    if (finance != null && !finance.Enabled)
                         finance = null;
                 }
 

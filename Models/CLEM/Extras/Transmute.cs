@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
@@ -84,14 +84,21 @@ namespace Models.CLEM
             {
                 ResourceGroup = (TransmuteResourceType as IModel).Parent as ResourceBaseWithTransactions;
 
-                var shortfallResourceType = (TransmuteResourceType as IModel).FindAncestor<IResourceType>();
+                var shortfallResourceType = (this as IModel).FindAncestor<IResourceType>();
                 shortfallPacketSize = (Parent as Transmutation).TransmutationPacketSize;
                 shortfallWholePackets = (Parent as Transmutation).UseWholePackets;
 
                 // get pricing of shortfall resource
                 if (shortfallResourceType != null && TransmuteStyle == TransmuteStyle.UsePricing)
                 {
-                    shortfallPricing = shortfallResourceType.Price(PurchaseOrSalePricingStyleType.Purchase);
+                    // get pricing
+                    if ((shortfallResourceType as CLEMResourceTypeBase).MarketStoreExists)
+                        if ((shortfallResourceType as CLEMResourceTypeBase).EquivalentMarketStore.PricingExists(PurchaseOrSalePricingStyleType.Purchase))
+                            shortfallPricing = (shortfallResourceType as CLEMResourceTypeBase).EquivalentMarketStore.Price(PurchaseOrSalePricingStyleType.Purchase);
+
+                    if(shortfallPricing is null)                    
+                        shortfallPricing = shortfallResourceType.Price(PurchaseOrSalePricingStyleType.Purchase);
+
                     shortfallPacketSize = shortfallPricing.PacketSize;
                     shortfallWholePackets = shortfallPricing.UseWholePackets;
 
@@ -103,6 +110,8 @@ namespace Models.CLEM
                             // link to first bank account
                             financeType = resources.FindResourceType<Finance, FinanceType>(this, FinanceTypeForTransactionsName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning);
                     }
+                    else
+                        transmutePricing = shortfallPricing;
                 }
             }
         }
@@ -116,7 +125,14 @@ namespace Models.CLEM
                     request.Required = shortfallPacketsNeeded * AmountPerPacket;
                     break;
                 case TransmuteStyle.UsePricing:
-                    request.Required = (shortfallPacketsNeeded * shortfallPricing.CurrentPrice) / transmutePricing.CurrentPrice;
+                    if (shortfallPricing.CurrentPrice > 0)
+                        if (transmutePricing.CurrentPrice > 0)
+                            // no value of transmute resource
+                            request.Required = 0;
+                        else
+                            request.Required = (shortfallPacketsNeeded * shortfallPricing.CurrentPrice) / transmutePricing.CurrentPrice;
+                    // else, there is no conversion, so assume the required is provided.
+
                     // check that sell whole packets are honoured
                     if (transmutePricing.UseWholePackets)
                     {
@@ -188,7 +204,7 @@ namespace Models.CLEM
                     object result = resources.FindResource<ResourceBaseWithTransactions>(TransmuteResourceTypeName.Split('.').First());
                     if (result == null)
                     {
-                        Summary.WriteWarning(this, $"Could not find resource group [r={TransmuteResourceTypeName.Split('.').First()}] in transmute [{this.Name}]{Environment.NewLine}The parent transmutation [{(this.Parent as CLEMModel).NameWithParent}] will not suceed without this resource and will not be performed");
+                        Summary.WriteMessage(this, $"Could not find resource group [r={TransmuteResourceTypeName.Split('.').First()}] in transmute [{this.Name}]{Environment.NewLine}The parent transmutation [{(this.Parent as CLEMModel).NameWithParent}] will not suceed without this resource and will not be performed", MessageType.Warning);
                     }
                     else
                     {
@@ -217,7 +233,7 @@ namespace Models.CLEM
                     if (transmutePricing is null)
                     {
                         string[] memberNames = new string[] { "Transmute resource pricing" };
-                        results.Add(new ValidationResult($"No resource pricing was found for [r={(TransmuteResourceType as CLEMModel).NameWithParent}] required for a price based transmute [{this.Name}]Provide a pricing for the transmute resource or use Direct transmute style", memberNames));
+                        results.Add(new ValidationResult($"No resource pricing was found for [r={(TransmuteResourceType as CLEMModel).NameWithParent}] required for a price based transmute [{this.Name}]{Environment.NewLine}Provide a pricing for the transmute resource or use Direct transmute style", memberNames));
                     }
                 }
             }

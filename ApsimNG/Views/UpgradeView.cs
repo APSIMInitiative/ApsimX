@@ -23,6 +23,7 @@
             public string IssueTitle { get; set; }
             public string IssueURL { get; set; }
             public string ReleaseURL { get; set; }
+            public uint RevisionNumber { get; set; }
         }
 
         /// <summary>
@@ -87,7 +88,7 @@
             listview1.Model = listmodel;
 
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            if (version.Revision == 0)
+            if (version.Build == 0)
             {
                 button1.Sensitive = false;
                 table2.Hide();
@@ -201,7 +202,7 @@
             if (File.Exists(tempLicenseFileName))
                 File.Delete(tempLicenseFileName);
 
-            if (version.Revision == 0)
+            if (version.Build == 0)
             {
                 button1.Sensitive = false;
                 table2.Hide();
@@ -225,7 +226,7 @@
                 upgrades = WebUtilities.CallRESTService<Upgrade[]>("https://apsimdev.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=" + version.Revision);
             foreach (Upgrade upgrade in oldVersions.Active ? allUpgrades : upgrades)
             {
-                string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.IssueNumber;
+                string versionNumber = $"{upgrade.ReleaseDate:yyyy.MM}.{upgrade.RevisionNumber}";
                 listmodel.AppendValues(versionNumber, upgrade.IssueTitle, "");
             }
             if (listmodel.IterNChildren() > 0)
@@ -552,6 +553,7 @@
                 Utility.Configuration.Settings.Email = emailBox.Text;
                 Utility.Configuration.Settings.Organisation = organisationBox.Text;
                 Utility.Configuration.Settings.Country = countryBox.GetActiveText();
+                Utility.Configuration.Settings.Save();
             }
             catch (Exception err)
             {

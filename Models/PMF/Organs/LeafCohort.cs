@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using APSIM.Shared.Documentation;
 using System.Collections.Generic;
 using System.Linq;
@@ -775,7 +775,7 @@ namespace Models.PMF.Organs
             {
                 if (Area > MaxArea)
                 {
-                    Summary.WriteWarning(this, "Initial area is more than max area for cohort " + Rank.ToString() + ".");
+                    Summary.WriteMessage(this, "Initial area is more than max area for cohort " + Rank.ToString() + ".", MessageType.Warning);
                     Area = MaxArea;
                 }
 

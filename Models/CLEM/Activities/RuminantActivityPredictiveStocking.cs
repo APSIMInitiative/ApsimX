@@ -108,7 +108,7 @@ namespace Models.CLEM.Activities
                 string[] memberNames = new string[] { "Ruminant group" };
                 results.Add(new ValidationResult("At least one [f=RuminantGroup] with a [Destock] reason and a [f=RuminantFilter] must be present under this [a=RuminantActivityPredictiveStocking] activity", memberNames));
             }
-            else if (this.FindAllChildren<RuminantGroup>().Where(a => a.Reason != RuminantStockGroupStyle.Destock).Count() > 0)
+            else if (this.FindAllChildren<RuminantGroup>().Where(a => a.Reason != RuminantGroupStyle.Remove).Count() > 0)
             {
                 string[] memberNames = new string[] { "Ruminant group" };
                 results.Add(new ValidationResult("Only [f=RuminantGroup] with a [Destock] reason are permitted under this [a=RuminantActivityPredictiveStocking] activity", memberNames));
@@ -220,7 +220,7 @@ namespace Models.CLEM.Activities
             HerdResource.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
             // remove individuals to sale as specified by destock groups
-            foreach (var item in FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock))
+            foreach (var item in FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantGroupStyle.Remove))
             {
                 // works with current filtered herd to obey filtering.
                 var herd = item.Filter(CurrentHerd(false))

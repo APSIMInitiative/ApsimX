@@ -1,4 +1,4 @@
-﻿namespace Models.GrazPlan
+namespace Models.GrazPlan
 {
     using APSIM.Shared.Utilities;
     using Models.Core;
@@ -3818,7 +3818,7 @@
         /// <param name="animals">The animal data</param>
         public void Add(StockAdd animals)
         {
-            outputSummary.WriteMessage(this, "Adding " + animals.Number.ToString() + ", " + animals.Genotype + " " + animals.Sex);
+            outputSummary.WriteMessage(this, "Adding " + animals.Number.ToString() + ", " + animals.Genotype + " " + animals.Sex, MessageType.Diagnostic);
             StockModel.Add(animals);
         }
 
@@ -3828,7 +3828,7 @@
         /// <param name="stock">The stock data</param>
         public void Buy(StockBuy stock)
         {
-            outputSummary.WriteMessage(this, "Buying " + stock.Number.ToString() + ", " + stock.Age.ToString() + " month old " + stock.Genotype + " " + stock.Sex.ToString() + " ");
+            outputSummary.WriteMessage(this, "Buying " + stock.Number.ToString() + ", " + stock.Age.ToString() + " month old " + stock.Genotype + " " + stock.Sex.ToString() + " ", MessageType.Diagnostic);
             StockModel.Buy(stock);
         }
 
@@ -3850,7 +3850,7 @@
             stock.Age = age;
             stock.Weight = weight;
             stock.FleeceWt = fleeceWeight;
-            outputSummary.WriteMessage(this, "Buying " + stock.Number.ToString() + ", " + stock.Age.ToString() + " month old " + stock.Genotype + " " + stock.Sex.ToString() + " ");
+            outputSummary.WriteMessage(this, "Buying " + stock.Number.ToString() + ", " + stock.Age.ToString() + " month old " + stock.Genotype + " " + stock.Sex.ToString() + " ", MessageType.Diagnostic);
             StockModel.Buy(stock);
         }
 
@@ -3878,7 +3878,7 @@
                 numSold = Math.Min(number, group.NoAnimals);
                 group.NoAnimals -= numSold;
             }
-            outputSummary.WriteMessage(this, $"Sold {number} animals");
+            outputSummary.WriteMessage(this, $"Sold {number} animals", MessageType.Diagnostic);
             return numSold;
         }
 
@@ -3901,7 +3901,7 @@
                 number -= numToSellFromThisGroup;
                 numSold += numToSellFromThisGroup;
             }
-            outputSummary.WriteMessage(this, $"Sold {numSold} animals");
+            outputSummary.WriteMessage(this, $"Sold {numSold} animals", MessageType.Diagnostic);
             return numSold;
         }
 
@@ -3914,7 +3914,7 @@
         /// <returns>cfw</returns>
         public double Shear(bool shearAdults, bool shearYoung, AnimalGroup group = null)
         {
-            this.outputSummary.WriteMessage(this, "Shearing animals");
+            this.outputSummary.WriteMessage(this, "Shearing animals", MessageType.Diagnostic);
             double totalCFW = 0;
             if (group == null)
             {
@@ -3932,7 +3932,7 @@
         /// <param name="group">The animal group to move.</param>
         public void Move(string paddockName, AnimalGroup group = null)
         {
-            this.outputSummary.WriteMessage(this, $"Moving animals to paddock {paddockName}");
+            this.outputSummary.WriteMessage(this, $"Moving animals to paddock {paddockName}", MessageType.Diagnostic);
             var paddockToMoveTo = StockModel.Paddocks.Find(p => p.Name.Equals(paddockName, StringComparison.InvariantCultureIgnoreCase));
             if (paddockToMoveTo == null)
                 throw new Exception($"Stock: attempt to place animals in non-existent paddock: {paddockName}");
@@ -3954,7 +3954,7 @@
         /// <param name="group">The animal group to mate. null denotes that all empty females of sufficient age should be mated.</param>
         public void Join(string mateTo, int mateDays, AnimalGroup group = null)
         {
-            outputSummary.WriteMessage(this, $"Joining animals to {mateTo}");
+            outputSummary.WriteMessage(this, $"Joining animals to {mateTo}", MessageType.Diagnostic);
 
             if (group == null)
             {
@@ -3975,7 +3975,7 @@
         /// <param name="group">The animal group to castrate. null denotes that each animal group should be processed in turn until the nominated number of offspring has been castrated.</param>
         public void Castrate(int number, AnimalGroup group = null)
         {
-            outputSummary.WriteMessage(this, $"Castrate {number} animals");
+            outputSummary.WriteMessage(this, $"Castrate {number} animals", MessageType.Diagnostic);
             if (group == null)
             {
                 foreach (var g in AnimalGroups)
@@ -4016,7 +4016,7 @@
                 msg += " males";
             else
                 msg += " females";
-            outputSummary.WriteMessage(this, msg);
+            outputSummary.WriteMessage(this, msg, MessageType.Diagnostic);
 
             if (group == null)
             {
@@ -4036,7 +4036,7 @@
         /// <param name="group">The animal group for which lactation is to end. Null denotes that each animal group should be processed in turn until the nominated number of cows has been dried off.</param>
         public void DryOff(int number, AnimalGroup group = null)
         {
-            outputSummary.WriteMessage(this, $"Drying off {number} animals.");
+            outputSummary.WriteMessage(this, $"Drying off {number} animals.", MessageType.Diagnostic);
             if (group == null)
                 StockModel.DryOff(AnimalGroups, number);
             else
@@ -4051,7 +4051,7 @@
         /// <returns>The new animal groups that were created.</returns>
         public IEnumerable<AnimalGroup> SplitByAge(int age, AnimalGroup group = null)
         {
-            outputSummary.WriteMessage(this, "Split animals by age.");
+            outputSummary.WriteMessage(this, "Split animals by age.", MessageType.Diagnostic);
             if (group == null)
                 return StockModel.SplitByAge(age, AnimalGroups);
             else
@@ -4066,7 +4066,7 @@
         /// <returns>The new animal groups that were created.</returns>
         public IEnumerable<AnimalGroup> SplitByWeight(double weight, AnimalGroup group = null)
         {
-            outputSummary.WriteMessage(this, "Split animals by weight.");
+            outputSummary.WriteMessage(this, "Split animals by weight.", MessageType.Diagnostic);
             if (group == null)
                 return StockModel.SplitByWeight(weight, AnimalGroups);
             else
@@ -4080,7 +4080,7 @@
         /// <returns>The new animal groups that were created.</returns>
         public IEnumerable<AnimalGroup> SplitByYoung(AnimalGroup group = null)
         {
-            outputSummary.WriteMessage(this, "Split young animals off.");
+            outputSummary.WriteMessage(this, "Split young animals off.", MessageType.Diagnostic);
             if (group == null)
                 return StockModel.SplitByYoung(AnimalGroups);
             else
@@ -4092,7 +4092,7 @@
         /// </summary>
         public void Sort()
         {
-            outputSummary.WriteMessage(this, "Sort animals by tag");
+            outputSummary.WriteMessage(this, "Sort animals by tag", MessageType.Diagnostic);
             StockModel.Sort();
         }
 

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -135,7 +135,7 @@ namespace Models.CLEM.Resources
                 if(!ind.Attributes.Exists(attribute))
                 {
                     string warningString = $"No mandatory attribute [{attribute.ToUpper()}] present for individual added by [a={model.Name}]";
-                    Warnings.CheckAndWrite(warningString, Summary, this);
+                    Warnings.CheckAndWrite(warningString, Summary, this, MessageType.Error);
                 }
             }
         }
@@ -162,7 +162,7 @@ namespace Models.CLEM.Resources
                     string warningString = warningMessage;
                     if(warningString == "")
                         warningString = $"No [{purchaseStyle}] price entry was found for [r={ind.Breed}] meeting the required criteria [f=age: {ind.Age}] [f=sex: {ind.Sex}] [f=weight: {ind.Weight:##0}]";
-                    Warnings.CheckAndWrite(warningString, Summary, this);
+                    Warnings.CheckAndWrite(warningString, Summary, this, MessageType.Warning);
                 }
                 return ind.CurrentPrice;
             }
@@ -213,7 +213,7 @@ namespace Models.CLEM.Resources
                                 if (!warningsMultipleEntry.Contains(criteria))
                             {
                                 warningsMultipleEntry.Add(criteria);
-                                Summary.WriteWarning(this, "Multiple specific [" + purchaseStyle.ToString() + "] price entries were found for [r=" + ind.Breed + "] where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".") + "\r\nOnly the first entry will be used. Price [" + matchCriteria.Value.ToString("#,##0.##") + "] [" + matchCriteria.PricingStyle.ToString() + "].");
+                                Summary.WriteMessage(this, "Multiple specific [" + purchaseStyle.ToString() + "] price entries were found for [r=" + ind.Breed + "] where [" + property + "]" + (value.ToUpper() != "TRUE" ? " = [" + value + "]." : ".") + "\r\nOnly the first entry will be used. Price [" + matchCriteria.Value.ToString("#,##0.##") + "] [" + matchCriteria.PricingStyle.ToString() + "].", MessageType.Warning);
                             }
                     }
 
@@ -239,7 +239,7 @@ namespace Models.CLEM.Resources
                         if (!warningsNotFound.Contains(criteria))
                         {
                             warningsNotFound.Add(criteria);
-                            Summary.WriteWarning(this, warningString);
+                            Summary.WriteMessage(this, warningString, MessageType.Warning);
                         }
                     }
                     ind.CurrentPrice = matchCriteria;
@@ -856,7 +856,7 @@ namespace Models.CLEM.Resources
         /// Proportion of SRW for zero calving/lambing rate
         /// </summary>
         [Category("Advanced", "Breeding")]
-        [Description("Proportion of SRW for zero Calving/lambing rate")]
+        [Description("Proportion of SRW required before conception possible (min size for mating)")]
         [Required, Proportion]
         public double CriticalCowWeight { get; set; }
 

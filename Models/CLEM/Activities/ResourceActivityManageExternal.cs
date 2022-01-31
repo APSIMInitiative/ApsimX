@@ -1,4 +1,4 @@
-﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -138,7 +138,7 @@ namespace Models.CLEM.Activities
                                 case "Models.CLEM.Resources.GrazeFoodStoreType":
                                 case "Models.CLEM.Resources.OtherAnimalsType":
                                     string warn = $"[a={this.Name}] does not support [r={resource.GetType()}]\r\nThis resource will be ignored. Contact developers for more information";
-                                    Warnings.CheckAndWrite(warn, Summary, this);
+                                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                                     resource = null;
                                     break;
                             default:
@@ -173,7 +173,7 @@ namespace Models.CLEM.Activities
                             else
                                 warn = $"[a={this.Name}] could not distinguish between multiple occurences of resource [r={resName}] provided by [x={fileResource.Name}] in the local [r=ResourcesHolder]\r\nEnsure all resource names are unique across stores, or use ResourceStore.ResourceType notation to specify resources in the input file";
 
-                            Warnings.CheckAndWrite(warn, Summary, this);
+                            Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                         }
                     }
                     if(resource != null)
@@ -240,7 +240,7 @@ namespace Models.CLEM.Activities
                     switch (OnPartialResourcesAvailableAction)
                     {
                         case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-                                Summary.WriteWarning(this, $"Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity [a={this.NameWithParent}]");
+                                Summary.WriteMessage(this, $"Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity [a={this.NameWithParent}]", MessageType.Warning);
                                 Status = ActivityStatus.Critical;
                                 throw new ApsimXException(this, $"Insufficient resources [r={AccountName}] for activity [a={this.NameWithParent}]");
                         case OnPartialResourcesAvailableActionTypes.SkipActivity:

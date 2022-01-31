@@ -2385,7 +2385,7 @@
                         if (numColumnsToPaste > numColumnsAvailable)
                             throw new Exception(string.Format("Unable to paste {0} column{1} of data into {2} non-readonly column{3}.", numColumnsToPaste, numColumnsToPaste == 1 ? string.Empty : "s", numColumnsAvailable, numColumnsAvailable == 1 ? string.Empty : "s"));
                         int numberSelectedCells = NumSelectedCells();
-                        if (numCellsToPaste > numberSelectedCells && numberSelectedCells > 1 && (ResponseType)MasterView.ShowMsgDialog("There's already data here. Do you want to replace it?", "APSIM Next Generation", MessageType.Question, ButtonsType.YesNo) != Gtk.ResponseType.Yes)
+                        if (numCellsToPaste > numberSelectedCells && numberSelectedCells > 1 && (ResponseType)MasterView.ShowMsgDialog("There's already data here. Do you want to replace it?", "APSIM Next Generation", Gtk.MessageType.Question, ButtonsType.YesNo) != Gtk.ResponseType.Yes)
                         {
                             // The number of selected cells is less than the number of cells that the user is attempting to paste.
                             // In this scenario, we ask for confirmation before proceeding with the paste operation.

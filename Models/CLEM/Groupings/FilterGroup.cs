@@ -33,15 +33,21 @@ namespace Models.CLEM
         public IEnumerable<string> Parameters => properties.Keys;
 
         /// <inheritdoc/>
-        public PropertyInfo GetProperty(string name) => properties[name];
+        public PropertyInfo GetProperty(string name) 
+        {
+            if (properties is null)
+                InitialiseFilters(false);
+
+            return properties[name]; 
+        }
 
         /// <summary>
-        /// Constructor
+        /// Clear all rules
         /// </summary>
-        public FilterGroup()
+        public void ClearRules()
         {
-            // needed for UI to access property lists
-            InitialiseFilters();
+            foreach (Filter filter in FindAllChildren<Filter>())
+                filter.ClearRule();
         }
 
         ///<inheritdoc/>
@@ -56,10 +62,11 @@ namespace Models.CLEM
         /// <summary>
         /// Initialise filter rules and dropdown lists of properties available for TFilter
         /// </summary>
-        public void InitialiseFilters()
+        public void InitialiseFilters(bool includeBuildRules = true)
         {
             properties = typeof(TFilter)
                 .GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
+                .Where(prop => Attribute.IsDefined(prop, typeof(FilterByPropertyAttribute)))
                 .ToDictionary(prop => prop.Name, prop => prop);
 
             var types = Assembly.GetExecutingAssembly()
@@ -69,7 +76,8 @@ namespace Models.CLEM
 
             foreach (var type in types)
             {
-                var props = type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance);
+                var props = type.GetProperties(BindingFlags.Public | BindingFlags.DeclaredOnly | BindingFlags.Instance)
+                                    .Where(prop => Attribute.IsDefined(prop, typeof(FilterByPropertyAttribute)));
                 foreach (var prop in props)
                 {
                     string key = prop.DeclaringType.Name;
@@ -82,6 +90,8 @@ namespace Models.CLEM
             foreach (Filter filter in FindAllChildren<Filter>())
             {
                 filter.Initialise();
+                if (includeBuildRules)
+                    filter.BuildRule();
             }
 
             sortList = FindAllChildren<ISort>();
@@ -93,21 +103,48 @@ namespace Models.CLEM
             if (source is null)
                 throw new NullReferenceException("Cannot filter a null object");
 
-            if (filterRules is null)
-                filterRules = FindAllChildren<Filter>().Select(filter => filter.Compile<IFilterable>());
+            filterRules ??= FindAllChildren<Filter>().Select(filter => filter.Rule);
 
-            // calculate the specified number/proportion of the filtered group to take from group
-            int number = source.Count();
-            foreach (var take in FindAllChildren<TakeFromFiltered>())
-                number = take.NumberToTake(number);
-
-            var filtered = (filterRules.Any() ? source.Where(item => filterRules.All(rule => rule(item))) : source);
+            var filtered = filterRules.Any() ? source.Where(item => filterRules.All(rule => rule is null ? false : rule(item))) : source;
 
             if(sortList?.Any()??false)
                 // add sorting and take specified
-                return filtered.Sort(sortList).Take(number); 
-            else
-                return filtered.Take(number);
+                filtered = filtered.Sort(sortList);
+
+            // do all takes and skips
+            foreach (var take in FindAllChildren<TakeFromFiltered>())
+            {
+                int number = 0;
+                switch (take.TakeStyle)
+                {
+                    case TakeFromFilterStyle.TakeProportion:
+                    case TakeFromFilterStyle.SkipProportion:
+                        number = take.NumberToTake(filtered.Count());
+                        break;
+                    case TakeFromFilterStyle.TakeIndividuals:
+                    case TakeFromFilterStyle.SkipIndividuals:
+                        number = take.NumberToTake(0);
+                        break;
+                }
+                switch (take.TakeStyle)
+                {
+                    case TakeFromFilterStyle.TakeProportion:
+                    case TakeFromFilterStyle.TakeIndividuals:
+                        if (take.TakePositionStyle == TakeFromFilteredPositionStyle.Start)
+                            filtered = filtered.Take(number);
+                        else
+                            filtered = filtered.TakeLast(number);
+                        break;
+                    case TakeFromFilterStyle.SkipProportion:
+                    case TakeFromFilterStyle.SkipIndividuals:
+                        if (take.TakePositionStyle == TakeFromFilteredPositionStyle.Start)
+                            filtered = filtered.Skip(number);
+                        else
+                            filtered = filtered.SkipLast(number);
+                        break;
+                }
+            }
+            return filtered;
         }
 
         ///<inheritdoc/>
@@ -116,10 +153,9 @@ namespace Models.CLEM
             if (item == null)
                 throw new NullReferenceException("Cannot filter a null object");
 
-            if (filterRules is null)
-                filterRules = FindAllChildren<Filter>().Select(filter => filter.Compile<IFilterable>());
+            filterRules ??= FindAllChildren<Filter>().Select(filter => filter.Rule);
 
-            return filterRules.All(rule => rule(item));
+            return filterRules.All(rule => rule is null ? false : rule(item));
         }
 
         #region descriptive summary
@@ -148,8 +184,6 @@ namespace Models.CLEM
                 return htmlWriter.ToString();
             }
         }
-
-
         #endregion
     }
 }

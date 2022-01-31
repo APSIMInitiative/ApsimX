@@ -6,6 +6,7 @@ using APSIM.Shared.Utilities;
 using CommandLine;
 using Models.Core;
 using Models.Core.ApsimFile;
+using Models.Core.Run;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -53,7 +54,27 @@ namespace APSIM.Cli
 
         private static void Run(RunOptions options)
         {
-            throw new NotImplementedException();
+            if (options.Files == null || !options.Files.Any())
+            {
+                throw new ArgumentException($"No files were specified");
+            }
+            IEnumerable<string> files = options.Files.SelectMany(f => DirectoryUtilities.FindFiles(f, options.Recursive));
+            if (!files.Any())
+            {
+                files = options.Files;
+            }
+            foreach (string file in files)
+            {
+                Simulations sims = FileFormat.ReadFromFile<Simulations>(file, e => throw e, false);
+
+                Runner runner = new Runner(sims);
+                List<Exception> errors = runner.Run();
+
+                if (errors != null && errors.Count > 0)
+                {
+                    throw new AggregateException("File ran with errors", errors);
+                }
+            }
         }
 
         private static void Document(DocumentOptions options)

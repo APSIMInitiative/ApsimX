@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Utilities;
+using APSIM.Shared.Utilities;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Reporting
 {
@@ -32,7 +33,7 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 2, "Updated to enable ResourceUnitsConverter to be used.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/Ledgers.htm")]
-    public class ReportResourceLedger : Models.Report
+    public class ReportResourceLedger : Models.Report, ICLEMUI
     {
         [Link]
         private ResourcesHolder resources = null;
@@ -75,6 +76,9 @@ namespace Models.CLEM.Reporting
         [Description("Include all unit conversions")]
         public bool IncludeConversions { get; set; }
 
+        /// <inheritdoc/>
+        public string SelectedTab { get; set; }
+
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
         /// <param name="e">Event arguments</param>
@@ -102,7 +106,7 @@ namespace Models.CLEM.Reporting
                 CLEMModel model = resources.FindResource<ResourceBaseWithTransactions>(ResourceGroupsToReport);
                 if (model == null)
                 {
-                    summary.WriteWarning(this, String.Format("Invalid resource group [{0}] in ReportResourceBalances [{1}]\r\nEntry has been ignored", this.ResourceGroupsToReport, this.Name));
+                    summary.WriteMessage(this, String.Format("Invalid resource group [{0}] in ReportResourceBalances [{1}]\r\nEntry has been ignored", this.ResourceGroupsToReport, this.Name), MessageType.Warning);
                 }
                 else
                 {
