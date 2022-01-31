@@ -134,8 +134,8 @@
                     double TopOfLayer = DepthSoFar;
                     double BottomOfLayer = DepthSoFar + ThisThickness;
 
-                    TopOfLayer = Math.Round(TopOfLayer, 3);
-                    BottomOfLayer = Math.Round(BottomOfLayer, 3);
+                    TopOfLayer = Math.Round(TopOfLayer, 1);
+                    BottomOfLayer = Math.Round(BottomOfLayer, 1);
 
                     Strings[i] = TopOfLayer.ToString() + "-" + BottomOfLayer.ToString();
                     DepthSoFar = BottomOfLayer;
