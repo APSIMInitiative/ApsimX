@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using APSIM.Shared.Utilities;
 using Gtk;
 using UserInterface.Hotkeys;
 
@@ -28,12 +29,12 @@ The APSIM Initiative would appreciate an acknowledgement in your research paper 
         /// <summary>
         /// Window in which help info is displayed.
         /// </summary>
-        private Dialog window;
+        private Window window;
 
         /// <summary>
         /// Label containing link to the next gen website.
         /// </summary>
-        private LinkButton website;
+        private Button website;
 
         /// <summary>
         /// Constructor. Initialises the view.
@@ -41,19 +42,22 @@ The APSIM Initiative would appreciate an acknowledgement in your research paper 
         /// <param name="owner"></param>
         public HelpView(MainView owner) : base(owner)
         {
-            window = new Dialog("Help", owner.MainWidget as Window, DialogFlags.DestroyWithParent | DialogFlags.Modal);
+            window = new Window("Help");
+            window.TransientFor = owner.MainWidget as Window;
+            window.Modal = true;
+            window.DestroyWithParent = true;
             window.WindowPosition = WindowPosition.Center;
+            window.Resizable = true;
             window.DeleteEvent += OnDelete;
             window.Destroyed += OnClose;
             window.Resizable = false;
             VBox container = new VBox(true, 10);
             container.Homogeneous = false;
+            container.Margin = 10;
 
-            Frame websiteFrame = new Frame("Website");
-            website = new LinkButton("https://apsimnextgeneration.netlify.com", "Apsim Next Generation Website");
-            website.Clicked += OnWebsiteClicked;
-            websiteFrame.Add(website);
-            container.PackStart(websiteFrame, false, false, 0);
+            website = new Button("Apsim Next Generation Website");
+            website.ButtonPressEvent += OnWebsiteClicked;
+            container.PackStart(website, false, false, 0);
 
             Button keyboardShortcuts = new Button("Keyboard Shortcuts");
             keyboardShortcuts.ButtonPressEvent += OnShowKeyboardShortcuts;
@@ -68,12 +72,16 @@ The APSIM Initiative would appreciate an acknowledgement in your research paper 
             // word wrapping, the label's text will not resize if we
             // resize the window, and the default width will be very
             // narrow. This will force the label to be 640px wide.
-            citation.WidthRequest = 640;
+            window.DefaultWidth = 640;
             citation.Wrap = true;
 
             citationFrame.Add(citation);
             container.PackStart(citationFrame, true, true, 0);
-            window.AddActionWidget(container, ResponseType.None);
+
+            ScrolledWindow scroller = new ScrolledWindow();
+            scroller.PropagateNaturalHeight = true;
+            scroller.Add(container);
+            window.Add(scroller);
             mainWidget = window;
         }
 
@@ -82,7 +90,7 @@ The APSIM Initiative would appreciate an acknowledgement in your research paper 
         {
             try
             {
-                GLib.Signal.Emit(window, "delete-event");
+                window.Close();
                 KeyboardShortcutsView shortcutsDialog = new KeyboardShortcutsView();
                 shortcutsDialog.Populate(new MainMenuHotkeys().GetHotkeys());
                 shortcutsDialog.Show();
@@ -98,11 +106,12 @@ The APSIM Initiative would appreciate an acknowledgement in your research paper 
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="e">Event Arguments.</param>
+        [GLib.ConnectBefore]
         private void OnWebsiteClicked(object sender, EventArgs e)
         {
             try
             {
-                Process.Start(website.Uri);
+                ProcessUtilities.ProcessStart("https://apsimnextgeneration.netlify.com");
             }
             catch (Exception err)
             {
@@ -161,7 +170,7 @@ The APSIM Initiative would appreciate an acknowledgement in your research paper 
         {
             try
             {
-                website.Clicked += OnWebsiteClicked;
+                website.ButtonPressEvent += OnWebsiteClicked;
                 window.DeleteEvent -= OnDelete;
                 window.Destroyed -= OnClose;
                 window.Dispose();
