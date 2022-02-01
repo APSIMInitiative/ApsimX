@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using Gtk;
+using UserInterface.Hotkeys;
 
 namespace UserInterface.Views
 {
@@ -54,6 +55,10 @@ The APSIM Initiative would appreciate an acknowledgement in your research paper 
             websiteFrame.Add(website);
             container.PackStart(websiteFrame, false, false, 0);
 
+            Button keyboardShortcuts = new Button("Keyboard Shortcuts");
+            keyboardShortcuts.ButtonPressEvent += OnShowKeyboardShortcuts;
+            container.PackStart(keyboardShortcuts, false, false, 0);
+
             Frame citationFrame = new Frame("Acknowledgement");
             Label citation = new Label(citationMarkup);
             citation.Selectable = true;
@@ -70,6 +75,22 @@ The APSIM Initiative would appreciate an acknowledgement in your research paper 
             container.PackStart(citationFrame, true, true, 0);
             window.AddActionWidget(container, ResponseType.None);
             mainWidget = window;
+        }
+
+        [GLib.ConnectBefore]
+        private void OnShowKeyboardShortcuts(object o, ButtonPressEventArgs args)
+        {
+            try
+            {
+                GLib.Signal.Emit(window, "delete-event");
+                KeyboardShortcutsView shortcutsDialog = new KeyboardShortcutsView();
+                shortcutsDialog.Populate(new MainMenuHotkeys().GetHotkeys());
+                shortcutsDialog.Show();
+            }
+            catch (Exception error)
+            {
+                ShowError(error);
+            }
         }
 
         /// <summary>
