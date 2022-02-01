@@ -8,11 +8,11 @@ namespace UserInterface.Hotkeys
         /// <summary>
         /// The keyboard shortcut.
         /// </summary>
-        public string Shortcut { get; }
+        string Shortcut { get; }
 
         /// <summary>
         /// A description of the hotkey's effects.
         /// </summary>
-        public string Description { get; }
+        string Description { get; }
     }
 }
