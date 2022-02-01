@@ -1002,9 +1002,12 @@
         /// </summary>
         public void HideProgressBar()
         {
-            progressBar.Visible = false;
-            stopButton.Visible = false;
-            lblStatus.Hide();
+            Application.Invoke(delegate
+            {
+                progressBar.Visible = false;
+                stopButton.Visible = false;
+                lblStatus.Hide();
+            });
         }
 
         /// <summary>User is trying to close the application - allow that to happen?</summary>
@@ -1149,6 +1152,24 @@
             Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
             Clipboard cb = Clipboard.Get(modelClipboard);
             cb.Text = text;
+        }
+
+        /// <inheritdoc />
+        public (int, bool) GetCurrentTab()
+        {
+            Notebook notebook = GetCurrentNotebook();
+            if (notebook == null)
+                return (-1, false);
+
+            bool onLeft = notebook.Name == notebook1.Name;
+            return (notebook.CurrentPage, onLeft);
+        }
+
+        private Notebook GetCurrentNotebook()
+        {
+            if (!notebook2.Visible)
+                return notebook1;
+            return hpaned1.FocusChild as Notebook;
         }
     }
 

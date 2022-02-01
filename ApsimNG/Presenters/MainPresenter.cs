@@ -521,6 +521,26 @@
         }
 
         /// <summary>
+        /// Get the currently active explorer presenter instance.
+        /// Return null if none are active.
+        /// </summary>
+        public ExplorerPresenter GetCurrentExplorerPresenter()
+        {
+            (int index, bool onLeft) = view.GetCurrentTab();
+
+            // The view has an extra tab ("home") which is not included in
+            // the presenters list. Our index needs to account for this
+            // offset.
+            index--;
+
+            List<IPresenter> presenters = onLeft ? Presenters1 : presenters2;
+            if (index < 0 || index >= presenters.Count)
+                return null;
+
+            return presenters[index] as ExplorerPresenter;
+        }
+
+        /// <summary>
         /// Updates display of the list of most-recently-used files.
         /// </summary>
         public void UpdateMRUDisplay()
