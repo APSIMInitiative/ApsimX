@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
-  "Version": 147,
+  "ExplorerWidth": 249,
+  "Version": 148,
   "Name": "Simulations",
   "Children": [
     {
@@ -994,7 +994,7 @@
                           "$type": "Models.Functions.Constant, Models",
                           "FixedValue": 1.1,
                           "Units": null,
-                          "Name": "Constant",
+                          "Name": "g_per_oCd",
                           "Children": [],
                           "Enabled": true,
                           "ReadOnly": false
@@ -1683,7 +1683,7 @@
                 },
                 {
                   "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1000.0,
+                  "FixedValue": 0.0,
                   "Units": null,
                   "Name": "FixationRate",
                   "Children": [],
@@ -8719,13 +8719,139 @@
                 {
                   "$type": "Models.Factorial.Factor, Models",
                   "Specification": "",
+                  "Name": "MaxRootingDepth",
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[SowAndHarvest].Script.MaxRootDep = 600"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "60cm",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[SowAndHarvest].Script.MaxRootDep = 900"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "90cm",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[SowAndHarvest].Script.MaxRootDep = 1200"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "120cm",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[SowAndHarvest].Script.MaxRootDep = 1500"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "150cm",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[SowAndHarvest].Script.MaxRootDep = 2000"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "200cm",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "",
+                  "Name": "NReplacement",
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[ApplyFertOnDates].Script.Amount = 50"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Low",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[ApplyFertOnDates].Script.Amount = 150"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Mid",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[ApplyFertOnDates].Script.Amount = 300"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "High",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[ApplyFertOnDates].Script.Amount = 600"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Extreame",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "",
                   "Name": "Sowyear",
                   "Children": [
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Clock].StartDate = 1999-11-15",
-                        "[Clock].EndDate = 2000-11-15"
+                        "[Clock].StartDate = 1999-08-01",
+                        "[Clock].EndDate = 2000-08-01"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8737,8 +8863,8 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Clock].StartDate = 2000-11-15",
-                        "[Clock].EndDate = 2001-11-15"
+                        "[Clock].StartDate = 2000-08-01",
+                        "[Clock].EndDate = 2001-08-01"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8750,8 +8876,8 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Clock].StartDate = 2001-11-15",
-                        "[Clock].EndDate = 2002-11-15"
+                        "[Clock].StartDate = 2001-08-01",
+                        "[Clock].EndDate = 2002-08-01"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8763,8 +8889,8 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Clock].StartDate = 2002-11-15",
-                        "[Clock].EndDate = 2003-11-15"
+                        "[Clock].StartDate = 2002-08-01",
+                        "[Clock].EndDate = 2003-08-01"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8776,8 +8902,8 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Clock].StartDate = 2003-11-15",
-                        "[Clock].EndDate = 2004-11-15"
+                        "[Clock].StartDate = 2003-08-01",
+                        "[Clock].EndDate = 2004-08-01"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8789,8 +8915,8 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Clock].StartDate = 2004-11-15",
-                        "[Clock].EndDate = 2005-11-15"
+                        "[Clock].StartDate = 2004-08-01",
+                        "[Clock].EndDate = 2005-08-01"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8802,8 +8928,8 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Clock].StartDate = 2005-11-15",
-                        "[Clock].EndDate = 2006-11-15"
+                        "[Clock].StartDate = 2005-08-01",
+                        "[Clock].EndDate = 2006-08-01"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8815,8 +8941,8 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Clock].StartDate = 2006-11-15",
-                        "[Clock].EndDate = 2007-11-15"
+                        "[Clock].StartDate = 2006-08-01",
+                        "[Clock].EndDate = 2007-08-01"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8828,8 +8954,8 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Clock].StartDate = 2007-11-15",
-                        "[Clock].EndDate = 2008-11-15"
+                        "[Clock].StartDate = 2007-08-01",
+                        "[Clock].EndDate = 2008-08-01"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8841,8 +8967,8 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Clock].StartDate = 2008-11-15",
-                        "[Clock].EndDate = 2009-11-15"
+                        "[Clock].StartDate = 2008-08-01",
+                        "[Clock].EndDate = 2009-08-01"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8854,8 +8980,8 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Clock].StartDate = 2009-11-15",
-                        "[Clock].EndDate = 2010-11-15"
+                        "[Clock].StartDate = 2009-08-01",
+                        "[Clock].EndDate = 2010-08-01"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8867,8 +8993,8 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Clock].StartDate = 2010-11-15",
-                        "[Clock].EndDate = 2011-11-15"
+                        "[Clock].StartDate = 2010-08-01",
+                        "[Clock].EndDate = 2011-08-01"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8880,8 +9006,8 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Clock].StartDate = 2011-11-15",
-                        "[Clock].EndDate = 2012-11-15"
+                        "[Clock].StartDate = 2011-08-01",
+                        "[Clock].EndDate = 2012-108-01"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8893,8 +9019,8 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Clock].StartDate = 2012-11-15",
-                        "[Clock].EndDate = 2013-11-15"
+                        "[Clock].StartDate = 2012-08-01",
+                        "[Clock].EndDate = 2013-08-01"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8906,8 +9032,8 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Clock].StartDate = 2013-11-15",
-                        "[Clock].EndDate = 2014-11-15"
+                        "[Clock].StartDate = 2013-08-01",
+                        "[Clock].EndDate = 2014-08-01"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8919,8 +9045,8 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Clock].StartDate = 2014-11-15",
-                        "[Clock].EndDate = 2015-11-15"
+                        "[Clock].StartDate = 2014-08-01",
+                        "[Clock].EndDate = 2015-08-01"
                       ],
                       "Paths": null,
                       "Values": null,
@@ -8932,12 +9058,159 @@
                     {
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
-                        "[Clock].StartDate = 2015-11-15",
-                        "[Clock].EndDate = 2016-11-15"
+                        "[Clock].StartDate = 2015-08-01",
+                        "[Clock].EndDate = 2016-08-01"
                       ],
                       "Paths": null,
                       "Values": null,
                       "Name": "2015",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "",
+                  "Name": "PotentialYield",
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[SowAndHarvest].Script.PotGrowth = 0.7"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Low",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[SowAndHarvest].Script.PotGrowth = 0.9"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Mid",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[SowAndHarvest].Script.PotGrowth = 1.1"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "High",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[SowAndHarvest].Script.PotGrowth = 1.3"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "WorldRecord",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "",
+                  "Name": "InitialN",
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Soil].Chemical.NO3N = 4.000,4.00,0.000,0.000,0.000,0.000,0.000"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Low",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Soil].Chemical.NO3N = 8.0000,8.000,0.000,0.000,0.000,0.000,0.000"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Mid",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Soil].Chemical.NO3N = 16.000,16.000,0.000,0.000,0.000,0.000,0.000"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "High",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[Soil].Chemical.NO3N = 32.000,32.000,0.000,0.000,0.000,0.000,0.000"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Extreame",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "",
+                  "Name": "Irrigation",
+                  "Children": [
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[AutomaticIrrigation].Script.Irrigation_Yes_No = yes"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "On",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Factorial.CompositeFactor, Models",
+                      "Specifications": [
+                        "[AutomaticIrrigation].Script.Irrigation_Yes_No = no"
+                      ],
+                      "Paths": null,
+                      "Values": null,
+                      "Name": "Off",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -8972,7 +9245,7 @@
             },
             {
               "$type": "Models.Clock, Models",
-              "Start": "1999-04-10T00:00:00",
+              "Start": "1999-08-01T00:00:00",
               "End": "2015-12-31T00:00:00",
               "Name": "Clock",
               "Children": [],
@@ -9041,15 +9314,6 @@
                   "Children": [
                     {
                       "$type": "Models.Soils.Chemical, Models",
-                      "Depth": [
-                        "0-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180",
-                        "180-200"
-                      ],
                       "Thickness": [
                         300.0,
                         300.0,
@@ -9102,15 +9366,6 @@
                     },
                     {
                       "$type": "Models.Soils.Physical, Models",
-                      "Depth": [
-                        "0-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150",
-                        "150-180",
-                        "180-200"
-                      ],
                       "Thickness": [
                         300.0,
                         300.0,
@@ -9380,14 +9635,6 @@
                     },
                     {
                       "$type": "Models.Soils.Organic, Models",
-                      "Depth": [
-                        "0-10",
-                        "10-30",
-                        "30-60",
-                        "60-90",
-                        "90-120",
-                        "120-150"
-                      ],
                       "FOMCNRatio": 30.0,
                       "Thickness": [
                         100.0,
@@ -9585,7 +9832,7 @@
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Newtonsoft.Json;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.PMF.Phen;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant SPRUM;\r\n        [Link] private Clock Clock;\r\n        [Link] private Simulation sim;\r\n        [Link] Zone zone;\r\n        [Link] private Summary Summary;\r\n        [Link(Type = LinkType.Path, Path = \"[SPRUM].Phenology\")]\r\n        private Phenology phenology;\r\n        \r\n        [Description(\"Cultivar\")]\r\n        public string Cultivar { get; set; }\r\n        [Description(\"Maximum Root Depth (mm)\")]\n        public double MaxRootDep { get; set;}\r\n        \r\n        [JsonIgnore] public bool Sown { get; set; }\r\n        [JsonIgnore] public bool Harvested { get; set; }\r\n        [JsonIgnore] public bool EndSet { get; set; }\r\n        [JsonIgnore] public int DAS { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Sown = false;\r\n            Harvested = false;\r\n            EndSet = false;\r\n            DAS=0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Sown == false)\r\n            {\r\n                SPRUM.Sow(population: 200, cultivar: Cultivar, depth: MaxRootDep, rowSpacing: 150, budNumber: 1);\r\n                Sown = true;\r\n                zone.Set(\"[SPRUM].Root.MaximumRootDepth.FixedValue\", MaxRootDep);\r\n            }\r\n            \r\n            DAS+=1;\r\n\r\n        }\r\n    }\r\n}\r\n                \r\n",
+                  "Code": "using Newtonsoft.Json;\r\nusing System.Xml.Serialization;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.PMF.Phen;\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private Plant SPRUM;\r\n        [Link] private Clock Clock;\r\n        [Link] private Simulation sim;\r\n        [Link] Zone zone;\r\n        [Link] private Summary Summary;\r\n        [Link(Type = LinkType.Path, Path = \"[SPRUM].Phenology\")]\r\n        private Phenology phenology;\r\n        \r\n        [Description(\"Cultivar\")]\r\n        public string Cultivar { get; set; }\r\n        [Description(\"Maximum Root Depth (mm)\")]\n        public double MaxRootDep { get; set;}\n        [Description(\"potential growth rate (g_dm_oCd)\")]\n        public double PotGrowth { get; set;}\r\n        \r\n        [JsonIgnore] public bool Sown { get; set; }\r\n        [JsonIgnore] public bool Harvested { get; set; }\r\n        [JsonIgnore] public bool EndSet { get; set; }\r\n        [JsonIgnore] public int DAS { get; set; }\r\n        \r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnSimulationCommencing(object sender, EventArgs e)\r\n        {\r\n            Sown = false;\r\n            Harvested = false;\r\n            EndSet = false;\r\n            DAS=0;\r\n        }\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if (Sown == false)\r\n            {\r\n                SPRUM.Sow(population: 200, cultivar: Cultivar, depth: MaxRootDep, rowSpacing: 150, budNumber: 1);\r\n                Sown = true;\n                zone.Set(\"[SPRUM].Root.MaximumRootDepth.FixedValue\", MaxRootDep);\r\n                zone.Set(\"[SPRUM].Stover.Photosynthesis.Potential.g_per_oCd.FixedValue\", PotGrowth);\r\n            }\r\n            \r\n            DAS+=1;\r\n\r\n        }\r\n    }\r\n}\r\n                \r\n",
                   "Parameters": [
                     {
                       "Key": "Cultivar",
@@ -9594,6 +9841,10 @@
                     {
                       "Key": "MaxRootDep",
                       "Value": "2000"
+                    },
+                    {
+                      "Key": "PotGrowth",
+                      "Value": "1.1"
                     }
                   ],
                   "Name": "SowAndHarvest",
@@ -9610,7 +9861,7 @@
                     },
                     {
                       "Key": "FertiliserDates",
-                      "Value": "1-dec"
+                      "Value": "1-Aug, 1-Sep, 1-Nov, 1-dec, 1-Jan, 1-Feb, 1-Mar"
                     },
                     {
                       "Key": "Amount",
@@ -9801,8 +10052,8 @@
               "Position": 0,
               "Inverted": false,
               "CrossesAtZero": false,
-              "Minimum": null,
-              "Maximum": null,
+              "Minimum": 0.0,
+              "Maximum": 1.0,
               "Interval": null
             }
           ],
@@ -9811,7 +10062,7 @@
           "AnnotationLocation": 0,
           "DisabledSeries": [],
           "LegendOutsideGraph": false,
-          "Name": "Graph1",
+          "Name": "Cover",
           "Children": [
             {
               "$type": "Models.Series, Models",
@@ -9900,7 +10151,7 @@
               "Cumulative": false,
               "CumulativeX": false,
               "Filter": null,
-              "Name": "Product",
+              "Name": "Uptake",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
@@ -9928,7 +10179,71 @@
               "Cumulative": false,
               "CumulativeX": false,
               "Filter": null,
-              "Name": "Photosynthesis",
+              "Name": "TotalN",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Graph, Models",
+          "Caption": null,
+          "Axis": [
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 3,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            },
+            {
+              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+              "Title": null,
+              "Position": 0,
+              "Inverted": false,
+              "CrossesAtZero": false,
+              "Minimum": null,
+              "Maximum": null,
+              "Interval": null
+            }
+          ],
+          "LegendPosition": 0,
+          "LegendOrientation": 0,
+          "AnnotationLocation": 0,
+          "DisabledSeries": [],
+          "LegendOutsideGraph": false,
+          "Name": "RootDepth",
+          "Children": [
+            {
+              "$type": "Models.Series, Models",
+              "Type": 1,
+              "XAxis": 3,
+              "YAxis": 0,
+              "ColourArgb": -11094807,
+              "FactorToVaryColours": null,
+              "FactorToVaryMarkers": null,
+              "FactorToVaryLines": null,
+              "Marker": 0,
+              "MarkerSize": 0,
+              "Line": 0,
+              "LineThickness": 0,
+              "TableName": "Report",
+              "XFieldName": "SPRUM.DaysAfterSowing",
+              "YFieldName": "SPRUM.Root.Depth",
+              "X2FieldName": null,
+              "Y2FieldName": null,
+              "ShowInLegend": false,
+              "IncludeSeriesNameInLegend": false,
+              "Cumulative": false,
+              "CumulativeX": false,
+              "Filter": null,
+              "Name": "Root",
               "Children": [],
               "Enabled": true,
               "ReadOnly": false
