@@ -6,15 +6,6 @@
   "Name": "Simulations",
   "Children": [
     {
-      "$type": "Models.Memo, Models",
-      "Text": "\r\n# The APSIM Oats Model\r\n \r\n_Allan Peake, Hamish Brown, Rob Zyskowski, Edmar I. Teixeira, Neil Huth_",
-      "Name": "TitlePage",
-      "Children": [],
-      "IncludeInDocumentation": true,
-      "Enabled": true,
-      "ReadOnly": false
-    },
-    {
       "$type": "Models.Core.Replacements, Models",
       "Name": "Replacements",
       "Children": [
@@ -1010,7 +1001,17 @@
                                 }
                               ],
                               "Name": "Irrig",
-                              "Children": [],
+                              "Children": [
+                                {
+                                  "$type": "Models.Memo, Models",
+                                  "Text": "Added an Irrigation on 30 Oct after looking at data and seeing a Panicle.",
+                                  "Name": "Memo",
+                                  "Children": [],
+                                  "IncludeInDocumentation": true,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -1157,15 +1158,6 @@
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Memo, Models",
-                              "Text": "Added an Irrigation on 30 Oct after looking at data and seeing a Panicle.",
-                              "Name": "Memo",
-                              "Children": [],
                               "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
@@ -8674,7 +8666,7 @@
                       "Children": [
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "Nit",
                           "Children": [
                             {
@@ -8723,7 +8715,7 @@
                         },
                         {
                           "$type": "Models.Factorial.Factor, Models",
-                          "Specification": null,
+                          "Specification": "",
                           "Name": "Irr",
                           "Children": [
                             {

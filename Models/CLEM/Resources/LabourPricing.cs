@@ -14,10 +14,10 @@ namespace Models.CLEM.Resources
     /// User entry of Labour prices
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyTablePresenter")]
+    [ViewName("UserInterface.Views.PropertyMultiModelView")]
+    [PresenterName("UserInterface.Presenters.PropertyMultiModelPresenter")]
     [ValidParent(ParentType = typeof(Labour))]
-    [Description("This component holds all Labour Price Entries that define the value of individuals.")]
+    [Description("Holds all labour price entries that define the pay rate of individuals")]
     [Version(1, 0, 1, "Initial release")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourPricing.htm")]
     public class LabourPricing : CLEMModel, IValidatableObject
@@ -58,12 +58,8 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             string html = "";
             if (this.Children.OfType<LabourPriceGroup>().Count() == 0)
@@ -75,28 +71,20 @@ namespace Models.CLEM.Resources
             return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerClosingTags()
         {
             string html = "";
             html += "</table>";
             return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerOpeningTags()
         {
             string html = "";
             if (this.Children.OfType<LabourPriceGroup>().Count() > 0)
-            {
                 html += "<table><tr><th>Name</th><th>Filter</th><th>Rate per day</th></tr>";
-            }
             return html;
         }
 

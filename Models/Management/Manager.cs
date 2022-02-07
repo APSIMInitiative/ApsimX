@@ -9,6 +9,7 @@
     using System.Drawing;
     using System.Reflection;
     using Newtonsoft.Json;
+    using APSIM.Shared.Documentation;
 
     /// <summary>
     /// The manager model
@@ -24,7 +25,7 @@
     [ValidParent(ParentType = typeof(Factorial.CompositeFactor))]
     [ValidParent(ParentType = typeof(Factorial.Factor))]
     [ValidParent(ParentType = typeof(Soils.Soil))]
-    public class Manager : Model, IOptionallySerialiseChildren, ICustomDocumentation
+    public class Manager : Model, IOptionallySerialiseChildren
     {
         [NonSerialized]
         [Link]
@@ -107,6 +108,7 @@
         /// </summary>
         public override void OnCreated()
         {
+            base.OnCreated();
             afterCreation = true;
 
             // During ModelReplacement.cs, OnCreated is called. When this happens links haven't yet been
@@ -175,7 +177,7 @@
                             if (property != null)
                             {
                                 object value;
-                                if (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("["))
+                                if ( (typeof(IModel).IsAssignableFrom(property.PropertyType) || property.PropertyType.IsInterface) && (parameter.Value.StartsWith(".") || parameter.Value.StartsWith("[")) )
                                     value = this.FindByPath(parameter.Value)?.Value;
                                 else if (property.PropertyType == typeof(IPlant))
                                     value = this.FindInScope(parameter.Value);
@@ -202,7 +204,7 @@
 
         /// <summary>Get all parameters from the script model and store in our parameters list.</summary>
         /// <returns></returns>
-        private void GetParametersFromScriptModel()
+        public void GetParametersFromScriptModel()
         {
             if (Children.Count > 0)
             {
@@ -214,7 +216,8 @@
                 foreach (PropertyInfo property in script.GetType().GetProperties(BindingFlags.Instance | BindingFlags.DeclaredOnly | BindingFlags.Public))
                 {
                     if (property.CanRead && property.CanWrite &&
-                        ReflectionUtilities.GetAttribute(property, typeof(JsonIgnoreAttribute), false) == null)
+                        ReflectionUtilities.GetAttribute(property, typeof(JsonIgnoreAttribute), false) == null &&
+                        Attribute.IsDefined(property, typeof(DescriptionAttribute)))
                     {
                         object value = property.GetValue(script, null);
                         if (value == null)
@@ -229,18 +232,19 @@
             }
         }
 
-        /// <summary>Ovewrite default auto-doc.</summary>
-        /// <param name="tags"></param>
-        /// <param name="headingLevel"></param>
-        /// <param name="indent"></param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the script iff it overrides its Document() method.
+        /// Otherwise, return nothing.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // document children
-                foreach (IModel child in Children)
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
+            // Nasty!
+            IModel script = Children[0];
+
+            Type scriptType = script.GetType();
+            if (scriptType.GetMethod(nameof(Document)).DeclaringType == scriptType)
+                foreach (ITag tag in script.Document())
+                    yield return tag;
         }
     }
 }

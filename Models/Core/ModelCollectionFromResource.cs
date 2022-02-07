@@ -12,7 +12,7 @@
 
     /// <summary>This class loads a model from a resource</summary>
     [Serializable]
-    public class ModelCollectionFromResource : Model, IOptionallySerialiseChildren
+    public abstract class ModelCollectionFromResource : Model, IOptionallySerialiseChildren
     {
         private static string[] propertiesToExclude = new string[] { "Name", "Children", "IsHidden", "IncludeInDocumentation", "Enabled", "ReadOnly" };
 
@@ -83,6 +83,7 @@
         /// </summary>
         public override void OnCreated()
         {
+            base.OnCreated();
             // If the model is not under replacements and a resource name is provided,
             // lookup the resource get the xml and then deserialise to a model.
             if (!string.IsNullOrEmpty(ResourceName) && (Children.Count == 0 || FindAncestor<Replacements>() == null))
@@ -109,7 +110,7 @@
         /// Get a list of parameter names for this model.
         /// </summary>
         /// <returns></returns>
-        public List<string> GetModelParameterNames()
+        public IEnumerable<string> GetModelParameterNames()
         {
             if (ResourceName != null && ResourceName != "")
             {
@@ -164,9 +165,7 @@
             if (string.IsNullOrEmpty(contents))
                 return null;
 
-            IModel modelFromResource = ApsimFile.FileFormat.ReadFromString<IModel>(contents, out List<Exception> errors);
-            if (errors != null && errors.Count > 0)
-                throw errors[0];
+            IModel modelFromResource = ApsimFile.FileFormat.ReadFromString<IModel>(contents, e => throw e, false);
 
             if (this.GetType() != modelFromResource.GetType())
             {

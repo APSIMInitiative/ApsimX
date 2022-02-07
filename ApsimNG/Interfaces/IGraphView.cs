@@ -5,12 +5,13 @@
     using System.Drawing;
     using Models;
     using EventArguments;
+    using APSIM.Shared.Graphing;
 
     /// <summary>
     /// Event arguments for a Axis click
     /// </summary>
     /// <param name="axisType">The type of axis clicked</param>
-    public delegate void ClickAxisDelegate(Axis.AxisType axisType);
+    public delegate void ClickAxisDelegate(AxisPosition axisType);
 
     /// <summary>
     /// This interface defines the API for talking to a GraphView.
@@ -25,7 +26,7 @@
         /// <summary>
         /// Marker size.
         /// </summary>
-        MarkerSizeType MarkerSize { get; set; }
+        MarkerSize MarkerSize { get; set; }
 
         /// <summary>
         /// Invoked when the user clicks on the plot area (the area inside the axes)
@@ -51,6 +52,11 @@
         /// Invoked when the user hovers over a series point.
         /// </summary>
         event EventHandler<HoverPointArgs> OnHoverOverPoint;
+
+        /// <summary>
+        /// Invoked when the user clicks on the annotation.
+        /// </summary>
+        event EventHandler OnAnnotationClick;
 
         /// <summary>
         /// Left margin in pixels.
@@ -112,13 +118,13 @@
              string yFieldName,
              IEnumerable xError,
              IEnumerable yError,
-             Models.Axis.AxisType xAxisType, 
-             Models.Axis.AxisType yAxisType,
+             AxisPosition xAxisType, 
+             AxisPosition yAxisType,
              Color colour,
-             Models.LineType lineType,
-             Models.MarkerType markerType,
-             Models.LineThicknessType lineThickness,
-             Models.MarkerSizeType markerSize,
+             LineType lineType,
+             MarkerType markerType,
+             LineThickness lineThickness,
+             MarkerSize markerSize,
              double markerModifier,
              bool showInLegend);
 
@@ -137,8 +143,8 @@
             string title, 
             IEnumerable x, 
             IEnumerable y, 
-            Models.Axis.AxisType xAxisType, 
-            Models.Axis.AxisType yAxisType, 
+            AxisPosition xAxisType, 
+            AxisPosition yAxisType, 
             Color colour,
             bool showInLegend);
 
@@ -162,8 +168,8 @@
             IEnumerable y1,
             IEnumerable x2,
             IEnumerable y2,
-            Models.Axis.AxisType xAxisType,
-            Models.Axis.AxisType yAxisType,
+            AxisPosition xAxisType,
+            AxisPosition yAxisType,
             Color colour,
             bool showInLegend);
 
@@ -183,8 +189,8 @@
             string title,
             IEnumerable x,
             IEnumerable y,
-            Axis.AxisType xAxisType,
-            Axis.AxisType yAxisType,
+            AxisPosition xAxisType,
+            AxisPosition yAxisType,
             Color colour,
             bool showOnLegend);
 
@@ -206,8 +212,8 @@
             string title,
             object[] x,
             double[] y,
-            Models.Axis.AxisType xAxisType,
-            Models.Axis.AxisType yAxisType,
+            AxisPosition xAxisType,
+            AxisPosition yAxisType,
             Color colour,
             bool showOnLegend);
 
@@ -230,13 +236,13 @@
             string title,
             object[] x,
             double[] y,
-            Axis.AxisType xAxisType,
-            Axis.AxisType yAxisType,
+            AxisPosition xAxisType,
+            AxisPosition yAxisType,
             Color colour,
             bool showOnLegend,
             LineType lineType,
             MarkerType markerType,
-            LineThicknessType lineThickness);
+            LineThickness lineThickness);
 
         /// <summary>
         /// Draw text on the graph at the specified coordinates.
@@ -245,6 +251,7 @@
         /// <param name="x">The x position in graph coordinates</param>
         /// <param name="y">The y position in graph coordinates</param>
         /// <param name="leftAlign">Left align the text?</param>
+        /// <param name="topAlign">Top align the text?</param>
         /// <param name="textRotation">Text rotation</param>
         /// <param name="xAxisType">The axis type the x value relates to</param>
         /// <param name="yAxisType">The axis type the y value are relates to</param>
@@ -255,9 +262,10 @@
             object x,
             object y,
             bool leftAlign,
+            bool topAlign,
             double textRotation,
-            Models.Axis.AxisType xAxisType,
-            Models.Axis.AxisType yAxisType,
+            AxisPosition xAxisType,
+            AxisPosition yAxisType,
             Color colour);
 
         /// <summary>
@@ -279,8 +287,8 @@
             object y1,
             object x2,
             object y2,
-            Models.LineType type,
-            Models.LineThicknessType thickness,
+            LineType type,
+            LineThickness thickness,
             Color colour,
             bool inFrontOfSeries,
             string toolTip);
@@ -296,7 +304,7 @@
         /// <param name="interval">Axis scale interval</param>
         /// <param name="crossAtZero">Axis crosses at zero?</param>
         void FormatAxis(
-            Models.Axis.AxisType axisType, 
+            AxisPosition axisType, 
             string title,
             bool inverted,
             double minimum,
@@ -307,9 +315,9 @@
         /// <summary>
         /// Format the legend.
         /// </summary>
-        /// <param name="legendPositionType">Position of the legend</param>
+        /// <param name="position">Position of the legend</param>
         /// <param name="orientation">Orientation of items in the legend.</param>
-        void FormatLegend(Models.Graph.LegendPositionType legendPositionType, Graph.LegendOrientationType orientation);
+        void FormatLegend(LegendPosition position, LegendOrientation orientation);
 
         /// <summary>
         /// Format the title.
@@ -356,17 +364,17 @@
         /// <summary>
         /// Gets the maximum scale of the specified axis.
         /// </summary>
-        double AxisMaximum(Models.Axis.AxisType axisType);
+        double AxisMaximum(AxisPosition axisType);
 
         /// <summary>
         /// Gets the minimum scale of the specified axis.
         /// </summary>
-        double AxisMinimum(Models.Axis.AxisType axisType);
+        double AxisMinimum(AxisPosition axisType);
 
         /// <summary>
         /// Gets the interval (major step) of the specified axis.
         /// </summary>
-        double AxisMajorStep(Models.Axis.AxisType axisType);
+        double AxisMajorStep(AxisPosition axisType);
         
         /// <summary>Gets the series names.</summary>
         /// <returns></returns>

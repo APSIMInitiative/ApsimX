@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Models.Core;
 
 namespace Models.CLEM.Resources
 {
@@ -11,16 +12,31 @@ namespace Models.CLEM.Resources
 
     public class RuminantFemale : Ruminant
     {
-        // Female Ruminant properties
+        /// <summary>
+        /// Sex of individual
+        /// </summary>
+        public override Sex Sex { get { return Sex.Female; } }
 
         /// <summary>
-        /// Is female of breeing age
+        /// Is female weaned and of minimum breeding age and weight 
         /// </summary>
+        [FilterByProperty]
         public bool IsBreeder
         {
             get
             {
-                return ((Age >= BreedParams.MinimumAge1stMating) & (HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight) & (Age <= BreedParams.MaximumAgeMating | IsPregnant) );
+                return Weaned && (Age >= BreedParams.MinimumAge1stMating) && (HighWeight >= BreedParams.MinimumSize1stMating * StandardReferenceWeight);
+            }
+        }
+
+        /// <summary>
+        /// Is this individual a valid breeder and in condition
+        /// </summary>
+        public override bool IsAbleToBreed
+        {
+            get
+            {
+                return (this.IsBreeder && !this.IsPregnant && (Age - AgeAtLastBirth) * 30.4 >= BreedParams.MinimumDaysBirthToConception);
             }
         }
 
@@ -33,39 +49,40 @@ namespace Models.CLEM.Resources
         /// The time (months) passed since last birth
         /// Returns 0 for pre-first birth females
         /// </summary>
+        [FilterByProperty]
         public double MonthsSinceLastBirth 
         { 
             get 
             {
                 if (AgeAtLastBirth > 0)
-                {
                     return Age - AgeAtLastBirth;
-                }
                 else
-                {
                     return 0;
-                }
             } 
         }
 
         /// <summary>
         /// Number of births for the female (twins = 1 birth)
         /// </summary>
+        [FilterByProperty]
         public int NumberOfBirths { get; set; }
 
         /// <summary>
         /// Number of offspring for the female
         /// </summary>
+        [FilterByProperty]
         public int NumberOfOffspring { get; set; }
 
         /// <summary>
         /// Number of weaned offspring for the female
         /// </summary>
+        [FilterByProperty]
         public int NumberOfWeaned { get; set; }
 
         /// <summary>
         /// Number of conceptions for the female
         /// </summary>
+        [FilterByProperty]
         public int NumberOfConceptions { get; set; }
 
         /// <summary>
@@ -100,9 +117,16 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Store for the style of mating
+        /// </summary>
+        [FilterByProperty]
+        public MatingStyle LastMatingStyle { get; set; }
+
+        /// <summary>
         /// Indicates if this female is a heifer
         /// Heifer equals less than min breed age and no offspring
         /// </summary>
+        [FilterByProperty]
         public bool IsHeifer
         {
             get
@@ -117,6 +141,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Indicates if this female is a weaned but less than age at first mating 
         /// </summary>
+        [FilterByProperty]
         public bool IsPreBreeder
         {
             get
@@ -124,7 +149,8 @@ namespace Models.CLEM.Resources
                 // wiki - weaned, no calf, <3 years. We use the ageAtFirstMating
                 // AL updated 28/10/2020. Removed ( && this.Age < this.BreedParams.MinimumAge1stMating ) as a heifer can be more than this age if first preganancy failed or missed.
                 // this was a misunderstanding opn my part.
-                return (this.Weaned && this.Age < BreedParams.MinimumAge1stMating);
+                //return (this.Weaned && this.Age < BreedParams.MinimumAge1stMating); need to include size restriction as well
+                return (this.Weaned && !this.IsBreeder);
             }
         }
 
@@ -145,9 +171,7 @@ namespace Models.CLEM.Resources
                     birthCount++;
                     birthProb += i;
                     if (rnd <= birthProb)
-                    {
                         return birthCount;
-                    }
                 }
                 birthCount = 1;
             }
@@ -164,13 +188,9 @@ namespace Models.CLEM.Resources
             get
             {
                 if (IsPregnant)
-                {
                     return this.Age >= this.AgeAtLastConception + this.BreedParams.GestationLength;
-                }
                 else
-                {
                     return false;
-                }
             }
         }
 
@@ -193,6 +213,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Indicates if the individual is pregnant
         /// </summary>
+        [FilterByProperty]
         public bool IsPregnant
         {
             get
@@ -213,13 +234,11 @@ namespace Models.CLEM.Resources
         {
             CarryingCount--;
             if(CarryingCount <= 0)
-            {
                 AgeAtLastBirth = this.Age;
-            }
         }
 
         /// <summary>
-        /// Number of breeding moths in simulation. Years since min breeding age or entering the simulation for breeding stats calculations..
+        /// Number of breeding months in simulation. Years since min breeding age or entering the simulation for breeding stats calculations..
         /// </summary>
         public bool SuccessfulPregnancy
         {
@@ -236,9 +255,8 @@ namespace Models.CLEM.Resources
         {
             // if she was dry breeder remove flag as she has become pregnant.
             if (SaleFlag == HerdChangeReason.DryBreederSale)
-            {
                 SaleFlag = HerdChangeReason.None;
-            }
+
             PreviousConceptionRate = rate;
             CarryingCount = number;
             AgeAtLastConception = this.Age + ageOffset;
@@ -249,13 +267,9 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Indicates if the individual is a dry breeder
-        /// </summary>
-        public bool DryBreeder { get; set; }
-
-        /// <summary>
         /// Indicates if the individual is lactating
         /// </summary>
+        [FilterByProperty]
         public bool IsLactating
         {
             get
@@ -265,7 +279,7 @@ namespace Models.CLEM.Resources
                 //(b) Is being milked
                 //and
                 //(c) Less than Milking days since last birth
-                return ((this.SucklingOffspringList.Count() > 0 | this.MilkingPerformed) && (this.Age - this.AgeAtLastBirth) * 30.4 <= this.BreedParams.MilkingDays);
+                return ((this.SucklingOffspringList.Any() | this.MilkingPerformed) && (this.Age - this.AgeAtLastBirth) * 30.4 <= this.BreedParams.MilkingDays);
             }            
         }
 
@@ -283,15 +297,14 @@ namespace Models.CLEM.Resources
                     return dl+15;
                 }
                 else
-                {
                     return 0;
-                }
             }
         }
 
         /// <summary>
         /// Determines if milking has been performed on individual to increase milk production
         /// </summary>
+        [FilterByProperty]
         public bool MilkingPerformed { get; set; }
 
         /// <summary>
@@ -354,7 +367,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantFemale(double setAge, Sex setGender, double setWeight, RuminantType setParams) : base(setAge, setGender, setWeight, setParams)
+        public RuminantFemale(RuminantType setParams, double setAge, double setWeight) 
+            : base(setParams, setAge, setWeight)
         {
             SucklingOffspringList = new List<Ruminant>();
         }
@@ -375,4 +389,26 @@ namespace Models.CLEM.Resources
         Milked
     }
 
+    /// <summary>
+    /// Style of mating
+    /// </summary>
+    public enum MatingStyle
+    { 
+        /// <summary>
+        /// Natural mating
+        /// </summary>
+        Natural,
+        /// <summary>
+        /// Controlled mating
+        /// </summary>
+        Controlled,
+        /// <summary>
+        /// Wild breeder
+        /// </summary>
+        WildBreeder,
+        /// <summary>
+        /// Mating assigned at setup
+        /// </summary>
+        PreSimulation
+    }
 }

@@ -1,4 +1,4 @@
-#if NETCOREAPP
+
 namespace UserInterface.Intellisense
 {
     using System;
@@ -47,7 +47,7 @@ namespace UserInterface.Intellisense
         {
             get
             {
-                return CompletionActivation.Interactive | CompletionActivation.UserRequested;
+                return CompletionActivation.UserRequested;
             }
         }
 
@@ -305,4 +305,3 @@ namespace UserInterface.Intellisense
         }
     }
 }
-#endif

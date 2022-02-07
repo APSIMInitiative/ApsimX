@@ -4,6 +4,7 @@ using Models.Core;
 using Models.Interfaces;
 using APSIM.Shared.Utilities;
 using Models.PMF.Organs;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions.RootShape
 {
@@ -11,10 +12,8 @@ namespace Models.Functions.RootShape
     /// This model calculates the proportion of each soil layer occupided by roots.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Root))]
-    public class RootShapeSemiCircle : Model, IRootShape, ICustomDocumentation
+    public class RootShapeSemiCircle : Model, IRootShape
     {
         /// <summary>Calculates the root area for a layer of soil</summary>
         public void CalcRootProportionInLayers(ZoneState zone)
@@ -44,6 +43,17 @@ namespace Models.Functions.RootShape
                 }
                 zone.RootProportions[layer] = prop;
             }
+        }
+
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
         }
 
         private double CalcRootAreaSemiCircleMaize(ZoneState zone, double top, double bottom, double hDist)
@@ -82,27 +92,6 @@ namespace Models.Functions.RootShape
                 areaLayer = topArea - bottomArea;
             }
             return areaLayer;
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                // add graph and table.
-                //tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " is calculated as a function of daily min and max temperatures, these are weighted toward VPD at max temperature according to the specified MaximumVPDWeight factor.  A value equal to 1.0 means it will use VPD at max temperature, a value of 0.5 means average VPD.</i>", indent));
-                //tags.Add(new AutoDocumentation.Paragraph("<i>MaximumVPDWeight = " + MaximumVPDWeight + "</i>", indent));
-
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-            }
         }
     }
 }

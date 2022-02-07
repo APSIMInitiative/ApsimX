@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Soils;
@@ -12,7 +11,7 @@ namespace Models.Functions
     /// \retval Water factor for daily nitrification of ammonium
     [Serializable]
     [Description("Nitrification Water Factor from CERES-Maize")]
-    public class CERESNitrificationWaterFactor : Model, IFunction, ICustomDocumentation
+    public class CERESNitrificationWaterFactor : Model, IFunction
     {
 
         [Link]
@@ -37,24 +36,6 @@ namespace Models.Functions
                 WF = 1 - MathUtilities.Divide(soilwater.SW[arrayIndex] - physical.DUL[arrayIndex], physical.SAT[arrayIndex] - physical.DUL[arrayIndex],0.0);
 
             return WF;
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-
-            // write memos.
-            foreach (IModel memo in this.FindAllChildren<Memo>())
-                AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-
         }
     }
 }

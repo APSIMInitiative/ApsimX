@@ -22,6 +22,7 @@
             var weirdo = soil.FindChild<WEIRDO>();
             var organicNode = soil.FindChild<Organic>();
             var waterBalance = soil.FindChild<ISoilWater>();
+            var swim3 = soil.FindChild<Swim3>();
 
             // Determine the target layer structure.
             var targetThickness = physicalNode.Thickness;
@@ -39,6 +40,8 @@
             SetAnalysisThickness(analysisNode, targetThickness);
             SetSoilOrganicMatterThickness(organicNode, targetThickness);
             SetPhysicalPropertiesThickness(physicalNode, targetThickness, soil);
+            if (swim3 != null)
+                SetSWIMThickness(swim3, targetThickness, soil);
         }
 
         /// <summary>Sets the water thickness.</summary>
@@ -64,10 +67,16 @@
                 physical.SAT = MapConcentration(physical.SAT, physical.Thickness, toThickness, MathUtilities.LastValue(physical.SAT));
                 physical.KS = MapConcentration(physical.KS, physical.Thickness, toThickness, MathUtilities.LastValue(physical.KS));
                 if (physical != null)
-                    if (physical.ParticleSizeClay != null && physical.ParticleSizeClay.Length == physical.Thickness.Length)
+                {
+                    if (physical.ParticleSizeClay != null && physical.ParticleSizeClay.Length > 0 && physical.ParticleSizeClay.Length != toThickness.Length)
                         physical.ParticleSizeClay = MapConcentration(physical.ParticleSizeClay, physical.Thickness, toThickness, MathUtilities.LastValue(physical.ParticleSizeClay));
-                    else
-                        physical.ParticleSizeClay = null;
+                    if (physical.ParticleSizeSand != null && physical.ParticleSizeSand.Length > 0 && physical.ParticleSizeSand.Length != toThickness.Length)
+                        physical.ParticleSizeSand = MapConcentration(physical.ParticleSizeSand, physical.Thickness, toThickness, MathUtilities.LastValue(physical.ParticleSizeSand));
+                    if (physical.ParticleSizeSilt != null && physical.ParticleSizeSilt.Length > 0 && physical.ParticleSizeSilt.Length != toThickness.Length)
+                        physical.ParticleSizeSilt = MapConcentration(physical.ParticleSizeSilt, physical.Thickness, toThickness, MathUtilities.LastValue(physical.ParticleSizeSilt));
+                    if (physical.Rocks != null && physical.Rocks.Length > 0 && physical.Rocks.Length != toThickness.Length)
+                        physical.Rocks = MapConcentration(physical.Rocks, physical.Thickness, toThickness, MathUtilities.LastValue(physical.Rocks));
+                }
                 physical.Thickness = toThickness;
 
                 foreach (var crop in crops)
@@ -141,6 +150,8 @@
                 analysis.CL = MapConcentration(analysis.CL, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.CL));
                 analysis.EC = MapConcentration(analysis.EC, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.EC));
                 analysis.ESP = MapConcentration(analysis.ESP, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.ESP));
+                analysis.LabileP = MapConcentration(analysis.LabileP, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.LabileP));
+                analysis.UnavailableP = MapConcentration(analysis.UnavailableP, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.UnavailableP));
 
                 analysis.PH = MapConcentration(analysis.PH, analysis.Thickness, thickness, MathUtilities.LastValue(analysis.PH));
                 analysis.Thickness = thickness;
@@ -175,7 +186,29 @@
                     sample.OC = MapConcentration(sample.OC, sample.Thickness, thickness, double.NaN, allowMissingValues: true);
                 if (sample.PH != null)
                     sample.PH = MapConcentration(sample.PH, sample.Thickness, thickness, double.NaN, allowMissingValues: true);
+                if (sample.LabileP != null)
+                    sample.LabileP = MapConcentration(sample.LabileP, sample.Thickness, thickness, double.NaN, allowMissingValues: true);
+                if (sample.UnavailableP != null)
+                    sample.UnavailableP = MapConcentration(sample.UnavailableP, sample.Thickness, thickness, double.NaN, allowMissingValues: true);
                 sample.Thickness = thickness;
+            }
+        }
+
+        /// <summary>Sets the sample thickness.</summary>
+        /// <param name="swim">The swim model.</param>
+        /// <param name="thickness">The thickness to change the sample to.</param>
+        /// <param name="soil">The soil</param>
+        private static void SetSWIMThickness(Swim3 swim, double[] thickness, Soil soil)
+        {
+            foreach (var soluteParameters in soil.FindAllChildren<SwimSoluteParameters>())
+            {
+                if (!MathUtilities.AreEqual(thickness, soluteParameters.Thickness))
+                {
+                    if (soluteParameters.Exco != null)
+                        soluteParameters.Exco = MapConcentration(soluteParameters.Exco, soluteParameters.Thickness, thickness, 0.2);
+                    if (soluteParameters.FIP != null)
+                        soluteParameters.FIP = MapConcentration(soluteParameters.FIP, soluteParameters.Thickness, thickness, 0.2);
+                }
             }
         }
 

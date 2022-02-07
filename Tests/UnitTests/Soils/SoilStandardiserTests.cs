@@ -4,6 +4,7 @@
     using Models.Soils;
     using Models.Soils.Standardiser;
     using NUnit.Framework;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
 
@@ -61,7 +62,8 @@
                     {
                         Thickness = new double[] { 1000 },
                         OC = new double[] { 1.35 },
-                        SWUnits = Sample.SWUnitsEnum.Volumetric
+                        SWUnits = Sample.SWUnitsEnum.Volumetric,
+                        Name = "Sample1"
                     }
                 }
             };
@@ -134,7 +136,8 @@
                     {
                         Thickness = new double[] { 1000 },
                         OC = new double[] { 1.35 },
-                        SWUnits = Sample.SWUnitsEnum.Volumetric
+                        SWUnits = Sample.SWUnitsEnum.Volumetric,
+                        Name = "Sample1"
                     },
                     new LayerStructure
                     {
@@ -164,7 +167,57 @@
         [Test]
         public void InitialConditionsIsCreated()
         {
-            var soil = new Soil
+            Soil soil = CreateSimpleSoil();
+            Utilities.InitialiseModel(soil);
+
+            SoilStandardiser.Standardise(soil);
+
+            var initial = soil.Children[5] as Sample;
+            var analysis = soil.Children[4] as Chemical;
+
+            Assert.AreEqual(soil.FindAllChildren<Sample>().Count(), 1);
+            Assert.AreEqual(initial.Name, "Initial");
+            Assert.AreEqual(initial.SW, new double[] { 0.1, 0.2 } );
+            Assert.AreEqual(initial.NO3, new double[] { 29.240000000000002, 2.432 });  // kg/ha
+            Assert.AreEqual(initial.NH4, new double[] { 1.4960000000000002, 0.4864 }); // kg/ha
+            Assert.AreEqual(initial.OC, new double[] { 2.0, 0.9 });
+            Assert.AreEqual(initial.PH, new double[] { 6.4, 6.9 });
+            Assert.AreEqual(initial.EC, new double[] { 150, 200 });
+
+            var soilOrganicMatter = soil.Children[3] as Organic;
+            Assert.IsNull(soilOrganicMatter.Carbon);
+
+            Assert.NotNull(analysis);
+        }
+
+        [Test]
+        public void DontStandardiseDisabledSoils()
+        {
+            Soil soil = CreateSimpleSoil();
+            Utilities.InitialiseModel(soil);
+            Physical phys = soil.FindChild<Physical>();
+
+            // Remove a layer from BD - this will cause standardisation to fail.
+            phys.BD = new double[phys.BD.Length - 1];
+
+            // Now disable the soil so it doesn't get standardised.
+            soil.Enabled = false;
+
+            // Chuck the soil in a simulation.
+            Simulations sims = Utilities.GetRunnableSim();
+            Zone paddock = sims.FindDescendant<Zone>();
+            paddock.Children.Add(soil);
+            soil.Parent = paddock;
+
+            // Run the simulation - this shouldn't fail, because the soil is disabled.
+            var runner = new Models.Core.Run.Runner(sims);
+            List<Exception> errors = runner.Run();
+            Assert.AreEqual(0, errors.Count, "There should be no errors - the faulty soil is disabled");
+        }
+
+        private Soil CreateSimpleSoil()
+        {
+            return new Soil
             {
                 Children = new List<IModel>()
                 {
@@ -204,29 +257,10 @@
                     {
                         Thickness = new double[] { 100, 200 },
                         PH = new double[] { 6.4, double.NaN },
+                        Name = "Sample2"
                     }
                 }
             };
-            Utilities.InitialiseModel(soil);
-
-            SoilStandardiser.Standardise(soil);
-
-            var initial = soil.Children[5] as Sample;
-            var analysis = soil.Children[4] as Chemical;
-
-            Assert.AreEqual(soil.FindAllChildren<Sample>().Count(), 1);
-            Assert.AreEqual(initial.Name, "Initial");
-            Assert.AreEqual(initial.SW, new double[] { 0.1, 0.2 } );
-            Assert.AreEqual(initial.NO3, new double[] { 29.240000000000002, 2.432 });  // kg/ha
-            Assert.AreEqual(initial.NH4, new double[] { 1.4960000000000002, 0.4864 }); // kg/ha
-            Assert.AreEqual(initial.OC, new double[] { 2.0, 0.9 });
-            Assert.AreEqual(initial.PH, new double[] { 6.4, 6.9 });
-            Assert.AreEqual(initial.EC, new double[] { 150, 200 });
-
-            var soilOrganicMatter = soil.Children[3] as Organic;
-            Assert.IsNull(soilOrganicMatter.Carbon);
-
-            Assert.NotNull(analysis);
         }
     }
 }

@@ -5,6 +5,7 @@ using Newtonsoft.Json;
 using Models.CLEM.Activities;
 using Models.Core;
 using Models.Core.Attributes;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Resources
 {
@@ -12,14 +13,27 @@ namespace Models.CLEM.Resources
     /// Holder for all initial ruminant cohorts
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
-    [PresenterName("UserInterface.Presenters.PropertyTablePresenter")]
+    [ViewName("UserInterface.Views.PropertyMultiModelView")]
+    [PresenterName("UserInterface.Presenters.PropertyMultiModelPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
-    [Description("This holds the list of initial cohorts for a given (parent) ruminant herd or type.")]
+    [Description("Holds the list of initial cohorts for a given ruminant herd")]
+    [Version(1, 0, 2, "Includes attribute specification for whole herd")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantInitialCohorts.htm")]
     public class RuminantInitialCohorts : CLEMModel
     {
+        /// <summary>
+        /// Determines if any SetPreviousConception components were found
+        /// </summary>
+        [JsonIgnore]
+        public bool ConceptionsFound { get; set; } = false;
+
+        /// <summary>
+        /// Determines if any SetAttribute components were found
+        /// </summary>
+        [JsonIgnore]
+        public bool AttributesFound { get; set; } = false;
+
         /// <summary>
         /// Records if a warning about set weight occurred
         /// </summary>
@@ -36,52 +50,42 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Create the individual ruminant animals for this Ruminant Type (Breed)
         /// </summary>
-        /// <returns></returns>
+        /// <returns>A list of ruminants</returns>
         public List<Ruminant> CreateIndividuals()
         {
+            List<ISetAttribute> initialCohortAttributes = this.FindAllChildren<ISetAttribute>().ToList();
             List<Ruminant> individuals = new List<Ruminant>();
             foreach (RuminantTypeCohort cohort in this.FindAllChildren<RuminantTypeCohort>())
-            {
-                individuals.AddRange(cohort.CreateIndividuals());
-            }
+                individuals.AddRange(cohort.CreateIndividuals(initialCohortAttributes.ToList()));
+
             return individuals;
         }
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             string html = "";
             return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerClosingTags()
         {
             string html = "</table>";
             if(WeightWarningOccurred)
-            {
                 html += "</br><span class=\"errorlink\">Warning: Initial weight differs from the expected normalised weight by more than 20%</span>";
-            }
             return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerOpeningTags()
         {
             WeightWarningOccurred = false;
-            return "<table><tr><th>Name</th><th>Gender</th><th>Age</th><th>Weight</th><th>Norm.Wt.</th><th>Number</th><th>Suckling</th><th>Sire</th></tr>";
+            ConceptionsFound = this.FindAllDescendants<SetPreviousConception>().Any();
+            AttributesFound = this.FindAllDescendants<SetAttributeWithValue>().Any();
+            return $"<table><tr><th>Name</th><th>Sex</th><th>Age</th><th>Weight</th><th>Norm.Wt.</th><th>Number</th><th>Suckling</th><th>Sire</th>{(ConceptionsFound? "<th>Pregnant</th>" : "")}{(AttributesFound ? "<th>Attributes</th>" : "")}</tr>";
         }
 
         #endregion

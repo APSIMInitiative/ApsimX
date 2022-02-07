@@ -26,9 +26,7 @@ namespace Models.Core.ApsimFile
         /// <param name="configFilePath">Absolute path to the config file.</param>
         public static Simulations Do(string apsimxFilePath, string configFilePath)
         {
-            Simulations file = FileFormat.ReadFromFile<Simulations>(apsimxFilePath, out List<Exception> errors);
-            if (errors != null && errors.Count > 0)
-                throw new Exception($"Error reading file ${apsimxFilePath}: {errors[0].ToString()}");
+            Simulations file = FileFormat.ReadFromFile<Simulations>(apsimxFilePath, e => throw e, false);
 
             return ApplyChanges(file, GetFactors(configFilePath));
         }
@@ -147,9 +145,7 @@ namespace Models.Core.ApsimFile
             if (toBeReplaced == null)
                 throw new Exception($"Unable to find model which is to be replaced ({modelToReplace}) in file {topLevel.FileName}");
 
-            IModel extFile = FileFormat.ReadFromFile<IModel>(replacementFile, out List<Exception> errors);
-            if (errors?.Count > 0)
-                throw new Exception($"Error reading replacement file {replacementFile}", errors[0]);
+            IModel extFile = FileFormat.ReadFromFile<IModel>(replacementFile, e => throw e, false);
 
             IModel replacement;
             if (string.IsNullOrEmpty(replacementPath))

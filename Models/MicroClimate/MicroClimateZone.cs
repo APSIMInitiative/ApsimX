@@ -496,7 +496,8 @@
                     {
                         lightProfile[i] = new CanopyEnergyBalanceInterceptionlayerType();
                         lightProfile[i].thickness = DeltaZ[i];
-                        lightProfile[i].amount = Canopies[j].Rs[i] * RadnGreenFraction(j);
+                        lightProfile[i].AmountOnGreen = Canopies[j].Rs[i] * RadnGreenFraction(j);
+                        lightProfile[i].AmountOnDead = Canopies[j].Rs[i] * (1 - RadnGreenFraction(j));
                         totalPotentialEp += Canopies[j].PET[i];
                         totalInterception += Canopies[j].interception[i];
                     }
@@ -546,10 +547,11 @@
                 }
             }
             Array.Resize<double>(ref nodes, numNodes);
-            Array.Sort(nodes);
-            numLayers = numNodes - 1;
+            Array.Sort(nodes);   //Order nodes by height
+            nodes = nodes.Distinct().ToArray();  //Remove nodes that are the same hight to avoid zero depth layers
+            numLayers = nodes.Length - 1;
             if (DeltaZ.Length != numLayers)
-            {
+             {
                 // Number of layers has changed; adjust array lengths
                 Array.Resize<double>(ref DeltaZ, numLayers);
                 Array.Resize<double>(ref layerKtot, numLayers);
@@ -571,7 +573,7 @@
                     Array.Resize<double>(ref Canopies[j].interception, numLayers);
                 }
             }
-            for (int i = 0; i <= numNodes - 2; i++)
+            for (int i = 0; i <= numLayers - 1; i++)
                 DeltaZ[i] = nodes[i + 1] - nodes[i];
         }
 

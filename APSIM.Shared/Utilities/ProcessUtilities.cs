@@ -151,7 +151,7 @@ namespace APSIM.Shared.Utilities
             else
             {
                 if (System.IO.File.Exists(path))
-                    System.Diagnostics.Process.Start(path);
+                    System.Diagnostics.Process.Start(new ProcessStartInfo(path) { UseShellExecute = true });
                 else if (System.IO.Directory.Exists(path))
                 {
                     if (path.Contains(" ") && path[0] != '\"')
@@ -160,7 +160,14 @@ namespace APSIM.Shared.Utilities
                     System.Diagnostics.Process.Start("explorer.exe", path);
                 }
                 else
-                    System.Diagnostics.Process.Start(path);
+                {
+                    var ps = new System.Diagnostics.ProcessStartInfo(path)
+                    {
+                        UseShellExecute = true,
+                        Verb = "open"
+                    };
+                    System.Diagnostics.Process.Start(ps);
+                }
             }
         }
 

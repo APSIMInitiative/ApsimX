@@ -39,7 +39,7 @@
         /// </summary>
         public List<CompositeFactor> GetCompositeFactors()
         {
-            var childCompositeFactors = FindAllChildren<CompositeFactor>().Where(f => f.Enabled).ToList();
+            var childCompositeFactors = FindAllChildren<CompositeFactor>().Where(f => f.Enabled);
             if (string.IsNullOrEmpty(Specification))
             {
                 // Return each child CompositeFactor
@@ -49,11 +49,18 @@
             {
                 List<CompositeFactor> factorValues = new List<CompositeFactor>();
 
-                if (Specification.Contains(" to ") &&
-                    Specification.Contains(" step "))
+                if (Specification.Contains(" to ") && Specification.Contains(" step "))
+                {
+                    if (childCompositeFactors.Any())
+                        throw new InvalidProgramException($"Error in factor {Name}: illegal factor configuration. Cannot use child composite factors with the factor specification '{Specification}'. Either delete the child composite factors or fix the factor specification text.");
                     factorValues.AddRange(RangeSpecificationToFactorValues(Specification));
+                }
                 else if (Specification.Contains('='))
+                {
+                    if (childCompositeFactors.Any())
+                        throw new InvalidProgramException($"Error in factor {Name}: illegal factor configuration. Cannot use child composite factors with the factor specification '{Specification}'. Either delete the child composite factors or fix the factor specification text.");
                     factorValues.AddRange(SetSpecificationToFactorValues(Specification));
+                }
                 else
                     factorValues.AddRange(ModelReplacementToFactorValues(Specification));
 
@@ -132,6 +139,10 @@
             double from = Convert.ToDouble(rangeBits[0], CultureInfo.InvariantCulture);
             double to = Convert.ToDouble(rangeBits[2], CultureInfo.InvariantCulture);
             double step = Convert.ToDouble(rangeBits[4], CultureInfo.InvariantCulture);
+
+            if ( (from < to && step < 0) ||
+                 (from > to && step > 0) )
+                throw new InvalidOperationException($"Unbounded factor specification: {specification}");
 
             for (double value = from; value <= to; value += step)
             {

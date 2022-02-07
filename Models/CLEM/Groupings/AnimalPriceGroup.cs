@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Groupings
 {
@@ -16,14 +17,14 @@ namespace Models.CLEM.Groupings
     /// Contains a group of filters to identify individual ruminants in a set price group
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(AnimalPricing))]
-    [Description("This ruminant price group sets the sale and purchase price for a set group of individuals.")]
+    [Description("Define the sale and purchase price for a specified group of individuals")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Purchase and sales identifier used")]
-    [HelpUri(@"Content/Features/Filters/AnimalPriceGroup.htm")]
-    public class AnimalPriceGroup: CLEMModel, IFilterGroup
+    [HelpUri(@"Content/Features/Filters/Groups/AnimalPriceGroup.htm")]
+    public class AnimalPriceGroup : FilterGroup<Ruminant>, IResourcePricing, IReportPricingChange
     {
         /// <summary>
         /// Style of pricing animals
@@ -47,16 +48,43 @@ namespace Models.CLEM.Groupings
         public PurchaseOrSalePricingStyleType PurchaseOrSale { get; set; }
 
         /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
+        /// Calulate the value of an individual
         /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
+        /// <param name="ind"></param>
+        /// <returns></returns>
+        public double CalculateValue(object ind)
+        {
+            if(ind is Ruminant)
+            {
+                double multiplier = 1;
+                switch (PricingStyle)
+                {
+                    case PricingStyleType.perHead:
+                        break;
+                    case PricingStyleType.perKg:
+                        multiplier = (ind as Ruminant).Weight;
+                        break;
+                    case PricingStyleType.perAE:
+                        multiplier = (ind as Ruminant).AdultEquivalent;
+                        break;
+                    default:
+                        break;
+                }
 
-        /// <summary>
-        /// Proportion of group to use
-        /// </summary>
+                return Value * multiplier;
+            }
+            else
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        /// <inheritdoc/>
         [JsonIgnore]
-        public double Proportion { get; set; }
+        public ResourcePriceChangeDetails LastPriceChange { get; set; }
+
+        /// <inheritdoc/>
+        public IResourceType Resource { get { return FindAncestor<IResourceType>(); } }
 
         /// <summary>
         /// Constructor
@@ -66,18 +94,57 @@ namespace Models.CLEM.Groupings
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
         }
 
-        #region descriptive summary
+        /// <inheritdoc/>
+        public event EventHandler PriceChangeOccurred;
+
+        /// <inheritdoc/>
+        public void SetPrice(double amount)
+        {
+            Value = amount;
+        }
+
+        /// <inheritdoc/>
+        public double CurrentPrice { get { return Value; } }
+
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public double PreviousPrice { get; set; }
+
+
+        /// <inheritdoc/>
+        public void SetPrice(double amount, IModel model)
+        {
+            PreviousPrice = CurrentPrice;
+            Value = amount;
+
+            if (LastPriceChange is null)
+            {
+                LastPriceChange = new ResourcePriceChangeDetails();
+            }
+            LastPriceChange.ChangedBy = model;
+            LastPriceChange.PriceChanged = this;
+
+            // price change event
+            OnPriceChanged(new PriceChangeEventArgs() { Details = LastPriceChange });
+        }
 
         /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
+        /// Price changed event
         /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <param name="e"></param>
+        protected void OnPriceChanged(PriceChangeEventArgs e)
+        {
+            PriceChangeOccurred?.Invoke(this, e);
+        }
+
+        #region descriptive summary
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (!formatForParentControl)
+                if (!FormatForParentControl)
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     switch (PurchaseOrSale)
@@ -111,15 +178,12 @@ namespace Models.CLEM.Groupings
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerClosingTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (formatForParentControl)
+                if (FormatForParentControl)
                 {
                     if (Value.ToString() == "0")
                     {
@@ -156,18 +220,15 @@ namespace Models.CLEM.Groupings
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerOpeningTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (formatForParentControl)
+                if (FormatForParentControl)
                 {
                     htmlWriter.Write("<tr><td>" + this.Name + "</td><td>");
-                    if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
+                    if (!(this.FindAllChildren<Filter>().Count() >= 1))
                     {
                         htmlWriter.Write("<div class=\"filter\">All individuals</div>");
                     }
@@ -175,7 +236,7 @@ namespace Models.CLEM.Groupings
                 else
                 {
                     htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                    if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
+                    if (!(this.FindAllChildren<Filter>().Count() >= 1))
                     {
                         htmlWriter.Write("<div class=\"filter\">All individuals</div>");
                     }
@@ -184,23 +245,18 @@ namespace Models.CLEM.Groupings
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
         {
-            return !formatForParentControl ? base.ModelSummaryClosingTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryClosingTags() : "";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
         {
-            return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
-        } 
+            return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
+        }
+
         #endregion
     }
 }

@@ -30,7 +30,7 @@
         /// </summary>
         private ExplorerPresenter explorerPresenter;
 
-        private SimplePropertyPresenter propertyPresenter;
+        private PropertyPresenter propertyPresenter;
 
         /// <summary>
         /// Attach the specified Model and View.
@@ -44,8 +44,8 @@
             this.view = view as IMapView;
             this.explorerPresenter = explorerPresenter;
 
-            propertyPresenter = new SimplePropertyPresenter();
-            propertyPresenter.Attach(model, this.view.PropertiesGrid, this.explorerPresenter);
+            propertyPresenter = new PropertyPresenter();
+            propertyPresenter.Attach(model, this.view.PropertiesView, this.explorerPresenter);
 
             // Tell the view to populate the axis.
             this.PopulateView();
@@ -104,7 +104,17 @@
             // Store the property values.
             properties.Add(new Commands.ChangeProperty.Property(this.map, "Zoom", this.view.Zoom));
             properties.Add(new Commands.ChangeProperty.Property(this.map, "Center", this.view.Center));
+
+            // This ViewChanged event occurs when the user drags/scrolls or otherwise
+            // modifies the map, in which case the view is responsible for applying these
+            // changes to the map shown in the UI. We need to now apply these changes to
+            // the model, but we don't want to tell the view to redraw itself afterward,
+            // so we need to disconnect our OnModelChanged callback from the ModelChanged
+            // event. Note that if the view is changed via the properties UI, we *do* want
+            // to trap the ModelChanged event and tell the view to redraw itself.
+            explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(properties));
+            explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
 
             // properties.Add()
             // this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(map, "Zoom", this.view.Zoom));
@@ -134,7 +144,7 @@
         /// <param name="changedModel">The model that has changed.</param>
         private void OnModelChanged(object changedModel)
         {
-            if (view != null && changedModel == this.map)
+            if (view != null && (changedModel == this.map || changedModel == this.map.Center))
             {
                 this.view.Zoom = this.map.Zoom;
                 this.view.Center = this.map.Center;

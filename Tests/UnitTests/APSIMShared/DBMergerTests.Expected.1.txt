@@ -1,3 +1,0 @@
-ID,Name,FolderName
- 1,Sim1,   Folder1
- 2,Sim2,   Folder2

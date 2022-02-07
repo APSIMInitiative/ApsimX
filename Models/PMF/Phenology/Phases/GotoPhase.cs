@@ -4,15 +4,16 @@ using Models.Core;
 using Models.Functions;
 using System.IO;
 using Newtonsoft.Json;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// #[Name]
-    /// When [Start] is reached phenology is rewound to [PhaseNameToGoTo]
+    /// When the specified start phase is reached, phenology is rewound to
+    /// a specified phase.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
     public class GotoPhase : Model, IPhase
@@ -30,9 +31,14 @@ namespace Models.PMF.Phen
         [Description("Start")]
         public string Start { get; set; }
 
-        /// <summary>The end</summary>
-        [Description("End")]
-        public string End { get; set; }
+        /// <summary>The end stage name.</summary>
+        public string End
+        {
+            get
+            {
+                return phenology.FindChild<IPhase>(PhaseNameToGoto)?.Start;
+            }
+        }
 
         /// <summary>The phase name to goto</summary>
         [Description("PhaseNameToGoto")]
@@ -59,5 +65,13 @@ namespace Models.PMF.Phen
 
         /// <summary>Resets the phase.</summary>
         public virtual void ResetPhase() {}
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Paragraph($"When the {Start} phase is reached, phenology is rewound to the {PhaseNameToGoto} phase.");
+        }
     }
 }

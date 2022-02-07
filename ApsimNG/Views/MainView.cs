@@ -3,9 +3,7 @@
     using APSIM.Shared.Utilities;
     using Gtk;
     using Models.Core;
-#if NETFRAMEWORK
-    using MonoMac.AppKit;
-#endif
+
     using System;
     using System.Drawing;
     using System.IO;
@@ -15,6 +13,8 @@
     using EventArguments;
     using global::UserInterface.Extensions;
     using System.Text;
+    using Utility;
+    using MessageType = Models.Core.MessageType;
 
     /// <summary>An enum type for the AskQuestion method.</summary>
     public enum QuestionResponseEnum { Yes, No, Cancel }
@@ -66,6 +66,15 @@
         private ProgressBar progressBar = null;
 
         /// <summary>
+        /// Label adjacent to progress bar. Used to display
+        /// progress status updates. The progress bar does
+        /// support displaying text by itself, but vertical
+        /// space here is limited so we display it in this
+        /// label instead.
+        /// </summary>
+        private Label lblStatus = null;
+
+        /// <summary>
         /// Status window used to display error messages and other information.
         /// </summary>
         private TextView statusWindow = null;
@@ -103,26 +112,14 @@
         /// <summary>
         /// Gtk widget which holds the status panel.
         /// </summary>
-        private HBox hbox1 = null;
-
-        /// <summary>
-        /// Dark theme icon.
-        /// </summary>
-        private static readonly Gtk.Image darkThemeIcon = new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Moon.png");
-
-        /// <summary>
-        /// Default theme Icon.
-        /// </summary>
-        private static readonly Gtk.Image defaultThemeIcon = new Gtk.Image(null, "ApsimNG.Resources.MenuImages.Sun.png");
+        private Widget hbox1 = null;
 
         /// <summary>
         /// Dialog which allows the user to change fonts.
         /// </summary>
-#if NETFRAMEWORK
-        private FontSelectionDialog fontDialog;
-#else
+
         private FontChooserDialog fontDialog;
-#endif
+
 
         /// <summary>
         /// Constructor
@@ -134,6 +131,7 @@
             Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.MainView.glade");
             window1 = (Window)builder.GetObject("window1");
             progressBar = (ProgressBar)builder.GetObject("progressBar");
+            lblStatus = (Label)builder.GetObject("lblStatus");
             statusWindow = (TextView)builder.GetObject("StatusWindow");
             stopButton = (Button)builder.GetObject("stopButton");
             notebook1 = (Notebook)builder.GetObject("notebook1");
@@ -141,7 +139,7 @@
             vbox1 = (VBox)builder.GetObject("vbox1");
             vbox2 = (VBox)builder.GetObject("vbox2");
             hpaned1 = (HPaned)builder.GetObject("hpaned1");
-            hbox1 = (HBox)builder.GetObject("hbox1");
+            hbox1 = (Widget)builder.GetObject("vbox3");
             mainWidget = window1;
             window1.Icon = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
             listButtonView1 = new ListButtonView(this);
@@ -164,6 +162,12 @@
             notebook1.GetTabLabel(notebook1.Children[0]).Name = "selected-tab";
 
             hbox1.HeightRequest = 20;
+
+            // Normally, one would specify the style class in the UI (.glade) file.
+            // However, doing so breaks gtk2-compatibility, so for now, we will just
+            // set the style class in code.
+            progressBar.StyleContext.AddClass("fat-progress-bar");
+
 
             TextTag tag = new TextTag("error");
             // Make errors orange-ish in dark mode.
@@ -204,8 +208,15 @@
             // Can't set font until widgets are initialised.
             if (!string.IsNullOrEmpty(Utility.Configuration.Settings.FontName))
             {
-                Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
-                ChangeFont(font);
+                try
+                {
+                    Pango.FontDescription font = Pango.FontDescription.FromString(Utility.Configuration.Settings.FontName);
+                    ChangeFont(font);
+                }
+                catch (Exception err)
+                {
+                    ShowError(err);
+                }
             }
 
             //window1.ShowAll();
@@ -218,22 +229,27 @@
             if (!ProcessUtilities.CurrentOS.IsLinux)
                 RefreshTheme();
 
-#if NETCOREAPP
+
             LoadStylesheets();
-#endif
+
         }
 
-#if NETCOREAPP
+
         private void LoadStylesheets()
         {
-            string css = ReflectionUtilities.GetResourceAsString("ApsimNG.Resources.Style.global.css");
+            LoadStylesheet("global");
+            LoadStylesheet(Configuration.Settings.DarkTheme ? "dark" : "light");
+        }
+
+        private void LoadStylesheet(string cssName)
+        {
+            string css = ReflectionUtilities.GetResourceAsString($"ApsimNG.Resources.Style.{cssName}.css");
             CssProvider provider = new CssProvider();
             if (!provider.LoadFromData(css))
-                throw new Exception("Unable to parse global.css");
-
-            window1.StyleContext.AddProvider(provider, StyleProviderPriority.Application);
+                throw new Exception($"Unable to parse {cssName}.css");
+            StyleContext.AddProviderForScreen(window1.Screen, provider, StyleProviderPriority.Application);
         }
-#endif
+
 
         /// <summary>
         /// Invoked when the user changes tabs.
@@ -242,18 +258,18 @@
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event arguments.</param>
-        [GLib.ConnectBefore]
         private void OnChangeTab(object sender, SwitchPageArgs args)
         {
             try
             {
-                Notebook control = sender as Notebook;
-
-                for (int i = 0; i < control.Children.Length; i++)
+                if (sender is Notebook control)
                 {
-                    // The top-level widget in the tab label is always an event box.
-                    Widget tabLabel = control.GetTabLabel(control.Children[i]);
-                    tabLabel.Name = args.PageNum == i ? "selected-tab" : "unselected-tab";
+                    for (int i = 0; i < control.Children.Length; i++)
+                    {
+                        // The top-level widget in the tab label is always an event box.
+                        Widget tabLabel = control.GetTabLabel(control.Children[i]);
+                        tabLabel.Name = args.PageNum == i ? "selected-tab" : "unselected-tab";
+                    }
                 }
             }
             catch (Exception err)
@@ -319,7 +335,7 @@
         {
             get
             {
-                return MainWidget == null ? null : MainWidget.Toplevel.GetGdkWindow();
+                return MainWidget == null ? null : MainWidget.Toplevel.Window;
             }
         }
 
@@ -348,7 +364,8 @@
                 tabLabel.Text = text;
             HBox headerBox = new HBox();
             Button closeBtn = new Button();
-            Gtk.Image closeImg = new Gtk.Image(new Gdk.Pixbuf(null, "ApsimNG.Resources.Close.png", 12, 12));
+            string imageName = Utility.Configuration.Settings.DarkTheme ? "Close.dark.svg" : "Close.light.svg";
+            Gtk.Image closeImg = new Gtk.Image(new Gdk.Pixbuf(null, $"ApsimNG.Resources.TreeViewImages.{imageName}", 12, 12));
 
             closeBtn.Image = closeImg;
             closeBtn.Relief = ReliefStyle.None;
@@ -383,9 +400,7 @@
         /// </summary>
         private void InitMac()
         {
-#if NETFRAMEWORK
-            NSApplication.Init();
-#endif
+
         }
 
         /// <summary>
@@ -519,7 +534,7 @@
             notebook2.SwitchPage -= OnChangeTab;
             stopButton.Clicked -= OnStopClicked;
             window1.DeleteEvent -= OnClosing;
-            mainWidget.Cleanup();
+            mainWidget.Dispose();
 
             // Let all the destruction stuff be carried out, just in 
             // case we've got any unmanaged resources that should be 
@@ -614,6 +629,21 @@
         }
 
         /// <summary>
+        /// Close a tab.
+        /// </summary>
+        /// <param name="index">Index of the tab to be removed.</param>
+        /// <param name="onLeft">Remove from the left (true) tab control or the right (false) tab control.</param>
+        public void RemoveTab(int index, bool onLeft)
+        {
+            Notebook notebook = onLeft ? notebook1 : notebook2;
+            if (index >= notebook.NPages)
+                throw new InvalidOperationException($"Cannot remove tab {index} from {(onLeft ? "left" : "right")} tab control: only {notebook.NPages} tabs are open");
+            if (index == 0)
+                throw new InvalidOperationException($"Cannot remove home tab");
+            notebook.RemovePage(index);
+        }
+
+        /// <summary>
         /// Looks for the tab holding the specified user interface object, and makes that the active tab
         /// </summary>
         /// <param name="o">The interface object being sought; normally will be a Gtk Widget</param>
@@ -661,8 +691,8 @@
         {
             get
             {
-                if (window1.GetGdkWindow() != null)
-                    return (window1.GetGdkWindow().State & Gdk.WindowState.Maximized) == Gdk.WindowState.Maximized;
+                if (window1.Window != null)
+                    return (window1.Window.State & Gdk.WindowState.Maximized) == Gdk.WindowState.Maximized;
                 else
                     return false;
             }
@@ -750,10 +780,10 @@
         /// <param name="message">The message to show the user.</param>
         public QuestionResponseEnum AskQuestion(string message)
         {
-            MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, MessageType.Question, ButtonsType.YesNo, message);
+            MessageDialog md = new MessageDialog(MainWidget.Toplevel as Window, DialogFlags.Modal, Gtk.MessageType.Question, ButtonsType.YesNo, message);
             md.Title = "Save changes";
             int result = md.Run();
-            md.Cleanup();
+            md.Dispose();
             switch ((ResponseType)result)
             {
                 case ResponseType.Yes:
@@ -765,6 +795,18 @@
             }
         }
 
+        /// <summary>
+        /// Clear the status panel.
+        /// </summary>
+        public void ClearStatusPanel()
+        {
+            Application.Invoke(delegate
+            {
+                numberOfButtons = 0;
+                statusWindow.Buffer.Clear();
+            });
+        }
+
         /// <summary>Add a status message to the explorer window</summary>
         /// <param name="message">The message.</param>
         /// <param name="errorLevel">The error level.</param>
@@ -772,7 +814,7 @@
         /// <param name="addSeparator">Add a separator beneath the message?</param>
         /// <param name="withButton">Add a 'more info' button?</param>
         /// <remarks>This is kind of a cludge. This method could probably be extracted to its own class.</remarks>
-        public void ShowMessage(string message, Simulation.ErrorLevel errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true)
+        public void ShowMessage(string message, MessageType errorLevel, bool overwrite = true, bool addSeparator = false, bool withButton = true)
         {
             Application.Invoke(delegate
             {
@@ -787,11 +829,11 @@
                 {
                     string tagName;
                     // Output the message
-                    if (errorLevel == Simulation.ErrorLevel.Error)
+                    if (errorLevel == MessageType.Error)
                     {
                         tagName = "error";
                     }
-                    else if (errorLevel == Simulation.ErrorLevel.Warning)
+                    else if (errorLevel == MessageType.Warning)
                     {
                         tagName = "warning";
                     }
@@ -808,7 +850,7 @@
                         insertIter = statusWindow.Buffer.EndIter;
 
                     statusWindow.Buffer.InsertWithTagsByName(ref insertIter, message, tagName);
-                    if (errorLevel == Simulation.ErrorLevel.Error && withButton)
+                    if (errorLevel == MessageType.Error && withButton)
                         AddButtonToStatusWindow("More Information", numberOfButtons++);
                     if (addSeparator)
                     {
@@ -818,8 +860,6 @@
                 }
 
                 //this.toolTip1.SetToolTip(this.StatusWindow, message);
-                progressBar.Visible = false;
-                stopButton.Visible = false;
             });
         }
 
@@ -837,28 +877,9 @@
         /// </summary>
         public void RefreshTheme()
         {
-#if NETFRAMEWORK
-            if (Utility.Configuration.Settings.DarkTheme)
-            {
-                string tempFile = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".gtkrc");
-                using (Stream rcStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ApsimNG.Resources.dark.gtkrc"))
-                {
-                    using (StreamReader darkTheme = new StreamReader(rcStream))
-                        File.WriteAllText(tempFile, darkTheme.ReadToEnd());
-                }
 
-                Rc.Parse(tempFile);
-                // Remove black colour from colour pallete.
-                Color black = Color.FromArgb(0, 0, 0);
-                ColourUtilities.Colours = ColourUtilities.Colours.Where(c => c != black).ToArray();
-            }
-            else if (ProcessUtilities.CurrentOS.IsWindows)
-                // Apsim's default gtk theme uses the 'wimp' rendering engine,
-                // which doesn't play nicely on non-windows systems.
-                Rc.Parse(Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), ".gtkrc"));
-#else
             // tbi
-#endif
+
         }
 
         private void AddButtonToStatusWindow(string buttonName, int buttonID)
@@ -890,39 +911,14 @@
         }
 
         /// <summary>
-        /// Invoked when theme is toggled.
-        /// Toggles the icon displayed on the "toggle theme" button.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
-        public void ToggleTheme(object sender, EventArgs args)
-        {
-            try
-            {
-                if (sender is ToolButton)
-                {
-                    ToolButton button = sender as ToolButton;
-                    button.IconWidget = Utility.Configuration.Settings.DarkTheme ? defaultThemeIcon : darkThemeIcon;
-                    button.IconWidget.ShowAll();
-                }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
         /// Shows the font selection dialog.
         /// </summary>
         public void ShowFontChooser()
         {
             string title = "Select a font";
-#if NETFRAMEWORK
-            fontDialog = new FontSelectionDialog(title);
-#else
+
             fontDialog = new FontChooserDialog(title, window1);
-#endif
+
 
             // Center the dialog on the main window.
             fontDialog.TransientFor = MainWidget as Window;
@@ -930,15 +926,12 @@
 
             // Select the current font.
             if (Utility.Configuration.Settings.FontName != null)
-                fontDialog.SetFontName(Utility.Configuration.Settings.FontName.ToString());
+                fontDialog.Font = Utility.Configuration.Settings.FontName.ToString();
 
-#if NETFRAMEWORK
-            fontDialog.Response += OnChangeFont;
-            //fontDialog.OkButton.Clicked += OnChangeFont;
-#else
+
             //fontDialog.FontActivated += OnChangeFont;
             fontDialog.Response += OnChangeFont;
-#endif
+
 
             // Show the dialog.
             fontDialog.ShowAll();
@@ -955,16 +948,15 @@
         {
             try
             {
-#if NETFRAMEWORK
-                string fontName = fontDialog.FontName;
-#else
+
                 string fontName = fontDialog.Font;
-#endif
+
                 Pango.FontDescription newFont = Pango.FontDescription.FromString(fontName);
                 Utility.Configuration.Settings.FontName = newFont.ToString();
+                Configuration.Settings.Save();
                 ChangeFont(newFont);
                 if (args.ResponseId != ResponseType.Apply)
-                    fontDialog.Cleanup();
+                    fontDialog.Dispose();
             }
             catch (Exception err)
             {
@@ -973,11 +965,24 @@
         }
 
         /// <summary>
+        /// Show a message next to the progress bar.
+        /// </summary>
+        /// <param name="message">Message to be displayed.</param>
+        public void ShowProgressMessage(string message)
+        {
+            Application.Invoke(delegate
+            {
+                lblStatus.Visible = !string.IsNullOrEmpty(message);
+                lblStatus.Text = message ?? "";
+            });
+        }
+
+        /// <summary>
         /// Show progress bar with the specified percent.
         /// </summary>
-        /// <param name="percent">Percentage complete.</param>
+        /// <param name="progress">Progress (0 - 1).</param>
         /// <param name="showStopButton">Should a stop button be shown?</param>
-        public void ShowProgress(int percent, bool showStopButton = true)
+        public void ShowProgress(double progress, bool showStopButton = true)
         {
             // We need to use "Invoke" if the timer is running in a
             // different thread. That means we can use either
@@ -986,9 +991,22 @@
             Application.Invoke(delegate
             {
                 progressBar.Visible = true;
-                progressBar.Fraction = percent / 100.0;
+                progressBar.Fraction = progress;
                 if (showStopButton)
                     stopButton.Visible = true;
+            });
+        }
+
+        /// <summary>
+        /// Hide the progress bar.
+        /// </summary>
+        public void HideProgressBar()
+        {
+            Application.Invoke(delegate
+            {
+                progressBar.Visible = false;
+                stopButton.Visible = false;
+                lblStatus.Hide();
             });
         }
 
@@ -1045,9 +1063,7 @@
         private void ChangeFont(Pango.FontDescription font)
         {
             SetWidgetFont(mainWidget, font);
-#if NETFRAMEWORK
-            Settings.Default.SetStringProperty($"gtk-font-name", font.ToString(), "");
-#endif
+
             //Rc.ParseString($"gtk-font-name = \"{font}\"");
         }
 
@@ -1058,7 +1074,7 @@
         /// <param name="newFont"></param>
         private void SetWidgetFont(Widget widget, Pango.FontDescription newFont)
         {
-#if NETCOREAPP
+
             int sizePt = newFont.SizeIsAbsolute ? newFont.Size : Convert.ToInt32(newFont.Size / Pango.Scale.PangoScale);
             CssProvider provider = new CssProvider();
             StringBuilder css = new StringBuilder();
@@ -1072,19 +1088,7 @@
             css.Append("}");
             provider.LoadFromData(css.ToString());
             window1.StyleContext.AddProvider(provider, StyleProviderPriority.Application);
-#else
-            widget.ModifyFont(newFont);
-            if (widget is Container)
-            {
-                foreach (Widget child in (widget as Container).Children)
-                {
-                    SetWidgetFont(child, newFont);
-                }
-                if (widget is Notebook)
-                    for (int i = 0; i < (widget as Notebook).NPages; i++)
-                        SetWidgetFont((widget as Notebook).GetTabLabel((widget as Notebook).GetNthPage(i)), newFont);
-            }
-#endif
+
         }
 
         /// <summary>
@@ -1121,7 +1125,7 @@
             md.Title = title;
             md.WindowPosition = WindowPosition.Center;
             int result = md.Run();
-            md.Cleanup();
+            md.Dispose();
             return result;
         }
 
@@ -1148,6 +1152,24 @@
             Gdk.Atom modelClipboard = Gdk.Atom.Intern(clipboardName, false);
             Clipboard cb = Clipboard.Get(modelClipboard);
             cb.Text = text;
+        }
+
+        /// <inheritdoc />
+        public (int, bool) GetCurrentTab()
+        {
+            Notebook notebook = GetCurrentNotebook();
+            if (notebook == null)
+                return (-1, false);
+
+            bool onLeft = notebook.Name == notebook1.Name;
+            return (notebook.CurrentPage, onLeft);
+        }
+
+        private Notebook GetCurrentNotebook()
+        {
+            if (!notebook2.Visible)
+                return notebook1;
+            return hpaned1.FocusChild as Notebook;
         }
     }
 

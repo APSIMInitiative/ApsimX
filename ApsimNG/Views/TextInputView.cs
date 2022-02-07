@@ -2,6 +2,7 @@ namespace UserInterface.Views
 {
     using Gtk;
     using System;
+    using System.Text;
     using FontDescription = Pango.FontDescription;
 
     public class TextInputView : ViewBase
@@ -81,7 +82,27 @@ namespace UserInterface.Views
         /// <param name="font">The font to be used.</param>
         public void ModifyFont(string font)
         {
-            editor.ModifyFont(FontDescription.FromString(font));
+
+            using (FontDescription newFont = FontDescription.FromString(font))
+            {
+                int sizePt = newFont.SizeIsAbsolute ? newFont.Size : Convert.ToInt32(newFont.Size / Pango.Scale.PangoScale);
+                StringBuilder css = new StringBuilder();
+                css.AppendLine("* {");
+                css.AppendLine($"font-family: {newFont.Family};");
+                css.AppendLine($"font-size: {sizePt}pt;");
+                css.AppendLine($"font-style: {newFont.Style};");
+                css.AppendLine($"font-variant: {newFont.Variant};");
+                css.AppendLine($"font-weight: {newFont.Weight};");
+                css.AppendLine($"font-stretch: {newFont.Stretch};");
+                css.Append("}");
+                using (CssProvider provider = new CssProvider())
+                {
+                    if (!provider.LoadFromData(css.ToString()))
+                        throw new Exception($"Unable to load font {font}");
+                    editor.StyleContext.AddProvider(provider, StyleProviderPriority.Application);
+                }
+            }
+
         }
 
         /// <summary>

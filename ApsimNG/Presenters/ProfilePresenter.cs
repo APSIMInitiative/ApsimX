@@ -13,6 +13,8 @@
     using System.Linq;
     using System.Reflection;
     using Views;
+    using APSIM.Shared.Graphing;
+    using Series = Models.Series;
 
     /// <summary>
     /// This presenter talks to a ProfileView to display profile (layered) data in a grid.
@@ -84,15 +86,16 @@
         {
             this.model = model as Model;
             this.view = view as IProfileView;
-            profileGrid.Attach(model, this.view.ProfileGrid, explorerPresenter);
             this.explorerPresenter = explorerPresenter;
+            profileGrid.Attach(model, this.view.ProfileGrid, explorerPresenter);
 
             this.view.ShowView(false);
 
             // Setup the property presenter and view. Hide the view if there are no properties to show.
             this.propertyPresenter = new PropertyPresenter();
-            this.propertyPresenter.Attach(this.model, this.view.PropertyGrid, this.explorerPresenter);
-            propertyPresenter.ScalarsOnly = true;
+            // Don't show any array properties.
+            propertyPresenter.Filter = p => !p.PropertyType.IsArray;
+            this.propertyPresenter.Attach(this.model, this.view.ProperiesView, this.explorerPresenter);
             // Populate the grid
             this.PopulateGrid();
 
@@ -147,8 +150,8 @@
                             cropLLSeries.Marker = MarkerType.None;
                             cropLLSeries.Type = SeriesType.Scatter;
                             cropLLSeries.ShowInLegend = true;
-                            cropLLSeries.XAxis = Axis.AxisType.Top;
-                            cropLLSeries.YAxis = Axis.AxisType.Left;
+                            cropLLSeries.XAxis = AxisPosition.Top;
+                            cropLLSeries.YAxis = AxisPosition.Left;
                             cropLLSeries.YFieldName = (parentForGraph is Soil ? parentForGraph.FullPath : "[Soil]") + ".Physical.DepthMidPoints";
                             cropLLSeries.XFieldName = ((profileGrid.Properties[i].Object as IModel)).FullPath + "." + profileGrid.Properties[i].Name;
                             //cropLLSeries.XFieldName = ((property.Object as Model)).FullPath + "." + property.Name;
@@ -158,7 +161,7 @@
                         }
                     }
 
-                    this.graph.LegendPosition = Graph.LegendPositionType.RightTop;
+                    this.graph.LegendPosition = LegendPosition.RightTop;
                     explorerPresenter.ApsimXFile.Links.Resolve(graphPresenter);
                     this.graphPresenter.Attach(this.graph, this.view.Graph, this.explorerPresenter);
                     graphPresenter.LegendInsideGraph = false;
@@ -191,7 +194,7 @@
         {
             // Remove, from the PropertyGrid, the properties being displayed in the ProfileGrid.
             //propertyPresenter.RemoveProperties(propertiesInGrid.Select(property => property.PropertyName)); // fixme
-            view.ShowPropertyGrid(!propertyPresenter.IsEmpty);
+            view.ShowPropertyGrid(true);
         }
 
         /// <summary>

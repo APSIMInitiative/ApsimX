@@ -14,16 +14,28 @@ namespace Models.CLEM.Activities
     /// <summary>Tracking settings for Ruminant purchases and sales</summary>
     /// <summary>If this model is provided within RuminantActivityBuySell, trucking costs and loading rules will occur</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityBuySell))]
-    [Description("This provides trucking settings for the Ruminant Buy and Sell Activity and will determine costs and emissions if required.")]
+    [Description("Provides trucking settings for the purchase and sale of individuals with costs and emissions included")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/Trucking.htm")]
     public class TruckingSettings : CLEMModel
     {
         [Link]
-        private ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
+
+        private GreenhouseGasesType co2Store;
+        private GreenhouseGasesType methaneStore;
+        private GreenhouseGasesType n2oStore;
+
+        /// <summary>
+        /// Label to assign each transaction created by this activity in ledgers
+        /// </summary>
+        [Description("Category for transactions")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
+        [Models.Core.Display(Order = 500)]
+        public string TransactionCategory { get; set; }
 
         /// <summary>
         /// Distance to market
@@ -99,7 +111,7 @@ namespace Models.CLEM.Activities
         /// Methane store for emissions
         /// </summary>
         [Description("Greenhouse gas store for methane emissions")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMExtraEntries = new string[] { "Use store named Methane if present" }, CLEMResourceGroups = new Type[] { typeof(GreenhouseGases) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Use store named Methane if present", typeof(GreenhouseGases) } })]
         [System.ComponentModel.DefaultValue("Use store named Methane if present")]
         public string MethaneStoreName { get; set; }
 
@@ -107,7 +119,7 @@ namespace Models.CLEM.Activities
         /// Carbon dioxide store for emissions
         /// </summary>
         [Description("Greenhouse gas store for carbon dioxide emissions")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMExtraEntries = new string[] { "Use store named CO2 if present" }, CLEMResourceGroups = new Type[] { typeof(GreenhouseGases) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Use store named CO2 if present", typeof(GreenhouseGases) } })]
         [System.ComponentModel.DefaultValue("Use store named CO2 if present")]
         public string CarbonDioxideStoreName { get; set; }
 
@@ -115,13 +127,9 @@ namespace Models.CLEM.Activities
         /// Nitrous oxide store for emissions
         /// </summary>
         [Description("Greenhouse gas store for nitrous oxide emissions")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMExtraEntries = new string[] { "Use store named N2O if present" }, CLEMResourceGroups = new Type[] { typeof(GreenhouseGases) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Use store named N2O if present", typeof(GreenhouseGases) } })]
         [System.ComponentModel.DefaultValue("Use store named N2O if present")]
         public string NitrousOxideStoreName { get; set; }
-
-        private GreenhouseGasesType CO2Store;
-        private GreenhouseGasesType MethaneStore;
-        private GreenhouseGasesType N2OStore;
 
         /// <summary>
         /// Constructor
@@ -129,6 +137,7 @@ namespace Models.CLEM.Activities
         public TruckingSettings()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
+            TransactionCategory = "Livestock.Trucking";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -138,38 +147,22 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             if (TruckMethaneEmissions > 0)
-            {
                 if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
-                {
-                    MethaneStore = Resources.GetResourceItem(this, typeof(GreenhouseGases), "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
-                }
+                    methaneStore = resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, "Methane", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                 else
-                {
-                    MethaneStore = Resources.GetResourceItem(this, MethaneStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
-                }
-            }
+                    methaneStore = resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, MethaneStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
+
             if (TruckCO2Emissions > 0)
-            {
                 if (CarbonDioxideStoreName is null || CarbonDioxideStoreName == "Use store named CO2 if present")
-                {
-                    CO2Store = Resources.GetResourceItem(this, typeof(GreenhouseGases), "CO2", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
-                }
+                    co2Store = resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, "CO2", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                 else
-                {
-                    CO2Store = Resources.GetResourceItem(this, CarbonDioxideStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
-                }
-            }
+                    co2Store = resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, CarbonDioxideStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+
             if (TruckN2OEmissions > 0)
-            {
                 if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
-                {
-                    N2OStore = Resources.GetResourceItem(this, typeof(GreenhouseGases), "N2O", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as GreenhouseGasesType;
-                }
+                    n2oStore = resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, "N2O", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                 else
-                {
-                    N2OStore = Resources.GetResourceItem(this, NitrousOxideStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GreenhouseGasesType;
-                }
-            }
+                    n2oStore = resources.FindResourceType<GreenhouseGases, GreenhouseGasesType>(this, NitrousOxideStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <summary>
@@ -189,15 +182,15 @@ namespace Models.CLEM.Activities
                     switch (gas)
                     {
                         case "Methane":
-                            gasstore = MethaneStore;
+                            gasstore = methaneStore;
                             emissions = TruckMethaneEmissions;
                             break;
                         case "CO2":
-                            gasstore = CO2Store;
+                            gasstore = co2Store;
                             emissions = TruckCO2Emissions;
                             break;
                         case "N2O":
-                            gasstore = N2OStore;
+                            gasstore = n2oStore;
                             emissions = TruckN2OEmissions;
                             break;
                         default:
@@ -206,21 +199,15 @@ namespace Models.CLEM.Activities
                     }
 
                     if (gasstore != null && emissions > 0)
-                    {
-                        gasstore.Add(numberOfTrucks * DistanceToMarket * emissions , this.Parent as CLEMModel, "", "Trucking "+(isSales?"sales":"purchases"));
-                    }
+                        gasstore.Add(numberOfTrucks * DistanceToMarket * emissions , this.Parent as CLEMModel, (isSales ? "sales" : "purchases"), TransactionCategory);
                 }
             }
         }
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -229,33 +216,25 @@ namespace Models.CLEM.Activities
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Each truck load can carry ");
                 if (Number450kgPerTruck == 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"setvalue\">" + Number450kgPerTruck.ToString("0.###") + "</span>");
-                }
+
                 htmlWriter.Write(" 450 kg individuals</div>");
 
                 if (MinimumLoadBeforeSelling > 0 || MinimumTrucksBeforeSelling > 0)
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     if (MinimumTrucksBeforeSelling > 0)
-                    {
                         htmlWriter.Write("A minimum of <span class=\"setvalue\">" + MinimumTrucksBeforeSelling.ToString("###") + "</span> truck loads is required");
-                    }
+
                     if (MinimumLoadBeforeSelling > 0)
                     {
                         if (MinimumTrucksBeforeSelling > 0)
-                        {
                             htmlWriter.Write(" and each ");
-                        }
                         else
-                        {
                             htmlWriter.Write("Each ");
 
-                        }
                         htmlWriter.Write("truck must be at least <span class=\"setvalue\">" + MinimumLoadBeforeSelling.ToString("0.##%") + "</span> full");
                     }
                     htmlWriter.Write(" for sales</div>");
@@ -265,47 +244,38 @@ namespace Models.CLEM.Activities
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     if (MinimumTrucksBeforeBuying > 0)
-                    {
                         htmlWriter.Write("A minimum of <span class=\"setvalue\">" + MinimumTrucksBeforeBuying.ToString("###") + "</span> truck loads is required");
-                    }
+
                     if (MinimumLoadBeforeBuying > 0)
                     {
                         if (MinimumTrucksBeforeBuying > 0)
-                        {
                             htmlWriter.Write(" and each ");
-                        }
                         else
-                        {
                             htmlWriter.Write("Each ");
 
-                        }
                         htmlWriter.Write("truck must be at least <span class=\"setvalue\">" + MinimumLoadBeforeBuying.ToString("0.##%") + "</span> full");
                     }
                     htmlWriter.Write(" for purchases</div>");
                 }
 
-
                 if (TruckMethaneEmissions > 0 || TruckN2OEmissions > 0)
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">Each truck will emmit ");
                     if (TruckMethaneEmissions > 0)
-                    {
                         htmlWriter.Write("<span class=\"setvalue\">" + TruckMethaneEmissions.ToString("0.###") + "</span> kg methane");
-                    }
+
                     if (TruckCO2Emissions > 0)
                     {
                         if (TruckMethaneEmissions > 0)
-                        {
                             htmlWriter.Write(", ");
-                        }
+
                         htmlWriter.Write("<span class=\"setvalue\">" + TruckCO2Emissions.ToString("0.###") + "</span> kg carbon dioxide");
                     }
                     if (TruckN2OEmissions > 0)
                     {
                         if (TruckMethaneEmissions + TruckCO2Emissions > 0)
-                        {
                             htmlWriter.Write(" and ");
-                        }
+
                         htmlWriter.Write("<span class=\"setvalue\">" + TruckN2OEmissions.ToString("0.###") + "</span> kg nitrous oxide");
                     }
                     htmlWriter.Write(" per km");
@@ -315,43 +285,33 @@ namespace Models.CLEM.Activities
                     {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">Methane emissions will be placed in ");
                         if (MethaneStoreName is null || MethaneStoreName == "Use store named Methane if present")
-                        {
                             htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].Methane</span> if present");
-                        }
                         else
-                        {
                             htmlWriter.Write($"<span class=\"resourcelink\">{MethaneStoreName}</span>");
-                        }
+
                         htmlWriter.Write("</div>");
                     }
                     if (TruckCO2Emissions > 0)
                     {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">Carbon dioxide emissions will be placed in ");
                         if (CarbonDioxideStoreName is null || CarbonDioxideStoreName == "Use store named CO2 if present")
-                        {
                             htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].CO2</span> if present");
-                        }
                         else
-                        {
                             htmlWriter.Write($"<span class=\"resourcelink\">{CarbonDioxideStoreName}</span>");
-                        }
+
                         htmlWriter.Write("</div>");
                     }
                     if (TruckN2OEmissions > 0)
                     {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">Nitrous oxide emissions will be placed in ");
                         if (NitrousOxideStoreName is null || NitrousOxideStoreName == "Use store named N2O if present")
-                        {
                             htmlWriter.Write("<span class=\"resourcelink\">[GreenhouseGases].N2O</span> if present");
-                        }
                         else
-                        {
                             htmlWriter.Write($"<span class=\"resourcelink\">{NitrousOxideStoreName}</span>");
-                        }
+
                         htmlWriter.Write("</div>");
                     }
                 }
-
                 return htmlWriter.ToString(); 
             }
         } 

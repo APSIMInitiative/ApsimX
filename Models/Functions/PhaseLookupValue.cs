@@ -6,14 +6,15 @@ using Models.PMF.Phen;
 using System.IO;
 using APSIM.Shared.Utilities;
 using System.Linq;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions
 {
     /// <summary>
-    /// [Name] has a non-zero value between [Start] and [End] calcualted as:
+    /// This function has a value between the specified start and end phases.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("Returns the value of it child function to the PhaseLookup parent function if current phenology is between Start and end stages specified.")]
     public class PhaseLookupValue : Model, IFunction
@@ -73,7 +74,23 @@ namespace Models.Functions
             }
         }
 
-       
+
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write memos.
+            foreach (var tag in DocumentChildren<Memo>())
+                yield return tag;
+
+            yield return new Paragraph($"{Name} has a value between {Start} and {End} calculated as:");
+
+            // Write memos.
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
+        }
+
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -83,7 +100,5 @@ namespace Models.Functions
             startStageIndex = Phenology.StartStagePhaseIndex(Start);
             endStageIndex = Phenology.EndStagePhaseIndex(End);
         }
-
     }
-
 }

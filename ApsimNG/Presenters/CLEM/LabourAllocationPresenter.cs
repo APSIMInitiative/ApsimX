@@ -39,7 +39,9 @@ namespace UserInterface.Presenters
 
         private List<ValidParentAttribute> validpAtt = new List<ValidParentAttribute>();
         private int numberLabourTypes = 0;
+        [NonSerialized]
         private Labour labour;
+        [NonSerialized]
         private List<LabourType> labourList = new List<LabourType>();
 
         /// <summary>
@@ -47,21 +49,13 @@ namespace UserInterface.Presenters
         /// </summary>
         public void AttachExtraPresenters(CLEMPresenter clemPresenter)
         {
-            //Display
-            try
+            object newView = new MarkdownView(clemPresenter.View as ViewBase);
+            IPresenter labourPresenter = new LabourAllocationPresenter();
+            if (newView != null && labourPresenter != null)
             {
-                object newView = new MarkdownView(clemPresenter.view as ViewBase);
-                IPresenter labourPresenter = new LabourAllocationPresenter();
-                if (newView != null && labourPresenter != null)
-                {
-                    clemPresenter.view.AddTabView("Display", newView);
-                    labourPresenter.Attach(clemPresenter.model, newView, clemPresenter.explorerPresenter);
-                    clemPresenter.presenterList.Add("Display", labourPresenter);
-                }
-            }
-            catch (Exception err)
-            {
-                this.explorerPresenter.MainPresenter.ShowError(err);
+                clemPresenter.View.AddTabView("Display", newView);
+                labourPresenter.Attach(clemPresenter.Model, newView, clemPresenter.ExplorerPresenter);
+                clemPresenter.PresenterList.Add("Display", labourPresenter);
             }
         }
 
@@ -76,17 +70,15 @@ namespace UserInterface.Presenters
             this.model = model as Model;
             this.genericView = view as IMarkdownView;
             this.explorerPresenter = explorerPresenter;
-
-            //this.genericView.Text = CreateMarkdown();
-            System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), (model as ISpecificOutputFilename).HtmlOutputFilename), CreateHTML());
+            File.WriteAllText(Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), (model as ISpecificOutputFilename).HtmlOutputFilename), CreateHTML());
+            this.genericView.Text = CreateMarkdown();
         }
 
         public void Refresh()
         {
+            File.WriteAllText(Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), (model as ISpecificOutputFilename).HtmlOutputFilename), CreateHTML());
             this.genericView.Text = CreateMarkdown();
-            System.IO.File.WriteAllText(Path.Combine(Path.GetDirectoryName(this.explorerPresenter.ApsimXFile.FileName), (model as ISpecificOutputFilename).HtmlOutputFilename), CreateHTML());
         }
-
 
         private string CreateHTML()
         {
@@ -104,21 +96,13 @@ namespace UserInterface.Presenters
                 "tr:nth-child(2n+3) {background:[ResRowBack] !important;}" +
                 "tr:nth-child(2n+2) {background:[ResRowBack2] !important;}" +
                 "td.fill {background-color: #c1946c !important;}" +
-                //"th,td {padding:5px;}" +
-                //"th,td {border: 1px dotted [GridColor]; }" +
-                //"table {border: 0px none #009999; border-collapse: collapse;}" +
                 "table.main {[TableBackground] }" +
                 "table.main tr td.disabled {color: [DisabledColour]; }" +
                 ".dot { margin:auto; display:block; height:20px; width:20px; line-height:20px; background-color:black; -moz-border-radius: 10px; border-radius: 10px; }" +
-                //".dot1 { background-color:lightgreen; }" +
-                //".dot2 { background-color:lightskyblue; }" +
-                //".dot4 { background-color:coral; }" +
-                //".dot3 { background-color:lightpink; }" +
-                // color blind corrected
-                ".dot1 { background-color:#62BB35; }" +
-                ".dot2 { background-color:#208EA3; }" +
-                ".dot4 { background-color:#E8384F; }" +
-                ".dot3 { background-color:#FD817D; }" +
+                ".dot1 { background-color:#F5793A; }" +
+                ".dot2 { background-color:#A95AA1; }" +
+                ".dot3 { background-color:#85C0F9; }" +
+                ".dot4 { background-color:#0F2080; }" +
                 ".warningbanner {background-color:orange; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
                 ".warningcontent {background-color:[WarningBackground]; margin-bottom:20px; border-radius:0px 0px 5px 5px; border-color:orange; border-width:1px; border-style:none solid solid solid; padding:10px;}" +
                 ".messagebanner {background-color:CornflowerBlue; border-radius:5px 5px 0px 0px; color:white; padding:5px; font-weight:bold }" +
@@ -172,9 +156,7 @@ namespace UserInterface.Presenters
             // get CLEM Zone
             IModel clem = model as IModel;
             while (!(clem is ZoneCLEM))
-            {
                 clem = clem.Parent;
-            }
 
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -211,14 +193,16 @@ namespace UserInterface.Presenters
                 labourList.Clear();
                 foreach (LabourType lt in labour.FindAllChildren<LabourType>())
                 {
-                    labourList.Add(new LabourType()
+                    var newLabour = new LabourType()
                     {
                         Parent = labour,
                         Name = lt.Name,
                         AgeInMonths = lt.InitialAge * 12,
-                        Gender = lt.Gender
-                    }
-                    );
+                        Sex = lt.Sex
+                    };
+                    IndividualAttribute att = new IndividualAttribute() { StoredValue = lt.Name };
+                    newLabour.Attributes.Add("Group", att);
+                    labourList.Add(newLabour);
                 }
 
                 // get all parents of LabourRequirement
@@ -234,7 +218,7 @@ namespace UserInterface.Presenters
 
                 // walk through all activities
                 // check if LabourRequirement can be added
-                ActivitiesHolder activities = clem.FindAllDescendants<ActivitiesHolder>().FirstOrDefault() as ActivitiesHolder;
+                ActivitiesHolder activities = clem.FindDescendant<ActivitiesHolder>();
                 if (activities == null)
                 {
                     htmlWriter.Write("Could not find an Activities Holder");
@@ -247,9 +231,8 @@ namespace UserInterface.Presenters
                     tableHtml.WriteLine("<table class=\"main\">");
                     tableHtml.Write("<tr><th>Activity</th>");
                     foreach (LabourType lt in labour.FindAllChildren<LabourType>())
-                    {
                         tableHtml.Write($"<th><span>{lt.Name}</span></th>");
-                    }
+
                     tableHtml.WriteLine("</tr>");
                     tableHtml.WriteLine(TableRowHTML(activities));
                     tableHtml.WriteLine("</table>");
@@ -298,54 +281,54 @@ namespace UserInterface.Presenters
             // create row
             using (StringWriter tblstr = new StringWriter())
             {
-                // can row be included?
                 if (validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
                 {
-                    Model labourRequirement = model.FindAllChildren<IModel>().Where(a => a.GetType().ToString().Contains("LabourRequirement")).FirstOrDefault() as Model;
-                    tblstr.Write("<tr" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + "><td" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + ">" + model.Name + "</td>");
-
-                    // does activity have a Labour Requirement
-                    if (!(labourRequirement == null))
+                    if (model.FindAllChildren<LabourRequirement>().Any())
                     {
-                        // for each labour type
-                        foreach (LabourType lt in labourList)
+                        foreach (LabourRequirement labourRequirement in model.FindAllChildren<LabourRequirement>())
                         {
-                            tblstr.WriteLine("<td>");
-                            // for each filter group
-                            foreach (Model item in labourRequirement.FindAllChildren<LabourFilterGroup>())
+                            tblstr.Write("<tr" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + "><td" + ((labourRequirement == null) ? " class=\"disabled\"" : "") + ">" + model.Name + "</td>");
+                            // for each labour type
+                            foreach (LabourType lt in labourList)
                             {
-                                tblstr.Write("<div>");
-                                int level = 0;
-                                // while nested 
-                                Model nested = labourRequirement as Model;
-
-                                while (nested.FindAllChildren<LabourFilterGroup>().Count() > 0)
+                                tblstr.WriteLine("<td>");
+                                // for each filter group
+                                foreach (var item in labourRequirement.FindAllChildren<LabourFilterGroup>())
                                 {
-                                    level++;
-                                    nested = nested.FindAllChildren<LabourFilterGroup>().FirstOrDefault() as Model;
-                                    List<LabourType> ltlist = new List<LabourType>() { lt };
-                                    if (ltlist.Filter(nested).Count() >= 1)
+                                    tblstr.Write("<div>");
+                                    int level = 0;
+                                    // while nested 
+                                    var nested = labourRequirement.FindChild<LabourFilterGroup>();
+                                    bool found = false;
+                                    while (nested != null)
                                     {
-                                        tblstr.Write("<span class=\"dot dot" + ((level < 5) ? level.ToString() : "5") + " \">" + "</span>");
+                                        nested.InitialiseFilters();
+                                        level++;
+                                        if (nested.Filter(lt))
+                                        {
+                                            found = true;
+                                            break;
+                                        }
+                                        nested.ClearRules();
+                                        nested = nested.FindAllChildren<LabourFilterGroup>().FirstOrDefault();
                                     }
+                                    if (found)
+                                        tblstr.Write($"<span class=\"dot dot{((level < 5) ? level.ToString() : "4")}\"></span>");
+                                    tblstr.Write("</div>");
                                 }
-                                tblstr.Write("</div>");
+                                tblstr.WriteLine("</td>");
                             }
-                            tblstr.WriteLine("</td>");
+                            tblstr.WriteLine("</tr>");
                         }
                     }
                     else
-                    {
-                        tblstr.Write(CreateRowHTML("", numberLabourTypes));
-                    }
-                    tblstr.WriteLine("</tr>");
+                        tblstr.Write($"<tr class=\"disabled\"><td class=\"disabled\">{model.Name}</td>{CreateRowHTML("", numberLabourTypes)}</tr>");
                 }
 
                 // add all rows for children
                 foreach (Model child in model.Children.Where(a => a.Enabled))
-                {
                     tblstr.WriteLine(TableRowHTML(child));
-                }
+
                 return tblstr.ToString();
             }
         }
@@ -355,9 +338,7 @@ namespace UserInterface.Presenters
             using (StringWriter row = new StringWriter())
             {
                 for (int i = 0; i < columns; i++)
-                {
                     row.Write($"<td>{text}</td>");
-                }
                 return row.ToString();
             }
         }
@@ -384,18 +365,19 @@ namespace UserInterface.Presenters
                     return markdownString.ToString();
                 }
 
-                // create labour list
                 labourList.Clear();
                 foreach (LabourType lt in labour.FindAllChildren<LabourType>())
                 {
-                    labourList.Add(new LabourType()
+                    var newLabour = new LabourType()
                     {
                         Parent = labour,
                         Name = lt.Name,
                         AgeInMonths = lt.InitialAge * 12,
-                        Gender = lt.Gender
-                    }
-                    );
+                        Sex = lt.Sex
+                    };
+                    IndividualAttribute att = new IndividualAttribute() { StoredValue = lt.Name };
+                    newLabour.Attributes.Add("Group", att);
+                    labourList.Add(newLabour);
                 }
 
                 // get all parents of LabourRequirement
@@ -466,63 +448,62 @@ namespace UserInterface.Presenters
                 // can row be included?
                 if (validpAtt.Select(a => a.ParentType).Contains(model.GetType()))
                 {
-                    Model labourRequirement = model.FindAllChildren<IModel>().Where(a => a.Enabled && a.GetType().ToString().Contains("LabourRequirement")).FirstOrDefault() as Model;
-                    string emph = (labourRequirement == null) ? "_" : "";
-
-                    // does activity have a Labour Requirement
-                    if (!(labourRequirement == null))
+                    string emph = "_";
+                    if (model.FindAllChildren<LabourRequirement>().Any())
                     {
-                        tblstr.Write($"| {emph}{model.Name.Replace("_", " ")}{emph} |");
-                        // for each labour type
-                        foreach (LabourType lt in labourList)
+                        foreach (LabourRequirement labourRequirement in model.FindAllChildren<LabourRequirement>())
                         {
-                            string levelstring = "";
-                            // for each filter group
-                            foreach (Model item in labourRequirement.FindAllChildren<LabourFilterGroup>())
+                            emph = "";
+                            tblstr.Write($"| {emph}{model.Name.Replace("_", " ")}{emph} |");
+                            // for each labour type
+                            foreach (LabourType lt in labourList)
                             {
-                                int level = 0;
-                                // while nested 
-                                Model nested = labourRequirement as Model;
-
-                                while (nested.FindAllChildren<LabourFilterGroup>().Count() > 0)
+                                // for each filter group
+                                foreach (var item in labourRequirement.FindAllChildren<LabourFilterGroup>())
                                 {
-                                    level++;
-                                    nested = nested.FindAllChildren<LabourFilterGroup>().FirstOrDefault() as Model;
-                                    List<LabourType> ltlist = new List<LabourType>() { lt };
-                                    if (ltlist.Filter(nested).Count() >= 1)
+                                    string levelstring = "";
+                                    bool found = false;
+                                    int level = 0;
+                                    // while nested 
+                                    var nested = item;
+                                    while (nested != null)
                                     {
-                                        levelstring = ((level < 5) ? level.ToString() : "5");
+                                        nested.InitialiseFilters();
+                                        level++;
+                                        levelstring = (level < 5) ? level.ToString() : "4";
+                                        if (nested.Filter(lt))
+                                        {
+                                            found = true;
+                                            break;
+                                        }
+                                        nested.ClearRules();
+                                        nested = nested.FindChild<LabourFilterGroup>();
                                     }
+                                    tblstr.Write($" {(found ? levelstring : "0")} |");
                                 }
                             }
-                            tblstr.Write($" {levelstring} |");
+                            tblstr.Write("  \n");
                         }
                     }
                     else
-                    {
-                        tblstr.Write($"| {emph}{model.Name.Replace("_", " ")}{emph} | " + CreateRowMarkdown("", numberLabourTypes));
-                    }
-                    tblstr.Write("  \n");
+                        tblstr.Write($"| {emph}{model.Name.Replace("_", " ")}{emph} | {CreateRowMarkdown("", numberLabourTypes)}  \n");
                 }
 
                 // add all rows for children
-                foreach (Model child in model.Children.Where(a => a.Enabled))
-                {
+                foreach (var child in model.Children.Where(a => a.Enabled))
                     tblstr.Write(TableRowMarkdown(child));
-                }
+
                 return tblstr.ToString(); 
             }
         }
-
 
         private string CreateRowMarkdown(string text, int columns)
         {
             using (StringWriter row = new StringWriter())
             {
                 for (int i = 0; i < columns; i++)
-                {
                     row.Write($"{text} | ");
-                }
+
                 return row.ToString();
             }
         }

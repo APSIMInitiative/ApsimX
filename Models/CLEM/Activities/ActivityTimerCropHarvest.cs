@@ -1,12 +1,11 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
 
@@ -16,11 +15,11 @@ namespace Models.CLEM.Activities
     /// Activity timer based on crop harvest
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityTask))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
-    [Description("This activity timer is used to determine whether an activity (and all sub activities) will be performed based on the harvest dates of the CropActivityManageProduct above.")]
+    [Description("This timer is related to the harvest dates of the CropActivityManageProduct above.")]
     [HelpUri(@"Content/Features/Timers/CropHarvest.htm")]
     [Version(1, 0, 3, "Accepts harvest tags for multiple harvests of single crop")]
     [Version(1, 0, 2, "Allows timer sequence to be added as child component")]
@@ -28,7 +27,7 @@ namespace Models.CLEM.Activities
     public class ActivityTimerCropHarvest : CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
     {
         [Link]
-        Clock Clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Months before harvest to start performing activities
@@ -36,6 +35,7 @@ namespace Models.CLEM.Activities
         [Description("Offset from harvest to begin activity (-ve before, 0 harvest, +ve after)")]
         [Required]
         public int OffsetMonthHarvestStart { get; set; }
+
         /// <summary>
         /// Months before harvest to stop performing activities
         /// </summary>
@@ -81,7 +81,7 @@ namespace Models.CLEM.Activities
             {
                 if(ManageProductActivity.ActivityEnabled)
                 {
-                    int today = Clock.Today.Year * 12 + Clock.Today.Month;
+                    int today = clock.Today.Year * 12 + clock.Today.Month;
                     // check and return status if already calculated
                     if (lastDate == today)
                     {
@@ -102,7 +102,7 @@ namespace Models.CLEM.Activities
                             }
                         };
                         // check if timer sequence ok
-                        if (sequenceTimerList.Count() > 0)
+                        if (sequenceTimerList.Count > 0)
                         {
                             // get month index in sequence
                             int sequenceIndex = today - month[0];
@@ -119,8 +119,6 @@ namespace Models.CLEM.Activities
                                 }
                             }
                         }
-                        activitye.Activity.SetGuID(this.UniqueID);
-                        this.OnActivityPerformed(activitye);
                         lastStatus = true;
                         return true;
                     }
@@ -172,9 +170,7 @@ namespace Models.CLEM.Activities
                         dates[1] = ManageProductActivity.NextHarvest.HarvestDate;
                     }
                     else
-                    {
                         return new int[] {0,0 };
-                    }
                 }
             }
             else
@@ -198,9 +194,7 @@ namespace Models.CLEM.Activities
                     dates[1] = ManageProductActivity.NextHarvest.HarvestDate;
                 }
                 else
-                {
                     return new int[] { 0, 0 };
-                }
             }
 
             for (int i = 0; i < 2; i++)
@@ -219,28 +213,21 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                int today = Clock.Today.Year * 12 + Clock.Today.Month;
+                int today = clock.Today.Year * 12 + clock.Today.Month;
                 if (lastDate != today)
-                {
                     month = CalculateMonthBounds(today);
-                }
+
                 return (month[0] < today && month[1] < today);
             }
         }
 
-        /// <summary>
-        /// Method to determine whether the activity is due based on a specified date
-        /// </summary>
-        /// <returns>Whether the activity is due based on the specified date</returns>
+        /// <inheritdoc/>
         public bool Check(DateTime dateToCheck)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Activity has occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         public virtual void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
@@ -280,12 +267,8 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -327,27 +310,20 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("</div>");
                 }
                 if (!this.Enabled)
-                {
                     htmlWriter.Write(" - DISABLED!");
-                }
+
                 return htmlWriter.ToString(); 
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
         {
             return "</div>";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -357,7 +333,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write(this.Name);
                 }
                 htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
                 return htmlWriter.ToString(); 
             }
         } 

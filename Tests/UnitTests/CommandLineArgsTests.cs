@@ -75,9 +75,7 @@ namespace UnitTests
             string text = ReflectionUtilities.GetResourceAsString("UnitTests.BasicFile.apsimx");
 
             // Check property values at this point.
-            Simulations sims = FileFormat.ReadFromString<Simulations>(text, out List<Exception> errors);
-            if (errors != null && errors.Count > 0)
-                throw errors[0];
+            Simulations sims = FileFormat.ReadFromString<Simulations>(text, e => throw e, false);
 
             Clock clock = sims.FindInScope<Clock>();
             Simulation sim1 = sims.FindInScope<Simulation>();
@@ -168,42 +166,30 @@ namespace UnitTests
 
             // Need to quote the regex on unix systems.
             string args;
-            if (ProcessUtilities.CurrentOS.IsWindows)
-                args = $@"{apsimxFileName} /Verbose /SimulationNameRegexPattern:sim\d";
-            else
-                args = $@"{apsimxFileName} /Verbose '/SimulationNameRegexPattern:sim\d'";
+            args = @"/Verbose /SimulationNameRegexPattern:sim\d";
 
-            ProcessUtilities.ProcessWithRedirectedOutput proc = new ProcessUtilities.ProcessWithRedirectedOutput();
-            proc.Start(models, args, Directory.GetCurrentDirectory(), true);
-            proc.WaitForExit();
+            string stdout = Utilities.RunModels(sims, args);
 
-            Assert.Null(proc.StdErr);
-            Assert.True(proc.StdOut.Contains("sim1"));
-            Assert.True(proc.StdOut.Contains("sim2"));
-            Assert.False(proc.StdOut.Contains("simulation3"));
-            Assert.False(proc.StdOut.Contains("Base"));
+            Assert.True(stdout.Contains("sim1"));
+            Assert.True(stdout.Contains("sim2"));
+            Assert.False(stdout.Contains("simulation3"));
+            Assert.False(stdout.Contains("Base"));
 
-            args = $@"{apsimxFileName} /Verbose /SimulationNameRegexPattern:sim1";
-            proc = new ProcessUtilities.ProcessWithRedirectedOutput();
-            proc.Start(models, args, Directory.GetCurrentDirectory(), true);
-            proc.WaitForExit();
+            args = @"/Verbose /SimulationNameRegexPattern:sim1";
+            stdout = Utilities.RunModels(sims, args);
 
-            Assert.Null(proc.StdErr);
-            Assert.True(proc.StdOut.Contains("sim1"));
-            Assert.False(proc.StdOut.Contains("sim2"));
-            Assert.False(proc.StdOut.Contains("simulation3"));
-            Assert.False(proc.StdOut.Contains("Base"));
+            Assert.True(stdout.Contains("sim1"));
+            Assert.False(stdout.Contains("sim2"));
+            Assert.False(stdout.Contains("simulation3"));
+            Assert.False(stdout.Contains("Base"));
 
-            args = $@"{apsimxFileName} /Verbose /SimulationNameRegexPattern:(simulation3)|(Base)";
-            proc = new ProcessUtilities.ProcessWithRedirectedOutput();
-            proc.Start(models, args, Directory.GetCurrentDirectory(), true);
-            proc.WaitForExit();
+            args = @"/Verbose /SimulationNameRegexPattern:(simulation3)|(Base)";
+            stdout = Utilities.RunModels(sims, args);
 
-            Assert.Null(proc.StdErr);
-            Assert.False(proc.StdOut.Contains("sim1"));
-            Assert.False(proc.StdOut.Contains("sim2"));
-            Assert.True(proc.StdOut.Contains("simulation3"));
-            Assert.True(proc.StdOut.Contains("Base"));
+            Assert.False(stdout.Contains("sim1"));
+            Assert.False(stdout.Contains("sim2"));
+            Assert.True(stdout.Contains("simulation3"));
+            Assert.True(stdout.Contains("Base"));
         }
 
         [Test]

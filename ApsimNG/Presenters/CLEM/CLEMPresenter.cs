@@ -1,32 +1,29 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.CLEM;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using UserInterface.Interfaces;
-using UserInterface.Presenters;
 using UserInterface.Views;
 
 namespace UserInterface.Presenters
 {
     public class CLEMPresenter : IPresenter
     {
-        internal ICLEMView view;
-        internal object viewobject;
-        internal ICLEMUI clemModel;
-        internal object model;
+        internal ICLEMView View;
+        internal ICLEMUI ClemModel;
+        internal IModel Model;
 
         /// <summary>
         /// The explorer
         /// </summary>
-        internal ExplorerPresenter explorerPresenter;
+        internal ExplorerPresenter ExplorerPresenter;
 
-        internal Dictionary<string, IPresenter> presenterList = new Dictionary<string, IPresenter> ();
+        internal Dictionary<string, IPresenter> PresenterList = new Dictionary<string, IPresenter> ();
 
         /// <summary>
         /// Attach the view
@@ -36,13 +33,12 @@ namespace UserInterface.Presenters
         /// <param name="explorerPresenter">The explorer</param>
         public virtual void Attach(object model, object view, ExplorerPresenter explorerPresenter)
         {
-            this.model = model;
-            this.clemModel = model as ICLEMUI;
-            this.explorerPresenter = explorerPresenter;
+            this.Model = model as IModel;
+            this.ClemModel = model as ICLEMUI;
+            this.ExplorerPresenter = explorerPresenter;
 
-            this.view = view as ICLEMView;
-            this.viewobject = view;
-
+            this.View = view as ICLEMView;
+            
             PresenterNameAttribute presenterName = null;
 
             if (model != null)
@@ -52,83 +48,86 @@ namespace UserInterface.Presenters
                 {
                     if (model is ZoneCLEM)
                     {
-                        object newView = new MarkdownView(this.view as ViewBase);
+                        object newView = new MarkdownView(this.View as ViewBase);
                         IPresenter messagePresenter = new MessagePresenter();
                         if (newView != null && messagePresenter != null)
                         {
-                            this.view.AddTabView("Messages", newView);
-                            messagePresenter.Attach(model, newView, this.explorerPresenter);
-                            presenterList.Add("Messages", messagePresenter);
+                            this.View.AddTabView("Messages", newView);
+                            messagePresenter.Attach(model, newView, this.ExplorerPresenter);
+                            PresenterList.Add("Messages", messagePresenter);
                         }
                     }
                 }
                 catch (Exception err)
                 {
-                    this.explorerPresenter.MainPresenter.ShowError(err);
+                    this.ExplorerPresenter.MainPresenter.ShowError(err);
                 }
                 //Properties
                 try
                 {
+                    // user can set view to state it must be multiview so do not override value
                     presenterName = ReflectionUtilities.GetAttribute(model.GetType(), typeof(PresenterNameAttribute), false) as PresenterNameAttribute;
                     string propPresenterName = presenterName.ToString();
-                    if (!presenterName.ToString().Contains("Property"))
-                    {
-                        propPresenterName = "UserInterface.Presenters.PropertyPresenter";
-                    }
                     ViewNameAttribute viewAttribute = ReflectionUtilities.GetAttribute(model.GetType(), typeof(ViewNameAttribute), false) as ViewNameAttribute;
                     string viewName = viewAttribute.ToString();
-                    if (!viewName.ToString().Contains(".Property") & !viewName.ToString().Contains(".GridView"))
+                    if (propPresenterName == "UserInterface.Presenters.PropertyPresenter" | !propPresenterName.Contains("Property"))
                     {
-                        viewName = "UserInterface.Views.GridView";
+                        propPresenterName = "UserInterface.Presenters.PropertyPresenter";
+                        if(viewName != "UserInterface.Views.PropertyMultiModelView")
+                            viewName = "UserInterface.Views.PropertyView";
                     }
 
-                    string[] childDisplayInParentPresenters = { "PropertyTablePresenter", "PropertyTreeTablePresenter" };
-                    bool isTablePresenter = childDisplayInParentPresenters.Contains(propPresenterName.Split('.').Last());
-
-                    // check if it has properties
-                    if (isTablePresenter ||
-                        (model.GetType().GetProperties(
+                    var props = model.GetType().GetProperties(
                         BindingFlags.Public |
                           BindingFlags.NonPublic |
                           BindingFlags.Instance
-                          ).Where(prop => prop.IsDefined(typeof(DescriptionAttribute), false)).Count() > 0))
+                          );
+
+                    bool categoryAttributeFound = (props.Where(prop => prop.IsDefined(typeof(CategoryAttribute), false)).Count() > 0);
+                    if (categoryAttributeFound)
                     {
-                        object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.view }, null, null);
+                        propPresenterName = "UserInterface.Presenters.PropertyCategorisedPresenter";
+                        viewName = "UserInterface.Views.PropertyCategorisedView";
+                    }
+
+                    // check if it has properties
+                    if ((viewName.Contains("PropertyMultiModelView") | propPresenterName.Contains("MultiModel")) ||
+                        (props.Where(prop => prop.IsDefined(typeof(DescriptionAttribute), false)).Count() > 0))
+                    {
+                        object newView = Assembly.GetExecutingAssembly().CreateInstance(viewName, false, BindingFlags.Default, null, new object[] { this.View }, null, null);
                         IPresenter propertyPresenter = Assembly.GetExecutingAssembly().CreateInstance(propPresenterName) as IPresenter;
                         if (newView != null && propertyPresenter != null)
                         {
-                            this.view.AddTabView("Properties", newView);
-                            propertyPresenter.Attach(model, newView, this.explorerPresenter);
-                            presenterList.Add("Properties", propertyPresenter);
+                            this.View.AddTabView("Properties", newView);
+                            propertyPresenter.Attach(model, newView, this.ExplorerPresenter);
+                            PresenterList.Add("Properties", propertyPresenter);
                         }
                     }
                 }
                 catch (Exception err)
                 {
-                    this.explorerPresenter.MainPresenter.ShowError(err);
+                    this.ExplorerPresenter.MainPresenter.ShowError(err);
                 }
 
                 // if presenter is ICLEMPresenter then add the extra presenters if specified
                 if (presenterName != null && typeof(ICLEMPresenter).IsAssignableFrom(Assembly.GetExecutingAssembly().GetType(presenterName.ToString())))
-                {
                     (Assembly.GetExecutingAssembly().CreateInstance(presenterName.ToString()) as ICLEMPresenter).AttachExtraPresenters(this);
-                }
 
                 //HTML Summary
                 try
                 {
-                    object newView = new MarkdownView(this.view as ViewBase);
+                    object newView = new MarkdownView(this.View as ViewBase);
                     IPresenter summaryPresenter = new CLEMSummaryPresenter();
                     if (newView != null && summaryPresenter != null)
                     {
-                        this.view.AddTabView("Summary", newView);
-                        summaryPresenter.Attach(model, newView, this.explorerPresenter);
-                        presenterList.Add("Summary", summaryPresenter);
+                        this.View.AddTabView("Summary", newView);
+                        summaryPresenter.Attach(model, newView, this.ExplorerPresenter);
+                        PresenterList.Add("Summary", summaryPresenter);
                     }
                 }
                 catch (Exception err)
                 {
-                    this.explorerPresenter.MainPresenter.ShowError(err);
+                    this.ExplorerPresenter.MainPresenter.ShowError(err);
                 }
                 //Versions
                 try
@@ -136,32 +135,36 @@ namespace UserInterface.Presenters
                     var versions = ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false);
                     if (versions.Count() > 0)
                     {
-                        object newView = new MarkdownView(this.view as ViewBase);
+                        object newView = new MarkdownView(this.View as ViewBase);
                         IPresenter versionPresenter = new VersionsPresenter();
                         if (newView != null && versionPresenter != null)
                         {
-                            this.view.AddTabView("Version", newView);
-                            versionPresenter.Attach(model, newView, this.explorerPresenter);
-                            presenterList.Add("Version", versionPresenter);
+                            this.View.AddTabView("Version", newView);
+                            versionPresenter.Attach(model, newView, this.ExplorerPresenter);
+                            PresenterList.Add("Version", versionPresenter);
                         }
                     }
                 }
                 catch (Exception err)
                 {
-                    this.explorerPresenter.MainPresenter.ShowError(err);
+                    this.ExplorerPresenter.MainPresenter.ShowError(err);
                 }
 
-                this.view.TabSelected += OnTabSelected;
+                this.View.TabSelected += OnTabSelected;
 
-                if (clemModel != null)
+                if (ClemModel != null)
                 {
-                    this.view.SelectTabView(clemModel.SelectedTab);
-                    if(clemModel.SelectedTab == "Summary")
+                    this.View.SelectTabView(ClemModel.SelectedTab);
+                    if(ClemModel.SelectedTab == "Summary")
                     {
-                        presenterList.TryGetValue("Summary", out IPresenter selectedPresenter);
+                        PresenterList.TryGetValue("Summary", out IPresenter selectedPresenter);
                         (selectedPresenter as CLEMSummaryPresenter).Refresh();
                     }
                 }
+
+                if(ClemModel != null && ClemModel.SelectedTab is null && PresenterList.Count > 0)
+                    if (PresenterList.FirstOrDefault().Value is IRefreshPresenter)
+                        (PresenterList.FirstOrDefault().Value as IRefreshPresenter).Refresh(); 
             }
         }
 
@@ -171,21 +174,15 @@ namespace UserInterface.Presenters
         internal void OnTabSelected(object sender, EventArgs e)
         {
             // change tab name
-            if (clemModel != null)
-            {
-                clemModel.SelectedTab = (e as TabChangedEventArgs).TabName;
-            }
+            if (ClemModel != null)
+                ClemModel.SelectedTab = (e as TabChangedEventArgs).TabName;
 
             string tabName = (e as TabChangedEventArgs).TabName;
-            presenterList.TryGetValue(tabName, out IPresenter selectedPresenter);
+            PresenterList.TryGetValue(tabName, out IPresenter selectedPresenter);
 
             if (selectedPresenter != null)
-            {
                 if (selectedPresenter is IRefreshPresenter)
-                {
                     (selectedPresenter as IRefreshPresenter).Refresh();
-                }
-            }
         }
 
         /// <summary>
@@ -193,15 +190,11 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
-            this.view.TabSelected -= OnTabSelected;
+            this.View.TabSelected -= OnTabSelected;
 
-            foreach (KeyValuePair<string, IPresenter> valuePair in presenterList)
-            {
+            foreach (KeyValuePair<string, IPresenter> valuePair in PresenterList)
                 if(valuePair.Value != null)
-                {
                     valuePair.Value.Detach();
-                }
-            }
         }
 
     }

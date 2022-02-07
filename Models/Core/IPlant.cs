@@ -1,11 +1,14 @@
-﻿namespace Models.Core
+﻿using Models.PMF;
+using System.Collections.Generic;
+
+namespace Models.Core
 {
     /// <summary>
     /// The ICrop interface specifies the properties and methods that all
     /// crops must have. In effect this interface describes the interactions
     /// between a crop and the other models in APSIM.
     /// </summary>
-    public interface IPlant
+    public interface IPlant : IModel
     {
         /// <summary>The plant type.</summary>
         /// <remarks>A substitute for the old Leguminosity.</remarks>
@@ -18,7 +21,13 @@
         string[] CultivarNames { get; }
 
         /// <summary>Get above ground biomass</summary>
-        PMF.Biomass AboveGround { get; }
+        IBiomass AboveGround { get; }
+
+        /// <summary>Daily soil water uptake from each soil layer (mm)</summary>
+        IReadOnlyList<double> WaterUptake { get; }
+
+        /// <summary>Daily nitrogen uptake from each soil layer (kg/ha).</summary>
+        IReadOnlyList<double> NitrogenUptake { get; }
 
         /// <summary>Sows the plant</summary>
         /// <param name="cultivar">The cultivar.</param>

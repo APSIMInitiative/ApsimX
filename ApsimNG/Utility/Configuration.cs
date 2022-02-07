@@ -96,9 +96,15 @@ namespace Utility
         [Input("Mute all sound effects")]
         public bool Muted { get; set; }
 
-        /// <summary>Use the new property presenter?</summary>
-        [Input("Use new/beta property presenter")]
-        public bool UseNewPropertyPresenter { get; set; }
+        /// <summary>
+        /// In theory, if there are any commands in the command history,
+        /// then the file has been modified. In practice, there may be
+        /// some faulty presenters which make changes to the model without
+        /// using the command history.
+        /// </summary>
+        [Input("Use faster file closing algorithm")]
+        [Tooltip("This will mostly eliminate the pause when closing a file, but it may cause apsim to fail to prompt to save the file in some cases.")]
+        public bool UseFastFileClose { get; set; }
 
         /// <summary>Return the name of the summary file JPG.</summary>
         public string SummaryPngFileName
@@ -379,9 +385,9 @@ namespace Utility
         /// </summary>
         private void OnDarkThemeToggled()
         {
-#if NETCOREAPP
+
             EditorStyleName = DarkTheme ? "Adwaita-dark" : "Adwaita";
-#endif
+
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Shared.Documentation;
 using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Interfaces;
@@ -10,16 +11,13 @@ using Newtonsoft.Json;
 namespace Models.Functions
 {
     /// <summary>
-    /// [Name] is the [agregationMethod] of sub-daily values from a [Response.GetType()].
-    /// [Document InterpolationMethod]
-    /// Each of the interpolated [InterpolationMethod.OutputValueType]s are then passed into 
-    /// the following Response and the [agregationMethod] taken to give daily [Name]
-    /// [Document Response]
+    /// This class uses aggregates, using a child aggregation function, sub-daily values from a child response function..
+    /// Each of the interpolated values are passed into the response function and then given to the aggregation function.
     /// </summary>
 
     [Serializable]
     [Description("Uses the specified InterpolationMethod to determine sub daily values then calcualtes a value for the Response at each of these time steps and returns either the sum or average depending on the AgrevationMethod selected")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class HourlyInterpolation : Model, IFunction
     {
@@ -35,7 +33,7 @@ namespace Models.Functions
         /// <summary>The temperature response function applied to each sub daily temperature and averaged to give daily mean</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private IIndexedFunction Response = null;
-        
+
         /// <summary>Method used to agreagate sub daily values</summary>
         [Description("Method used to agregate sub daily temperature function")]
         public AgregationMethod agregationMethod { get; set; }
@@ -80,19 +78,34 @@ namespace Models.Functions
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDailyInitialisation(object sender, EventArgs e)
         {
-		 SubDailyInput = InterpolationMethod.SubDailyValues();
+            SubDailyInput = InterpolationMethod.SubDailyValues();
             SubDailyResponse = new List<double>();
             foreach (double sdt in SubDailyInput)
-            {
                 SubDailyResponse.Add(Response.ValueIndexed(sdt));
-            }
+        }
 
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            yield return new Paragraph($"{Name} is the {agregationMethod.ToString().ToLower()} of sub-daily values from a {Response.GetType().Name}.");
+
+            // Write memos.
+            foreach (var tag in DocumentChildren<Memo>())
+                yield return tag;
+
+            foreach (var tag in (InterpolationMethod as IModel).Document())
+                yield return tag;
+
+            yield return new Paragraph($"Each of the interpolated {InterpolationMethod.OutputValueType}s are then passed into the following Response and the {agregationMethod} taken to give daily {Name}");
+
+            foreach (var tag in (Response as IModel).Document())
+                yield return tag;
         }
     }
 
     /// <summary>
     /// Firstly 3-hourly estimates of air temperature (Ta) are interpolated 
-    /// usig the method of [jones_ceres-maize:_1986] which assumes a sinusoidal temperature. 
+    /// using the method of [jones_ceres-maize:_1986] which assumes a sinusoidal temperature. 
     /// pattern between Tmax and Tmin.  
     /// </summary>
     [Serializable]
@@ -154,11 +167,18 @@ namespace Models.Functions
                 throw new Exception("Incorrect number of subdaily temperature estimations in " + this.Name + " temperature interpolation");
             return trfs;
         }
+
+        /// <summary>Writes documentation for this function</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+        }
     }
 
     /// <summary>
     /// Firstly hourly estimates of air temperature (Ta) are interpolated from Tmax, Tmin and daylength (d) 
-    /// usig the method of [Goudriaan1994].  
+    /// using the method of [Goudriaan1994].  
     /// During sunlight hours Ta is calculated each hour using a 
     /// sinusoidal curve fitted to Tmin and Tmax . 
     /// After sunset Ta is calculated as an exponential decline from Ta at sunset 
@@ -258,8 +278,12 @@ namespace Models.Functions
             return sdts;
         }
 
-        
-
+        /// <summary>Writes documentation for this function</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+        }
     }
 
     /// <summary>
@@ -343,6 +367,13 @@ namespace Models.Functions
             else if (t > setHour && t - 1 < setHour) weight = 1 - (t - setHour);
             else if (t > setHour) weight = 0;
             return weight;
+        }
+
+        /// <summary>Writes documentation for this function</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            foreach (var tag in GetModelDescription())
+                yield return tag;
         }
 
     }

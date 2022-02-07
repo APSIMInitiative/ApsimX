@@ -15,13 +15,13 @@ namespace Models.CLEM.Groupings
     /// Contains a group of filters to identify individual labour in a set price group
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourPricing))]
-    [Description("This labour price group sets the pay rate for a set group of individuals.")]
+    [Description("Set the pay rate for the selected group of individuals")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Filters/LabourPriceGroup.htm")]
-    public class LabourPriceGroup : CLEMModel, IFilterGroup
+    [HelpUri(@"Content/Features/Filters/Groups/LabourPriceGroup.htm")]
+    public class LabourPriceGroup : FilterGroup<LabourType>
     {
         /// <summary>
         /// Pay rate
@@ -29,18 +29,6 @@ namespace Models.CLEM.Groupings
         [Description("Daily pay rate")]
         [Required, GreaterThanEqualValue(0)]
         public double Value { get; set; }
-
-        /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
-
-        /// <summary>
-        /// Proportion of group to use
-        /// </summary>
-        [JsonIgnore]
-        public double Proportion { get; set; }
 
         /// <summary>
         /// Constructor
@@ -52,15 +40,11 @@ namespace Models.CLEM.Groupings
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             string html = "";
-            if (!formatForParentControl)
+            if (!FormatForParentControl)
             {
                 html += "\r\n<div class=\"activityentry\">";
                 html += "Pay ";
@@ -79,14 +63,11 @@ namespace Models.CLEM.Groupings
             return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerClosingTags()
         {
             string html = "";
-            if (formatForParentControl)
+            if (FormatForParentControl)
             {
                 if (Value.ToString() == "0")
                 {
@@ -107,48 +88,31 @@ namespace Models.CLEM.Groupings
             return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerOpeningTags()
         {
             string html = "";
-            if (formatForParentControl)
-            {
+            if (FormatForParentControl)            
                 html += "<tr><td>" + this.Name + "</td><td>";
-                if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
-                {
-                    html += "<div class=\"filter\">All individuals</div>";
-                }
-            }
-            else
-            {
-                html += "\r\n<div class=\"filterborder clearfix\">";
-                if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
-                {
-                    html += "<div class=\"filter\">All individuals</div>";
-                }
-            }
+            else            
+                html += "\r\n<div class=\"filterborder clearfix\">";            
+
+            if (FindAllChildren<Filter>().Count() < 1)
+                html += "<div class=\"filter\">All individuals</div>";
+
             return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
         {
-            return !formatForParentControl ? base.ModelSummaryClosingTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryClosingTags() : "";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
         {
-            return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
         } 
         #endregion
     }

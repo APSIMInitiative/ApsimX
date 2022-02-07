@@ -16,13 +16,13 @@ namespace Models.CLEM.Groupings
     /// Contains a group of filters to identify individual in labour pool
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourActivityFeed))]
-    [Description("This labour filter group selects specific individuals from the labour pool using any number of Labour Filters. This filter group includes feeding rules. No filters will apply rules to all individuals. Multiple feeding groups will select groups of individuals required.")]
+    [Description("Defines the feed value for specific individuals from the labour pool")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Filters/LabourFeedGroup.htm")]
-    public class LabourFeedGroup: CLEMModel, IFilterGroup
+    [HelpUri(@"Content/Features/Filters/Groups/LabourFeedGroup.htm")]
+    public class LabourFeedGroup : FilterGroup<LabourType>
     {
         /// <summary>
         /// Value to supply for each month
@@ -30,18 +30,6 @@ namespace Models.CLEM.Groupings
         [Description("Value to supply")]
         [GreaterThanValue(0)]
         public double Value { get; set; }
-
-        /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
-
-        /// <summary>
-        /// Proportion of group to use
-        /// </summary>
-        [JsonIgnore]
-        public double Proportion { get; set; }
 
         /// <summary>
         /// Constructor
@@ -53,12 +41,8 @@ namespace Models.CLEM.Groupings
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -82,11 +66,9 @@ namespace Models.CLEM.Groupings
 
                 ZoneCLEM zoneCLEM = FindAncestor<ZoneCLEM>();
                 ResourcesHolder resHolder = zoneCLEM.FindChild<ResourcesHolder>();
-                HumanFoodStoreType food = resHolder.GetResourceItem(this, (this.Parent as LabourActivityFeed).FeedTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore) as HumanFoodStoreType;
+                HumanFoodStoreType food = resHolder.FindResourceType<HumanFoodStore, HumanFoodStoreType>(this, (this.Parent as LabourActivityFeed).FeedTypeName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.Ignore);
                 if (food != null)
-                {
                     htmlWriter.Write(" " + food.Units + " ");
-                }
 
                 htmlWriter.Write("<span class=\"setvalue\">");
                 switch (ft)
@@ -111,32 +93,6 @@ namespace Models.CLEM.Groupings
                 htmlWriter.Write(" that matches the following conditions:");
 
                 htmlWriter.Write("</div>");
-                return htmlWriter.ToString(); 
-            }
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
-        {
-            return "\r\n</div>";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
-        {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                if (this.FindAllChildren<LabourFilter>().Count() == 0)
-                {
-                    htmlWriter.Write("<div class=\"filter\">All individuals</div>");
-                }
                 return htmlWriter.ToString(); 
             }
         }

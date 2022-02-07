@@ -21,6 +21,7 @@ namespace UserInterface.Presenters
     using Models.Management;
     using Views;
     using Interfaces;
+    using APSIM.Shared.Graphing;
 
     /// <summary>
     /// Presenter for the rotation bubble chart component
@@ -50,7 +51,7 @@ namespace UserInterface.Presenters
         /// </summary>
         private IEditorView currentEditor;
 
-        private SimplePropertyPresenter propertiesPresenter = new SimplePropertyPresenter();
+        private PropertyPresenter propertiesPresenter = new PropertyPresenter();
 
         /// <summary>
         /// Attach the Manager model and ManagerView to this presenter.

@@ -13,7 +13,7 @@ namespace UserInterface.Views
         /// <remarks>
         /// Change type to IProeprtyView when ready to release new property view.
         /// </remarks>
-        ViewBase PropertyEditor { get; }
+        IPropertyView PropertyEditor { get; }
 
         /// <summary>
         /// Provides access to the editor.
@@ -29,7 +29,7 @@ namespace UserInterface.Views
     public class ManagerView : ViewBase,  IManagerView
     {
 
-        private ViewBase propertyEditor;
+        private PropertyView propertyEditor;
         private IEditorView scriptEditor;
         private Notebook notebook;
 
@@ -41,16 +41,13 @@ namespace UserInterface.Views
         {
             notebook = new Notebook();
             mainWidget = notebook;
-            if (Utility.Configuration.Settings.UseNewPropertyPresenter)
-                propertyEditor = new PropertyView(this);
-            else
-                propertyEditor = new GridView(this);
+            propertyEditor = new PropertyView(this);
             scriptEditor = new EditorView(this)
             {
-#if NETCOREAPP
+
                 ShowLineNumbers = true,
                 Language = "c-sharp",
-#endif
+
             };
             notebook.AppendPage(propertyEditor.MainWidget, new Label("Parameters"));
             notebook.AppendPage(((ViewBase)scriptEditor).MainWidget, new Label("Script"));
@@ -61,9 +58,9 @@ namespace UserInterface.Views
         {
             try
             {
-                propertyEditor.MainWidget.Cleanup();
+                propertyEditor.MainWidget.Dispose();
                 propertyEditor = null;
-                (scriptEditor as ViewBase)?.MainWidget?.Cleanup();
+                (scriptEditor as ViewBase)?.MainWidget?.Dispose();
                 scriptEditor = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;
@@ -83,8 +80,7 @@ namespace UserInterface.Views
             set { notebook.CurrentPage = value; }
         }
 
-        public ViewBase PropertyEditor { get { return propertyEditor; } }
+        public IPropertyView PropertyEditor { get { return propertyEditor; } }
         public IEditorView Editor { get { return scriptEditor; } }
-       
     }
 }

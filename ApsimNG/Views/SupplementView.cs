@@ -213,7 +213,7 @@
                                                String.Format("Value should be a number in the range 0 to {0:F2}", maxVal));
                             md.Title = "Invalid entry";
                             md.Run();
-                            md.Cleanup();
+                            md.Dispose();
                         }
                         if (!cancel)
                         {
@@ -498,7 +498,7 @@
                                        "Value should be a non-negative number");
                     md.Title = "Invalid entry";
                     md.Run();
-                    md.Cleanup();
+                    md.Dispose();
                 }
                 if (!cancel)
                 {
@@ -530,7 +530,7 @@
                                        "You must provide a name for the supplement");
                     md.Title = "Invalid entry";
                     md.Run();
-                    md.Cleanup();
+                    md.Dispose();
                 }
                 if (!cancel)
                 {

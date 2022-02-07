@@ -109,6 +109,7 @@
         private void OnSplitterChanged(object sender, EventArgs e)
         {
             Configuration.Settings.ReportSplitterPosition = this.view.SplitterPosition;
+            Configuration.Settings.Save();
         }
 
         /// <summary>Detach the model from the view.</summary>
@@ -123,7 +124,8 @@
             this.view.EventList.TextHasChangedByUser -= OnEventNamesChanged;
             this.view.GroupByEdit.Changed -= OnGroupByChanged;
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
-            dataStorePresenter.Detach();
+            if(dataStore != null)
+                dataStorePresenter.Detach();
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
         }

@@ -1,36 +1,36 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
+using Models.CLEM.Reporting;
 
 namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Activity timer based on monthly interval
+    /// Activity timer based on month range
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [ValidParent(ParentType = typeof(GrazeFoodStoreFertilityLimiter))]
-    [Description("This activity timer defines a range between months upon which to perform activities.")]
+    [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
+    [ValidParent(ParentType = typeof(ReportRuminantHerd))]
+    [Description("This timer defines a range between months upon which to perform activities.")]
     [HelpUri(@"Content/Features/Timers/MonthRange.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerMonthRange: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
-        [JsonIgnore]
         [Link]
-        Clock Clock = null;
+        private Clock clock = null;
 
         private int startMonth;
         private int endMonth;
@@ -64,22 +64,16 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
         }
 
-        /// <summary>
-        /// Method to determine whether the activity is due
-        /// </summary>
-        /// <returns>Whether the activity is due in the current month</returns>
+        /// <inheritdoc/>
         public bool ActivityDue
         {
             get
             {
-                return IsMonthInRange(Clock.Today);
+                return IsMonthInRange(clock.Today);
             }
         }
 
-        /// <summary>
-        /// Method to determine whether the activity is due based on a specified date
-        /// </summary>
-        /// <returns>Whether the activity is due based on the specified date</returns>
+        /// <inheritdoc/>
         public bool Check(DateTime dateToCheck)
         {
             return IsMonthInRange(dateToCheck);
@@ -101,24 +95,17 @@ namespace Models.CLEM.Activities
             if (startMonth <= endMonth)
             {
                 if ((date.Month >= startMonth) & (date.Month <= endMonth))
-                {
                     due = true;
-                }
             }
             else
             {
                 if ((date.Month <= endMonth) | (date.Month >= startMonth))
-                {
                     due = true;
-                }
             }
             return due;
         }
 
-        /// <summary>
-        /// Activity has occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         public virtual void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
@@ -126,21 +113,15 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"filter\">");
                 htmlWriter.Write("Perform between ");
                 if (StartMonth == 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                }
                 else
                 {
                     htmlWriter.Write("<span class=\"setvalueextra\">");
@@ -148,9 +129,7 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write(" and <span class=\"setvalueextra\">");
                 if (EndMonth == 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">NOT SET</span>");
-                }
                 else
                 {
                     htmlWriter.Write("<span class=\"setvalueextra\">");
@@ -158,37 +137,27 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write("</div>");
                 if (!this.Enabled)
-                {
                     htmlWriter.Write(" - DISABLED!");
-                }
                 return htmlWriter.ToString(); 
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
         {
             return "</div>";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("<div class=\"filtername\">");
                 if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                {
                     htmlWriter.Write(this.Name);
-                }
                 htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
                 return htmlWriter.ToString(); 
             }
         } 

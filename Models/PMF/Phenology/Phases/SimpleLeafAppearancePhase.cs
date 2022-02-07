@@ -1,22 +1,18 @@
 ﻿using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.Functions;
-using Models.PMF.Struct;
 using System;
-using System.Collections.Generic;
-using System.IO;
 using Newtonsoft.Json;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// # [Name] Phase
-    /// The [Name] phase goes from [Start] stage to [End] stage and its duration is determined by
-    /// leaf appearance rate and the number of leaves to complete the phase. 
+    /// This phase goes from the specified start stage to the specified end stage and
+    /// its duration is determined by leaf appearance rate and the number of leaves to
+    /// complete the phase. 
     /// </summary>
-    
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
     public class SimpleLeafAppearancePhase : Model, IPhase
@@ -91,9 +87,9 @@ namespace Models.PMF.Phen
 
         /// <summary>Called when [simulation commencing].</summary>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e) { ResetPhase(); }
+        private void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            ResetPhase();
+        }
     }
 }
-
-      
-      

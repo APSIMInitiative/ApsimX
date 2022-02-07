@@ -12,7 +12,6 @@ using Models.PMF.Struct;
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// # [Name]
     /// This model calculates a Zadok growth stage value based upon the current phenological growth stage within the model. 
     /// The model uses information regarding germination, emergence, leaf appearance and tiller appearance for early growth stages (Zadok stages 0 to 30).
     /// The model then uses simulated phenological growth stages for Zadok stages 30 to 100.
@@ -37,7 +36,7 @@ namespace Models.PMF.Phen
     ///
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class ZadokPMF: Model
     {

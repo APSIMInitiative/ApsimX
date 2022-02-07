@@ -35,11 +35,9 @@ namespace UserInterface.Views
         {
             propertyEditor = new PropertyView(null);
             Box box;
-#if NETFRAMEWORK
-            box = VBox;
-#else
+
             box = ContentArea;
-#endif
+
             box.PackStart(propertyEditor.MainWidget, true, true, 0);
             propertyEditor.MainWidget.ShowAll();
             propertyEditor.PropertyChanged += OnPropertyChanged;
@@ -69,7 +67,7 @@ namespace UserInterface.Views
                 }
             }
             while (response == ResponseType.Apply);
-            this.Cleanup();
+            this.Dispose();
         }
 
         private PropertyGroup GetPropertyGroup()

@@ -1,17 +1,18 @@
-﻿using Models.Core;
-using System.Collections.Generic;
+﻿using APSIM.Shared.Documentation;
+using Models.Core;
 using Models.Functions;
 using Models.PMF.Interfaces;
 using System;
+using System.Collections.Generic;
 
 namespace Models.PMF
 {
     /// <summary>
-    /// This class holds the functions for calculating the demands for each biomass fraction
+    /// This class holds the functions for calculating the absolute demands for each biomass fraction. 
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(IOrgan))]
-    public class BiomassDemand : Model, ICustomDocumentation
+    public class BiomassDemand : Model
     {
         /// <summary>The demand for the structural fraction.</summary>
         [Link(Type = LinkType.Child, ByName = true)]
@@ -28,28 +29,15 @@ namespace Models.PMF
         [Units("g/m2")]
         public IFunction Storage = null;
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
 
-                // get description of this class.
-                tags.Add(new AutoDocumentation.Paragraph("This is the collection of functions for calculating the demands for each of the biomass pools (Structural, Metabolic, and Storage).", indent));
-
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // write children.
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
         }
     }
 }
