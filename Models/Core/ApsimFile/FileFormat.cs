@@ -142,7 +142,7 @@
         {
             protected override List<MemberInfo> GetSerializableMembers(Type objectType)
             {
-                var result = base.GetSerializableMembers(objectType);
+                List<MemberInfo> result = base.GetSerializableMembers(objectType);
                 result.RemoveAll(m => m is PropertyInfo &&
                                       !(m as PropertyInfo).CanWrite);
                 result.RemoveAll(m => m.GetCustomAttribute(typeof(LinkAttribute)) != null);

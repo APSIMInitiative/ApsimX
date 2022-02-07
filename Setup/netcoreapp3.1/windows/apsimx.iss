@@ -13,7 +13,7 @@
 #else
 #define AppVerNo GetStringFileInfo(ApsimX + "\bin\Release\netcoreapp3.1\win-x64\publish\Models.exe", PRODUCT_VERSION) 
 #endif
-#define GtkVer "3.24.20"
+#define GtkVer "3.24.24"
 #define GtkArchive "gtk-" + GtkVer + ".zip"
 #define GtkInstallPath "{localappdata}\Gtk\" + GtkVer
 

@@ -521,6 +521,26 @@
         }
 
         /// <summary>
+        /// Get the currently active explorer presenter instance.
+        /// Return null if none are active.
+        /// </summary>
+        public ExplorerPresenter GetCurrentExplorerPresenter()
+        {
+            (int index, bool onLeft) = view.GetCurrentTab();
+
+            // The view has an extra tab ("home") which is not included in
+            // the presenters list. Our index needs to account for this
+            // offset.
+            index--;
+
+            List<IPresenter> presenters = onLeft ? Presenters1 : presenters2;
+            if (index < 0 || index >= presenters.Count)
+                return null;
+
+            return presenters[index] as ExplorerPresenter;
+        }
+
+        /// <summary>
         /// Updates display of the list of most-recently-used files.
         /// </summary>
         public void UpdateMRUDisplay()
@@ -552,15 +572,6 @@
             {
                 ShowError(err);
             }
-        }
-
-        /// <summary>
-        /// Closes the tab containing a specified object.
-        /// </summary>
-        /// <param name="o">The object (normally a Gtk Widget) being sought.</param>
-        public void CloseTabContaining(object o)
-        {
-            this.view.CloseTabContaining(o);
         }
 
         /// <summary>
@@ -1061,16 +1072,14 @@
         /// <param name="onLeft">Is the tab in the left tab control?</param>
         public void CloseTab(int index, bool onLeft)
         {
-            if (onLeft)
-            {
-                Presenters1[index].Detach();
-                Presenters1.RemoveAt(index);
-            }
-            else
-            {
-                presenters2[index].Detach();
-                presenters2.RemoveAt(index);
-            }
+            List<IPresenter> presenters = onLeft ? Presenters1 : presenters2;
+            presenters[index].Detach();
+            presenters.RemoveAt(index);
+
+            // Need to add an offset to account for the home tab. E.g. presenter
+            // 0 (ie .apsimx file 0) will be the second tab in the notebook (ie
+            // index 1).
+            view.RemoveTab(index + 1, onLeft);
 
             // We've just closed Simulations
             // This is a good time to force garbage collection 
