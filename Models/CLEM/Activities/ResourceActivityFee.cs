@@ -1,6 +1,7 @@
 ﻿using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -59,6 +60,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Store finance type to use
         /// </summary>
+        [JsonIgnore]
         public FinanceType BankAccount { get; set; }
 
         /// <summary>

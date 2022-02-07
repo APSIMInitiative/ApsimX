@@ -33,6 +33,5 @@ namespace UserInterface.Views
             buttonParams.Y = (int)evnt.Y;
             return buttonParams;
         }
-
     }
 }
