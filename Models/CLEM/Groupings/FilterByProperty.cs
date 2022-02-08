@@ -30,7 +30,8 @@ namespace Models.CLEM.Groupings
         [NonSerialized]
         private PropertyInfo propertyInfo;
         private bool validOperator = true;
-        private IEnumerable<string> GetParameters() => Parent?.Parameters?.OrderBy(k => k);
+        
+        private IEnumerable<string> GetParameters() => Parent?.GetParameterNames().OrderBy(k => k);
 
         /// <summary>
         /// The property or method to filter by

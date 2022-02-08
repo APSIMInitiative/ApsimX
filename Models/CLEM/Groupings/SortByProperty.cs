@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
-
+using System.Linq;
 using Display = Models.Core.DisplayAttribute;
 
 namespace Models.CLEM.Groupings
@@ -38,7 +38,7 @@ namespace Models.CLEM.Groupings
         [Required]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetParameters))]
         public string PropertyOfIndividual { get; set; }
-        private IEnumerable<string> GetParameters() => Parent.Parameters;
+        private IEnumerable<string> GetParameters() => Parent?.GetParameterNames().OrderBy(k => k);
 
         /// <inheritdoc/>
         [Description("Sort direction")]

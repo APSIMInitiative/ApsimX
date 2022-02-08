@@ -33,6 +33,16 @@ namespace Models.CLEM
         public IEnumerable<string> Parameters => properties?.Keys;
 
         /// <inheritdoc/>
+        public IEnumerable<string> GetParameterNames()
+        {
+            if (properties is null)
+                InitialiseFilters(false);
+
+            return properties.Keys;
+        }
+
+
+        /// <inheritdoc/>
         public PropertyInfo GetProperty(string name) 
         {
             if (properties is null)

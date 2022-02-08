@@ -18,6 +18,11 @@ namespace Models.CLEM.Interfaces
         IEnumerable<string> Parameters { get; }
 
         /// <summary>
+        /// Retrieves a list of parameters available from the generic type being filtered
+        /// </summary>
+        IEnumerable<string> GetParameterNames();
+
+        /// <summary>
         /// Retrieves information on a property
         /// </summary>
         PropertyInfo GetProperty(string name);
