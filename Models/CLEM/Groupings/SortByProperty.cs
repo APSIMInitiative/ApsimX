@@ -20,6 +20,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(IFilterGroup))]
     [Description("Defines a sort order using the value of a property or method of the individual")]
     [Version(1, 0, 0, "")]
+    [HelpUri(@"Content/Features/Filters/SortByProperty.htm")]
     public class SortByProperty : CLEMModel, ISort
     {
         /// <inheritdoc/>

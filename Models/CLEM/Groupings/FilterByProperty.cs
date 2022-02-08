@@ -23,12 +23,14 @@ namespace Models.CLEM.Groupings
     [Description("Defines a filter rule using properties and methods of the individual")]
     [ValidParent(ParentType = typeof(IFilterGroup))]
     [Version(1, 0, 0, "")]
+    [HelpUri(@"Content/Features/Filters/FilterByProperty.htm")]
+
     public class FilterByProperty : Filter, IValidatableObject
     {
         [NonSerialized]
         private PropertyInfo propertyInfo;
         private bool validOperator = true;
-        private IEnumerable<string> GetParameters() => Parent?.Parameters.OrderBy(k => k);
+        private IEnumerable<string> GetParameters() => Parent?.Parameters?.OrderBy(k => k);
 
         /// <summary>
         /// The property or method to filter by
