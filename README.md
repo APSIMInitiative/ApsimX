@@ -22,7 +22,7 @@ Any recent PC with a minimum of 2Gb of RAM.
 
 ### Installation
 
-Binary releases are available via our [registration system](https://register.apsim.info).
+Binary releases are available via our [registration system](https://registration.apsim.info).
 
 ## Contributing
 
