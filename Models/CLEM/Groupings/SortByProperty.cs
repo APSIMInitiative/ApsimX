@@ -23,6 +23,8 @@ namespace Models.CLEM.Groupings
     [HelpUri(@"Content/Features/Filters/SortByProperty.htm")]
     public class SortByProperty : CLEMModel, ISort
     {
+        private IEnumerable<string> GetParameters() => Parent?.GetParameterNames().OrderBy(k => k);
+
         /// <inheritdoc/>
         [JsonIgnore]
         public new IFilterGroup Parent
@@ -38,7 +40,6 @@ namespace Models.CLEM.Groupings
         [Required]
         [Display(Type = DisplayType.DropDown, Values = nameof(GetParameters))]
         public string PropertyOfIndividual { get; set; }
-        private IEnumerable<string> GetParameters() => Parent?.GetParameterNames().OrderBy(k => k);
 
         /// <inheritdoc/>
         [Description("Sort direction")]

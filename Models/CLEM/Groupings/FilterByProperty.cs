@@ -83,7 +83,7 @@ namespace Models.CLEM.Groupings
         /// <inheritdoc/>
         public override Func<T, bool> Compile<T>()
         {
-            if (!validOperator) return f => false;
+            if (!validOperator || propertyInfo is null) return f => false;
             return CompileComplex<T>();
         }
 
