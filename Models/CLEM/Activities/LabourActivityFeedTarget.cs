@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     public class LabourActivityFeedTarget: CLEMModel
     {
         /// <summary>
-        /// Name of metric to base this target upon
+        /// Name of metric for this target
         /// </summary>
         [Description("Metric name")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Metric name required")]
@@ -62,7 +62,7 @@ namespace Models.CLEM.Activities
         /// Has target been achieved
         /// </summary>
         [JsonIgnore]
-        public bool TargetMet { get { return CurrentAchieved >= Target; } }
+        public bool TargetMet { get { return Math.Round(CurrentAchieved, 4) >= Math.Round(Target, 4); } }
 
         /// <summary>
         /// Constructor

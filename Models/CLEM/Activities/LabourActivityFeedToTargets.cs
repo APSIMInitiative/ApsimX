@@ -201,8 +201,12 @@ namespace Models.CLEM.Activities
                     foreach (var person in peopleList)
                     {
                         LabourDietComponent outsideEat = new LabourDietComponent();
+                        // TODO: might need to add consumed here
+                        outsideEat.AmountConsumed = this.DailyIntakeOtherSources * person.TotalAdultEquivalents * daysInMonth;
                         outsideEat.AddOtherSource(target.Metric, target.OtherSourcesValue * person.TotalAdultEquivalents * daysInMonth);
+                        // track this consumption by people here.
                         person.AddIntake(outsideEat);
+                        person.FeedToTargetIntake += outsideEat.AmountConsumed;
                     }
                 }
             }
@@ -215,7 +219,7 @@ namespace Models.CLEM.Activities
 
             foreach (HumanFoodStoreType foodStore in food.FindAllChildren<HumanFoodStoreType>().ToList())
             {
-                foreach (HumanFoodStorePool pool in foodStore.Pools)
+                foreach (HumanFoodStorePool pool in foodStore.Pools.Where(a => a.Amount > 0))
                 {
                     foodParcels.Add(new HumanFoodParcel()
                     {
@@ -244,7 +248,7 @@ namespace Models.CLEM.Activities
                 {
                     foreach (HumanFoodStoreType foodStore in food.FindAllChildren<HumanFoodStoreType>())
                     {
-                        foreach (HumanFoodStorePool pool in foodStore.Pools)
+                        foreach (HumanFoodStorePool pool in foodStore.Pools.Where(a => a.Amount > 0))
                         {
                             marketFoodParcels.Add(new HumanFoodParcel()
                             {
@@ -302,15 +306,11 @@ namespace Models.CLEM.Activities
                     {
                         ResourcePricing price = foodParcels[parcelIndex].FoodStore.Price(PurchaseOrSalePricingStyleType.Purchase);
                         double cost = (foodParcels[parcelIndex].Pool.Amount * foodParcels[parcelIndex].Proportion) / price.PacketSize * price.PricePerPacket;
-                        //if (cost > 0 && cost > fundsAvailable)
-                        //{
-                        //    // need to get some more money
 
-                        //    // sell cattle based on selling groups till run out of cattle or meet shortfall
+                        // TODO: sell cattle based on selling groups till run out of cattle or meet shortfall
+                        // adjust fundsAvailable with new money
+                        // if cost > 0 and cost > funds available
 
-                        //    // adjust fundsAvailable with new money
-
-                        //}
                         if (cost > 0)
                         {
                             propToPrice = Math.Min(1, fundsAvailable / cost);
@@ -552,11 +552,15 @@ namespace Models.CLEM.Activities
                     foreach (ResourceRequest request in requests.Where(a => a.Provided > 0))
                         // add to individual intake
                         foreach (LabourType labour in group)
+                        {
+                            double amount = request.Provided * (labour.TotalAdultEquivalents / aE);
                             labour.AddIntake(new LabourDietComponent()
                             {
-                                AmountConsumed = request.Provided * (labour.TotalAdultEquivalents / aE),
+                                AmountConsumed = amount,
                                 FoodStore = request.Resource as HumanFoodStoreType
                             });
+                            labour.FeedToTargetIntake += amount;
+                        }
                 }
                 if (this.FindAllChildren<LabourActivityFeedTarget>().Where(a => !a.TargetMet).Any())
                     this.Status = ActivityStatus.Partial;
