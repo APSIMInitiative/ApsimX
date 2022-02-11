@@ -189,6 +189,9 @@ namespace Models.CLEM.Activities
                 // calculate target
                 target.Target = target.TargetValue * aE * daysInMonth;
 
+                // calculate target maximum
+                target.TargetMaximum = target.TargetMaximumValue * aE * daysInMonth;
+
                 // set initial level based on off store inputs
                 target.CurrentAchieved = target.OtherSourcesValue * aE * daysInMonth;
 
@@ -272,10 +275,15 @@ namespace Models.CLEM.Activities
             double metricneeded = 0;
             double intake = otherIntake;
             // start eating food from list from that about to expire first
+
+            // food from household can be eaten up to target maximum
+            // food from market can only be eaten up to target
+
             while(parcelIndex < foodParcels.Count)
             {
                 foodParcels[parcelIndex].Proportion = 0;
-                if (intake < intakeLimit & (labourActivityFeedTargets.Where(a => !a.TargetMet).Count() > 0 | foodParcels[parcelIndex].Expires == 0))
+                var isHousehold = foodParcels[parcelIndex].FoodStore.CLEMParentName == this.CLEMParentName;
+                if (intake < intakeLimit & (labourActivityFeedTargets.Where(a => ((isHousehold)? !a.TargetMaximumAchieved: !a.TargetAchieved)).Count() > 0 | foodParcels[parcelIndex].Expires == 0))
                 {
                     // still able to eat and target not met or food about to expire this timestep
                     // reduce by amout that can be eaten
@@ -287,11 +295,11 @@ namespace Models.CLEM.Activities
                         // if the food is not going to spoil
                         // then adjust what can be eaten up to target otherwise allow over target consumption to avoid waste
 
-                        LabourActivityFeedTarget targetUnfilled = labourActivityFeedTargets.Where(a => !a.TargetMet).FirstOrDefault();
+                        LabourActivityFeedTarget targetUnfilled = labourActivityFeedTargets.Where(a => ((isHousehold) ? !a.TargetMaximumAchieved : !a.TargetAchieved)).FirstOrDefault();
                         if (targetUnfilled != null)
                         {
                             // calculate reduction to metric target
-                            metricneeded = Math.Max(0, targetUnfilled.Target - targetUnfilled.CurrentAchieved);
+                            metricneeded = Math.Max(0, (isHousehold ? targetUnfilled.TargetMaximum : targetUnfilled.Target) - targetUnfilled.CurrentAchieved);
                             double amountneeded = metricneeded / foodParcels[parcelIndex].FoodStore.ConversionFactor(targetUnfilled.Metric);
 
                             propToTarget = Math.Min(1, amountneeded / (foodParcels[parcelIndex].FoodStore.EdibleProportion * foodParcels[parcelIndex].Pool.Amount));
@@ -301,8 +309,9 @@ namespace Models.CLEM.Activities
                     foodParcels[parcelIndex].Proportion = Math.Min(propCanBeEaten, propToTarget);
 
                     // work out if there will be a cost limitation, only if a price structure exists for the resource
+                    // no charge for household consumption
                     double propToPrice = 1;
-                    if (foodParcels[parcelIndex].FoodStore.PricingExists(PurchaseOrSalePricingStyleType.Purchase))
+                    if (!isHousehold && foodParcels[parcelIndex].FoodStore.PricingExists(PurchaseOrSalePricingStyleType.Purchase))
                     {
                         ResourcePricing price = foodParcels[parcelIndex].FoodStore.Price(PurchaseOrSalePricingStyleType.Purchase);
                         double cost = (foodParcels[parcelIndex].Pool.Amount * foodParcels[parcelIndex].Proportion) / price.PacketSize * price.PricePerPacket;
@@ -330,7 +339,7 @@ namespace Models.CLEM.Activities
                     foreach (LabourActivityFeedTarget target in labourActivityFeedTargets)
                         target.CurrentAchieved += newIntake * foodParcels[parcelIndex].FoodStore.ConversionFactor(target.Metric);
                 }
-                else if (intake >= intakeLimit && labourActivityFeedTargets.Where(a => !a.TargetMet).Count() > 1)
+                else if (intake >= intakeLimit && labourActivityFeedTargets.Where(a => ((isHousehold) ? !a.TargetMaximumAchieved : !a.TargetAchieved)).Count() > 1)
                 {
                     // full but could still reach target with some substitution
                     // but can substitute to remove a previous target
@@ -389,7 +398,8 @@ namespace Models.CLEM.Activities
             // if no market is present it will look to transmutating from its own stores if possible.
             // this means that other than a purchase from market (above) this activity doesn't need to worry about financial tranactions.
             int testType = 0;
-            while (testType < 2 && intake < intakeLimit && (labourActivityFeedTargets.Where(a => !a.TargetMet).Any()) && fundsAvailable > 0)
+            // test is limited to 1 for now so only to metric target NOT intake limit as we use maximum and target values now
+            while (testType < 1 && intake < intakeLimit && (labourActivityFeedTargets.Where(a => !a.TargetAchieved).Any()) && fundsAvailable > 0)
             {
                 // don't worry about money anymore. The over request will be handled by the transmutation.
                 // move through specified purchase list
@@ -397,7 +407,7 @@ namespace Models.CLEM.Activities
                 // 2. if still need food assign based on intake still needed
 
                 metricneeded = 0;
-                LabourActivityFeedTarget targetUnfilled = labourActivityFeedTargets.Where(a => !a.TargetMet).FirstOrDefault();
+                LabourActivityFeedTarget targetUnfilled = labourActivityFeedTargets.Where(a => !a.TargetAchieved).FirstOrDefault();
                 if (targetUnfilled != null)
                 {
                     metricneeded = Math.Max(0, (targetUnfilled.Target - targetUnfilled.CurrentAchieved));
@@ -562,7 +572,7 @@ namespace Models.CLEM.Activities
                             labour.FeedToTargetIntake += amount;
                         }
                 }
-                if (this.FindAllChildren<LabourActivityFeedTarget>().Where(a => !a.TargetMet).Any())
+                if (this.FindAllChildren<LabourActivityFeedTarget>().Where(a => !a.TargetAchieved).Any())
                     this.Status = ActivityStatus.Partial;
                 else
                     this.Status = ActivityStatus.Success;
@@ -602,7 +612,7 @@ namespace Models.CLEM.Activities
                 {
                     DateTime month = clock.Today.AddMonths(i);
                     daysInMonth[i] = DateTime.DaysInMonth(month.Year, month.Month);
-                    target[i] = daysInMonth[i] * aE * (feedTarget.TargetValue - feedTarget.OtherSourcesValue);
+                    target[i] = daysInMonth[i] * aE * (feedTarget.TargetMaximumValue - feedTarget.OtherSourcesValue);
                 }
 
                 double amountStored = 0; // reset here to make store based on all food types

@@ -39,6 +39,14 @@ namespace Models.CLEM.Activities
         public double TargetValue { get; set; }
 
         /// <summary>
+        /// Target max level
+        /// </summary>
+        [Description("Target maximum level")]
+        [Units("units per AE per day")]
+        [GreaterThan("TargetValue")]
+        public double TargetMaximumValue { get; set; }
+
+        /// <summary>
         /// Amount from other sources
         /// </summary>
         [Description("Amount from other sources")]
@@ -53,6 +61,12 @@ namespace Models.CLEM.Activities
         public double Target { get; set; }
 
         /// <summary>
+        /// Current target
+        /// </summary>
+        [JsonIgnore]
+        public double TargetMaximum { get; set; }
+
+        /// <summary>
         /// Stored level achieved
         /// </summary>
         [JsonIgnore]
@@ -62,7 +76,13 @@ namespace Models.CLEM.Activities
         /// Has target been achieved
         /// </summary>
         [JsonIgnore]
-        public bool TargetMet { get { return Math.Round(CurrentAchieved, 4) >= Math.Round(Target, 4); } }
+        public bool TargetAchieved { get { return Math.Round(CurrentAchieved, 4) >= Math.Round(Target, 4); } }
+
+        /// <summary>
+        /// Has target maximum been achieved
+        /// </summary>
+        [JsonIgnore]
+        public bool TargetMaximumAchieved { get { return Math.Round(CurrentAchieved, 4) >= Math.Round(TargetMaximum, 4); } }
 
         /// <summary>
         /// Constructor
@@ -90,7 +110,17 @@ namespace Models.CLEM.Activities
                 else
                     htmlWriter.Write("<span class=\"errorlink\">VALUE NOT SET");
 
-                htmlWriter.Write("</span> units per AE per day</div>");
+                htmlWriter.Write("</span> units per AE per day ");
+
+                if (TargetMaximumValue > 0)
+                {
+                    htmlWriter.Write("up to maximum of <span class=\"setvalue\">");
+                    htmlWriter.Write(TargetMaximumValue.ToString("#,##0.##"));
+                }
+                else
+                    htmlWriter.Write("<span class=\"errorlink\">VALUE NOT SET");
+
+                htmlWriter.Write("</span></div>");
 
                 if (OtherSourcesValue > 0)
                 {
