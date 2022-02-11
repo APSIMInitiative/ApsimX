@@ -563,13 +563,17 @@ namespace Models.CLEM.Activities
                 else
                     this.Status = ActivityStatus.Success;
             }
+            // finished eating, so this household is now free to sell the resources
+            // assumes all households above in the tree supply this level.
+            // if sibling above relies on food from this household it own't work
+            // selling is perfomed in the next method called in this same event
             
         }
 
         /// <summary>An event handler to allow us to sell excess resources.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMAnimalSell")]
+        [EventSubscribe("CLEMGetResourcesRequired")]
         private void OnCLEMAnimalSell(object sender, EventArgs e)
         {
             // Sell excess above store reserve level calculated from AE and daily target of first feed target
