@@ -154,6 +154,20 @@ namespace UserInterface.Views
         /// </summary>
         private void ClearGridColumns()
         {
+            while (Fixedcolview.Columns.Length > 0)
+            {
+                TreeViewColumn col = Fixedcolview.GetColumn(0);
+                foreach (CellRenderer render in col.Cells)
+                {
+                    if (render is CellRendererText)
+                    {
+                        CellRendererText textRender = render as CellRendererText;
+                        col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
+                    }
+                }
+
+                Fixedcolview.RemoveColumn(Fixedcolview.GetColumn(0));
+            }
             while (Grid.Columns.Length > 0)
             {
                 TreeViewColumn col = Grid.GetColumn(0);
@@ -174,20 +188,6 @@ namespace UserInterface.Views
                     render.Dispose();
                 }
                 Grid.RemoveColumn(Grid.GetColumn(0));
-            }
-            while (Fixedcolview.Columns.Length > 0)
-            {
-                TreeViewColumn col = Fixedcolview.GetColumn(0);
-                foreach (CellRenderer render in col.Cells)
-                {
-                    if (render is CellRendererText)
-                    {
-                        CellRendererText textRender = render as CellRendererText;
-                        col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
-                    }
-                }
-
-                Fixedcolview.RemoveColumn(Fixedcolview.GetColumn(0));
             }
         }
 
@@ -339,14 +339,7 @@ namespace UserInterface.Views
                 TreeViewColumn fixedColumn = new TreeViewColumn(this.DataSource.Columns[i].ColumnName, textRender, "text", i);
                 //fixedColumn.Sizing = TreeViewColumnSizing.GrowOnly;
                 fixedColumn.Resizable = false;
-                if (i == 0)
-                {
-                    fixedColumn.SetCellDataFunc(textRender, OnSetCellData);
-                }
-                else
-                {
-                    fixedColumn.SetCellDataFunc(pixbufRender, RenderActivityStatus);
-                }
+                fixedColumn.SetCellDataFunc(textRender, OnSetCellData);
                 fixedColumn.Alignment = 0.0f; // For centered alignment of the column header
                 fixedColumn.Visible = true;
                 Fixedcolview.AppendColumn(fixedColumn);
