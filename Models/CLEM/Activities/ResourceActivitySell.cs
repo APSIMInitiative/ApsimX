@@ -118,7 +118,7 @@ namespace Models.CLEM.Activities
             if(resourceToPlace != null)
                 price = resourceToPlace.Price(PurchaseOrSalePricingStyleType.Purchase);
 
-            if(price is null && resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale)  != null)
+            if(price is null && resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale) != null)
                 price = resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale);
 
         }
@@ -224,7 +224,13 @@ namespace Models.CLEM.Activities
                 // transfer money earned
                 if (bankAccount != null)
                 {
-                    bankAccount.Add(units * price.PricePerPacket, this, (resourceToSell as CLEMModel).NameWithParent, "Sales");
+                    if(price.PricePerPacket == 0)
+                    {
+                        string warn = $"No price set [0] for [r={resourceToSell.Name}] at time of transaction for [a={this.Name}]{Environment.NewLine}No financial transactions will occur.{Environment.NewLine}Ensure price is set or resource pricing file contains entries before this transaction or start of simulation.";
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+                    }
+
+                    bankAccount.Add(units * price.PricePerPacket, this, (resourceToSell as CLEMModel).NameWithParent, TransactionCategory);
                     if (bankAccount.EquivalentMarketStore != null)
                     {
                         purchaseRequest.Required = units * price.PricePerPacket;

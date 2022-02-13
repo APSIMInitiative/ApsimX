@@ -116,6 +116,7 @@ namespace Models
         /// </summary>
         public override void OnCreated()
         {
+            base.OnCreated();
             if (this.FindChild<Manager>() == null)
             {
                 Manager script = new Manager();

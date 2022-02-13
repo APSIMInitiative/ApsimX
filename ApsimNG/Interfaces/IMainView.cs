@@ -173,8 +173,9 @@ namespace UserInterface.Interfaces
         /// <summary>
         /// Close a tab.
         /// </summary>
-        /// <param name="o">A widget appearing on the tab</param>
-        void CloseTabContaining(object o);
+        /// <param name="index">Index of the tab to be removed.</param>
+        /// <param name="onLeft">Remove from the left (true) tab control or the right (false) tab control.</param>
+        void RemoveTab(int index, bool onLeft);
 
         /// <summary>
         /// Select a tab.
@@ -205,6 +206,15 @@ namespace UserInterface.Interfaces
         /// Shows the font selection dialog.
         /// </summary>
         void ShowFontChooser();
+
+        /// <summary>
+        /// Get the currently active (focused) tab in the GUI.
+        /// </summary>
+        /// <returns>
+        /// The index of the tab, and true if the tab is on the left-hand of the
+        /// split-screen, or false if the tab is on the right-hand tab control.
+        /// </returns>
+        (int, bool) GetCurrentTab();
 
         /// <summary>
         /// Invoked when application tries to close

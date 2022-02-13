@@ -179,11 +179,11 @@ namespace APSIM.Interop.Drawing.Skia
         }
 
         /// <inheritdoc />
-        public (int Left, int Right, int Width, int Height) GetPixelExtents(string text, bool bold, bool italics)
+        public (int Left, int Top, int Width, int Height) GetPixelExtents(string text, bool bold, bool italics)
         {
             // tbi: account for text formatting.
             var rect = GetTextExtents(text);
-            return (rect.Left, rect.Right, rect.Width, rect.Height);
+            return (rect.Left, rect.Top, rect.Width, rect.Height);
         }
 
         /// <inheritdoc />
