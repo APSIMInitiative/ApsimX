@@ -291,7 +291,6 @@ namespace UserInterface.Presenters
         private CategoryTree GetPropertyCategories()
         {
             CategoryTree categories = new CategoryTree();
-
             IModel modelToUse = ModelForProperties();
 
             if (modelToUse != null)
@@ -319,11 +318,23 @@ namespace UserInterface.Presenters
                         {
                             //get the attribute data
                             CategoryAttribute catAtt = (CategoryAttribute)property.GetCustomAttribute(typeof(CategoryAttribute));
-                            //add the category name to the list of category items
-                            categories.AddCategoryToTree(catAtt.Category);
-                            //add the subcategory name to the list of subcategories for the category
-                            CategoryItem catItem = categories.FindCategoryInTree(catAtt.Category);
-                            catItem.AddSubcategoryName(catAtt.Subcategory);
+                            // add the category name to the list of category items
+                            // allow : separated list for multiple categories
+                            int catIndex = 0;
+                            foreach (var catLabel in catAtt.Category.Split(':'))
+                            {
+                                categories.AddCategoryToTree(catLabel);
+                                //add the subcategory name to the list of subcategories for the category
+                                CategoryItem catItem = categories.FindCategoryInTree(catLabel);
+                                var subLabels = catAtt.Subcategory.Split(':');
+                                if(subLabels.Length >= catIndex+1)
+                                    catItem.AddSubcategoryName(subLabels[catIndex]);
+                                catIndex++;
+                            }
+                            //categories.AddCategoryToTree(catAtt.Category);
+                            ////add the subcategory name to the list of subcategories for the category
+                            //CategoryItem catItem = categories.FindCategoryInTree(catAtt.Category);
+                            //catItem.AddSubcategoryName(catAtt.Subcategory);
                         }
                         else
                         {
@@ -379,14 +390,14 @@ namespace UserInterface.Presenters
                 if (Attribute.IsDefined(property, typeof(CategoryAttribute), false))
                 {
                     CategoryAttribute catAtt = (CategoryAttribute)Attribute.GetCustomAttribute(property, typeof(CategoryAttribute));
-                    if (catAtt.Category == this.selectedCategory)
+                    if (Array.Exists(catAtt.Category.Split(':'), element => element == this.selectedCategory))
                     {
                         if ((selectedSubCategory ?? "") != "") // a sub category has been selected
                         {
                             // The catAtt.Subcategory is by default given a value of 
                             // "Unspecified" if the Subcategory is not assigned in the Category Attribute.
                             // so this line below will also handle "Unspecified" subcategories.
-                            return (catAtt.Subcategory == this.selectedSubCategory);
+                            return (Array.Exists(catAtt.Subcategory.Split(':'), element => element == selectedSubCategory));
                         }
                     }
                     else
