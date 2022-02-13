@@ -298,6 +298,17 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write($"The Attributes of the sire are {(attributeSetters.Any()? "specified below" : "selected at random ofrm the herd")} to ensure inheritance to offpsring");
                     htmlWriter.Write("</div>");
                 }
+                else
+                {
+                    // need to check for mandatory attributes
+                    var mandatoryAttributes = this.FindAncestor<Zone>().FindAllDescendants<SetAttributeWithValue>().Where(a => a.Mandatory).Select(a => a.AttributeName).Distinct();
+                    if (mandatoryAttributes.Any())
+                    {
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                        htmlWriter.Write($"The mandatory attributes <span class=\"setvalue\">{string.Join("</span>,<span class=\"setvalue\">", mandatoryAttributes)}</span> required from the breeding males will be randomally selected from the herd");
+                        htmlWriter.Write("</div>");
+                    }
+                }
                 return htmlWriter.ToString();
             }
         }

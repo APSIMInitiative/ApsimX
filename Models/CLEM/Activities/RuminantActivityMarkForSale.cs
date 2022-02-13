@@ -4,6 +4,7 @@ using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -25,7 +26,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Allows specification of sale reason for reporting")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMarkForSale.htm")]
-    public class RuminantActivityMarkForSale: CLEMRuminantActivityBase
+    public class RuminantActivityMarkForSale: CLEMRuminantActivityBase, IValidatableObject
     {
         private LabourRequirement labourRequirement;
 
@@ -34,8 +35,9 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Sale reason to apply")]
         [System.ComponentModel.DefaultValueAttribute("MarkedSale")]
-        [GreaterThanEqualValue(4, ErrorMessage = "A sale reason must be provided")]
-        public MarkForSaleReason SaleFlagToUse { get; set; }
+        [GreaterThanValue(0, ErrorMessage = "A sale reason must be provided")]
+        [HerdSaleReason("sale", ErrorMessage = "The herd change reason provided must relate to a sale")]
+        public HerdChangeReason SaleFlagToUse { get; set; }
 
         /// <summary>
         /// Overwrite any currently recorded sale flag
@@ -46,7 +48,6 @@ namespace Models.CLEM.Activities
 
         private int numberToTag = 0;
         private bool labourShortfall = false;
-        private HerdChangeReason changeReason;
 
         /// <summary>
         /// Constructor
@@ -64,7 +65,6 @@ namespace Models.CLEM.Activities
         {
             // get all ui tree herd filters that relate to this activity
             this.InitialiseHerd(true, true);
-            changeReason = (HerdChangeReason)SaleFlagToUse;
         }
 
         /// <inheritdoc/>
@@ -85,6 +85,9 @@ namespace Models.CLEM.Activities
                 number = 0;
                 foreach (RuminantGroup item in filterGroups)
                     number += item.Filter(herd).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Count();
+
+                if(number > 0)
+                    number = Math.Min(number, herd.Count());
             }
             else
                 number = herd.Count();
@@ -158,7 +161,8 @@ namespace Models.CLEM.Activities
                         foreach (Ruminant ind in item.Filter(herd).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
                         {
                             this.Status = (labourShortfall)?ActivityStatus.Partial:ActivityStatus.Success;
-                            ind.SaleFlag = changeReason;
+
+                            ind.SaleFlag = SaleFlagToUse;
                             numberToTag--;
                         }
                     }
@@ -167,7 +171,7 @@ namespace Models.CLEM.Activities
                         foreach (Ruminant ind in herd.Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
                         {
                             this.Status = (labourShortfall) ? ActivityStatus.Partial : ActivityStatus.Success;
-                            ind.SaleFlag = changeReason;
+                            ind.SaleFlag = SaleFlagToUse;
                             numberToTag--;
                         }
                     }
@@ -178,6 +182,26 @@ namespace Models.CLEM.Activities
             else
                 this.Status = ActivityStatus.Ignored;
         }
+
+        #region validation
+
+        /// <summary>
+        /// Validate this model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if (!FindAllChildren<RuminantGroup>().Any())
+            {
+                string[] memberNames = new string[] { "Specify individuals" };
+                results.Add(new ValidationResult($"No individuals have been specified by [f=RuminantGroup] to be marked in [a={Name}]. Provide at least an empty RuminantGroup to mark all individuals.", memberNames));
+            }
+            return results;
+        }
+
+        #endregion
 
         #region descriptive summary
 

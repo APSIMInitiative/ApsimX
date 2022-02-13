@@ -78,7 +78,7 @@ namespace Models.CLEM
         public bool AutoCreateDescriptiveSummary { get; set; }
 
         /// <summary>
-        /// Month this overhead is next due.
+        /// Month this cecological indicators calculation is next due.
         /// </summary>
         [JsonIgnore]
         public DateTime EcologicalIndicatorsNextDueDate { get; set; }
@@ -237,16 +237,7 @@ namespace Models.CLEM
             // each ZoneCLEM and Market will call this validation for all children
             // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
             if (!Validate(this, "", this, summary))
-            {
-                string error = ""; //"@i:Invalid parameters in model";
-
-                // get all validations 
-                if(summary.Messages() != null)
-                    foreach (DataRow item in summary.Messages().Rows)
-                        if (item[3].ToString().StartsWith("Invalid"))
-                            error += "\r\n" + item[3].ToString();
-                throw new ApsimXException(this, error.Replace("&shy;","."));
-            }
+                ReportInvalidParameters(this);
 
             if (clock.StartDate.Year > 1) // avoid checking if clock not set.
             if ((int)EcologicalIndicatorsCalculationMonth >= clock.StartDate.Month)
@@ -261,6 +252,32 @@ namespace Models.CLEM
                 EcologicalIndicatorsNextDueDate = new DateTime(clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, clock.StartDate.Day);
                 while (clock.StartDate > EcologicalIndicatorsNextDueDate)
                     EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
+            }
+        }
+
+        /// <summary>
+        /// Reports any validation errors to exception
+        /// </summary>
+        /// <param name="model"></param>
+        /// <exception cref="ApsimXException"></exception>
+        public static void ReportInvalidParameters(IModel model)
+        {
+            IModel simulation = model.FindAncestor<Simulation>();
+            var summary = simulation.FindDescendant<Summary>();
+
+            // get all validations 
+            var errorsThisSim = summary.GetMessages(simulation.Name)?.ToArray().Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter "));
+
+            // create combined inner exception
+            string innerExceptionString = "";
+            foreach (var error in errorsThisSim)
+                innerExceptionString += $"{error.Text}{Environment.NewLine}";
+
+            // report error and stop
+            if (errorsThisSim.Any())
+            {
+                Exception innerException = new Exception(innerExceptionString);
+                throw new ApsimXException(model, $"{errorsThisSim.Count()} invalid entr{(errorsThisSim.Count() == 1 ? "y" : "ies")}.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details", innerException);
             }
         }
 
@@ -330,7 +347,7 @@ namespace Models.CLEM
                     if (text != "")
                         error += String.Format(Environment.NewLine + "DESCRIPTION: " + text);
                     error += String.Format(Environment.NewLine + "PROBLEM: " + validateError.ErrorMessage + Environment.NewLine);
-                    summary.WriteMessage(parentZone, error, MessageType.Warning);
+                    summary.WriteMessage(parentZone, error, MessageType.Error);
                 }
             }
             foreach (var child in model.Children)

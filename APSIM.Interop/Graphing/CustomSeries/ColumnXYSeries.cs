@@ -94,6 +94,20 @@
                                             result.YAxis.Title,
                                             item.Y);
             }
+            else if (result?.Item is RectangleBarItem barItem)
+            {
+                double xValue = (barItem.X0 + barItem.X1) / 2;
+                string xLabel = xValue.ToString();
+                if (result.XAxis is DateTimeAxis dateAxis)
+                    xLabel = dateAxis.FormatValue(xValue);
+                result.Text = string.Format(CultureInfo.CurrentCulture,
+                                            TrackerFormatString,
+                                            result.Series.Title,
+                                            result.XAxis.Title,
+                                            xLabel,
+                                            result.YAxis.Title,
+                                            barItem.Y1);
+            }
             return result;
         }
     }

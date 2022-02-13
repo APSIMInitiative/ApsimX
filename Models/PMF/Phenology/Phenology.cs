@@ -205,7 +205,7 @@ namespace Models.PMF.Phen
 
                 foreach (IPhase phase in phasesToRewind)
                 {
-                    if(!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase) && !(phase is PhotoperiodPhase) && !(phase is LeafDeathPhase) && !(phase is DAWSPhase))
+                    if(!(phase is IPhaseWithTarget) && !(phase is GotoPhase) && !(phase is EndPhase) && !(phase is PhotoperiodPhase) && !(phase is LeafDeathPhase) && !(phase is DAWSPhase) && !(phase is StartPhase) && !(phase is GrazeAndRewind))
                         { throw new Exception("Can not rewind over phase of type " + phase.GetType()); }
                     if (phase is IPhaseWithTarget)
                     {
@@ -217,8 +217,8 @@ namespace Models.PMF.Phen
                     else
                         phase.ResetPhase();
                 }
+                AccumulatedTT = Math.Max(0, AccumulatedTT);
                 AccumulatedEmergedTT = Math.Max(0, AccumulatedEmergedTT);
-
             }
             else
             {
@@ -319,6 +319,11 @@ namespace Models.PMF.Phen
             else
                 return false;
         }
+        /// <summary> A utility function to return true if the simulation is at or past the specified startstage.</summary>
+        public bool BeyondPhase(int phaseIndex) => currentPhaseIndex > phaseIndex;
+
+        /// <summary> A utility function to return true if the simulation is before the specified phaseIndex.</summary>
+        public bool BeforePhase(int phaseIndex) => currentPhaseIndex < phaseIndex;
 
         /// <summary>A utility function to return the phenological phase that starts with the specified start stage name.</summary>
         public IPhase PhaseStartingWith(String start)
@@ -360,6 +365,7 @@ namespace Models.PMF.Phen
         /// <summary>Called when model has been created.</summary>
         public override void OnCreated()
         {
+            base.OnCreated();
             RefreshPhases();
         }
 
@@ -394,7 +400,7 @@ namespace Models.PMF.Phen
 
                 while (incrementPhase)
                 {
-                    if ((CurrentPhase is EmergingPhase) || (CurrentPhase.End == structure?.LeafInitialisationStage)|| (CurrentPhase is DAWSPhase))
+                    if ((CurrentPhase is EmergingPhase) || (CurrentPhase is StartPhase) || (CurrentPhase.End == structure?.LeafInitialisationStage)|| (CurrentPhase is DAWSPhase))
                     {
                          Emerged = true;
                         PlantEmerged?.Invoke(this, new EventArgs());

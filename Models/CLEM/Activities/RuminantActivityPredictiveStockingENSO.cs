@@ -257,7 +257,7 @@ namespace Models.CLEM.Activities
                     {
                         string warn = $"No pasture biomass to herd change proportion [Relationship] provided for {((forecastEnsoState== ENSOState.ElNino)? "El Niño":"La Niña")} phase in [a={this.Name}]\r\nNo stock management will be performed in this phase.";
                         this.Status = ActivityStatus.Warning;
-                        Warnings.CheckAndWrite(warn, Summary, this);
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                     }
 
                     if (herdChange> 1.0)
@@ -304,12 +304,12 @@ namespace Models.CLEM.Activities
             // This does not change the shortfall AE as they were not counted in TotalAE pressure.
             HerdResource.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
-            var destockGroups = FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock);
+            var destockGroups = FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantGroupStyle.Remove);
             if (!destockGroups.Any())
             {
                 string warn = $"No [f=FilterGroup]s with a [Destock] Reason were provided in [a={this.Name}]\r\nNo destocking will be performed.";
                 this.Status = ActivityStatus.Warning;
-                Warnings.CheckAndWrite(warn, Summary, this);
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
             }
 
             foreach (var item in destockGroups)
@@ -355,7 +355,7 @@ namespace Models.CLEM.Activities
                 {
                     string warn = $"No [f=SpecifyRuminant]s were provided in [a={this.Name}]\r\nNo restocking will be performed.";
                     this.Status = ActivityStatus.Warning;
-                    Warnings.CheckAndWrite(warn, Summary, this);
+                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                 }
 
                 // buy animals specified in restock ruminant groups
@@ -451,7 +451,7 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activitybannerlight\">Herd change</div>");
                 // Destock
                 htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
-                var rumGrps = FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock);
+                var rumGrps = FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantGroupStyle.Remove);
                 if (rumGrps.Count() == 0)
                     htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"filterlink\">RuminantGroups</span> with Reason <span class=\"setvalue\">Destock</span> were provided</span>. No destocking will be performed</div>");
                 else

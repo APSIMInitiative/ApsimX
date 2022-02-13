@@ -288,7 +288,7 @@
                 else
                 {
                     LastError.Add(error.ToString());
-                    view.ShowMessage(GetInnerException(error).Message, MessageType.Error, overwrite: overwrite, addSeparator: !overwrite);
+                    view.ShowMessage(GetExceptionMessage(error), MessageType.Error, overwrite: overwrite, addSeparator: !overwrite);
                 }
             }
         }
@@ -310,7 +310,7 @@
                         ShowError(aggregate.InnerExceptions.ToList(), overwrite && i == 0);
                     else
                         // only overwrite other messages the first time through the loop
-                        view.ShowMessage(GetInnerException(errors[i]).Message, MessageType.Error, overwrite && i == 0, true);
+                        view.ShowMessage(GetExceptionMessage(errors[i]), MessageType.Error, overwrite && i == 0, true);
                 }
             }
             else
@@ -318,6 +318,30 @@
                 LastError.Clear();
                 ShowError(new NullReferenceException("Attempted to display a null error"));
             }
+        }
+
+        /// <summary>
+        /// Get an exception's message along with the messages of any inner
+        /// exceptions in a format suitable for display in the GUI.
+        /// </summary>
+        /// <param name="exception">The exception.</param>
+        private string GetExceptionMessage(Exception exception)
+        {
+            if (exception.InnerException == null)
+                return exception.Message;
+
+            string innerMessage = GetExceptionMessage(exception.InnerException);
+
+            if (string.IsNullOrEmpty(exception.Message))
+                return innerMessage;
+
+            // AggregateExceptions will include all inner exceptions' messages
+            // in their message. Therefore we don't need to fetch the inner
+            // exceptions' messages in such cases.
+            if (string.IsNullOrEmpty(innerMessage) || exception is AggregateException)
+                return exception.Message;
+
+            return $"{exception.Message} --> {innerMessage}";
         }
 
         /// <summary>
@@ -497,6 +521,26 @@
         }
 
         /// <summary>
+        /// Get the currently active explorer presenter instance.
+        /// Return null if none are active.
+        /// </summary>
+        public ExplorerPresenter GetCurrentExplorerPresenter()
+        {
+            (int index, bool onLeft) = view.GetCurrentTab();
+
+            // The view has an extra tab ("home") which is not included in
+            // the presenters list. Our index needs to account for this
+            // offset.
+            index--;
+
+            List<IPresenter> presenters = onLeft ? Presenters1 : presenters2;
+            if (index < 0 || index >= presenters.Count)
+                return null;
+
+            return presenters[index] as ExplorerPresenter;
+        }
+
+        /// <summary>
         /// Updates display of the list of most-recently-used files.
         /// </summary>
         public void UpdateMRUDisplay()
@@ -528,15 +572,6 @@
             {
                 ShowError(err);
             }
-        }
-
-        /// <summary>
-        /// Closes the tab containing a specified object.
-        /// </summary>
-        /// <param name="o">The object (normally a Gtk Widget) being sought.</param>
-        public void CloseTabContaining(object o)
-        {
-            this.view.CloseTabContaining(o);
         }
 
         /// <summary>
@@ -1037,16 +1072,14 @@
         /// <param name="onLeft">Is the tab in the left tab control?</param>
         public void CloseTab(int index, bool onLeft)
         {
-            if (onLeft)
-            {
-                Presenters1[index].Detach();
-                Presenters1.RemoveAt(index);
-            }
-            else
-            {
-                presenters2[index].Detach();
-                presenters2.RemoveAt(index);
-            }
+            List<IPresenter> presenters = onLeft ? Presenters1 : presenters2;
+            presenters[index].Detach();
+            presenters.RemoveAt(index);
+
+            // Need to add an offset to account for the home tab. E.g. presenter
+            // 0 (ie .apsimx file 0) will be the second tab in the notebook (ie
+            // index 1).
+            view.RemoveTab(index + 1, onLeft);
 
             // We've just closed Simulations
             // This is a good time to force garbage collection 
@@ -1271,7 +1304,7 @@
             {
                 // Get the version of the current assembly.
                 Version version = Assembly.GetExecutingAssembly().GetName().Version;
-                if (version.Revision == 0)
+                if (version.Build == 0)
                 {
                     ShowError("You are on a custom build. You cannot upgrade.");
                 }

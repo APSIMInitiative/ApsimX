@@ -94,6 +94,9 @@
 
         public void DrawGraph()
         {
+            if (graph.Parent is GraphPanel)
+                return;
+
             graphView.Clear();
             if (storage == null)
                 storage = graph.FindInScope<IDataStore>();
@@ -225,11 +228,8 @@
             {
                 try
                 {
-                    Color colour = definition.Colour;
-                    // If dark theme is active, and colour is black, use white instead.
-                    // This won't help at all if the colour is a dark grey.
-                    if (Utility.Configuration.Settings.DarkTheme && colour.R == 0 && colour.G == 0 && colour.B == 0)
-                        colour = Color.White;
+                    Color colour = GetColour(definition.Colour);
+
                     // Create the series and populate it with data.
                     if (definition.Type == SeriesType.Bar)
                     {
@@ -318,6 +318,16 @@
             }
         }
 
+        private Color GetColour(Color colour)
+        {
+            // If dark theme is active, and colour is black, use white instead.
+            // This won't help at all if the colour is a dark grey.
+            if (Utility.Configuration.Settings.DarkTheme && colour.R == 0 && colour.G == 0 && colour.B == 0)
+                return Color.White;
+
+            return colour;
+        }
+
         /// <summary>Draws the specified series definition on the view.</summary>
         /// <param name="annotations">The list of annotations</param>
         private void DrawOnView(IEnumerable<IAnnotation> annotations)
@@ -335,7 +345,7 @@
                 IAnnotation annotation = annotations.ElementAt(i);
                 if (annotation is TextAnnotation textAnnotation)
                 {
-                    double interval = (maximumY - lowestAxisScale) / 15; // fit 8 annotations on graph.
+                    double interval = (maximumY - lowestAxisScale) / 8; // fit 8 annotations on graph.
 
                     object x, y;
                     bool leftAlign = textAnnotation.leftAlign;
@@ -383,7 +393,7 @@
                                         textAnnotation.textRotation,
                                         AxisPosition.Bottom,
                                         AxisPosition.Left,
-                                        Utility.Configuration.Settings.DarkTheme ? Color.White : textAnnotation.colour);
+                                        GetColour(textAnnotation.colour));
                 }
                 else if (annotation is LineAnnotation lineAnnotation)
                 {
@@ -394,7 +404,7 @@
                                         lineAnnotation.y2,
                                         lineAnnotation.type, 
                                         lineAnnotation.thickness,
-                                        Utility.Configuration.Settings.DarkTheme ? Color.White : lineAnnotation.colour,
+                                        GetColour(lineAnnotation.colour),
                                         lineAnnotation.InFrontOfSeries,
                                         lineAnnotation.ToolTip);
                 }

@@ -110,13 +110,14 @@ namespace Models.CLEM.Resources
         /// <returns>List of ruminants</returns>
         public List<Ruminant> CreateIndividuals(List<ISetAttribute> initialAttributes, RuminantType ruminantType = null)
         {
+            List<ISetAttribute> localAttributes = new List<ISetAttribute>();
+            // add any whole herd attributes
+            if (initialAttributes != null)
+                localAttributes.AddRange(initialAttributes);
             // Add any attributes defined at the cohort level
-            if(initialAttributes is null)
-                initialAttributes = new List<ISetAttribute>();
+            localAttributes.AddRange(this.FindAllChildren<ISetAttribute>().ToList());
 
-            initialAttributes.AddRange(this.FindAllChildren<ISetAttribute>().ToList());
-
-            return CreateIndividuals(Convert.ToInt32(this.Number, CultureInfo.InvariantCulture), initialAttributes, ruminantType);
+            return CreateIndividuals(Convert.ToInt32(this.Number, CultureInfo.InvariantCulture), localAttributes, ruminantType);
         }
 
         /// <summary>
@@ -161,7 +162,14 @@ namespace Models.CLEM.Resources
                     ruminant.SaleFlag = HerdChangeReason.None;
 
                     if (Suckling)
-                        ruminant.SetUnweaned();
+                        if(Age >= ((parent.NaturalWeaningAge == 0)?parent.GestationLength: parent.NaturalWeaningAge))
+                        {
+                            string limitstring = (parent.NaturalWeaningAge == 0) ? $"gestation length [{parent.GestationLength}]" : $"natural weaning age [{parent.NaturalWeaningAge}]";
+                            string warn = $"Individuals older than {limitstring} cannot be assigned as suckling [r={parent.Name}][r={this.Parent.Name}][r={this.Name}]{Environment.NewLine}These individuals have not been assigned suckling.";
+                            Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+                        }
+                        else
+                            ruminant.SetUnweaned();
 
                     if (Sire)
                     {
@@ -171,7 +179,10 @@ namespace Models.CLEM.Resources
                             ruminantMale.Attributes.Add("Sire");
                         }
                         else
-                            Summary.WriteMessage(this, "Breeding sire switch is not valid for individual females [r=" + parent.Name + "].[r=" + this.Parent.Name + "].[r=" + this.Name + "]", MessageType.Warning);
+                        {
+                            string warn = $"Breeding sire switch is not valid for individual females [r={parent.Name}][r={this.Parent.Name}][r={this.Name}]{Environment.NewLine}These individuals have not been assigned sires. Change Sex to Male to create sires in initial herd.";
+                            Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+                        }
                     }
 
                     // if weight not provided use normalised weight
@@ -350,12 +361,16 @@ namespace Models.CLEM.Resources
                             var newInd = Ruminant.Create(Sex, rumtype, Age);
 
                             string normWtString = newInd.NormalisedAnimalWeight.ToString("#,##0");
-                            if (Math.Abs(this.Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
+                            if (this.Weight != 0 && Math.Abs(this.Weight - newInd.NormalisedAnimalWeight) / newInd.NormalisedAnimalWeight > 0.2)
                             {
                                 normWtString = "<span class=\"errorlink\">" + normWtString + "</span>";
                                 (this.Parent as RuminantInitialCohorts).WeightWarningOccurred = true;
                             }
-                            htmlWriter.Write($"\r\n<tr{(this.Enabled ? "" : " class=\"disabled\"")}><td>" + this.Name + "</td><td><span class=\"setvalue\">" + this.Sex + "</span></td><td><span class=\"setvalue\">" + this.Age.ToString() + "</span></td><td><span class=\"setvalue\">" + this.Weight.ToString() + ((this.WeightSD > 0) ? " (" + this.WeightSD.ToString() + ")" : "") + "</spam></td><td>" + normWtString + "</td><td><span class=\"setvalue\">" + this.Number.ToString() + "</span></td><td" + ((this.Suckling) ? " class=\"fill\"" : "") + "></td><td" + ((this.Sire) ? " class=\"fill\"" : "") + "></td>");
+                            string weightstring = "";
+                            if (this.Weight > 0)
+                                weightstring = $"<span class=\"setvalue\">{this.Weight.ToString() + ((this.WeightSD > 0) ? " (" + this.WeightSD.ToString() + ")" : "")}</span>";
+
+                            htmlWriter.Write($"\r\n<tr{(this.Enabled ? "" : " class=\"disabled\"")}><td>{this.Name}</td><td><span class=\"setvalue\">{this.Sex}</span></td><td><span class=\"setvalue\">{this.Age.ToString()}</span></td><td>{weightstring}</td><td>{normWtString}</td><td><span class=\"setvalue\">{this.Number.ToString()}</span></td><td{((this.Suckling) ? " class=\"fill\"" : "")}></td><td{((this.Sire) ? " class=\"fill\"" : "")}></td>");
 
                             if ((Parent as RuminantInitialCohorts).ConceptionsFound)
                             {

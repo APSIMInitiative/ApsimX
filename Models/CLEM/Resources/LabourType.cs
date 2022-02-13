@@ -50,18 +50,21 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Sex")]
         [Required]
+        [FilterByProperty]
         public Sex Sex { get; set; }
 
         /// <summary>
         /// Age in years.
         /// </summary>
         [JsonIgnore]
+        [FilterByProperty]
         public double Age { get { return Math.Floor(AgeInMonths/12); } }
        
         /// <summary>
         /// Age in months.
         /// </summary>
         [JsonIgnore]
+        [FilterByProperty]
         public double AgeInMonths
         {
             get
@@ -85,6 +88,7 @@ namespace Models.CLEM.Resources
         /// Adult equivalent.
         /// </summary>
         [JsonIgnore]
+        [FilterByProperty]
         public double AdultEquivalent
         {
             get
@@ -103,6 +107,20 @@ namespace Models.CLEM.Resources
                 return adultEquivalent??1;
             }
         }
+
+        /// <summary>
+        /// Adult equivalents of all individuals.
+        /// </summary>
+        [JsonIgnore]
+        [FilterByProperty]
+        public double TotalAdultEquivalents
+        {
+            get
+            {
+                return (adultEquivalent ?? 1)*Convert.ToDouble(Individuals, System.Globalization.CultureInfo.InvariantCulture);
+            }
+        }
+
 
         /// <summary>
         /// Total value of resource
@@ -158,7 +176,7 @@ namespace Models.CLEM.Resources
             if (DietaryComponentList is null)
                 return 0;
             else
-                return DietaryComponentList.Where(a => a.FoodStore.Name == foodTypeName).Sum(a => a.AmountConsumed);
+                return DietaryComponentList.Where(a => a.FoodStore?.Name == foodTypeName).Sum(a => a.AmountConsumed);
         }
 
         /// <summary>
@@ -172,7 +190,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         [Description("Number of individuals")]
         [Required, GreaterThanEqualValue(0)]
-        public int Individuals { get; set; }
+        public decimal Individuals { get; set; }
 
         /// <summary>
         /// Hired labour switch
@@ -202,6 +220,7 @@ namespace Models.CLEM.Resources
         /// Available Labour (in days) in the current month. 
         /// </summary>
         [JsonIgnore]
+        [FilterByProperty]
         public double AvailableDays { get; private set; }
 
         /// <summary>

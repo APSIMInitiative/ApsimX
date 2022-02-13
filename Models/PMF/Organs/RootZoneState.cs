@@ -300,19 +300,7 @@ namespace Models.PMF.Organs
             MaxDepth = Math.Min(maximumRootDepth.Value(), MaxDepth);
             Depth = Math.Min(Depth, MaxDepth);
 
-            //RootFront - needed by sorghum
-            if (root.RootFrontCalcSwitch?.Value() == 1)
-            {
-                var dltRootFront = rootfrontvelocity * rootDepthWaterStress * xf[RootLayer];
-
-                double maxFront = Math.Sqrt(Math.Pow(Depth, 2) + Math.Pow(LeftDist, 2));
-                dltRootFront = Math.Min(dltRootFront, maxFront - RootFront);
-                RootFront += dltRootFront;
-            }
-            else
-            {
-                RootFront = Depth;
-            }
+            RootFront = Depth;
             root.RootShape.CalcRootProportionInLayers(this);
         }
         /// <summary>

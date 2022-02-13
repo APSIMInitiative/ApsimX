@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Reporting
 {
@@ -32,7 +33,7 @@ namespace Models.CLEM.Reporting
     [Version(1, 0, 2, "Updated to enable ResourceUnitsConverter to be used.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/Ledgers.htm")]
-    public class ReportResourceLedger : Models.Report
+    public class ReportResourceLedger : Models.Report, ICLEMUI
     {
         [Link]
         private ResourcesHolder resources = null;
@@ -74,6 +75,9 @@ namespace Models.CLEM.Reporting
         [Summary]
         [Description("Include all unit conversions")]
         public bool IncludeConversions { get; set; }
+
+        /// <inheritdoc/>
+        public string SelectedTab { get; set; }
 
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
@@ -150,12 +154,12 @@ namespace Models.CLEM.Reporting
                                 {
                                     if (ReportStyle == ReportTransactionStyle.GainAndLossColumns)
                                     {
-                                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ConvertTo(" + item + $",\"gain\",{ReportLossesAsNegative}) as " + item + "_Gain");
-                                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ConvertTo(" + item + $",\"loss\",{ReportLossesAsNegative}) as " + item + "_Loss");
+                                        variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastTransaction.ConvertTo(\"{item}\",\"gain\",{ReportLossesAsNegative}) as {item}_Gain");
+                                        variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastTransaction.ConvertTo(\"{item}\",\"loss\",{ReportLossesAsNegative}) as {item}_Loss");
                                     }
                                     else
                                     {
-                                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ConvertTo(" + item + $"\", {ReportLossesAsNegative}) as " + item + "_Amount");
+                                        variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastTransaction.ConvertTo(\"{item}\", {ReportLossesAsNegative}) as {item}_Amount");
                                     }
                                 }
                             } 

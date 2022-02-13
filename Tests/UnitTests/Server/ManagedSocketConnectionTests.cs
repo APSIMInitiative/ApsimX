@@ -140,6 +140,7 @@ namespace UnitTests
                 client.Connect();
                 PipeUtilities.SendObjectToPipe(client, expected);
             }
+            server.Wait();
         }
 
         private void TestRead(ICommand target)

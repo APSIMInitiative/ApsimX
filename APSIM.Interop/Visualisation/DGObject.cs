@@ -75,11 +75,11 @@
         /// <param name="point">The point to centre the text around</param>
         protected void DrawCentredText(IDrawContext context, string text, Point point)
         {
-            var extents = context.GetTextExtents(text);
-            double x = point.X - (extents.Width / 2 + extents.X);
-            double y = point.Y - (extents.Height / 2 + extents.Y);
+            (int left, int top, int width, int height) = context.GetPixelExtents(text, false, false);
+            double x = point.X - (width / 2 + left);
+            double y = point.Y - (height / 2 + top);
             context.MoveTo(x, y);
-            context.ShowText(text);
+            context.DrawText(text, false, false);
         }
     }
 }

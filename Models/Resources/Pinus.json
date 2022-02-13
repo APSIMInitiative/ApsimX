@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 0,
-  "Version": 146,
+  "Version": 148,
   "Name": "Simulations",
   "Children": [
     {
@@ -1822,76 +1822,7 @@
                         0.0
                       ],
                       "Name": "XYPairs",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                              "Title": "Y",
-                              "Inverted": false,
-                              "Minimum": null,
-                              "Maximum": null,
-                              "Interval": null,
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false,
-                              "Position": 0
-                            },
-                            {
-                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                              "Title": "X",
-                              "Inverted": false,
-                              "Minimum": null,
-                              "Maximum": null,
-                              "Interval": null,
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false,
-                              "Position": 3
-                            }
-                          ],
-                          "LegendPosition": 3,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "Graph",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -65536,
-                              "FactorToVaryColours": null,
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 0,
-                              "LineThickness": 0,
-                              "TableName": null,
-                              "XFieldName": "[XYPairs].X",
-                              "YFieldName": "[XYPairs].Y",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "FVPD",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -1927,76 +1858,7 @@
                         1.0
                       ],
                       "Name": "XYPairs",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                              "Title": "Y",
-                              "Inverted": false,
-                              "Minimum": null,
-                              "Maximum": null,
-                              "Interval": null,
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false,
-                              "Position": 0
-                            },
-                            {
-                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                              "Title": "X",
-                              "Inverted": false,
-                              "Minimum": null,
-                              "Maximum": null,
-                              "Interval": null,
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false,
-                              "Position": 3
-                            }
-                          ],
-                          "LegendPosition": 3,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "Graph",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -65536,
-                              "FactorToVaryColours": null,
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 0,
-                              "LineThickness": 0,
-                              "TableName": null,
-                              "XFieldName": "[XYPairs].X",
-                              "YFieldName": "[XYPairs].Y",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "FN",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
@@ -2032,76 +1894,7 @@
                         1.0
                       ],
                       "Name": "XYPairs",
-                      "Children": [
-                        {
-                          "$type": "Models.Graph, Models",
-                          "Caption": null,
-                          "Axis": [
-                            {
-                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                              "Title": "Y",
-                              "Inverted": false,
-                              "Minimum": null,
-                              "Maximum": null,
-                              "Interval": null,
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false,
-                              "Position": 0
-                            },
-                            {
-                              "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                              "Title": "X",
-                              "Inverted": false,
-                              "Minimum": null,
-                              "Maximum": null,
-                              "Interval": null,
-                              "DateTimeAxis": false,
-                              "CrossesAtZero": false,
-                              "Position": 3
-                            }
-                          ],
-                          "LegendPosition": 3,
-                          "LegendOrientation": 0,
-                          "AnnotationPosition": 0,
-                          "DisabledSeries": [],
-                          "LegendOutsideGraph": false,
-                          "Name": "Graph",
-                          "Children": [
-                            {
-                              "$type": "Models.Series, Models",
-                              "Type": 1,
-                              "XAxis": 3,
-                              "YAxis": 0,
-                              "ColourArgb": -65536,
-                              "FactorToVaryColours": null,
-                              "FactorToVaryMarkers": null,
-                              "FactorToVaryLines": null,
-                              "Marker": 11,
-                              "MarkerSize": 0,
-                              "Line": 0,
-                              "LineThickness": 0,
-                              "TableName": null,
-                              "XFieldName": "[XYPairs].X",
-                              "YFieldName": "[XYPairs].Y",
-                              "X2FieldName": "",
-                              "Y2FieldName": "",
-                              "ShowInLegend": true,
-                              "IncludeSeriesNameInLegend": false,
-                              "Cumulative": false,
-                              "CumulativeX": false,
-                              "Filter": null,
-                              "Name": "FW",
-                              "Children": [],
-                              "IncludeInDocumentation": true,
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "IncludeInDocumentation": true,
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
