@@ -38,8 +38,15 @@ namespace Models.PMF.Struct
 		public double CurrentLeafNo { get; set; }
 
 		/// <summary>Leaf area.</summary>
-		/// <remarks>Changes each day.</remarks>
+		/// <remarks>Changes each day - doesn't include proportion of culm.</remarks>
 		public double LeafArea { get; set; }
+
+		/// <summary>Increase in Leaf area.</summary>
+		/// <remarks>Changes each day - includes proportion effect.</remarks>
+		public double DltLAI { get; set; }
+
+		/// <summary>Increase in Leaf area reduced by stress effect.</summary>
+		public double DltStressedLAI { get; set; }
 
 		/// <summary>Accumulated lai for this culm.</summary>
 		public double TotalLAI { get; set; }
@@ -93,6 +100,8 @@ namespace Models.PMF.Struct
 			VertAdjValue = 0.0;
 			Proportion = 1.0;
 			TotalLAI = 0.0;
+			DltLAI = 0.0;
+			DltStressedLAI = 0.0;
 			CulmNo = 0;
 			LeafSizes = new List<double>();
 			//readParams();

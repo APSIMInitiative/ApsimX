@@ -327,7 +327,9 @@ namespace Models.PMF.Struct
 
 				//CalcPotentialArea();
 				dltPotentialLAI = tillering.CalcPotentialLeafArea();
-				dltStressedLAI = dltPotentialLAI * expansionStress.Value();
+				double expStress = expansionStress.Value();
+				dltStressedLAI = dltPotentialLAI * expStress;
+				Culms.ForEach(c=> c.DltStressedLAI = c.DltLAI * expStress);
 			}
 
 		}
@@ -337,7 +339,10 @@ namespace Models.PMF.Struct
 		/// </summary>
 		public double CalculateActualArea()
 		{
-            return tillering.CalcActualLeafArea(dltStressedLAI);
+            double actualLAI = tillering.CalcActualLeafArea(dltStressedLAI);
+			Culms.ForEach(c => c.TotalLAI = c.TotalLAI + c.DltStressedLAI);
+
+			return actualLAI;
         }
 
 		private double CalculateFtn()
