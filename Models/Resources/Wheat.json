@@ -6934,15 +6934,16 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 5",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 7.8",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
-                    "[Phenology].CAMP.FLNparams.LV = 9.136363636363637",
-                    "[Phenology].CAMP.FLNparams.LN = 15.19047619047619",
-                    "[Phenology].CAMP.FLNparams.SV = 11.34285714285714",
-                    "[Phenology].CAMP.FLNparams.SN = 16.35897435897436",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 1",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 90"
+                    "[Phenology].CAMP.FLNparams.LV = 9.3",
+                    "[Phenology].CAMP.FLNparams.LN = 16.1",
+                    "[Phenology].CAMP.FLNparams.SV = 12.5",
+                    "[Phenology].CAMP.FLNparams.SN = 22.1",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 70",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
                   "Name": "Amarok",
                   "Children": [],
@@ -6967,17 +6968,18 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 4.5",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
-                    "[Phenology].CAMP.FLNparams.LV = 8.277777777777779",
-                    "[Phenology].CAMP.FLNparams.LN = 19.0",
-                    "[Phenology].CAMP.FLNparams.SV = 12.025",
-                    "[Phenology].CAMP.FLNparams.SN = 17.0",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 1",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 90"
+                    "[Phenology].CAMP.FLNparams.LV = 8.5",
+                    "[Phenology].CAMP.FLNparams.LN = 18.7",
+                    "[Phenology].CAMP.FLNparams.SV = 15.5",
+                    "[Phenology].CAMP.FLNparams.SN = 21.7",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 120",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
                   "Name": "BattenWinter",
                   "Children": [],
@@ -6988,17 +6990,18 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 4.5",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
-                    "[Phenology].CAMP.FLNparams.LV = 7.947368421052632",
-                    "[Phenology].CAMP.FLNparams.LN = 8.0",
-                    "[Phenology].CAMP.FLNparams.SV = 11.75",
-                    "[Phenology].CAMP.FLNparams.SN = 12.14102564102564",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 1",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 90"
+                    "[Phenology].CAMP.FLNparams.LV = 8.5",
+                    "[Phenology].CAMP.FLNparams.LN = 8.7",
+                    "[Phenology].CAMP.FLNparams.SV = 15.5",
+                    "[Phenology].CAMP.FLNparams.SN = 17.4",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 120",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
                   "Name": "BattenSpring",
                   "Children": [],
@@ -7023,12 +7026,15 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2.3",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Phenology].CAMP.FLNparams.LV = 8",
-                    "[Phenology].CAMP.FLNparams.LN = 16.0",
-                    "[Phenology].CAMP.FLNparams.SV = 16.0",
-                    "[Phenology].CAMP.FLNparams.SN = 24.0"
+                    "[Phenology].CAMP.FLNparams.LV = 10.0",
+                    "[Phenology].CAMP.FLNparams.LN = 22.0",
+                    "[Phenology].CAMP.FLNparams.SV = 13.0",
+                    "[Phenology].CAMP.FLNparams.SN = 30.0",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 200",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
                   "Name": "Claire",
                   "Children": [],
@@ -7060,8 +7066,10 @@
                     "[Phenology].CAMP.FLNparams.LN = 15.625",
                     "[Phenology].CAMP.FLNparams.SV = 14.24444444444444",
                     "[Phenology].CAMP.FLNparams.SN = 16.84444444444444",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 1",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 90"
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 200",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2.3",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
                   "Name": "CRWT153",
                   "Children": [],
@@ -7164,15 +7172,16 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 7.6",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.6",
-                    "[Phenology].CAMP.FLNparams.LV = 6.652173913043478",
-                    "[Phenology].CAMP.FLNparams.LN = 6.935483870967742",
-                    "[Phenology].CAMP.FLNparams.SV = 9.11111111111111",
-                    "[Phenology].CAMP.FLNparams.SN = 8.355263157894736",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 1",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 90"
+                    "[Phenology].CAMP.FLNparams.LV = 6.8",
+                    "[Phenology].CAMP.FLNparams.LN = 6.8",
+                    "[Phenology].CAMP.FLNparams.SV = 10.6",
+                    "[Phenology].CAMP.FLNparams.SN = 10.6",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 90",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
                   "Name": "Otane",
                   "Children": [],
@@ -7239,12 +7248,15 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2.3",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Phenology].CAMP.FLNparams.LV = 7",
-                    "[Phenology].CAMP.FLNparams.LN = 7.0",
-                    "[Phenology].CAMP.FLNparams.SV = 9.0",
-                    "[Phenology].CAMP.FLNparams.SN = 9.0"
+                    "[Phenology].CAMP.FLNparams.LV = 7.5",
+                    "[Phenology].CAMP.FLNparams.LN = 7.5",
+                    "[Phenology].CAMP.FLNparams.SV = 22.0",
+                    "[Phenology].CAMP.FLNparams.SN = 28.0",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 200",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
                   "Name": "Rongotea",
                   "Children": [],
@@ -7289,8 +7301,10 @@
                     "[Phenology].CAMP.FLNparams.LN = 10.71428571428571",
                     "[Phenology].CAMP.FLNparams.SV = 10.25641025641026",
                     "[Phenology].CAMP.FLNparams.SN = 11.13333333333333",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 1",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 90"
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 200",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2.3",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
                   "Name": "Saracen",
                   "Children": [],
@@ -7357,17 +7371,20 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 4",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 90",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 96",
                     "[Leaf].ExtinctionCoeff.VegetativePhase.FixedValue = 0.7",
                     "[Grain].NumberFunction.GrainNumber.GrainsPerGramOfStem.FixedValue = 22",
                     "[Grain].MaximumPotentialGrainSize.FixedValue = 0.045",
                     "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 3000",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.33",
-                    "[Phenology].CAMP.FLNparams.LV = 8",
-                    "[Phenology].CAMP.FLNparams.LN = 18.0",
-                    "[Phenology].CAMP.FLNparams.SV = 8.0",
-                    "[Phenology].CAMP.FLNparams.SN = 18.0"
+                    "[Phenology].CAMP.FLNparams.LV = 11.0",
+                    "[Phenology].CAMP.FLNparams.LN = 15.5",
+                    "[Phenology].CAMP.FLNparams.SV = 19.1",
+                    "[Phenology].CAMP.FLNparams.SN = 28.0",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 7.9",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
                   "Name": "Wakanui",
                   "Children": [],
@@ -7663,26 +7680,17 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 96.2227321902995",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.199981872553676",
-                    "[Phenology].CAMP.FLNparams.LV = 7.5",
-                    "[Phenology].CAMP.FLNparams.LN = 10.0",
-                    "[Phenology].CAMP.FLNparams.SV = 8.0",
-                    "[Phenology].CAMP.FLNparams.SN = 14.5",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                    "[Phenology].CAMP.FLNparams.LV = 6.1",
+                    "[Phenology].CAMP.FLNparams.LN = 8.7",
+                    "[Phenology].CAMP.FLNparams.SV = 9.2",
+                    "[Phenology].CAMP.FLNparams.SN = 8.0",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 190",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
                   ],
                   "Name": "Gregory",
-                  "Children": [
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Suneca",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "Children": [],
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
@@ -7722,14 +7730,6 @@
                     {
                       "$type": "Models.Core.Alias, Models",
                       "Name": "Chara",
-                      "Children": [],
-                      "IncludeInDocumentation": true,
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Core.Alias, Models",
-                      "Name": "Drysdale",
                       "Children": [],
                       "IncludeInDocumentation": true,
                       "Enabled": true,
@@ -7942,10 +7942,14 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
                     "[Grain].MaximumPotentialGrainSize.FixedValue = 0.041",
-                    "[Phenology].CAMP.FLNparams.LV = 6",
-                    "[Phenology].CAMP.FLNparams.LN = 6.0",
-                    "[Phenology].CAMP.FLNparams.SV = 11.0",
-                    "[Phenology].CAMP.FLNparams.SN = 11.0"
+                    "[Phenology].CAMP.FLNparams.LV = 5.5",
+                    "[Phenology].CAMP.FLNparams.LN = 5.5",
+                    "[Phenology].CAMP.FLNparams.SV = 9.5",
+                    "[Phenology].CAMP.FLNparams.SN = 15.5",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 83",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3.0",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
                   "Name": "Hartog",
                   "Children": [
@@ -8258,12 +8262,14 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue =80",
-                    "[Phenology].CAMP.FLNparams.LV = 7.0",
-                    "[Phenology].CAMP.FLNparams.LN = 12.0",
-                    "[Phenology].CAMP.FLNparams.SV = 7.0",
-                    "[Phenology].CAMP.FLNparams.SN = 12.0",
+                    "[Phenology].CAMP.FLNparams.LV = 7.6",
+                    "[Phenology].CAMP.FLNparams.LN = 8.6",
+                    "[Phenology].CAMP.FLNparams.SV = 11.9",
+                    "[Phenology].CAMP.FLNparams.SN = 14.4",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 50",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 3.0",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 90"
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
                   "Name": "Egret",
                   "Children": [],
@@ -8401,11 +8407,11 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 106.268453805677",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.137742329295879",
-                    "[Phenology].CAMP.FLNparams.LV = 5.5",
-                    "[Phenology].CAMP.FLNparams.LN = 10.0",
-                    "[Phenology].CAMP.FLNparams.SV = 7.0",
-                    "[Phenology].CAMP.FLNparams.SN = 12.5",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                    "[Phenology].CAMP.FLNparams.LV = 7.1",
+                    "[Phenology].CAMP.FLNparams.LN = 7.2",
+                    "[Phenology].CAMP.FLNparams.SV = 8.9",
+                    "[Phenology].CAMP.FLNparams.SN = 15.6",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 210",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
@@ -8419,12 +8425,15 @@
                 {
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
-                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 3.5 ",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 167",
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100",
-                    "[Phenology].CAMP.FLNparams.LV = 7",
-                    "[Phenology].CAMP.FLNparams.LN = 12.0",
-                    "[Phenology].CAMP.FLNparams.SV = 12.0",
-                    "[Phenology].CAMP.FLNparams.SN = 17.0"
+                    "[Phenology].CAMP.FLNparams.LV = 8.0",
+                    "[Phenology].CAMP.FLNparams.LN = 17.0",
+                    "[Phenology].CAMP.FLNparams.SV = 10.4",
+                    "[Phenology].CAMP.FLNparams.SN = 13.9",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2.0",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
                   "Name": "MacKellar",
                   "Children": [
@@ -8477,10 +8486,14 @@
                   "$type": "Models.PMF.Cultivar, Models",
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
-                    "[Phenology].CAMP.FLNparams.LV = 8",
+                    "[Phenology].CAMP.FLNparams.LV = 8.0",
                     "[Phenology].CAMP.FLNparams.LN = 8.0",
-                    "[Phenology].CAMP.FLNparams.SV = 13.0",
-                    "[Phenology].CAMP.FLNparams.SN = 13.0"
+                    "[Phenology].CAMP.FLNparams.SV = 18.0",
+                    "[Phenology].CAMP.FLNparams.SN = 23.0",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 200",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2.3",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
                   "Name": "McCubbin",
                   "Children": [],
@@ -8749,11 +8762,11 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 107.602580952482",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.23032920462638",
-                    "[Phenology].CAMP.FLNparams.LV = 5.5",
-                    "[Phenology].CAMP.FLNparams.LN = 10.5",
-                    "[Phenology].CAMP.FLNparams.SV = 7.0",
-                    "[Phenology].CAMP.FLNparams.SN = 11.5",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                    "[Phenology].CAMP.FLNparams.LV = 6.8",
+                    "[Phenology].CAMP.FLNparams.LN = 11.7",
+                    "[Phenology].CAMP.FLNparams.SV = 9.9",
+                    "[Phenology].CAMP.FLNparams.SN = 11.2",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 210",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
@@ -8933,12 +8946,14 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 90",
                     "[Leaf].CohortParameters.MaxArea.AreaLargestLeaves.FixedValue = 4000",
-                    "[Phenology].CAMP.FLNparams.LV = 6.0",
-                    "[Phenology].CAMP.FLNparams.LN = 10.0",
-                    "[Phenology].CAMP.FLNparams.SV = 6.0",
+                    "[Phenology].CAMP.FLNparams.LV = 6.4",
+                    "[Phenology].CAMP.FLNparams.LN = 9.9",
+                    "[Phenology].CAMP.FLNparams.SV = 8.8",
                     "[Phenology].CAMP.FLNparams.SN = 10.0",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 68",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0",
                     "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
-                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 90"
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
                   ],
                   "Name": "Yecora",
                   "Children": [],
@@ -9309,11 +9324,11 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 100.832025052954",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.199967770650946",
-                    "[Phenology].CAMP.FLNparams.LV = 5.5",
-                    "[Phenology].CAMP.FLNparams.LN = 11.5",
-                    "[Phenology].CAMP.FLNparams.SV = 7.5",
-                    "[Phenology].CAMP.FLNparams.SN = 14.5",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                    "[Phenology].CAMP.FLNparams.LV = 6.1",
+                    "[Phenology].CAMP.FLNparams.LN = 11.9",
+                    "[Phenology].CAMP.FLNparams.SV = 9.1",
+                    "[Phenology].CAMP.FLNparams.SN = 10.9",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 150",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
@@ -9749,11 +9764,11 @@
                   "Command": [
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 104.816433323058",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.253254338348875",
-                    "[Phenology].CAMP.FLNparams.LV = 9.0",
-                    "[Phenology].CAMP.FLNparams.LN = 14.5",
-                    "[Phenology].CAMP.FLNparams.SV = 12.0",
-                    "[Phenology].CAMP.FLNparams.SN = 17.0",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                    "[Phenology].CAMP.FLNparams.LV = 10.9",
+                    "[Phenology].CAMP.FLNparams.LN = 15.7",
+                    "[Phenology].CAMP.FLNparams.SV = 20.8",
+                    "[Phenology].CAMP.FLNparams.SN = 32.7",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 250",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
@@ -9890,10 +9905,10 @@
                     "[Phenology].Phyllochron.BasePhyllochron.FixedValue = 102.794916048683",
                     "[Phenology].PhyllochronPpSensitivity.FixedValue = 0.192036818570067",
                     "[Phenology].CAMP.FLNparams.LV = 6.0",
-                    "[Phenology].CAMP.FLNparams.LN = 11.5",
-                    "[Phenology].CAMP.FLNparams.SV = 7.5",
-                    "[Phenology].CAMP.FLNparams.SN = 14.5",
-                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 5.8",
+                    "[Phenology].CAMP.FLNparams.LN = 9.9",
+                    "[Phenology].CAMP.FLNparams.SV = 11.7",
+                    "[Phenology].CAMP.FLNparams.SN = 14.2",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
                     "[Phenology].CAMP.EnvData.VrnTreatDuration = 60",
                     "[Phenology].HeadEmergenceLongDayBase.FixedValue = 190",
                     "[Phenology].HeadEmergencePpSensitivity.FixedValue = 0.0"
@@ -10083,6 +10098,51 @@
                   "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].CAMP.FLNparams.LV = 6.6",
+                    "[Phenology].CAMP.FLNparams.LN = 9.2",
+                    "[Phenology].CAMP.FLNparams.SV = 11.9",
+                    "[Phenology].CAMP.FLNparams.SN = 15.2",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 288",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 8.0",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
+                  ],
+                  "Name": "Kellelac",
+                  "Children": []
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].CAMP.FLNparams.LV = 5.5",
+                    "[Phenology].CAMP.FLNparams.LN = 0.5",
+                    "[Phenology].CAMP.FLNparams.SV = 7.2",
+                    "[Phenology].CAMP.FLNparams.SN = 9.7",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 293",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 1.5",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
+                  ],
+                  "Name": "Suneca",
+                  "Children": []
+                },
+                {
+                  "$type": "Models.PMF.Cultivar, Models",
+                  "Command": [
+                    "[Phenology].CAMP.FLNparams.LV = 8.7",
+                    "[Phenology].CAMP.FLNparams.LN = 9.2",
+                    "[Phenology].CAMP.FLNparams.SV = 11.9",
+                    "[Phenology].CAMP.FLNparams.SN = 8.7",
+                    "[Phenology].HeadEmergenceLongDayBase.FixedValue = 100",
+                    "[Phenology].HeadEmergencePpSensitivity.FixedValue = 2.5",
+                    "[Phenology].CAMP.EnvData.VrnTreatTemp = 6",
+                    "[Phenology].CAMP.EnvData.VrnTreatDuration = 60"
+                  ],
+                  "Name": "Drysdale",
+                  "Children": []
                 }
               ],
               "IncludeInDocumentation": true,
