@@ -741,15 +741,22 @@ namespace UserInterface.Views
         /// <param name="args"></param>
         private void RefColWidget_SizeAllocated(object o, SizeAllocatedArgs args)
         {
-            headerHeight = refColWidget.AllocatedHeight;
-            for (int i = 0; i < numberLockedCols; i++)
+            try
             {
-                Fixedcolview.Columns[i].Widget.HeightRequest = headerHeight;
+                headerHeight = refColWidget.AllocatedHeight;
+                for (int i = 0; i < numberLockedCols; i++)
+                {
+                    Fixedcolview.Columns[i].Widget.HeightRequest = headerHeight;
+                }
+                // We have the value we need, so we can clean up. There's no real need to return, as we don't expect
+                // the column headers to change.
+                refColWidget.SizeAllocated -= RefColWidget_SizeAllocated;
+                refColWidget = null;
             }
-            // We have the value we need, so we can clean up. There's no real need to return, as we don't expect
-            // the column headers to change.
-            refColWidget.SizeAllocated -= RefColWidget_SizeAllocated;
-            refColWidget = null;
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Get screenshot of grid.</summary>
