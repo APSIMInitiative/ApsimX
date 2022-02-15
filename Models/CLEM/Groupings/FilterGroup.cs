@@ -30,7 +30,17 @@ namespace Models.CLEM
 
         /// <inheritdoc/>
         [JsonIgnore]
-        public IEnumerable<string> Parameters => properties.Keys;
+        public IEnumerable<string> Parameters => properties?.Keys;
+
+        /// <inheritdoc/>
+        public IEnumerable<string> GetParameterNames()
+        {
+            if (properties is null)
+                InitialiseFilters(false);
+
+            return properties.Keys;
+        }
+
 
         /// <inheritdoc/>
         public PropertyInfo GetProperty(string name) 

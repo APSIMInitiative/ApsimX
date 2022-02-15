@@ -176,7 +176,7 @@ namespace Models.CLEM.Resources
             if (DietaryComponentList is null)
                 return 0;
             else
-                return DietaryComponentList.Where(a => a.FoodStore.Name == foodTypeName).Sum(a => a.AmountConsumed);
+                return DietaryComponentList.Where(a => a.FoodStore?.Name == foodTypeName).Sum(a => a.AmountConsumed);
         }
 
         /// <summary>
