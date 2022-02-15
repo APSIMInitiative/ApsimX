@@ -153,6 +153,10 @@ namespace Models.PMF.Organs
         /// <summary>Gets the canopy type. Should return null if no canopy present.</summary>
         public string CanopyType => plant.PlantType;
 
+        /// <summary>Gets or sets the R50.</summary>
+        [Description("Tillering Method: 0 = Fixed - uses FTN, 1 = Dynamic")]
+        public int TilleringMethod { get; set; } = 0;
+
         /// <summary>The initial biomass dry matter weight</summary>
         [Description("Initial leaf dry matter weight")]
         [Units("g/m2")]

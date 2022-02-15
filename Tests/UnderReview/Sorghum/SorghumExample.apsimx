@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 147,
+  "Version": 148,
   "Name": "Simulations",
   "Children": [
     {
@@ -1379,7 +1379,6 @@
               "$type": "Models.PMF.Struct.LeafCulms, Models",
               "dltLeafNo": 0.0,
               "Culms": [],
-              "DynamicTillering": false,
               "FinalLeafNo": 0.0,
               "dltPotentialLAI": 0.0,
               "dltStressedLAI": 0.0,
@@ -1469,33 +1468,6 @@
                   "FixedValue": 1.0,
                   "Units": null,
                   "Name": "leafNoAtEmergence",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -0.82,
-                  "Units": null,
-                  "Name": "tilleringPropensity",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.2065,
-                  "Units": null,
-                  "Name": "tillerSdSlope",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 30.0,
-                  "Units": "%",
-                  "Name": "tillerSlaBound",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -1784,9 +1756,148 @@
                   "ReadOnly": false
                 },
                 {
+                  "$type": "Models.PMF.Struct.DynamicTillering, Models",
+                  "CalculatedTillerNumber": 0.0,
+                  "FertileTillerNumber": 0.0,
+                  "SupplyDemandRatio": 0.0,
+                  "Name": "dynamicTillering",
+                  "Children": [
+                    {
+                      "$type": "Models.PMF.C4LeafArea, Models",
+                      "Name": "AreaCalc",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[LeafCulms].A0",
+                          "Name": "A0",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[LeafCulms].A1",
+                          "Name": "A1",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[LeafCulms].B0",
+                          "Name": "B0",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[LeafCulms].B1",
+                          "Name": "B1",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[LeafCulms].aX0",
+                          "Name": "aX0",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[LeafCulms].aMaxSlope",
+                          "Name": "aMaxS",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[LeafCulms].aMaxIntercept",
+                          "Name": "aMaxI",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[LeafCulms].largestLeafPlateau",
+                          "Name": "largestLeafPlateau",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[LeafCulms].leafNoCorrection",
+                          "Name": "leafNoCorrection",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[LeafCulms].slaMax",
+                      "Name": "slaMax",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[LeafCulms].tillerSdIntercept",
+                      "Name": "tillerSdIntercept",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[LeafCulms].tillerSdSlope",
+                      "Name": "tillerSdSlope",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[LeafCulms].tillerSlaBound",
+                      "Name": "tillerSlaBound",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[LeafCulms].maxLAIForTillerAddition",
+                      "Name": "maxLAIForTillerAddition",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[LeafCulms].maxDailyTillerReduction",
+                      "Name": "maxDailyTillerReduction",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
                   "$type": "Models.PMF.Struct.FixedTillering, Models",
                   "FertileTillerNumber": 0.0,
-                  "Name": "Tillering",
+                  "Name": "FixedTillering",
                   "Children": [
                     {
                       "$type": "Models.PMF.C4LeafArea, Models",
@@ -2059,6 +2170,51 @@
                   "FixedValue": 49.25,
                   "Units": null,
                   "Name": "largestLeafPlateau",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.329,
+                  "Units": null,
+                  "Name": "tillerSdIntercept",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.3,
+                  "Units": null,
+                  "Name": "tillerSdSlope",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 30.0,
+                  "Units": "%",
+                  "Name": "tillerSlaBound",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.325,
+                  "Units": null,
+                  "Name": "maxLAIForTillerAddition",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.Constant, Models",
+                  "FixedValue": 0.3,
+                  "Units": null,
+                  "Name": "maxDailyTillerReduction",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -4088,6 +4244,7 @@
             },
             {
               "$type": "Models.PMF.Organs.SorghumLeaf, Models",
+              "TilleringMethod": 0,
               "InitialDMWeight": 0.1,
               "InitialLAI": 200.0,
               "InitialSLN": 1.5,
@@ -8561,7 +8718,9 @@
                         "[Phenology].PhotoModifier.XYPairs.Y[2] = 26",
                         "[Phenology].TTEndJuvToInit.FixedValue = 202",
                         "[LeafCulms].aMaxSlope.FixedValue = 0",
-                        "[LeafCulms].aMaxIntercept.FixedValue = 450"
+                        "[LeafCulms].aMaxIntercept.FixedValue = 450",
+                        "[LeafCulms].tillerSdIntercept.FixedValue = -0.265",
+                        "[LeafCulms].tillerSdSlope.FixedValue = 0.247"
                       ],
                       "Name": "ATX623xRTX430",
                       "Children": [],
@@ -8576,7 +8735,9 @@
                         "[Phenology].PhotoModifier.XYPairs.Y[2] = 87.34",
                         "[Phenology].TTEndJuvToInit.FixedValue = 134.4",
                         "[LeafCulms].aMaxSlope.FixedValue = 0",
-                        "[LeafCulms].aMaxIntercept.FixedValue = 450"
+                        "[LeafCulms].aMaxIntercept.FixedValue = 450",
+                        "[LeafCulms].tillerSdIntercept.FixedValue = -0.265",
+                        "[LeafCulms].tillerSdSlope.FixedValue = 0.247"
                       ],
                       "Name": "A35xQL36",
                       "Children": [],
@@ -8589,7 +8750,9 @@
                         "[Phenology].PhotoModifier.XYPairs.Y[2] = 25",
                         "[Phenology].TTEndJuvToInit.FixedValue = 179",
                         "[LeafCulms].aMaxSlope.FixedValue = 0",
-                        "[LeafCulms].aMaxIntercept.FixedValue = 450"
+                        "[LeafCulms].aMaxIntercept.FixedValue = 450",
+                        "[LeafCulms].tillerSdIntercept.FixedValue = -0.265",
+                        "[LeafCulms].tillerSdSlope.FixedValue = 0.247"
                       ],
                       "Name": "QL41xQL36",
                       "Children": [],
@@ -8605,7 +8768,9 @@
                         "[Phenology].TTEndJuvToInit.FixedValue = 114.4",
                         "[LeafCulms].aMaxIntercept.FixedValue = -321.13",
                         "[LeafCulms].aMaxSlope.FixedValue = 46.312",
-                        "[LeafCulms].aX0.FixedValue = 0.786"
+                        "[LeafCulms].aX0.FixedValue = 0.786",
+                        "[LeafCulms].tillerSdIntercept.FixedValue = -0.265",
+                        "[LeafCulms].tillerSdSlope.FixedValue = 0.247"
                       ],
                       "Name": "QL39xQL36",
                       "Children": [],
@@ -8623,7 +8788,9 @@
                         "[LeafCulms].NumberOfLeaves.leafInitRate.FixedValue = 26.1",
                         "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
                         "[LeafCulms].aMaxSlope.FixedValue = 8.9",
-                        "[LeafCulms].aMaxIntercept.FixedValue = 245.3"
+                        "[LeafCulms].aMaxIntercept.FixedValue = 245.3",
+                        "[LeafCulms].tillerSdIntercept.FixedValue = -1.363",
+                        "[LeafCulms].tillerSdSlope.FixedValue = 0.206"
                       ],
                       "Name": "M35-1",
                       "Children": [],
@@ -8639,7 +8806,9 @@
                         "[Leaf].Photosynthesis.RUE.FixedValue = 1.6",
                         "[Leaf].Parameters.PartitionRate.FixedValue = 0.018",
                         "[Leaf].TargetSLN.PreEventValue.FixedValue = 1.2",
-                        "[LeafCulms].NumberOfLeaves.leafInitRate.FixedValue = 23.2"
+                        "[LeafCulms].NumberOfLeaves.leafInitRate.FixedValue = 23.2",
+                        "[LeafCulms].tillerSdIntercept.FixedValue = -0.818",
+                        "[LeafCulms].tillerSdSlope.FixedValue = 0.159"
                       ],
                       "Name": "CSH13R",
                       "Children": [],
@@ -9152,18 +9321,6 @@
               "Children": [
                 {
                   "$type": "Models.Soils.Physical, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-20",
-                    "20-40",
-                    "40-60",
-                    "60-80",
-                    "80-100",
-                    "100-120",
-                    "120-140",
-                    "140-160",
-                    "160-180"
-                  ],
                   "Thickness": [
                     100.0,
                     100.0,
@@ -9415,18 +9572,6 @@
                 },
                 {
                   "$type": "Models.Soils.Organic, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-20",
-                    "20-40",
-                    "40-60",
-                    "60-80",
-                    "80-100",
-                    "100-120",
-                    "120-140",
-                    "140-160",
-                    "160-180"
-                  ],
                   "FOMCNRatio": 50.0,
                   "Thickness": [
                     100.0,
@@ -9509,18 +9654,6 @@
                 },
                 {
                   "$type": "Models.Soils.Chemical, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-20",
-                    "20-40",
-                    "40-60",
-                    "60-80",
-                    "80-100",
-                    "100-120",
-                    "120-140",
-                    "140-160",
-                    "160-180"
-                  ],
                   "Thickness": [
                     100.0,
                     100.0,
@@ -9585,18 +9718,6 @@
                 },
                 {
                   "$type": "Models.Soils.Sample, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-20",
-                    "20-40",
-                    "40-60",
-                    "60-80",
-                    "80-100",
-                    "100-120",
-                    "120-140",
-                    "140-160",
-                    "160-180"
-                  ],
                   "Thickness": [
                     100.0,
                     100.0,
