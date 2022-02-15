@@ -15,6 +15,7 @@ using Models.Core.Run;
 using APSIM.Server.Extensions;
 using System.Data;
 using APSIM.Shared.Utilities;
+using System.Globalization;
 
 namespace APSIM.Server
 {
@@ -53,17 +54,19 @@ namespace APSIM.Server
         /// <summary>
         /// A label with this name is added to all pods created by the bootstrapper.
         /// </summary>
-        private const string podTypeLabelName = "dev.apsim.info/pod-type";
+        private const string podTypeLabelName = "k8s.apsim.info/pod-type";
+
+        /// <summary>
+        /// A label with this name is added to all pods created by the
+        /// bootstrapper. The value of this label indicates the TCP port on
+        /// which the server in the pod is listening for connections.
+        /// </summary>
+        private const string podPortNoLabelName = "k8s.apsim.info/port-no";
 
         /// <summary>
         /// All worker pods have their <see cref="podTypeLabelName"/> set to this value.
         /// </summary>
         private const string workerPodType = "worker";
-
-        /// <summary>
-        /// Port number used for socket connections to the worker pods.
-        /// </summary>
-        private const uint portNo = 27746;
 
         // State
         private readonly Kubernetes client;
@@ -109,6 +112,7 @@ namespace APSIM.Server
         public override void Run()
         {
             workers = FindWorkers();
+            WriteToLog($"Discovered {workers.Count()} worker pods");
 
             // tbi: go into relay mode
             WriteToLog("Starting relay server...");
@@ -183,8 +187,9 @@ namespace APSIM.Server
 
                 // Create a new socket connection to the pod.
                 string ip = pod.Status.PodIP;
-                WriteToLog($"Attempting connection to pod {podName} on {ip}:{portNo}");
-                using (NetworkSocketClient conn = new NetworkSocketClient(relayOptions.Verbose, ip, portNo, Protocol.Managed))
+                ushort port = GetPortNo(pod);
+                WriteToLog($"Attempting connection to pod {podName} on {ip}:{port}");
+                using (NetworkSocketClient conn = new NetworkSocketClient(relayOptions.Verbose, ip, port, Protocol.Managed))
                 {
                     WriteToLog($"Connection to {podName} established. Sending command...");
 
@@ -194,6 +199,22 @@ namespace APSIM.Server
                     WriteToLog($"Closing connection to {podName}...");
                 }
             });
+        }
+
+        /// <summary>
+        /// Get the port number on which a pod is listening.
+        /// </summary>
+        /// <param name="pod">A worker pod.</param>
+        private ushort GetPortNo(V1Pod pod)
+        {
+            IDictionary<string, string> labels = pod.Metadata.Labels;
+            if (labels == null)
+                throw new InvalidOperationException($"Pod {pod.Name()} has no labels");
+            if (!labels.TryGetValue(podPortNoLabelName, out string portString))
+                throw new InvalidOperationException($"Pod {pod.Name()} has no {podPortNoLabelName} label");
+            if (!ushort.TryParse(portString, NumberStyles.Integer, CultureInfo.InvariantCulture, out ushort port))
+                throw new InvalidOperationException($"Unable to parse port number '{portString} for pod {pod.Name()}");
+            return port;
         }
 
         private void DoReadCommand(ReadCommand command, IConnectionManager connection)
@@ -226,8 +247,9 @@ namespace APSIM.Server
 
                 // Create a new socket connection to the pod.
                 string ip = pod.Status.PodIP;
-                WriteToLog($"Attempting connection to pod {podName} on {ip}:{portNo}");
-                using (NetworkSocketClient conn = new NetworkSocketClient(relayOptions.Verbose, ip, portNo, Protocol.Managed))
+                ushort port = GetPortNo(pod);
+                WriteToLog($"Attempting connection to pod {podName} on {ip}:{port}");
+                using (NetworkSocketClient conn = new NetworkSocketClient(relayOptions.Verbose, ip, port, Protocol.Managed))
                 {
                     WriteToLog($"Connection to {podName} established. Sending command...");
 

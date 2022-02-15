@@ -64,6 +64,9 @@ namespace UserInterface.Views
         private ListStore gridmodel = new ListStore(typeof(string));
         private Dictionary<CellRenderer, int> colLookup = new Dictionary<CellRenderer, int>();
 
+        private Widget refColWidget = null;
+        private int headerHeight = 0;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="GridView" /> class.
         /// </summary>
@@ -154,6 +157,25 @@ namespace UserInterface.Views
         /// </summary>
         private void ClearGridColumns()
         {
+            if (refColWidget != null)
+            {
+                refColWidget.SizeAllocated -= RefColWidget_SizeAllocated;
+                refColWidget = null;
+            }
+            while (Fixedcolview.Columns.Length > 0)
+            {
+                TreeViewColumn col = Fixedcolview.GetColumn(0);
+                foreach (CellRenderer render in col.Cells)
+                {
+                    if (render is CellRendererText)
+                    {
+                        CellRendererText textRender = render as CellRendererText;
+                        col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
+                    }
+                }
+
+                Fixedcolview.RemoveColumn(Fixedcolview.GetColumn(0));
+            }
             while (Grid.Columns.Length > 0)
             {
                 TreeViewColumn col = Grid.GetColumn(0);
@@ -174,20 +196,6 @@ namespace UserInterface.Views
                     render.Dispose();
                 }
                 Grid.RemoveColumn(Grid.GetColumn(0));
-            }
-            while (Fixedcolview.Columns.Length > 0)
-            {
-                TreeViewColumn col = Fixedcolview.GetColumn(0);
-                foreach (CellRenderer render in col.Cells)
-                {
-                    if (render is CellRendererText)
-                    {
-                        CellRendererText textRender = render as CellRendererText;
-                        col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
-                    }
-                }
-
-                Fixedcolview.RemoveColumn(Fixedcolview.GetColumn(0));
             }
         }
 
@@ -339,14 +347,7 @@ namespace UserInterface.Views
                 TreeViewColumn fixedColumn = new TreeViewColumn(this.DataSource.Columns[i].ColumnName, textRender, "text", i);
                 //fixedColumn.Sizing = TreeViewColumnSizing.GrowOnly;
                 fixedColumn.Resizable = false;
-                if (i == 0)
-                {
-                    fixedColumn.SetCellDataFunc(textRender, OnSetCellData);
-                }
-                else
-                {
-                    fixedColumn.SetCellDataFunc(pixbufRender, RenderActivityStatus);
-                }
+                fixedColumn.SetCellDataFunc(textRender, OnSetCellData);
                 fixedColumn.Alignment = 0.0f; // For centered alignment of the column header
                 fixedColumn.Visible = true;
                 Fixedcolview.AppendColumn(fixedColumn);
@@ -666,11 +667,19 @@ namespace UserInterface.Views
                 if (Fixedcolview.Columns.Length > i)
                 {
                     Fixedcolview.Columns[i].Visible = i < number;
+                    if (Fixedcolview.Columns[i].Visible && headerHeight > 0 && Fixedcolview.Columns[i].Widget != null)
+                        Fixedcolview.Columns[i].Widget.HeightRequest = headerHeight;
                 }
 
                 if (Grid.Columns.Length > i)
                 {
                     Grid.Columns[i].Visible = i >= number;
+                    if (refColWidget == null & Grid.Columns[i].Visible)
+                    {
+                        refColWidget = Grid.Columns[i].Widget;
+                        if (refColWidget != null)
+                            refColWidget.SizeAllocated += RefColWidget_SizeAllocated;
+                    }
                 }
             }
             if (number > 0)
@@ -721,6 +730,33 @@ namespace UserInterface.Views
                 splitter.Child1.Hide();
             }
             numberLockedCols = number;
+        }
+
+        /// <summary>
+        /// This is intended to assure the header height of the Fixedcolview grid matches that of the main grid.
+        /// By detecting when Gtk has allocated height for the main grid headers, we adjust the fixed grid headers
+        /// to match. This is not as robust or generalised as it might be, but should suffice for the purposes of this view.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
+        private void RefColWidget_SizeAllocated(object o, SizeAllocatedArgs args)
+        {
+            try
+            {
+                headerHeight = refColWidget.AllocatedHeight;
+                for (int i = 0; i < numberLockedCols; i++)
+                {
+                    Fixedcolview.Columns[i].Widget.HeightRequest = headerHeight;
+                }
+                // We have the value we need, so we can clean up. There's no real need to return, as we don't expect
+                // the column headers to change.
+                refColWidget.SizeAllocated -= RefColWidget_SizeAllocated;
+                refColWidget = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Get screenshot of grid.</summary>

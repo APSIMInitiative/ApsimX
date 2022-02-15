@@ -22,6 +22,7 @@ namespace Models.CLEM.Groupings
     [Description("Defines a filter rule using Attribute details of the individual")]
     [ValidParent(ParentType = typeof(IFilterGroup))]
     [Version(1, 0, 0, "")]
+    [HelpUri(@"Content/Features/Filters/FilterByAttribute.htm")]
     public class FilterByAttribute : Filter, IValidatableObject
     {
         /// <summary>
