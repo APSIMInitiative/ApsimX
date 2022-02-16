@@ -2,6 +2,7 @@
 import glob
 import os.path as path
 import pandas
+import re
 
 # Get the indices of the header rows.
 def getHeaderRows(fileName):
@@ -14,6 +15,10 @@ def getHeaderRows(fileName):
                 ignored.append(i)
         ignored.append(ignored[len(ignored) - 1] + 2)
         return ignored
+
+# Change date formats to yyyy-MM-dd
+def fixDate(date):
+    return re.sub(r'^(\d+)/(\d+)/(\d+)', r'\3-\2-\1', date)
 
 def getSimNameLookup(filename):
     try:    
@@ -34,6 +39,7 @@ def main():
     for file in files:
         ignoredRows = getHeaderRows(file)
         df = pandas.read_csv(file, skiprows = ignoredRows)
+        df['Date'] = df['Date'].apply(fixDate)
         simName = path.splitext(path.basename(file))[0]
         simName = simName.replace('-', '_')
         if simName in simNames:
