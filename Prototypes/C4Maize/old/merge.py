@@ -1,8 +1,11 @@
 #!/usr/bin/python
-import glob
+from glob import glob
 import os.path as path
 import pandas
-import re
+from re import sub
+
+def isHeaderLine(line):
+    return '=' in line or '()' in line
 
 # Get the indices of the header rows.
 def getHeaderRows(fileName):
@@ -11,14 +14,14 @@ def getHeaderRows(fileName):
         ignored = []
         for i in range(0, len(lines)):
             line = lines[i]
-            if '=' in line:
+            if isHeaderLine(line):
                 ignored.append(i)
         ignored.append(ignored[len(ignored) - 1] + 2)
         return ignored
 
 # Change date formats to yyyy-MM-dd
 def fixDate(date):
-    return re.sub(r'^(\d+)/(\d+)/(\d+)', r'\3-\2-\1', date)
+    return sub(r'^(\d+)/(\d+)/(\d+)', r'\3-\2-\1', date)
 
 def getSimNameLookup(filename):
     try:    
@@ -33,12 +36,12 @@ def getSimNameLookup(filename):
         return {}
 
 def main():
-    files = glob.glob('raw/*.out')
+    files = glob('raw/*.out')
     data = []
     simNames = getSimNameLookup('names.txt')
     for file in files:
         ignoredRows = getHeaderRows(file)
-        df = pandas.read_csv(file, skiprows = ignoredRows)
+        df = pandas.read_csv(file, skiprows = ignoredRows, sep = '\s+')
         df['Date'] = df['Date'].apply(fixDate)
         simName = path.splitext(path.basename(file))[0]
         simName = simName.replace('-', '_')
