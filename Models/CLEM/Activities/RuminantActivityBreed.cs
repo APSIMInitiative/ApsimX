@@ -91,7 +91,7 @@ namespace Models.CLEM.Activities
 
             // report previous pregnancies as conceptions
             foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => a.IsPregnant))
-                // report conception status changed from those assigned calf at startup
+                // report conception status changed from those assigned suckling at startup
                 female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Conceived, female, clock.Today));
 
             // work out pregnancy status of initial herd
@@ -299,27 +299,27 @@ namespace Models.CLEM.Activities
                         Sex sex = isMale ? Sex.Male : Sex.Female;
                         double weight = female.BreedParams.SRWBirth * female.StandardReferenceWeight * (1 - 0.33 * (1 - female.Weight / female.StandardReferenceWeight));
                         
-                        Ruminant newCalfRuminant = Ruminant.Create(sex, female.BreedParams, 0, weight);
-                        newCalfRuminant.HerdName = female.HerdName;
-                        newCalfRuminant.Breed = female.BreedParams.Breed;
-                        newCalfRuminant.ID = HerdResource.NextUniqueID;
-                        newCalfRuminant.Location = female.Location;
-                        newCalfRuminant.Mother = female;
-                        newCalfRuminant.Number = 1;
-                        newCalfRuminant.SetUnweaned();
-                        // calf weight from Freer
-                        newCalfRuminant.PreviousWeight = newCalfRuminant.Weight;
-                        newCalfRuminant.SaleFlag = HerdChangeReason.Born;
+                        Ruminant newSucklingRuminant = Ruminant.Create(sex, female.BreedParams, 0, weight);
+                        newSucklingRuminant.HerdName = female.HerdName;
+                        newSucklingRuminant.Breed = female.BreedParams.Breed;
+                        newSucklingRuminant.ID = HerdResource.NextUniqueID;
+                        newSucklingRuminant.Location = female.Location;
+                        newSucklingRuminant.Mother = female;
+                        newSucklingRuminant.Number = 1;
+                        newSucklingRuminant.SetUnweaned();
+                        // suckling/calf weight from Freer
+                        newSucklingRuminant.PreviousWeight = newSucklingRuminant.Weight;
+                        newSucklingRuminant.SaleFlag = HerdChangeReason.Born;
 
                         // add attributes inherited from mother
                         foreach (var attribute in female.Attributes.Items)
                             if (attribute.Value != null)
-                                newCalfRuminant.Attributes.Add(attribute.Key, attribute.Value.GetInheritedAttribute() as IIndividualAttribute);
+                                newSucklingRuminant.Attributes.Add(attribute.Key, attribute.Value.GetInheritedAttribute() as IIndividualAttribute);
 
-                        HerdResource.AddRuminant(newCalfRuminant, this);
+                        HerdResource.AddRuminant(newSucklingRuminant, this);
 
                         // add to sucklings
-                        female.SucklingOffspringList.Add(newCalfRuminant);
+                        female.SucklingOffspringList.Add(newSucklingRuminant);
                         // this now reports for each individual born not a birth event as individual wean events are reported
                         female.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Birth, female, clock.Today));
                     }
