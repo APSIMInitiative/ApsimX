@@ -102,6 +102,7 @@
               "Notes": null,
               "SelectedTab": null,
               "CurrentAncestorList": [
+                "ZoneCLEM",
                 "ResourcesHolder"
               ],
               "Name": "Resources",
@@ -113,6 +114,7 @@
                   "Notes": null,
                   "SelectedTab": null,
                   "CurrentAncestorList": [
+                    "ZoneCLEM",
                     "ResourcesHolder",
                     "Land"
                   ],
@@ -127,6 +129,7 @@
                       "Notes": null,
                       "SelectedTab": null,
                       "CurrentAncestorList": [
+                        "ZoneCLEM",
                         "ResourcesHolder",
                         "Land",
                         "LandType"
@@ -147,6 +150,8 @@
                   "Notes": null,
                   "SelectedTab": null,
                   "CurrentAncestorList": [
+                    "ZoneCLEM",
+                    "ResourcesHolder",
                     "Finance"
                   ],
                   "Name": "Finances",
@@ -161,6 +166,8 @@
                       "Notes": null,
                       "SelectedTab": null,
                       "CurrentAncestorList": [
+                        "ZoneCLEM",
+                        "ResourcesHolder",
                         "Finance",
                         "FinanceType"
                       ],
@@ -179,6 +186,7 @@
                   "Notes": null,
                   "SelectedTab": null,
                   "CurrentAncestorList": [
+                    "ZoneCLEM",
                     "ResourcesHolder",
                     "RuminantHerd"
                   ],
@@ -259,6 +267,7 @@
                       "Notes": null,
                       "SelectedTab": null,
                       "CurrentAncestorList": [
+                        "ZoneCLEM",
                         "ResourcesHolder",
                         "RuminantHerd",
                         "RuminantType"
@@ -271,6 +280,7 @@
                           "Notes": null,
                           "SelectedTab": null,
                           "CurrentAncestorList": [
+                            "ZoneCLEM",
                             "ResourcesHolder",
                             "RuminantHerd",
                             "RuminantType",
@@ -290,6 +300,7 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
+                                "ZoneCLEM",
                                 "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
@@ -313,6 +324,7 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
+                                "ZoneCLEM",
                                 "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
@@ -336,6 +348,7 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
+                                "ZoneCLEM",
                                 "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
@@ -359,6 +372,7 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
+                                "ZoneCLEM",
                                 "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
@@ -379,6 +393,7 @@
                           "Notes": null,
                           "SelectedTab": "Summary",
                           "CurrentAncestorList": [
+                            "ZoneCLEM",
                             "ResourcesHolder",
                             "RuminantHerd",
                             "RuminantType",
@@ -394,6 +409,7 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
+                                "ZoneCLEM",
                                 "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
@@ -411,6 +427,7 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
+                                    "ZoneCLEM",
                                     "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
@@ -435,6 +452,7 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
+                                "ZoneCLEM",
                                 "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
@@ -452,6 +470,7 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
+                                    "ZoneCLEM",
                                     "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
@@ -473,6 +492,7 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
+                                    "ZoneCLEM",
                                     "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
@@ -497,6 +517,7 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
+                                "ZoneCLEM",
                                 "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
@@ -514,6 +535,7 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
+                                    "ZoneCLEM",
                                     "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
@@ -535,6 +557,7 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
+                                    "ZoneCLEM",
                                     "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
@@ -559,6 +582,7 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
+                                "ZoneCLEM",
                                 "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
@@ -576,6 +600,7 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
+                                    "ZoneCLEM",
                                     "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
@@ -597,6 +622,7 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
+                                    "ZoneCLEM",
                                     "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
@@ -621,6 +647,7 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
+                                "ZoneCLEM",
                                 "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
@@ -638,6 +665,7 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
+                                    "ZoneCLEM",
                                     "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
@@ -662,6 +690,7 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
+                                "ZoneCLEM",
                                 "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
@@ -679,6 +708,7 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
+                                    "ZoneCLEM",
                                     "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
@@ -700,6 +730,7 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
+                                    "ZoneCLEM",
                                     "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
@@ -724,6 +755,7 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
+                                "ZoneCLEM",
                                 "ResourcesHolder",
                                 "RuminantHerd",
                                 "RuminantType",
@@ -741,6 +773,7 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
+                                    "ZoneCLEM",
                                     "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
@@ -762,6 +795,7 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
+                                    "ZoneCLEM",
                                     "ResourcesHolder",
                                     "RuminantHerd",
                                     "RuminantType",
@@ -790,6 +824,7 @@
                           "Notes": null,
                           "SelectedTab": null,
                           "CurrentAncestorList": [
+                            "ZoneCLEM",
                             "ResourcesHolder",
                             "RuminantHerd",
                             "RuminantType",
@@ -813,6 +848,7 @@
                   "Notes": null,
                   "SelectedTab": null,
                   "CurrentAncestorList": [
+                    "ZoneCLEM",
                     "ResourcesHolder",
                     "GrazeFoodStore"
                   ],
@@ -839,6 +875,7 @@
                       "Notes": null,
                       "SelectedTab": null,
                       "CurrentAncestorList": [
+                        "ZoneCLEM",
                         "ResourcesHolder",
                         "GrazeFoodStore",
                         "GrazeFoodStoreType"
@@ -857,6 +894,7 @@
                   "Notes": null,
                   "SelectedTab": null,
                   "CurrentAncestorList": [
+                    "ZoneCLEM",
                     "ResourcesHolder",
                     "AnimalFoodStore"
                   ],
@@ -871,6 +909,7 @@
                       "Notes": null,
                       "SelectedTab": null,
                       "CurrentAncestorList": [
+                        "ZoneCLEM",
                         "ResourcesHolder",
                         "AnimalFoodStore",
                         "AnimalFoodStoreType"
@@ -886,6 +925,7 @@
                           "Notes": null,
                           "SelectedTab": null,
                           "CurrentAncestorList": [
+                            "ZoneCLEM",
                             "ResourcesHolder",
                             "AnimalFoodStore",
                             "AnimalFoodStoreType",
@@ -903,6 +943,7 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
+                                "ZoneCLEM",
                                 "ResourcesHolder",
                                 "AnimalFoodStore",
                                 "AnimalFoodStoreType",

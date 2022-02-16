@@ -27,6 +27,8 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
     [ValidParent(ParentType = typeof(RuminantActivityMove))]
     [ValidParent(ParentType = typeof(RuminantActivityMarkForSale))]
+    [ValidParent(ParentType = typeof(RuminantActivityWean))]
+    [ValidParent(ParentType = typeof(RuminantActivityTag))]
     [ValidParent(ParentType = typeof(TransmuteRuminant))]
     [ValidParent(ParentType = typeof(ReportRuminantAttributeSummary))]
     [Description("Selects specific individuals ruminants from the herd")]
