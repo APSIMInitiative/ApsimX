@@ -51,7 +51,7 @@ namespace APSIM.Server.Cli
         public uint Port { get; set; }
 
         /// <summary>Maximum number of pending connections to allow.</summary>
-        [Option('b', "backlog", HelpText = "Maximum number of pending connections to allow.", Default = 1)]
+        [Option('b', "backlog", HelpText = "Maximum number of pending connections to allow.", Default = (ushort)1)]
         public ushort Backlog { get; set; }
 
         /// <summary>IP Address on which to listen for connections.</summary>
