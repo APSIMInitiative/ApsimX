@@ -10,6 +10,7 @@ using Newtonsoft.Json;
 using Models.CLEM.Resources;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Groupings
 {
@@ -31,15 +32,14 @@ namespace Models.CLEM.Groupings
     [Description("Selects specific individuals ruminants from the herd")]
     [Version(1, 0, 1, "Added ability to select random proportion of the group to use")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantGroup.htm")]
-    public class RuminantGroup : FilterGroup<Ruminant>
+    public class RuminantGroup : FilterGroup<Ruminant>, IValidatableObject, IIdentifiableComponent
     {
         /// <summary>
-        /// The reason for this filter group
+        /// An identifier for this FilterGroup based on parent requirements
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(0)]
-        [Description("Style of group")]
-        [Required]
-        public RuminantGroupStyle Reason { get; set; }
+        [Description("Group identifier")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers")]
+        public string Identifier { get; set; }
 
         /// <summary>
         /// Constructor to apply defaults
@@ -48,6 +48,8 @@ namespace Models.CLEM.Groupings
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
             this.SetDefaults();
+            if (!ParentSuppliedIdentifiers().Contains(Identifier))
+                Identifier = "";
         }
 
         #region descriptive summary
@@ -64,21 +66,53 @@ namespace Models.CLEM.Groupings
             return "";
         }
 
+        /// <summary>
+        /// A method to return the list of identifiers relavent to this ruminant group
+        /// </summary>
+        /// <returns>A list of identifiers as stings</returns>
+        public List<string> ParentSuppliedIdentifiers()
+        {
+            if(Parent is CLEMRuminantActivityBase)
+                return (Parent as CLEMRuminantActivityBase).GetChildComponentIdentifiers<RuminantGroup>();
+            else
+                return new List<string>();
+        }
+
         /// <inheritdoc/>
         public override string ModelSummaryOpeningTags()
         {
-            using (StringWriter htmlWriter = new StringWriter())
-            {
-                htmlWriter.Write("<div class=\"filtername\">");
-                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                    htmlWriter.Write($"{Name} - {Reason}");
-
-                htmlWriter.Write($"</div>");
-                return htmlWriter.ToString();
-            }
+            using StringWriter htmlWriter = new StringWriter();
+            htmlWriter.Write("<div class=\"filtername\">");
+            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+                htmlWriter.Write($"{Name}");
+            htmlWriter.Write($"</div>");
+            return htmlWriter.ToString();
         }
 
+        #endregion
 
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            var identifiers = ParentSuppliedIdentifiers();
+            if(identifiers.Any() & Identifier == "")
+            {
+                string[] memberNames = new string[] { "Ruminant group" };
+                results.Add(new ValidationResult($"The group identifier [BLANK] in [f={this.Name}] is not valid for the parent activity [a={Parent.Name}].{Environment.NewLine}Select an option from the list or provide an empty value for the property if no entries are provided", memberNames));
+            }
+            if (identifiers.Any() & !ParentSuppliedIdentifiers().Contains(Identifier))
+            {
+                string[] memberNames = new string[] { "Ruminant group" };
+                results.Add(new ValidationResult($"The group identifier [{Identifier}] in [f={this.Name}] is not valid for the parent activity [a={Parent.Name}].{Environment.NewLine}Select an option from the list or provide an empty value for the property if no entries are provided", memberNames));
+            }
+            return results;
+        }
         #endregion
 
     }
