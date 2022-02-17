@@ -166,21 +166,21 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// Returns the opacity value for this component in the summary display
-        /// </summary>
-        public double SummaryOpacity(bool formatForParent) => ((!this.Enabled & (!formatForParent | (formatForParent & this.Parent.Enabled))) ? 0.4 : 1.0);
-
-        /// <summary>
         /// Determines if this component has a valid parent based on parent attributes
         /// </summary>
         /// <returns></returns>
         public bool ValidParent()
         {
             var parents = ReflectionUtilities.GetAttributes(this.GetType(), typeof(ValidParentAttribute), false).Cast<ValidParentAttribute>().ToList();
-            return (parents.Where(a => a.ParentType.Name == this.Parent.GetType().Name).Count() > 0);
+            return (parents.Where(a => a.ParentType.Name == this.Parent.GetType().Name).Any());
         }
 
         #region descriptive summary
+
+        /// <summary>
+        /// Returns the opacity value for this component in the summary display
+        /// </summary>
+        public double SummaryOpacity(bool formatForParent) => ((!this.Enabled & (!formatForParent | (formatForParent & this.Parent.Enabled))) ? 0.4 : 1.0);
 
         /// <summary>
         /// Create a html snippet
