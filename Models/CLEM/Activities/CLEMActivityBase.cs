@@ -267,13 +267,6 @@ namespace Models.CLEM.Activities
                     activity.ClearActivitiesPerformedStatus();
                 }
             }
-
-            //// clear status for all children of type CLEMActivityBase
-            //foreach (CLEMActivityBase activity in ActivityChildren)
-            //{
-            //    activity.Status = ActivityStatus.Ignored;
-            //    activity.ClearAllAllActivitiesPerformedStatus();
-            //}
         }
 
         /// <summary>

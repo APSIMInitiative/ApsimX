@@ -129,7 +129,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        private void SetUniqueActivityIDs(object sender, EventArgs e)
         {
             BindEvents(FindAllChildren<IModel>());
             int index = 0;
@@ -150,17 +150,6 @@ namespace Models.CLEM.Activities
                 child.GetResourcesForAllActivityInitialisation();
         }
 
-        /// <summary>A method to allow all activities to get ready for the time step</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMStartOfTimeStep")]
-        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
-        {
-            // clear the activity performed status at start of time step
-            foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
-                child.ClearAllAllActivitiesPerformedStatus();
-        }
-
         /// <summary>A method to get all resources required in the time step</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -175,7 +164,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMEndOfTimeStep")]
-        private void OnCLEMEndOfTimeStep(object sender, EventArgs e)
+        private void ReportAllActivitiesStatus(object sender, EventArgs e)
         {
             // fire all activity performed triggers at end of time step
             foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
@@ -213,7 +202,7 @@ namespace Models.CLEM.Activities
         /// A method to clean up at the end of the simulation
         /// </summary>
         [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
+        private void CleanUpBindings(object sender, EventArgs e)
         {
             UnBindEvents(FindAllChildren<IModel>());
         }
