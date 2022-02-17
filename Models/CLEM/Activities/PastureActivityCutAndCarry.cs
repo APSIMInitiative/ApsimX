@@ -115,6 +115,12 @@ namespace Models.CLEM.Activities
             }
         }
 
+        /// <inheritdoc/>
+        [EventSubscribe("CLEMGetResourcesRequired")]
+        protected override void PerformActivity(object sender, EventArgs e)
+        {
+        }
+
         /// <summary>An event handler for a Cut and Carry</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -167,7 +173,7 @@ namespace Models.CLEM.Activities
             }
 
             // get resources
-            GetResourcesRequiredForActivity();
+            ManageActivityResourcesAndTasks();
         }
 
         /// <inheritdoc/>

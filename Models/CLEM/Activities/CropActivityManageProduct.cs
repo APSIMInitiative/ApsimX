@@ -370,6 +370,13 @@ namespace Models.CLEM.Activities
             }
         }
 
+        /// <inheritdoc/>
+        [EventSubscribe("CLEMGetResourcesRequired")]
+        protected override void PerformActivity(object sender, EventArgs e)
+        {
+        }
+
+
         /// <summary>An event handler to allow us to get next supply of pasture</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -395,7 +402,7 @@ namespace Models.CLEM.Activities
             // get resources needed such as labour before DoActivity
             // when not going to a GrazeFoodStore that uses CLEMUpdatePasture
             if (parentManagementActivity.ActivityEnabled && LinkedResourceItem.GetType() != typeof(GrazeFoodStoreType))
-                GetResourcesRequiredForActivity();
+                ManageActivityResourcesAndTasks();
         }
 
         /// <summary>

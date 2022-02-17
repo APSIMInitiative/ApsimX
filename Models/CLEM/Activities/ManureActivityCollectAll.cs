@@ -92,6 +92,12 @@ namespace Models.CLEM.Activities
             }
         }
 
+        /// <inheritdoc/>
+        [EventSubscribe("CLEMGetResourcesRequired")]
+        protected override void PerformActivity(object sender, EventArgs e)
+        {
+        }
+
         /// <summary>An event handler to allow us to perform manure collection</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -100,7 +106,7 @@ namespace Models.CLEM.Activities
         {
             if (manureStore != null)
                 // get resources
-                GetResourcesRequiredForActivity();
+                ManageActivityResourcesAndTasks();
         }
 
         ///<inheritdoc/>

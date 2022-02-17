@@ -101,8 +101,14 @@ namespace Models.CLEM.Activities
 
                 ActivityList.Add(ragpb);
                 ragpb.ResourceShortfallOccurred += Paddock_ResourceShortfallOccurred;
-                ragpb.ActivityPerformed += BubbleHerd_ActivityPerformed;
+ //               ragpb.ActivityPerformed += BubbleHerd_ActivityPerformed;
             }
+        }
+
+        /// <inheritdoc/>
+        [EventSubscribe("CLEMGetResourcesRequired")]
+        protected override void PerformActivity(object sender, EventArgs e)
+        {
         }
 
         /// <inheritdoc/>
@@ -183,7 +189,7 @@ namespace Models.CLEM.Activities
                 foreach (RuminantActivityGrazePastureHerd pastureHerd in ActivityList)
                 {
                     pastureHerd.ResourceShortfallOccurred -= Paddock_ResourceShortfallOccurred;
-                    pastureHerd.ActivityPerformed -= BubbleHerd_ActivityPerformed;
+//                    pastureHerd.ActivityPerformed -= BubbleHerd_ActivityPerformed;
                 }
             }
         }
@@ -196,7 +202,7 @@ namespace Models.CLEM.Activities
 
         private void BubbleHerd_ActivityPerformed(object sender, EventArgs e)
         {
-            OnActivityPerformed(e);
+ //           OnActivityPerformed(e);
         }
 
         /// <inheritdoc/>

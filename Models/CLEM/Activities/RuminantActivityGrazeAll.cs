@@ -70,7 +70,7 @@ namespace Models.CLEM.Activities
                         Name = "Graze_" + (pastureType as Model).Name,
                         OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction
                     };
-                    ragp.ActivityPerformed += BubblePaddock_ActivityPerformed;
+//                    ragp.ActivityPerformed += BubblePaddock_ActivityPerformed;
                     ragp.SetLinkedModels(Resources);
                     ragp.InitialiseHerd(true, true);
 
@@ -97,7 +97,7 @@ namespace Models.CLEM.Activities
 
                         ragp.ActivityList.Add(ragpb);
                         ragpb.ResourceShortfallOccurred += GrazeAll_ResourceShortfallOccurred;
-                        ragpb.ActivityPerformed += BubblePaddock_ActivityPerformed;
+//                        ragpb.ActivityPerformed += BubblePaddock_ActivityPerformed;
                     }
                     if (ActivityList == null)
                         ActivityList = new List<CLEMActivityBase>();
@@ -121,7 +121,7 @@ namespace Models.CLEM.Activities
                     foreach (RuminantActivityGrazePastureHerd pastureHerd in pastureGraze.ActivityList)
                     {
                         pastureHerd.ResourceShortfallOccurred -= GrazeAll_ResourceShortfallOccurred;
-                        pastureHerd.ActivityPerformed -= BubblePaddock_ActivityPerformed;
+//                        pastureHerd.ActivityPerformed -= BubblePaddock_ActivityPerformed;
                     }
                 }
             }
@@ -135,7 +135,7 @@ namespace Models.CLEM.Activities
 
         private void BubblePaddock_ActivityPerformed(object sender, EventArgs e)
         {
-            OnActivityPerformed(e);
+//            OnActivityPerformed(e);
         }
 
         /// <inheritdoc/>

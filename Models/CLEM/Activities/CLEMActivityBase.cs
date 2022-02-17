@@ -28,6 +28,13 @@ namespace Models.CLEM.Activities
         [Link]
         protected ResourcesHolder Resources = null;
 
+        /// <summary>
+        /// Link to Activity holder
+        /// </summary>
+        [Link]
+        [NonSerialized]
+        public ActivitiesHolder ActivitiesHolder = null;
+
         private bool enabled = true;
         private IEnumerable<CLEMActivityBase> activityChildren = null;
         private ZoneCLEM parentZone = null;
@@ -151,11 +158,6 @@ namespace Models.CLEM.Activities
         public event EventHandler ResourceShortfallOccurred;
 
         /// <summary>
-        /// Activity performed event handler
-        /// </summary>
-        public event EventHandler ActivityPerformed;
-
-        /// <summary>
         /// Method to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree and a specified date
         /// </summary>
         /// <returns>T/F</returns>
@@ -264,110 +266,104 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Protected method to cascade calls for activities performed for all dynamically created activities
         /// </summary>
-        public void ReportActivitiesPerformed()
+        public void ReportActivityStatus()
         {
             this.TriggerOnActivityPerformed();
+
+            // report all timers that were due this time step
+            foreach (IActivityTimer timer in this.FindAllDescendants<IActivityTimer>())
+            {
+                if (timer.ActivityDue)
+                {
+                    // report activity performed.
+                    ActivityPerformedEventArgs timerActivity = new ActivityPerformedEventArgs
+                    {
+                        Activity = new BlankActivity()
+                        {
+                            Status = ActivityStatus.Timer,
+                            Name = (timer as IModel).Name
+                        }
+                    };
+                    timerActivity.Activity.SetGuID((timer as CLEMModel).UniqueID);
+                    ActivitiesHolder?.ReportActivityPerformed(timerActivity);
+                }
+            }
+
             // call activity performed for all dynamically created CLEMActivityBase activities
             if (ActivityList != null)
             {
                 foreach (CLEMActivityBase activity in ActivityList)
-                    activity.ReportActivitiesPerformed();
+                    activity.ReportActivityStatus();
             }
             // call activity performed for all children of type CLEMActivityBase
             foreach (CLEMActivityBase activity in ActivityChildren)
-                activity.ReportActivitiesPerformed();
+                activity.ReportActivityStatus();
+        }
+
+        /// <summary>A method to arrange the activity to be performed on the specified clock event</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMGetResourcesRequired")]
+        protected virtual void PerformActivity(object sender, EventArgs e)
+        {
+            ManageActivityResourcesAndTasks();
         }
 
         /// <summary>
-        /// Method to cascade calls for resources for all activities in the UI tree. 
-        /// Responds to CLEMGetResourcesRequired in the Activity model holing top level list of activities
+        /// The main method to manage an activity based on resources available 
         /// </summary>
-        public virtual void GetResourcesForAllActivities(CLEMModel model)
+        protected virtual void ManageActivityResourcesAndTasks()
         {
-            if (this.Enabled)
+            if (Enabled)
             {
                 if (TimingOK)
-                    ResourcesForAllActivities(model);
+                {
+                    {
+                        // clear Resources Required list
+                        ResourceRequestList = new List<ResourceRequest>();
+
+                        // add any labour resources requirements based on method supplied by activity
+                        ResourceRequestList.AddRange(GetLabourResourcesNeededForActivity());
+
+                        // add any non-labour resources needed based on method supplied by activity
+                        var requests = GetResourcesNeededForActivity();
+                        if (requests != null)
+                            ResourceRequestList.AddRange(requests);
+
+                        // check availability
+                        CheckResources(ResourceRequestList, Guid.NewGuid());
+
+                        // adjust if needed based on method supplied by activity
+                        AdjustResourcesNeededForActivity();
+
+                        // take resources
+                        bool tookRequestedResources = TakeResources(ResourceRequestList, false);
+
+                        // if no resources required perform Activity if code is present.
+                        // if resources are returned (all available or UseResourcesAvailable action) perform Activity
+                        if (tookRequestedResources || (ResourceRequestList.Count == 0))
+                            DoActivity(); //based on method supplied by activity
+                    }
+
+                    // try perform activity for dynamically created CLEMActivityBase activities
+                    // as these are not linked up to event subscriptions they need to be handled here and should not include nesting 
+                    if (ActivityList != null)
+                        foreach (CLEMActivityBase activity in ActivityList)
+                            activity.ManageActivityResourcesAndTasks();
+                }
                 else
                 {
                     this.Status = ActivityStatus.Ignored;
                     if (ActivityList != null)
                     {
                         foreach (CLEMActivityBase activity in ActivityList)
-                            activity.Status = ActivityStatus.Ignored;
+                            activity.ManageActivityResourcesAndTasks();
                     }
-                    // get resources required for all children of type CLEMActivityBase
-                    foreach (CLEMActivityBase activity in ActivityChildren)
-                        activity.Status = ActivityStatus.Ignored;
                 }
             }
-        }
-
-        /// <summary>
-        /// protected method to cascade calls for resources for all activities in the UI tree. 
-        /// </summary>
-        protected void ResourcesForAllActivities(CLEMModel model)
-        {
-            // Get resources needed and use substitution if needed and provided, then move through children getting their resources.
-
-            if ((model.GetType() == typeof(ActivitiesHolder) & this.AllocationStyle == ResourceAllocationStyle.Automatic) | (model.GetType() != typeof(ActivitiesHolder)))
+            else
             {
-                // this will be performed if
-                // (a) the call has come from the Activity Holder and is therefore using the GetResourcesRequired event and the allocation style is automatic, or
-                // (b) the call has come from the Activity
-                GetResourcesRequiredForActivity();
-            }
-
-            // get resources required for all dynamically created CLEMActivityBase activities
-            if (ActivityList != null)
-            {
-                foreach (CLEMActivityBase activity in ActivityList)
-                    activity.GetResourcesForAllActivities(model);
-            }
-            // get resources required for all children of type CLEMActivityBase
-            foreach (CLEMActivityBase activity in ActivityChildren)
-                activity.GetResourcesForAllActivities(model);
-        }
-
-        /// <summary>
-        /// Method to get this time steps current required resources for this activity. 
-        /// </summary>
-        public virtual void GetResourcesRequiredForActivity()
-        {
-            ResourcesRequiredForActivity();
-        }
-
-        /// <summary>
-        /// Protected method to get this time steps current required resources for this activity. 
-        /// </summary>
-        protected void ResourcesRequiredForActivity()
-        {
-            // clear Resources Required list
-            ResourceRequestList = new List<ResourceRequest>();
-
-            if (this.TimingOK)
-            {
-                // add any labour resources required (automated here so not needed in Activity code)
-                ResourceRequestList.AddRange(GetLabourResourcesNeededForActivity());
-
-                // add any non-labour resources needed (from method in Activity code)
-                var requests = GetResourcesNeededForActivity();
-                if (requests != null)
-                    ResourceRequestList.AddRange(requests);
-
-                // check availability
-                CheckResources(ResourceRequestList, Guid.NewGuid());
-
-                // adjust if needed
-                AdjustResourcesNeededForActivity();
-
-                // take resources
-                bool tookRequestedResources = TakeResources(ResourceRequestList, false);
-
-                // if no resources required perform Activity if code is present.
-                // if resources are returned (all available or UseResourcesAvailable action) perform Activity
-                if (tookRequestedResources || (ResourceRequestList.Count == 0))
-                    DoActivity();
+                Status = ActivityStatus.Ignored;
             }
         }
 
@@ -785,7 +781,8 @@ namespace Models.CLEM.Activities
             {
                 Activity = this
             };
-            this.OnActivityPerformed(activitye);
+            ActivitiesHolder?.ReportActivityPerformed(activitye);
+            //this.OnActivityPerformed(activitye);
         }
 
         /// <summary>
@@ -799,7 +796,8 @@ namespace Models.CLEM.Activities
             {
                 Activity = new ActivityFolder() { Name = this.Name, Status = status }
             };
-            this.OnActivityPerformed(activitye);
+            ActivitiesHolder?.ReportActivityPerformed(activitye);
+            //this.OnActivityPerformed(activitye);
         }
 
         /// <summary>
@@ -846,16 +844,6 @@ namespace Models.CLEM.Activities
         protected void OnShortfallOccurred(EventArgs e)
         {
             ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-
-        /// <summary>
-        /// Activity has occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
         }
     }
 

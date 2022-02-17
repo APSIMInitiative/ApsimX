@@ -44,6 +44,12 @@ namespace Models.CLEM.Activities
             manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
+        /// <inheritdoc/>
+        [EventSubscribe("CLEMGetResourcesRequired")]
+        protected override void PerformActivity(object sender, EventArgs e)
+        {
+        }
+
         /// <summary>
         /// Constructor
         /// </summary>
@@ -113,7 +119,7 @@ namespace Models.CLEM.Activities
         {
             if (manureStore != null)
                 // get resources
-                GetResourcesRequiredForActivity();
+                ManageActivityResourcesAndTasks();
         }
 
         #region descriptive summary

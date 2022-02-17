@@ -146,8 +146,10 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void GetResourcesRequiredForActivity()
+        protected override void ManageActivityResourcesAndTasks()
         {
+            //GetResourcesRequiredForActivity
+
             // if there is no ResourceRequestList (i.e. not created from parent pasture)
             if (ResourceRequestList == null)
             {

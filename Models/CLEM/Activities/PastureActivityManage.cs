@@ -264,6 +264,12 @@ namespace Models.CLEM.Activities
                 LinkedLandItem.TransactionOccurred -= LinkedLandItem_TransactionOccurred;
         }
 
+        /// <inheritdoc/>
+        [EventSubscribe("CLEMGetResourcesRequired")]
+        protected override void PerformActivity(object sender, EventArgs e)
+        {
+        }
+
         /// <summary>An event handler to allow us to get next supply of pasture</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -316,7 +322,7 @@ namespace Models.CLEM.Activities
                 }
             };
             activitye.Activity.SetGuID(this.UniqueID);
-            this.OnActivityPerformed(activitye);
+//            this.OnActivityPerformed(activitye);
         }
 
         /// <summary>

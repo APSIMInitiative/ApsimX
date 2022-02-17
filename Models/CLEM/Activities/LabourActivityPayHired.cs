@@ -74,7 +74,13 @@ namespace Models.CLEM.Activities
         private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
             if(PaymentCalculationStyle == PayHiredLabourCalculationStyle.ByAvailableLabour)
-                GetResourcesRequiredForActivity();
+                ManageActivityResourcesAndTasks();
+        }
+
+        /// <inheritdoc/>
+        [EventSubscribe("CLEMGetResourcesRequired")]
+        protected override void PerformActivity(object sender, EventArgs e)
+        {
         }
 
         /// <summary>An event handler to allow us to organise payment at start of timestep.</summary>
