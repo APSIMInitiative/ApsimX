@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using System.ComponentModel.DataAnnotations;
+using System.Diagnostics;
 
 namespace Models.CLEM.Activities
 {
@@ -71,7 +72,7 @@ namespace Models.CLEM.Activities
         public ResourceAllocationStyle AllocationStyle { get; set; }
 
         /// <summary>
-        /// A list of activity base chldren for this activity
+        /// A list of activity base children for this activity
         /// </summary>
         public IEnumerable<CLEMActivityBase> ActivityChildren
         {
@@ -96,7 +97,7 @@ namespace Models.CLEM.Activities
             set
             {
                 if(value!=enabled)
-                    foreach (var child in this.FindAllChildren<CLEMActivityBase>())
+                    foreach (var child in FindAllChildren<CLEMActivityBase>())
                         child.ActivityEnabled = value;
                     enabled = value;
             }
@@ -232,10 +233,20 @@ namespace Models.CLEM.Activities
             return results.AsEnumerable();
         }
 
-        /// <summary>
-        /// Method to cascade calls for calling activites performed for all activities in the UI tree. 
-        /// </summary>
-        public virtual void ClearAllAllActivitiesPerformedStatus()
+        /// <summary>An method to perform core actions when simulation commences</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("StartOfSimulation")]
+        protected virtual void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Debug.WriteLine($"StartOfSimulation for {Name}");
+        }
+
+        /// <summary>A method to arrange clearing status on CLEMStartOfTimeStep event</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        protected virtual void OnResetActivityStatus(object sender, EventArgs e)
         {
             ClearActivitiesPerformedStatus();
         }
@@ -243,23 +254,26 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Protected method to cascade clearing of status for all dynamic activities created for this activity. 
         /// </summary>
-        protected void ClearActivitiesPerformedStatus()
+        protected private void ClearActivitiesPerformedStatus()
         {
+            Status = ActivityStatus.Ignored;
+
             // clear status of all dynamically created CLEMActivityBase activities
             if (ActivityList != null)
             {
                 foreach (CLEMActivityBase activity in ActivityList)
                 {
                     activity.Status = ActivityStatus.Ignored;
-                    activity.ClearAllAllActivitiesPerformedStatus();
+                    activity.ClearActivitiesPerformedStatus();
                 }
             }
-            // clear status for all children of type CLEMActivityBase
-            foreach (CLEMActivityBase activity in ActivityChildren)
-            {
-                activity.Status = ActivityStatus.Ignored;
-                activity.ClearAllAllActivitiesPerformedStatus();
-            }
+
+            //// clear status for all children of type CLEMActivityBase
+            //foreach (CLEMActivityBase activity in ActivityChildren)
+            //{
+            //    activity.Status = ActivityStatus.Ignored;
+            //    activity.ClearAllAllActivitiesPerformedStatus();
+            //}
         }
 
         /// <summary>
@@ -445,7 +459,7 @@ namespace Models.CLEM.Activities
             List<ResourceRequest> labourResourceRequestList = new List<ResourceRequest>();
             foreach (LabourRequirement item in FindAllChildren<LabourRequirement>())
             {
-                GetDaysLabourRequiredReturnArgs daysResult = GetDaysLabourRequired(item);
+                LabourRequiredArgs daysResult = GetDaysLabourRequired(item);
                 if (daysResult.DaysNeeded > 0)
                 {
                     foreach (LabourFilterGroup fg in item.FindAllChildren<LabourFilterGroup>())
@@ -871,7 +885,7 @@ namespace Models.CLEM.Activities
         /// Base method to determine the number of days labour required based on Activity requirements and labour settings.
         /// Functionality provided in derived classes
         /// </summary>
-        public virtual GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        public virtual LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
@@ -933,96 +947,5 @@ namespace Models.CLEM.Activities
         }
     }
 
-    /// <summary>
-    /// Structure to return values form a labour days request
-    /// </summary>
-    public class GetDaysLabourRequiredReturnArgs
-    {
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        /// <param name="daysNeeded"></param>
-        /// <param name="category"></param>
-        /// <param name="relatesToResource"></param>
-        public GetDaysLabourRequiredReturnArgs(double daysNeeded, string category, string relatesToResource)
-        {
-            DaysNeeded = daysNeeded;
-            Category = category;
-            RelatesToResource = relatesToResource;
-        }
-
-        /// <summary>
-        /// Calculated days needed
-        /// </summary>
-        public double DaysNeeded { get; set; }
-
-        /// <summary>
-        /// Transaction category
-        /// </summary>
-        public string Category { get; set; }
-
-        /// <summary>
-        /// Transacation relates to resource
-        /// </summary>
-        public string RelatesToResource { get; set; }
-    }
-
-    /// <summary>
-    /// Status of activity
-    /// </summary>
-    public enum ActivityStatus
-    {
-        /// <summary>
-        /// Performed with all resources available
-        /// </summary>
-        Success,
-        /// <summary>
-        /// Performed with partial resources available
-        /// </summary>
-        Partial,
-        /// <summary>
-        /// Insufficient resources so activity ignored
-        /// </summary>
-        Ignored,
-        /// <summary>
-        /// Insufficient resources so simulation stopped
-        /// </summary>
-        Critical,
-        /// <summary>
-        /// Indicates a timer occurred successfully
-        /// </summary>
-        Timer,
-        /// <summary>
-        /// Indicates a calculation event occurred
-        /// </summary>
-        Calculation,
-        /// <summary>
-        /// Indicates activity occurred but was not needed
-        /// </summary>
-        NotNeeded,
-        /// <summary>
-        /// Indicates activity caused a warning and was not performed
-        /// </summary>
-        Warning,
-        /// <summary>
-        /// Indicates activity was place holder or parent activity
-        /// </summary>
-        NoTask
-    }
-
-    /// <summary>
-    /// Status of activity
-    /// </summary>
-    public enum ResourceAllocationStyle
-    {
-        /// <summary>
-        /// Automatically perform in CLEMGetResourcesRequired
-        /// </summary>
-        Automatic,
-        /// <summary>
-        /// Manually perform in activity code.
-        /// </summary>
-        Manual
-    }
 
 }
