@@ -246,15 +246,7 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMStartOfTimeStep")]
-        protected virtual void OnResetActivityStatus(object sender, EventArgs e)
-        {
-            ClearActivitiesPerformedStatus();
-        }
-
-        /// <summary>
-        /// Protected method to cascade clearing of status for all dynamic activities created for this activity. 
-        /// </summary>
-        protected private void ClearActivitiesPerformedStatus()
+        protected virtual void ResetActivityStatus(object sender, EventArgs e)
         {
             Status = ActivityStatus.Ignored;
 
@@ -264,18 +256,10 @@ namespace Models.CLEM.Activities
                 foreach (CLEMActivityBase activity in ActivityList)
                 {
                     activity.Status = ActivityStatus.Ignored;
-                    activity.ClearActivitiesPerformedStatus();
+                    activity.ResetActivityStatus(sender, e); //ClearActivitiesPerformedStatus();
                 }
             }
         }
-
-        ///// <summary>
-        ///// Method to cascade calls for calling activites performed for all activities in the UI tree. 
-        ///// </summary>
-        //public virtual void ReportAllAllActivitiesPerformed()
-        //{
-        //    ReportActivitiesPerformed();
-        //}
 
         /// <summary>
         /// Protected method to cascade calls for activities performed for all dynamically created activities
