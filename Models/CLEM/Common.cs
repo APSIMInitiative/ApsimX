@@ -6,6 +6,63 @@ using System.Text;
 
 namespace Models.CLEM
 {
+    /// <summary>
+    /// Status of activity
+    /// </summary>
+    public enum ActivityStatus
+    {
+        /// <summary>
+        /// Performed with all resources available
+        /// </summary>
+        Success,
+        /// <summary>
+        /// Performed with partial resources available
+        /// </summary>
+        Partial,
+        /// <summary>
+        /// Insufficient resources so activity ignored
+        /// </summary>
+        Ignored,
+        /// <summary>
+        /// Insufficient resources so simulation stopped
+        /// </summary>
+        Critical,
+        /// <summary>
+        /// Indicates a timer occurred successfully
+        /// </summary>
+        Timer,
+        /// <summary>
+        /// Indicates a calculation event occurred
+        /// </summary>
+        Calculation,
+        /// <summary>
+        /// Indicates activity occurred but was not needed
+        /// </summary>
+        NotNeeded,
+        /// <summary>
+        /// Indicates activity caused a warning and was not performed
+        /// </summary>
+        Warning,
+        /// <summary>
+        /// Indicates activity was place holder or parent activity
+        /// </summary>
+        NoTask
+    }
+
+    /// <summary>
+    /// Status of activity
+    /// </summary>
+    public enum ResourceAllocationStyle
+    {
+        /// <summary>
+        /// Automatically perform in CLEMGetResourcesRequired
+        /// </summary>
+        Automatic,
+        /// <summary>
+        /// Manually perform in activity code.
+        /// </summary>
+        Manual
+    }
 
     /// <summary>
     /// Crop store style

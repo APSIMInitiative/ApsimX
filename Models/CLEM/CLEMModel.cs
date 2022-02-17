@@ -77,7 +77,7 @@ namespace Models.CLEM
         public string NameWithParent => $"{this.Parent.Name}.{this.Name}";
 
         /// <summary>
-        /// Method to set defaults from   
+        /// Method to set defaults from Attribute for this model
         /// </summary>
         public void SetDefaults()
         {
@@ -85,7 +85,7 @@ namespace Models.CLEM
         }
 
         /// <summary>
-        /// Public means of setting default values 
+        /// Public means of setting default values for a selected model
         /// </summary>
         /// <param name="model"></param>
         public static void SetPropertyDefaults(IModel model)
