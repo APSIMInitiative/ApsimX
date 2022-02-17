@@ -280,40 +280,6 @@ namespace Models.CLEM.Activities
 
         /// <summary>
         /// Method to cascade calls for resources for all activities in the UI tree. 
-        /// Responds to CLEMInitialiseActivity in the Activity model holing top level list of activities
-        /// </summary>
-        public virtual void GetResourcesForAllActivityInitialisation()
-        {
-            ResourcesForAllActivityInitialisation();
-        }
-
-        /// <summary>
-        /// Protected method to cascade calls for resources for all activities in the UI tree. 
-        /// </summary>
-        protected void ResourcesForAllActivityInitialisation()
-        {
-            if (this.Enabled)
-            {
-                // Get resources needed and use substitution if needed and provided, then move through children getting their resources.
-                GetResourcesRequiredForInitialisation();
-
-                // get resources required for all dynamically created CLEMActivityBase activities
-                if (ActivityList != null)
-                {
-                    foreach (CLEMActivityBase activity in ActivityList)
-                        activity.GetResourcesForAllActivityInitialisation();
-                }
-                // get resources required for all children of type CLEMActivityBase
-                foreach (CLEMActivityBase activity in ActivityChildren)
-                {
-                    if (activity.Enabled)
-                        activity.GetResourcesForAllActivityInitialisation();
-                }
-            }
-        }
-
-        /// <summary>
-        /// Method to cascade calls for resources for all activities in the UI tree. 
         /// Responds to CLEMGetResourcesRequired in the Activity model holing top level list of activities
         /// </summary>
         public virtual void GetResourcesForAllActivities(CLEMModel model)
@@ -361,28 +327,6 @@ namespace Models.CLEM.Activities
             // get resources required for all children of type CLEMActivityBase
             foreach (CLEMActivityBase activity in ActivityChildren)
                 activity.GetResourcesForAllActivities(model);
-        }
-
-        /// <summary>
-        /// Method to get required resources for initialisation of this activity. 
-        /// </summary>
-        public virtual void GetResourcesRequiredForInitialisation()
-        {
-            ResourcesRequiredForInitialisation();
-        }
-
-        /// <summary>
-        /// Protected method to get required resources for initialisation of this activity. 
-        /// </summary>
-        protected void ResourcesRequiredForInitialisation()
-        {
-            // determine what resources are needed for initialisation
-            ResourceRequestList = GetResourcesNeededForinitialisation();
-
-            CheckResources(ResourceRequestList, Guid.NewGuid());
-            TakeResources(ResourceRequestList, false);
-
-            ResourceRequestList = null;
         }
 
         /// <summary>
@@ -883,15 +827,6 @@ namespace Models.CLEM.Activities
         public virtual void AdjustResourcesNeededForActivity()
         {
             return;
-        }
-
-        /// <summary>
-        /// Method to determine list of resources and amounts needed for initilaisation. 
-        /// Functionality provided in derived classes
-        /// </summary>
-        public virtual List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
         }
 
         /// <summary>

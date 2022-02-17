@@ -140,15 +140,15 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>A method to allow all activities to initialise themselves</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
-        {
-            foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
-                child.GetResourcesForAllActivityInitialisation();
-        }
+        ///// <summary>A method to allow all activities to initialise themselves</summary>
+        ///// <param name="sender">The sender.</param>
+        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        //[EventSubscribe("CLEMInitialiseActivity")]
+        //private void OnCLEMInitialiseActivity(object sender, EventArgs e)
+        //{
+        //    foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
+        //        child.GetResourcesForAllActivityInitialisation();
+        //}
 
         /// <summary>A method to get all resources required in the time step</summary>
         /// <param name="sender">The sender.</param>

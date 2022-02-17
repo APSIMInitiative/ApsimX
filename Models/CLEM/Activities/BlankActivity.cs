@@ -37,10 +37,5 @@ namespace Models.CLEM.Activities
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            throw new NotImplementedException();
-        }
     }
 }
