@@ -46,7 +46,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Name of resource data reader")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Resource data reader required")]
-        [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetReadersAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(FileResource) } })]
+        [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetNameOfModelsByType", ValuesArgs = new object[] { new Type[] { typeof(FileResource) } })]
         public string ResourceDataReader { get; set; }
 
         /// <summary>

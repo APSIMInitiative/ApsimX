@@ -217,20 +217,20 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// return a list of components available given the specified types
+        /// Get a list of model names given specified types as array
         /// </summary>
-        /// <param name="typesToFind">the list of types to locate</param>
-        /// <returns>A list of names of components</returns>
-        public IEnumerable<string> GetReadersAvailableByName(Type[] typesToFind)
+        /// <param name="typesToFind">the list of types to include</param>
+        /// <returns>A list of model names</returns>
+        public IEnumerable<string> GetNameOfModelsByType(Type[] typesToFind)
         {
-            List<string> results = new List<string>();
             Simulation simulation = this.FindAncestor<Simulation>();
-            if (simulation != null)
+            if (simulation is null)
+                return new List<string>().AsEnumerable();
+            else
             {
-                foreach (Type type in typesToFind)
-                    results.AddRange(simulation.FindAllDescendants().Where(a => a.GetType() == type).Select(a => a.Name));
+                List<Type> types =  new List<Type>();
+                return simulation.FindAllDescendants().Where(a => typesToFind.ToList().Contains(a.GetType())).Select(a => a.Name);
             }
-            return results.AsEnumerable();
         }
 
         /// <summary>An method to perform core actions when simulation commences</summary>

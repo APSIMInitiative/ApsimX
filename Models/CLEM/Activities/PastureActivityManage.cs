@@ -63,7 +63,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Name of pasture data reader")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture production database reader required")]
-        [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetReadersAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(FileCrop), typeof(FileSQLitePasture) } })]
+        [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetNameOfModelsByType", ValuesArgs = new object[] { new Type[] { typeof(FileCrop), typeof(FileSQLitePasture) } })]
         public string PastureDataReader { get; set; }
 
         /// <summary>
