@@ -164,11 +164,11 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMEndOfTimeStep")]
-        private void ReportAllActivitiesStatus(object sender, EventArgs e)
+        private void ReportAllActivityStatus(object sender, EventArgs e)
         {
             // fire all activity performed triggers at end of time step
             foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
-                child.ReportAllAllActivitiesPerformed();
+                child.ReportActivitiesPerformed();
 
             // report all timers that were due this time step
             foreach (IActivityTimer timer in this.FindAllDescendants<IActivityTimer>())

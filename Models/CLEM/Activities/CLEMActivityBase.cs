@@ -269,29 +269,29 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Method to cascade calls for calling activites performed for all activities in the UI tree. 
-        /// </summary>
-        public virtual void ReportAllAllActivitiesPerformed()
-        {
-            ReportActivitiesPerformed();
-        }
+        ///// <summary>
+        ///// Method to cascade calls for calling activites performed for all activities in the UI tree. 
+        ///// </summary>
+        //public virtual void ReportAllAllActivitiesPerformed()
+        //{
+        //    ReportActivitiesPerformed();
+        //}
 
         /// <summary>
         /// Protected method to cascade calls for activities performed for all dynamically created activities
         /// </summary>
-        protected void ReportActivitiesPerformed()
+        public void ReportActivitiesPerformed()
         {
             this.TriggerOnActivityPerformed();
             // call activity performed for all dynamically created CLEMActivityBase activities
             if (ActivityList != null)
             {
                 foreach (CLEMActivityBase activity in ActivityList)
-                    activity.ReportAllAllActivitiesPerformed();
+                    activity.ReportActivitiesPerformed();
             }
-            // call activity performed  for all children of type CLEMActivityBase
+            // call activity performed for all children of type CLEMActivityBase
             foreach (CLEMActivityBase activity in ActivityChildren)
-                activity.ReportAllAllActivitiesPerformed();
+                activity.ReportActivitiesPerformed();
         }
 
         /// <summary>
