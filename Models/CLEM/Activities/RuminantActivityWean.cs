@@ -185,11 +185,11 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             IEnumerable<Ruminant> herd = CurrentHerd(false);
             double daysNeeded = 0;
-            var returnArgs = new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
+            var returnArgs = new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
             if (requirement.UnitType == LabourUnitType.Fixed)
                 returnArgs.DaysNeeded = requirement.LabourPerUnit;
             else

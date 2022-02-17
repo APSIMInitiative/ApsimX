@@ -98,9 +98,9 @@ namespace Models.CLEM.Activities
         #endregion
 
         /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            return new GetDaysLabourRequiredReturnArgs(0, null, null);
+            return new LabourRequiredArgs(0, null, null);
         }
 
         /// <inheritdoc/>

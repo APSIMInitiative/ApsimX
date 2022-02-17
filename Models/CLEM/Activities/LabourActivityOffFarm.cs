@@ -57,7 +57,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded = 0;
             // get fixed days per LabourRequirement
@@ -65,7 +65,7 @@ namespace Models.CLEM.Activities
             {
                 daysNeeded = labourRequired.LabourPerUnit;
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, null);
+            return new LabourRequiredArgs(daysNeeded, TransactionCategory, null);
 
         }
 

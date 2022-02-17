@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }

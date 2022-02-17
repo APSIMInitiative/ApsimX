@@ -490,7 +490,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             var group = people?.Items.Where(a => a.Hired != true);
             decimal head = 0;
@@ -526,7 +526,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Feeding", null);
+            return new LabourRequiredArgs(daysNeeded, "Feeding", null);
         }
 
         /// <inheritdoc/>

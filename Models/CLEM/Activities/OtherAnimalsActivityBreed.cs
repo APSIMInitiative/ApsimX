@@ -132,12 +132,12 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge).Sum(b => b.Number);
             if (breeders == 0)
             {
-                return new GetDaysLabourRequiredReturnArgs(0, TransactionCategory, SelectedOtherAnimalsType.NameWithParent);
+                return new LabourRequiredArgs(0, TransactionCategory, SelectedOtherAnimalsType.NameWithParent);
             }
 
             double daysNeeded = 0;
@@ -152,7 +152,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, SelectedOtherAnimalsType.NameWithParent);
+            return new LabourRequiredArgs(daysNeeded, TransactionCategory, SelectedOtherAnimalsType.NameWithParent);
         }
 
     }

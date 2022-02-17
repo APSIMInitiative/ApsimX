@@ -43,13 +43,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             // get all days required as fixed only option from requirement
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
-                    return new GetDaysLabourRequiredReturnArgs(requirement.LabourPerUnit, TransactionCategory, null);
+                    return new LabourRequiredArgs(requirement.LabourPerUnit, TransactionCategory, null);
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }

@@ -510,7 +510,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             List<Ruminant> herd = HerdResource.Herd.Where(a => (a.SaleFlag.ToString().Contains("Purchase") || a.SaleFlag.ToString().Contains("Sale")) && a.Breed == this.PredictedHerdBreed).ToList();
             int head = herd.Count();
@@ -539,7 +539,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
+            return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
         }
 
         /// <inheritdoc/>

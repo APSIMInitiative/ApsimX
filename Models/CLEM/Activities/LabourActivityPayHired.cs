@@ -172,9 +172,9 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
-            return new GetDaysLabourRequiredReturnArgs(0, TransactionCategory, null);
+            return new LabourRequiredArgs(0, TransactionCategory, null);
         }
 
         /// <inheritdoc/>

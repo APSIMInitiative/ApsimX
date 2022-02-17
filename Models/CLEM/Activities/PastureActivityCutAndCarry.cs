@@ -192,7 +192,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
             // TODO add labour multiplier if pasture below given amount and difficult to cut
@@ -218,7 +218,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, pasture.NameWithParent);
+            return new LabourRequiredArgs(daysNeeded, TransactionCategory, pasture.NameWithParent);
         }
 
         /// <inheritdoc/>

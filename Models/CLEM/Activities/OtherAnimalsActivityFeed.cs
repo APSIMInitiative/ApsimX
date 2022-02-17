@@ -121,7 +121,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double allIndividuals = 0;
             foreach (var group in FindAllChildren<OtherAnimalsFilterGroup>())
@@ -146,7 +146,7 @@ namespace Models.CLEM.Activities
                 default:
                     throw new Exception(string.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, "Other animals");
+            return new LabourRequiredArgs(daysNeeded, TransactionCategory, "Other animals");
         }
 
     }

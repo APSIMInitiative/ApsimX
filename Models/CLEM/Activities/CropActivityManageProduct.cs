@@ -414,7 +414,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded = 0;
             if (this.TimingOK)
@@ -480,7 +480,7 @@ namespace Models.CLEM.Activities
                 if (amount <= 0)
                     daysNeeded = 0;
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, (LinkedResourceItem as CLEMModel).NameWithParent);
+            return new LabourRequiredArgs(daysNeeded, TransactionCategory, (LinkedResourceItem as CLEMModel).NameWithParent);
         }
 
         /// <inheritdoc/>
