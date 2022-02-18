@@ -5,7 +5,7 @@ import pandas
 from re import sub
 
 def isHeaderLine(line):
-    return '=' in line or '()' in line
+    return '=' in line or '(mm' in line
 
 # Get the indices of the header rows.
 def getHeaderRows(fileName):
