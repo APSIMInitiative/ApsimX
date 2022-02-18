@@ -161,14 +161,14 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        protected override List<ResourceRequest> DetermineResourcesForActivity()
         {
             unitsAvailable = unitsAvailableForSale;
             return null;
         }
 
         /// <inheritdoc/>
-        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
             switch (requirement.UnitType)
@@ -186,7 +186,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
+        protected override void AdjustResourcesForActivity()
         {
             // adjust resources sold based on labour shortfall
             double labourLimit = this.LabourLimitProportion;
@@ -196,7 +196,7 @@ namespace Models.CLEM.Activities
 
 
         /// <inheritdoc/>
-        public override void DoActivity()
+        protected override void PerformTasksForActivity()
         {
             Status = ActivityStatus.NotNeeded;
             double labourlimit = this.LabourLimitProportion;

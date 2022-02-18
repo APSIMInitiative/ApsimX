@@ -372,7 +372,7 @@ namespace Models.CLEM.Activities
 
         /// <inheritdoc/>
         [EventSubscribe("CLEMGetResourcesRequired")]
-        protected override void PerformActivity(object sender, EventArgs e)
+        protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {
         }
 
@@ -388,7 +388,7 @@ namespace Models.CLEM.Activities
                 if (this.TimingOK)
                 {
                     Status = ActivityStatus.NotNeeded;
-                    DoActivity();
+                    PerformTasksForActivity();
                 }
             }
         }
@@ -421,7 +421,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded = 0;
             if (this.TimingOK)
@@ -491,7 +491,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void DoActivity()
+        protected override void PerformTasksForActivity()
         {
             int year = clock.Today.Year;
             int month = clock.Today.Month;

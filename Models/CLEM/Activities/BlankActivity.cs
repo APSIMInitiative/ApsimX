@@ -14,25 +14,25 @@ namespace Models.CLEM.Activities
     public class BlankActivity : CLEMActivityBase
     {
         /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
+        protected override void AdjustResourcesForActivity()
         {
             return;
         }
 
         /// <inheritdoc/>
-        public override void DoActivity()
+        protected override void PerformTasksForActivity()
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             throw new NotImplementedException();
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        protected override List<ResourceRequest> DetermineResourcesForActivity()
         {
             throw new NotImplementedException();
         }

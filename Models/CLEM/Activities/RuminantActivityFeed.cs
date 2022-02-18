@@ -103,7 +103,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        protected override List<ResourceRequest> DetermineResourcesForActivity()
         {
             var herd = CurrentHerd(false);
             feedEstimated = 0;
@@ -239,7 +239,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             IEnumerable<Ruminant> herd = CurrentHerd(false);
             int head = 0;
@@ -298,7 +298,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
+        protected override void AdjustResourcesForActivity()
         {
             // labour shortfall if any
             double labourLimit = this.LabourLimitProportion;
@@ -372,7 +372,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void DoActivity()
+        protected override void PerformTasksForActivity()
         {
             IEnumerable<Ruminant> herd = CurrentHerd(false);
             if (herd != null && herd.Any())

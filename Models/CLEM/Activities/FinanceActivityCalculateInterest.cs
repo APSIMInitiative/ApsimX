@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using Models.Core.Attributes;
 using System.IO;
+using System.Diagnostics;
 
 namespace Models.CLEM.Activities
 {
@@ -31,6 +32,15 @@ namespace Models.CLEM.Activities
             TransactionCategory = "Interest";
         }
 
+        /// <summary>An method to perform core actions when simulation commences</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        protected override void OnSimulationCommencing(object sender, EventArgs e)
+        {
+            Debug.WriteLine($"StartOfTimeStepOverride for {Name}");
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -41,7 +51,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void DoActivity()
+        protected override void PerformTasksForActivity()
         {
             Status = ActivityStatus.NotNeeded;
             if (finance != null)
@@ -131,9 +141,9 @@ namespace Models.CLEM.Activities
                             htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not needed for <span class=\"resourcelink\">" + accnt.Name + "</span> as no interest rates are set.</div>");
                         else
                             if (accnt.InterestRateCharged > 0)
-                                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity will calculate interest charged for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRateCharged.ToString("#.00") + "</span>%</div>");
+                                htmlWriter.Write($"\r\n<div class=\"activityentry\">This activity will calculate interest charged for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRateCharged.ToString("#.00") + "</span>%</div>");
                             else
-                                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity will calculate interest paid for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRatePaid.ToString("#.00") + "</span>%</div>");
+                                htmlWriter.Write($"\r\n<div class=\"activityentry\">This activity will calculate interest paid for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRatePaid.ToString("#.00") + "</span>%</div>");
                     }
                 }
                 return htmlWriter.ToString(); 

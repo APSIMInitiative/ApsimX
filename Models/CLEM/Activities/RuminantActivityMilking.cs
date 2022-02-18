@@ -91,7 +91,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             IEnumerable<RuminantFemale> herd = this.CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count() == 0);
             double daysNeeded = 0;

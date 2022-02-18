@@ -117,7 +117,7 @@ namespace Models.CLEM.Activities
 
         /// <inheritdoc/>
         [EventSubscribe("CLEMGetResourcesRequired")]
-        protected override void PerformActivity(object sender, EventArgs e)
+        protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {
         }
 
@@ -177,7 +177,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        protected override List<ResourceRequest> DetermineResourcesForActivity()
         {
             List<ResourceRequest> requestList = null;
             if (AmountHarvested > 0)
@@ -198,7 +198,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
             // TODO add labour multiplier if pasture below given amount and difficult to cut
@@ -228,7 +228,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
+        protected override void AdjustResourcesForActivity()
         {
             // labour limiter
             var labourRequests = ResourceRequestList.Where(a => a.ResourceType == typeof(Labour));
@@ -253,7 +253,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void DoActivity()
+        protected override void PerformTasksForActivity()
         {
             FoodResourcePacket packet = new FoodResourcePacket()
             {

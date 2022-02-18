@@ -266,7 +266,7 @@ namespace Models.CLEM.Activities
 
         /// <inheritdoc/>
         [EventSubscribe("CLEMGetResourcesRequired")]
-        protected override void PerformActivity(object sender, EventArgs e)
+        protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {
         }
 

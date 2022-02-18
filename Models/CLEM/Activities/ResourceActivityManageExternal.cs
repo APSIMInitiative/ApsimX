@@ -101,7 +101,7 @@ namespace Models.CLEM.Activities
         #endregion
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        protected override List<ResourceRequest> DetermineResourcesForActivity()
         {
             List<ResourceRequest> requests = new List<ResourceRequest>();
             earned = 0;
@@ -184,7 +184,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
             switch (requirement.UnitType)
@@ -201,7 +201,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Method used to perform activity if it can occur as soon as resources are available.
         /// </summary>
-        public override void DoActivity()
+        protected override void PerformTasksForActivity()
         {
             this.Status = ActivityStatus.NotNeeded;
 

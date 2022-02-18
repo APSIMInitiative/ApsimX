@@ -87,12 +87,12 @@ namespace Models.CLEM.Activities
 
         /// <inheritdoc/>
         [EventSubscribe("CLEMAnimalMark")]
-        protected override void PerformActivity(object sender, EventArgs e)
+        protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {
         }
 
         /// <inheritdoc/>
-        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             IEnumerable<Ruminant> herd = CurrentHerd(false);
 
@@ -133,7 +133,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void AdjustResourcesForActivity()
+        protected override void AdjustResourcesForActivity()
         {
             if (LabourLimitProportion > 0 && LabourLimitProportion < 1 && (labourRequirement != null && labourRequirement.LabourShortfallAffectsActivity))
             {
@@ -153,7 +153,7 @@ namespace Models.CLEM.Activities
 
 
         /// <inheritdoc/>
-        public override void DoActivity()
+        protected override void PerformTasksForActivity()
         {
 
         }

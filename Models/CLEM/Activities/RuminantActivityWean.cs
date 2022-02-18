@@ -118,7 +118,7 @@ namespace Models.CLEM.Activities
 
         /// <inheritdoc/>
         [EventSubscribe("CLEMAnimalMark")]
-        protected override void PerformActivity(object sender, EventArgs e)
+        protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {
         }
 
@@ -196,7 +196,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <param name="requirement">Labour requirement model</param>
         /// <returns></returns>
-        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             IEnumerable<Ruminant> herd = CurrentHerd(false);
             double daysNeeded = 0;

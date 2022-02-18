@@ -74,7 +74,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        protected override List<ResourceRequest> DetermineResourcesForActivity()
         {
             feedRequired = 0;
 
@@ -123,7 +123,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             IEnumerable<LabourType> labourers = labour?.Items.Where(a => a.Hired != true);
             int head = 0;
@@ -173,7 +173,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
+        protected override void AdjustResourcesForActivity()
         {
             //add limit to amout collected based on labour shortfall
             double labourLimit = this.LabourLimitProportion;
@@ -186,7 +186,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void DoActivity()
+        protected override void PerformTasksForActivity()
         {
             IEnumerable<LabourType> group = labour?.Items.Where(a => a.Hired != true);
             if (group != null && group.Any())

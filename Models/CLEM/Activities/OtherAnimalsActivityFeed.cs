@@ -71,7 +71,7 @@ namespace Models.CLEM.Activities
         /// Method to determine resources required for this activity in the current month
         /// </summary>
         /// <returns></returns>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        protected override List<ResourceRequest> DetermineResourcesForActivity()
         {
             List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
 
@@ -121,7 +121,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double allIndividuals = 0;
             foreach (var group in FindAllChildren<OtherAnimalsFilterGroup>())

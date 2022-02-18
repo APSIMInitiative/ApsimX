@@ -98,7 +98,7 @@ namespace Models.CLEM.Activities
         /// Method to determine resources required for this activity in the current month
         /// </summary>
         /// <returns>List of required resource requests</returns>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        protected override List<ResourceRequest> DetermineResourcesForActivity()
         {
             List<ResourceRequest> resourcesNeeded = null;
 
@@ -147,7 +147,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             // get all potential dry breeders
             IEnumerable<Ruminant> herd = this.CurrentHerd(false);

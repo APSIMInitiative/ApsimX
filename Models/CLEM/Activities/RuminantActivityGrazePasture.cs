@@ -100,19 +100,19 @@ namespace Models.CLEM.Activities
                     ActivityList = new List<CLEMActivityBase>();
 
                 ActivityList.Add(ragpb);
-                ragpb.ResourceShortfallOccurred += Paddock_ResourceShortfallOccurred;
+//                ragpb.ResourceShortfallOccurred += Paddock_ResourceShortfallOccurred;
  //               ragpb.ActivityPerformed += BubbleHerd_ActivityPerformed;
             }
         }
 
         /// <inheritdoc/>
         [EventSubscribe("CLEMGetResourcesRequired")]
-        protected override void PerformActivity(object sender, EventArgs e)
+        protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        protected override List<ResourceRequest> DetermineResourcesForActivity()
         {
             // This method does not take any resources but is used to arbitrate resources for all breed grazing activities it contains
 
@@ -123,7 +123,7 @@ namespace Models.CLEM.Activities
                 double potentialIntakeLimiter = item.CalculatePotentialIntakePastureQualityLimiter();
                 item.ResourceRequestList = null;
                 item.PotentialIntakePastureQualityLimiter = potentialIntakeLimiter;
-                item.GetResourcesNeededForActivity();
+                //item.DetermineResourcesForActivity();
                 if (item.ResourceRequestList != null && item.ResourceRequestList.Count > 0)
                     totalNeeded += item.ResourceRequestList[0].Required;
             }
@@ -144,7 +144,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             IEnumerable<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location == GrazeFoodStoreModel.Name);
             double daysNeeded = 0;
@@ -188,7 +188,7 @@ namespace Models.CLEM.Activities
             {
                 foreach (RuminantActivityGrazePastureHerd pastureHerd in ActivityList)
                 {
-                    pastureHerd.ResourceShortfallOccurred -= Paddock_ResourceShortfallOccurred;
+//                    pastureHerd.ResourceShortfallOccurred -= Paddock_ResourceShortfallOccurred;
 //                    pastureHerd.ActivityPerformed -= BubbleHerd_ActivityPerformed;
                 }
             }
@@ -197,7 +197,7 @@ namespace Models.CLEM.Activities
         private void Paddock_ResourceShortfallOccurred(object sender, EventArgs e)
         {
             // bubble shortfall to Activity base for reporting
-            OnShortfallOccurred(e);
+//            OnShortfallOccurred(e);
         }
 
         private void BubbleHerd_ActivityPerformed(object sender, EventArgs e)
@@ -206,7 +206,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void DoActivity()
+        protected override void PerformTasksForActivity()
         {
             if (Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
                 Status = ActivityStatus.NoTask;

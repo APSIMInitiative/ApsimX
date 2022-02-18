@@ -215,7 +215,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void DoActivity()
+        protected override void PerformTasksForActivity()
         {
             Status = ActivityStatus.NoTask;
             return;

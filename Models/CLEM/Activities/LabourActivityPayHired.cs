@@ -79,7 +79,7 @@ namespace Models.CLEM.Activities
 
         /// <inheritdoc/>
         [EventSubscribe("CLEMGetResourcesRequired")]
-        protected override void PerformActivity(object sender, EventArgs e)
+        protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {
         }
 
@@ -119,7 +119,7 @@ namespace Models.CLEM.Activities
 
 
         /// <inheritdoc/>
-        public override void DoActivity()
+        protected override void PerformTasksForActivity()
         {
             if (PaymentCalculationStyle == PayHiredLabourCalculationStyle.ByAvailableLabour)
             {
@@ -178,13 +178,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             return new LabourRequiredArgs(0, TransactionCategory, null);
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        protected override List<ResourceRequest> DetermineResourcesForActivity()
         {
             List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
             if (PaymentCalculationStyle == PayHiredLabourCalculationStyle.ByAvailableLabour)

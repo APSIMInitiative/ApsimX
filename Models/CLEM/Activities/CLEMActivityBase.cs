@@ -36,7 +36,6 @@ namespace Models.CLEM.Activities
         public ActivitiesHolder ActivitiesHolder = null;
 
         private bool enabled = true;
-        private IEnumerable<CLEMActivityBase> activityChildren = null;
         private ZoneCLEM parentZone = null;
 
         /// <summary>
@@ -77,19 +76,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         [JsonIgnore]
         public ResourceAllocationStyle AllocationStyle { get; set; }
-
-        /// <summary>
-        /// A list of activity base children for this activity
-        /// </summary>
-        public IEnumerable<CLEMActivityBase> ActivityChildren
-        {
-            get
-            {
-                if (activityChildren is null)
-                    activityChildren = FindAllChildren<CLEMActivityBase>();
-                return activityChildren;
-            }
-        }
 
         /// <summary>
         /// Current status of this activity
@@ -152,10 +138,10 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
-        public event EventHandler ResourceShortfallOccurred;
+        ///// <summary>
+        ///// Resource shortfall occured event handler
+        ///// </summary>
+        //public event EventHandler ResourceShortfallOccurred;
 
         /// <summary>
         /// Method to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree and a specified date
@@ -271,7 +257,7 @@ namespace Models.CLEM.Activities
             this.TriggerOnActivityPerformed();
 
             // report all timers that were due this time step
-            foreach (IActivityTimer timer in this.FindAllDescendants<IActivityTimer>())
+            foreach (IActivityTimer timer in this.FindAllChildren<IActivityTimer>())
             {
                 if (timer.ActivityDue)
                 {
@@ -296,7 +282,7 @@ namespace Models.CLEM.Activities
                     activity.ReportActivityStatus();
             }
             // call activity performed for all children of type CLEMActivityBase
-            foreach (CLEMActivityBase activity in ActivityChildren)
+            foreach (CLEMActivityBase activity in FindAllChildren<CLEMActivityBase>())
                 activity.ReportActivityStatus();
         }
 
@@ -304,9 +290,10 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMGetResourcesRequired")]
-        protected virtual void PerformActivity(object sender, EventArgs e)
+        protected virtual void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {
-            ManageActivityResourcesAndTasks();
+            if(AllocationStyle != ResourceAllocationStyle.Manual)
+                ManageActivityResourcesAndTasks();
         }
 
         /// <summary>
@@ -323,10 +310,10 @@ namespace Models.CLEM.Activities
                         ResourceRequestList = new List<ResourceRequest>();
 
                         // add any labour resources requirements based on method supplied by activity
-                        ResourceRequestList.AddRange(GetLabourResourcesNeededForActivity());
+                        ResourceRequestList.AddRange(GetLabourRequiredForActivity());
 
                         // add any non-labour resources needed based on method supplied by activity
-                        var requests = GetResourcesNeededForActivity();
+                        var requests = DetermineResourcesForActivity();
                         if (requests != null)
                             ResourceRequestList.AddRange(requests);
 
@@ -334,7 +321,7 @@ namespace Models.CLEM.Activities
                         CheckResources(ResourceRequestList, Guid.NewGuid());
 
                         // adjust if needed based on method supplied by activity
-                        AdjustResourcesNeededForActivity();
+                        AdjustResourcesForActivity();
 
                         // take resources
                         bool tookRequestedResources = TakeResources(ResourceRequestList, false);
@@ -342,7 +329,7 @@ namespace Models.CLEM.Activities
                         // if no resources required perform Activity if code is present.
                         // if resources are returned (all available or UseResourcesAvailable action) perform Activity
                         if (tookRequestedResources || (ResourceRequestList.Count == 0))
-                            DoActivity(); //based on method supplied by activity
+                            PerformTasksForActivity(); //based on method supplied by activity
                     }
 
                     // try perform activity for dynamically created CLEMActivityBase activities
@@ -368,16 +355,52 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// A common method to get the labour resource requests from the activity.
+        /// Base method to determine the number of days labour required based on Activity requirements and labour settings.
+        /// Functionality provided in derived classes
+        /// </summary>
+        protected virtual LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Method to determine the list of resources and amounts needed. 
+        /// Functionality provided in derived classes
+        /// </summary>
+        protected virtual List<ResourceRequest> DetermineResourcesForActivity()
+        {
+            return null;
+        }
+
+        /// <summary>
+        /// Method to adjust activities needed based on shortfalls before they are taken from resource pools. 
+        /// Functionality provided in derived classes
+        /// </summary>
+        protected virtual void AdjustResourcesForActivity()
+        {
+            return;
+        }
+
+        /// <summary>
+        /// Method to perform activity tasks if expected as soon as resources are available
+        /// Functionality provided in derived classes
+        /// </summary>
+        protected virtual void PerformTasksForActivity()
+        {
+            return;
+        }
+
+        /// <summary>
+        /// A common method to get the labour resource requests for the activity.
         /// </summary>
         /// <returns></returns>
-        protected List<ResourceRequest> GetLabourResourcesNeededForActivity()
+        protected List<ResourceRequest> GetLabourRequiredForActivity()
         {
             List<ResourceRequest> labourResourceRequestList = new List<ResourceRequest>();
             foreach (LabourRequirement item in FindAllChildren<LabourRequirement>())
             {
                 LabourRequiredArgs daysResult = GetDaysLabourRequired(item);
-                if (daysResult.DaysNeeded > 0)
+                if (daysResult?.DaysNeeded > 0)
                 {
                     foreach (LabourFilterGroup fg in item.FindAllChildren<LabourFilterGroup>())
                     {
@@ -438,6 +461,9 @@ namespace Models.CLEM.Activities
             double proportion = 1.0;
             if (ResourceRequestList == null)
                 return proportion;
+
+            if (resourceType == typeof(LabourType))
+                return LabourLimitProportion;
 
             double totalNeeded = ResourceRequestList.Where(a => a.ResourceType == resourceType).Sum(a => a.Required);
 
@@ -782,7 +808,6 @@ namespace Models.CLEM.Activities
                 Activity = this
             };
             ActivitiesHolder?.ReportActivityPerformed(activitye);
-            //this.OnActivityPerformed(activitye);
         }
 
         /// <summary>
@@ -797,54 +822,16 @@ namespace Models.CLEM.Activities
                 Activity = new ActivityFolder() { Name = this.Name, Status = status }
             };
             ActivitiesHolder?.ReportActivityPerformed(activitye);
-            //this.OnActivityPerformed(activitye);
         }
 
-        /// <summary>
-        /// Base method to determine the number of days labour required based on Activity requirements and labour settings.
-        /// Functionality provided in derived classes
-        /// </summary>
-        public virtual LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <summary>
-        /// Method to determine list of resources and amounts needed. 
-        /// Functionality provided in derived classes
-        /// </summary>
-        public virtual List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Method to adjust activities needed based on shortfalls before they are taken from resource pools. 
-        /// Functionality provided in derived classes
-        /// </summary>
-        public virtual void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <summary>
-        /// Method to perform activity tasks if expected as soon as resources are available
-        /// Functionality provided in derived classes
-        /// </summary>
-        public virtual void DoActivity()
-        {
-            return;
-        }
-
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
+        ///// <summary>
+        ///// Shortfall occurred 
+        ///// </summary>
+        ///// <param name="e"></param>
+        //protected void OnShortfallOccurred(EventArgs e)
+        //{
+        //    ResourceShortfallOccurred?.Invoke(this, e);
+        //}
     }
 
 

@@ -154,10 +154,10 @@ namespace Models.CLEM.Activities
             if (ResourceRequestList == null)
             {
                 PotentialIntakePastureQualityLimiter = CalculatePotentialIntakePastureQualityLimiter();
-                GetResourcesNeededForActivity();
+                DetermineResourcesForActivity();
             }
             // The DoActivity has all the code to feed animals.
-            DoActivity();
+            PerformTasksForActivity();
         }
 
         /// <summary>
@@ -179,7 +179,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        protected override List<ResourceRequest> DetermineResourcesForActivity()
         {
             // check if resource request list has been calculated from a parent call
             if (ResourceRequestList == null)
@@ -275,7 +275,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void DoActivity()
+        protected override void PerformTasksForActivity()
         {
             //Go through amount received and put it into the animals intake with quality measures.
             if (ResourceRequestList != null)

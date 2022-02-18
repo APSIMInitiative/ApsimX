@@ -64,7 +64,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             IEnumerable<Ruminant> herd = CurrentHerd(false);
             double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
@@ -112,7 +112,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
+        protected override void AdjustResourcesForActivity()
         {
             //add limit to amount collected based on labour shortfall
             double labourLimit = this.LabourLimitProportion;
@@ -123,7 +123,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void DoActivity()
+        protected override void PerformTasksForActivity()
         {
             IEnumerable<Ruminant> herd = CurrentHerd(false).OrderByDescending(a => a.Wool);
             if (herd.Any())
