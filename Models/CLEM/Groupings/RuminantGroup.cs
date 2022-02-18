@@ -75,7 +75,7 @@ namespace Models.CLEM.Groupings
         public List<string> ParentSuppliedIdentifiers()
         {
             if(Parent is CLEMRuminantActivityBase)
-                return (Parent as CLEMRuminantActivityBase).GetChildComponentIdentifiers<RuminantGroup>();
+                return (Parent as CLEMRuminantActivityBase).DefineWorkerChildrenIdentifiers<RuminantGroup>();
             else
                 return new List<string>();
         }
@@ -108,7 +108,7 @@ namespace Models.CLEM.Groupings
                 string[] memberNames = new string[] { "Ruminant group" };
                 results.Add(new ValidationResult($"The group identifier [BLANK] in [f={this.Name}] is not valid for the parent activity [a={Parent.Name}].{Environment.NewLine}Select an option from the list or provide an empty value for the property if no entries are provided", memberNames));
             }
-            if (identifiers.Any() & !ParentSuppliedIdentifiers().Contains(Identifier))
+            if (identifiers.Any() & !identifiers.Contains(Identifier))
             {
                 string[] memberNames = new string[] { "Ruminant group" };
                 results.Add(new ValidationResult($"The group identifier [{Identifier}] in [f={this.Name}] is not valid for the parent activity [a={Parent.Name}].{Environment.NewLine}Select an option from the list or provide an empty value for the property if no entries are provided", memberNames));

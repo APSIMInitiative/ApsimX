@@ -10,6 +10,7 @@ using Models.CLEM.Resources;
 using Models.Core.Attributes;
 using System.IO;
 using System.Text.Json.Serialization;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Activities
 {
@@ -36,10 +37,11 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(PastureActivityCutAndCarry))]
     [ValidParent(ParentType = typeof(LabourActivityTask))]
     [ValidParent(ParentType = typeof(LabourActivityOffFarm))]
+    [ValidParent(ParentType = typeof(RuminantActivityControlledMating))]
     [Description("Defines the amount and type of labour required for an activity. This component must have at least one LabourFilterGroup as a child")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourRequirement.htm")]
-    public class LabourRequirement: CLEMModel, IValidatableObject
+    public class LabourRequirement: CLEMModel, IValidatableObject, IIdentifiableComponent
     {
         /// <summary>
         /// Link to resources
@@ -58,6 +60,13 @@ namespace Models.CLEM.Activities
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
             this.SetDefaults();
         }
+
+        /// <summary>
+        /// An identifier for this Labour requirement based on parent requirements
+        /// </summary>
+        [Description("Labour identifier")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers")]
+        public string Identifier { get; set; }
 
         /// <summary>
         /// Days labour required per unit or fixed (days)

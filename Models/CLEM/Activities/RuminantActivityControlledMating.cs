@@ -38,9 +38,9 @@ namespace Models.CLEM.Activities
         public double MaximumAgeMating { get; set; }
 
         /// <summary>
-        /// Number joinings per male
+        /// Number joinings per male before male genetics replaced
         /// </summary>
-        [Description("Number of joinings per male")]
+        [Description("Joinings per individual male (genetics)")]
         [Required, GreaterThanValue(0)]
         [System.ComponentModel.DefaultValue(1)]
         public int JoiningsPerMale { get; set; }
@@ -60,13 +60,36 @@ namespace Models.CLEM.Activities
             TransactionCategory = "Livestock.Manage";
         }
 
+        /// <inheritdoc/>
+        public override List<string> DefineWorkerChildrenIdentifiers<T>()
+        {
+            switch (typeof(T).Name)
+            {
+                case "RuminantGroup":
+                    return new List<string>()
+                    {
+                        "SelectFemaleBreeders",
+                        "SelectMaleBreeders",
+                    };
+                case "RuminantActivityFee":
+                case "LabourRequirement":
+                    return new List<string>()
+                    {
+                        "PerFemaleMated",
+                        "PerFemaleConceived",
+                    };
+                default:
+                    return new List<string>();
+            }
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            this.AllocationStyle = ResourceAllocationStyle.Manual;
+            this.AllocationStyle = ResourceAllocationStyle.ByParent;
             this.InitialiseHerd(false, true);
 
             attributeList = this.FindAllDescendants<SetAttributeWithValue>().ToList();
@@ -81,33 +104,14 @@ namespace Models.CLEM.Activities
             breedingParent = this.Parent as RuminantActivityBreed;
         }
 
-        #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-
-            if (breedingParent is null)
-            {
-                string[] memberNames = new string[] { "Controlled mating parent" };
-                results.Add(new ValidationResult($"Invalid parent component of [a={this.Name}]. Expecting [a=RuminantActivityBreed].[a=RuminantActivityControlledMating]", memberNames));
-            }
-            return results;
-        }
-        #endregion
-
-        /// <summary>An event handler to perfrom actions needed at the start of the time step</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMStartOfTimeStep")]
-        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
-        {
-            this.Status = ActivityStatus.NotNeeded;
-        }
+        ///// <summary>An event handler to perfrom actions needed at the start of the time step</summary>
+        ///// <param name="sender">The sender.</param>
+        ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        //[EventSubscribe("CLEMStartOfTimeStep")]
+        //private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
+        //{
+        //    this.Status = ActivityStatus.NotNeeded;
+        //}
 
         /// <summary>
         /// Provide the list of all breeders currently available
@@ -117,10 +121,13 @@ namespace Models.CLEM.Activities
         {
             // return the full list of breeders currently able to breed
             // controlled mating includes a max breeding age property, so reduces numbers mated
-            return milkingTimer != null
+            var fullSetBreeders = milkingTimer != null
                 ? milkingTimer.IndividualsToBreed
                 : CurrentHerd(true).OfType<RuminantFemale>()
                     .Where(a => a.IsAbleToBreed & a.Age <= MaximumAgeMating);
+
+
+            return fullSetBreeders;
         }
 
         /// <summary>
@@ -282,6 +289,25 @@ namespace Models.CLEM.Activities
             }
             return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
         }
+
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            if (breedingParent is null)
+            {
+                string[] memberNames = new string[] { "Controlled mating parent" };
+                results.Add(new ValidationResult($"Invalid parent component of [a={this.Name}]. Expecting [a=RuminantActivityBreed].[a=RuminantActivityControlledMating]", memberNames));
+            }
+            return results;
+        }
+        #endregion
 
         #region descriptive summary
 

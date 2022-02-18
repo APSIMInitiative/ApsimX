@@ -61,7 +61,11 @@ namespace Models.CLEM
         /// <summary>
         /// Manually perform in activity code.
         /// </summary>
-        Manual
+        Manual,
+        /// <summary>
+        /// Controlled by parent activity.
+        /// </summary>
+        ByParent,
     }
 
     /// <summary>

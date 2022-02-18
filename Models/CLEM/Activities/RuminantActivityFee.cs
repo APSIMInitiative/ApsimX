@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -21,10 +22,17 @@ namespace Models.CLEM.Activities
     [Description("Define a herd expense for herd management activities")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFee.htm")]
-    public class RuminantActivityFee: CLEMModel
+    public class RuminantActivityFee: CLEMModel, IIdentifiableComponent
     {
         [Link]
         private ResourcesHolder resources = null;
+
+        /// <summary>
+        /// An identifier for this Fee based on parent requirements
+        /// </summary>
+        [Description("Fee identifier")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers")]
+        public string Identifier { get; set; }
 
         /// <summary>
         /// Bank account to use
