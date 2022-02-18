@@ -79,7 +79,7 @@ namespace Models.CLEM
         /// <summary>
         /// Method to set defaults from Attribute for this model
         /// </summary>
-        public void SetDefaults()
+        protected private void SetDefaults()
         {
             SetPropertyDefaults(this);
         }
@@ -169,7 +169,7 @@ namespace Models.CLEM
         /// Determines if this component has a valid parent based on parent attributes
         /// </summary>
         /// <returns></returns>
-        public bool ValidParent()
+        public bool IsParentValid()
         {
             var parents = ReflectionUtilities.GetAttributes(this.GetType(), typeof(ValidParentAttribute), false).Cast<ValidParentAttribute>().ToList();
             return (parents.Where(a => a.ParentType.Name == this.Parent.GetType().Name).Any());

@@ -30,28 +30,28 @@ namespace Models.CLEM.Activities
         /// List of filters that define the herd
         /// </summary>
         [JsonIgnore]
-        public List<RuminantActivityGroup> HerdFilters { get; set; }
+        private List<RuminantActivityGroup> HerdFilters { get; set; }
 
         /// <summary>
         /// Herd name determined for this activity
         /// </summary>
         [JsonIgnore]
-        public string PredictedHerdName { get; set; }
+        public string PredictedHerdName { get; private set; }
 
         /// <summary>
         /// Breed determined for this activity
         /// </summary>
         [JsonIgnore]
-        public string PredictedHerdBreed { get; set; }
+        public string PredictedHerdBreed { get; private set; }
 
         /// <summary>
-        /// The herd resource for this simulation
+        /// The herd resource for this simulation zone
         /// </summary>
         [JsonIgnore]
-        public RuminantHerd HerdResource { get; set; }
+        protected private RuminantHerd HerdResource { get; set; }
 
         /// <summary>
-        /// Method to get the set herd filters
+        /// Method to get the set herd filters and perform checks
         /// </summary>
         public void InitialiseHerd(bool allowMultipleBreeds, bool allowMultipleHerds)
         {
@@ -88,7 +88,13 @@ namespace Models.CLEM.Activities
         /// <returns>A list of identifiers as strings</returns>
         public virtual List<string> GetChildComponentIdentifiers<T>()
         {
-            return new List<string>();
+            switch (typeof(T).Name)
+            {
+                //case "":
+                //    break;
+                default:
+                    return new List<string>();
+            }
         }
 
         /// <summary>
@@ -96,7 +102,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <typeparam name="T">Type of component to consider</typeparam>
         /// <returns></returns>
-        public Dictionary<string, IEnumerable<T>> DefineChildComponentGroups<T>(bool addBlankEntryIfNoneFound) where T : IIdentifiableComponent, new()
+        protected private Dictionary<string, IEnumerable<T>> DefineChildComponentGroups<T>(bool addBlankEntryIfNoneFound) where T : IIdentifiableComponent, new()
         {
             Dictionary<string, IEnumerable<T>> filters = new Dictionary<string, IEnumerable<T>>();
 
@@ -127,7 +133,7 @@ namespace Models.CLEM.Activities
         /// <param name="predictedBreedOnly">Flag to only return the single predicted breed for this activity. Default is true</param>
         /// <param name="includeCheckHerdMeetsCriteria">Perform check and report issues. Only expected once per activity or if herd changing. Default false</param>
         /// <returns>A list of individuals in the herd</returns>
-        public IEnumerable<T> GetIndividuals<T>(GetRuminantHerdSelectionStyle herdStyle = GetRuminantHerdSelectionStyle.NotMarkedForSale, List<HerdChangeReason> excludeFlags = null, bool predictedBreedOnly = true, bool includeCheckHerdMeetsCriteria = false) where T: Ruminant
+        protected private IEnumerable<T> GetIndividuals<T>(GetRuminantHerdSelectionStyle herdStyle = GetRuminantHerdSelectionStyle.NotMarkedForSale, List<HerdChangeReason> excludeFlags = null, bool predictedBreedOnly = true, bool includeCheckHerdMeetsCriteria = false) where T: Ruminant
         {
             if(herdStyle == GetRuminantHerdSelectionStyle.ForPurchase)
                 return HerdResource.PurchaseIndividuals.OfType<T>().Where(a => !predictedBreedOnly || a.Breed == PredictedHerdBreed);

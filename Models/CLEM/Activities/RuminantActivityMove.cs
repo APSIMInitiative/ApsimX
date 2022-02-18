@@ -87,7 +87,9 @@ namespace Models.CLEM.Activities
             // link to graze food store type pasture to move to
             // "Not specified" is general yards.
             pastureName = "";
-            if (!ManagedPastureName.StartsWith("Not specified"))
+            if (ManagedPastureName.StartsWith("Not specified"))
+                pastureName = "";
+            else
                 pastureName = ManagedPastureName.Split('.')[1];
 
             if (PerformAtStartOfSimulation)
