@@ -232,7 +232,7 @@ namespace Models.CLEM.Activities
                         Category = "External purchases"
                     };
                     ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = purchaseRequest };
-                    OnShortfallOccurred(rre);
+                    ActivitiesHolder.ReportActivityShortfall(rre);
                 }
 
                 if (financeLimit < 1 || labourLimit < 1)
@@ -240,9 +240,11 @@ namespace Models.CLEM.Activities
                     switch (OnPartialResourcesAvailableAction)
                     {
                         case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-                                Summary.WriteMessage(this, $"Ensure resources are available or change OnPartialResourcesAvailableAction setting for activity [a={this.NameWithParent}]", MessageType.Warning);
-                                Status = ActivityStatus.Critical;
-                                throw new ApsimXException(this, $"Insufficient resources [r={AccountName}] for activity [a={this.NameWithParent}]");
+                            string shortfallResources = (financeLimit < 1) ? "[r=Finance]":"";
+                            shortfallResources += (labourLimit < 1) ?"[r=Labour]":"";
+                            string errorMessage = $"Insufficient [r={shortfallResources}] for [a={this.NameWithParent}]{Environment.NewLine}[Report error and stop] is selected as action when shortfall of resources. Ensure sufficient resources are available or change OnPartialResourcesAvailableAction setting";
+                            Status = ActivityStatus.Critical;
+                            throw new ApsimXException(this, errorMessage);
                         case OnPartialResourcesAvailableActionTypes.SkipActivity:
                             this.Status = ActivityStatus.Ignored;
                             return;

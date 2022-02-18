@@ -340,7 +340,7 @@ namespace Models.CLEM.Activities
                     purchaseRequest.ResourceType = typeof(Finance);
                     purchaseRequest.ResourceTypeName = BankAccountName;
                     ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = purchaseRequest };
-                    OnShortfallOccurred(rre);
+                    ActivitiesHolder.ReportActivityShortfall(rre);
                 }
             }
         }
@@ -477,7 +477,7 @@ namespace Models.CLEM.Activities
                         purchaseRequest.ResourceType = typeof(Finance);
                         purchaseRequest.ResourceTypeName = BankAccountName;
                         ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = purchaseRequest };
-                        OnShortfallOccurred(rre);
+                        ActivitiesHolder.ReportActivityShortfall(rre);
                     }
 
                     ResourceRequest expenseRequest = new ResourceRequest
@@ -500,7 +500,7 @@ namespace Models.CLEM.Activities
                             expenseRequest.ResourceType = typeof(Finance);
                             expenseRequest.ResourceTypeName = BankAccountName;
                             ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = expenseRequest };
-                            OnShortfallOccurred(rre);
+                            ActivitiesHolder.ReportActivityShortfall(rre);
                         }
                     }
                 }

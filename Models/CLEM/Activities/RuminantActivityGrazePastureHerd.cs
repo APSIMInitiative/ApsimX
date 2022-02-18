@@ -341,7 +341,7 @@ namespace Models.CLEM.Activities
                             request.ResourceType = typeof(GrazeFoodStore);
                             request.ResourceTypeName = GrazeFoodStoreModel.Name;
                             ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = request };
-                            OnShortfallOccurred(rre);
+                            ActivitiesHolder.ReportActivityShortfall(rre);
 
                             if (this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
                                 throw new ApsimXException(this, "Insufficient pasture available for grazing in paddock (" + GrazeFoodStoreModel.Name + ") in " + Clock.Today.Month.ToString() + "\\" + Clock.Today.Year.ToString());

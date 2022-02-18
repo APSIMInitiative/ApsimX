@@ -96,7 +96,7 @@ namespace Models.CLEM.Activities
                             ragp.ActivityList = new List<CLEMActivityBase>();
 
                         ragp.ActivityList.Add(ragpb);
-                        ragpb.ResourceShortfallOccurred += GrazeAll_ResourceShortfallOccurred;
+//                        ragpb.ResourceShortfallOccurred += GrazeAll_ResourceShortfallOccurred;
 //                        ragpb.ActivityPerformed += BubblePaddock_ActivityPerformed;
                     }
                     if (ActivityList == null)
@@ -120,7 +120,7 @@ namespace Models.CLEM.Activities
                 {
                     foreach (RuminantActivityGrazePastureHerd pastureHerd in pastureGraze.ActivityList)
                     {
-                        pastureHerd.ResourceShortfallOccurred -= GrazeAll_ResourceShortfallOccurred;
+//                        pastureHerd.ResourceShortfallOccurred -= GrazeAll_ResourceShortfallOccurred;
 //                        pastureHerd.ActivityPerformed -= BubblePaddock_ActivityPerformed;
                     }
                 }
@@ -130,7 +130,7 @@ namespace Models.CLEM.Activities
         private void GrazeAll_ResourceShortfallOccurred(object sender, EventArgs e)
         {
             // bubble shortfall to Activity base for reporting
-            OnShortfallOccurred(e);
+//            OnShortfallOccurred(e);
         }
 
         private void BubblePaddock_ActivityPerformed(object sender, EventArgs e)

@@ -88,7 +88,7 @@ namespace Models.CLEM.Activities
                                 interestRequest.ResourceTypeName = accnt.NameWithParent;
                                 interestRequest.Available = accnt.FundsAvailable;
                                 ResourceRequestEventArgs rre = new ResourceRequestEventArgs() { Request = interestRequest };
-                                OnShortfallOccurred(rre);
+                                ActivitiesHolder.ReportActivityShortfall(rre);
 
                                 switch (OnPartialResourcesAvailableAction)
                                 {

@@ -41,42 +41,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public event EventHandler ActivityPerformed;
 
-        private void BindEvents(IEnumerable<IModel> root)
-        {
-            foreach (var item in root.OfType<CLEMActivityBase>())
-            {
-                if (item.GetType() != typeof(ActivityFolder))
-                    (item as CLEMActivityBase).ResourceShortfallOccurred += ActivitiesHolder_ResourceShortfallOccurred;
-                BindEvents(item.FindAllChildren<IModel>());
-            }
-        }
-
-        private void UnBindEvents(IEnumerable<IModel> root)
-        {
-            if (root.Any())
-            {
-                foreach (var item in root.OfType<CLEMActivityBase>())
-                {
-                    if (item.GetType() != typeof(ActivityFolder))
-                        (item as CLEMActivityBase).ResourceShortfallOccurred -= ActivitiesHolder_ResourceShortfallOccurred;
-                    UnBindEvents(item.FindAllChildren<IModel>());
-                }
-            }
-        }
-
-        /// <summary>
-        /// Hander for shortfall
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        public void ActivitiesHolder_ResourceShortfallOccurred(object sender, EventArgs e)
-        {
-            // save resource request
-            LastShortfallResourceRequest = (e as ResourceRequestEventArgs).Request;
-            // call resourceShortfallEventhandler
-            OnShortfallOccurred(e);
-        }
-
         /// <summary>
         /// Shortfall occurred 
         /// </summary>
@@ -107,25 +71,12 @@ namespace Models.CLEM.Activities
         [EventSubscribe("Commencing")]
         private void SetUniqueActivityIDs(object sender, EventArgs e)
         {
-            BindEvents(FindAllChildren<IModel>());
             int index = 0;
             foreach (var activity in FindAllDescendants<CLEMActivityBase>())
             {
                 activity.SetGuID($"{index.ToString().PadLeft(8,'0')}-0000-0000-0000-000000000000");
                 index++;
             }
-        }
-
-        /// <summary>
-        /// Report activity performed event
-        /// </summary>
-        /// <param name="e"></param>
-        public void ReportActivityPerformed(ActivityPerformedEventArgs e)
-        {
-            // save 
-            LastActivityPerformed = (e as ActivityPerformedEventArgs).Activity;
-            // call ActivityPerformedEventhandler
-            OnActivityPerformed(e);
         }
 
         /// <summary>A method to allow all activities to perform actions at the end of the time step</summary>
@@ -148,12 +99,27 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// A method to clean up at the end of the simulation
+        /// Report activity performed event
         /// </summary>
-        [EventSubscribe("Completed")]
-        private void CleanUpBindings(object sender, EventArgs e)
+        /// <param name="e"></param>
+        public void ReportActivityPerformed(ActivityPerformedEventArgs e)
         {
-            UnBindEvents(FindAllChildren<IModel>());
+            // save 
+            LastActivityPerformed = (e as ActivityPerformedEventArgs).Activity;
+            // call ActivityPerformedEventhandler
+            OnActivityPerformed(e);
+        }
+
+        /// <summary>
+        /// Report activity shortfall event
+        /// </summary>
+        /// <param name="e"></param>
+        public void ReportActivityShortfall(ResourceRequestEventArgs e)
+        {
+            // save 
+            LastShortfallResourceRequest = e.Request;
+            // call ShortfallOccurredEventhandler
+            OnShortfallOccurred(e);
         }
 
         #region validation

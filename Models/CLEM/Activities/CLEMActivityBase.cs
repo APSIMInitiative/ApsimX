@@ -138,11 +138,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        ///// <summary>
-        ///// Resource shortfall occured event handler
-        ///// </summary>
-        //public event EventHandler ResourceShortfallOccurred;
-
         /// <summary>
         /// Method to check if timing of this activity is ok based on child and parent ActivityTimers in UI tree and a specified date
         /// </summary>
@@ -735,10 +730,10 @@ namespace Models.CLEM.Activities
                 {
                     ActivitiesHolder marketActivities = Resources.FoundMarket.FindChild<ActivitiesHolder>();
                     if(marketActivities != null)
-                        marketActivities.ActivitiesHolder_ResourceShortfallOccurred(this, rrEventArgs);
+                        marketActivities.ReportActivityShortfall(rrEventArgs);
                 }
                 else
-                    OnShortfallOccurred(rrEventArgs);
+                    ActivitiesHolder.ReportActivityShortfall(rrEventArgs);
                 Status = ActivityStatus.Partial;
                 deficitFound = true;
             }
@@ -765,16 +760,12 @@ namespace Models.CLEM.Activities
             {
                 if(OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
                 {
-                    string resourcelist = "";
-                    foreach (var item in resourceRequestList.Where(a => a.Required > a.Available))
-                        resourcelist += item.ResourceType.Name + ",";
-
-                    resourcelist = resourcelist.Trim(',');
+                    string resourcelist = string.Join("][r=", resourceRequestList.Where(a => a.Required > a.Available).Select(a => a.ResourceType.Name));
                     if (resourcelist.Length > 0)
                     {
-                        Summary.WriteMessage(this, $"Ensure all resources are available or change OnPartialResourcesAvailableAction setting for activity [a={this.NameWithParent}]", MessageType.Warning);
+                        string errorMessage = $"Insufficient [r={resourcelist}] for [a={this.NameWithParent}]{Environment.NewLine}[Report error and stop] is selected as action when shortfall of resources. Ensure sufficient resources are available or change OnPartialResourcesAvailableAction setting";
                         Status = ActivityStatus.Critical;
-                        throw new Exception($"Insufficient resources [r={resourcelist}] for activity [a={this.NameWithParent}]");
+                        throw new ApsimXException(this, errorMessage);
                     }
                 }
 
@@ -824,15 +815,5 @@ namespace Models.CLEM.Activities
             ActivitiesHolder?.ReportActivityPerformed(activitye);
         }
 
-        ///// <summary>
-        ///// Shortfall occurred 
-        ///// </summary>
-        ///// <param name="e"></param>
-        //protected void OnShortfallOccurred(EventArgs e)
-        //{
-        //    ResourceShortfallOccurred?.Invoke(this, e);
-        //}
     }
-
-
 }
