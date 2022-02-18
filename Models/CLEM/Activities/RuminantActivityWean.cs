@@ -97,6 +97,9 @@ namespace Models.CLEM.Activities
         {
             this.InitialiseHerd(true, true);
 
+            // activity is performed in ManageAnimals
+            this.AllocationStyle = ResourceAllocationStyle.Manual;
+
             // check GrazeFoodStoreExists
             grazeStore = "";
             if (GrazeFoodStoreName != null && !GrazeFoodStoreName.StartsWith("Not specified"))
@@ -112,6 +115,14 @@ namespace Models.CLEM.Activities
 
             filterGroups = FindAllChildren<RuminantGroup>();
         }
+
+        /// <inheritdoc/>
+        [EventSubscribe("CLEMAnimalMark")]
+        protected override void PerformActivity(object sender, EventArgs e)
+        {
+        }
+
+
 
         /// <summary>An event handler to call for all herd management activities</summary>
         /// <param name="sender">The sender.</param>

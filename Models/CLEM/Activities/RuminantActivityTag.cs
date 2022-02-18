@@ -29,17 +29,6 @@ namespace Models.CLEM.Activities
     {
         private LabourRequirement labourRequirement;
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMInitialiseActivity")]
-        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
-        {
-            // get all ui tree herd filters that relate to this activity
-            this.InitialiseHerd(true, true);
-            filterGroups = FindAllChildren<RuminantGroup>();
-        }
-
         /// <summary>
         /// Tag label
         /// </summary>
@@ -83,6 +72,25 @@ namespace Models.CLEM.Activities
         }
         #endregion
 
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseActivity")]
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
+        {
+            // get all ui tree herd filters that relate to this activity
+            this.InitialiseHerd(true, true);
+            filterGroups = FindAllChildren<RuminantGroup>();
+            // activity is performed in ManageAnimals
+            this.AllocationStyle = ResourceAllocationStyle.Manual;
+        }
+
+        /// <inheritdoc/>
+        [EventSubscribe("CLEMAnimalMark")]
+        protected override void PerformActivity(object sender, EventArgs e)
+        {
+        }
+
         /// <inheritdoc/>
         public override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
@@ -125,7 +133,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
+        public override void AdjustResourcesForActivity()
         {
             if (LabourLimitProportion > 0 && LabourLimitProportion < 1 && (labourRequirement != null && labourRequirement.LabourShortfallAffectsActivity))
             {

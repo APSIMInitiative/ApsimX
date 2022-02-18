@@ -65,10 +65,19 @@ namespace Models.CLEM.Activities
         {
             // get all ui tree herd filters that relate to this activity
             this.InitialiseHerd(true, true);
+
+            // activity is performed in ManageAnimals
+            this.AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
+        [EventSubscribe("CLEMAnimalMark")]
+        protected override void PerformActivity(object sender, EventArgs e)
+        {
+        }
+
+        /// <inheritdoc/>
+        public override List<ResourceRequest> DetermineResourcesForActivity()
         {
             numberToTag = NumberToTag();
             return null;
@@ -119,7 +128,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
+        public override void AdjustResourcesForActivity()
         {
             labourShortfall = false;
             if (LabourLimitProportion < 1 & (labourRequirement != null && labourRequirement.LabourShortfallAffectsActivity))
