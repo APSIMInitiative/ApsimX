@@ -24,6 +24,9 @@ namespace Models.Core
         /// <summary>Connect all events in the specified simulation.</summary>
         void ConnectEvents();
 
+        /// <summary>Connect all events in the specified model to simulation events.</summary>
+        void ConnectEvents(IModel model);
+
         /// <summary>Connect all events in the specified simulation.</summary>
         void DisconnectEvents();
 
