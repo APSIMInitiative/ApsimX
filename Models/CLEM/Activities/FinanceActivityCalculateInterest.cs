@@ -32,15 +32,6 @@ namespace Models.CLEM.Activities
             TransactionCategory = "Interest";
         }
 
-        /// <summary>An method to perform core actions when simulation commences</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMStartOfTimeStep")]
-        protected override void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            Debug.WriteLine($"StartOfTimeStepOverride for {Name}");
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>

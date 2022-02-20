@@ -85,7 +85,7 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Find a resource type from  type of resources and name of resource type component
+        /// Find a resource type from type of resources and name of resource type component
         /// </summary>
         /// <typeparam name="T">Type of ResourceType to return</typeparam>
         /// <typeparam name="R">Type of Resource group containing resource type</typeparam>

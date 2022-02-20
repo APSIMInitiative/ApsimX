@@ -272,7 +272,7 @@ namespace Models.CLEM
             // get all validations 
             var errorsThisSim = summary.GetMessages(simulation.Name)?.ToArray().Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter "));
 
-            // create combined inner exception
+            //create combined inner exception
             string innerExceptionString = "";
             foreach (var error in errorsThisSim)
                 innerExceptionString += $"{error.Text}{Environment.NewLine}";
@@ -281,7 +281,7 @@ namespace Models.CLEM
             if (errorsThisSim.Any())
             {
                 Exception innerException = new Exception(innerExceptionString);
-                throw new ApsimXException(model, $"{errorsThisSim.Count()} invalid entr{(errorsThisSim.Count() == 1 ? "y" : "ies")}.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details", innerException);
+                throw new ApsimXException(model, $"{errorsThisSim.Count()} invalid entr{(errorsThisSim.Count() == 1 ? "y" : "ies")}.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details{Environment.NewLine}", innerException);
             }
         }
 
