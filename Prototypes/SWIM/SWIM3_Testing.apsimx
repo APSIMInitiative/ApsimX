@@ -1,7 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
-  "Version": 147,
+  "ExplorerWidth": 285,
+  "Version": 148,
   "Name": "Simulations",
   "Children": [
     {
@@ -45,24 +45,37 @@
               "Name": "Factors",
               "Children": [
                 {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[SetLowerBoundaryCondition].Script.LowerBCType=gradient",
+                  "$type": "Models.Factorial.CompositeFactor, Models",
+                  "Specifications": [
+                    "[SWIM3 _SetLowerBC].Script.LowerBCType=gradient"
+                  ],
+                  "Paths": null,
+                  "Values": null,
                   "Name": "Gradient",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[SetLowerBoundaryCondition].Script.LowerBCType=seepage",
+                  "$type": "Models.Factorial.CompositeFactor, Models",
+                  "Specifications": [
+                    "[SWIM3 _SetLowerBC].Script.LowerBCType=seepage"
+                  ],
+                  "Paths": null,
+                  "Values": null,
                   "Name": "Seepage",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[SetLowerBoundaryCondition].Script.LowerBCType=potential50",
+                  "$type": "Models.Factorial.CompositeFactor, Models",
+                  "Specifications": [
+                    "[SWIM3 _SetLowerBC].Script.LowerBCType=potential",
+                    "[SWIM3 _SetLowerBC].Script.LowerBCValue=-500"
+                  ],
+                  "Paths": null,
+                  "Values": null,
                   "Name": "Potential",
                   "Children": [],
                   "Enabled": true,
@@ -91,7 +104,7 @@
                 {
                   "$type": "Models.Clock, Models",
                   "Start": "2000-01-01T00:00:00",
-                  "End": "2005-12-30T00:00:00",
+                  "End": "2005-01-31T00:00:00",
                   "Name": "Clock",
                   "Children": [],
                   "Enabled": true,
@@ -280,7 +293,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\nusing System.Linq;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] IWeather weather;\r\n        [Link] Irrigation irrigation;\r\n        [Link] private Swim3 swim;  // I know that we are concerned with SWIM3 but should this be generic and sub in SoilWater?\r\n        [Link] private IPlant[] plants;\r\n\r\n  \r\n        // add water uptake and (no3+nh4) uptake as N uptake to IPlant\r\n\r\n        public double WaterBalanceCumulative  { get; set; }\r\n        public double WaterBalanceToday  { get; set; }\r\n\r\n        public double SoilWaterAtInitialisation  { get; set; }\r\n        public double SoilWaterYesterday  { get; set; }\r\n\t\tpublic double SoilWaterNow  { get; set; }\r\n\r\n\t\tpublic double PlantWaterUptake { get; set; }\r\n\r\n        public double WaterAddedToday  { get; set; }\r\n        public double WaterRemovedToday  { get; set; }\r\n        public double WaterAddedCumulative  { get; set; }\r\n        public double WaterRemovedCumulative  { get; set; }\r\n\r\n\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        \tif (clock.Today == clock.StartDate) \r\n        \t// capture the water in and on the soil as a starting point\r\n        \t// doing this here as need the models to have intialised first\r\n        \t{\r\n\t        \tSoilWaterAtInitialisation = swim.pond;\r\n    \t    \tfor (int i = 0; i < swim.SWmm.Length; i++)\r\n        \t\t\tSoilWaterAtInitialisation += swim.SWmm[i];\r\n\r\n        \t\tSoilWaterYesterday = SoilWaterAtInitialisation;\t\t\r\n        \t\tWaterAddedCumulative = 0.0;\r\n        \t\tWaterRemovedCumulative = 0.0;\r\n        \t\tSoilWaterNow = 0.0;\r\n        \t}\r\n        \telse\r\n        \t{\r\n        \t\tSoilWaterYesterday = SoilWaterNow;\t\t// SoilWaterNow holds the value calculated at reporting yesterday\r\n        \t\tWaterAddedToday = 0.0;\r\n        \t\tWaterRemovedToday = 0.0;\r\n        \t}\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        \t// All the WaterBalance variables should be zero. A positive value is a generation of water.\r\n        \tSoilWaterNow = swim.pond;\r\n        \tfor (int i = 0; i < swim.SWmm.Length; i++)\r\n        \t\tSoilWaterNow += swim.SWmm[i]; // so all the water stored in or on the soil\r\n\r\n        \tWaterAddedToday = weather.Rain + irrigation.IrrigationApplied;   // Can there be runon? Probably not but this will throw an error if that ever happens\r\n        \tWaterAddedCumulative+= WaterAddedToday;\r\n\r\n        \tWaterRemovedToday = swim.Drainage + swim.Es + swim.Runoff;\r\n        \tPlantWaterUptake = 0.0;\r\n        \tforeach (var plant in plants)\r\n        \t\tPlantWaterUptake += plant.WaterUptake.Sum();\r\n\r\n        \tWaterRemovedToday += PlantWaterUptake;\r\n        \t// Need to add subsurface drainage here\r\n\r\n        \tWaterRemovedCumulative += WaterRemovedToday;\r\n\r\n        \tWaterBalanceToday = WaterAddedToday - WaterRemovedToday - (SoilWaterNow - SoilWaterYesterday);\r\n        \tWaterBalanceCumulative = WaterAddedCumulative - WaterRemovedCumulative - (SoilWaterNow - SoilWaterAtInitialisation);\r\n        \t// need to add a warning value and a crash value and make a crash\r\n\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\nusing System.Linq;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] IWeather weather;\r\n        [Link] Irrigation irrigation;\r\n        [Link] private Swim3 swim;  // I know that we are concerned with SWIM3 but should this be generic and sub in SoilWater?\r\n        [Link] private IPlant[] plants;\r\n\r\n  \r\n        // add (no3+nh4) uptake as N uptake to IPlant\r\n\r\n        public double WaterBalanceCumulative  { get; set; }\r\n        public double WaterBalanceToday  { get; set; }\r\n\r\n        public double SoilWaterAtInitialisation  { get; set; }\r\n        public double SoilWaterYesterday  { get; set; }\r\n\t\tpublic double SoilWaterNow  { get; set; }\r\n\r\n\t\tpublic double PlantWaterUptake { get; set; }\r\n\r\n        public double WaterAddedToday  { get; set; }\r\n        public double WaterRemovedToday  { get; set; }\r\n        public double WaterAddedCumulative  { get; set; }\r\n        public double WaterRemovedCumulative  { get; set; }\r\n\r\n\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        \tif (clock.Today == clock.StartDate) \r\n        \t// capture the water in and on the soil as a starting point\r\n        \t// doing this here as need the models to have intialised first\r\n        \t{\r\n\t        \tSoilWaterAtInitialisation = swim.pond;\r\n    \t    \tfor (int i = 0; i < swim.SWmm.Length; i++)\r\n        \t\t\tSoilWaterAtInitialisation += swim.SWmm[i];\r\n\r\n        \t\tSoilWaterYesterday = SoilWaterAtInitialisation;\t\t\r\n        \t\tWaterAddedCumulative = 0.0;\r\n        \t\tWaterRemovedCumulative = 0.0;\r\n        \t\tSoilWaterNow = 0.0;\r\n        \t}\r\n        \telse\r\n        \t{\r\n        \t\tSoilWaterYesterday = SoilWaterNow;\t\t// SoilWaterNow holds the value calculated at reporting yesterday\r\n        \t\tWaterAddedToday = 0.0;\r\n        \t\tWaterRemovedToday = 0.0;\r\n        \t}\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        \t// All the WaterBalance variables should be zero. A positive value is a generation of water.\r\n        \tSoilWaterNow = swim.pond;\r\n        \tfor (int i = 0; i < swim.SWmm.Length; i++)\r\n        \t\tSoilWaterNow += swim.SWmm[i]; // so all the water stored in or on the soil\r\n\r\n        \tWaterAddedToday = weather.Rain + irrigation.IrrigationApplied;   // Can there be runon? Probably not but this will throw an error if that ever happens\r\n        \tWaterAddedCumulative+= WaterAddedToday;\r\n\r\n        \tWaterRemovedToday = swim.Drainage + swim.Es + swim.Runoff;\r\n        \tPlantWaterUptake = 0.0;\r\n        \tforeach (var plant in plants)\r\n        \t\tPlantWaterUptake += plant.WaterUptake.Sum();\r\n\r\n        \tWaterRemovedToday += PlantWaterUptake;\r\n        \t// Need to add subsurface drainage here\r\n\r\n        \tWaterRemovedCumulative += WaterRemovedToday;\r\n\r\n        \tWaterBalanceToday = WaterAddedToday - WaterRemovedToday - (SoilWaterNow - SoilWaterYesterday);\r\n        \tWaterBalanceCumulative = WaterAddedCumulative - WaterRemovedCumulative - (SoilWaterNow - SoilWaterAtInitialisation);\r\n        \t// need to add a warning value and a crash value and make a crash\r\n\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [],
                       "Name": "CalculateRollingWaterBalance",
                       "Enabled": true,
@@ -288,14 +301,18 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        //[Link] private PastureSpecies ryegrass;\r\n        //[Link] private SimpleGrazing grazing;\r\n\r\n        [Description(\"What lower BC? Current options gradient/seepage/potential\")] public string LowerBCType { get; set; }\r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == clock.StartDate)\r\n            {\r\n                summary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType, MessageType.Diagnostic);\r\n                if (LowerBCType.ToLower() == \"gradient\")\r\n                    swim.SetLowerBCForGradient(bbcGradient: 0.0);   // in cm/cm (ibbc=0) Note that this is the default setting\r\n                else if (LowerBCType.ToLower() == \"potential50\")\r\n                    swim.SetLowerBCForGivenPotential(bbcPotential: -50.0);    //  in cm (ibbc=1), DUL is -100 cm so this is quite wet but not saturated\r\n                else if (LowerBCType.ToLower() == \"seepage\")\r\n                    swim.SetLowerBCForSeepage(bbcPotentialSeepage: 0.0);  // in cm (ibbc=3)\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        //[Link] private PastureSpecies ryegrass;\r\n        //[Link] private SimpleGrazing grazing;\n        \n        public enum LowerBCTypeOptions {gradient,seepage,potential};\r\n\r\n        [Separator(\"Sets the lower boundary condition type (and value if set to 'potential' for SWIM3. The change is applied at the beginning of the first day of the simulation.\")]\n        [Description(\"[Get a dropdown] What lower boundary condition is wanted?\")] public LowerBCTypeOptions LowerBCType { get; set; }\r\n        [Description(\"If 'potential', then what potential? Should be negative (mm) \")] public double LowerBCValue { get; set; }\r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == clock.StartDate)\r\n            {\r\n                summary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType, MessageType.Diagnostic);\r\n                if (LowerBCType == LowerBCTypeOptions.gradient)\r\n                    swim.SetLowerBCForGradient(bbcGradient: 0.0);   // in cm/cm (ibbc=0) Note that this is the default setting\r\n                else if (LowerBCType == LowerBCTypeOptions.potential)\r\n                    swim.SetLowerBCForGivenPotential(bbcPotential: LowerBCValue /10.0 );    //  in cm (ibbc=1), DUL is -100 cm so this is quite wet but not saturated. Input in mm so divide here.\r\n                else if (LowerBCType == LowerBCTypeOptions.seepage)\r\n                    swim.SetLowerBCForSeepage(bbcPotentialSeepage: 0.0);  // in cm (ibbc=3)\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "LowerBCType",
-                          "Value": "gradient"
+                          "Value": "potential"
+                        },
+                        {
+                          "Key": "LowerBCValue",
+                          "Value": "-500"
                         }
                       ],
-                      "Name": "SetLowerBoundaryCondition",
+                      "Name": "SWIM3 _SetLowerBC",
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -461,13 +478,6 @@
                       "Children": [
                         {
                           "$type": "Models.Soils.Physical, Models",
-                          "Depth": [
-                            "0-6",
-                            "6-17",
-                            "17-31",
-                            "31-55",
-                            "55-70"
-                          ],
                           "Thickness": [
                             60.0,
                             110.0,
@@ -634,13 +644,6 @@
                         },
                         {
                           "$type": "Models.Soils.Organic, Models",
-                          "Depth": [
-                            "0-6",
-                            "6-17",
-                            "17-31",
-                            "31-55",
-                            "55-70"
-                          ],
                           "FOMCNRatio": 40.0,
                           "Thickness": [
                             60.0,
@@ -693,13 +696,6 @@
                         },
                         {
                           "$type": "Models.Soils.Chemical, Models",
-                          "Depth": [
-                            "0-6",
-                            "6-17",
-                            "17-31",
-                            "31-55",
-                            "55-70"
-                          ],
                           "Thickness": [
                             60.0,
                             110.0,
@@ -750,13 +746,6 @@
                         },
                         {
                           "$type": "Models.Soils.Sample, Models",
-                          "Depth": [
-                            "0-6",
-                            "6-17",
-                            "17-31",
-                            "31-55",
-                            "55-70"
-                          ],
                           "Thickness": [
                             60.0,
                             110.0,
@@ -793,8 +782,8 @@
                             "NaN"
                           ],
                           "SW": [
-                            0.565,
-                            0.565,
+                            0.58,
+                            0.58,
                             0.565,
                             0.565,
                             0.565
@@ -1307,7 +1296,7 @@
                     {
                       "$type": "Models.Report, Models",
                       "VariableNames": [
-                        "[SetLowerBoundaryCondition].Script.LowerBCType",
+                        "[SWIM3 _SetLowerBC].Script.LowerBCType",
                         "[Clock].Today as Date",
                         "[CalculateRollingWaterBalance].Script.WaterAddedToday as WaterAddedToday",
                         "[CalculateRollingWaterBalance].Script.WaterRemovedToday as WaterRemovedToday",
@@ -3011,13 +3000,6 @@
                       "Children": [
                         {
                           "$type": "Models.Soils.Physical, Models",
-                          "Depth": [
-                            "0-6",
-                            "6-17",
-                            "17-31",
-                            "31-55",
-                            "55-70"
-                          ],
                           "Thickness": [
                             60.0,
                             110.0,
@@ -3184,13 +3166,6 @@
                         },
                         {
                           "$type": "Models.Soils.Organic, Models",
-                          "Depth": [
-                            "0-6",
-                            "6-17",
-                            "17-31",
-                            "31-55",
-                            "55-70"
-                          ],
                           "FOMCNRatio": 40.0,
                           "Thickness": [
                             60.0,
@@ -3243,13 +3218,6 @@
                         },
                         {
                           "$type": "Models.Soils.Chemical, Models",
-                          "Depth": [
-                            "0-6",
-                            "6-17",
-                            "17-31",
-                            "31-55",
-                            "55-70"
-                          ],
                           "Thickness": [
                             60.0,
                             110.0,
@@ -3300,13 +3268,6 @@
                         },
                         {
                           "$type": "Models.Soils.Sample, Models",
-                          "Depth": [
-                            "0-6",
-                            "6-17",
-                            "17-31",
-                            "31-55",
-                            "55-70"
-                          ],
                           "Thickness": [
                             60.0,
                             110.0,
