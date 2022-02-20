@@ -37,8 +37,10 @@ namespace Models.CLEM.Activities
 
         private bool enabled = true;
         private ZoneCLEM parentZone = null;
-        private Dictionary<Type, List<string>> identifiableModelIdentifiers = new Dictionary<Type, List<string>>();
-        private Dictionary<Type, object> identifiableModelsPresent = new Dictionary<Type, object>();
+        //[NonSerialized]
+        private Dictionary<string, List<string>> identifiableModelIdentifiers = new Dictionary<string, List<string>>();
+        //[NonSerialized]
+        private Dictionary<string, object> identifiableModelsPresent = new Dictionary<string, object>();
 
         /// <summary>
         /// Label to assign each transaction created by this activity in ledgers
@@ -204,14 +206,14 @@ namespace Models.CLEM.Activities
         /// <returns>List of identifiers provided</returns>
         public List<string> IdentifiableChildModelIdentifiers<T>() where T : IIdentifiableChildModel
         {
-            if (identifiableModelIdentifiers.ContainsKey(typeof(T)))
+            if (identifiableModelIdentifiers.ContainsKey(typeof(T).Name))
             {
-                return identifiableModelIdentifiers[typeof(T)];
+                return identifiableModelIdentifiers[typeof(T).Name];
             }
             else
             {
                 List<string> identifiersDefined = DefineIdentifiableChildModelIdentifiers<T>();
-                identifiableModelIdentifiers.Add(typeof(T), identifiersDefined);
+                identifiableModelIdentifiers.Add(typeof(T).Name, identifiersDefined);
                 return identifiersDefined;
             }
         }
@@ -221,7 +223,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <typeparam name="T">Identifiable child model type</typeparam>
         /// <returns>A list of identifiers as strings</returns>
-        public List<string> DefineIdentifiableChildModelIdentifiers<T>() where T : IIdentifiableChildModel
+        public virtual List<string> DefineIdentifiableChildModelIdentifiers<T>() where T : IIdentifiableChildModel
         {
             if (this is ICanHandleIdentifiableChildModels)
             {
@@ -252,13 +254,13 @@ namespace Models.CLEM.Activities
                     switch (componentType.Name)
                     {
                         case "RuminantGroup":
-                            identifiableModelsPresent.Add(componentType, LocateIdentifiableChildren<RuminantGroup>(true));
+                            identifiableModelsPresent.Add(componentType.Name, LocateIdentifiableChildren<RuminantGroup>(true));
                             break;
                         case "LabourRequirement":
-                            identifiableModelsPresent.Add(componentType, LocateIdentifiableChildren<LabourRequirement>(false));
+                            identifiableModelsPresent.Add(componentType.Name, LocateIdentifiableChildren<LabourRequirement>(false));
                             break;
                         case "RuminantActivityFee":
-                            identifiableModelsPresent.Add(componentType, LocateIdentifiableChildren<RuminantActivityFee>(false));
+                            identifiableModelsPresent.Add(componentType.Name, LocateIdentifiableChildren<RuminantActivityFee>(false));
                             break;
                         default:
                             throw new NotSupportedException($"{componentType.Name} not currently supported as IdentifiableComponent");
@@ -276,9 +278,9 @@ namespace Models.CLEM.Activities
         /// <returns></returns>
         protected private IEnumerable<T> GetIdentifiableChildrenByIdentifier<T>(string identifier, bool addNewIfEmpty) where T : IIdentifiableChildModel, new()
         {
-            if (identifiableModelsPresent.ContainsKey(typeof(T)))
+            if (identifiableModelsPresent.ContainsKey(typeof(T).Name))
             {
-                if (identifiableModelsPresent[typeof(T)] is Dictionary<string, IEnumerable<T>> foundTypeDictionary)
+                if (identifiableModelsPresent[typeof(T).Name] is Dictionary<string, IEnumerable<T>> foundTypeDictionary)
                 {
                     if (foundTypeDictionary.ContainsKey(identifier))
                         return foundTypeDictionary[identifier];
@@ -317,15 +319,6 @@ namespace Models.CLEM.Activities
         }
 
         #endregion
-
-        /// <summary>An method to perform core actions when simulation commences</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("StartOfSimulation")]
-        protected virtual void OnSimulationCommencing(object sender, EventArgs e)
-        {
-            Debug.WriteLine($"StartOfSimulation for {Name}");
-        }
 
         /// <summary>A method to arrange clearing status on CLEMStartOfTimeStep event</summary>
         /// <param name="sender">The sender.</param>
