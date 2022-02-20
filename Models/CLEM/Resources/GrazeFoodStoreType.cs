@@ -53,7 +53,7 @@ namespace Models.CLEM.Resources
         /// <returns>GraxeFoodStore pool</returns>
         public GrazeFoodStorePool Pool(int index, bool getByAge)
         {
-            if(getByAge)
+            if (getByAge)
             {
                 var res = Pools.Where(a => a.Age == index);
                 if (res.Count() > 1)
@@ -75,10 +75,12 @@ namespace Models.CLEM.Resources
                     return res.FirstOrDefault();
             }
             else
+            {
                 if (index < Pools.Count())
                     return Pools[index];
                 else
                     return null;
+            }
         }
 
         /// <summary>
@@ -348,23 +350,16 @@ namespace Models.CLEM.Resources
             else
                 pools = Pools.Where(a => a.Age >= 12);
 
-            switch (property)
+            return property switch
             {
-                case "Detached":
-                    return pools.Sum(a => a.Detached);
-                case "Growth":
-                    return pools.Sum(a => a.Growth);
-                case "Consumed":
-                    return pools.Sum(a => a.Consumed);
-                case "Amount":
-                    return pools.Sum(a => a.Amount);
-                case "DMD":
-                    return pools.Sum(a => a.Amount* a.DMD)/ pools.Sum(a => a.Amount);
-                case "Nitrogen":
-                    return pools.Sum(a => a.Amount * a.Nitrogen) / pools.Sum(a => a.Amount);
-                default:
-                    throw new ApsimXException(this, "Property [" + property + "] not available for reporting pools");
-            }
+                "Detached" => pools.Sum(a => a.Detached),
+                "Growth" => pools.Sum(a => a.Growth),
+                "Consumed" => pools.Sum(a => a.Consumed),
+                "Amount" => pools.Sum(a => a.Amount),
+                "DMD" => pools.Sum(a => a.Amount * a.DMD) / pools.Sum(a => a.Amount),
+                "Nitrogen" => pools.Sum(a => a.Amount * a.Nitrogen) / pools.Sum(a => a.Amount),
+                _ => throw new ApsimXException(this, "Property [" + property + "] not available for reporting pools"),
+            };
         }
 
         /// <summary>

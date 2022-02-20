@@ -60,12 +60,6 @@ namespace Models.CLEM.Activities
         public List<ResourceRequest> ResourceRequestList { get; set; }
 
         /// <summary>
-        /// Current list of activities under this activity
-        /// </summary>
-        [JsonIgnore]
-        public List<CLEMActivityBase> ActivityList { get; set; }
-
-        /// <summary>
         /// Current status of this activity
         /// </summary>
         [JsonIgnore]
@@ -231,17 +225,10 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMStartOfTimeStep")]
         protected virtual void ResetActivityStatus(object sender, EventArgs e)
         {
-            Status = ActivityStatus.Ignored;
+            // clear Resources Required list
+            ResourceRequestList = new List<ResourceRequest>();
 
-            // clear status of all dynamically created CLEMActivityBase activities
-            if (ActivityList != null)
-            {
-                foreach (CLEMActivityBase activity in ActivityList)
-                {
-                    activity.Status = ActivityStatus.Ignored;
-                    activity.ResetActivityStatus(sender, e); //ClearActivitiesPerformedStatus();
-                }
-            }
+            Status = ActivityStatus.Ignored;
         }
 
         /// <summary>
@@ -269,13 +256,6 @@ namespace Models.CLEM.Activities
                     ActivitiesHolder?.ReportActivityPerformed(timerActivity);
                 }
             }
-
-            // call activity performed for all dynamically created CLEMActivityBase activities
-            if (ActivityList != null)
-            {
-                foreach (CLEMActivityBase activity in ActivityList)
-                    activity.ReportActivityStatus();
-            }
             // call activity performed for all children of type CLEMActivityBase
             foreach (CLEMActivityBase activity in FindAllChildren<CLEMActivityBase>())
                 activity.ReportActivityStatus();
@@ -287,8 +267,10 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMGetResourcesRequired")]
         protected virtual void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {
-            if(AllocationStyle != ResourceAllocationStyle.Manual)
+            if (AllocationStyle != ResourceAllocationStyle.Manual)
+            {
                 ManageActivityResourcesAndTasks();
+            }
         }
 
         /// <summary>
@@ -300,47 +282,32 @@ namespace Models.CLEM.Activities
             {
                 if (TimingOK)
                 {
-                    {
-                        // clear Resources Required list
-                        ResourceRequestList = new List<ResourceRequest>();
+                    // add any labour resources requirements based on method supplied by activity
+                    ResourceRequestList.AddRange(GetLabourRequiredForActivity());
 
-                        // add any labour resources requirements based on method supplied by activity
-                        ResourceRequestList.AddRange(GetLabourRequiredForActivity());
+                    // add any non-labour resources needed based on method supplied by activity
+                    var requests = DetermineResourcesForActivity();
+                    if (requests != null)
+                        ResourceRequestList.AddRange(requests);
 
-                        // add any non-labour resources needed based on method supplied by activity
-                        var requests = DetermineResourcesForActivity();
-                        if (requests != null)
-                            ResourceRequestList.AddRange(requests);
+                    // check availability
+                    CheckResources(ResourceRequestList, Guid.NewGuid());
 
-                        // check availability
-                        CheckResources(ResourceRequestList, Guid.NewGuid());
+                    // adjust if needed based on method supplied by activity
+                    AdjustResourcesForActivity();
 
-                        // adjust if needed based on method supplied by activity
-                        AdjustResourcesForActivity();
+                    // take resources
+                    bool tookRequestedResources = TakeResources(ResourceRequestList, false);
 
-                        // take resources
-                        bool tookRequestedResources = TakeResources(ResourceRequestList, false);
+                    // if no resources required perform Activity if code is present.
+                    // if resources are returned (all available or UseResourcesAvailable action) perform Activity
+                    if (tookRequestedResources || (ResourceRequestList.Count == 0))
+                        PerformTasksForActivity(); //based on method supplied by activity
 
-                        // if no resources required perform Activity if code is present.
-                        // if resources are returned (all available or UseResourcesAvailable action) perform Activity
-                        if (tookRequestedResources || (ResourceRequestList.Count == 0))
-                            PerformTasksForActivity(); //based on method supplied by activity
-                    }
-
-                    // try perform activity for dynamically created CLEMActivityBase activities
-                    // as these are not linked up to event subscriptions they need to be handled here and should not include nesting 
-                    if (ActivityList != null)
-                        foreach (CLEMActivityBase activity in ActivityList)
-                            activity.ManageActivityResourcesAndTasks();
                 }
                 else
                 {
                     this.Status = ActivityStatus.Ignored;
-                    if (ActivityList != null)
-                    {
-                        foreach (CLEMActivityBase activity in ActivityList)
-                            activity.ManageActivityResourcesAndTasks();
-                    }
                 }
             }
             else
@@ -465,8 +432,10 @@ namespace Models.CLEM.Activities
             foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == resourceType))
             {
                 if (resourceType == typeof(LabourType))
+                {
                     if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourFilterGroup).Parent as LabourRequirement).LabourShortfallAffectsActivity)
                         proportion *= item.Provided / item.Required;
+                }
                 else // all other types
                     proportion *= item.Provided / item.Required;
             }
