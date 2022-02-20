@@ -24,6 +24,7 @@ namespace Models.CLEM.Activities
     public class ActivitiesHolder: CLEMModel, IValidatableObject
     {
         private ActivityFolder timeStep = new ActivityFolder() { Name = "TimeStep", Status= ActivityStatus.NoTask };
+        private int nextUniqueID = 1;
 
         /// <summary>
         /// Last resource request that was in defecit
@@ -65,18 +66,28 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
+        /// <summary>
+        /// Create a GuID string based on next unique ID
+        /// </summary>
+        /// <returns></returns>
+        public string NextGuID
+        {
+            get 
+            {
+                int current = nextUniqueID;
+                nextUniqueID++;
+                return $"{current.ToString().PadLeft(8, '0')}-0000-0000-0000-000000000000";
+            }
+        }
+
         /// <summary>An method to perform core actions when simulation commences</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void SetUniqueActivityIDs(object sender, EventArgs e)
         {
-            int index = 0;
             foreach (var activity in FindAllDescendants<CLEMActivityBase>())
-            {
-                activity.SetGuID($"{index.ToString().PadLeft(8,'0')}-0000-0000-0000-000000000000");
-                index++;
-            }
+                activity.SetGuID(NextGuID);
         }
 
         /// <summary>A method to allow all activities to perform actions at the end of the time step</summary>
