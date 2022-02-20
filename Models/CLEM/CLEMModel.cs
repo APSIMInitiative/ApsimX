@@ -94,17 +94,17 @@ namespace Models.CLEM
             foreach (var property in model.GetType().GetProperties())
                 //Iterate through attributes of this property
                 foreach (Attribute attr in property.GetCustomAttributes(true))
+                    //So lets try to load default value to the property
                     //does this property have [DefaultValueAttribute]?
-                    if (attr is System.ComponentModel.DefaultValueAttribute)
+                    if (attr is System.ComponentModel.DefaultValueAttribute dv)
                     {
-                        //So lets try to load default value to the property
-                        System.ComponentModel.DefaultValueAttribute dv = (System.ComponentModel.DefaultValueAttribute)attr;
                         if (dv != null)
+                        {
                             if (property.PropertyType.IsEnum)
                                 property.SetValue(model, Enum.Parse(property.PropertyType, dv.Value.ToString()));
                             else
                                 property.SetValue(model, dv.Value, null);
-
+                        }
                     }
 
         }
@@ -139,11 +139,11 @@ namespace Models.CLEM
         /// return a list of components available given the specified types
         /// </summary>
         /// <param name="typesToFind">the list of types to locate</param>
-        /// <returns>A list of names of components</returns>
+        /// <returns>A list of names of components including any string item in list provided</returns>
         public IEnumerable<string> GetResourcesAvailableByName(object[] typesToFind)
         {
             List<string> results = new List<string>();
-            Zone zone = this.FindAncestor<Zone>();
+            Zone zone = FindAncestor<Zone>();
             if (!(zone is null))
             {
                 ResourcesHolder resources = zone.FindChild<ResourcesHolder>();
@@ -163,6 +163,23 @@ namespace Models.CLEM
                 }
             }
             return results.AsEnumerable();
+        }
+
+        /// <summary>
+        /// Get a list of model names given specified types as array
+        /// </summary>
+        /// <param name="typesToFind">the list of types to include</param>
+        /// <returns>A list of model names</returns>
+        public IEnumerable<string> GetNameOfModelsByType(Type[] typesToFind)
+        {
+            Simulation simulation = FindAncestor<Simulation>();
+            if (simulation is null)
+                return new List<string>().AsEnumerable();
+            else
+            {
+                List<Type> types = new List<Type>();
+                return simulation.FindAllDescendants().Where(a => typesToFind.ToList().Contains(a.GetType())).Select(a => a.Name);
+            }
         }
 
         /// <summary>

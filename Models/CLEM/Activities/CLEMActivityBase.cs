@@ -195,23 +195,6 @@ namespace Models.CLEM.Activities
                 Status = ActivityStatus.Success;
         }
 
-        /// <summary>
-        /// Get a list of model names given specified types as array
-        /// </summary>
-        /// <param name="typesToFind">the list of types to include</param>
-        /// <returns>A list of model names</returns>
-        public IEnumerable<string> GetNameOfModelsByType(Type[] typesToFind)
-        {
-            Simulation simulation = this.FindAncestor<Simulation>();
-            if (simulation is null)
-                return new List<string>().AsEnumerable();
-            else
-            {
-                List<Type> types =  new List<Type>();
-                return simulation.FindAllDescendants().Where(a => typesToFind.ToList().Contains(a.GetType())).Select(a => a.Name);
-            }
-        }
-
         #region Identifiable child model handling
 
         /// <summary>
