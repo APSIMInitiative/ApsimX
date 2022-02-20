@@ -51,8 +51,15 @@ namespace Models.CLEM.Groupings
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
             this.SetDefaults();
-            if (!ParentSuppliedIdentifiers().Contains(Identifier))
-                Identifier = "";
+        }
+
+        /// <inheritdoc/>
+        public List<string> ParentSuppliedIdentifiers()
+        {
+            if (Parent is ICanHandleIdentifiableChildModels)
+                return (Parent as ICanHandleIdentifiableChildModels).IdentifiableChildModelIdentifiers<RuminantGroup>();
+            else
+                return new List<string>();
         }
 
         #region descriptive summary
@@ -67,18 +74,6 @@ namespace Models.CLEM.Groupings
         public override string ModelSummaryClosingTags()
         {
             return "";
-        }
-
-        /// <summary>
-        /// A method to return the list of identifiers relavent to this ruminant group
-        /// </summary>
-        /// <returns>A list of identifiers as stings</returns>
-        public List<string> ParentSuppliedIdentifiers()
-        {
-            if(Parent is ICanHandleIdentifiableChildModels)
-                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelIdentifiers<RuminantGroup>();
-            else
-                return new List<string>();
         }
 
         /// <inheritdoc/>
@@ -103,16 +98,14 @@ namespace Models.CLEM.Groupings
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            var identifiers = ParentSuppliedIdentifiers();
-            if(identifiers.Any() & Identifier == "")
+            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
             {
-                string[] memberNames = new string[] { "Ruminant group" };
-                results.Add(new ValidationResult($"The group identifier [BLANK] in [f={this.Name}] is not valid for the parent activity [a={Parent.Name}].{Environment.NewLine}Select an option from the list or provide an empty value for the property if no entries are provided", memberNames));
-            }
-            if (identifiers.Any() & !identifiers.Contains(Identifier))
-            {
-                string[] memberNames = new string[] { "Ruminant group" };
-                results.Add(new ValidationResult($"The group identifier [{Identifier}] in [f={this.Name}] is not valid for the parent activity [a={Parent.Name}].{Environment.NewLine}Select an option from the list or provide an empty value for the property if no entries are provided", memberNames));
+                var identifiers = ParentSuppliedIdentifiers();
+                if (identifiers.Any() & !identifiers.Contains(Identifier))
+                {
+                    string[] memberNames = new string[] { "Ruminant group" };
+                    results.Add(new ValidationResult($"The group identifier [{((Identifier == "") ? "BLANK" : Identifier)}] in [f={this.Name}] is not valid for the parent activity [a={Parent.Name}].{Environment.NewLine}Select an option from the list or provide an empty value for the property if no entries are provided", memberNames));
+                }
             }
             return results;
         }

@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     [Description("Define a herd expense for herd management activities")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFee.htm")]
-    public class RuminantActivityFee: CLEMModel, IIdentifiableChildModel
+    public class RuminantActivityFee: CLEMModel, IIdentifiableChildModel, IValidatableObject
     {
         [Link]
         private ResourcesHolder resources = null;
@@ -88,6 +88,38 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
             TransactionCategory = "Livestock.[Activity]";
         }
+
+        /// <inheritdoc/>
+        public List<string> ParentSuppliedIdentifiers()
+        {
+            if (Parent is ICanHandleIdentifiableChildModels)
+                return (Parent as ICanHandleIdentifiableChildModels).IdentifiableChildModelIdentifiers<RuminantActivityFee>();
+            else
+                return new List<string>();
+        }
+
+
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
+            {
+                var identifiers = ParentSuppliedIdentifiers();
+                if (identifiers.Any() & !identifiers.Contains(Identifier))
+                {
+                    string[] memberNames = new string[] { "Ruminant activity fee" };
+                    results.Add(new ValidationResult($"The fee identifier [{((Identifier == "") ? "BLANK" : Identifier)}] in [f={this.Name}] is not valid for the parent activity [a={Parent.Name}].{Environment.NewLine}Select an option from the list or provide an empty value for the property if no entries are provided", memberNames));
+                }
+            }
+            return results;
+        }
+        #endregion
 
         #region descriptive summary
 

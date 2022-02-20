@@ -7,10 +7,10 @@ namespace Models.CLEM.Interfaces
     internal interface ICanHandleIdentifiableChildModels
     {
         /// <summary>
-        /// A method to get a list of activity specific identifiers for a given type of Identifiable child model
+        /// A method to return the list of identifiers provided by the parent activity for the given identifiable child model type
         /// </summary>
-        /// <typeparam name="T">Identifiable child model type</typeparam>
-        /// <returns>A list of identifiers as strings</returns>
-        List<string> DefineIdentifiableChildModelIdentifiers<T>() where T : IIdentifiableChildModel;
+        /// <typeparam name="T">Type of identifiable child model</typeparam>
+        /// <returns>List of identifiers provided</returns>
+        List<string> IdentifiableChildModelIdentifiers<T>() where T : IIdentifiableChildModel;
     }
 }

@@ -347,7 +347,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public List<string> DefineWorkerChildrenIdentifiers<T>()
+        public override List<string> DefineIdentifiableChildModelIdentifiers<T>()
         {
             if (typeof(T) == typeof(RuminantGroup))
             {

@@ -199,6 +199,15 @@ namespace Models.CLEM.Activities
             return;            
         }
 
+        /// <inheritdoc/>
+        public List<string> ParentSuppliedIdentifiers()
+        {
+            if (Parent is ICanHandleIdentifiableChildModels)
+                return (Parent as ICanHandleIdentifiableChildModels).IdentifiableChildModelIdentifiers<LabourRequirement>();
+            else
+                return new List<string>();
+        }
+
         #region validation
 
         /// <summary>

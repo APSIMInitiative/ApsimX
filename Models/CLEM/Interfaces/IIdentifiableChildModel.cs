@@ -14,6 +14,12 @@ namespace Models.CLEM.Interfaces
         /// Identifier of this component 
         /// </summary>
         string Identifier { get; set; }
+
+        /// <summary>
+        /// A method to return the list of identifiers relavent to this ruminant group
+        /// </summary>
+        /// <returns>A list of identifiers as stings</returns>
+        List<string> ParentSuppliedIdentifiers();
     }
 }
 
