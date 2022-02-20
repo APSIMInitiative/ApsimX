@@ -330,9 +330,13 @@ namespace Models.CLEM.Resources
         }
 
         ///<inheritdoc/>
-        [EventSubscribe("Commencing")]
-        private new void OnSimulationCommencing(object sender, EventArgs e)
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
+            // clear purchased individuals at start of time step as there is no carryover
+            // this is not the responsibility of any activity as we cannbe assured of what activities will be run.
+            if (PurchaseIndividuals != null)
+                PurchaseIndividuals.Clear();
         }
 
         /// <summary>
