@@ -450,11 +450,13 @@ namespace Models.CLEM
             DefaultErrorMessage += " (expecting " + numberOfArrayItems.ToString() + " values)";
             string[] memberNames = new string[] { validationContext.MemberName };
 
-            if(value.GetType().IsArray)
+            if (value.GetType().IsArray)
+            {
                 if ((value as Array).Length == numberOfArrayItems)
                     return ValidationResult.Success;
                 else
                     return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
+            }
             else
                 return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
         }

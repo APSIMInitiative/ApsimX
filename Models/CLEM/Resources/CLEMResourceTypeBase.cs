@@ -150,10 +150,12 @@ namespace Models.CLEM.Resources
                     {
                         string market = "";
                         if ((this.Parent.Parent as ResourcesHolder).MarketPresent)
+                        {
                             if (!(this.EquivalentMarketStore is null))
                                 market = this.EquivalentMarketStore.CLEMParentName + ".";
                             else
                                 market = this.CLEMParentName + ".";
+                        }
 
                         string warn = $"Cannot report the value of {((converterName.Contains("gain"))?"gains":"losses")} for [r={market}{this.Parent.Name}.{this.Name}]";
                         warn += $" in [o=ResourceLedger] as no [{((converterName.Contains("gain")) ? "purchase" : "sale")}] pricing has been provided.";

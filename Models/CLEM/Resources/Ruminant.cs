@@ -278,25 +278,28 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if(this.IsSuckling)
+                if (this.IsSuckling)
                     return "Suckling";
-                else if(this.IsWeaner)
+                else if (this.IsWeaner)
                     return "Weaner";
                 else
                 {
-                    if(this is RuminantFemale)
+                    if (this is RuminantFemale)
+                    {
                         if ((this as RuminantFemale).IsPreBreeder)
                             return "PreBreeder";
                         else
                             return "Breeder";
+                    }
                     else
-                        if((this as RuminantMale).IsSire)
+                    {
+                        if ((this as RuminantMale).IsSire)
                             return "Sire";
-                        else if((this as RuminantMale).IsCastrated)
+                        else if ((this as RuminantMale).IsCastrated)
                             return "Castrate";
                         else
                         {
-                            if((this as RuminantMale).IsWildBreeder)
+                            if ((this as RuminantMale).IsWildBreeder)
                             {
                                 return "Breeder";
                             }
@@ -305,6 +308,7 @@ namespace Models.CLEM.Resources
                                 return "PreBreeder";
                             }
                         }
+                    }
                 }
             }
         }
@@ -576,14 +580,12 @@ namespace Models.CLEM.Resources
             }
             if (report)
             {
+                RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
                 {
-                    RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
-                    {
-                        RumObj = this,
-                        Category = reason
-                    };
-                    (this.BreedParams.Parent as RuminantHerd).OnWeanOccurred(args);
-                }
+                    RumObj = this,
+                    Category = reason
+                };
+                (this.BreedParams.Parent as RuminantHerd).OnWeanOccurred(args);
             }
 
         }

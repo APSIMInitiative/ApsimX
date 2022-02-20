@@ -272,13 +272,17 @@ namespace Models.CLEM.Resources
         {
             // Remove mother ID from any suckling offspring
             if (ind.Sex == Sex.Female)
+            {
                 foreach (var offspring in (ind as RuminantFemale).SucklingOffspringList)
                     offspring.Mother = null;
+            }
 
             // if sold and unweaned set mothers weaning count + 1 as effectively weaned in process and not death
             if (!ind.Weaned & !ind.SaleFlag.ToString().Contains("Died"))
-                if(ind.Mother != null)
+            {
+                if (ind.Mother != null)
                     ind.Mother.NumberOfWeaned++;
+            }
 
             Herd.Remove(ind);
             LastIndividualChanged = ind;

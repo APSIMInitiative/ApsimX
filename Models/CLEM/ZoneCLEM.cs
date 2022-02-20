@@ -134,7 +134,8 @@ namespace Models.CLEM
         {
             // if auto create summary 
             if (AutoCreateDescriptiveSummary)
-            if (!File.Exists(wholeSimulationSummaryFile))
+            {
+                if (!File.Exists(wholeSimulationSummaryFile))
                     System.IO.File.WriteAllText(wholeSimulationSummaryFile, CLEMModel.CreateDescriptiveSummaryHTML(this, false, false, (sender as Simulation).FileName));
                 else
                 {
@@ -151,6 +152,7 @@ namespace Models.CLEM
                         }
                     }
                 }
+            }
         }
 
 
@@ -240,18 +242,20 @@ namespace Models.CLEM
                 ReportInvalidParameters(this);
 
             if (clock.StartDate.Year > 1) // avoid checking if clock not set.
-            if ((int)EcologicalIndicatorsCalculationMonth >= clock.StartDate.Month)
             {
-                DateTime trackDate = new DateTime(clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, clock.StartDate.Day);
-                while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= clock.Today)
-                    trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
-                EcologicalIndicatorsNextDueDate = trackDate;
-            }
-            else
-            {
-                EcologicalIndicatorsNextDueDate = new DateTime(clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, clock.StartDate.Day);
-                while (clock.StartDate > EcologicalIndicatorsNextDueDate)
-                    EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
+                if ((int)EcologicalIndicatorsCalculationMonth >= clock.StartDate.Month)
+                {
+                    DateTime trackDate = new DateTime(clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, clock.StartDate.Day);
+                    while (trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval) >= clock.Today)
+                        trackDate = trackDate.AddMonths(-EcologicalIndicatorsCalculationInterval);
+                    EcologicalIndicatorsNextDueDate = trackDate;
+                }
+                else
+                {
+                    EcologicalIndicatorsNextDueDate = new DateTime(clock.StartDate.Year, (int)EcologicalIndicatorsCalculationMonth, clock.StartDate.Day);
+                    while (clock.StartDate > EcologicalIndicatorsNextDueDate)
+                        EcologicalIndicatorsNextDueDate = EcologicalIndicatorsNextDueDate.AddMonths(EcologicalIndicatorsCalculationInterval);
+                }
             }
         }
 
@@ -467,13 +471,15 @@ namespace Models.CLEM
                 htmlWriter.Write($"<span class=\"setvalue\">{ClimateRegion}</span></div>");
 
                 ResourcesHolder resources = this.FindChild<ResourcesHolder>();
-                if(resources != null)
+                if (resources != null)
+                {
                     if (resources.FoundMarket != null)
                     {
                         htmlWriter.Write("\r\n<div class=\"activityentry\">");
                         htmlWriter.Write("This farm represents ");
                         htmlWriter.Write($"<span class=\"setvalue\">{FarmMultiplier}</span></div> farm(s) when trading with the Market</div>");
                     }
+                }
 
                 if ((this.FindDescendant<RuminantActivityGrazeAll>() != null) || (this.FindDescendant<RuminantActivityGrazePasture>() != null) || (this.FindDescendant<RuminantActivityGrazePastureHerd>() != null))
                 {

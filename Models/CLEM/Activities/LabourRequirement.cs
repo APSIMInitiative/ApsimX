@@ -212,9 +212,8 @@ namespace Models.CLEM.Activities
             Labour lab = Resources.FindResource<Labour>();
             if (lab == null)
                 Summary.WriteMessage(this, "[a=" + this.Parent.Name + "][f=" + this.Name + "] No labour resorces in simulation. Labour requirement will be ignored.", MessageType.Warning);
-            else
-                if (lab.Children.Count <= 0)
-                    Summary.WriteMessage(this, "[a=" + this.Parent.Name + "][f=" + this.Name + "] No labour resorce types are provided in the labour resource. Labour requirement will be ignored.", MessageType.Warning);
+            else if (lab.Children.Count <= 0)
+                Summary.WriteMessage(this, "[a=" + this.Parent.Name + "][f=" + this.Name + "] No labour resorce types are provided in the labour resource. Labour requirement will be ignored.", MessageType.Warning);
 
             // check filter groups present
             if (this.Children.OfType<LabourFilterGroup>().Count() == 0)

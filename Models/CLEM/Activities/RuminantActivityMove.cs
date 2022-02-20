@@ -157,8 +157,10 @@ namespace Models.CLEM.Activities
         {
             // check if labour provided or PartialResources allowed
             if (this.TimingOK)
+            {
                 if ((this.Status == ActivityStatus.Success || this.Status == ActivityStatus.NotNeeded) || (this.Status == ActivityStatus.Partial && this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
                     Move();
+            }
             else
                 Status = ActivityStatus.Ignored;
         }

@@ -279,9 +279,9 @@ namespace Models.CLEM.Groupings
                         }
                     }
                     else
-                        filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                        filterWriter.Write($" {DisplaySummaryValueSnippet(OperatorToSymbol(), "Unknown operator", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
 
-                    filterWriter.Write($" {CLEMModel.DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
+                    filterWriter.Write($" {DisplaySummaryValueSnippet(Value?.ToString(), "No value", HTMLSummaryStyle.Filter, htmlTags: htmltags)}");
                 }
                 return filterWriter.ToString();
             }

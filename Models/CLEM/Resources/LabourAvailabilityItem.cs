@@ -62,8 +62,12 @@ namespace Models.CLEM.Resources
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     if (Value <= 0)
                         htmlWriter.Write("<span class=\"errorlink\">" + Value.ToString() + "</span>");
-                    else if (Value > 0)
-                        htmlWriter.Write("<span class=\"setvalue\">" + Value.ToString() + "</span> x ");
+                    else
+                    {
+                        if (Value > 0)
+                            htmlWriter.Write("<span class=\"setvalue\">" + Value.ToString() + "</span> x ");
+                    }
+
                     htmlWriter.Write(" days available each month</div>");
                 }
                 return htmlWriter.ToString(); 

@@ -140,10 +140,12 @@ namespace Models.CLEM.Activities
                         if (accnt.InterestRateCharged == 0 & accnt.InterestRatePaid == 0)
                             htmlWriter.Write("\r\n<div class=\"activityentry\">This activity is not needed for <span class=\"resourcelink\">" + accnt.Name + "</span> as no interest rates are set.</div>");
                         else
+                        {
                             if (accnt.InterestRateCharged > 0)
                                 htmlWriter.Write($"\r\n<div class=\"activityentry\">This activity will calculate interest charged for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRateCharged.ToString("#.00") + "</span>%</div>");
                             else
                                 htmlWriter.Write($"\r\n<div class=\"activityentry\">This activity will calculate interest paid for <span class=\"resourcelink\">" + accnt.Name + "</span> at a rate of <span class=\"setvalue\">" + accnt.InterestRatePaid.ToString("#.00") + "</span>%</div>");
+                        }
                     }
                 }
                 return htmlWriter.ToString(); 

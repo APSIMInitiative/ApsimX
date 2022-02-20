@@ -305,8 +305,10 @@ namespace Models.CLEM
                             throw new Exception($"Cannot find Amount column [o={AmountColumnName}] in resource file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                 }
                 else
+                {
                     if (this.reader.IsExcelFile != true)
                         this.reader.SeekToDate(this.reader.FirstDate);
+                }
 
                 return true;
             }
@@ -336,15 +338,17 @@ namespace Models.CLEM
                 {
                     htmlWriter.Write("Using <span class=\"errorlink\">FILE NOT SET</span>");
                 }
-                else if (!this.FileExists)
-                {
-                    htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
-                }
                 else
                 {
-                    htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
+                    if (!this.FileExists)
+                    {
+                        htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
+                    }
+                    else
+                    {
+                        htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
+                    }
                 }
-
                 if (FileName != null && FileName.Contains(".xls"))
                 {
                     if (ExcelWorkSheetName == null || ExcelWorkSheetName == "")

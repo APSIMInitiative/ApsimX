@@ -225,17 +225,20 @@ namespace Models.CLEM
                     break;
             }
 
-            if(htmlTags)
+            if (htmlTags)
+            {
                 if (value != null && value != "")
                     return $"<span class=\"{spanClass}\">{value}</span>";
                 else
                     return $"<span class=\"{errorClass}\">{errorString}</span>";
+            }
             else
+            {
                 if (value != null && value != "")
-                return value.ToString();
-            else
-                return errorString;
-
+                    return value.ToString();
+                else
+                    return errorString;
+            }
         }
 
         /// <summary>

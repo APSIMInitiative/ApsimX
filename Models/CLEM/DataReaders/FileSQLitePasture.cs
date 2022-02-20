@@ -814,112 +814,115 @@ namespace Models.CLEM
                     htmlWriter.Write("Using <span class=\"errorlink\">[FILE NOT SET]</span>");
                     htmlWriter.Write("\r\n</div>");
                 }
-                else if (!this.FileExists)
-                {
-                    htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
-                    htmlWriter.Write("\r\n</div>");
-                }
                 else
                 {
-                    htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
-                    htmlWriter.Write("\r\n</div>");
-
-                    // Add table name
-                    htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
-                    htmlWriter.Write("Using table <span class=\"filelink\">" + TableName + "</span>");
-                    // add column links
-                    htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
-
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Region id</span> is ");
-                    if (RegionColumnName is null || RegionColumnName == "")
-                        htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                    else
-                        htmlWriter.Write("<span class=\"setvalue\">" + RegionColumnName + "</span></div>");
-
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is ");
-                    if (LandIdColumnName is null || LandIdColumnName == "")
-                        htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                    else
-                        htmlWriter.Write("<span class=\"setvalue\">" + LandIdColumnName + "</span></div>");
-
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Grass basal area</span> is ");
-                    if (GrassBAColumnName is null || GrassBAColumnName == "")
-                        htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                    else
-                        htmlWriter.Write("<span class=\"setvalue\">" + GrassBAColumnName + "</span></div>");
-
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land condition</span> is ");
-                    if (LandConColumnName is null || LandConColumnName == "")
-                        htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                    else
-                        htmlWriter.Write("<span class=\"setvalue\">" + LandConColumnName + "</span></div>");
-
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Stocking rate</span> is ");
-                    if (StkRateColumnName is null || StkRateColumnName == "")
-                        htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                    else
-                        htmlWriter.Write("<span class=\"setvalue\">" + StkRateColumnName + "</span></div>");
-
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ");
-                    if (YearColumnName is null || YearColumnName == "")
-                        htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                    else
-                        htmlWriter.Write("<span class=\"setvalue\">" + YearColumnName + "</span></div>");
-
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
-                    if (MonthColumnName is null || MonthColumnName == "")
-                        htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                    else
-                        htmlWriter.Write("<span class=\"setvalue\">" + MonthColumnName + "</span></div>");
-
-                    htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Growth</span> is ");
-                    if (GrowthColumnName is null || GrowthColumnName == "")
-                        htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
-                    else
-                        htmlWriter.Write("<span class=\"setvalue\">" + GrowthColumnName + "</span></div>");
-
-                    // other data columns
-                    if (ErosionColumnName is null || ErosionColumnName == "")
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">No erosion data will be obtained from database</div>");
+                    if (!this.FileExists)
+                    {
+                        htmlWriter.Write("The file <span class=\"errorlink\">" + FullFileName + "</span> could not be found");
+                        htmlWriter.Write("\r\n</div>");
+                    }
                     else
                     {
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">Erosion data will be obtained from column named ");
-                        htmlWriter.Write("<span class=\"setvalue\">" + ErosionColumnName + "</span></div>");
-                    }
+                        htmlWriter.Write("Using <span class=\"filelink\">" + FileName + "</span>");
+                        htmlWriter.Write("\r\n</div>");
 
-                    if (RunoffColumnName is null || RunoffColumnName == "")
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">No runoff data will be obtained from database</div>");
-                    else
-                    {
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">Runoff data will be obtained from column named ");
-                        htmlWriter.Write("<span class=\"setvalue\">" + RunoffColumnName + "</span></div>");
-                    }
+                        // Add table name
+                        htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
+                        htmlWriter.Write("Using table <span class=\"filelink\">" + TableName + "</span>");
+                        // add column links
+                        htmlWriter.Write("\r\n<div class=\"activityentry\" style=\"Margin-left:15px;\">");
 
-                    if (RainfallColumnName is null || RainfallColumnName == "")
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">No rainfall data will be obtained from database</div>");
-                    else
-                    {
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">Rainfall data will be obtained from column named ");
-                        htmlWriter.Write("<span class=\"setvalue\">" + RainfallColumnName + "</span></div>");
-                    }
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Region id</span> is ");
+                        if (RegionColumnName is null || RegionColumnName == "")
+                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                        else
+                            htmlWriter.Write("<span class=\"setvalue\">" + RegionColumnName + "</span></div>");
 
-                    if (CoverColumnName is null || CoverColumnName == "")
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">No cover data will be obtained from database</div>");
-                    else
-                    {
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">Cover data will be obtained from column named ");
-                        htmlWriter.Write("<span class=\"setvalue\">" + CoverColumnName + "</span></div>");
-                    }
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land id</span> is ");
+                        if (LandIdColumnName is null || LandIdColumnName == "")
+                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                        else
+                            htmlWriter.Write("<span class=\"setvalue\">" + LandIdColumnName + "</span></div>");
 
-                    if (TBAColumnName is null || TBAColumnName == "")
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">No tree basal area data will be obtained from database</div>");
-                    else
-                    {
-                        htmlWriter.Write("\r\n<div class=\"activityentry\">Tree basal area data will be obtained from column named ");
-                        htmlWriter.Write("<span class=\"setvalue\">" + TBAColumnName + "</span></div>");
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Grass basal area</span> is ");
+                        if (GrassBAColumnName is null || GrassBAColumnName == "")
+                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                        else
+                            htmlWriter.Write("<span class=\"setvalue\">" + GrassBAColumnName + "</span></div>");
+
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Land condition</span> is ");
+                        if (LandConColumnName is null || LandConColumnName == "")
+                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                        else
+                            htmlWriter.Write("<span class=\"setvalue\">" + LandConColumnName + "</span></div>");
+
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Stocking rate</span> is ");
+                        if (StkRateColumnName is null || StkRateColumnName == "")
+                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                        else
+                            htmlWriter.Write("<span class=\"setvalue\">" + StkRateColumnName + "</span></div>");
+
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Year</span> is ");
+                        if (YearColumnName is null || YearColumnName == "")
+                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                        else
+                            htmlWriter.Write("<span class=\"setvalue\">" + YearColumnName + "</span></div>");
+
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Month</span> is ");
+                        if (MonthColumnName is null || MonthColumnName == "")
+                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                        else
+                            htmlWriter.Write("<span class=\"setvalue\">" + MonthColumnName + "</span></div>");
+
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">Column name for <span class=\"filelink\">Growth</span> is ");
+                        if (GrowthColumnName is null || GrowthColumnName == "")
+                            htmlWriter.Write("<span class=\"errorlink\">NOT SET</span></div>");
+                        else
+                            htmlWriter.Write("<span class=\"setvalue\">" + GrowthColumnName + "</span></div>");
+
+                        // other data columns
+                        if (ErosionColumnName is null || ErosionColumnName == "")
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">No erosion data will be obtained from database</div>");
+                        else
+                        {
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">Erosion data will be obtained from column named ");
+                            htmlWriter.Write("<span class=\"setvalue\">" + ErosionColumnName + "</span></div>");
+                        }
+
+                        if (RunoffColumnName is null || RunoffColumnName == "")
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">No runoff data will be obtained from database</div>");
+                        else
+                        {
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">Runoff data will be obtained from column named ");
+                            htmlWriter.Write("<span class=\"setvalue\">" + RunoffColumnName + "</span></div>");
+                        }
+
+                        if (RainfallColumnName is null || RainfallColumnName == "")
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">No rainfall data will be obtained from database</div>");
+                        else
+                        {
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">Rainfall data will be obtained from column named ");
+                            htmlWriter.Write("<span class=\"setvalue\">" + RainfallColumnName + "</span></div>");
+                        }
+
+                        if (CoverColumnName is null || CoverColumnName == "")
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">No cover data will be obtained from database</div>");
+                        else
+                        {
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">Cover data will be obtained from column named ");
+                            htmlWriter.Write("<span class=\"setvalue\">" + CoverColumnName + "</span></div>");
+                        }
+
+                        if (TBAColumnName is null || TBAColumnName == "")
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">No tree basal area data will be obtained from database</div>");
+                        else
+                        {
+                            htmlWriter.Write("\r\n<div class=\"activityentry\">Tree basal area data will be obtained from column named ");
+                            htmlWriter.Write("<span class=\"setvalue\">" + TBAColumnName + "</span></div>");
+                        }
+                        htmlWriter.Write("\r\n</div>");
+                        htmlWriter.Write("\r\n</div>");
                     }
-                    htmlWriter.Write("\r\n</div>");
-                    htmlWriter.Write("\r\n</div>");
                 }
                 if (MissingDataAction == OnMissingResourceActionTypes.Ignore)
                     htmlWriter.Write("\r\n<div class=\"warningbanner\">CAUTION: The simulation will assume no production and associated monthly values such as rainfall if any monthly pasture production entries are missing. You will not be alerted to this possible problem with the pasture database. It is suggested that you run your simulation with another setting of MissingDataAction to check the database when setting up your simulation.</div>");

@@ -264,8 +264,10 @@ namespace Models.CLEM
                             throw new Exception($"Cannot find Date column [o={DateColumnName ?? "Empty"}] in Pricing file [x=" + this.FullFileName.Replace("\\", "\\&shy;") + "]" + $" for [x={this.Name}]");
                 }
                 else
+                {
                     if (this.reader.IsExcelFile != true)
                         this.reader.SeekToDate(this.reader.FirstDate);
+                }
                 return true;
             }
             else

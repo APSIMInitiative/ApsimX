@@ -119,19 +119,23 @@ namespace Models.CLEM.Resources
                     break;
                 case AttributeInheritanceStyle.LeastBothParents:
                     if (StoredValue != null & StoredMateValue != null)
+                    {
                         if (this.Value <= this.MateValue)
                             newAttribute.StoredValue = StoredValue;
                         else
                             newAttribute.StoredValue = StoredMateValue;
+                    }
                     else
                         return null;
                     break;
                 case AttributeInheritanceStyle.GreatestBothParents:
                     if (StoredValue != null & StoredValue != null)
+                    {
                         if (Value >= MateValue)
                             newAttribute.StoredValue = StoredValue;
                         else
                             newAttribute.StoredValue = StoredMateValue;
+                    }
                     else
                         return null;
                     break;

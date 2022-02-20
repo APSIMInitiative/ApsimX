@@ -149,41 +149,43 @@ namespace Models.CLEM
 
                 if (XValues is null || XValues.Length == 0)
                     htmlWriter.Write("<span class=\"errorlink\">No x values provided</span>");
-                else if (YValues is null || XValues.Length != YValues.Length)
-                    htmlWriter.Write("<span class=\"errorlink\">Number of x values does not equal number of y values</span>");
                 else
                 {
-                    htmlWriter.Write(@"
-                <canvas id=""myChart_" + this.Name + @"""><p>Unable to display graph in browser</p></canvas>
-                <script>
-                var ctx = document.getElementById('myChart_" + this.Name + @"').getContext('2d');
-                var myChart = new Chart(ctx, {
-                    responsive:false,
-                    maintainAspectRatio: true,
-                    type: 'scatter',
-                    data: {
-                        datasets: [{
-                            data: [");
-                    string data = "";
-                    for (int i = 0; i < XValues.Length; i++)
-                        if (YValues.Length > i)
-                            data += "{ x: " + XValues[i].ToString() + ", y: " + YValues[i] + "},";
+                    if (YValues is null || XValues.Length != YValues.Length)
+                        htmlWriter.Write("<span class=\"errorlink\">Number of x values does not equal number of y values</span>");
+                    else
+                    {
+                        htmlWriter.Write(@"
+                        <canvas id=""myChart_" + this.Name + @"""><p>Unable to display graph in browser</p></canvas>
+                        <script>
+                        var ctx = document.getElementById('myChart_" + this.Name + @"').getContext('2d');
+                        var myChart = new Chart(ctx, {
+                        responsive:false,
+                        maintainAspectRatio: true,
+                        type: 'scatter',
+                        data: {
+                            datasets: [{
+                                data: [");
+                        string data = "";
+                        for (int i = 0; i < XValues.Length; i++)
+                            if (YValues.Length > i)
+                                data += "{ x: " + XValues[i].ToString() + ", y: " + YValues[i] + "},";
 
-                    data = data.TrimEnd(',');
-                    htmlWriter.Write(data);
-                    htmlWriter.Write(@"],
-                     pointBackgroundColor: '[GraphPointColour]',
-                     pointBorderColor: '[GraphPointColour]',
-                     borderColor: '[GraphLineColour]', 
-                     pointRadius: 5,
-                     pointHoverRadius: 5,
-                     fill: false,
-                     tension: 0,
-                     showLine: true,
-                     steppedLine: " + (CalculationMethod == RelationshipCalculationMethod.UseSpecifiedValues).ToString().ToLower() + @",
+                        data = data.TrimEnd(',');
+                        htmlWriter.Write(data);
+                        htmlWriter.Write(@"],
+                        pointBackgroundColor: '[GraphPointColour]',
+                        pointBorderColor: '[GraphPointColour]',
+                        borderColor: '[GraphLineColour]', 
+                        pointRadius: 5,
+                        pointHoverRadius: 5,
+                        fill: false,
+                        tension: 0,
+                        showLine: true,
+                        steppedLine: " + (CalculationMethod == RelationshipCalculationMethod.UseSpecifiedValues).ToString().ToLower() + @",
                         }]
-                    },
-                    options: {
+                        },
+                        options: {
                             legend: {
                                 display: false
                             },
@@ -201,41 +203,42 @@ namespace Models.CLEM
                                        color: '[GraphGridLineColour]',
                                        drawOnChartArea: true
                                     }");
-                    if (this.NameOfXVariable != null && this.NameOfXVariable != "")
-                    {
-                        htmlWriter.Write(@", 
-                                      scaleLabel: {
-                                       display: true,
-                                       labelString: '" + this.NameOfXVariable + @"'
-                                      }");
-                    }
-                    htmlWriter.Write(@"}],
-                                yAxes: [{
-                                    type: 'linear',
-                                    gridLines: {
-                                       zeroLineColor: '[GraphGridZeroLineColour]',
-                                       zeroLineWidth: 1,
-                                       zeroLineBorderDash: [3, 3],
-                                       color: '[GraphGridLineColour]',
-                                       drawOnChartArea: true
-                                    },
-                                    ticks: {
-                                      fontColor: '[GraphLabelColour]',
-                                      fontSize: 13,
-                                      padding: 3
-                                    }");
-                    if (this.NameOfYVariable != null && this.NameOfYVariable != "")
-                    {
-                        htmlWriter.Write(@", scaleLabel: {
-                                      display: true,
-                                      labelString: '" + this.NameOfYVariable + @"'
-                                    }");
-                    }
-                    htmlWriter.Write(@"}],
+                        if (this.NameOfXVariable != null && this.NameOfXVariable != "")
+                        {
+                            htmlWriter.Write(@", 
+                            scaleLabel: {
+                            display: true,
+                            labelString: '" + this.NameOfXVariable + @"'
+                            }");
+                        }
+                        htmlWriter.Write(@"}],
+                        yAxes: [{
+                            type: 'linear',
+                            gridLines: {
+                                zeroLineColor: '[GraphGridZeroLineColour]',
+                                zeroLineWidth: 1,
+                                zeroLineBorderDash: [3, 3],
+                                color: '[GraphGridLineColour]',
+                                drawOnChartArea: true
+                            },
+                            ticks: {
+                                fontColor: '[GraphLabelColour]',
+                                fontSize: 13,
+                                padding: 3
+                            }");
+                        if (this.NameOfYVariable != null && this.NameOfYVariable != "")
+                        {
+                            htmlWriter.Write(@", scaleLabel: {
+                            display: true,
+                            labelString: '" + this.NameOfYVariable + @"'
+                        }");
+                        }
+                        htmlWriter.Write(@"}],
                             }
                            }
                         });
-                </script>");
+                        </script>");
+                    }
                 }
                 htmlWriter.Write("\r\n</div>");
                 return htmlWriter.ToString(); 

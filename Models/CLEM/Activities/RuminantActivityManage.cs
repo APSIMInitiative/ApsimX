@@ -1307,10 +1307,13 @@ namespace Models.CLEM.Activities
                     string adjusted = "";
                     if (AdjustBreedingFemalesAtStartup & AdjustBreedingMalesAtStartup)
                         adjusted = "females and males";
-                    else if (AdjustBreedingFemalesAtStartup)
-                        adjusted = "females";
-                    else if (AdjustBreedingFemalesAtStartup)
-                        adjusted = "males";
+                    else
+                    {
+                        if (AdjustBreedingFemalesAtStartup)
+                            adjusted = "females";
+                        else
+                            adjusted = "males";
+                    }
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     htmlWriter.Write($"The initial number of breeding <span class=\"setvalue\">{adjusted}</span> will be adjusted to the maximum herd defined below by scaling the initial population defined by the ruminant cohorts");
                     htmlWriter.Write("</div>");

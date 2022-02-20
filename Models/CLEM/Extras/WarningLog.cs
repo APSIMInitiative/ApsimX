@@ -24,11 +24,13 @@ namespace Models.CLEM
         /// <returns>A shared WarningLog</returns>
         public static WarningLog GetInstance(int maxEntries)
         {
-            if(instance == null)
+            if (instance == null)
                 instance = new WarningLog(maxEntries);
             else
-                if(maxEntries > instance.maxCount)
+            {
+                if (maxEntries > instance.maxCount)
                     instance.maxCount = maxEntries;
+            }
 
             return instance;
         }
