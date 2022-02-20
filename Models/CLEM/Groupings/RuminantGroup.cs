@@ -22,19 +22,20 @@ namespace Models.CLEM.Groupings
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ReportRuminantHerd))]
     [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
-    [ValidParent(ParentType = typeof(RuminantActivityManage))]
-    [ValidParent(ParentType = typeof(RuminantActivityPredictiveStocking))]
-    [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
-    [ValidParent(ParentType = typeof(RuminantActivityMove))]
-    [ValidParent(ParentType = typeof(RuminantActivityMarkForSale))]
-    [ValidParent(ParentType = typeof(RuminantActivityWean))]
-    [ValidParent(ParentType = typeof(RuminantActivityTag))]
+    [ValidParent(ParentType = typeof(ICanHandleIdentifiableChildModels))]
+    //[ValidParent(ParentType = typeof(RuminantActivityManage))]
+    //[ValidParent(ParentType = typeof(RuminantActivityPredictiveStocking))]
+    //[ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
+    //[ValidParent(ParentType = typeof(RuminantActivityMove))]
+    //[ValidParent(ParentType = typeof(RuminantActivityMarkForSale))]
+    //[ValidParent(ParentType = typeof(RuminantActivityWean))]
+    //[ValidParent(ParentType = typeof(RuminantActivityTag))]
     [ValidParent(ParentType = typeof(TransmuteRuminant))]
     [ValidParent(ParentType = typeof(ReportRuminantAttributeSummary))]
     [Description("Selects specific individuals ruminants from the herd")]
     [Version(1, 0, 1, "Added ability to select random proportion of the group to use")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantGroup.htm")]
-    public class RuminantGroup : FilterGroup<Ruminant>, IValidatableObject, IIdentifiableComponent
+    public class RuminantGroup : FilterGroup<Ruminant>, IValidatableObject, IIdentifiableChildModel
     {
         /// <summary>
         /// An identifier for this FilterGroup based on parent requirements
@@ -74,8 +75,8 @@ namespace Models.CLEM.Groupings
         /// <returns>A list of identifiers as stings</returns>
         public List<string> ParentSuppliedIdentifiers()
         {
-            if(Parent is CLEMRuminantActivityBase)
-                return (Parent as CLEMRuminantActivityBase).DefineWorkerChildrenIdentifiers<RuminantGroup>();
+            if(Parent is ICanHandleIdentifiableChildModels)
+                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelIdentifiers<RuminantGroup>();
             else
                 return new List<string>();
         }

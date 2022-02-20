@@ -37,6 +37,8 @@ namespace Models.CLEM.Activities
 
         private bool enabled = true;
         private ZoneCLEM parentZone = null;
+        private Dictionary<Type, List<string>> identifiableModelIdentifiers = new Dictionary<Type, List<string>>();
+        private Dictionary<Type, object> identifiableModelsPresent = new Dictionary<Type, object>();
 
         /// <summary>
         /// Label to assign each transaction created by this activity in ledgers
@@ -210,6 +212,129 @@ namespace Models.CLEM.Activities
             }
         }
 
+        #region Identifiable child model handling
+
+        /// <summary>
+        /// A method to return the list of identifiers provided by the parent activity for the given identifiable child model type
+        /// </summary>
+        /// <typeparam name="T">Type of identifiable child model</typeparam>
+        /// <returns>List of identifiers provided</returns>
+        public List<string> IdentifiableChildModelIdentifiers<T>() where T : IIdentifiableChildModel
+        {
+            if (identifiableModelIdentifiers.ContainsKey(typeof(T)))
+            {
+                return identifiableModelIdentifiers[typeof(T)];
+            }
+            else
+            {
+                List<string> identifiersDefined = DefineIdentifiableChildModelIdentifiers<T>();
+                identifiableModelIdentifiers.Add(typeof(T), identifiersDefined);
+                return identifiersDefined;
+            }
+        }
+
+        /// <summary>
+        /// A method to get a list of activity specified identifiers for a generic type T add by the user
+        /// </summary>
+        /// <typeparam name="T">Identifiable child model type</typeparam>
+        /// <returns>A list of identifiers as strings</returns>
+        public List<string> DefineIdentifiableChildModelIdentifiers<T>() where T : IIdentifiableChildModel
+        {
+            if (this is ICanHandleIdentifiableChildModels)
+            {
+                switch (typeof(T).Name)
+                {
+                    //case "":
+                    //    break;
+                    default:
+                        return new List<string>();
+                }
+            }
+            else
+                throw new NotImplementedException($"[a={NameWithParent}] does not support Identifiable child models to perform custom tasks with resource provision.");
+        }
+
+        /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("FinalInitialise")]
+        protected virtual void OnFinalInitialiseGetIdentifiableChilddModels(object sender, EventArgs e)
+        {
+            // if this activity supports identifiable child models for controlling resource requirements
+            if (this is ICanHandleIdentifiableChildModels)
+            {
+                // for each IIdentifiableChildMlode type in direct children 
+                foreach (Type componentType in FindAllChildren<IIdentifiableChildModel>().Select(a => a.GetType()).Distinct())
+                {
+                    switch (componentType.Name)
+                    {
+                        case "RuminantGroup":
+                            identifiableModelsPresent.Add(componentType, LocateIdentifiableChildren<RuminantGroup>(true));
+                            break;
+                        case "LabourRequirement":
+                            identifiableModelsPresent.Add(componentType, LocateIdentifiableChildren<LabourRequirement>(false));
+                            break;
+                        case "RuminantActivityFee":
+                            identifiableModelsPresent.Add(componentType, LocateIdentifiableChildren<RuminantActivityFee>(false));
+                            break;
+                        default:
+                            throw new NotSupportedException($"{componentType.Name} not currently supported as IdentifiableComponent");
+                    }
+                } 
+            }
+        }
+
+        /// <summary>
+        /// Get the IEnumerable(T) of all activity specified identifiable child models by type and identifer
+        /// </summary>
+        /// <typeparam name="T">The Identifiable child model type</typeparam>
+        /// <param name="identifier">Identifer label</param>
+        /// <param name="addNewIfEmpty">Create IENumuerable with a new() instance of T</param>
+        /// <returns></returns>
+        protected private IEnumerable<T> GetIdentifiableChildrenByIdentifier<T>(string identifier, bool addNewIfEmpty) where T : IIdentifiableChildModel, new()
+        {
+            if (identifiableModelsPresent.ContainsKey(typeof(T)))
+            {
+                if (identifiableModelsPresent[typeof(T)] is Dictionary<string, IEnumerable<T>> foundTypeDictionary)
+                {
+                    if (foundTypeDictionary.ContainsKey(identifier))
+                        return foundTypeDictionary[identifier];
+                }
+            }
+            if (addNewIfEmpty)
+                return new List<T>() { new T() };
+            else
+                return null;
+        }
+
+        /// <summary>
+        /// Create a dictionary of groups of components by identifier provided by the parent model
+        /// </summary>
+        /// <typeparam name="T">Type of component to consider</typeparam>
+        /// <returns></returns>
+        protected private Dictionary<string, IEnumerable<T>> LocateIdentifiableChildren<T>(bool addBlankEntryIfNoneFound) where T : IIdentifiableChildModel, new()
+        {
+            Dictionary<string, IEnumerable<T>> filters = new Dictionary<string, IEnumerable<T>>();
+
+            foreach (var id in IdentifiableChildModelIdentifiers<T>())
+            {
+                var group = FindAllChildren<T>().Where(a => a.Identifier == id && a.Enabled);
+                if (group.Any())
+                    filters.Add(id, group);
+                else
+                {
+                    if (addBlankEntryIfNoneFound)
+                    {
+                        var newEntry = new List<T>() { new T() { Identifier = id } };
+                        filters.Add(id, newEntry);
+                    }
+                }
+            }
+            return filters;
+        }
+
+        #endregion
+
         /// <summary>An method to perform core actions when simulation commences</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -304,10 +429,7 @@ namespace Models.CLEM.Activities
                     if (tookRequestedResources || (ResourceRequestList.Count == 0))
                         PerformTasksForActivity(); //based on method supplied by activity
 
-                }
-                else
-                {
-                    this.Status = ActivityStatus.Ignored;
+                    return;
                 }
             }
             else

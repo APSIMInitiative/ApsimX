@@ -8,7 +8,7 @@ namespace Models.CLEM.Interfaces
     /// <summary>
     /// A CLEM model able to be identified by the parent given a user specified identifier
     /// </summary>
-    public interface IIdentifiableComponent: IModel
+    public interface IIdentifiableChildModel: IModel
     {
         /// <summary>
         /// Identifier of this component 

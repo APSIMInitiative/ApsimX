@@ -17,12 +17,13 @@ namespace Models.CLEM.Activities
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(RuminantActivityBuySell))]
-    [ValidParent(ParentType = typeof(RuminantActivityControlledMating))]
+    [ValidParent(ParentType = typeof(ICanHandleIdentifiableChildModels))]
+//    [ValidParent(ParentType = typeof(RuminantActivityBuySell))]
+//    [ValidParent(ParentType = typeof(RuminantActivityControlledMating))]
     [Description("Define a herd expense for herd management activities")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFee.htm")]
-    public class RuminantActivityFee: CLEMModel, IIdentifiableComponent
+    public class RuminantActivityFee: CLEMModel, IIdentifiableChildModel
     {
         [Link]
         private ResourcesHolder resources = null;

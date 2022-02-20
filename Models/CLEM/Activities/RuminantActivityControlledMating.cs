@@ -60,28 +60,28 @@ namespace Models.CLEM.Activities
             TransactionCategory = "Livestock.Manage";
         }
 
-        /// <inheritdoc/>
-        public override List<string> DefineWorkerChildrenIdentifiers<T>()
-        {
-            switch (typeof(T).Name)
-            {
-                case "RuminantGroup":
-                    return new List<string>()
-                    {
-                        "SelectFemaleBreeders",
-                        "SelectMaleBreeders",
-                    };
-                case "RuminantActivityFee":
-                case "LabourRequirement":
-                    return new List<string>()
-                    {
-                        "PerFemaleMated",
-                        "PerFemaleConceived",
-                    };
-                default:
-                    return new List<string>();
-            }
-        }
+        ///// <inheritdoc/>
+        //public override List<string> DefineWorkerChildrenIdentifiers<T>()
+        //{
+        //    switch (typeof(T).Name)
+        //    {
+        //        case "RuminantGroup":
+        //            return new List<string>()
+        //            {
+        //                "SelectFemaleBreeders",
+        //                "SelectMaleBreeders",
+        //            };
+        //        case "RuminantActivityFee":
+        //        case "LabourRequirement":
+        //            return new List<string>()
+        //            {
+        //                "PerFemaleMated",
+        //                "PerFemaleConceived",
+        //            };
+        //        default:
+        //            return new List<string>();
+        //    }
+        //}
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>

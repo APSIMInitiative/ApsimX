@@ -25,7 +25,6 @@ namespace Models.CLEM.Activities
         private bool reportedRestrictedHerd = false;
         private bool allowMultipleBreeds;
         private bool allowMultipleHerds;
-        protected private Dictionary<Type, object> workerChildren = new Dictionary<Type, object>();
 
         /// <summary>
         /// List of filters that define the herd
@@ -63,59 +62,6 @@ namespace Models.CLEM.Activities
             DetermineHerdName();
         }
 
-        /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("FinalInitialise")]
-        protected virtual void OnFinalInitialiseGetWorkerChildren(object sender, EventArgs e)
-        {
-            // for each IIdentifiableComponent type in children 
-            // only allows direct children to be considered
-            foreach (Type componentType in FindAllChildren<IIdentifiableComponent>().Select(a => a.GetType()).Distinct())
-            {
-                switch (componentType.Name)
-                {
-                    case "RuminantGroup":
-                        workerChildren.Add(componentType, DefineWorkerChildrenGroups<RuminantGroup>(true));
-                        break;
-                    case "LabourRequirement":
-                        workerChildren.Add(componentType, DefineWorkerChildrenGroups<LabourRequirement>(false));
-                        break;
-                    case "RuminantActivityFee":
-                        workerChildren.Add(componentType, DefineWorkerChildrenGroups<RuminantActivityFee>(false));
-                        break;
-                    default:
-                        throw new NotSupportedException($"{componentType.Name} not currently supported as IdentifiableComponent");
-                }
-            }
-        }
-
-        /// <summary>
-        /// Get the IEnumerable(T) of all custom identifiable worker children by type and identifer
-        /// </summary>
-        /// <typeparam name="T">The type of worker child</typeparam>
-        /// <param name="identifier">The identifer to find</param>
-        /// <param name="addNewIfEmpty">Create IENumuerable with a new() instance of T</param>
-        /// <returns></returns>
-        protected private IEnumerable<T> GetWorkerChildrenByIdentifier<T>(string identifier, bool addNewIfEmpty) where T : IIdentifiableComponent, new()
-        {
-            if (workerChildren.Any())
-            {
-                if (workerChildren.ContainsKey(typeof(T)))
-                {
-                    if (workerChildren[typeof(T)] is Dictionary<string, IEnumerable<T>> foundTypeDictionary)
-                        if (foundTypeDictionary.ContainsKey(identifier))
-                            return foundTypeDictionary[identifier];
-                }
-            }
-            else
-            {
-                if (addNewIfEmpty)
-                    return new List<T>() { new T() };
-            }
-            return null;
-        }
-
         /// <summary>
         /// Method to get the set herd filters
         /// </summary>
@@ -134,49 +80,6 @@ namespace Models.CLEM.Activities
 
                 current = current.Parent as IModel;
             }
-        }
-
-        /// <summary>
-        /// A method to get a list of activity specified identifiers for a generic type T add by the user
-        /// </summary>
-        /// <returns>A list of identifiers as strings</returns>
-        public virtual List<string> DefineWorkerChildrenIdentifiers<T>()
-        {
-            switch (typeof(T).Name)
-            {
-                //case "":
-                //    break;
-                default:
-                    return new List<string>();
-            }
-        }
-
-        /// <summary>
-        /// Create a dictionary of groups of components by identifier provided by the parent model
-        /// </summary>
-        /// <typeparam name="T">Type of component to consider</typeparam>
-        /// <returns></returns>
-        protected private Dictionary<string, IEnumerable<T>> DefineWorkerChildrenGroups<T>(bool addBlankEntryIfNoneFound) where T : IIdentifiableComponent, new()
-        {
-            Dictionary<string, IEnumerable<T>> filters = new Dictionary<string, IEnumerable<T>>();
-
-            List<string> identifiers = DefineWorkerChildrenIdentifiers<T>();
-            foreach (var id in identifiers)
-            {
-                var group = FindAllChildren<T>().Where(a => a.Identifier == id && a.Enabled);
-                if (group.Any())
-                    filters.Add(id, group);
-                else
-                {
-                    if (addBlankEntryIfNoneFound)
-                    {
-                        var newEntry = new List<T>() { new T() { Identifier = id } };
-                        filters.Add(id, newEntry);
-                    }
-                }
-            }
-
-            return filters;
         }
 
         /// <summary>

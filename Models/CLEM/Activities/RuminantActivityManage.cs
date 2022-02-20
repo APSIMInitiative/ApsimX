@@ -36,7 +36,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Implements minimum breeders kept to define breeder purchase limits")]
     [Version(1, 0, 1, "First implementation of this activity using IAT/NABSA processes")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantManage.htm")]
-    public class RuminantActivityManage : CLEMRuminantActivityBase, IValidatableObject
+    public class RuminantActivityManage : CLEMRuminantActivityBase, IValidatableObject, ICanHandleIdentifiableChildModels
     {
         private int maxBreeders;
         private int minBreeders;
@@ -347,7 +347,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<string> DefineWorkerChildrenIdentifiers<T>()
+        public List<string> DefineWorkerChildrenIdentifiers<T>()
         {
             if (typeof(T) == typeof(RuminantGroup))
             {
@@ -712,7 +712,7 @@ namespace Models.CLEM.Activities
 
                     // select females for growing out
                     if (GrowOutYoungFemales)
-                        foreach (var removalFilter in GetWorkerChildrenByIdentifier<RuminantGroup>("SelectFemalesForGrowOut",true))
+                        foreach (var removalFilter in GetIdentifiableChildrenByIdentifier<RuminantGroup>("SelectFemalesForGrowOut",true))
                             foreach (var ind in removalFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => !a.ReplacementBreeder && a.IsPreBreeder)).ToList())
                             {
                                 ind.Location = grazeStoreGrowOutFemales;
@@ -723,7 +723,7 @@ namespace Models.CLEM.Activities
 
                     // select old males for growing out
                     if (GrowOutYoungMales)
-                        foreach (var removalFilter in GetWorkerChildrenByIdentifier<RuminantGroup>("SelectMalesForGrowOut", true))
+                        foreach (var removalFilter in GetIdentifiableChildrenByIdentifier<RuminantGroup>("SelectMalesForGrowOut", true))
                             foreach (var ind in removalFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Weaned && !a.ReplacementBreeder && !a.IsSire)).ToList())
                             {
                                 ind.Location = grazeStoreGrowOutMales;
@@ -759,7 +759,7 @@ namespace Models.CLEM.Activities
 
                 // select old females for sale
                 if(MarkOldBreedersForSale)
-                    foreach (var removalFilter in GetWorkerChildrenByIdentifier<RuminantGroup>("RemoveOldFemalesFromHerd", true))
+                    foreach (var removalFilter in GetIdentifiableChildrenByIdentifier<RuminantGroup>("RemoveOldFemalesFromHerd", true))
                         foreach (var ind in removalFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Age >= MaximumBreederAge)).ToList())
                         {
                             ind.SaleFlag = HerdChangeReason.MaxAgeSale;
@@ -768,7 +768,7 @@ namespace Models.CLEM.Activities
 
                 // select old males for sale
                 if (MarkOldSiresForSale)
-                    foreach (var removalFilter in GetWorkerChildrenByIdentifier<RuminantGroup>("RemoveOldSiresFromHerd", true))
+                    foreach (var removalFilter in GetIdentifiableChildrenByIdentifier<RuminantGroup>("RemoveOldSiresFromHerd", true))
                         foreach (var ind in removalFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.IsSire && a.Age >= MaximumSireAge)).ToList())
                         {
                             ind.SaleFlag = HerdChangeReason.MaxAgeSale;
@@ -834,7 +834,7 @@ namespace Models.CLEM.Activities
                             int numberToRemove = Math.Min(numberMaleSiresInHerd + numberMaleSiresInPurchases - SiresKept, numberMaleSiresInPurchases);
 
                             // remove suitable individuals from the purchase list 
-                            foreach (var removeFilter in GetWorkerChildrenByIdentifier<RuminantGroup>("RemoveSiresFromPurchases", true))
+                            foreach (var removeFilter in GetIdentifiableChildrenByIdentifier<RuminantGroup>("RemoveSiresFromPurchases", true))
                             {
                                 int index = 0;
                                 var individuals = removeFilter.Filter(HerdResource.PurchaseIndividuals.OfType<RuminantMale>().Where(a => a.Breed == this.PredictedHerdBreed && a.IsSire)).ToList();
@@ -848,7 +848,7 @@ namespace Models.CLEM.Activities
 
                             // remove sires followed by replacement sires in one go
                             if (numberToRemove > 0)
-                                foreach (var removalFilter in GetWorkerChildrenByIdentifier<RuminantGroup>("RemoveSiresFromHerd", true))
+                                foreach (var removalFilter in GetIdentifiableChildrenByIdentifier<RuminantGroup>("RemoveSiresFromHerd", true))
                                     foreach (var male in removalFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.IsSire || a.ReplacementBreeder)).OrderByDescending(a => a.Class).Take(numberToRemove))
                                     {
                                         male.Location = grazeStoreSires;
@@ -874,7 +874,7 @@ namespace Models.CLEM.Activities
                             maleBreedersRequired = Math.Min(MaximumSiresPerPurchase, Math.Max(0, sires - numberMaleSiresInHerd - numberMaleSiresInPurchases));
 
                             // get suitable sires marked for sale if not maxage sale
-                            foreach (var selectFilter in GetWorkerChildrenByIdentifier<RuminantGroup>("SelectSiresFromSales", true))
+                            foreach (var selectFilter in GetIdentifiableChildrenByIdentifier<RuminantGroup>("SelectSiresFromSales", true))
                                 foreach (var male in selectFilter.Filter(GetIndividuals<RuminantMale>( GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale }).Where(a => a.IsSire)).Take(maleBreedersRequired))
                                 {
                                     male.SaleFlag = HerdChangeReason.None;
@@ -887,7 +887,7 @@ namespace Models.CLEM.Activities
                             {
                                 // remove young males from sale herd to replace breeding sires (not those sold because too old)
                                 // only consider individuals that will mature in next 12 months and are not castrated
-                                foreach (var selectFilter in GetWorkerChildrenByIdentifier<RuminantGroup>("SelectYoungMalesFromSales", true))
+                                foreach (var selectFilter in GetIdentifiableChildrenByIdentifier<RuminantGroup>("SelectYoungMalesFromSales", true))
                                     // male, saleflag is AgeWeightSale, not castrated and age will mature in next 12 months
                                     foreach (RuminantMale male in selectFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale }).Where(a => a.Weaned && (a.Age - a.BreedParams.MinimumAge1stMating > -11) && !a.IsCastrated)).Take(maleBreedersRequired))
                                     {
@@ -904,7 +904,7 @@ namespace Models.CLEM.Activities
                                 // only consider individuals that will mature in next 12 months
                                 if (GrowOutYoungMales && maleBreedersRequired > 0)
                                 {
-                                    foreach (var selectFilter in GetWorkerChildrenByIdentifier<RuminantGroup>("SelectYoungMalesFromGrowOut", true))
+                                    foreach (var selectFilter in GetIdentifiableChildrenByIdentifier<RuminantGroup>("SelectYoungMalesFromGrowOut", true))
                                         foreach (RuminantMale male in selectFilter.Filter(GetIndividuals<RuminantMale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.Attributes.Exists("GrowOut") && !a.IsCastrated)).Take(maleBreedersRequired).ToList())
                                         {
                                             male.Location = grazeStoreSires;
@@ -1022,7 +1022,7 @@ namespace Models.CLEM.Activities
                             // Remove from purchases
                             //
                             // remove suitable individuals from the purchase list 
-                            foreach (var removeFilter in GetWorkerChildrenByIdentifier<RuminantGroup>("RemoveBreedersFromPurchases", true))
+                            foreach (var removeFilter in GetIdentifiableChildrenByIdentifier<RuminantGroup>("RemoveBreedersFromPurchases", true))
                             {
                                 int index = 0;
                                 var individuals = removeFilter.Filter(HerdResource.PurchaseIndividuals.OfType<RuminantFemale>().Where(a => a.Breed == this.PredictedHerdBreed && a.IsBreeder)).ToList();
@@ -1035,7 +1035,7 @@ namespace Models.CLEM.Activities
                             }
 
                             // Remove from herd not for sale
-                            foreach (var removeFilter in GetWorkerChildrenByIdentifier<RuminantGroup>("RemoveBreedersFromHerd", true))
+                            foreach (var removeFilter in GetIdentifiableChildrenByIdentifier<RuminantGroup>("RemoveBreedersFromHerd", true))
                                 foreach (RuminantFemale female in removeFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.IsBreeder || (a.IsPreBreeder && (a.Age - a.BreedParams.MinimumAge1stMating > -11)))).OrderBy(a => a.Class).Take(excessBreeders).ToList())
                                 {
                                     female.SaleFlag = HerdChangeReason.ExcessBreederSale;
@@ -1059,7 +1059,7 @@ namespace Models.CLEM.Activities
                             if (femaleBreedersRequired > 0)
                             {
                                 // remove females from sale herd to replace breeders (not those sold because too old)
-                                foreach (var selectFilter in GetWorkerChildrenByIdentifier<RuminantGroup>("SelectBreedersFromSales", true))
+                                foreach (var selectFilter in GetIdentifiableChildrenByIdentifier<RuminantGroup>("SelectBreedersFromSales", true))
                                     foreach (var female in selectFilter.Filter(GetIndividuals<RuminantFemale>( GetRuminantHerdSelectionStyle.MarkedForSale, new List<HerdChangeReason>() { HerdChangeReason.MaxAgeSale }).Where(a => a.ReadyForSale && (a.Age - a.BreedParams.MinimumAge1stMating > -11))).Take(femaleBreedersRequired).ToList())
                                     {
                                         female.Attributes.Remove("GrowOut"); // in case grow out
@@ -1074,7 +1074,7 @@ namespace Models.CLEM.Activities
                             // remove grow out heifers from grow out if of breeding in next year age
                             if (GrowOutYoungFemales && femaleBreedersRequired > 0)
                             {
-                                foreach (var selectFilter in GetWorkerChildrenByIdentifier<RuminantGroup>("SelectYoungFemalesFromGrowOut", true))
+                                foreach (var selectFilter in GetIdentifiableChildrenByIdentifier<RuminantGroup>("SelectYoungFemalesFromGrowOut", true))
                                     foreach (RuminantFemale female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => (a.Age - a.BreedParams.MinimumAge1stMating > -11) && a.Attributes.Exists("GrowOut"))).Take(femaleBreedersRequired).ToList())
                                     {
                                         female.Attributes.Remove("GrowOut");
@@ -1162,7 +1162,7 @@ namespace Models.CLEM.Activities
 
                                 // remove grow out heifers from grow out if young as these will be future needed replacements
                                 if (GrowOutYoungFemales & femaleBreedersRequired > 0)
-                                    foreach (var selectFilter in GetWorkerChildrenByIdentifier<RuminantGroup>("SelectYoungFemalesFromGrowOut", true))
+                                    foreach (var selectFilter in GetIdentifiableChildrenByIdentifier<RuminantGroup>("SelectYoungFemalesFromGrowOut", true))
                                         foreach (RuminantFemale female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Attributes.Exists("GrowOut"))).OrderByDescending(a => a.Age).Take(femaleBreedersRequired).ToList())
                                         {
                                             female.Attributes.Remove("GrowOut");
@@ -1175,7 +1175,7 @@ namespace Models.CLEM.Activities
 
                                 // still need breeders and couldn't buy them so look at even younger individuals still in sale herd
                                 if (femaleBreedersRequired > 0)
-                                    foreach (var selectFilter in GetWorkerChildrenByIdentifier<RuminantGroup>("SelectYoungFemalesFromSales", true))
+                                    foreach (var selectFilter in GetIdentifiableChildrenByIdentifier<RuminantGroup>("SelectYoungFemalesFromSales", true))
                                         foreach (RuminantFemale female in selectFilter.Filter(GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.MarkedForSale)).OrderByDescending(a => a.Age).Take(femaleBreedersRequired).ToList())
                                         {
                                             female.Attributes.Remove("GrowOut");
@@ -1226,13 +1226,13 @@ namespace Models.CLEM.Activities
                 // and castration and grow-out is only handled in this activity in the management month. 
 
                 if(RetainFemaleReplacementBreedersFromSaleHerd)
-                    identifyMaleReplacementBreedersFromSaleHerd();
+                    IdentifyMaleReplacementBreedersFromSaleHerd();
                 if (RetainMaleReplacementBreedersFromSaleHerd)
-                    identifyFemaleReplacementBreedersFromSaleHerd();
+                    IdentifyFemaleReplacementBreedersFromSaleHerd();
             }
         }
 
-        private void identifyMaleReplacementBreedersFromSaleHerd()
+        private void IdentifyMaleReplacementBreedersFromSaleHerd()
         {
             if (maleBreedersRequired > 0)
             {
@@ -1249,7 +1249,7 @@ namespace Models.CLEM.Activities
             }
         }
 
-        private void identifyFemaleReplacementBreedersFromSaleHerd()
+        private void IdentifyFemaleReplacementBreedersFromSaleHerd()
         {
             if (femaleBreedersRequired > 0)
             {
@@ -1529,9 +1529,9 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activitybannerlight\">Custom filtering rules</div>");
                 htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
 
-                var filtersProvided = DefineWorkerChildrenGroups<RuminantGroup>(false);
+                var filtersProvided = LocateIdentifiableChildren<RuminantGroup>(false);
 
-                foreach (var identifier in DefineWorkerChildrenIdentifiers<RuminantGroup>())
+                foreach (var identifier in IdentifiableChildModelIdentifiers<RuminantGroup>())
                 {
                     if (filtersProvided.ContainsKey(identifier))
                         if (IsCustomFilterTaskIncluded(identifier))
