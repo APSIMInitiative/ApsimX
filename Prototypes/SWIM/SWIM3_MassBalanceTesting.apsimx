@@ -1,8 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 272,
-  "Version": 142,
-  "ApsimVersion": "0.0.0.0",
+  "ExplorerWidth": 300,
+  "Version": 148,
   "Name": "Simulations",
   "Children": [
     {
@@ -11,13 +10,13 @@
       "CustomFileName": null,
       "Name": "DataStore",
       "Children": [],
-      "IncludeInDocumentation": false,
       "Enabled": true,
       "ReadOnly": false
     },
     {
       "$type": "Models.Core.Folder, Models",
-      "ShowPageOfGraphs": true,
+      "ShowInDocs": true,
+      "GraphsPerPage": 6,
       "Name": "LowerBoundaryConditions",
       "Children": [
         {
@@ -25,7 +24,6 @@
           "Text": "https://www.apsim.info/documentation/model-documentation/soil-modules-documentation/swimv2-1/\n\n# Overview\n\nSWIM3 allows three of the four lower boundary conditions described in Verburg et al. (1996) as described below. Note that the zero flux lower boundary condition has not been enabled. \n\nAll referenes to \"SWIM\" here refer to the highly detailed documentation by Verburg et al. (1996) of the standalone model that has morphed over the years into SWIM3. Verburg et al. remains the definitive documentation and should be referred to for detail.\n\nSee the \"SetLowerBC\" Manager script for examples of how to change lower boundary conditions.\n\n## SetLowerBCForGradient(bbcGradient)\n\nA constant gradient in soil water potential with depth in the soil is the default lower boundary condition and is applicable to most 'open field' simulations where there is free drainage from\nthe soil. This option is ibbc = 0 in SWIM. This lower boundary condition setting must be accompanied by the value of that gradient. This is done using a command in a Manager script along the \nlines of:\n\n\tSetLowerBCForGradient(bbcGradient);\n\nwhere bbcGradient is a double (real) variable with the value of the required gradient in soil water potential with depth in the soil. The set value remains in place until the user resets it.\nGravity is added to bbcGradient so the most common setting is \nbbcGradient = 0.0 which means that there is no graident of soil water potential. In this case  water moves under the influence of gravity alone.\nSetting bbcGradient = -1.0 will set the soil water potential gradient to counteract the effect of gravity and will essentially set a no-flow lower boundary. **I think**\n\n## SetLowerBCForGivenPotential(bbcPotential)\n\nThis lower boundary condition sets a constant soil water potential at the lowest node in the simulation. Note that in SWIM and SWIM3, soil water potential is in units of cm and is negative in unsaturated soils. This option can be useful for mimicing the effect of a water table at the base of the simulation by setting a positivie value equal to the height difference between the\nwater table and the bottom of the simulated soil profile. Note that in this setting, water will be added to the simulation as needed to maintain the user set soil water potential potential.\nSee the Manager script \"SetLowerBC\" for an example: \n\n\tSetLowerBCForGivenPotential(bbcPotential);\n\nwhere bbcPotential is the required potential as a double variable in cm. this setting is equivalent to ibbc = 1 in SWIM.\n\n## SetLowerBCForSeepage(bbcPotentialSeepage)\n\nA seepage lower boundary is a condition where no drainage can occur until a user-set head of water (i.e., a depth of saturated soil) of bbcPotentialSeepage accumulates at the base of the soil profile. Once that head is reached drainage occurrs at the rate allowed by the saturated soil water conductivity under gravity only until the head falls below the user-set value. This lower boundary condition is that of ibbc = 3 in SWIM. A common usage of this boundary condition is when simulating a zero-tension (i.e., free to the atmosphere) lysimeter and in this case bbcPotentialSeepage = 0.0. See an example in  \"SetLowerBC\":\n\n\tSetLowerBCForSeepage(bbcPotentialSeepage);\n\nwhere bbcPotentialSeepage is in cm.\n\n## Testing\n\nDo they do what is expected? \n\nAnd is there a test for this?\n\nDoes the mass balance with these options?\n\n",
           "Name": "Memo Lower BC",
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -43,7 +41,6 @@
                   "Specification": "[SetLowerBC].Script.LowerBCType=gradient",
                   "Name": "Gradient",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -52,7 +49,6 @@
                   "Specification": "[SetLowerBC].Script.LowerBCType=seepage",
                   "Name": "Seepage",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": false,
                   "ReadOnly": false
                 },
@@ -61,12 +57,10 @@
                   "Specification": "[SetLowerBC].Script.LowerBCType=potential50",
                   "Name": "Potential",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -83,7 +77,6 @@
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -93,18 +86,14 @@
                   "End": "2001-01-30T00:00:00",
                   "Name": "Clock",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Summary, Models",
-                  "CaptureErrors": true,
-                  "CaptureWarnings": true,
-                  "CaptureSummaryText": true,
+                  "Verbosity": 100,
                   "Name": "summaryfile",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -112,7 +101,6 @@
                   "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
                   "Name": "SoilArbitrator",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -128,7 +116,6 @@
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -145,22 +132,20 @@
                       "Text": "The first few lines in IrrigationSchedule\n// these are only here to get the soil above saturation - \n\n// not working all that well because the upper BC is causing all the excess water to runoff anyway\n\n// can delete this probably once pond is fixed.\n\nAdd with and without plants to the experiment. Need a more flexible Manager first? Or add and kill?\n\nCould be nice to be able to swap from weather to controlled environment without having to change the links in \"CalculateRollingWaterBalance\"\n",
                       "Name": "To do and notes",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\nusing System.Linq;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] IWeather weather;\r\n        [Link] Irrigation irrigation;\r\n        [Link] private Swim3 swim;  // I know that we are concerned with SWIM3 but should this be generic and sub in SoilWater?\r\n        [Link] private IPlant[] plants;\r\n\r\n        //Dean - what is a way to find out what plants are in the simulation and then get their uptake?\r\n        // add water uptake and (no3+nh4) uptake as N uptake to IPlant\r\n\r\n        public double WaterBalanceCumulative  { get; set; }\r\n        public double WaterBalanceToday  { get; set; }\r\n\r\n        public double SoilWaterAtInitialisation  { get; set; }\r\n        public double SoilWaterYesterday  { get; set; }\r\n\t\tpublic double SoilWaterNow  { get; set; }\r\n\r\n\t\tpublic double PlantWaterUptake { get; set; }\r\n\r\n        public double WaterAddedToday  { get; set; }\r\n        public double WaterRemovedToday  { get; set; }\r\n        public double WaterAddedCumulative  { get; set; }\r\n        public double WaterRemovedCumulative  { get; set; }\r\n\r\n\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        \tif (clock.Today == clock.StartDate) \r\n        \t// capture the water in and on the soil as a starting point\r\n        \t// doing this here as need the models to have intialised first\r\n        \t{\r\n\t        \tSoilWaterAtInitialisation = swim.pond;\r\n    \t    \tfor (int i = 0; i < swim.SWmm.Length; i++)\r\n        \t\t\tSoilWaterAtInitialisation += swim.SWmm[i];\r\n\r\n        \t\tSoilWaterYesterday = SoilWaterAtInitialisation;\t\t\r\n        \t\tWaterAddedCumulative = 0.0;\r\n        \t\tWaterRemovedCumulative = 0.0;\r\n        \t\tSoilWaterNow = 0.0;\r\n        \t}\r\n        \telse\r\n        \t{\r\n        \t\tSoilWaterYesterday = SoilWaterNow;\t\t// SoilWaterNow holds the value calculated at reporting yesterday\r\n        \t\tWaterAddedToday = 0.0;\r\n        \t\tWaterRemovedToday = 0.0;\r\n        \t}\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        \t// All the WaterBalance variables should be zero. A positive value is a generation of water.\r\n        \tSoilWaterNow = swim.pond;\r\n        \tfor (int i = 0; i < swim.SWmm.Length; i++)\r\n        \t\tSoilWaterNow += swim.SWmm[i]; // so all the water stored in or on the soil\r\n\r\n        \tWaterAddedToday = weather.Rain + irrigation.IrrigationApplied;   // Can there be runon? Probably not but this will throw an error if that ever happens\r\n        \tWaterAddedCumulative+= WaterAddedToday;\r\n\r\n        \tWaterRemovedToday = swim.Drainage + swim.Es + swim.Runoff;\r\n        \tPlantWaterUptake = 0.0;\r\n        \tforeach (var plant in plants)\r\n        \t\tPlantWaterUptake += plant.WaterUptake.Sum();\r\n\r\n        \tWaterRemovedToday += PlantWaterUptake;\r\n        \t// Need to add subsurface drainage here\r\n\r\n        \tWaterRemovedCumulative += WaterRemovedToday;\r\n\r\n        \tWaterBalanceToday = WaterAddedToday - WaterRemovedToday - (SoilWaterNow - SoilWaterYesterday);\r\n        \tWaterBalanceCumulative = WaterAddedCumulative - WaterRemovedCumulative - (SoilWaterNow - SoilWaterAtInitialisation);\r\n        \t// need to add a warning value and a crash value and make a crash\r\n\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\nusing System.Linq;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] IWeather weather;\r\n        [Link] Irrigation irrigation;\r\n        [Link] private Swim3 swim;  // I know that we are concerned with SWIM3 but should this be generic and sub in SoilWater?\r\n        [Link] private IPlant[] plants;\r\n\r\n        //Dean - what is a way to find out what plants are in the simulation and then get their uptake?\r\n        // add water uptake and (no3+nh4) uptake as N uptake to IPlant\r\n\r\n        public double WaterBalanceCumulative  { get; set; }\r\n        public double WaterBalanceToday  { get; set; }\r\n\r\n        public double SoilWaterAtInitialisation  { get; set; }\r\n        public double SoilWaterYesterday  { get; set; }\r\n\t\tpublic double SoilWaterNow  { get; set; }\r\n\r\n\t\tpublic double PlantWaterUptake { get; set; }\r\n\r\n        public double WaterAddedToday  { get; set; }\r\n        public double WaterRemovedToday  { get; set; }\r\n        public double WaterAddedCumulative  { get; set; }\r\n        public double WaterRemovedCumulative  { get; set; }\r\n\r\n\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        \tif (clock.Today == clock.StartDate) \r\n        \t// capture the water in and on the soil as a starting point\r\n        \t// doing this here as need the models to have intialised first\r\n        \t{\r\n\t        \tSoilWaterAtInitialisation = swim.Pond;\r\n    \t    \tfor (int i = 0; i < swim.SWmm.Length; i++)\r\n        \t\t\tSoilWaterAtInitialisation += swim.SWmm[i];\r\n\r\n        \t\tSoilWaterYesterday = SoilWaterAtInitialisation;\t\t\r\n        \t\tWaterAddedCumulative = 0.0;\r\n        \t\tWaterRemovedCumulative = 0.0;\r\n        \t\tSoilWaterNow = 0.0;\r\n        \t}\r\n        \telse\r\n        \t{\r\n        \t\tSoilWaterYesterday = SoilWaterNow;\t\t// SoilWaterNow holds the value calculated at reporting yesterday\r\n        \t\tWaterAddedToday = 0.0;\r\n        \t\tWaterRemovedToday = 0.0;\r\n        \t}\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        \t// All the WaterBalance variables should be zero. A positive value is a generation of water.\r\n        \tSoilWaterNow = swim.Pond;\r\n        \tfor (int i = 0; i < swim.SWmm.Length; i++)\r\n        \t\tSoilWaterNow += swim.SWmm[i]; // so all the water stored in or on the soil\r\n\r\n        \tWaterAddedToday = weather.Rain + irrigation.IrrigationApplied;   // Can there be runon? Probably not but this will throw an error if that ever happens\r\n        \tWaterAddedCumulative+= WaterAddedToday;\r\n\r\n        \tWaterRemovedToday = swim.Drainage + swim.Es + swim.Runoff;\r\n        \tPlantWaterUptake = 0.0;\r\n        \tforeach (var plant in plants)\r\n        \t\tPlantWaterUptake += plant.WaterUptake.Sum();\r\n\r\n        \tWaterRemovedToday += PlantWaterUptake;\r\n        \t// Need to add subsurface drainage here\r\n\r\n        \tWaterRemovedCumulative += WaterRemovedToday;\r\n\r\n        \tWaterBalanceToday = WaterAddedToday - WaterRemovedToday - (SoilWaterNow - SoilWaterYesterday);\r\n        \tWaterBalanceCumulative = WaterAddedCumulative - WaterRemovedCumulative - (SoilWaterNow - SoilWaterAtInitialisation);\r\n        \t// need to add a warning value and a crash value and make a crash\r\n\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [],
                       "Name": "CalculateRollingWaterBalance",
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        //[Link] private PastureSpecies ryegrass;\r\n        //[Link] private SimpleGrazing grazing;\r\n\r\n        [Description(\"What lower BC? Current options gradient/seepage/potential\")] public string LowerBCType { get; set; }\r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n        \t/*if (clock.Today == clock.StartDate)\r\n        \t{\r\n        \t\tsummary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType);\r\n        \t\tif (LowerBCType.ToLower() == \"gradient\")\r\n        \t\t\tswim.SetLowerBCForGradient(bbcGradient: 0.0);   // in cm/cm (ibbc=0) Note that this is the default setting\r\n        \t\telse if (LowerBCType.ToLower() == \"potential50\")\r\n        \t\t\tswim.SetLowerBCForGivenPotential(bbcPotential: -1.0);    //  in cm (ibbc=1)\r\n        \t\telse if (LowerBCType.ToLower() == \"seepage\")\r\n        \t\t\tswim.SetLowerBCForSeepage(bbcPotentialSeepage: 0.0);  // in cm (ibbc=3)\r\n        \t}*/\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        //[Link] private PastureSpecies ryegrass;\r\n        //[Link] private SimpleGrazing grazing;\r\n\r\n        [Description(\"What lower BC? Current options gradient/seepage/potential\")] public string LowerBCType { get; set; }\r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n            /*if (clock.Today == clock.StartDate)\r\n            {\r\n                summary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType, MessageType.Diagnostic);\r\n                if (LowerBCType.ToLower() == \"gradient\")\r\n                    swim.SetLowerBCForGradient(bbcGradient: 0.0);   // in cm/cm (ibbc=0) Note that this is the default setting\r\n                else if (LowerBCType.ToLower() == \"potential50\")\r\n                    swim.SetLowerBCForGivenPotential(bbcPotential: -1.0);    //  in cm (ibbc=1)\r\n                else if (LowerBCType.ToLower() == \"seepage\")\r\n                    swim.SetLowerBCForSeepage(bbcPotentialSeepage: 0.0);  // in cm (ibbc=3)\r\n            }*/\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "LowerBCType",
@@ -168,7 +153,6 @@
                         }
                       ],
                       "Name": "SetLowerBC",
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -196,7 +180,6 @@
                       ],
                       "Name": "IrrigationSchedule",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": false,
                       "ReadOnly": false
                     },
@@ -242,7 +225,6 @@
                         }
                       ],
                       "Name": "AutomaticIrrigation",
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -270,13 +252,6 @@
                       "Children": [
                         {
                           "$type": "Models.Soils.Physical, Models",
-                          "Depth": [
-                            "0-6",
-                            "6-17",
-                            "17-31",
-                            "31-55",
-                            "55-70"
-                          ],
                           "Thickness": [
                             60.0,
                             110.0,
@@ -396,7 +371,6 @@
                               "XFMetadata": null,
                               "Name": "AgPRyegrassSoil",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -428,12 +402,10 @@
                               "XFMetadata": null,
                               "Name": "AgPWhiteCloverSoil",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -441,19 +413,11 @@
                           "$type": "Models.Soils.Nutrients.Nutrient, Models",
                           "ResourceName": "Nutrient",
                           "Name": "Nutrient",
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Soils.Organic, Models",
-                          "Depth": [
-                            "0-6",
-                            "6-17",
-                            "17-31",
-                            "31-55",
-                            "55-70"
-                          ],
                           "FOMCNRatio": 40.0,
                           "Thickness": [
                             60.0,
@@ -501,19 +465,11 @@
                           "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Soils.Chemical, Models",
-                          "Depth": [
-                            "0-6",
-                            "6-17",
-                            "17-31",
-                            "31-55",
-                            "55-70"
-                          ],
                           "Thickness": [
                             60.0,
                             110.0,
@@ -559,19 +515,11 @@
                           "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Soils.Sample, Models",
-                          "Depth": [
-                            "0-6",
-                            "6-17",
-                            "17-31",
-                            "31-55",
-                            "55-70"
-                          ],
                           "Thickness": [
                             60.0,
                             110.0,
@@ -654,7 +602,6 @@
                           "PHUnits": 0,
                           "Name": "Initial values",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -718,7 +665,6 @@
                               ],
                               "Name": "Urea",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -756,7 +702,6 @@
                               ],
                               "Name": "NH4",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -794,7 +739,6 @@
                               ],
                               "Name": "NO3",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -832,7 +776,6 @@
                               ],
                               "Name": "CL",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -870,7 +813,6 @@
                               ],
                               "Name": "PlantAvailableNH4",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -908,7 +850,6 @@
                               ],
                               "Name": "PlantAvailableNO3",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -946,7 +887,6 @@
                               ],
                               "Name": "LabileP",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -984,12 +924,10 @@
                               ],
                               "Name": "UnavailableP",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -997,7 +935,6 @@
                           "$type": "Models.Soils.Nutrients.Solute, Models",
                           "Name": "CL",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -1037,7 +974,6 @@
                           ],
                           "Name": "LayerStructure",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -1045,7 +981,6 @@
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Name": "SoilTemperature",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -1066,8 +1001,8 @@
                             "55-60",
                             "60-62.5",
                             "62.5-65",
-                            "65-67.75",
-                            "67.75-70"
+                            "65-67.8",
+                            "67.8-70"
                           ],
                           "Thickness": [
                             10.0,
@@ -1089,12 +1024,10 @@
                           ],
                           "Name": "LayerStructureDetailed",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1102,7 +1035,6 @@
                       "$type": "Models.Irrigation, Models",
                       "Name": "Irrigation",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1110,7 +1042,6 @@
                       "$type": "Models.Fertiliser, Models",
                       "ResourceName": "Fertiliser",
                       "Name": "Fertiliser",
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1124,7 +1055,6 @@
                       "InitialCNR": 17.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1157,7 +1087,6 @@
                       "SpeciesCutProportions": null,
                       "Name": "SimpleGrazing",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1168,7 +1097,6 @@
                       "InitialRootDepth": 700.0,
                       "ResourceName": "AGPRyegrass",
                       "Name": "AGPRyegrass",
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1179,7 +1107,6 @@
                       "InitialRootDepth": 150.0,
                       "ResourceName": "AGPWhiteClover",
                       "Name": "AGPWhiteClover",
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1207,23 +1134,29 @@
                       "GroupByVariableName": null,
                       "Name": "Report",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.Forages, Models",
+                  "Parameters": null,
+                  "Name": "Forages",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Core.Folder, Models",
-              "ShowPageOfGraphs": true,
+              "ShowInDocs": true,
+              "GraphsPerPage": 6,
               "Name": "WaterBalance",
               "Children": [
                 {
@@ -1231,31 +1164,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Daily WaterBalance",
@@ -1285,12 +1216,10 @@
                       "Filter": null,
                       "Name": "Daily WaterBal",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1299,31 +1228,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Cumulative WaterBalance",
@@ -1353,12 +1280,10 @@
                       "Filter": null,
                       "Name": "Cumulative WaterBal",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1367,31 +1292,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 0,
                       "Inverted": false,
+                      "CrossesAtZero": false,
                       "Minimum": 0.0,
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "WaterAdded",
@@ -1421,12 +1344,10 @@
                       "Filter": null,
                       "Name": "Added",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1435,31 +1356,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "WaterRemoved",
@@ -1489,12 +1408,10 @@
                       "Filter": null,
                       "Name": "Removed",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1503,31 +1420,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "WaterStored",
@@ -1557,12 +1472,10 @@
                       "Filter": null,
                       "Name": "Stored",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1571,31 +1484,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "WaterPonded",
@@ -1625,12 +1536,10 @@
                       "Filter": null,
                       "Name": "Ponded",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1639,31 +1548,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "PsiOfLowestLayer",
@@ -1693,12 +1600,10 @@
                       "Filter": null,
                       "Name": "LowerPot",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1707,42 +1612,39 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 2,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 2,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Seepage",
@@ -1772,7 +1674,6 @@
                       "Filter": "[SimulationName] LIKE '*Seepage'",
                       "Name": "LowerPot",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1801,12 +1702,10 @@
                       "Filter": "[SimulationName] LIKE '*Seepage'",
                       "Name": "Drainage",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1815,31 +1714,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "ConstPotential",
@@ -1869,7 +1766,6 @@
                       "Filter": "[SimulationName] LIKE '*Potential'",
                       "Name": "LowerPot",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1898,12 +1794,10 @@
                       "Filter": "[SimulationName] LIKE '*Potential'",
                       "Name": "Drainage",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1912,31 +1806,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Wateruptake",
@@ -1966,12 +1858,10 @@
                       "Filter": null,
                       "Name": "Uptake",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1980,31 +1870,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Drainage",
@@ -2034,12 +1922,10 @@
                       "Filter": null,
                       "Name": "Drainage",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2048,31 +1934,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "CumulativeDrainage",
@@ -2102,12 +1986,10 @@
                       "Filter": null,
                       "Name": "Drainage",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2116,31 +1998,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Runoff",
@@ -2170,12 +2050,10 @@
                       "Filter": null,
                       "Name": "Runoff",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2184,31 +2062,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "CumulativeRunoff",
@@ -2238,12 +2114,10 @@
                       "Filter": null,
                       "Name": "Runoff",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2252,31 +2126,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Irrigation",
@@ -2306,12 +2178,10 @@
                       "Filter": null,
                       "Name": "Irrigation",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2320,31 +2190,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "SoilWaterPotential_Gradient",
@@ -2374,7 +2242,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi01",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2403,7 +2270,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi02",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2432,7 +2298,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi03",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2461,7 +2326,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi04",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2490,7 +2354,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi05",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2519,7 +2382,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi06",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2548,7 +2410,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi07",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2577,7 +2438,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi08",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2606,7 +2466,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi09",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2635,7 +2494,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi10",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2664,7 +2522,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi11",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2693,7 +2550,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi12",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2722,7 +2578,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi13",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2751,12 +2606,10 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi14",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2765,31 +2618,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "SoilWater_Gradient",
@@ -2819,7 +2670,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi01",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2848,7 +2698,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi02",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2877,7 +2726,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi03",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2906,7 +2754,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi04",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2935,7 +2782,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi05",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2964,7 +2810,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi06",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2993,7 +2838,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi07",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3022,7 +2866,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi08",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3051,7 +2894,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi09",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3080,7 +2922,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi10",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3109,7 +2950,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi11",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3138,7 +2978,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi12",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3167,7 +3006,6 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi13",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3196,12 +3034,10 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Psi14",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -3210,42 +3046,39 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": true,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 2,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
+                      "Position": 2,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Test",
@@ -3275,7 +3108,6 @@
                       "Filter": null,
                       "Name": "Psi",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3304,32 +3136,26 @@
                       "Filter": null,
                       "Name": "SW",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }
