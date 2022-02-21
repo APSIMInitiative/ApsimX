@@ -330,9 +330,13 @@ namespace Models.CLEM.Resources
         }
 
         ///<inheritdoc/>
-        [EventSubscribe("Commencing")]
-        private new void OnSimulationCommencing(object sender, EventArgs e)
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
+            // clear purchased individuals at start of time step as there is no carryover
+            // this is not the responsibility of any activity as we cannbe assured of what activities will be run.
+            if (PurchaseIndividuals != null)
+                PurchaseIndividuals.Clear();
         }
 
         /// <summary>
@@ -431,7 +435,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="individuals">Individuals to summarize</param>
         /// <param name="priceStyle">Price style to use</param>
-        /// <param name="warningMessage">A custom warning message used if prices cannot be found otherwise the stand messge will be reported for each unique missing price</param>
+        /// <param name="warningMessage">A custom warning message used if prices cannot be found otherwise the standard messge will be reported for each unique missing price</param>
         /// <returns>A grouped summary of individuals</returns>
         public IEnumerable<RuminantReportTypeDetails> SummarizeIndividualsByGroups(IEnumerable<Ruminant> individuals, PurchaseOrSalePricingStyleType priceStyle, string warningMessage = "")
         {

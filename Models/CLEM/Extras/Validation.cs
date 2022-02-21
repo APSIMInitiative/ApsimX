@@ -261,6 +261,71 @@ namespace Models.CLEM
         }
     }
 
+    /// <summary>
+    /// Tests if herd change reason is of a specified style (purchase or sale)
+    /// </summary>
+    [AttributeUsage(AttributeTargets.Property)]
+    public class HerdSaleReasonAttribute : ValidationAttribute
+    {
+        private string DefaultErrorMessage;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="value"></param>
+        public HerdSaleReasonAttribute(object value)
+        {
+            compareStyle = Convert.ToString(value, CultureInfo.InvariantCulture);
+        }
+
+        private string compareStyle { get; set; }
+
+        /// <summary>
+        /// Perfom validation method
+        /// </summary>
+        /// <param name="value"></param>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        protected override ValidationResult IsValid(object value, ValidationContext validationContext)
+        {
+            if (!Enum.TryParse<HerdChangeReason>(value.ToString(), out HerdChangeReason changeReason))
+                throw new Exception($"The property type {value.GetType().Name} is not permitted for HerdSaleReasonValidation attribute");
+
+            string result = "";
+            switch (changeReason)
+            {
+                case HerdChangeReason.MarkedSale:
+                case HerdChangeReason.TradeSale:
+                case HerdChangeReason.DryBreederSale:
+                case HerdChangeReason.ExcessBreederSale:
+                case HerdChangeReason.ExcessPreBreederSale:
+                case HerdChangeReason.ExcessSireSale:
+                case HerdChangeReason.MaxAgeSale:
+                case HerdChangeReason.AgeWeightSale:
+                case HerdChangeReason.DestockSale:
+                    result = "sale";
+                    break;
+                case HerdChangeReason.TradePurchase:
+                case HerdChangeReason.BreederPurchase:
+                case HerdChangeReason.SirePurchase:
+                case HerdChangeReason.RestockPurchase:
+                    result = "purchase";
+                    break;
+                default:
+                    break;
+            }
+
+            string[] memberNames = new string[] { validationContext.MemberName };
+
+            if (result == compareStyle)
+                return ValidationResult.Success;
+            else
+            {
+                DefaultErrorMessage = $"Value [{ changeReason.ToString() }] must be a {compareStyle} change reason";
+                return new ValidationResult(ErrorMessage ?? DefaultErrorMessage, memberNames);
+            }
+        }
+    }
 
     /// <summary>
     /// Tests if date greater than specified property name

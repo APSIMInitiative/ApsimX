@@ -23,12 +23,15 @@ namespace Models.CLEM.Groupings
     [Description("Defines a filter rule using properties and methods of the individual")]
     [ValidParent(ParentType = typeof(IFilterGroup))]
     [Version(1, 0, 0, "")]
+    [HelpUri(@"Content/Features/Filters/FilterByProperty.htm")]
+
     public class FilterByProperty : Filter, IValidatableObject
     {
         [NonSerialized]
         private PropertyInfo propertyInfo;
         private bool validOperator = true;
-        private IEnumerable<string> GetParameters() => Parent?.Parameters.OrderBy(k => k);
+        
+        private IEnumerable<string> GetParameters() => Parent?.GetParameterNames().OrderBy(k => k);
 
         /// <summary>
         /// The property or method to filter by
@@ -55,13 +58,12 @@ namespace Models.CLEM.Groupings
             if (Validator.TryValidateObject(this, context, results, true))
             {
                 Initialise();
-                Rule = Compile<IFilterable>();
+                // rules can only be built on commence not during use in UI (Descriptive summaries)
+                BuildRule();
             }
         }
 
-        /// <summary>
-        /// Initialise this filter by property 
-        /// </summary>
+        /// <inheritdoc/>
         public override void Initialise()
         {
             if (PropertyOfIndividual != null && PropertyOfIndividual != "")
@@ -72,9 +74,16 @@ namespace Models.CLEM.Groupings
         }
 
         /// <inheritdoc/>
+        public override void BuildRule()
+        {
+            if (Rule is null)
+                Rule = Compile<IFilterable>();
+        }
+
+        /// <inheritdoc/>
         public override Func<T, bool> Compile<T>()
         {
-            if (!validOperator) return f => false;
+            if (!validOperator || propertyInfo is null) return f => false;
             return CompileComplex<T>();
         }
 
@@ -234,7 +243,7 @@ namespace Models.CLEM.Groupings
                 bool truefalse = IsOperatorTrueFalseTest();
                 if (truefalse | (propertyInfo != null && propertyInfo.PropertyType.IsEnum))
                 {
-                    if(propertyInfo.PropertyType == typeof(bool))
+                    if (propertyInfo.PropertyType == typeof(bool))
                     {
                         if (Operator == ExpressionType.IsFalse || Value?.ToString().ToLower() == "false")
                             filterWriter.Write(" not");

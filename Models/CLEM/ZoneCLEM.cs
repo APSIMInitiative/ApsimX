@@ -78,7 +78,7 @@ namespace Models.CLEM
         public bool AutoCreateDescriptiveSummary { get; set; }
 
         /// <summary>
-        /// Month this overhead is next due.
+        /// Month this cecological indicators calculation is next due.
         /// </summary>
         [JsonIgnore]
         public DateTime EcologicalIndicatorsNextDueDate { get; set; }
@@ -265,18 +265,19 @@ namespace Models.CLEM
             IModel simulation = model.FindAncestor<Simulation>();
             var summary = simulation.FindDescendant<Summary>();
 
-            var errorsThisSim = summary.Messages().Rows.Cast<DataRow>().Where(a => a[4].ToString() == "0" && a[1].ToString().StartsWith(model.Name));
-
             // get all validations 
-            string innerExceptionString = "";
-            foreach (DataRow error in errorsThisSim)
-                innerExceptionString += $"{error[3]}{Environment.NewLine}";
+            var errorsThisSim = summary.GetMessages(simulation.Name)?.ToArray().Where(a => a.Severity == MessageType.Error && a.Text.StartsWith("Invalid parameter "));
 
+            // create combined inner exception
+            string innerExceptionString = "";
+            foreach (var error in errorsThisSim)
+                innerExceptionString += $"{error.Text}{Environment.NewLine}";
+
+            // report error and stop
             if (errorsThisSim.Any())
             {
-                int invalidCount = errorsThisSim.Where(a => a[3].ToString().StartsWith("Invalid parameter ")).Count();
                 Exception innerException = new Exception(innerExceptionString);
-                throw new ApsimXException(model, $"{invalidCount} invalid entr{(invalidCount == 1 ? "y" : "ies")}.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details", innerException);
+                throw new ApsimXException(model, $"{errorsThisSim.Count()} invalid entr{(errorsThisSim.Count() == 1 ? "y" : "ies")}.{Environment.NewLine}See CLEM component [{model.GetType().Name}] Messages tab for details", innerException);
             }
         }
 

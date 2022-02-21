@@ -114,18 +114,6 @@
             mainWidget = scroller;
             drawable.Realized += OnRealized;
             drawable.SizeAllocated += OnRealized;
-            if (owner == null)
-            {
-                DGObject.DefaultOutlineColour = Color.Black;
-            }
-            else
-            {
-                // Needs to be reimplemented for gtk3.
-                DGObject.DefaultOutlineColour = owner.MainWidget.StyleContext.GetColor(StateFlags.Normal).ToColour();
-#pragma warning disable 0612
-                DGObject.DefaultBackgroundColour = owner.MainWidget.StyleContext.GetBackgroundColor(StateFlags.Normal).ToColour();
-#pragma warning restore 0612
-            }
             mainWidget.Destroyed += OnDestroyed;
         }
 
@@ -208,8 +196,12 @@
             {
                 DrawingArea area = (DrawingArea)sender;
 
-
                 Cairo.Context context = args.Cr;
+
+                DGObject.DefaultOutlineColour = area.StyleContext.GetColor(StateFlags.Normal).ToColour();
+#pragma warning disable 0612
+                DGObject.DefaultBackgroundColour = area.StyleContext.GetBackgroundColor(StateFlags.Normal).ToColour();
+#pragma warning restore 0612
 
                 CairoContext drawingContext = new CairoContext(context, MainWidget);
                 DirectedGraphRenderer.Draw(drawingContext, arcs, nodes);

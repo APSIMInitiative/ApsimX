@@ -38,6 +38,9 @@
         /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>
         double Drainage { get; }
 
+        /// <summary>Pond depth (mm).</summary>
+        double Pond { get; }
+
         /// <summary>Fraction of incoming radiation reflected from bare soil</summary>
         double Salb { get; }
 

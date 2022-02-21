@@ -21,6 +21,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(IFilterGroup))]
     [Description("Defines a sort order using the Attribute details of the individual")]
     [Version(1, 0, 0, "")]
+    [HelpUri(@"Content/Features/Filters/SortByAttribute.htm")]
     public class SortByAttribute : CLEMModel, ISort
     {
         /// <summary>

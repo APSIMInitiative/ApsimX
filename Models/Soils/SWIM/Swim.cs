@@ -918,7 +918,7 @@ namespace Models.Soils
 
         /// <summary>Pond depth (mm)</summary>
         [Units("mm")]
-        public double pond
+        public double Pond
         {
             get
             {

@@ -438,7 +438,18 @@
         /// Called when the model has been newly created in memory whether from 
         /// cloning or deserialisation.
         /// </summary>
-        public virtual void OnCreated() { }
+        public virtual void OnCreated()
+        {
+            // Check for duplicate child models (child models with the same name).
+            // First, group children according to their name.
+            IEnumerable<IGrouping<string, IModel>> groups = Children.GroupBy(c => c.Name);
+            foreach (IGrouping<string, IModel> group in groups)
+            {
+                int n = group.Count();
+                if (n > 1)
+                    throw new Exception($"Duplicate models found: {FullPath} has {n} children named {group.Key}");
+            }
+        }
 
         /// <summary>
         /// Called immediately before a simulation has its links resolved and is run.

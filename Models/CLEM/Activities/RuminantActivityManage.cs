@@ -176,7 +176,7 @@ namespace Models.CLEM.Activities
         /// Include the marking for sale of males reaching age or weight
         /// </summary>
         [Category("Grow out herd", "Males")]
-        [Description("Perform growing out of young males")]
+        [Description("Mark grow out males for sale")]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool MarkAgeWeightMalesForSale { get; set; }
 
@@ -184,7 +184,7 @@ namespace Models.CLEM.Activities
         /// Castrate grow out males (steers, bullocks)
         /// </summary>
         [Category("Grow out herd", "Males")]
-        [Description("Castrate grow out males")]
+        [Description("Castrate young males")]
         [System.ComponentModel.DefaultValueAttribute(true)]
         public bool CastrateGrowOutMales { get; set; }
 
@@ -209,7 +209,7 @@ namespace Models.CLEM.Activities
         /// Perform selling of young females the same as males
         /// </summary>
         [Category("Grow out herd", "Females")]
-        [Description("Perform growing out of young females")]
+        [Description("Also perform growing out of young females")]
         [Required]
         public bool SellFemalesLikeMales { get; set; }
 
@@ -278,14 +278,14 @@ namespace Models.CLEM.Activities
         /// Adjust breeding females up to required amount at start-up
         /// </summary>
         [Category("Start up", "Breeding females")]
-        [Description("Adjust breeding females at start-up")]
+        [Description("Adjust breeding female numbers at start-up")]
         public bool AdjustBreedingFemalesAtStartup { get; set; }
 
         /// <summary>
         /// Adjust breeding males up to required amount at start-up
         /// </summary>
         [Category("Start up", "Breeding males")]
-        [Description("Adjust breeding sires at start-up")]
+        [Description("Adjust breeding sire numbers at start-up")]
         public bool AdjustBreedingMalesAtStartup { get; set; }
 
         /// <summary>
@@ -429,7 +429,7 @@ namespace Models.CLEM.Activities
             this.InitialiseHerd(false, true);
             breedParams = Resources.FindResourceType<RuminantHerd, RuminantType>(this, this.PredictedHerdName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as RuminantType;
 
-            decimal breederHerdSize = 0;
+            int breederHerdSize = 0;
 
             IEnumerable<Ruminant> individuals = this.CurrentHerd(false);
             if (individuals.Any())
@@ -441,12 +441,14 @@ namespace Models.CLEM.Activities
 
                 if (cohorts != null)
                 {
+                    int heifers = 0;
+                    var cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Sex == Sex.Female && a.Age >= breedParams.MinimumAge1stMating);
+                    int initialBreeders = Convert.ToInt32(cohortList.Sum(a => a.Number), CultureInfo.InvariantCulture);
+                    breederHerdSize = initialBreeders;
+
                     if (AdjustBreedingFemalesAtStartup)
                     {
                         // breeders
-                        int heifers = 0;// Convert.ToInt32(cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Gender == Sex.Female && (a.Age >= 12 & a.Age < breedParams.MinimumAge1stMating)).Sum(a => a.Number));
-                        var cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Sex == Sex.Female && (a.Age >= breedParams.MinimumAge1stMating & a.Age <= this.MaximumBreederAge));
-                        int initialBreeders = Convert.ToInt32(cohortList.Sum(a => a.Number), CultureInfo.InvariantCulture);
                         if (initialBreeders < (minBreeders - heifers))
                         {
                             double scaleFactor = (minBreeders - heifers) / Convert.ToDouble(initialBreeders);
@@ -464,7 +466,7 @@ namespace Models.CLEM.Activities
                             if (numberAdded == 0)
                                 throw new ApsimXException(this, $"Unable to scale breeding female population up to the maximum breeders kept at startup\r\nNo cohorts representing breeders were found in the initial herd structure [r=InitialCohorts] for [r={breedParams.Name}]\r\nAdd at least one initial cohort that meets the breeder criteria of age at first mating and max age kept");
 
-                            breederHerdSize = initialBreeders + numberAdded;
+                            breederHerdSize += numberAdded;
                         }
                         else if (initialBreeders > (maxBreeders - heifers))
                         {
@@ -491,7 +493,7 @@ namespace Models.CLEM.Activities
 
                     // max sires
                     if (MaximumSiresKept < 1 & MaximumSiresKept > 0)
-                        SiresKept = Convert.ToInt32(Math.Ceiling(maxBreeders * breederHerdSize), CultureInfo.InvariantCulture);
+                        SiresKept = Convert.ToInt32(Math.Ceiling(breederHerdSize * MaximumSiresKept), CultureInfo.InvariantCulture);
                     else
                         SiresKept = Convert.ToInt32(Math.Truncate(MaximumSiresKept), CultureInfo.InvariantCulture);
 
@@ -499,7 +501,7 @@ namespace Models.CLEM.Activities
                     if (AdjustBreedingMalesAtStartup)
                     {
                         // get number in herd
-                        List<RuminantTypeCohort> cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Sex == Sex.Male & a.Sire == true).ToList();
+                        cohortList = cohorts.FindAllChildren<RuminantTypeCohort>().Where(a => a.Sex == Sex.Male & a.Sire == true).ToList();
                         int numberPresent = Convert.ToInt32(cohortList.Sum(a => a.Number));
                         // expand from those in herd
                         if (numberPresent < SiresKept)
@@ -749,7 +751,7 @@ namespace Models.CLEM.Activities
                 int numberFemaleHeifersInHerd = preBreeders.Count();
 
                 // adjust males sires
-                if (numberMaleSiresInHerd > SiresKept)
+                if (numberMaleSiresInHerd >= SiresKept)
                 {
                     // sell sires
                     // What rule? oldest first as they may be lost soonest?
@@ -766,9 +768,15 @@ namespace Models.CLEM.Activities
                     }
                     if(numberToRemove > 0)
                         Status = ActivityStatus.Warning;
+
+                    // we can castrate any growout males at this point as there are no prebreeders to manage
+                    if (CastrateGrowOutMales)
+                        foreach (RuminantMale male in growOutHerd.OfType<RuminantMale>().Where(a => !a.ReplacementBreeder && !a.IsCastrated))
+                            male.Attributes.Add("Castrated");
                 }
-                else if(numberMaleSiresInHerd < SiresKept)
+                else
                 {
+                    // need to assign/buy sires
                     if ((foodStoreSires == null) || (sufficientFoodSires))
                     {
                         // limit by breeders as proportion of max breeders so we don't spend alot on sires when building the herd and females more valuable
@@ -819,12 +827,8 @@ namespace Models.CLEM.Activities
                         // time to castrate any males that have not been assigned as replacement breeders from this years young male pool
                         // get grow-out males that are not castrated and not marked as replacement breeder
                         if (CastrateGrowOutMales)
-                        {
                             foreach (RuminantMale male in growOutHerd.OfType<RuminantMale>().Where(a => !a.ReplacementBreeder && !a.IsCastrated))
-                            {
                                 male.Attributes.Add("Castrated");
-                            } 
-                        }
 
                         // if still insufficient buy sires.
                         // new code to buy sires based on details provided in SpecifyRuminants list already created in initialise and validated

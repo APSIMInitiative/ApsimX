@@ -122,45 +122,6 @@ namespace Models.CLEM
     }
 
     /// <summary>
-    /// Reasons link to herd change for use with manual mark for sale
-    /// </summary>
-    public enum MarkForSaleReason
-    {
-        /// <summary>
-        /// Reason not provided
-        /// </summary>
-        NotProvided = 0,
-        /// <summary>
-        /// Individual sold as marked for sale
-        /// </summary>
-        MarkedSale = 4,
-        /// <summary>
-        /// Individual reached sale weight or age
-        /// </summary>
-        AgeWeightSale = 12,
-        /// <summary>
-        /// Individual consumed by household
-        /// </summary>
-        Consumed = 15,
-        /// <summary>
-        /// Destocking sale
-        /// </summary>
-        DestockSale = 16,
-        /// <summary>
-        /// Dry breeder sold
-        /// </summary>
-        DryBreederSale = 6,
-        /// <summary>
-        /// Individual reached maximim age and sold
-        /// </summary>
-        MaxAgeSale = 10,
-        /// <summary>
-        /// Trade individual sold weight/age
-        /// </summary>
-        TradeSale = 5 
-    }
-
-    /// <summary>
     /// Mustering timing type
     /// </summary>
     public enum MusterTimingType
@@ -323,6 +284,40 @@ namespace Models.CLEM
         /// Labour per unit
         /// </summary>
         perUnit = 6,
+    }
+
+    /// <summary>
+    /// Labour limit type calculation type
+    /// </summary>
+    public enum LabourLimitType
+    {
+        /// <summary>
+        /// Represents a rate or fixed days specified
+        /// </summary>
+        AsDaysRequired,
+        /// <summary>
+        /// Relates to the total days allowed
+        /// </summary>
+        AsTotalAllowed,
+        /// <summary>
+        /// As proportion of the days required
+        /// </summary>
+        ProportionOfDaysRequired
+    }
+
+    /// <summary>
+    /// Style to calculate hired labour payment
+    /// </summary>
+    public enum PayHiredLabourCalculationStyle
+    {
+        /// <summary>
+        /// Use labour available in LabourAvailability for all hired labour
+        /// </summary>
+        ByAvailableLabour,
+        /// <summary>
+        /// Use the hired labour used in timestep
+        /// </summary>
+        ByLabourUsedInTimeStep
     }
 
     /// <summary>
@@ -856,10 +851,34 @@ namespace Models.CLEM
         /// <summary>
         /// Take a proportion of the group selected
         /// </summary>
-        Proportion,
+        TakeProportion,
         /// <summary>
         /// Take a set number of individuals
         /// </summary>
-        Individuals
+        TakeIndividuals,
+        /// <summary>
+        /// Skip a proportion of the group selected and return the remainder
+        /// </summary>
+        SkipProportion,
+        /// <summary>
+        /// Skip a set number of individuals and return the remainder
+        /// </summary>
+        SkipIndividuals
     }
+
+    /// <summary>
+    /// Position for reducing individuals from a filter group
+    /// </summary>
+    public enum TakeFromFilteredPositionStyle
+    {
+        /// <summary>
+        /// Take/Skip from start
+        /// </summary>
+        Start,
+        /// <summary>
+        /// Take/Skip from end
+        /// </summary>
+        End
+    }
+
 }

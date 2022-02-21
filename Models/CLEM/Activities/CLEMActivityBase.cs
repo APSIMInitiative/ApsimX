@@ -560,13 +560,20 @@ namespace Models.CLEM.Activities
                     // coming from Transmutation request
                     lr = new LabourRequirement()
                     {
+                        LimitStyle = LabourLimitType.AsDaysRequired,
                         ApplyToAll = false,
+                        MaximumPerGroup = 10000,
                         MaximumPerPerson = 1000,
                         MinimumPerPerson = 0
                     };
             }
             else
                 lr = callingModel.FindAllChildren<LabourRequirement>().FirstOrDefault();
+
+            lr.CalculateLimits(amountNeeded);
+            amountNeeded = Math.Min(amountNeeded, lr.MaximumDaysPerGroup);
+            request.Required = amountNeeded;
+            // may need to reduce request here or shortfalls will be triggered
 
             int currentIndex = 0;
             if (current==null)
@@ -595,19 +602,19 @@ namespace Models.CLEM.Activities
             while (current != null && amountProvided < amountNeeded)
             {
                 IEnumerable<LabourType> items = resourceHolder.FindResource<Labour>().Items;
-                items = items.Where(a => (a.LastActivityRequestID != request.ActivityID) || (a.LastActivityRequestID == request.ActivityID && a.LastActivityRequestAmount < lr.MaximumPerPerson));
+                items = items.Where(a => (a.LastActivityRequestID != request.ActivityID) || (a.LastActivityRequestID == request.ActivityID && a.LastActivityRequestAmount < lr.MaximumDaysPerPerson));
                 items = current.Filter(items);
 
                 // search for people who can do whole task first
-                while (amountProvided < amountNeeded && items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson) >= request.Required).Count() > 0)
+                while (amountProvided < amountNeeded && items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumDaysPerPerson) >= request.Required).Any())
                 {
                     // get labour least available but with the amount needed
-                    LabourType lt = items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson) >= request.Required).OrderBy(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson)).FirstOrDefault();
+                    LabourType lt = items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumDaysPerPerson) >= request.Required).OrderBy(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumDaysPerPerson)).FirstOrDefault();
 
-                    double amount = Math.Min(amountNeeded - amountProvided, lt.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson));
+                    double amount = Math.Min(amountNeeded - amountProvided, lt.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumDaysPerPerson));
 
                     // limit to max allowed per person
-                    amount = Math.Min(amount, lr.MaximumPerPerson);
+                    amount = Math.Min(amount, lr.MaximumDaysPerPerson);
                     // limit to min per person to do activity
                     if (amount < lr.MinimumPerPerson)
                     {
@@ -633,18 +640,18 @@ namespace Models.CLEM.Activities
                     if (amountProvided < amountNeeded)
                     {
                         // then search for those that meet criteria and can do part of task
-                        foreach (LabourType item in items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson) >= 0).OrderByDescending(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson))) 
+                        foreach (LabourType item in items.Where(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumDaysPerPerson) >= 0).OrderByDescending(a => a.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumDaysPerPerson))) 
                         {
                             if (amountProvided >= amountNeeded)
                                 break;
 
-                            double amount = Math.Min(amountNeeded - amountProvided, item.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumPerPerson));
+                            double amount = Math.Min(amountNeeded - amountProvided, item.LabourCurrentlyAvailableForActivity(request.ActivityID, lr.MaximumDaysPerPerson));
 
                             // limit to max allowed per person
-                            amount = Math.Min(amount, lr.MaximumPerPerson);
+                            amount = Math.Min(amount, lr.MaximumDaysPerPerson);
 
                             // limit to min per person to do activity
-                            if (amount >= lr.MinimumPerPerson)
+                            if (amount >= lr.MinimumDaysPerPerson)
                             {
                                 amountProvided += amount;
                                 removeRequest.Required = amount;
