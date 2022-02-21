@@ -3891,8 +3891,11 @@ namespace Models.Soils
                     //_h = Math.Max(0.0, _h + dp[-1]);
                 }
 
-                var msg = it + ",psi," + StringUtilities.Build(_psi, ",") + ",th," + StringUtilities.Build(th, ",");
-                summary.WriteMessage(this, msg, MessageType.Diagnostic);
+                if (Diagnostics)
+                {
+                    var msg = it + ",psi," + StringUtilities.Build(_psi, ",") + ",th," + StringUtilities.Build(th, ",");
+                    summary.WriteMessage(this, msg, MessageType.Diagnostic);
+                }
             }
             while (fail && it < itlim);
 
