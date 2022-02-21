@@ -197,35 +197,35 @@ namespace Models.CLEM.Activities
             return requestList;
         }
 
-        /// <inheritdoc/>
-        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            double daysNeeded;
-            // TODO add labour multiplier if pasture below given amount and difficult to cut
-            // as per IAT rules below 500kg/ha
+        ///// <inheritdoc/>
+        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        //{
+        //    double daysNeeded;
+        //    // TODO add labour multiplier if pasture below given amount and difficult to cut
+        //    // as per IAT rules below 500kg/ha
 
-            switch (requirement.UnitType)
-            {
-                case LabourUnitType.perKg:
-                    daysNeeded = requirement.LabourPerUnit * AmountHarvested;
-                    break;
-                case LabourUnitType.perUnit:
-                    double numberUnits = AmountHarvested / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                    {
-                        numberUnits = Math.Ceiling(numberUnits);
-                    }
+        //    switch (requirement.UnitType)
+        //    {
+        //        case LabourUnitType.perKg:
+        //            daysNeeded = requirement.LabourPerUnit * AmountHarvested;
+        //            break;
+        //        case LabourUnitType.perUnit:
+        //            double numberUnits = AmountHarvested / requirement.UnitSize;
+        //            if (requirement.WholeUnitBlocks)
+        //            {
+        //                numberUnits = Math.Ceiling(numberUnits);
+        //            }
 
-                    daysNeeded = requirement.LabourPerUnit * numberUnits;
-                    break;
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-            }
-            return new LabourRequiredArgs(daysNeeded, TransactionCategory, pasture.NameWithParent);
-        }
+        //            daysNeeded = requirement.LabourPerUnit * numberUnits;
+        //            break;
+        //        case LabourUnitType.Fixed:
+        //            daysNeeded = requirement.LabourPerUnit;
+        //            break;
+        //        default:
+        //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+        //    }
+        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, pasture.NameWithParent);
+        //}
 
         /// <inheritdoc/>
         protected override void AdjustResourcesForActivity()

@@ -153,7 +153,7 @@ namespace Models.CLEM.Activities
                     {
                         double cashlimit = 1;
                         // calculate required and provided for fixed and variable payments
-                        var payments = resourcesneeded.Where(a => a.ResourceType == typeof(Finance)).GroupBy(a => (a.ActivityModel as RuminantActivityFee).PaymentStyle == AnimalPaymentStyleType.Fixed).Select(a => new { key = a.Key, required = a.Sum(b => b.Required), provided = a.Sum(b => b.Provided), });
+                        var payments = resourcesneeded.Where(a => a.ResourceType == typeof(Finance)).GroupBy(a => (a.ActivityModel as RuminantActivityFee).Units.ToUpper() == "FIXED").Select(a => new { key = a.Key, required = a.Sum(b => b.Required), provided = a.Sum(b => b.Provided), });
                         double paymentsRequired = payments.Sum(a => a.required);
                         double paymentsProvided = payments.Sum(a => a.provided);
 
@@ -261,34 +261,34 @@ namespace Models.CLEM.Activities
             return null;
         }
 
-        /// <summary>
-        /// Determine the labour required for this activity based on LabourRequired items in tree
-        /// </summary>
-        /// <param name="requirement">Labour requirement model</param>
-        /// <returns></returns>
-        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            IEnumerable<Ruminant> herd = CurrentHerd(false);
-            int head = herd.Where(a => a.Weaned == false).Count();
+        ///// <summary>
+        ///// Determine the labour required for this activity based on LabourRequired items in tree
+        ///// </summary>
+        ///// <param name="requirement">Labour requirement model</param>
+        ///// <returns></returns>
+        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        //{
+        //    IEnumerable<Ruminant> herd = CurrentHerd(false);
+        //    int head = herd.Where(a => a.Weaned == false).Count();
 
-            double daysNeeded = 0;
-            switch (requirement.UnitType)
-            {
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perHead:
-                    daysNeeded = head * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perAE:
-                    double sumAE = 0;
-                    daysNeeded = sumAE * requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-            }
-            return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
-        }
+        //    double daysNeeded = 0;
+        //    switch (requirement.UnitType)
+        //    {
+        //        case LabourUnitType.Fixed:
+        //            daysNeeded = requirement.LabourPerUnit;
+        //            break;
+        //        case LabourUnitType.perHead:
+        //            daysNeeded = head * requirement.LabourPerUnit;
+        //            break;
+        //        case LabourUnitType.perAE:
+        //            double sumAE = 0;
+        //            daysNeeded = sumAE * requirement.LabourPerUnit;
+        //            break;
+        //        default:
+        //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+        //    }
+        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
+        //}
 
         #region validation
         /// <summary>

@@ -85,7 +85,10 @@ namespace Models.CLEM.Resources
         /// 0 (default) = not a market transaction
         ///</summary> 
         public double MarketTransactionMultiplier { get; set; }
-
+        /// <summary>
+        /// The details if this request comes from an identifiable child managing resources
+        /// </summary>
+        public (string type, string identifier, string unit) IdentifiableChildDetails { get; set; }
         ///<summary>
         /// ResourceRequest constructor
         ///</summary> 

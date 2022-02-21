@@ -45,28 +45,28 @@ namespace Models.CLEM.Activities
             TransactionCategory = "Manure";
         }
 
-        /// <inheritdoc/>
-        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            double amountAvailable = 0;
-            // determine wet weight to move
-            foreach (ManureStoreUncollected msu in manureStore.UncollectedStores)
-                amountAvailable = msu.Pools.Sum(a => a.WetWeight(manureStore.MoistureDecayRate, manureStore.ProportionMoistureFresh));
+        ///// <inheritdoc/>
+        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        //{
+        //    double amountAvailable = 0;
+        //    // determine wet weight to move
+        //    foreach (ManureStoreUncollected msu in manureStore.UncollectedStores)
+        //        amountAvailable = msu.Pools.Sum(a => a.WetWeight(manureStore.MoistureDecayRate, manureStore.ProportionMoistureFresh));
 
-            double daysNeeded = 0;
-            switch (requirement.UnitType)
-            {
-                case LabourUnitType.perUnit:
-                    daysNeeded = requirement.LabourPerUnit * (amountAvailable / requirement.UnitSize);
-                    break;
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-            }
-            return new LabourRequiredArgs(daysNeeded, TransactionCategory, manureStore.NameWithParent);
-        }
+        //    double daysNeeded = 0;
+        //    switch (requirement.UnitType)
+        //    {
+        //        case LabourUnitType.perUnit:
+        //            daysNeeded = requirement.LabourPerUnit * (amountAvailable / requirement.UnitSize);
+        //            break;
+        //        case LabourUnitType.Fixed:
+        //            daysNeeded = requirement.LabourPerUnit;
+        //            break;
+        //        default:
+        //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+        //    }
+        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, manureStore.NameWithParent);
+        //}
 
         /// <inheritdoc/>
         protected override void PerformTasksForActivity()

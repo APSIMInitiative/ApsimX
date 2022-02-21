@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
+using Models.CLEM.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -67,10 +68,13 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (!FindAllChildren<RuminantGroup>().Any())
+            if (this is ICanHandleIdentifiableChildModels)
             {
-                string[] memberNames = new string[] { "Specify individuals" };
-                results.Add(new ValidationResult($"No individuals have been specified by [f=RuminantGroup] to be moved in [a={Name}]. Provide at least an empty RuminantGroup to move all individuals.", memberNames));
+                if (!FindAllChildren<RuminantGroup>().Any())
+                {
+                    string[] memberNames = new string[] { "Specify individuals" };
+                    results.Add(new ValidationResult($"No individuals have been specified by [f=RuminantGroup] to be moved in [a={Name}]. Provide at least an empty RuminantGroup to move all individuals.", memberNames));
+                }
             }
             return results;
         }
@@ -116,41 +120,41 @@ namespace Models.CLEM.Activities
                 }
         }
 
-        /// <inheritdoc/>
-        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            double daysNeeded = 0;
-            double numberUnits = 0;
-            IEnumerable<Ruminant> herd = this.CurrentHerd(false);
-            int head = herd.Count();
-            double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
-            if (herd.Any())
-            {
-                switch (requirement.UnitType)
-                {
-                    case LabourUnitType.Fixed:
-                        daysNeeded = requirement.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perHead:
-                        numberUnits = head / requirement.UnitSize;
-                        if (requirement.WholeUnitBlocks)
-                            numberUnits = Math.Ceiling(numberUnits);
+        ///// <inheritdoc/>
+        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        //{
+        //    double daysNeeded = 0;
+        //    double numberUnits = 0;
+        //    IEnumerable<Ruminant> herd = this.CurrentHerd(false);
+        //    int head = herd.Count();
+        //    double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
+        //    if (herd.Any())
+        //    {
+        //        switch (requirement.UnitType)
+        //        {
+        //            case LabourUnitType.Fixed:
+        //                daysNeeded = requirement.LabourPerUnit;
+        //                break;
+        //            case LabourUnitType.perHead:
+        //                numberUnits = head / requirement.UnitSize;
+        //                if (requirement.WholeUnitBlocks)
+        //                    numberUnits = Math.Ceiling(numberUnits);
 
-                        daysNeeded = numberUnits * requirement.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perAE:
-                        numberUnits = adultEquivalents / requirement.UnitSize;
-                        if (requirement.WholeUnitBlocks)
-                            numberUnits = Math.Ceiling(numberUnits);
+        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
+        //                break;
+        //            case LabourUnitType.perAE:
+        //                numberUnits = adultEquivalents / requirement.UnitSize;
+        //                if (requirement.WholeUnitBlocks)
+        //                    numberUnits = Math.Ceiling(numberUnits);
 
-                        daysNeeded = numberUnits * requirement.LabourPerUnit;
-                        break;
-                    default:
-                        throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-                } 
-            }
-            return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
-        }
+        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
+        //                break;
+        //            default:
+        //                throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+        //        } 
+        //    }
+        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
+        //}
 
         /// <inheritdoc/>
         protected override void PerformTasksForActivity()

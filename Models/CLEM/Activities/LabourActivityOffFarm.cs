@@ -101,7 +101,7 @@ namespace Models.CLEM.Activities
             else
             {
                 // check labour required is using fixed type
-                if (labourRequired.UnitType != LabourUnitType.Fixed)
+                if (labourRequired.Units.ToUpper() != "FIXED")
                 {
                     string[] memberNames = new string[] { "Labour requirement" };
                     results.Add(new ValidationResult(String.Format("The UnitType of the [r=LabourRequirement] in [a={0}] must be [Fixed] for this activity.", this.Name), memberNames));

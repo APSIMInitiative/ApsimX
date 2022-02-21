@@ -11,6 +11,7 @@ using Models.CLEM.Resources;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using Models.CLEM.Interfaces;
+using System.Xml.Serialization;
 
 namespace Models.CLEM.Groupings
 {
@@ -33,6 +34,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(TransmuteRuminant))]
     [ValidParent(ParentType = typeof(ReportRuminantAttributeSummary))]
     [Description("Selects specific individuals ruminants from the herd")]
+    [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "Added ability to select random proportion of the group to use")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantGroup.htm")]
     public class RuminantGroup : FilterGroup<Ruminant>, IValidatableObject, IIdentifiableChildModel
@@ -42,7 +44,21 @@ namespace Models.CLEM.Groupings
         /// </summary>
         [Description("Group identifier")]
         [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Identifier required")]
         public string Identifier { get; set; }
+
+        /// <inheritdoc/>
+        [XmlIgnore]
+        public string Units 
+        { 
+            get { return ""; }
+            set { units = value; }
+        }
+        private string units;          
+
+        /// <inheritdoc/>
+        [XmlIgnore]
+        public bool ShortfallAffectsActivity { get; set; }
 
         /// <summary>
         /// Constructor to apply defaults
@@ -54,12 +70,9 @@ namespace Models.CLEM.Groupings
         }
 
         /// <inheritdoc/>
-        public List<string> ParentSuppliedIdentifiers()
+        public List<ResourceRequest> GetResourceRequests(double activityMetric)
         {
-            if (Parent is ICanHandleIdentifiableChildModels)
-                return (Parent as ICanHandleIdentifiableChildModels).IdentifiableChildModelIdentifiers<RuminantGroup>();
-            else
-                return new List<string>();
+            return new List<ResourceRequest>();
         }
 
         #region descriptive summary
@@ -90,6 +103,31 @@ namespace Models.CLEM.Groupings
         #endregion
 
         #region validation
+
+        /// <summary>
+        /// A method to return the list of identifiers relavent to this parent activity
+        /// </summary>
+        /// <returns>A list of identifiers</returns>
+        public List<string> ParentSuppliedIdentifiers()
+        {
+            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
+                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels<RuminantGroup>().Identifiers;
+            else
+                return new List<string>();
+        }
+
+        /// <summary>
+        /// A method to return the list of units relavent to this parent activity
+        /// </summary>
+        /// <returns>A list of units</returns>
+        public List<string> ParentSuppliedUnits()
+        {
+            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
+                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels<RuminantGroup>().Units;
+            else
+                return new List<string>();
+        }
+
         /// <summary>
         /// Validate model
         /// </summary>
@@ -104,7 +142,7 @@ namespace Models.CLEM.Groupings
                 if (identifiers.Any() & !identifiers.Contains(Identifier))
                 {
                     string[] memberNames = new string[] { "Ruminant group" };
-                    results.Add(new ValidationResult($"The group identifier [{((Identifier == "") ? "BLANK" : Identifier)}] in [f={this.Name}] is not valid for the parent activity [a={Parent.Name}].{Environment.NewLine}Select an option from the list or provide an empty value for the property if no entries are provided", memberNames));
+                    results.Add(new ValidationResult($"The identifier [{((Identifier == "") ? "BLANK" : Identifier)}] in [f={this.Name}] is not valid for the parent activity [a={Parent.Name}].{Environment.NewLine}Select an option from the list. If the list is empty this activity does not support custom ruminant filtering", memberNames));
                 }
             }
             return results;

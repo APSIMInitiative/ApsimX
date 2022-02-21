@@ -98,7 +98,7 @@ namespace Models.CLEM.Activities
         [Description("Units to use")]
         [Category("Labour", "Units")]
         [Required]
-        public LabourUnitType UnitType { get; set; }
+        public string Units { get; set; }
 
         /// <summary>
         /// Labour limit style
@@ -135,13 +135,13 @@ namespace Models.CLEM.Activities
         public double MaximumPerPerson { get; set; }
 
         /// <summary>
-        /// Allow labour shortfall to affect activity
+        /// Allow shortfall to affect activity
         /// </summary>
         [Description("Allow labour shortfall to affect activity")]
         [Required]
         [System.ComponentModel.DefaultValueAttribute(false)]
         [Category("Labour", "General")]
-        public bool LabourShortfallAffectsActivity { get; set; }
+        public bool ShortfallAffectsActivity { get; set; }
 
         /// <summary>
         /// Apply to all matching labour (everyone performs activity)
@@ -150,6 +150,9 @@ namespace Models.CLEM.Activities
         [Required]
         [Category("Labour", "Rate")]
         public bool ApplyToAll { get; set; }
+
+        /// <inheritdoc/>
+        public string Measure { get { return "none"; } }
 
         /// <summary>
         /// Get the calculated maximum days per person for activity from CalculateLimits
@@ -200,15 +203,36 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
+        public List<ResourceRequest> GetResourceRequests(double activityMetric)
+        {
+            return new List<ResourceRequest>();
+        }
+
+        #region validation
+
+        /// <summary>
+        /// A method to return the list of identifiers relavent to this parent activity
+        /// </summary>
+        /// <returns>A list of identifiers</returns>
         public List<string> ParentSuppliedIdentifiers()
         {
-            if (Parent is ICanHandleIdentifiableChildModels)
-                return (Parent as ICanHandleIdentifiableChildModels).IdentifiableChildModelIdentifiers<LabourRequirement>();
+            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
+                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels<LabourRequirement>().Identifiers;
             else
                 return new List<string>();
         }
 
-        #region validation
+        /// <summary>
+        /// A method to return the list of units relavent to this parent activity
+        /// </summary>
+        /// <returns>A list of units</returns>
+        public List<string> ParentSuppliedUnits()
+        {
+            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
+                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels<LabourRequirement>().Units;
+            else
+                return new List<string>();
+        }
 
         /// <summary>
         /// Validate this object
@@ -258,14 +282,14 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activityentry\"><span class=\"setvalue\">");
                 // get amount
                 htmlWriter.Write($"{LabourPerUnit}</span> days labour is required");
-                if (UnitType != LabourUnitType.Fixed)
+                if (Units.ToUpper() != "Fixed")
                 {
                     if (UnitSize == 1)
                         htmlWriter.Write(" for each ");
                     else
                         htmlWriter.Write($" for every <span class=\"setvalue\">{UnitSize:#,##0.##}</span>");
 
-                    htmlWriter.Write($"<span class=\"setvalue\">{UnitType2HTML()}</span>");
+                    htmlWriter.Write($"<span class=\"setvalue\">{Units}</span>");
                     if (WholeUnitBlocks)
                         htmlWriter.Write(" and will be supplied in blocks");
                 }
@@ -327,30 +351,6 @@ namespace Models.CLEM.Activities
         } 
         #endregion
 
-        private string UnitType2HTML()
-        {
-            switch (UnitType)
-            {
-                case LabourUnitType.Fixed:
-                    return "";
-                case LabourUnitType.perHa:
-                    return "hectare";
-                case LabourUnitType.perUnitOfLand:
-                    return "land unit";
-                case LabourUnitType.perTree:
-                    return "tree";
-                case LabourUnitType.perHead:
-                    return "head";
-                case LabourUnitType.perAE:
-                    return "AE";
-                case LabourUnitType.perKg:
-                    return "kg";
-                case LabourUnitType.perUnit:
-                    return "unit";
-                default:
-                    return "Unknown";
-            }
-        }
 
     }
 }

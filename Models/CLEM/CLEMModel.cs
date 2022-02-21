@@ -267,7 +267,6 @@ namespace Models.CLEM
             return null;
         }
 
-
         /// <inheritdoc/>
         public virtual string ModelSummary()
         {

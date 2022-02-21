@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Manages weaning of suckling ruminant individuals based on age and/or weight")]
-    [Version(1, 1, 0, "Implements new activity control")]
+    [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 2, "Weaning style added. Allows decision rule (age, weight, or both to be considered.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantWean.htm")]
@@ -35,8 +35,10 @@ namespace Models.CLEM.Activities
 
         private string grazeStore;
         private IEnumerable<Ruminant> uniqueIndividuals;
-        private int numberToSkip = 0;
+        private int weanToSkip = 0;
+        private int sucklingToSkip = 0;
         private int numberToWean = 0;
+        private int sucklingsToCheck = 0;
 
         /// <summary>
         /// Style of weaning rule
@@ -77,22 +79,30 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<string> DefineIdentifiableChildModelIdentifiers<T>()
+        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels<T>()
         {
             switch (typeof(T).Name)
             {
                 case "RuminantGroup":
-                    return new List<string>() {
-                        "SelectIndividualsToCheck",
-                    };
-                    case "RuminantActivityFee":
-                    //case "LabourRequirement":
-                    return new List<string>() {
-                        "NumberWeaned",
-                        "NumberChecked",
-                    };
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>() {
+                            "Individuals to check" },
+                        units: new List<string>()
+                        );
+                case "RuminantActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>() {
+                            "Number sucklings checked",
+                            "Number weaned"
+                        },
+                        units: new List<string>() {
+                            "fixed",
+                            "per head"
+                        }
+                        );
                 default:
-                    return new List<string>();
+                    return new LabelsForIdentifiableChildren();
             }
         }
 
@@ -115,7 +125,7 @@ namespace Models.CLEM.Activities
             }
             else
             {
-                var ah = this.FindInScope<ActivitiesHolder>();
+                ActivitiesHolder ah = this.FindInScope<ActivitiesHolder>();
                 if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                     Summary.WriteMessage(this, String.Format("Individuals weaned by [a={0}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", this.Name), MessageType.Warning);
             }
@@ -131,25 +141,51 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         protected override List<ResourceRequest> DetermineResourcesForActivity()
         {
-            numberToSkip = 0;
+            weanToSkip = 0;
+            sucklingToSkip = 0;
             numberToWean = 0;
-            IEnumerable<Ruminant> fullherd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Weaned == false);
+            sucklingsToCheck = 0;
+            IEnumerable<Ruminant> sucklingherd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Weaned == false);
             uniqueIndividuals = new List<Ruminant>();
-            IEnumerable<RuminantGroup> filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>("SelectIndividualsToCheck", true);
+            IEnumerable<RuminantGroup> filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>("Individuals to check", true);
             if(filterGroups.Any())
             {
                 if(filterGroups.Count() >1)
                 {
                     foreach (var selectFilter in filterGroups)
-                    {
-                        uniqueIndividuals = uniqueIndividuals.Union(selectFilter.Filter(fullherd)).DistinctBy(a => a.ID);
-                    }
+                        uniqueIndividuals = uniqueIndividuals.Union(selectFilter.Filter(sucklingherd)).DistinctBy(a => a.ID);
                 }
                 else
                 {
-                    uniqueIndividuals = filterGroups.FirstOrDefault().Filter(fullherd);
+                    uniqueIndividuals = filterGroups.FirstOrDefault().Filter(sucklingherd);
                 }
-                numberToWean = uniqueIndividuals?.Count() ?? 0;
+            }
+            else
+            {
+                uniqueIndividuals = sucklingherd;
+            }
+            sucklingsToCheck = uniqueIndividuals?.Count() ?? 0;
+            numberToWean = uniqueIndividuals.Where(a => (a.Age >= WeaningAge && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.AgeOnly)) || (a.Weight >= WeaningWeight && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.WeightOnly)))?.Count() ?? 0; 
+
+            // provide updated units of measure for identifiable children
+            foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
+            {
+                int number = numberToWean;
+                if (valueToSupply.Key.identifier == "Number sucklings checked")
+                    number = sucklingsToCheck;
+
+                switch (valueToSupply.Key.unit)
+                {
+                    case "fixed":
+                        valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                        break;
+                    case "per head":
+                        valuesForIdentifiableModels[valueToSupply.Key] = number;
+                        break;
+                    default:
+                        valuesForIdentifiableModels[valueToSupply.Key] = 0;
+                        break;
+                }
             }
             return null;
         }
@@ -157,20 +193,20 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         protected override void AdjustResourcesForActivity()
         {
-            // if there's a finance or labour reduction
-            // work out the number of individuals not weaned.
+            IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
+            if (shortfalls.Any())
+            {
+                // find shortfall by identifiers as these may have different influence on outcome
+                var sucklingShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "Number sucklings checked").FirstOrDefault();
+                if(sucklingShort != null)
+                    sucklingToSkip = Convert.ToInt32(sucklingsToCheck * sucklingShort.Required / sucklingShort.Provided);
 
-            //double labourlimit = this.LabourLimitProportion;
+                var weanShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "Number weaned").FirstOrDefault();
+                if (weanShort != null)
+                    weanToSkip = Convert.ToInt32(numberToWean * weanShort.Required / weanShort.Provided);
 
-            // if there;s a limit reduce number to wean accordingly
-
-            // reduce excess of the other fees and labour accordingly
-
-            //numberToSkip = reduction number;
-
-            //this.Status = ActivityStatus.Partial;
-
-            return;
+                this.Status = ActivityStatus.Partial;
+            }
         }
 
         /// <inheritdoc/>
@@ -178,86 +214,58 @@ namespace Models.CLEM.Activities
         {
             if (numberToWean > 0)
             {
-                foreach (Ruminant ind in uniqueIndividuals.SkipLast(numberToSkip).ToList())
+                if (numberToWean - weanToSkip > 0 && sucklingsToCheck - sucklingToSkip > 0)
                 {
-                    bool readyToWean = false;
-                    string reason = "";
-                    switch (Style)
+                    int weaned = 0;
+                    foreach (Ruminant ind in uniqueIndividuals.SkipLast(sucklingToSkip).ToList())
                     {
-                        case WeaningStyle.AgeOrWeight:
-                            readyToWean = (ind.Age >= WeaningAge || ind.Weight >= WeaningWeight);
-                            reason = (ind.Age >= WeaningAge) ? ((ind.Weight >= WeaningWeight) ? "AgeAndWeight" : "Age") : "Weight";
-                            break;
-                        case WeaningStyle.AgeOnly:
-                            readyToWean = (ind.Age >= WeaningAge);
-                            reason = "Age";
-                            break;
-                        case WeaningStyle.WeightOnly:
-                            readyToWean = (ind.Weight >= WeaningWeight);
-                            reason = "Weight";
-                            break;
+                        bool readyToWean = false;
+                        string reason = "";
+                        switch (Style)
+                        {
+                            case WeaningStyle.AgeOrWeight:
+                                readyToWean = (ind.Age >= WeaningAge || ind.Weight >= WeaningWeight);
+                                reason = (ind.Age >= WeaningAge) ? ((ind.Weight >= WeaningWeight) ? "AgeAndWeight" : "Age") : "Weight";
+                                break;
+                            case WeaningStyle.AgeOnly:
+                                readyToWean = (ind.Age >= WeaningAge);
+                                reason = "Age";
+                                break;
+                            case WeaningStyle.WeightOnly:
+                                readyToWean = (ind.Weight >= WeaningWeight);
+                                reason = "Weight";
+                                break;
+                        }
+
+                        if (readyToWean)
+                        {
+                            ind.Wean(true, reason);
+
+                            // leave where weaned or move to specified location
+                            if (GrazeFoodStoreName != "Leave at current location")
+                                if (GrazeFoodStoreName == "Not specified -general yards")
+                                    ind.Location = "";
+                                else
+                                    ind.Location = grazeStore;
+
+                            // report wean. If mother has died create temp female with the mother's ID for reporting only
+                            ind.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, -1, 999) { ID = ind.MotherID }, clock.Today, ind));
+                            weaned++;
+                            if (weaned > numberToWean - weanToSkip)
+                                break;
+                        }
                     }
-
-                    if (readyToWean)
-                    {
-                        ind.Wean(true, reason);
-
-                        // leave where weaned or move to specified location
-                        if (GrazeFoodStoreName != "Leave at current location")
-                        if(GrazeFoodStoreName == "Not specified -general yards")
-                            ind.Location = "";
-                        else
-                            ind.Location = grazeStore;
-
-                        // report wean. If mother has died create temp female with the mother's ID for reporting only
-                        ind.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, -1, 999) { ID = ind.MotherID }, clock.Today, ind));
-                    }
+                    if (weaned == numberToWean)
+                        SetStatusSuccess();
+                    else
+                        this.Status = ActivityStatus.Partial;
                 }
-                if (numberToSkip == 0)
-                    SetStatusSuccess();
+                else
+                    this.Status = ActivityStatus.Partial;
             }
             else
                 this.Status = ActivityStatus.NotNeeded;
         }
-
-        ///// <summary>
-        ///// Determine the labour required for this activity based on LabourRequired items in tree
-        ///// </summary>
-        ///// <param name="requirement">Labour requirement model</param>
-        ///// <returns></returns>
-        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        //{
-        //    IEnumerable<Ruminant> herd = CurrentHerd(false);
-        //    double daysNeeded = 0;
-        //    var returnArgs = new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
-        //    if (requirement.UnitType == LabourUnitType.Fixed)
-        //        returnArgs.DaysNeeded = requirement.LabourPerUnit;
-        //    else
-        //    {
-        //        foreach (RuminantGroup item in filterGroups)
-        //        {
-        //            int head = item.Filter(GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Weaned == false)).Count();
-        //            switch (requirement.UnitType)
-        //            {
-        //                case LabourUnitType.Fixed:
-        //                    break;
-        //                case LabourUnitType.perHead:
-        //                    daysNeeded += head * requirement.LabourPerUnit;
-        //                    break;
-        //                case LabourUnitType.perUnit:
-        //                    double numberUnits = head / requirement.UnitSize;
-        //                    if (requirement.WholeUnitBlocks)
-        //                        numberUnits += Math.Ceiling(numberUnits);
-
-        //                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //                    break;
-        //                default:
-        //                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-        //            }
-        //        }
-        //    }
-        //    return returnArgs;
-        //}
 
         #region validation
         /// <summary>

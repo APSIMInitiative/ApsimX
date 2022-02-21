@@ -183,20 +183,20 @@ namespace Models.CLEM.Activities
             return requests;
         }
 
-        /// <inheritdoc/>
-        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            double daysNeeded;
-            switch (requirement.UnitType)
-            {
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-            }
-            return new LabourRequiredArgs(daysNeeded, "External", null);
-        }
+        ///// <inheritdoc/>
+        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        //{
+        //    double daysNeeded;
+        //    switch (requirement.UnitType)
+        //    {
+        //        case LabourUnitType.Fixed:
+        //            daysNeeded = requirement.LabourPerUnit;
+        //            break;
+        //        default:
+        //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+        //    }
+        //    return new LabourRequiredArgs(daysNeeded, "External", null);
+        //}
 
         /// <summary>
         /// Method used to perform activity if it can occur as soon as resources are available.

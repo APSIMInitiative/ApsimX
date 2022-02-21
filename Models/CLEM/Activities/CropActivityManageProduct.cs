@@ -420,75 +420,75 @@ namespace Models.CLEM.Activities
             return limiterFound;
         }
 
-        /// <inheritdoc/>
-        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            double daysNeeded = 0;
-            if (this.TimingOK)
-            {
-                int year = clock.Today.Year;
-                int month = clock.Today.Month;
-                double amount = 0;
-                if (NextHarvest != null)
-                {
-                    //if this month is a harvest month for this crop
-                    if ((year == NextHarvest.HarvestDate.Year) && (month == NextHarvest.HarvestDate.Month))
-                    {
-                        if (this.TimingOK)
-                        {
-                            if (IsTreeCrop)
-                                amount = NextHarvest.AmtKg * TreesPerHa * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
-                            else
-                                amount = NextHarvest.AmtKg * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
+        ///// <inheritdoc/>
+        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        //{
+        //    double daysNeeded = 0;
+        //    if (this.TimingOK)
+        //    {
+        //        int year = clock.Today.Year;
+        //        int month = clock.Today.Month;
+        //        double amount = 0;
+        //        if (NextHarvest != null)
+        //        {
+        //            //if this month is a harvest month for this crop
+        //            if ((year == NextHarvest.HarvestDate.Year) && (month == NextHarvest.HarvestDate.Month))
+        //            {
+        //                if (this.TimingOK)
+        //                {
+        //                    if (IsTreeCrop)
+        //                        amount = NextHarvest.AmtKg * TreesPerHa * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
+        //                    else
+        //                        amount = NextHarvest.AmtKg * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
 
-                            if (limiter != null)
-                            {
-                                double canBeCarried = limiter.GetAmountAvailable(clock.Today.Month);
-                                amount = Math.Max(amount, canBeCarried);
-                            }
-                        }
-                    }
-                }
+        //                    if (limiter != null)
+        //                    {
+        //                        double canBeCarried = limiter.GetAmountAvailable(clock.Today.Month);
+        //                        amount = Math.Max(amount, canBeCarried);
+        //                    }
+        //                }
+        //            }
+        //        }
 
-                double numberUnits;
-                switch (requirement.UnitType)
-                {
-                    case LabourUnitType.Fixed:
-                        daysNeeded = requirement.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perKg:
-                        daysNeeded = amount * requirement.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perUnit:
-                        numberUnits = amount / requirement.UnitSize;
-                        if (requirement.WholeUnitBlocks)
-                            numberUnits = Math.Ceiling(numberUnits);
+        //        double numberUnits;
+        //        switch (requirement.UnitType)
+        //        {
+        //            case LabourUnitType.Fixed:
+        //                daysNeeded = requirement.LabourPerUnit;
+        //                break;
+        //            case LabourUnitType.perKg:
+        //                daysNeeded = amount * requirement.LabourPerUnit;
+        //                break;
+        //            case LabourUnitType.perUnit:
+        //                numberUnits = amount / requirement.UnitSize;
+        //                if (requirement.WholeUnitBlocks)
+        //                    numberUnits = Math.Ceiling(numberUnits);
 
-                        daysNeeded = numberUnits * requirement.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perUnitOfLand:
-                        numberUnits = parentManagementActivity.Area / requirement.UnitSize;
-                        if (requirement.WholeUnitBlocks)
-                            numberUnits = Math.Ceiling(numberUnits);
+        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
+        //                break;
+        //            case LabourUnitType.perUnitOfLand:
+        //                numberUnits = parentManagementActivity.Area / requirement.UnitSize;
+        //                if (requirement.WholeUnitBlocks)
+        //                    numberUnits = Math.Ceiling(numberUnits);
 
-                        daysNeeded = numberUnits * requirement.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perHa:
-                        numberUnits = parentManagementActivity.Area * UnitsToHaConverter / requirement.UnitSize;
-                        if (requirement.WholeUnitBlocks)
-                            numberUnits = Math.Ceiling(numberUnits);
+        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
+        //                break;
+        //            case LabourUnitType.perHa:
+        //                numberUnits = parentManagementActivity.Area * UnitsToHaConverter / requirement.UnitSize;
+        //                if (requirement.WholeUnitBlocks)
+        //                    numberUnits = Math.Ceiling(numberUnits);
 
-                        daysNeeded = numberUnits * requirement.LabourPerUnit;
-                        break;
-                    default:
-                        throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-                }
+        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
+        //                break;
+        //            default:
+        //                throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+        //        }
 
-                if (amount <= 0)
-                    daysNeeded = 0;
-            }
-            return new LabourRequiredArgs(daysNeeded, TransactionCategory, (LinkedResourceItem as CLEMModel).NameWithParent);
-        }
+        //        if (amount <= 0)
+        //            daysNeeded = 0;
+        //    }
+        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, (LinkedResourceItem as CLEMModel).NameWithParent);
+        //}
 
         /// <inheritdoc/>
         protected override void PerformTasksForActivity()

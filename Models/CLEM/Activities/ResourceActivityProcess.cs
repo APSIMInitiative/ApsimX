@@ -125,31 +125,31 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <inheritdoc/>
-        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            double daysNeeded;
+        ///// <inheritdoc/>
+        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        //{
+        //    double daysNeeded;
 
-            // get amount to processed
-            double amountToProcess = resourceTypeProcessModel.Amount;
-            if (Reserve > 0)
-            {
-                amountToProcess = Math.Min(amountToProcess, Reserve);
-            }
+        //    // get amount to processed
+        //    double amountToProcess = resourceTypeProcessModel.Amount;
+        //    if (Reserve > 0)
+        //    {
+        //        amountToProcess = Math.Min(amountToProcess, Reserve);
+        //    }
 
-            switch (requirement.UnitType)
-            {
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perUnit:
-                    daysNeeded = amountToProcess / requirement.UnitSize * requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-            }
-            return new LabourRequiredArgs(daysNeeded, TransactionCategory, (resourceTypeCreatedModel as CLEMModel).NameWithParent);
-        }
+        //    switch (requirement.UnitType)
+        //    {
+        //        case LabourUnitType.Fixed:
+        //            daysNeeded = requirement.LabourPerUnit;
+        //            break;
+        //        case LabourUnitType.perUnit:
+        //            daysNeeded = amountToProcess / requirement.UnitSize * requirement.LabourPerUnit;
+        //            break;
+        //        default:
+        //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+        //    }
+        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, (resourceTypeCreatedModel as CLEMModel).NameWithParent);
+        //}
 
         /// <inheritdoc/>
         protected override List<ResourceRequest> DetermineResourcesForActivity()

@@ -146,42 +146,42 @@ namespace Models.CLEM.Activities
             return resourcesNeeded;
         }
 
-        /// <inheritdoc/>
-        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            // get all potential dry breeders
-            IEnumerable<Ruminant> herd = this.CurrentHerd(false);
-            double daysNeeded = 0;
-            double numberUnits = 0;
-            if (herd.Any())
-            {
-                switch (requirement.UnitType)
-                {
-                    case LabourUnitType.Fixed:
-                        daysNeeded = requirement.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perHead:
-                        int head = herd.Count();
-                        numberUnits = head / requirement.UnitSize;
-                        if (requirement.WholeUnitBlocks)
-                            numberUnits = Math.Ceiling(numberUnits);
+        ///// <inheritdoc/>
+        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        //{
+        //    // get all potential dry breeders
+        //    IEnumerable<Ruminant> herd = this.CurrentHerd(false);
+        //    double daysNeeded = 0;
+        //    double numberUnits = 0;
+        //    if (herd.Any())
+        //    {
+        //        switch (requirement.UnitType)
+        //        {
+        //            case LabourUnitType.Fixed:
+        //                daysNeeded = requirement.LabourPerUnit;
+        //                break;
+        //            case LabourUnitType.perHead:
+        //                int head = herd.Count();
+        //                numberUnits = head / requirement.UnitSize;
+        //                if (requirement.WholeUnitBlocks)
+        //                    numberUnits = Math.Ceiling(numberUnits);
 
-                        daysNeeded = numberUnits * requirement.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perAE:
-                        double animalEquivalents = herd.Sum(a => a.AdultEquivalent);
-                        numberUnits = animalEquivalents / requirement.UnitSize;
-                        if (requirement.WholeUnitBlocks)
-                            numberUnits = Math.Ceiling(numberUnits);
+        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
+        //                break;
+        //            case LabourUnitType.perAE:
+        //                double animalEquivalents = herd.Sum(a => a.AdultEquivalent);
+        //                numberUnits = animalEquivalents / requirement.UnitSize;
+        //                if (requirement.WholeUnitBlocks)
+        //                    numberUnits = Math.Ceiling(numberUnits);
 
-                        daysNeeded = numberUnits * requirement.LabourPerUnit;
-                        break;
-                    default:
-                        throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-                } 
-            }
-            return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
-        }
+        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
+        //                break;
+        //            default:
+        //                throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+        //        } 
+        //    }
+        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
+        //}
 
         #region descriptive summary
 

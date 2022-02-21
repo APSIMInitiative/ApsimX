@@ -42,18 +42,18 @@ namespace Models.CLEM.Activities
             return resourcesNeeded;
         }
 
-        /// <inheritdoc/>
-        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            // get all days required as fixed only option from requirement
-            switch (requirement.UnitType)
-            {
-                case LabourUnitType.Fixed:
-                    return new LabourRequiredArgs(requirement.LabourPerUnit, TransactionCategory, null);
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-            }
-        }
+        ///// <inheritdoc/>
+        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        //{
+        //    // get all days required as fixed only option from requirement
+        //    switch (requirement.UnitType)
+        //    {
+        //        case LabourUnitType.Fixed:
+        //            return new LabourRequiredArgs(requirement.LabourPerUnit, TransactionCategory, null);
+        //        default:
+        //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+        //    }
+        //}
 
         #region descriptive summary
 

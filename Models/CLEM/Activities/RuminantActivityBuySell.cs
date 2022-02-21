@@ -222,23 +222,23 @@ namespace Models.CLEM.Activities
                 // perform activity fee payments
                 foreach (RuminantActivityFee item in this.FindAllChildren<RuminantActivityFee>())
                 {
-                    switch (item.PaymentStyle)
-                    {
-                        case AnimalPaymentStyleType.Fixed:
-                            expenseRequest.Required = item.Amount;
-                            break;
-                        case AnimalPaymentStyleType.perHead:
-                            expenseRequest.Required = head * item.Amount;
-                            break;
-                        case AnimalPaymentStyleType.perAE:
-                            expenseRequest.Required = aESum * item.Amount;
-                            break;
-                        case AnimalPaymentStyleType.ProportionOfTotalSales:
-                            expenseRequest.Required = saleValue * item.Amount;
-                            break;
-                        default:
-                            throw new Exception(String.Format("PaymentStyle [{0}] is not supported for [{1}] in [{2}]", item.PaymentStyle, item.Name, this.Name));
-                    }
+                    //switch (item.Units)
+                    //{
+                    //    case AnimalPaymentStyleType.Fixed:
+                    //        expenseRequest.Required = item.Amount;
+                    //        break;
+                    //    case AnimalPaymentStyleType.perHead:
+                    //        expenseRequest.Required = head * item.Amount;
+                    //        break;
+                    //    case AnimalPaymentStyleType.perAE:
+                    //        expenseRequest.Required = aESum * item.Amount;
+                    //        break;
+                    //    case AnimalPaymentStyleType.ProportionOfTotalSales:
+                    //        expenseRequest.Required = saleValue * item.Amount;
+                    //        break;
+                    //    default:
+                    //        throw new Exception(String.Format("PaymentStyle [{0}] is not supported for [{1}] in [{2}]", item.PaymentStyle, item.Name, this.Name));
+                    //}
                     expenseRequest.Category = item.TransactionCategory;
                     // uses bank account specified in the RuminantActivityFee
                     item.BankAccount.Remove(expenseRequest);
@@ -509,38 +509,38 @@ namespace Models.CLEM.Activities
                 this.Status = ActivityStatus.Warning;
         }
 
-        /// <inheritdoc/>
-        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            List<Ruminant> herd = HerdResource.Herd.Where(a => (a.SaleFlag.ToString().Contains("Purchase") || a.SaleFlag.ToString().Contains("Sale")) && a.Breed == this.PredictedHerdBreed).ToList();
-            int head = herd.Count();
-            double animalEquivalents = herd.Sum(a => a.AdultEquivalent);
-            double daysNeeded = 0;
-            double numberUnits = 0;
-            switch (requirement.UnitType)
-            {
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perHead:
-                    numberUnits = head / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                        numberUnits = Math.Ceiling(numberUnits);
+        ///// <inheritdoc/>
+        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        //{
+        //    List<Ruminant> herd = HerdResource.Herd.Where(a => (a.SaleFlag.ToString().Contains("Purchase") || a.SaleFlag.ToString().Contains("Sale")) && a.Breed == this.PredictedHerdBreed).ToList();
+        //    int head = herd.Count();
+        //    double animalEquivalents = herd.Sum(a => a.AdultEquivalent);
+        //    double daysNeeded = 0;
+        //    double numberUnits = 0;
+        //    switch (requirement.UnitType)
+        //    {
+        //        case LabourUnitType.Fixed:
+        //            daysNeeded = requirement.LabourPerUnit;
+        //            break;
+        //        case LabourUnitType.perHead:
+        //            numberUnits = head / requirement.UnitSize;
+        //            if (requirement.WholeUnitBlocks)
+        //                numberUnits = Math.Ceiling(numberUnits);
 
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perAE:
-                    numberUnits = animalEquivalents / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                        numberUnits = Math.Ceiling(numberUnits);
+        //            daysNeeded = numberUnits * requirement.LabourPerUnit;
+        //            break;
+        //        case LabourUnitType.perAE:
+        //            numberUnits = animalEquivalents / requirement.UnitSize;
+        //            if (requirement.WholeUnitBlocks)
+        //                numberUnits = Math.Ceiling(numberUnits);
 
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-            }
-            return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
-        }
+        //            daysNeeded = numberUnits * requirement.LabourPerUnit;
+        //            break;
+        //        default:
+        //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+        //    }
+        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
+        //}
 
         /// <inheritdoc/>
         protected override void PerformTasksForActivity()

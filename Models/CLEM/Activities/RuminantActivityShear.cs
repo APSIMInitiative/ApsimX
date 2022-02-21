@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantShear.htm")]
     public class RuminantActivityShear : CLEMRuminantActivityBase
     {
-        private LabourRequirement labourRequirement;
+        //private LabourRequirement labourRequirement;
 
         /// <summary>
         /// Name of Product store to place clip (with Resource Group name appended to the front [separated with a '.'])
@@ -63,53 +63,53 @@ namespace Models.CLEM.Activities
             StoreType = Resources.FindResourceType<ProductStore, ProductStoreType>(this, ProductStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
-        /// <inheritdoc/>
-        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            IEnumerable<Ruminant> herd = CurrentHerd(false);
-            double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
+        ///// <inheritdoc/>
+        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        //{
+        //    IEnumerable<Ruminant> herd = CurrentHerd(false);
+        //    double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
 
-            double daysNeeded = 0;
-            double numberUnits = 0;
-            labourRequirement = requirement;
-            if (herd.Any())
-            {
-                switch (requirement.UnitType)
-                {
-                    case LabourUnitType.Fixed:
-                        daysNeeded = requirement.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perHead:
-                        int head = herd.Count();
-                        numberUnits = head / requirement.UnitSize;
-                        if (requirement.WholeUnitBlocks)
-                            numberUnits = Math.Ceiling(numberUnits);
+        //    double daysNeeded = 0;
+        //    double numberUnits = 0;
+        //    labourRequirement = requirement;
+        //    if (herd.Any())
+        //    {
+        //        switch (requirement.UnitType)
+        //        {
+        //            case LabourUnitType.Fixed:
+        //                daysNeeded = requirement.LabourPerUnit;
+        //                break;
+        //            case LabourUnitType.perHead:
+        //                int head = herd.Count();
+        //                numberUnits = head / requirement.UnitSize;
+        //                if (requirement.WholeUnitBlocks)
+        //                    numberUnits = Math.Ceiling(numberUnits);
 
-                        daysNeeded = numberUnits * requirement.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perAE:
-                        numberUnits = adultEquivalents / requirement.UnitSize;
-                        if (requirement.WholeUnitBlocks)
-                            numberUnits = Math.Ceiling(numberUnits);
+        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
+        //                break;
+        //            case LabourUnitType.perAE:
+        //                numberUnits = adultEquivalents / requirement.UnitSize;
+        //                if (requirement.WholeUnitBlocks)
+        //                    numberUnits = Math.Ceiling(numberUnits);
 
-                        daysNeeded = numberUnits * requirement.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perKg:
-                        daysNeeded = herd.Sum(a => a.Wool) * requirement.LabourPerUnit;
-                        break;
-                    case LabourUnitType.perUnit:
-                        numberUnits = herd.Sum(a => a.Wool) / requirement.UnitSize;
-                        if (requirement.WholeUnitBlocks)
-                            numberUnits = Math.Ceiling(numberUnits);
+        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
+        //                break;
+        //            case LabourUnitType.perKg:
+        //                daysNeeded = herd.Sum(a => a.Wool) * requirement.LabourPerUnit;
+        //                break;
+        //            case LabourUnitType.perUnit:
+        //                numberUnits = herd.Sum(a => a.Wool) / requirement.UnitSize;
+        //                if (requirement.WholeUnitBlocks)
+        //                    numberUnits = Math.Ceiling(numberUnits);
 
-                        daysNeeded = numberUnits * requirement.LabourPerUnit;
-                        break;
-                    default:
-                        throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-                } 
-            }
-            return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
-        }
+        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
+        //                break;
+        //            default:
+        //                throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+        //        } 
+        //    }
+        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
+        //}
 
         /// <inheritdoc/>
         protected override void AdjustResourcesForActivity()
@@ -129,72 +129,72 @@ namespace Models.CLEM.Activities
             if (herd.Any())
             {
                 double woolTotal = 0;
-                if(LabourLimitProportion == 1 | (labourRequirement != null && !labourRequirement.LabourShortfallAffectsActivity))
-                {
-                    woolTotal = herd.Sum(a => a.Wool);
-                    herd.ToList().ForEach(a => a.Wool = 0);
-                }
-                else
-                {
-                    // limits clip based on labour shortfall
-                    switch (labourRequirement.UnitType)
-                    {
-                        case LabourUnitType.Fixed:
-                            // no clip taken
-                            break;
-                        case LabourUnitType.perHead:
-                            int numberShorn = Convert.ToInt32(herd.Count() * LabourLimitProportion, CultureInfo.InvariantCulture);
-                            woolTotal = herd.Take(numberShorn).Sum(a => a.Wool);
-                            herd.Take(numberShorn).ToList().ForEach(a => a.Wool = 0);
-                            break;
-                        case LabourUnitType.perAE:
-                            // stop when AE reached
-                            double aELimit = herd.Sum(a => a.AdultEquivalent) * LabourLimitProportion;
-                            double aETrack = 0;
-                            foreach (var item in herd)
-                            {
-                                if(aETrack + item.AdultEquivalent > aELimit)
-                                    break;
-                                aETrack += item.AdultEquivalent;
-                                woolTotal += item.Wool;
-                                item.Wool = 0;
-                            }
-                            break;
-                        case LabourUnitType.perKg:
-                            // stop shearing when limit reached
-                            double kgLimit = herd.Sum(a => a.Wool) * LabourLimitProportion;
-                            double kgTrack = 0;
-                            foreach (var item in herd)
-                            {
-                                if (kgTrack + item.Wool > kgLimit)
-                                    break;
-                                kgTrack += item.Wool;
-                                woolTotal += item.Wool;
-                                item.Wool = 0;
-                            }
-                            break;
-                        case LabourUnitType.perUnit:
-                            // stop shearing when unit limit reached
-                            double unitLimit = herd.Sum(a => a.Wool) / labourRequirement.UnitSize  * LabourLimitProportion;
-                            if(labourRequirement.WholeUnitBlocks)
-                                unitLimit = Math.Floor(unitLimit);
+                //if(LabourLimitProportion == 1 | (labourRequirement != null && !labourRequirement.ShortfallAffectsActivity))
+                //{
+                //    woolTotal = herd.Sum(a => a.Wool);
+                //    herd.ToList().ForEach(a => a.Wool = 0);
+                //}
+                //else
+                //{
+                //    //// limits clip based on labour shortfall
+                //    //switch (labourRequirement.UnitType)
+                //    //{
+                //    //    case LabourUnitType.Fixed:
+                //    //        // no clip taken
+                //    //        break;
+                //    //    case LabourUnitType.perHead:
+                //    //        int numberShorn = Convert.ToInt32(herd.Count() * LabourLimitProportion, CultureInfo.InvariantCulture);
+                //    //        woolTotal = herd.Take(numberShorn).Sum(a => a.Wool);
+                //    //        herd.Take(numberShorn).ToList().ForEach(a => a.Wool = 0);
+                //    //        break;
+                //    //    case LabourUnitType.perAE:
+                //    //        // stop when AE reached
+                //    //        double aELimit = herd.Sum(a => a.AdultEquivalent) * LabourLimitProportion;
+                //    //        double aETrack = 0;
+                //    //        foreach (var item in herd)
+                //    //        {
+                //    //            if(aETrack + item.AdultEquivalent > aELimit)
+                //    //                break;
+                //    //            aETrack += item.AdultEquivalent;
+                //    //            woolTotal += item.Wool;
+                //    //            item.Wool = 0;
+                //    //        }
+                //    //        break;
+                //    //    case LabourUnitType.perKg:
+                //    //        // stop shearing when limit reached
+                //    //        double kgLimit = herd.Sum(a => a.Wool) * LabourLimitProportion;
+                //    //        double kgTrack = 0;
+                //    //        foreach (var item in herd)
+                //    //        {
+                //    //            if (kgTrack + item.Wool > kgLimit)
+                //    //                break;
+                //    //            kgTrack += item.Wool;
+                //    //            woolTotal += item.Wool;
+                //    //            item.Wool = 0;
+                //    //        }
+                //    //        break;
+                //    //    case LabourUnitType.perUnit:
+                //    //        // stop shearing when unit limit reached
+                //    //        double unitLimit = herd.Sum(a => a.Wool) / labourRequirement.UnitSize  * LabourLimitProportion;
+                //    //        if(labourRequirement.WholeUnitBlocks)
+                //    //            unitLimit = Math.Floor(unitLimit);
 
-                            kgLimit = unitLimit * labourRequirement.UnitSize;
-                            kgTrack = 0;
-                            foreach (var item in herd)
-                            {
-                                if (kgTrack + item.Wool > kgLimit)
-                                    break;
-                                kgTrack += item.Wool;
-                                woolTotal += item.Wool;
-                                item.Wool = 0;
-                            }
-                            break;
-                        default:
-                            throw new ApsimXException(this, "Labour requirement type " + labourRequirement.UnitType.ToString() + " is not supported in DoActivity method of [a=" + this.Name + "]");
-                    }
-                    this.Status = ActivityStatus.Partial;
-                }
+                //    //        kgLimit = unitLimit * labourRequirement.UnitSize;
+                //    //        kgTrack = 0;
+                //    //        foreach (var item in herd)
+                //    //        {
+                //    //            if (kgTrack + item.Wool > kgLimit)
+                //    //                break;
+                //    //            kgTrack += item.Wool;
+                //    //            woolTotal += item.Wool;
+                //    //            item.Wool = 0;
+                //    //        }
+                //    //        break;
+                //    //    default:
+                //    //        throw new ApsimXException(this, "Labour requirement type " + labourRequirement.UnitType.ToString() + " is not supported in DoActivity method of [a=" + this.Name + "]");
+                //    //}
+                //    this.Status = ActivityStatus.Partial;
+                //}
 
                 // place clip in selected store
                 (StoreType as IResourceType).Add(woolTotal, this, this.PredictedHerdName, TransactionCategory);

@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMarkForSale.htm")]
     public class RuminantActivityMarkForSale: CLEMRuminantActivityBase, IValidatableObject
     {
-        private LabourRequirement labourRequirement;
+        //private LabourRequirement labourRequirement;
 
         /// <summary>
         /// Sale flag to use
@@ -104,48 +104,48 @@ namespace Models.CLEM.Activities
             return number;
         }
 
-        /// <inheritdoc/>
-        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            labourRequirement = requirement;
-            double daysNeeded;
-            switch (requirement.UnitType)
-            {
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perHead:
-                    double numberUnits = numberToTag / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                        numberUnits = Math.Ceiling(numberUnits);
+        ///// <inheritdoc/>
+        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        //{
+        //    labourRequirement = requirement;
+        //    double daysNeeded;
+        //    switch (requirement.UnitType)
+        //    {
+        //        case LabourUnitType.Fixed:
+        //            daysNeeded = requirement.LabourPerUnit;
+        //            break;
+        //        case LabourUnitType.perHead:
+        //            double numberUnits = numberToTag / requirement.UnitSize;
+        //            if (requirement.WholeUnitBlocks)
+        //                numberUnits = Math.Ceiling(numberUnits);
 
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-            }
-            return new LabourRequiredArgs(daysNeeded, "Mark", this.PredictedHerdName);
-        }
+        //            daysNeeded = numberUnits * requirement.LabourPerUnit;
+        //            break;
+        //        default:
+        //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+        //    }
+        //    return new LabourRequiredArgs(daysNeeded, "Mark", this.PredictedHerdName);
+        //}
 
-        /// <inheritdoc/>
-        protected override void AdjustResourcesForActivity()
-        {
-            labourShortfall = false;
-            if (LabourLimitProportion < 1 & (labourRequirement != null && labourRequirement.LabourShortfallAffectsActivity))
-            {
-                switch (labourRequirement.UnitType)
-                {
-                    case LabourUnitType.Fixed:
-                    case LabourUnitType.perHead:
-                        numberToTag = Convert.ToInt32(numberToTag * LabourLimitProportion, CultureInfo.InvariantCulture);
-                        labourShortfall = true;
-                        break;
-                    default:
-                        throw new ApsimXException(this, "Labour requirement type " + labourRequirement.UnitType.ToString() + " is not supported in DoActivity method of [a=" + this.Name + "]");
-                }
-            }
-            return;
-        }
+        ///// <inheritdoc/>
+        //protected override void AdjustResourcesForActivity()
+        //{
+        //    labourShortfall = false;
+        //    if (LabourLimitProportion < 1 & (labourRequirement != null && labourRequirement.ShortfallAffectsActivity))
+        //    {
+        //        switch (labourRequirement.UnitType)
+        //        {
+        //            case LabourUnitType.Fixed:
+        //            case LabourUnitType.perHead:
+        //                numberToTag = Convert.ToInt32(numberToTag * LabourLimitProportion, CultureInfo.InvariantCulture);
+        //                labourShortfall = true;
+        //                break;
+        //            default:
+        //                throw new ApsimXException(this, "Labour requirement type " + labourRequirement.UnitType.ToString() + " is not supported in DoActivity method of [a=" + this.Name + "]");
+        //        }
+        //    }
+        //    return;
+        //}
 
         /// <summary>An event handler to call for changing stocking based on prediced pasture biomass</summary>
         /// <param name="sender">The sender.</param>

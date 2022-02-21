@@ -238,64 +238,64 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <inheritdoc/>
-        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            IEnumerable<Ruminant> herd = CurrentHerd(false);
-            int head = 0;
-            double adultEquivalents = 0;
-            double daysNeeded = 0;
-            double numberUnits = 0;
+        ///// <inheritdoc/>
+        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        //{
+        //    IEnumerable<Ruminant> herd = CurrentHerd(false);
+        //    int head = 0;
+        //    double adultEquivalents = 0;
+        //    double daysNeeded = 0;
+        //    double numberUnits = 0;
 
-            if (requirement.UnitType == LabourUnitType.perHead || requirement.UnitType == LabourUnitType.perAE)
-                foreach (IFilterGroup child in Children.OfType<RuminantFeedGroup>())
-                {
-                    var selectedIndividuals = child.Filter(herd).GroupBy(i => 1).Select(a => new {
-                        Count = (requirement.UnitType == LabourUnitType.perHead) ? a.Count() : 0,
-                        TotalAE = (requirement.UnitType == LabourUnitType.perAE) ? a.Sum(b => b.Weight) : 0
-                    }).ToList();
+        //    if (requirement.UnitType == LabourUnitType.perHead || requirement.UnitType == LabourUnitType.perAE)
+        //        foreach (IFilterGroup child in Children.OfType<RuminantFeedGroup>())
+        //        {
+        //            var selectedIndividuals = child.Filter(herd).GroupBy(i => 1).Select(a => new {
+        //                Count = (requirement.UnitType == LabourUnitType.perHead) ? a.Count() : 0,
+        //                TotalAE = (requirement.UnitType == LabourUnitType.perAE) ? a.Sum(b => b.Weight) : 0
+        //            }).ToList();
 
-                    if (selectedIndividuals.Count > 0)
-                    {
-                        head += selectedIndividuals.FirstOrDefault().Count;
-                        adultEquivalents += selectedIndividuals.FirstOrDefault().TotalAE;
-                    }
-                }
+        //            if (selectedIndividuals.Count > 0)
+        //            {
+        //                head += selectedIndividuals.FirstOrDefault().Count;
+        //                adultEquivalents += selectedIndividuals.FirstOrDefault().TotalAE;
+        //            }
+        //        }
 
-            switch (requirement.UnitType)
-            {
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perHead:
-                    numberUnits = head / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                        numberUnits = Math.Ceiling(numberUnits);
+        //    switch (requirement.UnitType)
+        //    {
+        //        case LabourUnitType.Fixed:
+        //            daysNeeded = requirement.LabourPerUnit;
+        //            break;
+        //        case LabourUnitType.perHead:
+        //            numberUnits = head / requirement.UnitSize;
+        //            if (requirement.WholeUnitBlocks)
+        //                numberUnits = Math.Ceiling(numberUnits);
 
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perAE:
-                    numberUnits = adultEquivalents / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                        numberUnits = Math.Ceiling(numberUnits);
+        //            daysNeeded = numberUnits * requirement.LabourPerUnit;
+        //            break;
+        //        case LabourUnitType.perAE:
+        //            numberUnits = adultEquivalents / requirement.UnitSize;
+        //            if (requirement.WholeUnitBlocks)
+        //                numberUnits = Math.Ceiling(numberUnits);
 
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perKg:
-                    daysNeeded = feedEstimated * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perUnit:
-                    numberUnits = feedEstimated / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                        numberUnits = Math.Ceiling(numberUnits);
+        //            daysNeeded = numberUnits * requirement.LabourPerUnit;
+        //            break;
+        //        case LabourUnitType.perKg:
+        //            daysNeeded = feedEstimated * requirement.LabourPerUnit;
+        //            break;
+        //        case LabourUnitType.perUnit:
+        //            numberUnits = feedEstimated / requirement.UnitSize;
+        //            if (requirement.WholeUnitBlocks)
+        //                numberUnits = Math.Ceiling(numberUnits);
 
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-            }
-            return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
-        }
+        //            daysNeeded = numberUnits * requirement.LabourPerUnit;
+        //            break;
+        //        default:
+        //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+        //    }
+        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
+        //}
 
         /// <inheritdoc/>
         protected override void AdjustResourcesForActivity()

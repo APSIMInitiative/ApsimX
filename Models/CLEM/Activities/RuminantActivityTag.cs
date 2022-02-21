@@ -27,7 +27,7 @@ namespace Models.CLEM.Activities
 
     public class RuminantActivityTag : CLEMRuminantActivityBase, IValidatableObject
     {
-        private LabourRequirement labourRequirement;
+        //private LabourRequirement labourRequirement;
 
         /// <summary>
         /// Tag label
@@ -91,65 +91,65 @@ namespace Models.CLEM.Activities
         {
         }
 
-        /// <inheritdoc/>
-        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            IEnumerable<Ruminant> herd = CurrentHerd(false);
+        ///// <inheritdoc/>
+        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        //{
+        //    IEnumerable<Ruminant> herd = CurrentHerd(false);
 
-            if (filterGroups.Any())
-            {
-                numberToTag = 0;
-                foreach (RuminantGroup item in filterGroups)
-                {
-                    if (ApplicationStyle == TagApplicationStyle.Add)
-                        numberToTag += item.Filter(herd).Where(a => !a.Attributes.Exists(TagLabel)).Count();
-                    else
-                        numberToTag += item.Filter(herd).Where(a => a.Attributes.Exists(TagLabel)).Count();
-                }
-            }
-            else
-                numberToTag = herd.Count();
+        //    if (filterGroups.Any())
+        //    {
+        //        numberToTag = 0;
+        //        foreach (RuminantGroup item in filterGroups)
+        //        {
+        //            if (ApplicationStyle == TagApplicationStyle.Add)
+        //                numberToTag += item.Filter(herd).Where(a => !a.Attributes.Exists(TagLabel)).Count();
+        //            else
+        //                numberToTag += item.Filter(herd).Where(a => a.Attributes.Exists(TagLabel)).Count();
+        //        }
+        //    }
+        //    else
+        //        numberToTag = herd.Count();
 
-            double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
-            double daysNeeded = 0;
-            double numberUnits = 0;
-            labourRequirement = requirement;
-            switch (requirement.UnitType)
-            {
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perHead:
-                    numberUnits = numberToTag / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                        numberUnits = Math.Ceiling(numberUnits);
+        //    double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
+        //    double daysNeeded = 0;
+        //    double numberUnits = 0;
+        //    labourRequirement = requirement;
+        //    switch (requirement.UnitType)
+        //    {
+        //        case LabourUnitType.Fixed:
+        //            daysNeeded = requirement.LabourPerUnit;
+        //            break;
+        //        case LabourUnitType.perHead:
+        //            numberUnits = numberToTag / requirement.UnitSize;
+        //            if (requirement.WholeUnitBlocks)
+        //                numberUnits = Math.Ceiling(numberUnits);
 
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-            }
-            return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
-        }
+        //            daysNeeded = numberUnits * requirement.LabourPerUnit;
+        //            break;
+        //        default:
+        //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+        //    }
+        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
+        //}
 
-        /// <inheritdoc/>
-        protected override void AdjustResourcesForActivity()
-        {
-            if (LabourLimitProportion > 0 && LabourLimitProportion < 1 && (labourRequirement != null && labourRequirement.LabourShortfallAffectsActivity))
-            {
-                this.Status = ActivityStatus.Partial;
-                switch (labourRequirement.UnitType)
-                {
-                    case LabourUnitType.Fixed:
-                    case LabourUnitType.perHead:
-                        numberToTag = Convert.ToInt32(numberToTag * LabourLimitProportion, CultureInfo.InvariantCulture);
-                        break;
-                    default:
-                        throw new ApsimXException(this, "Labour requirement type " + labourRequirement.UnitType.ToString() + " is not supported in DoActivity method of [a=" + this.Name + "]");
-                }
-            }
-            return;
-        }
+        ///// <inheritdoc/>
+        //protected override void AdjustResourcesForActivity()
+        //{
+        //    if (LabourLimitProportion > 0 && LabourLimitProportion < 1 && (labourRequirement != null && labourRequirement.ShortfallAffectsActivity))
+        //    {
+        //        this.Status = ActivityStatus.Partial;
+        //        switch (labourRequirement.UnitType)
+        //        {
+        //            case LabourUnitType.Fixed:
+        //            case LabourUnitType.perHead:
+        //                numberToTag = Convert.ToInt32(numberToTag * LabourLimitProportion, CultureInfo.InvariantCulture);
+        //                break;
+        //            default:
+        //                throw new ApsimXException(this, "Labour requirement type " + labourRequirement.UnitType.ToString() + " is not supported in DoActivity method of [a=" + this.Name + "]");
+        //        }
+        //    }
+        //    return;
+        //}
 
 
         /// <inheritdoc/>
