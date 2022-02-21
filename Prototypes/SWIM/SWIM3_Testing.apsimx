@@ -29,7 +29,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "https://www.apsim.info/documentation/model-documentation/soil-modules-documentation/swimv2-1/\n\n# Overview\n\nSWIM3 allows three of the four lower boundary conditions described in Verburg et al. (1996) as described below. Note that the zero flux lower boundary condition has not been enabled. \n\nAll references to \"SWIM\" here refer to the highly detailed documentation by Verburg et al. (1996) of the standalone model that has morphed over the years into SWIM3. Verburg et al. remains the definitive documentation and should be referred to for detail.\n\nSee the \"SetLowerBC\" Manager script for examples of how to change lower boundary conditions.\n\n## SetLowerBCForGradient(bbcGradient)\n\nA constant gradient in soil water potential with depth in the soil is the default lower boundary condition and is applicable to most 'open field' simulations where there is free drainage from\nthe soil. This option is ibbc = 0 in SWIM. This lower boundary condition setting must be accompanied by the value of that gradient. This is done using a command in a Manager script along the \nlines of:\n\n\tSetLowerBCForGradient(bbcGradient);\n\nwhere bbcGradient is a double (real) variable with the value of the required gradient in soil water potential with depth in the soil. The set value remains in place until the user resets it.\nGravity is added to bbcGradient so the most common setting is \nbbcGradient = 0.0 which means that there is no graident of soil water potential. In this case water moves under the influence of gravity alone.\nSetting bbcGradient = -1.0 will set the soil water potential gradient to counteract the effect of gravity and will essentially set a no-flow lower boundary. **I think**\n\n## SetLowerBCForGivenPotential(bbcPotential)\n\nThis lower boundary condition sets a constant soil water potential at the lowest node in the simulation. Note that in SWIM and SWIM3, soil water potential is in units of cm and is negative in unsaturated soils. This option can be useful for mimicking the effect of a water table at the base of the simulation by setting a positive value equal to the height difference between the\nwater table and the bottom of the simulated soil profile. Note that in this setting, water will be added to the simulation as needed to maintain the user set soil water potential.\nSee the Manager script \"SetLowerBC\" for an example: \n\n\tSetLowerBCForGivenPotential(bbcPotential);\n\nwhere bbcPotential is the required potential as a double variable in cm. this setting is equivalent to ibbc = 1 in SWIM.\n\n## SetLowerBCForSeepage(bbcPotentialSeepage)\n\nA seepage lower boundary is a condition where no drainage can occur until a user-set head of water (i.e., a depth of saturated soil) of bbcPotentialSeepage accumulates at the base of the soil profile. Once that head is reached drainage occurs at the rate allowed by the saturated soil water conductivity under gravity only until the head falls below the user-set value. This lower boundary condition is that of ibbc = 3 in SWIM. A common usage of this boundary condition is when simulating a zero-tension (i.e., free to the atmosphere) lysimeter and in this case bbcPotentialSeepage = 0.0. See an example in \"SetLowerBC\":\n\n\tSetLowerBCForSeepage(bbcPotentialSeepage);\n\nwhere bbcPotentialSeepage is in cm.\n\n## Testing\n\nDo they do what is expected? \n\nAnd is there a test for this?\n\nDoes the mass balance with these options?\n\n",
+          "Text": "https://www.apsim.info/documentation/model-documentation/soil-modules-documentation/swimv2-1/\n\n# Overview\n\nSWIM3 (Huth et al., 2012) allows three of the four lower boundary conditions described in Verburg et al. (1996) as described below. The zero flux lower boundary condition has not been enabled. \n\nAll references to \"SWIM\" here refer to the highly detailed documentation by Verburg et al. (1996) of the standalone model that has morphed over the years into SWIM3. Verburg et al. remains the definitive documentation and should be referred to for detail.\n\nSee the \"SWIM3_SetLowerBC\" Manager script (to be found in both the SWIM3 example and in the Manager toolbox) for examples of how to change lower boundary conditions.\n\n## SetLowerBCForGradient(bbcGradient)\n\nA constant gradient in soil water potential with depth is the default lower boundary condition and is applicable to most 'open field' simulations where there is free drainage from the soil. This option is ibbc = 0 in SWIM3. This lower boundary condition setting must be accompanied by the value of that gradient. This is done using a command in a Manager script along the lines of:\n\n\tSetLowerBCForGradient(bbcGradient);\n\nwhere bbcGradient is a double (real) variable with the value of the required gradient in soil water potential with depth in the soil. The set value remains in place until the user resets it.\nGravity is added to bbcGradient so the most common setting is bbcGradient = 0.0 which means that there is no gradient of soil water potential. In this case, water moves under the influence of gravity alone at the lower boundary. This is the default for SWIM3 and will prevail unless the user intervenes.\nOther gradients can be set. For example, setting bbcGradient = -1.0 will set the soil water potential gradient to counteract the effect of gravity and will essentially set a no-flow lower boundary (which is likely to result in an unstable simulation). \n\n## SetLowerBCForGivenPotential(bbcPotential)\n\nThis lower boundary condition sets a constant soil water potential at the lowest node in the simulation. Note that soil water potential is in units of cm (although units of mm are used on the user interface) and is negative in unsaturated soils. This option can be useful for mimicking the effect of a water table at the base of the simulation by setting a positive value equal to the height difference between the water table and the bottom of the simulated soil profile. Note that in this setting, water will be added to the simulation at the lower boundary as needed to maintain the user set soil water potential.\nSee the Manager script \"SWIM3_SetLowerBC\" for an example: \n\n\tSetLowerBCForGivenPotential(bbcPotential);\n\nwhere bbcPotential is the required potential as a double variable in cm. this setting is equivalent to ibbc = 1 in SWIM.\n\n## SetLowerBCForSeepage(bbcPotentialSeepage)\n\nA seepage lower boundary is a condition where no drainage can occur until a user-set head of water (i.e., a depth of saturated soil) of bbcPotentialSeepage accumulates at the base of the soil profile. Once that head is reached drainage occurs at the rate allowed by the saturated soil water conductivity under gravity only until the head falls below the user-set value. This lower boundary condition is that of ibbc = 3 in SWIM. A common usage of this boundary condition is when simulating a zero-tension (i.e., free to the atmosphere) lysimeter and in this case bbcPotentialSeepage = 0.0. See an example in \"SWIM3_SetLowerBC\":\n\n\tSetLowerBCForSeepage(bbcPotentialSeepage);\n\nwhere bbcPotentialSeepage is in cm.\n\n## Testing\n\nThe simulation below runs a simple pasture simulation in an irrigated environment with lower boundary conditions of a unit gradient (“Gradient”), zero-tension seepage as in a lysimeter (“Seepage”), and a set water potential of -500 mm (so wetter than the drained upper limit, “Potential”). \n\nThe simulation contains a Manager component to check for preservation of mass in the water balance (“CalculateRollingWaterBalance”). This component calculates daily and cumulative water balances to test for errors and drift. First the component adds up the daily water inputs (rain, irrigation), outputs (drainage, **tile drainage**, soil water evaporation, runoff, plant water uptake), and change in water storage from the start to the end of the day. Here, storage is both the water in the soil and that in any surface pond. The water balance is the water added, minus water removed, minus the increase in water stored. Note that this water balance component is generic and can be added to any simulation.\n\nSeveral plots have been produced.\n\n**Daily WaterBalance** shows that the largest absolute daily error in the water balance is less than 0.0003 mm and that there are more positive errors (water ‘lost’ in the simulation) than negative errors. Following this to the **Cumulative WaterBalance** shows the effect of the lop-sided daily errors but is reassuring in that the cumulative error is less than 0.02 mm even after six years of simulation.\n\n**WaterStored** shows the amount of water stored in the soil (none of these simulations included ponding conditions). As expected, the Potential simulation has the highest water storage because the lower boundary potential of -500 mm is wetter than the drained upper limit and water is regularly being added into the simulation to maintain that water potential. The Seepage simulation holds slightly more water in the soil than the Gradient simulation because in Seepage drainage cannot occur until the lower boundary soil water potential rises to zero. That need to the water potential to rise to zero before draining means that some water must accumulate at the base of the soil while the potential is rising and so it allows more time for plants to access the water before it eventually drains. The outcome is that there will generally be somewhat less drainage when a seepage lower boundary condition is set compared to the default unit gradient boundary condition.\n\n**PsiOfLowestLayer** shows the time series of soil water potential in the lower layer. In Potential it is the prescribed -50 cm (note that SWIM3’s outputs of psi are in cm rather than mm – something that might be fixed in the future perhaps). Seepage maintains a higher value of Psi than Gradient for most of the simulation as expected.\n\n\n\nAnd is there a test for this?\n\nDoes the mass balance with these options?\n\n",
           "Name": "Memo Lower BC",
           "Children": [],
           "Enabled": true,
@@ -47,7 +47,7 @@
                 {
                   "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
-                    "[SWIM3 _SetLowerBC].Script.LowerBCType=gradient"
+                    "[SWIM3_SetLowerBC].Script.LowerBCType=gradient"
                   ],
                   "Paths": null,
                   "Values": null,
@@ -59,7 +59,7 @@
                 {
                   "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
-                    "[SWIM3 _SetLowerBC].Script.LowerBCType=seepage"
+                    "[SWIM3_SetLowerBC].Script.LowerBCType=seepage"
                   ],
                   "Paths": null,
                   "Values": null,
@@ -71,8 +71,8 @@
                 {
                   "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
-                    "[SWIM3 _SetLowerBC].Script.LowerBCType=potential",
-                    "[SWIM3 _SetLowerBC].Script.LowerBCValue=-500"
+                    "[SWIM3_SetLowerBC].Script.LowerBCType=potential",
+                    "[SWIM3_SetLowerBC].Script.LowerBCValue=-500"
                   ],
                   "Paths": null,
                   "Values": null,
@@ -284,14 +284,6 @@
                   "Name": "paddock",
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "The first few lines in IrrigationSchedule\n// these are only here to get the soil above saturation - \n\n// not working all that well because the upper BC is causing all the excess water to runoff anyway\n\n// can delete this probably once pond is fixed.\n\nAdd with and without plants to the experiment. Need a more flexible Manager first? Or add and kill?\n\nCould be nice to be able to swap from weather to controlled environment without having to change the links in \"CalculateRollingWaterBalance\"\n",
-                      "Name": "To do and notes",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
                       "$type": "Models.Manager, Models",
                       "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\nusing System.Linq;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] IWeather weather;\r\n        [Link] Irrigation irrigation;\r\n        [Link] private Swim3 swim;  // I know that we are concerned with SWIM3 but should this be generic and sub in SoilWater?\r\n        [Link] private IPlant[] plants;\r\n\r\n  \r\n        // add (no3+nh4) uptake as N uptake to IPlant\r\n\r\n        public double WaterBalanceCumulative  { get; set; }\r\n        public double WaterBalanceToday  { get; set; }\r\n\r\n        public double SoilWaterAtInitialisation  { get; set; }\r\n        public double SoilWaterYesterday  { get; set; }\r\n\t\tpublic double SoilWaterNow  { get; set; }\r\n\r\n\t\tpublic double PlantWaterUptake { get; set; }\r\n\r\n        public double WaterAddedToday  { get; set; }\r\n        public double WaterRemovedToday  { get; set; }\r\n        public double WaterAddedCumulative  { get; set; }\r\n        public double WaterRemovedCumulative  { get; set; }\r\n\r\n\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        \tif (clock.Today == clock.StartDate) \r\n        \t// capture the water in and on the soil as a starting point\r\n        \t// doing this here as need the models to have intialised first\r\n        \t{\r\n\t        \tSoilWaterAtInitialisation = swim.pond;\r\n    \t    \tfor (int i = 0; i < swim.SWmm.Length; i++)\r\n        \t\t\tSoilWaterAtInitialisation += swim.SWmm[i];\r\n\r\n        \t\tSoilWaterYesterday = SoilWaterAtInitialisation;\t\t\r\n        \t\tWaterAddedCumulative = 0.0;\r\n        \t\tWaterRemovedCumulative = 0.0;\r\n        \t\tSoilWaterNow = 0.0;\r\n        \t}\r\n        \telse\r\n        \t{\r\n        \t\tSoilWaterYesterday = SoilWaterNow;\t\t// SoilWaterNow holds the value calculated at reporting yesterday\r\n        \t\tWaterAddedToday = 0.0;\r\n        \t\tWaterRemovedToday = 0.0;\r\n        \t}\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        \t// All the WaterBalance variables should be zero. A positive value is a generation of water.\r\n        \tSoilWaterNow = swim.pond;\r\n        \tfor (int i = 0; i < swim.SWmm.Length; i++)\r\n        \t\tSoilWaterNow += swim.SWmm[i]; // so all the water stored in or on the soil\r\n\r\n        \tWaterAddedToday = weather.Rain + irrigation.IrrigationApplied;   // Can there be runon? Probably not but this will throw an error if that ever happens\r\n        \tWaterAddedCumulative+= WaterAddedToday;\r\n\r\n        \tWaterRemovedToday = swim.Drainage + swim.Es + swim.Runoff;\r\n        \tPlantWaterUptake = 0.0;\r\n        \tforeach (var plant in plants)\r\n        \t\tPlantWaterUptake += plant.WaterUptake.Sum();\r\n\r\n        \tWaterRemovedToday += PlantWaterUptake;\r\n        \t// Need to add subsurface drainage here\r\n\r\n        \tWaterRemovedCumulative += WaterRemovedToday;\r\n\r\n        \tWaterBalanceToday = WaterAddedToday - WaterRemovedToday - (SoilWaterNow - SoilWaterYesterday);\r\n        \tWaterBalanceCumulative = WaterAddedCumulative - WaterRemovedCumulative - (SoilWaterNow - SoilWaterAtInitialisation);\r\n        \t// need to add a warning value and a crash value and make a crash\r\n\r\n\t\t}\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [],
@@ -301,7 +293,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        //[Link] private PastureSpecies ryegrass;\r\n        //[Link] private SimpleGrazing grazing;\n        \n        public enum LowerBCTypeOptions {gradient,seepage,potential};\r\n\r\n        [Separator(\"Sets the lower boundary condition type (and value if set to 'potential' for SWIM3. The change is applied at the beginning of the first day of the simulation.\")]\n        [Description(\"[Get a dropdown] What lower boundary condition is wanted?\")] public LowerBCTypeOptions LowerBCType { get; set; }\r\n        [Description(\"If 'potential', then what potential? Should be negative (mm) \")] public double LowerBCValue { get; set; }\r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == clock.StartDate)\r\n            {\r\n                summary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType, MessageType.Diagnostic);\r\n                if (LowerBCType == LowerBCTypeOptions.gradient)\r\n                    swim.SetLowerBCForGradient(bbcGradient: 0.0);   // in cm/cm (ibbc=0) Note that this is the default setting\r\n                else if (LowerBCType == LowerBCTypeOptions.potential)\r\n                    swim.SetLowerBCForGivenPotential(bbcPotential: LowerBCValue /10.0 );    //  in cm (ibbc=1), DUL is -100 cm so this is quite wet but not saturated. Input in mm so divide here.\r\n                else if (LowerBCType == LowerBCTypeOptions.seepage)\r\n                    swim.SetLowerBCForSeepage(bbcPotentialSeepage: 0.0);  // in cm (ibbc=3)\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        //[Link] private PastureSpecies ryegrass;\r\n        //[Link] private SimpleGrazing grazing;\n        \n        public enum LowerBCTypeOptions {gradient,seepage,potential};\r\n\r\n        [Separator(\"Sets the lower boundary condition type (and value if set to 'potential' for SWIM3. The change is applied at the beginning of the first day of the simulation.\")]\n        [Description(\"[Get a dropdown] What lower boundary condition is wanted?\")] public LowerBCTypeOptions LowerBCType { get; set; }\r\n        [Description(\"If 'potential', then what potential? Should be negative (mm) \")] public double LowerBCValue { get; set; }\r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == clock.StartDate)\r\n            {\r\n                summary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType, MessageType.Diagnostic);\r\n                if (LowerBCType == LowerBCTypeOptions.gradient)\r\n                    swim.SetLowerBCForGradient(bbcGradient: 0.0);   // in cm/cm (ibbc=0) Note that this is the default setting\r\n                else if (LowerBCType == LowerBCTypeOptions.potential)\r\n                    swim.SetLowerBCForGivenPotential(bbcPotential: LowerBCValue /10.0 );    //  convert to cm (ibbc=1), DUL is -100 cm so values more positive will often result in inflow to the bottom of the soil profile. Input in mm so divide here.\r\n                else if (LowerBCType == LowerBCTypeOptions.seepage)\r\n                    swim.SetLowerBCForSeepage(bbcPotentialSeepage: 0.0);  // in cm (ibbc=3). This is for zero-tension lysimeters\n                else\n                \tthrow new Exception(\"Wrong lower boundary condition type\");\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "LowerBCType",
@@ -312,7 +304,7 @@
                           "Value": "-500"
                         }
                       ],
-                      "Name": "SWIM3 _SetLowerBC",
+                      "Name": "SWIM3_SetLowerBC",
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -359,99 +351,6 @@
                       ],
                       "Name": "AutomaticIrrigation",
                       "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Operations, Models",
-                      "Operation": [
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2000-01-01",
-                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
-                          "Enabled": false
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2000-01-02",
-                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
-                          "Enabled": false
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2000-01-03",
-                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
-                          "Enabled": false
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2000-01-04",
-                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
-                          "Enabled": false
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2000-01-21",
-                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2000-01-22",
-                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2000-01-23",
-                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
-                          "Enabled": false
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2000-01-24",
-                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
-                          "Enabled": false
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2000-02-21",
-                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2000-02-22",
-                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2000-02-23",
-                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
-                          "Enabled": false
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2000-02-24",
-                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
-                          "Enabled": false
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-02-21",
-                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-02-22",
-                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
-                          "Enabled": true
-                        }
-                      ],
-                      "Name": "IrrigationSchedule",
-                      "Children": [],
-                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -782,8 +681,8 @@
                             "NaN"
                           ],
                           "SW": [
-                            0.58,
-                            0.58,
+                            0.565,
+                            0.565,
                             0.565,
                             0.565,
                             0.565
@@ -1296,7 +1195,7 @@
                     {
                       "$type": "Models.Report, Models",
                       "VariableNames": [
-                        "[SWIM3 _SetLowerBC].Script.LowerBCType",
+                        "[SWIM3_SetLowerBC].Script.LowerBCType",
                         "[Clock].Today as Date",
                         "[CalculateRollingWaterBalance].Script.WaterAddedToday as WaterAddedToday",
                         "[CalculateRollingWaterBalance].Script.WaterRemovedToday as WaterRemovedToday",
@@ -1309,7 +1208,8 @@
                         "[CalculateRollingWaterBalance].Script.PlantWaterUptake",
                         "[Soil].Swim3.psi as Psi",
                         "[Soil].Swim3.SW as SW",
-                        "[Irrigation].IrrigationApplied as Irrigation"
+                        "[Irrigation].IrrigationApplied as Irrigation",
+                        "AGPRyegrass.AboveGround + AGPWhiteClover.AboveGround as AboveGroundBioamss"
                       ],
                       "EventNames": [
                         "[Clock].EndOfDay"
@@ -1332,7 +1232,7 @@
               "$type": "Models.Core.Folder, Models",
               "ShowInDocs": true,
               "GraphsPerPage": 6,
-              "Name": "WaterBalance",
+              "Name": "Plots",
               "Children": [
                 {
                   "$type": "Models.Graph, Models",
@@ -1482,134 +1382,6 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
-                      "Minimum": 0.0,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "WaterAdded",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -1663232,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "WaterAddedToday",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Added",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "WaterRemoved",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -1663232,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "WaterRemovedToday",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "LowerPot",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -1646,70 +1418,6 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Stored",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "WaterPonded",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "PondDepth",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Ponded",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1879,34 +1587,6 @@
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 2,
-                      "ColourArgb": -16747854,
-                      "FactorToVaryColours": null,
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "WaterAddedToday",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": "[SimulationName] LIKE '*Gradient'",
-                      "Name": "Rain_Irrig",
-                      "Children": [],
-                      "Enabled": false,
-                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -1930,6 +1610,16 @@
                       "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": null,
                       "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "Drainage (mm)",
+                      "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
                       "Minimum": null,
@@ -1976,7 +1666,7 @@
                       "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
-                      "YAxis": 0,
+                      "YAxis": 2,
                       "ColourArgb": -1663232,
                       "FactorToVaryColours": null,
                       "FactorToVaryMarkers": null,
@@ -1987,7 +1677,7 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Date",
-                      "YFieldName": "WaterRemovedToday",
+                      "YFieldName": "Drainage",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
@@ -2030,7 +1720,7 @@
                     },
                     {
                       "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "WaterRemovedToday",
+                      "Title": "Drainage (mm)",
                       "Position": 2,
                       "Inverted": false,
                       "CrossesAtZero": false,
@@ -2068,7 +1758,7 @@
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
-                      "Filter": "[SimulationName] LIKE '*Potential50'",
+                      "Filter": "[SimulationName] LIKE '*Potential'",
                       "Name": "LowerPot",
                       "Children": [],
                       "Enabled": true,
@@ -2096,7 +1786,7 @@
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
-                      "Filter": "[SimulationName] LIKE '*Potential50'",
+                      "Filter": "[SimulationName] LIKE '*Potential'",
                       "Name": "Drainage",
                       "Children": [],
                       "Enabled": true,
@@ -2554,9 +2244,53 @@
               "Name": "Factors",
               "Children": [
                 {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[SetLowerBoundaryCondition].Script.LowerBCValue = -150 to 0 step 50",
-                  "Name": "Potential",
+                  "$type": "Models.Factorial.CompositeFactor, Models",
+                  "Specifications": [
+                    "[SWIM3_SetLowerBC].Script.LowerBCType=potential",
+                    "[SWIM3_SetLowerBC].Script.LowerBCValue=0"
+                  ],
+                  "Paths": null,
+                  "Values": null,
+                  "Name": "Potential_0",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.CompositeFactor, Models",
+                  "Specifications": [
+                    "[SWIM3_SetLowerBC].Script.LowerBCType=potential",
+                    "[SWIM3_SetLowerBC].Script.LowerBCValue=-500"
+                  ],
+                  "Paths": null,
+                  "Values": null,
+                  "Name": "Potential_500",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.CompositeFactor, Models",
+                  "Specifications": [
+                    "[SWIM3_SetLowerBC].Script.LowerBCType=potential",
+                    "[SWIM3_SetLowerBC].Script.LowerBCValue=-1000"
+                  ],
+                  "Paths": null,
+                  "Values": null,
+                  "Name": "Potential_1000",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.CompositeFactor, Models",
+                  "Specifications": [
+                    "[SWIM3_SetLowerBC].Script.LowerBCType=potential",
+                    "[SWIM3_SetLowerBC].Script.LowerBCValue=-200000"
+                  ],
+                  "Paths": null,
+                  "Values": null,
+                  "Name": "Potential_2000",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
@@ -2781,7 +2515,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        //[Link] private PastureSpecies ryegrass;\r\n        //[Link] private SimpleGrazing grazing;\r\n\r\n        [Description(\"What lower BC? Current options gradient/seepage/potential\")] public string LowerBCType { get; set; }\r\n        [Description(\"If the lower BC is potential, what value should be set? (cm)\")] public double LowerBCValue { get; set; }\r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == clock.StartDate)\r\n            {\r\n                summary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType, MessageType.Diagnostic);\r\n                if (LowerBCType.ToLower() == \"gradient\")\r\n                    swim.SetLowerBCForGradient(bbcGradient: 0.0);   // in cm/cm (ibbc=0) Note that this is the default setting\r\n                else if (LowerBCType.ToLower() == \"potential\")\r\n                    swim.SetLowerBCForGivenPotential(bbcPotential: LowerBCValue);    //  in cm (ibbc=1), DUL is -100 cm so this is quite wet but not saturated\r\n                else if (LowerBCType.ToLower() == \"seepage\")\r\n                    swim.SetLowerBCForSeepage(bbcPotentialSeepage: 0.0);  // in cm (ibbc=3)\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        //[Link] private PastureSpecies ryegrass;\r\n        //[Link] private SimpleGrazing grazing;\n        \n        public enum LowerBCTypeOptions {gradient,seepage,potential};\r\n\r\n        [Separator(\"Sets the lower boundary condition type (and value if set to 'potential' for SWIM3. The change is applied at the beginning of the first day of the simulation.\")]\n        [Description(\"[Get a dropdown] What lower boundary condition is wanted?\")] public LowerBCTypeOptions LowerBCType { get; set; }\r\n        [Description(\"If 'potential', then what potential? Should be negative (mm) \")] public double LowerBCValue { get; set; }\r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == clock.StartDate)\r\n            {\r\n                summary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType, MessageType.Diagnostic);\r\n                if (LowerBCType == LowerBCTypeOptions.gradient)\r\n                    swim.SetLowerBCForGradient(bbcGradient: 0.0);   // in cm/cm (ibbc=0) Note that this is the default setting\r\n                else if (LowerBCType == LowerBCTypeOptions.potential)\r\n                    swim.SetLowerBCForGivenPotential(bbcPotential: LowerBCValue /10.0 );    //  convert to cm (ibbc=1), DUL is -100 cm so values more positive will often result in inflow to the bottom of the soil profile. Input in mm so divide here.\r\n                else if (LowerBCType == LowerBCTypeOptions.seepage)\r\n                    swim.SetLowerBCForSeepage(bbcPotentialSeepage: 0.0);  // in cm (ibbc=3). This is for zero-tension lysimeters\r\n            }\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "LowerBCType",
@@ -2789,10 +2523,10 @@
                         },
                         {
                           "Key": "LowerBCValue",
-                          "Value": "-50"
+                          "Value": "-500"
                         }
                       ],
-                      "Name": "SetLowerBoundaryCondition",
+                      "Name": "SWIM3_SetLowerBC",
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2838,141 +2572,6 @@
                         }
                       ],
                       "Name": "AutomaticIrrigation",
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Operations, Models",
-                      "Operation": [
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-01",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-02",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-03",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-04",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-05",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-06",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-07",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-08",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-09",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-10",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-11",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-12",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-13",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-14",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-15",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-16",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-17",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-18",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-19",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-20",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        },
-                        {
-                          "$type": "Models.Operation, Models",
-                          "Date": "2001-01-21",
-                          "Action": "[Irrigation].Apply(amount:300,duration:60);",
-                          "Enabled": true
-                        }
-                      ],
-                      "Name": "IrrigationSchedule",
-                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -3818,7 +3417,7 @@
                     {
                       "$type": "Models.Report, Models",
                       "VariableNames": [
-                        "[SetLowerBoundaryCondition].Script.LowerBCType",
+                        "[SWIM3_SetLowerBC].Script.LowerBCType",
                         "[Clock].Today as Date",
                         "[CalculateRollingWaterBalance].Script.WaterAddedToday as WaterAddedToday",
                         "[CalculateRollingWaterBalance].Script.WaterRemovedToday as WaterRemovedToday",
@@ -4009,134 +3608,6 @@
                       "Position": 0,
                       "Inverted": false,
                       "CrossesAtZero": false,
-                      "Minimum": 0.0,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "WaterAdded",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -1663232,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "WaterAddedToday",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Added",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "WaterRemoved",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -1663232,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "WaterRemovedToday",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "LowerPot",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
                       "Minimum": null,
                       "Maximum": null,
                       "Interval": null
@@ -4173,70 +3644,6 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Stored",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "WaterPonded",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 9,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "PondDepth",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Ponded",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -4517,262 +3924,6 @@
                     },
                     {
                       "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "Runoff",
-                      "Position": 2,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "Runoff",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 2,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "Runoff",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Runoff",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "Runoff",
-                      "Position": 2,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "Irrigation",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 2,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "Irrigation",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Irrigation",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "Runoff",
-                      "Position": 2,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "CumulativeIrrigation",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 2,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "Irrigation",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": true,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Irrigation",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "Runoff",
-                      "Position": 2,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "Rainfall",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 2,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "Rainfall",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Rainfall",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": "",
                       "Position": 2,
                       "Inverted": false,
@@ -4821,7 +3972,7 @@
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
-                      "Filter": "[SimulationName] LIKE 'Experiment2Potential-100'",
+                      "Filter": "[SimulationName] LIKE 'Experiment2Potential_1000'",
                       "Name": "Psi",
                       "Children": [],
                       "Enabled": true,
@@ -4849,7 +4000,7 @@
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
-                      "Filter": "[SimulationName] LIKE 'Experiment2Potential-100'",
+                      "Filter": "[SimulationName] LIKE 'Experiment2Potential_1000'",
                       "Name": "SW",
                       "Children": [],
                       "Enabled": true,
@@ -4877,7 +4028,7 @@
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
-                      "Filter": "[SimulationName] LIKE 'Experiment2Potential-100'",
+                      "Filter": "[SimulationName] LIKE 'Experiment2Potential_1000'",
                       "Name": "DUL",
                       "Children": [],
                       "Enabled": true,
@@ -4905,7 +4056,7 @@
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
-                      "Filter": "[SimulationName] LIKE 'Experiment2Potential-100'",
+                      "Filter": "[SimulationName] LIKE 'Experiment2Potential_1000'",
                       "Name": "Sat",
                       "Children": [],
                       "Enabled": true,
@@ -5099,7 +4250,7 @@
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
-                      "Filter": "[SimulationName] LIKE 'Experiment2Potential-100'",
+                      "Filter": "[SimulationName] LIKE 'Experiment2Potential_1000'",
                       "Name": "Psi",
                       "Children": [],
                       "Enabled": true,
@@ -5127,7 +4278,7 @@
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
-                      "Filter": "[SimulationName] LIKE 'Experiment2Potential-100'",
+                      "Filter": "[SimulationName] LIKE 'Experiment2Potential_1000'",
                       "Name": "SW",
                       "Children": [],
                       "Enabled": true,
@@ -5155,7 +4306,7 @@
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
-                      "Filter": "[SimulationName] LIKE 'Experiment2Potential-100'",
+                      "Filter": "[SimulationName] LIKE 'Experiment2Potential_1000'",
                       "Name": "DUL",
                       "Children": [],
                       "Enabled": true,
@@ -5183,7 +4334,7 @@
                       "IncludeSeriesNameInLegend": false,
                       "Cumulative": false,
                       "CumulativeX": false,
-                      "Filter": "[SimulationName] LIKE 'Experiment2Potential-100'",
+                      "Filter": "[SimulationName] LIKE 'Experiment2Potential_1000'",
                       "Name": "Sat",
                       "Children": [],
                       "Enabled": true,
