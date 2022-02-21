@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantTag.htm")]
 
-    public class RuminantActivityTag : CLEMRuminantActivityBase
+    public class RuminantActivityTag : CLEMRuminantActivityBase, IValidatableObject
     {
         private LabourRequirement labourRequirement;
 
@@ -64,6 +64,24 @@ namespace Models.CLEM.Activities
         {
             TransactionCategory = "Livestock.Manage";
         }
+
+        #region validation
+        /// <summary>
+        /// Validate this model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if (!FindAllChildren<RuminantGroup>().Any())
+            {
+                string[] memberNames = new string[] { "Specify individuals" };
+                results.Add(new ValidationResult($"No individuals have been specified by [f=RuminantGroup] for tagging in [a={Name}]. Provide at least an empty RuminantGroup to consider all individuals.", memberNames));
+            }
+            return results;
+        }
+        #endregion
 
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
@@ -125,8 +143,18 @@ namespace Models.CLEM.Activities
             return;
         }
 
+
         /// <inheritdoc/>
         public override void DoActivity()
+        {
+
+        }
+
+        /// <summary>An event handler to call for performing all marking for sale, tagging and weaning</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMAnimalMark")]
+        private void OnCLEMAnimalMark(object sender, EventArgs e)
         {
             if (this.TimingOK)
             {
@@ -135,7 +163,7 @@ namespace Models.CLEM.Activities
                 {
                     foreach (RuminantGroup item in filterGroups)
                     {
-                        foreach (Ruminant ind in item.Filter(herd).Where(a => (ApplicationStyle == TagApplicationStyle.Add)? !a.Attributes.Exists(TagLabel): a.Attributes.Exists(TagLabel)).Take(numberToTag))
+                        foreach (Ruminant ind in item.Filter(GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => (ApplicationStyle == TagApplicationStyle.Add)? !a.Attributes.Exists(TagLabel): a.Attributes.Exists(TagLabel))).Take(numberToTag))
                         {
                             if(this.Status != ActivityStatus.Partial)
                                 this.Status = ActivityStatus.Success;
@@ -154,7 +182,7 @@ namespace Models.CLEM.Activities
                     }
                     if(!filterGroups.Any())
                     {
-                        foreach (Ruminant ind in herd.Where(a => (ApplicationStyle == TagApplicationStyle.Add) ? !a.Attributes.Exists(TagLabel) : a.Attributes.Exists(TagLabel)).Take(numberToTag))
+                        foreach (Ruminant ind in GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => (ApplicationStyle == TagApplicationStyle.Add) ? !a.Attributes.Exists(TagLabel) : a.Attributes.Exists(TagLabel)).Take(numberToTag))
                         {
                             if (this.Status != ActivityStatus.Partial)
                                 this.Status = ActivityStatus.Success;

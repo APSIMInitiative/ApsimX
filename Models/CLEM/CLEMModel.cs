@@ -31,6 +31,14 @@ namespace Models.CLEM
         private IEnumerable<IActivityTimer> activityTimers = null;
 
         /// <summary>
+        /// Model settings notes
+        /// </summary>
+        [Description("Notes")]
+        [Category("*", "*")]
+        [Core.Display(Order = 9999)]
+        public string Notes { get; set; }
+
+        /// <summary>
         /// Identifies the last selected tab for display
         /// </summary>
         public string SelectedTab { get; set; }
@@ -61,7 +69,7 @@ namespace Models.CLEM
         /// Stored here so rapidly retrieved
         /// </summary>
         [JsonIgnore]
-        public String CLEMParentName { get; set; }
+        public string CLEMParentName { get; set; }
 
         /// <summary>
         /// return combo name of ParentName.ModelName
@@ -230,6 +238,16 @@ namespace Models.CLEM
 
         }
 
+        /// <summary>
+        /// Provide a list of child types to ignore from summary for the given model
+        /// </summary>
+        /// <returns>List of types</returns>
+        public virtual List<Type> ChildrenToIgnoreInSummary()
+        {
+            return null;
+        }
+
+
         /// <inheritdoc/>
         public virtual string ModelSummary()
         {
@@ -248,6 +266,12 @@ namespace Models.CLEM
                     cm.CurrentAncestorList.Add(model.GetType().Name);
 
                     htmlWriter.Write(cm.ModelSummaryOpeningTags());
+
+                    if (cm.Notes != null && cm.Notes != "")
+                    {
+                        htmlWriter.Write("\r\n<div class='memo-container'><div class='memo-head'>Notes</div>");
+                        htmlWriter.Write($"\r\n<div class='memo-text'>{cm.Notes}</div></div>");
+                    }
 
                     htmlWriter.Write(cm.ModelSummaryInnerOpeningTagsBeforeSummary());
 
@@ -278,7 +302,8 @@ namespace Models.CLEM
                         }
                         else
                         {
-                            htmlWriter.Write(GetFullSummary(item, cm.CurrentAncestorList.ToList(), htmlString));
+                            if (ChildrenToIgnoreInSummary() is null || !ChildrenToIgnoreInSummary().Contains(item.GetType()))
+                                htmlWriter.Write(GetFullSummary(item, cm.CurrentAncestorList.ToList(), htmlString));
                         }
                     }
 
@@ -554,8 +579,8 @@ namespace Models.CLEM
                 ".memo-text {margin:auto;margin-left:15px;padding:5px;color:Black;}" +
                 ".memo-container h1 {color:#000000; } .activity h1,h2,h3 { color:#000000; margin-bottom:5px; }" +
                 ".filterlink {font-weight:bold; color:#cc33cc; background-color:[FiltContBack] !important; border-color:#cc33cc; border-width:1px; border-style:solid; padding:0px 5px 0px 5px; border-radius:3px; }" +
-                ".filtername {margin:10px 0px 5px 0px; font-size:0.9em; color:#cc33cc;font-weight:bold;}" +
-                ".filterborder {display: block; width: 100% - 40px; border-color:#cc33cc; background-color:[FiltContBack] !important; border-width:1px; border-style:solid; padding:0px 5px 5px 5px; margin:10px 0px 5px 0px; border-radius:5px; }" +
+                ".filtername {margin:5px 0px 5px 0px; font-size:0.9em; color:#cc33cc;font-weight:bold;}" +
+                ".filterborder {display: block; width: 100% - 40px; border-color:#cc33cc; background-color:[FiltContBack] !important; border-width:1px; border-style:solid; padding:0px 5px 5px 5px; margin:5px 0px 5px 0px; border-radius:5px; }" +
                 ".filterset {font-size:0.85em; font-weight:bold; color:#cc33cc; background-color:[FiltContBack] !important; border-width:0px; border-style:none; padding: 1px 3px; margin: 2px 3px 0px 0px; border-radius:3px; }" +
                 ".filteractivityborder {background-color:[FiltContActivityBack] !important; color:#fff; }" +
                 ".filter {float: left; border-color:#cc33cc; background-color:#cc33cc !important; color:white; border-width:1px; border-style:solid; padding: 1px 5px 1px 5px; margin: 5px 5px 0px 5px; border-radius:3px;}" +
