@@ -37,10 +37,9 @@ namespace Models.CLEM.Activities
 
         private bool enabled = true;
         private ZoneCLEM parentZone = null;
-        //[NonSerialized]
-        private Dictionary<string, List<string>> identifiableModelIdentifiers = new Dictionary<string, List<string>>();
-        //[NonSerialized]
         private Dictionary<string, object> identifiableModelsPresent = new Dictionary<string, object>();
+        private protected Dictionary<(string type, string identifier, string unit), double?> valuesForIdentifiableModels = new Dictionary<(string type, string identifier, string unit), double?>();
+        private Dictionary<string, LabelsForIdentifiableChildren> identifiableModelLabels = new Dictionary<string, LabelsForIdentifiableChildren>();
 
         /// <summary>
         /// Label to assign each transaction created by this activity in ledgers
@@ -200,43 +199,48 @@ namespace Models.CLEM.Activities
         #region Identifiable child model handling
 
         /// <summary>
-        /// A method to return the list of identifiers provided by the parent activity for the given identifiable child model type
+        /// A method to return the list of labels provided by the parent activity for the given identifiable child model type
         /// </summary>
-        /// <typeparam name="T">Type of identifiable child model</typeparam>
-        /// <returns>List of identifiers provided</returns>
-        public List<string> IdentifiableChildModelIdentifiers<T>() where T : IIdentifiableChildModel
-        {
-            if (identifiableModelIdentifiers.ContainsKey(typeof(T).Name))
-            {
-                return identifiableModelIdentifiers[typeof(T).Name];
-            }
-            else
-            {
-                List<string> identifiersDefined = DefineIdentifiableChildModelIdentifiers<T>();
-                identifiableModelIdentifiers.Add(typeof(T).Name, identifiersDefined);
-                return identifiersDefined;
-            }
-        }
-
-        /// <summary>
-        /// A method to get a list of activity specified identifiers for a generic type T add by the user
-        /// </summary>
+        /// <param name="labelType">The type of labels to provide</param>
         /// <typeparam name="T">Identifiable child model type</typeparam>
-        /// <returns>A list of identifiers as strings</returns>
-        public virtual List<string> DefineIdentifiableChildModelIdentifiers<T>() where T : IIdentifiableChildModel
+        /// <returns>List of labels for the selected style</returns>
+        public List<string> IdentifiableChildModelLabels<T>(IdentifiableChildModelLabelType labelType) where T : IIdentifiableChildModel
         {
             if (this is ICanHandleIdentifiableChildModels)
             {
-                switch (typeof(T).Name)
+                LabelsForIdentifiableChildren labels;
+                if (identifiableModelLabels.ContainsKey(typeof(T).Name))
                 {
-                    //case "":
-                    //    break;
-                    default:
-                        return new List<string>();
+                    labels = identifiableModelLabels[typeof(T).Name];
                 }
+                else
+                {
+                    labels = DefineIdentifiableChildModelLabels<T>();
+                    identifiableModelLabels.Add(typeof(T).Name, labels);
+                }
+                switch (labelType)
+                {
+                    case IdentifiableChildModelLabelType.Identifiers:
+                        return labels.Identifiers;
+                    case IdentifiableChildModelLabelType.Units:
+                        return labels.Units;
+                    default:
+                        break;
+                }
+                return new List<string>();
             }
             else
                 throw new NotImplementedException($"[a={NameWithParent}] does not support Identifiable child models to perform custom tasks with resource provision.");
+        }
+
+        /// <summary>
+        /// A method to get a list of activity specified labels for a generic type T 
+        /// </summary>
+        /// <typeparam name="T">Identifiable child model type</typeparam>
+        /// <returns>A LabelsForIdentifiableChildren containing all labels</returns>
+        public virtual LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels<T>() where T : IIdentifiableChildModel
+        {
+            return new LabelsForIdentifiableChildren();
         }
 
         /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
@@ -284,6 +288,8 @@ namespace Models.CLEM.Activities
                 {
                     if (foundTypeDictionary.ContainsKey(identifier))
                         return foundTypeDictionary[identifier];
+                    else
+                        throw new ApsimXException(this, $"The requested identifier [{identifier}] is not supported by [a={NameWithParent}]{Environment.NewLine}Internal code error: see developers!");
                 }
             }
             if (addNewIfEmpty)
@@ -301,11 +307,17 @@ namespace Models.CLEM.Activities
         {
             Dictionary<string, IEnumerable<T>> filters = new Dictionary<string, IEnumerable<T>>();
 
-            foreach (var id in IdentifiableChildModelIdentifiers<T>())
+            foreach (var id in IdentifiableChildModelLabels<T>(IdentifiableChildModelLabelType.Identifiers))
             {
-                var group = FindAllChildren<T>().Where(a => a.Identifier == id && a.Enabled);
-                if (group.Any())
-                    filters.Add(id, group);
+                var iChildren = FindAllChildren<T>().Where(a => a.Identifier == id && a.Enabled);
+                if (iChildren.Any())
+                {
+                    filters.Add(id, iChildren);
+                    foreach (var item in iChildren)
+                    {
+                        valuesForIdentifiableModels.Add((typeof(T).Name, id, item.Units), 0);
+                    }
+                }
                 else
                 {
                     if (addBlankEntryIfNoneFound)
@@ -328,7 +340,10 @@ namespace Models.CLEM.Activities
         {
             // clear Resources Required list
             ResourceRequestList = new List<ResourceRequest>();
-
+            foreach (var key in valuesForIdentifiableModels.Keys.ToList())
+            {
+                valuesForIdentifiableModels[key] = null;
+            }
             Status = ActivityStatus.Ignored;
         }
 
@@ -384,12 +399,36 @@ namespace Models.CLEM.Activities
                 if (TimingOK)
                 {
                     // add any labour resources requirements based on method supplied by activity
-                    ResourceRequestList.AddRange(GetLabourRequiredForActivity());
+                    //ResourceRequestList.AddRange(GetLabourRequiredForActivity());
+                    // labour will be added when linked up as IIdentifiable
 
                     // add any non-labour resources needed based on method supplied by activity
                     var requests = DetermineResourcesForActivity();
                     if (requests != null)
                         ResourceRequestList.AddRange(requests);
+
+                    // get all identifiable child related expense requests
+                    if (this is ICanHandleIdentifiableChildModels)
+                    {
+                        foreach (IIdentifiableChildModel identifiableChild in FindAllChildren<IIdentifiableChildModel>())
+                        {
+                            var unitsProvided = valuesForIdentifiableModels[(identifiableChild.GetType().Name, identifiableChild.Identifier, identifiableChild.Units)];
+                            if (unitsProvided is null)
+                                throw new ApsimXException(this, $"Units for [{identifiableChild.GetType().Name}]-[{identifiableChild.Identifier}]-[{identifiableChild.Units}] have not been calculated by [a={NameWithParent}] before use.{Environment.NewLine}Code issue. See Developers");
+                            else
+                            {
+                                if (unitsProvided > 0)
+                                {
+                                    foreach (ResourceRequest request in identifiableChild.GetResourceRequests(unitsProvided ?? 0))
+                                    {
+                                        request.ActivityModel = this;
+                                        request.IdentifiableChildDetails = (identifiableChild.GetType().Name, identifiableChild.Identifier, identifiableChild.Units);
+                                        ResourceRequestList.Add(request);
+                                    } 
+                                }
+                            }
+                        }
+                    }
 
                     // check availability
                     CheckResources(ResourceRequestList, Guid.NewGuid());
@@ -412,6 +451,31 @@ namespace Models.CLEM.Activities
             {
                 Status = ActivityStatus.Ignored;
             }
+        }
+
+        /// <summary>
+        /// Determine the min proportion shortfall for the current resource request
+        /// Only considers those coming from the IIdentifiable childen
+        /// </summary>
+        /// <param name="affectsActivityOnly">Only uses identifiable chilren flags as affetcs Activity in calculations if True</param>
+        /// <param name="reduceAllIdentifableShortfalls"></param>
+        /// <returns>Minimum proportion found</returns>
+        public IEnumerable<ResourceRequest> MinimumShortfallProportion(bool affectsActivityOnly = true, bool reduceAllIdentifableShortfalls = true)
+        {
+            double min = 1;
+            if (ResourceRequestList != null && ResourceRequestList.Any())
+            {
+                var shortfallRequests =  ResourceRequestList.Where(a => Math.Round(Math.Max(0, a.Provided - a.Required), 4) > 0 && a.AdditionalDetails is IIdentifiableChildModel && (!affectsActivityOnly || (a.AdditionalDetails as IIdentifiableChildModel).ShortfallAffectsActivity)).ToList();
+                if (shortfallRequests.Any())
+                {
+                    min = shortfallRequests.Select(a => a.Provided / a.Required).Min();
+                    foreach (var request in ResourceRequestList.Where(a => a.Provided / a.Required != min && a.AdditionalDetails is IIdentifiableChildModel && (!affectsActivityOnly || (a.AdditionalDetails as IIdentifiableChildModel).ShortfallAffectsActivity)))
+                        request.Required = Math.Min(request.Provided, request.Required * min);
+
+                    return shortfallRequests.OrderBy(a => a.Provided / a.Required);
+                } 
+            }
+            return new List<ResourceRequest>();
         }
 
         /// <summary>
@@ -505,7 +569,7 @@ namespace Models.CLEM.Activities
                 double totalNeeded = ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)).Sum(a => a.Required);
 
                 foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)))
-                    if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourFilterGroup).Parent as LabourRequirement).LabourShortfallAffectsActivity)
+                    if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourFilterGroup).Parent as LabourRequirement).ShortfallAffectsActivity)
                         proportion *= item.Provided / item.Required;
                 return proportion;
             }
@@ -531,11 +595,11 @@ namespace Models.CLEM.Activities
             {
                 if (resourceType == typeof(LabourType))
                 {
-                    if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourFilterGroup).Parent as LabourRequirement).LabourShortfallAffectsActivity)
+                    if (item.FilterDetails != null && ((item.FilterDetails.First() as LabourFilterGroup).Parent as LabourRequirement).ShortfallAffectsActivity)
                         proportion *= item.Provided / item.Required;
                 }
                 else // all other types
-                    proportion *= item.Provided / item.Required;
+                    proportion = item.Provided / item.Required;
             }
             return proportion;
         }
@@ -549,7 +613,7 @@ namespace Models.CLEM.Activities
             get
             {
                 foreach (LabourRequirement item in FindAllChildren<LabourRequirement>())
-                    if (item.LabourShortfallAffectsActivity)
+                    if (item.ShortfallAffectsActivity)
                         return true;
                 return false;
             }
@@ -822,12 +886,13 @@ namespace Models.CLEM.Activities
                 return false;
 
             // remove activity resources 
-            // check if deficit and performWithPartial
-            if ((resourceRequestList.Where(a => a.Required > a.Available).Count() == 0) || OnPartialResourcesAvailableAction != OnPartialResourcesAvailableActionTypes.SkipActivity)
+            // if no shortfalls or not skip activity if they are present
+            if (resourceRequestList.Where(a => Math.Round(a.Available - a.Required, 4)>=0).Any() == false || OnPartialResourcesAvailableAction != OnPartialResourcesAvailableActionTypes.SkipActivity)
             {
-                if(OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+                // check if deficit and performWithPartial
+                if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
                 {
-                    string resourcelist = string.Join("][r=", resourceRequestList.Where(a => a.Required > a.Available).Select(a => a.ResourceType.Name));
+                    string resourcelist = string.Join("][r=", resourceRequestList.Where(a => Math.Round(a.Available - a.Required, 4) < 0).Select(a => a.ResourceType.Name));
                     if (resourcelist.Length > 0)
                     {
                         string errorMessage = $"Insufficient [r={resourcelist}] for [a={this.NameWithParent}]{Environment.NewLine}[Report error and stop] is selected as action when shortfall of resources. Ensure sufficient resources are available or change OnPartialResourcesAvailableAction setting";

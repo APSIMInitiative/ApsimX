@@ -952,6 +952,47 @@ namespace Models.CLEM
     }
 
     /// <summary>
+    /// The types of labels provided for use by Identifiable chilren
+    /// </summary>
+    public enum IdentifiableChildModelLabelType
+    {
+        /// <summary>
+        /// The child identifiers available
+        /// </summary>
+        Identifiers,
+        /// <summary>
+        /// The units of measure available
+        /// </summary>
+        Units
+    }
+
+    /// <summary>
+    /// A list of labels used for communication between an activity and identifiable children
+    /// </summary>
+    public struct LabelsForIdentifiableChildren
+    {
+        /// <summary>
+        /// List of available identifiers
+        /// </summary>
+        public List<string> Identifiers;
+        /// <summary>
+        /// List of available units of measure
+        /// </summary>
+        public List<string> Units;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="identifiers"></param>
+        /// <param name="units"></param>
+        public LabelsForIdentifiableChildren(List<string> identifiers, List<string> units)
+        {
+            Identifiers = identifiers;
+            Units = units;
+        }
+    }
+
+    /// <summary>
     /// Additional linq extensions
     /// </summary>
     public static class LinqExtensions

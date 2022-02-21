@@ -21,6 +21,7 @@ namespace Models.CLEM.Activities
 //    [ValidParent(ParentType = typeof(RuminantActivityBuySell))]
 //    [ValidParent(ParentType = typeof(RuminantActivityControlledMating))]
     [Description("Define a herd expense for herd management activities")]
+    [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFee.htm")]
     public class RuminantActivityFee: CLEMModel, IIdentifiableChildModel, IValidatableObject
@@ -33,6 +34,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Fee identifier")]
         [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Identifier required")]
         public string Identifier { get; set; }
 
         /// <summary>
@@ -46,10 +48,10 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Payment style
         /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(AnimalPaymentStyleType.perHead)]
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedUnits")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Units of measure required")]
         [Description("Payment style")]
-        [Required]
-        public AnimalPaymentStyleType PaymentStyle { get; set; }
+        public string Units { get; set; }
 
         /// <summary>
         /// Amount
@@ -65,6 +67,30 @@ namespace Models.CLEM.Activities
         [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
         [Models.Core.Display(Order = 500)]
         public string TransactionCategory { get; set; }
+
+        /// <inheritdoc/>
+        [Description("Allow finance shortfall to affect activity")]
+        [Required]
+        [System.ComponentModel.DefaultValueAttribute(false)]
+        public bool ShortfallAffectsActivity { get; set; }
+
+        /// <inheritdoc/>
+        public List<ResourceRequest> GetResourceRequests(double activityMetric)
+        {
+            double charge;
+            charge = (double)activityMetric * Amount;
+            return new List<ResourceRequest>() { new ResourceRequest()
+            {
+                Resource = BankAccount,
+                ResourceType = typeof(Finance),
+                AllowTransmutation = false,
+                Required = charge,
+                Category = TransactionCategory,
+                AdditionalDetails = this,
+                RelatesToResource = (Parent as CLEMRuminantActivityBase).PredictedHerdName
+            }
+            };
+        }
 
         /// <summary>
         /// Store finance type to use
@@ -89,17 +115,33 @@ namespace Models.CLEM.Activities
             TransactionCategory = "Livestock.[Activity]";
         }
 
-        /// <inheritdoc/>
+        #region validation
+
+        /// <summary>
+        /// A method to return the list of identifiers relavent to this parent activity
+        /// </summary>
+        /// <returns>A list of identifiers</returns>
         public List<string> ParentSuppliedIdentifiers()
         {
-            if (Parent is ICanHandleIdentifiableChildModels)
-                return (Parent as ICanHandleIdentifiableChildModels).IdentifiableChildModelIdentifiers<RuminantActivityFee>();
+            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
+                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels<RuminantActivityFee>().Identifiers;
+            else
+                return new List<string>();
+        }
+
+        /// <summary>
+        /// A method to return the list of units relavent to this parent activity
+        /// </summary>
+        /// <returns>A list of units</returns>
+        public List<string> ParentSuppliedUnits()
+        {
+            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
+                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels<RuminantActivityFee>().Units;
             else
                 return new List<string>();
         }
 
 
-        #region validation
         /// <summary>
         /// Validate model
         /// </summary>
@@ -129,8 +171,8 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Pay ");
-                htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.##") + "</span> ");
-                htmlWriter.Write("<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> ");
+                htmlWriter.Write($"<span class=\"setvalue\">{Amount:#,##0.##}</span> ");
+                htmlWriter.Write($"<span class=\"setvalue\">{Units}</span> ");
                 htmlWriter.Write(" from ");
 
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(BankAccountName, "Account not set", HTMLSummaryStyle.Resource));

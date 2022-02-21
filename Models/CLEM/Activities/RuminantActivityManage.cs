@@ -23,6 +23,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Overall management of ruminant numbers with multiple management actions")]
+    [Version(1, 2, 0, "Implements event based activity control")]
     [Version(1, 1, 1, "Improved custom filtering of task individuals")]
     [Version(1, 1, 0, "Allow all tasks to be controlled and cleaned up logic")]
     [Version(1, 0, 10, "Allows control order individuals are identified for removal and keeping")]
@@ -347,31 +348,34 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<string> DefineIdentifiableChildModelIdentifiers<T>()
+        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels<T>()
         {
-            if (typeof(T) == typeof(RuminantGroup))
+            switch (typeof(T).Name)
             {
-                return new List<string>()
-                {
-                    "RemoveBreedersFromPurchases",
-                    "RemoveBreedersFromHerd",
-                    "RemoveOldFemalesFromHerd",
-                    "RemoveOldSiresFromHerd",
-                    "RemoveSiresFromPurchases",
-                    "RemoveSiresFromHerd",
-                    "SelectBreedersFromSales",
-                    "SelectBreedersFromHerd",
-                    "SelectYoungFemalesFromGrowOut",
-                    "SelectYoungFemalesFromSales",
-                    "SelectFemalesForGrowOut",
-                    "SelectSiresFromSales",
-                    "SelectFutureSiresFromSales",
-                    "SelectFutureSiresFromGrowOut",
-                    "SelectMalesForGrowOut"
-                };
+                case "RuminantGroup":
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>() {
+                            "RemoveBreedersFromPurchases",
+                            "RemoveBreedersFromHerd",
+                            "RemoveOldFemalesFromHerd",
+                            "RemoveOldSiresFromHerd",
+                            "RemoveSiresFromPurchases",
+                            "RemoveSiresFromHerd",
+                            "SelectBreedersFromSales",
+                            "SelectBreedersFromHerd",
+                            "SelectYoungFemalesFromGrowOut",
+                            "SelectYoungFemalesFromSales",
+                            "SelectFemalesForGrowOut",
+                            "SelectSiresFromSales",
+                            "SelectFutureSiresFromSales",
+                            "SelectFutureSiresFromGrowOut",
+                            "SelectMalesForGrowOut"
+                        },
+                        units: new List<string>()
+                        );
+                default:
+                    return new LabelsForIdentifiableChildren();
             }
-            else
-                    return new List<string>();
         }
 
         #region validation
@@ -1531,7 +1535,7 @@ namespace Models.CLEM.Activities
 
                 var filtersProvided = LocateIdentifiableChildren<RuminantGroup>(false);
 
-                foreach (var identifier in IdentifiableChildModelIdentifiers<RuminantGroup>())
+                foreach (var identifier in IdentifiableChildModelLabels<RuminantGroup>(IdentifiableChildModelLabelType.Identifiers))
                 {
                     if (filtersProvided.ContainsKey(identifier))
                         if (IsCustomFilterTaskIncluded(identifier))
