@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 285,
   "Version": 148,
   "Name": "Simulations",
   "Children": [
@@ -29,7 +29,7 @@
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "https://www.apsim.info/documentation/model-documentation/soil-modules-documentation/swimv2-1/\n\n# Overview\n\nSWIM3 (Huth et al., 2012) allows three of the four lower boundary conditions described in Verburg et al. (1996) as described below. The zero flux lower boundary condition has not been enabled. \n\nAll references to \"SWIM\" here refer to the highly detailed documentation by Verburg et al. (1996) of the standalone model that has morphed over the years into SWIM3. Verburg et al. remains the definitive documentation and should be referred to for detail.\n\nSee the \"SWIM3_SetLowerBC\" Manager script (to be found in both the SWIM3 example and in the Manager toolbox) for examples of how to change lower boundary conditions.\n\n## SetLowerBCForGradient(bbcGradient)\n\nA constant gradient in soil water potential with depth is the default lower boundary condition and is applicable to most 'open field' simulations where there is free drainage from the soil. This option is ibbc = 0 in SWIM3. This lower boundary condition setting must be accompanied by the value of that gradient. This is done using a command in a Manager script along the lines of:\n\n\tSetLowerBCForGradient(bbcGradient);\n\nwhere bbcGradient is a double (real) variable with the value of the required gradient in soil water potential with depth in the soil. The set value remains in place until the user resets it.\nGravity is added to bbcGradient so the most common setting is bbcGradient = 0.0 which means that there is no gradient of soil water potential. In this case, water moves under the influence of gravity alone at the lower boundary. This is the default for SWIM3 and will prevail unless the user intervenes.\nOther gradients can be set. For example, setting bbcGradient = -1.0 will set the soil water potential gradient to counteract the effect of gravity and will essentially set a no-flow lower boundary (which is likely to result in an unstable simulation). \n\n## SetLowerBCForGivenPotential(bbcPotential)\n\nThis lower boundary condition sets a constant soil water potential at the lowest node in the simulation. Note that soil water potential is in units of cm (although units of mm are used on the user interface) and is negative in unsaturated soils. This option can be useful for mimicking the effect of a water table at the base of the simulation by setting a positive value equal to the height difference between the water table and the bottom of the simulated soil profile. Note that in this setting, water will be added to the simulation at the lower boundary as needed to maintain the user set soil water potential.\nSee the Manager script \"SWIM3_SetLowerBC\" for an example: \n\n\tSetLowerBCForGivenPotential(bbcPotential);\n\nwhere bbcPotential is the required potential as a double variable in cm. this setting is equivalent to ibbc = 1 in SWIM.\n\n## SetLowerBCForSeepage(bbcPotentialSeepage)\n\nA seepage lower boundary is a condition where no drainage can occur until a user-set head of water (i.e., a depth of saturated soil) of bbcPotentialSeepage accumulates at the base of the soil profile. Once that head is reached drainage occurs at the rate allowed by the saturated soil water conductivity under gravity only until the head falls below the user-set value. This lower boundary condition is that of ibbc = 3 in SWIM. A common usage of this boundary condition is when simulating a zero-tension (i.e., free to the atmosphere) lysimeter and in this case bbcPotentialSeepage = 0.0. See an example in \"SWIM3_SetLowerBC\":\n\n\tSetLowerBCForSeepage(bbcPotentialSeepage);\n\nwhere bbcPotentialSeepage is in cm.\n\n## Testing\n\nThe simulation below runs a simple pasture simulation in an irrigated environment with lower boundary conditions of a unit gradient (“Gradient”), zero-tension seepage as in a lysimeter (“Seepage”), and a set water potential of -500 mm (so wetter than the drained upper limit, “Potential”). \n\nThe simulation contains a Manager component to check for preservation of mass in the water balance (“CalculateRollingWaterBalance”). This component calculates daily and cumulative water balances to test for errors and drift. First the component adds up the daily water inputs (rain, irrigation), outputs (drainage, **tile drainage**, soil water evaporation, runoff, plant water uptake), and change in water storage from the start to the end of the day. Here, storage is both the water in the soil and that in any surface pond. The water balance is the water added, minus water removed, minus the increase in water stored. Note that this water balance component is generic and can be added to any simulation.\n\nSeveral plots have been produced.\n\n**Daily WaterBalance** shows that the largest absolute daily error in the water balance is less than 0.0003 mm and that there are more positive errors (water ‘lost’ in the simulation) than negative errors. Following this to the **Cumulative WaterBalance** shows the effect of the lop-sided daily errors but is reassuring in that the cumulative error is less than 0.02 mm even after six years of simulation.\n\n**WaterStored** shows the amount of water stored in the soil (none of these simulations included ponding conditions). As expected, the Potential simulation has the highest water storage because the lower boundary potential of -500 mm is wetter than the drained upper limit and water is regularly being added into the simulation to maintain that water potential. The Seepage simulation holds slightly more water in the soil than the Gradient simulation because in Seepage drainage cannot occur until the lower boundary soil water potential rises to zero. That need to the water potential to rise to zero before draining means that some water must accumulate at the base of the soil while the potential is rising and so it allows more time for plants to access the water before it eventually drains. The outcome is that there will generally be somewhat less drainage when a seepage lower boundary condition is set compared to the default unit gradient boundary condition.\n\n**PsiOfLowestLayer** shows the time series of soil water potential in the lower layer. In Potential it is the prescribed -50 cm (note that SWIM3’s outputs of psi are in cm rather than mm – something that might be fixed in the future perhaps). Seepage maintains a higher value of Psi than Gradient for most of the simulation as expected.\n\n\n\nAnd is there a test for this?\n\nDoes the mass balance with these options?\n\n",
+          "Text": "https://www.apsim.info/documentation/model-documentation/soil-modules-documentation/swimv2-1/\n\n# Overview\n\nSWIM3 (Huth et al., 2012) allows three of the four lower boundary conditions described in Verburg et al. (1996) as described below. The zero flux lower boundary condition has not been enabled. \n\nAll references to \"SWIM\" here refer to the highly detailed documentation by Verburg et al. (1996) of the standalone model that has morphed over the years into SWIM3. Verburg et al. remains the definitive documentation and should be referred to for detail.\n\nSee the \"SWIM3_SetLowerBC\" Manager script (to be found in both the SWIM3 example and in the Manager toolbox) for examples of how to change lower boundary conditions.\n\n## SetLowerBCForGradient(bbcGradient)\n\nA constant gradient in soil water potential with depth is the default lower boundary condition and is applicable to most 'open field' simulations where there is free drainage from the soil. This option is ibbc = 0 in SWIM3. This lower boundary condition setting must be accompanied by the value of that gradient. This is done using a command in a Manager script along the lines of:\n\n\tSetLowerBCForGradient(bbcGradient);\n\nwhere bbcGradient is a double (real) variable with the value of the required gradient in soil water potential with depth in the soil. The set value remains in place until the user resets it.\nGravity is added to bbcGradient so the most common setting is bbcGradient = 0.0 which means that there is no gradient of soil water potential. In this case, water moves under the influence of gravity alone at the lower boundary. This is the default for SWIM3 and will prevail unless the user intervenes.\nOther gradients can be set. For example, setting bbcGradient = -1.0 will set the soil water potential gradient to counteract the effect of gravity and will essentially set a no-flow lower boundary (which is likely to result in an unstable simulation). \n\n## SetLowerBCForGivenPotential(bbcPotential)\n\nThis lower boundary condition sets a constant soil water potential at the lowest node in the simulation. Note that soil water potential is in units of cm (although units of mm are used on the user interface) and is negative in unsaturated soils. This option can be useful for mimicking the effect of a water table at the base of the simulation by setting a positive value equal to the height difference between the water table and the bottom of the simulated soil profile. Note that in this setting, water will be added to the simulation at the lower boundary as needed to maintain the user set soil water potential.\nSee the Manager script \"SWIM3_SetLowerBC\" for an example: \n\n\tSetLowerBCForGivenPotential(bbcPotential);\n\nwhere bbcPotential is the required potential as a double variable in cm. this setting is equivalent to ibbc = 1 in SWIM.\n\n## SetLowerBCForSeepage(bbcPotentialSeepage)\n\nA seepage lower boundary is a condition where no drainage can occur until a user-set head of water (i.e., a depth of saturated soil) of bbcPotentialSeepage accumulates at the base of the soil profile. Once that head is reached drainage occurs at the rate allowed by the saturated soil water conductivity under gravity only until the head falls below the user-set value. This lower boundary condition is that of ibbc = 3 in SWIM. A common usage of this boundary condition is when simulating a zero-tension (i.e., free to the atmosphere) lysimeter and in this case bbcPotentialSeepage = 0.0. See an example in \"SWIM3_SetLowerBC\":\n\n\tSetLowerBCForSeepage(bbcPotentialSeepage);\n\nwhere bbcPotentialSeepage is in cm.\n\n## Testing\n\nThe simulation below runs a simple pasture simulation in an irrigated environment with lower boundary conditions of a unit gradient (“Gradient”), zero-tension seepage as in a lysimeter (“Seepage”), and a set water potential of -500 mm (so wetter than the drained upper limit, “Potential”). \n\nThe simulation contains a Manager component to check for preservation of mass in the water balance (“CalculateRollingWaterBalance”). This component calculates daily and cumulative water balances to test for errors and drift. First the component adds up the daily water inputs (rain, irrigation), outputs (drainage, **tile drainage**, soil water evaporation, runoff, plant water uptake), and change in water storage from the start to the end of the day. Here, storage is both the water in the soil and that in any surface pond. The water balance is the water added, minus water removed, minus the increase in water stored. Note that this water balance component is generic and can be added to any simulation.\n\nSeveral plots have been produced.\n\n**Daily WaterBalance** shows that the largest absolute daily error in the water balance is less than 0.0003 mm and that there are more positive errors (water ‘lost’ in the simulation) than negative errors. Following this to the **Cumulative WaterBalance** shows the effect of the lop-sided daily errors but is reassuring in that the cumulative error is less than 0.02 mm even after six years of simulation.\n\n**WaterStored** shows the amount of water stored in the soil (none of these simulations included ponding conditions). As expected, the Potential simulation has the highest water storage because the lower boundary potential of -500 mm is wetter than the drained upper limit and water is regularly being added into the simulation to maintain that water potential. The Seepage simulation holds slightly more water in the soil than the Gradient simulation because in Seepage drainage cannot occur until the lower boundary soil water potential rises to zero. That need to the water potential to rise to zero before draining means that some water must accumulate at the base of the soil while the potential is rising and so it allows more time for plants to access the water before it eventually drains. The outcome is that there will generally be somewhat less drainage when a seepage lower boundary condition is set compared to the default unit gradient boundary condition.\n\n**PsiOfLowestLayer** shows the time series of soil water potential in the lower layer. In Potential it is the prescribed -50 cm (note that SWIM3’s outputs of psi are in cm rather than mm – something that might be fixed in the future perhaps). Seepage maintains a higher value of Psi than Gradient for most of the simulation as expected.\n\n**Gradient**, **Seepage** and **Potential** detail the time series of soil water potential in the lowest layer against drainage for each boundary condition type. Close examination of **Seepage** shows that drainage is only present when the potential is zero. Note that the drainage is the sum of that during the day while the potential is that at the end of the day so it is possible that there was some drainage during the day but a slightly negative potential at the end of the day. One feature of this boundary condition is the absence of the almost-daily small (< 1mm /day) drainage amounts that are seen in **Gradient**. The negative drainage in **Potential** is the result of inflow to maintain the -500 mm soil water potential at the lower boundary. **Drainage** and **CumulativeDrainage** show the effects of the boundary conditions more clearly.\n\nIn these simulations there is no difference in **WaterUptake** across the boundary conditions (because the simulations are well irrigated). In the absence of irrigation it would be expected that their would be higher water uptake in the seepage and potential (given a value of -500 mm) boundary conditions as they hold more water in the soil (see **WaterStored**) for the bulk of the simulation duration.\n\nOnly the constant potential boundary condition resulted in any **Runoff** (the simulations are in a relatively dry environment with a highly permeable soil). The irrigation setting for the simulations was based on soil water deficit. Therefore, as might be expected, **Irrigation** (see also ** CumulativeIrrigation**) commenced later in each season for the constant potential boundary condition and less irrigation was applied. Also as expected, slightly more irrigation was applied to the constant gradient simulation than the seepage simulation.\n\n",
           "Name": "Memo Lower BC",
           "Children": [],
           "Enabled": true,
@@ -1840,70 +1840,6 @@
                     },
                     {
                       "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "WaterUptake",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": 0,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "CalculateRollingWaterBalance.Script.PlantWaterUptake",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Uptake",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": "Drainage",
                       "Position": 2,
                       "Inverted": false,
@@ -2008,6 +1944,70 @@
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Drainage",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "WaterUptake",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": 0,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Date",
+                      "YFieldName": "CalculateRollingWaterBalance.Script.PlantWaterUptake",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Uptake",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
