@@ -77,6 +77,9 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double Drainage { get; set; }
+        /// <summary>Subsurface drain (mm)</summary>
+        [JsonIgnore]
+        public double SubsurfaceDrain { get; }
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double[] DULmm { get; set; }

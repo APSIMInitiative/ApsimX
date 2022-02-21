@@ -963,8 +963,9 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Subsurface drain (mm)</summary>
         [Units("mm")]
-        private double subsurface_drain
+        public double SubsurfaceDrain
         {
             get
             {
