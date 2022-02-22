@@ -1,6 +1,8 @@
 ﻿namespace Models.Core
 {
     using System;
+    using System.Collections.Generic;
+    using APSIM.Shared.Documentation;
 
     /// <summary>
     /// A replacements model
@@ -10,6 +12,12 @@
     [ScopedModel]
     public class Replacements : Model
     {
-
+        /// <summary>
+        /// This model is not documented in autodocs.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            yield break;
+        }
     }
 }

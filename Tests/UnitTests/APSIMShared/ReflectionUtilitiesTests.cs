@@ -1,9 +1,11 @@
 namespace UnitTests.APSIMShared
 {
     using APSIM.Shared.Utilities;
+    using Models.Core;
     using NUnit.Framework;
     using System;
     using System.Collections.Generic;
+    using System.IO;
 
     [TestFixture]
     public class ReflectionUtilitiesTests
@@ -45,6 +47,23 @@ namespace UnitTests.APSIMShared
             string output = ReflectionUtilities.ObjectToString(input);
             string expectedOutput = "a, b,  c, d ";
             Assert.AreEqual(expectedOutput, output);
+        }
+
+        /// <summary>
+        /// Test binary deserealization of SimulationException.
+        /// </summary>
+        [Test]
+        public void TestDeserializeSimulationException()
+        {
+            SimulationException exception = new SimulationException("Custom message", "Name of the simulation", "The filename");
+            using (Stream stream = ReflectionUtilities.BinarySerialise(exception))
+            {
+                stream.Seek(0, SeekOrigin.Begin);
+                SimulationException cloned = (SimulationException)ReflectionUtilities.BinaryDeserialise(stream);
+                Assert.AreEqual(exception.Message, cloned.Message);
+                Assert.AreEqual(exception.SimulationName, cloned.SimulationName);
+                Assert.AreEqual(exception.FileName, cloned.FileName);
+            }
         }
     }
 }

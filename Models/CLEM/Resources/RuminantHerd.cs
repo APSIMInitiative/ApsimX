@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,6 +12,7 @@ using System.Globalization;
 using Models.CLEM.Interfaces;
 using System.ComponentModel.DataAnnotations;
 using Models.CLEM.Groupings;
+using System.Diagnostics;
 
 namespace Models.CLEM.Resources
 {
@@ -22,7 +23,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
-    [Description("This resource group holds all rumiant types (herds or breeds) for the simulation.")]
+    [Description("Resource group for all rumiant types (herds or breeds) in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantHerd.htm")]
     public class RuminantHerd: ResourceBaseWithTransactions
@@ -57,19 +58,13 @@ namespace Models.CLEM.Resources
         /// The last individual to be added or removed (for reporting)
         /// </summary>
         [JsonIgnore]
-        public object LastIndividualChanged { get; set; }
+        public Ruminant LastIndividualChanged { get; set; }
 
         /// <summary>
         /// The details of an individual for reporting
         /// </summary>
         [JsonIgnore]
         public RuminantReportItemEventArgs ReportIndividual { get; set; }
-
-        /// <summary>
-        /// Statistical summar of a list of numbers (e.g. attribute values)
-        /// </summary>
-        [JsonIgnore]
-        public ListStatistics LastListStatistics { get; set; }
 
         /// <summary>
         /// Get the next unique individual id number
@@ -88,23 +83,19 @@ namespace Models.CLEM.Resources
 
             // for each Ruminant type 
             foreach (RuminantType rType in this.FindAllChildren<RuminantType>())
-            {
                 foreach (RuminantInitialCohorts ruminantCohorts in rType.FindAllChildren<RuminantInitialCohorts>())
-                {
                     foreach (var ind in ruminantCohorts.CreateIndividuals())
                     {
                         ind.SaleFlag = HerdChangeReason.InitialHerd;
                         AddRuminant(ind, this);
                     }
-                }
-            }
 
             // Assign mothers to suckling calves
             foreach (string herdName in Herd.Select(a => a.HerdName).Distinct())
             {
                 List<Ruminant> herd = Herd.Where(a => a.HerdName == herdName).ToList();
 
-                if (herd.Any())
+                if (herd.Count > 0)
                 {
                     // get list of all sucking individuals
                     var sucklingGroups = herd.Where(a => a.Weaned == false).GroupBy(a => a.Age).OrderByDescending(a => a.Key);
@@ -112,13 +103,13 @@ namespace Models.CLEM.Resources
                     foreach (var sucklingList in sucklingGroups)
                     {
                         // get list of females of breeding age and condition
-                        List<RuminantFemale> breedFemales = herd.OfType<RuminantFemale>().Where(a => a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength + sucklingList.Key && a.Age <= a.BreedParams.MaximumAgeMating && a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.BreedParams.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.Age).ToList();
+                        List<RuminantFemale> breedFemales = herd.OfType<RuminantFemale>().Where(a => a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength + sucklingList.Key && a.HighWeight >= (a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight) && a.Weight >= (a.BreedParams.CriticalCowWeight * a.StandardReferenceWeight)).OrderByDescending(a => a.Age).ToList();
 
-                        if (!breedFemales.Any())
+                        if (breedFemales.Count == 0)
                         {
                             if (sucklingList.Any())
                             {
-                                Summary.WriteWarning(this, $"Insufficient breeding females to assign [{sucklingList.Count()}] [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\r\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a calf.");
+                                Summary.WriteMessage(this, $"Insufficient breeding females to assign [{sucklingList.Count()}] x [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\r\nUnassigned sucklings will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a suckling.", MessageType.Warning);
                                 break;
                             }
                         }
@@ -182,7 +173,7 @@ namespace Models.CLEM.Resources
                                 }
                                 else
                                 {
-                                    Summary.WriteWarning(this, $"Insufficient breeding females to assign [{sucklingList.Count() - sucklingCount}] [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\r\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a calf.");
+                                    Summary.WriteMessage(this, $"Insufficient breeding females to assign [{sucklingList.Count() - sucklingCount}] x [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\r\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a suckling.", MessageType.Warning);
                                     break;
                                 }
                             }
@@ -197,7 +188,7 @@ namespace Models.CLEM.Resources
                     minsizeIPI = Math.Max(minsizeIPI, herd[0].BreedParams.GestationLength + 2);
 
                     // assigning values for the remaining females who haven't just bred.
-                    // i.e met breeding rules and not pregnant or lactating (just assigned calf), but calculate for underweight individuals not previously provided calves.
+                    // i.e met breeding rules and not pregnant or lactating (just assigned suckling), but calculate for underweight individuals not previously provided sucklings.
                     double ageFirstBirth = herd[0].BreedParams.MinimumAge1stMating + herd[0].BreedParams.GestationLength;
                     foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => !a.IsLactating && !a.IsPregnant && (a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength & a.HighWeight >= a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)))
                     {
@@ -212,18 +203,12 @@ namespace Models.CLEM.Resources
                         int numberOfBirths = Convert.ToInt32((female.Age - ageFirstBirth) / ((currentIPI + minsizeIPI) / 2), CultureInfo.InvariantCulture) - 1;
                         female.AgeAtLastBirth = ageFirstBirth + (currentIPI * numberOfBirths);
                         female.AgeAtLastConception = female.AgeAtLastBirth - female.BreedParams.GestationLength;
-
-                        // no longer needed as only work with stats during the simulation.
-                        // fill breeding stats prior to simulation start
-                        // assumes all previous births successful
-                        //female.NumberOfConceptions = female.NumberOfBirths;
-                        //female.NumberOfOffspring = female.NumberOfBirths;
-                        //female.NumberOfWeaned = female.NumberOfBirths;
                     }
                 }
             }
             // group herd ready for reporting
-            groupedHerdForReporting = SummarizeIndividualsByGroups(Herd, PurchaseOrSalePricingStyleType.Purchase);
+            string warnMessage = $"Some ruminants did not have a [PriceGroup] of style [Purchase] for reporting value in a [Herd Summary].{System.Environment.NewLine}The values reported will not include these individuals. Ensure all individuals have a purchase price in order to provide ruminant value in summary reports.";
+            groupedHerdForReporting = SummarizeIndividualsByGroups(Herd, PurchaseOrSalePricingStyleType.Purchase, warnMessage);
         }
 
         /// <summary>An event handler to allow us to peform atsks at the end of the simulation</summary>
@@ -233,7 +218,7 @@ namespace Models.CLEM.Resources
         private void OnEndOfSimulation(object sender, EventArgs e)
         {
             // report all females of breeding age at end of simulation
-            foreach (RuminantFemale female in Herd.Where(a => a.Gender == Sex.Female && a.Age >= a.BreedParams.MinimumAge1stMating))
+            foreach (RuminantFemale female in Herd.Where(a => a.Sex == Sex.Female && a.Age >= a.BreedParams.MinimumAge1stMating))
             {
                 RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
                 {
@@ -286,7 +271,7 @@ namespace Models.CLEM.Resources
         public void RemoveRuminant(Ruminant ind, IModel model)
         {
             // Remove mother ID from any suckling offspring
-            if (ind.Gender == Sex.Female)
+            if (ind.Sex == Sex.Female)
                 foreach (var offspring in (ind as RuminantFemale).SucklingOffspringList)
                     offspring.Mother = null;
 
@@ -314,7 +299,7 @@ namespace Models.CLEM.Resources
             OnTransactionOccurred(te);
 
             // report female breeding stats if needed
-            if(ind.Gender == Sex.Female & ind.Age >= ind.BreedParams.MinimumAge1stMating)
+            if(ind.Sex == Sex.Female & ind.Age >= ind.BreedParams.MinimumAge1stMating)
             {
                 RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
                 {
@@ -326,30 +311,6 @@ namespace Models.CLEM.Resources
 
             // remove change flag
             ind.SaleFlag = HerdChangeReason.None;
-        }
-
-        /// <summary>
-        /// Return the mean and standard deviation of an attribute value
-        /// </summary>
-        public int SummariseAttribute(string tag, bool ignoreNotFound)
-        {
-            LastListStatistics = new ListStatistics();
-            if (Herd is null)
-                return 0;
-
-            var values = Herd.Where( a => (ignoreNotFound & a.Attributes.GetValue(tag) == null) ? false : true).Select(a => Convert.ToDouble(a.Attributes.GetValue(tag)?.storedValue));
-            if (values.Count() == 0)
-                return 0;
-
-            double sd = 0;
-            double mean = values.Average();
-            double sum = values.Sum(d => Math.Pow(d - mean, 2));
-            sd = Math.Sqrt((sum) / values.Count() - 1);
-            LastListStatistics.Average = mean;
-            LastListStatistics.StandardDeviation = sd;
-            LastListStatistics.Count = values.Count();
-            LastListStatistics.Total = Herd.Count();
-            return Herd.Count();
         }
 
         /// <summary>
@@ -369,9 +330,13 @@ namespace Models.CLEM.Resources
         }
 
         ///<inheritdoc/>
-        [EventSubscribe("Commencing")]
-        private new void OnSimulationCommencing(object sender, EventArgs e)
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
+            // clear purchased individuals at start of time step as there is no carryover
+            // this is not the responsibility of any activity as we cannbe assured of what activities will be run.
+            if (PurchaseIndividuals != null)
+                PurchaseIndividuals.Clear();
         }
 
         /// <summary>
@@ -397,7 +362,8 @@ namespace Models.CLEM.Resources
         {
             // group herd ready for reporting
             // performed at herd summary to avoid end of step aging purchases etc
-            groupedHerdForReporting = SummarizeIndividualsByGroups(Herd, PurchaseOrSalePricingStyleType.Purchase);
+            string warnMessage = $"Some ruminants did not have a [PriceGroup] of style [Purchase] for reporting value in a [Herd Summary].{System.Environment.NewLine}The values reported will not include these individuals. Ensure all individuals have a purchase price in order to provide ruminant value in summary reports.";
+            groupedHerdForReporting = SummarizeIndividualsByGroups(Herd, PurchaseOrSalePricingStyleType.Purchase, warnMessage);
         }
 
         /// <summary>
@@ -469,8 +435,9 @@ namespace Models.CLEM.Resources
         /// </summary>
         /// <param name="individuals">Individuals to summarize</param>
         /// <param name="priceStyle">Price style to use</param>
+        /// <param name="warningMessage">A custom warning message used if prices cannot be found otherwise the standard messge will be reported for each unique missing price</param>
         /// <returns>A grouped summary of individuals</returns>
-        public IEnumerable<RuminantReportTypeDetails> SummarizeIndividualsByGroups(IEnumerable<Ruminant> individuals, PurchaseOrSalePricingStyleType priceStyle)
+        public IEnumerable<RuminantReportTypeDetails> SummarizeIndividualsByGroups(IEnumerable<Ruminant> individuals, PurchaseOrSalePricingStyleType priceStyle, string warningMessage = "")
         {
             var groupedInd = from ind in individuals
                                     group ind by ind.BreedParams.Name into breedGroup
@@ -485,7 +452,7 @@ namespace Models.CLEM.Resources
                                                      Count = catind.Count(),
                                                      TotalAdultEquivalent = catind.Sum(a => a.AdultEquivalent),
                                                      TotalWeight = catind.Sum(a => a.Weight),
-                                                     TotalPrice = catind.Sum(a => a.BreedParams.ValueofIndividual(a, priceStyle)?.CalculateValue(a))
+                                                     TotalPrice = catind.Sum(a => a.BreedParams.ValueofIndividual(a, priceStyle, warningMessage)?.CalculateValue(a))
                                                  }
                                     };
             return groupedInd;
@@ -541,12 +508,8 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             string html = "";
             html += "\r\n<div class=\"activityentry\">Activities reporting on herds will group individuals";

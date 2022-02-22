@@ -1,9 +1,9 @@
 ﻿using Models.Core;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
@@ -140,16 +140,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>A method to get all resources required in the time step</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMGetResourcesRequired")]
-        private void OnGetResourcesRequired(object sender, EventArgs e)
-        {
-            foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
-                child.GetResourcesForAllActivities(this);
-        }
-
         /// <summary>A method to allow all activities to initialise themselves</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -169,6 +159,16 @@ namespace Models.CLEM.Activities
             // clear the activity performed status at start of time step
             foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
                 child.ClearAllAllActivitiesPerformedStatus();
+        }
+
+        /// <summary>A method to get all resources required in the time step</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMGetResourcesRequired")]
+        private void OnGetResourcesRequired(object sender, EventArgs e)
+        {
+            foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
+                child.GetResourcesForAllActivities(this);
         }
 
         /// <summary>A method to allow all activities to perform actions at the end of the time step</summary>
@@ -243,19 +243,19 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             return "\r\n<h1>Activities summary</h1>";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
-            return "\r\n<div class=\"activity\"style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
+            return "\r\n<div class=\"activity\"style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
             return "\r\n</div>";
         } 

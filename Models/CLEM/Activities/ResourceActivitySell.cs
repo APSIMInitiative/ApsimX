@@ -1,12 +1,9 @@
 ﻿using Models.Core;
-using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Models.Core.Attributes;
 using System.IO;
 
@@ -21,7 +18,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages the sale of a specified resource.")]
+    [Description("Manages the sale of a specified resource")]
     [HelpUri(@"Content/Features/Activities/All resources/SellResource.htm")]
     [Version(1, 0, 3, "Added Proportion of last gain as selling style. Allows you to sell a proportion of the harvest")]
     [Version(1, 0, 2, "Automatically handles transactions with Marketplace if present")]
@@ -121,7 +118,7 @@ namespace Models.CLEM.Activities
             if(resourceToPlace != null)
                 price = resourceToPlace.Price(PurchaseOrSalePricingStyleType.Purchase);
 
-            if(price is null && resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale)  != null)
+            if(price is null && resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale) != null)
                 price = resourceToSell.Price(PurchaseOrSalePricingStyleType.Sale);
 
         }
@@ -227,7 +224,13 @@ namespace Models.CLEM.Activities
                 // transfer money earned
                 if (bankAccount != null)
                 {
-                    bankAccount.Add(units * price.PricePerPacket, this, (resourceToSell as CLEMModel).NameWithParent, "Sales");
+                    if(price.PricePerPacket == 0)
+                    {
+                        string warn = $"No price set [0] for [r={resourceToSell.Name}] at time of transaction for [a={this.Name}]{Environment.NewLine}No financial transactions will occur.{Environment.NewLine}Ensure price is set or resource pricing file contains entries before this transaction or start of simulation.";
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
+                    }
+
+                    bankAccount.Add(units * price.PricePerPacket, this, (resourceToSell as CLEMModel).NameWithParent, TransactionCategory);
                     if (bankAccount.EquivalentMarketStore != null)
                     {
                         purchaseRequest.Required = units * price.PricePerPacket;
@@ -244,7 +247,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary 
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

@@ -1,6 +1,7 @@
 ﻿using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -17,7 +18,7 @@ namespace Models.CLEM.Activities
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourceActivityProcess))]
-    [Description("This is a fee required to perform processing of a resource.")]
+    [Description("Provides a fee required to perform processing of a resource")]
     [HelpUri(@"Content/Features/Activities/All resources/ResourceFee.htm")]
     [Version(1, 0, 1, "")]
     public class ResourceActivityFee: CLEMModel
@@ -30,6 +31,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Category for transactions")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
+        [Models.Core.Display(Order = 500)]
         public string TransactionCategory { get; set; }
 
         /// <summary>
@@ -58,6 +60,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Store finance type to use
         /// </summary>
+        [JsonIgnore]
         public FinanceType BankAccount { get; set; }
 
         /// <summary>
@@ -81,12 +84,8 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

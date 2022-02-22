@@ -127,7 +127,7 @@ namespace APSIM.Server
             if (options.LocalMode)
                 return new LocalSocketConnection(options.SocketName, options.Verbose, protocol);
             if (options.RemoteMode)
-                return new NetworkSocketConnection(options.Verbose, options.IPAddress, options.Port, protocol);
+                return new NetworkSocketConnection(options.Verbose, options.IPAddress, options.Port, options.Backlog, protocol);
             // We shouldn't be able to reach here from the CLI, but if the class is
             // instantiated in code, this could certainly occur.
             throw new NotImplementedException("Unknown connection type. Use either local or remote mode.");

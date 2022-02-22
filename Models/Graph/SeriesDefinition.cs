@@ -1,5 +1,6 @@
 ﻿namespace Models
 {
+    using APSIM.Shared.Graphing;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Core.Run;
@@ -117,8 +118,8 @@
                                 MarkerType marker = MarkerType.None,
                                 bool showInLegend = true,
                                 SeriesType type = SeriesType.Scatter,
-                                Axis.AxisType xAxis = Axis.AxisType.Bottom,
-                                Axis.AxisType yAxis = Axis.AxisType.Left)
+                                AxisPosition xAxis = AxisPosition.Bottom,
+                                AxisPosition yAxis = AxisPosition.Left)
         { 
             this.Title = title;
             this.Colour = colour;
@@ -148,34 +149,34 @@
         public SeriesType Type { get; }
 
         /// <summary>Gets the marker size.</summary>
-        public MarkerSizeType MarkerSize
+        public MarkerSize MarkerSize
         {
             get
             {
                 if (Series == null) // Can be null for regression lines or 1:1 lines
-                    return MarkerSizeType.Normal;
+                    return MarkerSize.Normal;
 
                 return Series.MarkerSize;
             }
         }
 
         /// <summary>Gets the line thickness.</summary>
-        public LineThicknessType LineThickness
+        public LineThickness LineThickness
         {
             get
             {
                 if (Series == null) // Can be null for regression lines or 1:1 lines
-                    return LineThicknessType.Normal;
+                    return LineThickness.Normal;
                 else
                     return Series.LineThickness;
             }
         }
 
         /// <summary>Gets the associated x axis.</summary>
-        public Axis.AxisType XAxis { get; }
+        public AxisPosition XAxis { get; }
 
         /// <summary>Gets the associated y axis.</summary>
-        public Axis.AxisType YAxis { get; }
+        public AxisPosition YAxis { get; }
 
         /// <summary>Gets the x field name.</summary>
         public string XFieldName { get; }
@@ -309,6 +310,8 @@
                 {
                     var simulationIds = reader.ToSimulationIDs(simulationNameFilter);
                     var simulationIdsCSV = StringUtilities.Build(simulationIds, ",");
+                    if (string.IsNullOrEmpty(simulationIdsCSV))
+                        return;
                     if (fieldsThatExist.Contains("SimulationID"))
                         filter = AddToFilter(filter, $"SimulationID in ({simulationIdsCSV})");
                 }

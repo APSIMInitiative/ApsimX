@@ -140,6 +140,10 @@
             double to = Convert.ToDouble(rangeBits[2], CultureInfo.InvariantCulture);
             double step = Convert.ToDouble(rangeBits[4], CultureInfo.InvariantCulture);
 
+            if ( (from < to && step < 0) ||
+                 (from > to && step > 0) )
+                throw new InvalidOperationException($"Unbounded factor specification: {specification}");
+
             for (double value = from; value <= to; value += step)
             {
                 var newFactor = new CompositeFactor(this, path.Trim(), value.ToString());

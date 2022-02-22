@@ -20,11 +20,11 @@ namespace Models.CLEM.Groupings
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(AnimalPricing))]
-    [Description("This ruminant price group sets the sale and purchase price for a set group of individuals.")]
+    [Description("Define the sale and purchase price for a specified group of individuals")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Purchase and sales identifier used")]
     [HelpUri(@"Content/Features/Filters/Groups/AnimalPriceGroup.htm")]
-    public class AnimalPriceGroup: CLEMModel, IFilterGroup, IResourcePricing, IReportPricingChange
+    public class AnimalPriceGroup : FilterGroup<Ruminant>, IResourcePricing, IReportPricingChange
     {
         /// <summary>
         /// Style of pricing animals
@@ -78,18 +78,6 @@ namespace Models.CLEM.Groupings
                 throw new NotImplementedException();
             }
         }
-
-        /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
-
-        /// <summary>
-        /// Proportion of group to use
-        /// </summary>
-        [JsonIgnore]
-        public double Proportion { get; set; }
 
         /// <inheritdoc/>
         [JsonIgnore]
@@ -151,16 +139,12 @@ namespace Models.CLEM.Groupings
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (!formatForParentControl)
+                if (!FormatForParentControl)
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     switch (PurchaseOrSale)
@@ -194,15 +178,12 @@ namespace Models.CLEM.Groupings
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerClosingTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (formatForParentControl)
+                if (FormatForParentControl)
                 {
                     if (Value.ToString() == "0")
                     {
@@ -239,18 +220,15 @@ namespace Models.CLEM.Groupings
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerOpeningTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                if (formatForParentControl)
+                if (FormatForParentControl)
                 {
                     htmlWriter.Write("<tr><td>" + this.Name + "</td><td>");
-                    if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
+                    if (!(this.FindAllChildren<Filter>().Count() >= 1))
                     {
                         htmlWriter.Write("<div class=\"filter\">All individuals</div>");
                     }
@@ -258,7 +236,7 @@ namespace Models.CLEM.Groupings
                 else
                 {
                     htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
-                    if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
+                    if (!(this.FindAllChildren<Filter>().Count() >= 1))
                     {
                         htmlWriter.Write("<div class=\"filter\">All individuals</div>");
                     }
@@ -267,22 +245,16 @@ namespace Models.CLEM.Groupings
             }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
         {
-            return !formatForParentControl ? base.ModelSummaryClosingTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryClosingTags() : "";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
         {
-            return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
         }
 
         #endregion

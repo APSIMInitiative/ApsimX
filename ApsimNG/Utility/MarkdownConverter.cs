@@ -67,7 +67,7 @@ namespace Utility
                     Uri uri = new Uri(src);
                     if (!string.IsNullOrEmpty(src) && !File.Exists(uri.AbsolutePath))
                     {
-                        string tempFileName = HtmlToMigraDoc.GetImagePath(uri.AbsolutePath, Path.GetTempPath());
+                        string tempFileName = "";//HtmlToMigraDoc.GetImagePath(uri.AbsolutePath, Path.GetTempPath());
                         if (!string.IsNullOrEmpty(tempFileName))
                             image.SetAttributeValue("src", tempFileName);
                     }

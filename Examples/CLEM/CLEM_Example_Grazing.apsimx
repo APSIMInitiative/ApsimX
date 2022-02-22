@@ -1,8 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 285,
-  "Version": 137,
-  "ApsimVersion": "0.0.0.0",
+  "Version": 148,
   "Name": "Simulations",
   "Children": [
     {
@@ -11,21 +10,20 @@
       "CustomFileName": null,
       "Name": "DataStore",
       "Children": [],
-      "IncludeInDocumentation": false,
       "Enabled": true,
       "ReadOnly": false
     },
     {
       "$type": "Models.Core.Folder, Models",
-      "ShowPageOfGraphs": true,
+      "ShowInDocs": true,
+      "GraphsPerPage": 6,
       "Name": "Grazing example",
       "Children": [
         {
           "$type": "Models.Memo, Models",
-          "Text": "#CLEM Grazing simulation example\n##Grazing 10 Ruminants on native pasture and feeding hay \n\nIt is recommended that you use these simulations as examples, but build your simulation from scratch to best understand the processes included.\n\n#Help\nThe CLEM help system provides a model overview, user guide (how to) and a full description of every CLEM component, as well as in depth discussions on modelling various farm systems and what components to use. The Help documentation can be accessed by clicking the Help button beside the component name in the right hand information pane after selecting any CLEM component from your simulation tree or at [CLEM Help online](http://www.apsim.info/CLEM/Content/Home.htm).",
+          "Text": "# CLEM Grazing simulation example\n## Grazing 10 Ruminants on native pasture and feeding hay \n\nIt is recommended that you use these simulations as examples, but build your simulation from scratch to best understand the processes included.\n\n# Help\nThe CLEM help system provides a model overview, user guide (how to) and a full description of every CLEM component, as well as in depth discussions on modelling various farm systems and what components to use. The Help documentation can be accessed by clicking the Help button beside the component name in the right hand information pane after selecting any CLEM component from your simulation tree or at [CLEM Help online](http://www.apsim.info/CLEM/Content/Home.htm).",
           "Name": "Grazing example description",
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -37,10 +35,9 @@
           "Children": [
             {
               "$type": "Models.Memo, Models",
-              "Text": "#Grazing Enterprise - simulated for 14 years - with 10 ruminants on native pasture and feeding hay\n#### EACH MONTH:\n#### Native Pasture  \n- Native Pasture yield data - from an external dataset (from a Grass growth model) in an SQLite Database\n- Native Pasture is managed - land assigned, tracking pasture state, and calculate ecological factors\n####Hay purchased\n - 100kg Hay purchased as needed\n#### Ruminants\n- 10 Ruminants (different Starting Ages and Weights) - Mustered to Native Pasture\n- Ruminants grazed on Pasture for the maximum 8 hours each day\n- Fed purchase hay to potential intake\n- Breeding by Artificial Insemination - every 12 months from March\n- Weaning - Individuals are weaned at 8 months or 100 kg - every 6 months from April\n- Manage numbers: every August\n - Breeding females: maintained between 2 and 10 - sold when over 180 months old - A maximum of 100% of the Maximum Breeders Kept can be purchased in a single transaction\n - Breeding males (sires/rams etc): A maximum of 2 will be kept - sold when over 96 months old\n - General herd: Males will be sold when 18 months old or 150 kg - Animals will be sold only when activity is due - Purchased individuals will be placed on Native Pasture\n- Buy and sell\n - Finances goes in and out of the General account\n\n\n",
+              "Text": "# Grazing \n- simulated for 14 years - with 10 ruminants on native pasture and feeding hay\n\n## Native Pasture  \n- Native Pasture yield data - from an external dataset (from a Grass growth model) using the \"Simple\" method with data provided in csv file\n- Native Pasture is managed - land assigned, tracking pasture state\n## Hay purchased\n - 100kg Hay purchased as needed\n## Ruminants\n- 10 Ruminants (different Starting Ages and Weights)\n- Moved to Native Pasture at start of simulation\n- Ruminants grazed on Pasture for the maximum 8 hours each day\n- Fed purchase hay to potential intake\n- Breeding by Controlled mating - every 12 months from March\n- Weaning - Individuals are weaned at 8 months or 100 kg - every 6 months from April\n- Manage numbers: every August\n - Breeding females: maintained between 2 and 10 - sold when over 180 months old - A maximum of 100% of the Maximum Breeders Kept can be purchased in a single transaction\n - Breeding males (sires/rams etc): A maximum of 2 will be kept - sold when over 96 months old\n - General herd: Males will be sold when 18 months old or 150 kg - Animals will be sold only when activity is due - Purchased individuals will be placed on Native Pasture\n- Buy and sell\n - Finances goes in and out of the General account\n\n\n",
               "Name": "Grazing 10Animals_PastureHay",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -50,18 +47,14 @@
               "End": "1993-12-31T00:00:00",
               "Name": "clock",
               "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Summary, Models",
-              "CaptureErrors": true,
-              "CaptureWarnings": true,
-              "CaptureSummaryText": true,
+              "Verbosity": 100,
               "Name": "summaryfile",
               "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -71,7 +64,6 @@
               "Iteration": 0,
               "Name": "RandomNumbers",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -79,6 +71,7 @@
               "$type": "Models.CLEM.ZoneCLEM, Models",
               "FarmMultiplier": 1.0,
               "ClimateRegion": 0,
+              "EcologicalIndicatorsCalculationInterval": 12,
               "EcologicalIndicatorsCalculationMonth": 12,
               "AutoCreateDescriptiveSummary": false,
               "Area": 0.0,
@@ -99,23 +92,38 @@
                   "AmountColumnName": "AmtKg",
                   "PercentNitrogenColumnName": null,
                   "HarvestTypeColumnName": null,
-                  "SelectedTab": null,
+                  "Notes": null,
+                  "SelectedTab": "Properties",
+                  "CurrentAncestorList": [
+                    "ZoneCLEM",
+                    "FileCrop"
+                  ],
                   "Name": "FileForage",
                   "Children": [],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
+                  "Notes": null,
                   "SelectedTab": null,
+                  "CurrentAncestorList": [
+                    "ZoneCLEM",
+                    "ResourcesHolder"
+                  ],
                   "Name": "Resources",
                   "Children": [
                     {
                       "$type": "Models.CLEM.Resources.Land, Models",
                       "UnitsOfArea": "hectares",
                       "UnitsOfAreaToHaConversion": 1.0,
+                      "Notes": null,
                       "SelectedTab": null,
+                      "CurrentAncestorList": [
+                        "ZoneCLEM",
+                        "ResourcesHolder",
+                        "Land"
+                      ],
                       "Name": "Land",
                       "Children": [
                         {
@@ -124,22 +132,34 @@
                           "PortionBuildings": 0.0,
                           "ProportionOfTotalArea": 1.0,
                           "SoilType": "2",
+                          "Notes": null,
                           "SelectedTab": null,
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ResourcesHolder",
+                            "Land",
+                            "LandType"
+                          ],
                           "Name": "Paddock1",
                           "Children": [],
-                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.CLEM.Resources.Finance, Models",
                       "CurrencyName": null,
+                      "FirstMonthOfFinancialYear": 7,
+                      "Notes": null,
                       "SelectedTab": null,
+                      "CurrentAncestorList": [
+                        "ZoneCLEM",
+                        "ResourcesHolder",
+                        "Finance"
+                      ],
                       "Name": "Finances",
                       "Children": [
                         {
@@ -149,22 +169,33 @@
                           "WithdrawalLimit": 0.0,
                           "InterestRateCharged": 7.5,
                           "InterestRatePaid": 2.0,
+                          "Notes": null,
                           "SelectedTab": null,
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ResourcesHolder",
+                            "Finance",
+                            "FinanceType"
+                          ],
                           "Name": "General account",
                           "Children": [],
-                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.CLEM.Resources.RuminantHerd, Models",
                       "TransactionStyle": 0,
+                      "Notes": null,
                       "SelectedTab": null,
+                      "CurrentAncestorList": [
+                        "ZoneCLEM",
+                        "ResourcesHolder",
+                        "RuminantHerd"
+                      ],
                       "Name": "Ruminants",
                       "Children": [
                         {
@@ -232,7 +263,6 @@
                           "InterParturitionIntervalCoefficient": -0.7994,
                           "GestationLength": 9.0,
                           "MinimumAge1stMating": 24.0,
-                          "MaximumAgeMating": 120.0,
                           "MinimumSize1stMating": 0.5,
                           "MinimumDaysBirthToConception": 61.0,
                           "MultipleBirthRate": null,
@@ -240,103 +270,165 @@
                           "MaximumMaleMatingsPerDay": 30.0,
                           "PrenatalMortality": 0.079,
                           "MethaneProductionCoefficient": 20.7,
+                          "Notes": null,
                           "SelectedTab": null,
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ResourcesHolder",
+                            "RuminantHerd",
+                            "RuminantType"
+                          ],
                           "Name": "Bos indicus",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Resources.RuminantInitialCohorts, Models",
                               "WeightWarningOccurred": false,
+                              "Notes": null,
                               "SelectedTab": null,
+                              "CurrentAncestorList": [
+                                "ZoneCLEM",
+                                "ResourcesHolder",
+                                "RuminantHerd",
+                                "RuminantType",
+                                "RuminantInitialCohorts"
+                              ],
                               "Name": "Initial cohorts",
                               "Children": [
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 1,
+                                  "Sex": 0,
                                   "Age": 8,
                                   "Number": 2.0,
                                   "Weight": 180.0,
                                   "WeightSD": 0.0,
                                   "Suckling": false,
                                   "Sire": false,
+                                  "Notes": null,
                                   "SelectedTab": null,
+                                  "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ResourcesHolder",
+                                    "RuminantHerd",
+                                    "RuminantType",
+                                    "RuminantInitialCohorts",
+                                    "RuminantTypeCohort"
+                                  ],
                                   "Name": "WeanerF",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 0,
+                                  "Sex": 1,
                                   "Age": 8,
                                   "Number": 2.0,
                                   "Weight": 180.0,
                                   "WeightSD": 0.0,
                                   "Suckling": false,
                                   "Sire": false,
+                                  "Notes": null,
                                   "SelectedTab": null,
+                                  "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ResourcesHolder",
+                                    "RuminantHerd",
+                                    "RuminantType",
+                                    "RuminantInitialCohorts",
+                                    "RuminantTypeCohort"
+                                  ],
                                   "Name": "WeanerM",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 1,
+                                  "Sex": 0,
                                   "Age": 37,
                                   "Number": 4.0,
                                   "Weight": 400.0,
                                   "WeightSD": 0.0,
                                   "Suckling": false,
                                   "Sire": false,
+                                  "Notes": null,
                                   "SelectedTab": null,
+                                  "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ResourcesHolder",
+                                    "RuminantHerd",
+                                    "RuminantType",
+                                    "RuminantInitialCohorts",
+                                    "RuminantTypeCohort"
+                                  ],
                                   "Name": "Female3_4",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 0,
+                                  "Sex": 1,
                                   "Age": 30,
                                   "Number": 1.0,
                                   "Weight": 520.0,
                                   "WeightSD": 0.0,
                                   "Suckling": false,
                                   "Sire": false,
+                                  "Notes": null,
                                   "SelectedTab": null,
+                                  "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ResourcesHolder",
+                                    "RuminantHerd",
+                                    "RuminantType",
+                                    "RuminantInitialCohorts",
+                                    "RuminantTypeCohort"
+                                  ],
                                   "Name": "Male2_3",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 0,
+                                  "Sex": 1,
                                   "Age": 42,
                                   "Number": 1.0,
                                   "Weight": 610.0,
                                   "WeightSD": 0.0,
                                   "Suckling": false,
                                   "Sire": true,
+                                  "Notes": null,
                                   "SelectedTab": null,
+                                  "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ResourcesHolder",
+                                    "RuminantHerd",
+                                    "RuminantType",
+                                    "RuminantInitialCohorts",
+                                    "RuminantTypeCohort"
+                                  ],
                                   "Name": "Male3_4",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
                             {
                               "$type": "Models.CLEM.Resources.AnimalPricing, Models",
-                              "SelectedTab": null,
+                              "Notes": null,
+                              "SelectedTab": "Summary",
+                              "CurrentAncestorList": [
+                                "ZoneCLEM",
+                                "ResourcesHolder",
+                                "RuminantHerd",
+                                "RuminantType",
+                                "AnimalPricing"
+                              ],
                               "Name": "Prices",
                               "Children": [
                                 {
@@ -344,23 +436,41 @@
                                   "PricingStyle": 1,
                                   "Value": 2.5,
                                   "PurchaseOrSale": 0,
+                                  "Notes": null,
                                   "SelectedTab": null,
+                                  "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ResourcesHolder",
+                                    "RuminantHerd",
+                                    "RuminantType",
+                                    "AnimalPricing",
+                                    "AnimalPriceGroup"
+                                  ],
                                   "Name": "Weaners_LT_12m",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 3,
-                                      "Operator": 2,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Age",
+                                      "Rule": null,
+                                      "Operator": 20,
                                       "Value": "12",
+                                      "Notes": null,
                                       "SelectedTab": null,
+                                      "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ResourcesHolder",
+                                        "RuminantHerd",
+                                        "RuminantType",
+                                        "AnimalPricing",
+                                        "AnimalPriceGroup",
+                                        "FilterByProperty"
+                                      ],
                                       "Name": "LT_12m",
                                       "Children": [],
-                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -369,35 +479,63 @@
                                   "PricingStyle": 1,
                                   "Value": 2.3,
                                   "PurchaseOrSale": 1,
+                                  "Notes": null,
                                   "SelectedTab": null,
+                                  "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ResourcesHolder",
+                                    "RuminantHerd",
+                                    "RuminantType",
+                                    "AnimalPricing",
+                                    "AnimalPriceGroup"
+                                  ],
                                   "Name": "Female1_3_Buy",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 2,
-                                      "Operator": 0,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Sex",
+                                      "Rule": null,
+                                      "Operator": 13,
                                       "Value": "Female",
+                                      "Notes": null,
                                       "SelectedTab": null,
+                                      "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ResourcesHolder",
+                                        "RuminantHerd",
+                                        "RuminantType",
+                                        "AnimalPricing",
+                                        "AnimalPriceGroup",
+                                        "FilterByProperty"
+                                      ],
                                       "Name": "Female",
                                       "Children": [],
-                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 3,
-                                      "Operator": 2,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Age",
+                                      "Rule": null,
+                                      "Operator": 20,
                                       "Value": "36",
+                                      "Notes": null,
                                       "SelectedTab": null,
+                                      "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ResourcesHolder",
+                                        "RuminantHerd",
+                                        "RuminantType",
+                                        "AnimalPricing",
+                                        "AnimalPriceGroup",
+                                        "FilterByProperty"
+                                      ],
                                       "Name": "less36months",
                                       "Children": [],
-                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -406,35 +544,63 @@
                                   "PricingStyle": 1,
                                   "Value": 2.5,
                                   "PurchaseOrSale": 2,
+                                  "Notes": null,
                                   "SelectedTab": null,
+                                  "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ResourcesHolder",
+                                    "RuminantHerd",
+                                    "RuminantType",
+                                    "AnimalPricing",
+                                    "AnimalPriceGroup"
+                                  ],
                                   "Name": "Female1_3_Sell",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 2,
-                                      "Operator": 0,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Sex",
+                                      "Rule": null,
+                                      "Operator": 13,
                                       "Value": "Female",
+                                      "Notes": null,
                                       "SelectedTab": null,
+                                      "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ResourcesHolder",
+                                        "RuminantHerd",
+                                        "RuminantType",
+                                        "AnimalPricing",
+                                        "AnimalPriceGroup",
+                                        "FilterByProperty"
+                                      ],
                                       "Name": "Female",
                                       "Children": [],
-                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 3,
-                                      "Operator": 2,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Age",
+                                      "Rule": null,
+                                      "Operator": 20,
                                       "Value": "36",
+                                      "Notes": null,
                                       "SelectedTab": null,
+                                      "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ResourcesHolder",
+                                        "RuminantHerd",
+                                        "RuminantType",
+                                        "AnimalPricing",
+                                        "AnimalPriceGroup",
+                                        "FilterByProperty"
+                                      ],
                                       "Name": "less36months",
                                       "Children": [],
-                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -443,35 +609,106 @@
                                   "PricingStyle": 1,
                                   "Value": 2.2,
                                   "PurchaseOrSale": 0,
+                                  "Notes": null,
                                   "SelectedTab": null,
+                                  "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ResourcesHolder",
+                                    "RuminantHerd",
+                                    "RuminantType",
+                                    "AnimalPricing",
+                                    "AnimalPriceGroup"
+                                  ],
                                   "Name": "Female 3plus",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 2,
-                                      "Operator": 0,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Sex",
+                                      "Rule": null,
+                                      "Operator": 13,
                                       "Value": "Female",
+                                      "Notes": null,
                                       "SelectedTab": null,
+                                      "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ResourcesHolder",
+                                        "RuminantHerd",
+                                        "RuminantType",
+                                        "AnimalPricing",
+                                        "AnimalPriceGroup",
+                                        "FilterByProperty"
+                                      ],
                                       "Name": "Female",
                                       "Children": [],
-                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 3,
-                                      "Operator": 5,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Age",
+                                      "Rule": null,
+                                      "Operator": 16,
                                       "Value": "36",
+                                      "Notes": null,
                                       "SelectedTab": null,
+                                      "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ResourcesHolder",
+                                        "RuminantHerd",
+                                        "RuminantType",
+                                        "AnimalPricing",
+                                        "AnimalPriceGroup",
+                                        "FilterByProperty"
+                                      ],
                                       "Name": "36months",
                                       "Children": [],
-                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": false,
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.CLEM.Groupings.AnimalPriceGroup, Models",
+                                  "PricingStyle": 1,
+                                  "Value": 2.2,
+                                  "PurchaseOrSale": 0,
+                                  "Notes": null,
+                                  "SelectedTab": null,
+                                  "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ResourcesHolder",
+                                    "RuminantHerd",
+                                    "RuminantType",
+                                    "AnimalPricing",
+                                    "AnimalPriceGroup"
+                                  ],
+                                  "Name": "Breeding Sires",
+                                  "Children": [
+                                    {
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Male.IsSire",
+                                      "Rule": null,
+                                      "Operator": 83,
+                                      "Value": null,
+                                      "Notes": null,
+                                      "SelectedTab": null,
+                                      "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ResourcesHolder",
+                                        "RuminantHerd",
+                                        "RuminantType",
+                                        "AnimalPricing",
+                                        "AnimalPriceGroup",
+                                        "FilterByProperty"
+                                      ],
+                                      "Name": "isSire",
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    }
+                                  ],
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -480,35 +717,63 @@
                                   "PricingStyle": 1,
                                   "Value": 2.5,
                                   "PurchaseOrSale": 0,
+                                  "Notes": null,
                                   "SelectedTab": null,
+                                  "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ResourcesHolder",
+                                    "RuminantHerd",
+                                    "RuminantType",
+                                    "AnimalPricing",
+                                    "AnimalPriceGroup"
+                                  ],
                                   "Name": "Male1_3",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 2,
-                                      "Operator": 0,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Sex",
+                                      "Rule": null,
+                                      "Operator": 13,
                                       "Value": "Male",
+                                      "Notes": null,
                                       "SelectedTab": null,
+                                      "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ResourcesHolder",
+                                        "RuminantHerd",
+                                        "RuminantType",
+                                        "AnimalPricing",
+                                        "AnimalPriceGroup",
+                                        "FilterByProperty"
+                                      ],
                                       "Name": "Male",
                                       "Children": [],
-                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 3,
-                                      "Operator": 2,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Age",
+                                      "Rule": null,
+                                      "Operator": 20,
                                       "Value": "36",
+                                      "Notes": null,
                                       "SelectedTab": null,
+                                      "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ResourcesHolder",
+                                        "RuminantHerd",
+                                        "RuminantType",
+                                        "AnimalPricing",
+                                        "AnimalPriceGroup",
+                                        "FilterByProperty"
+                                      ],
                                       "Name": "less36months",
                                       "Children": [],
-                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 },
@@ -517,77 +782,67 @@
                                   "PricingStyle": 1,
                                   "Value": 2.4,
                                   "PurchaseOrSale": 0,
+                                  "Notes": null,
                                   "SelectedTab": null,
+                                  "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ResourcesHolder",
+                                    "RuminantHerd",
+                                    "RuminantType",
+                                    "AnimalPricing",
+                                    "AnimalPriceGroup"
+                                  ],
                                   "Name": "Male 3plus",
                                   "Children": [
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 2,
-                                      "Operator": 0,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Sex",
+                                      "Rule": null,
+                                      "Operator": 13,
                                       "Value": "Male",
+                                      "Notes": null,
                                       "SelectedTab": null,
+                                      "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ResourcesHolder",
+                                        "RuminantHerd",
+                                        "RuminantType",
+                                        "AnimalPricing",
+                                        "AnimalPriceGroup",
+                                        "FilterByProperty"
+                                      ],
                                       "Name": "Male",
                                       "Children": [],
-                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 3,
-                                      "Operator": 5,
+                                      "$type": "Models.CLEM.Groupings.FilterByProperty, Models",
+                                      "PropertyOfIndividual": "Age",
+                                      "Rule": null,
+                                      "Operator": 16,
                                       "Value": "36",
+                                      "Notes": null,
                                       "SelectedTab": null,
+                                      "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ResourcesHolder",
+                                        "RuminantHerd",
+                                        "RuminantType",
+                                        "AnimalPricing",
+                                        "AnimalPriceGroup",
+                                        "FilterByProperty"
+                                      ],
                                       "Name": "36months",
                                       "Children": [],
-                                      "IncludeInDocumentation": false,
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
                                   ],
-                                  "IncludeInDocumentation": false,
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.CLEM.Groupings.AnimalPriceGroup, Models",
-                                  "PricingStyle": 1,
-                                  "Value": 2.2,
-                                  "PurchaseOrSale": 0,
-                                  "SelectedTab": null,
-                                  "Name": "Breeding Sires",
-                                  "Children": [
-                                    {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 2,
-                                      "Operator": 0,
-                                      "Value": "Male",
-                                      "SelectedTab": null,
-                                      "Name": "Male",
-                                      "Children": [],
-                                      "IncludeInDocumentation": false,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.CLEM.Groupings.RuminantFilter, Models",
-                                      "Parameter": 15,
-                                      "Operator": 0,
-                                      "Value": "True",
-                                      "SelectedTab": null,
-                                      "Name": "isSire",
-                                      "Children": [],
-                                      "IncludeInDocumentation": false,
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    }
-                                  ],
-                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -596,26 +851,37 @@
                               "ConceptionRateCoefficent": -14.247,
                               "ConceptionRateIntercept": 5.182,
                               "ConceptionRateAsymptote": 90.0,
+                              "Notes": null,
                               "SelectedTab": null,
+                              "CurrentAncestorList": [
+                                "ZoneCLEM",
+                                "ResourcesHolder",
+                                "RuminantHerd",
+                                "RuminantType",
+                                "RuminantConceptionCurve"
+                              ],
                               "Name": "RuminantConceptionCurve",
                               "Children": [],
-                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.CLEM.Resources.GrazeFoodStore, Models",
+                      "Notes": null,
                       "SelectedTab": null,
+                      "CurrentAncestorList": [
+                        "ZoneCLEM",
+                        "ResourcesHolder",
+                        "GrazeFoodStore"
+                      ],
                       "Name": "GrazeFoodStore",
                       "Children": [
                         {
@@ -623,7 +889,6 @@
                           "Units": null,
                           "NToDMDCoefficient": 11.03,
                           "NToDMDIntercept": 41.4,
-                          "NToDMDCrudeProteinDenominator": 0.0,
                           "GreenNitrogen": 2.0,
                           "DecayNitrogen": 0.35,
                           "MinimumNitrogen": 0.4,
@@ -633,21 +898,36 @@
                           "CarryoverDetachRate": 0.12,
                           "IntakeTropicalQualityCoefficient": 0.16,
                           "IntakeQualityCoefficient": 1.7,
+                          "InitialBiomass": 2000.0,
+                          "FirstMonthOfGrowSeason": 11,
+                          "LastMonthOfGrowSeason": 3,
+                          "NumberMonthsForInitialBiomass": 5,
+                          "Notes": null,
                           "SelectedTab": null,
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ResourcesHolder",
+                            "GrazeFoodStore",
+                            "GrazeFoodStoreType"
+                          ],
                           "Name": "NativePasture",
                           "Children": [],
-                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.CLEM.Resources.AnimalFoodStore, Models",
+                      "Notes": null,
                       "SelectedTab": null,
+                      "CurrentAncestorList": [
+                        "ZoneCLEM",
+                        "ResourcesHolder",
+                        "AnimalFoodStore"
+                      ],
                       "Name": "AnimalFoodStore",
                       "Children": [
                         {
@@ -656,7 +936,14 @@
                           "DMD": 49.0,
                           "Nitrogen": 3.4,
                           "StartingAmount": 100.0,
+                          "Notes": null,
                           "SelectedTab": null,
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ResourcesHolder",
+                            "AnimalFoodStore",
+                            "AnimalFoodStoreType"
+                          ],
                           "Name": "Hay",
                           "Children": [
                             {
@@ -665,7 +952,15 @@
                               "TransmutationPacketSize": 1000.0,
                               "UseWholePackets": false,
                               "TransactionCategory": "Transmutation",
+                              "Notes": null,
                               "SelectedTab": null,
+                              "CurrentAncestorList": [
+                                "ZoneCLEM",
+                                "ResourcesHolder",
+                                "AnimalFoodStore",
+                                "AnimalFoodStoreType",
+                                "Transmutation"
+                              ],
                               "Name": "Purchase",
                               "Children": [
                                 {
@@ -675,36 +970,45 @@
                                   "TransmuteStyle": 0,
                                   "ResourceGroup": null,
                                   "FinanceTypeForTransactionsName": "No transactions",
+                                  "Notes": null,
                                   "SelectedTab": null,
+                                  "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ResourcesHolder",
+                                    "AnimalFoodStore",
+                                    "AnimalFoodStoreType",
+                                    "Transmutation",
+                                    "Transmute"
+                                  ],
                                   "Name": "Transmute",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
+                  "Notes": null,
                   "SelectedTab": null,
+                  "CurrentAncestorList": [
+                    "ZoneCLEM",
+                    "ActivitiesHolder"
+                  ],
                   "Name": "Activities",
                   "Children": [
                     {
@@ -714,7 +1018,13 @@
                       "UseAreaAvailable": true,
                       "TransactionCategory": "Crop",
                       "OnPartialResourcesAvailableAction": 0,
+                      "Notes": null,
                       "SelectedTab": null,
+                      "CurrentAncestorList": [
+                        "ZoneCLEM",
+                        "ActivitiesHolder",
+                        "CropActivityManageCrop"
+                      ],
                       "Name": "Native Pasture on farm",
                       "Children": [
                         {
@@ -723,18 +1033,24 @@
                           "CropName": "Native",
                           "StoreItemName": "GrazeFoodStore.NativePasture",
                           "ProportionKept": 1.0,
+                          "PlantedMultiplier": 1.0,
                           "TreesPerHa": 0.0,
                           "TransactionCategory": "Crop.[Product]",
                           "OnPartialResourcesAvailableAction": 0,
+                          "Notes": null,
                           "SelectedTab": null,
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ActivitiesHolder",
+                            "CropActivityManageCrop",
+                            "CropActivityManageProduct"
+                          ],
                           "Name": "Native Pasture to GrazeFoodStore",
                           "Children": [],
-                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -742,7 +1058,13 @@
                       "$type": "Models.CLEM.Activities.ActivityFolder, Models",
                       "TransactionCategory": null,
                       "OnPartialResourcesAvailableAction": 0,
+                      "Notes": null,
                       "SelectedTab": null,
+                      "CurrentAncestorList": [
+                        "ZoneCLEM",
+                        "ActivitiesHolder",
+                        "ActivityFolder"
+                      ],
                       "Name": "Manage herd",
                       "Children": [
                         {
@@ -751,10 +1073,16 @@
                           "MethaneStoreName": "Use store named Methane if present",
                           "OnPartialResourcesAvailableAction": 0,
                           "TransactionCategory": "Livestock.Manage",
+                          "Notes": null,
                           "SelectedTab": null,
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ActivitiesHolder",
+                            "ActivityFolder",
+                            "RuminantActivityGrow"
+                          ],
                           "Name": "Grow all ruminants",
                           "Children": [],
-                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -765,22 +1093,34 @@
                           "MoveSucklings": false,
                           "TransactionCategory": "Livestock.Manage",
                           "OnPartialResourcesAvailableAction": 0,
+                          "Notes": null,
                           "SelectedTab": null,
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ActivitiesHolder",
+                            "ActivityFolder",
+                            "RuminantActivityMove"
+                          ],
                           "Name": "Move to pasture",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Groupings.RuminantGroup, Models",
-                              "Reason": 0,
-                              "Proportion": 1.0,
+                              "Identifier": "",
+                              "Notes": null,
                               "SelectedTab": null,
+                              "CurrentAncestorList": [
+                                "ZoneCLEM",
+                                "ActivitiesHolder",
+                                "ActivityFolder",
+                                "RuminantActivityMove",
+                                "RuminantGroup"
+                              ],
                               "Name": "All",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -789,10 +1129,16 @@
                           "HoursGrazed": 8.0,
                           "TransactionCategory": "Livestock.Grazing",
                           "OnPartialResourcesAvailableAction": 2,
+                          "Notes": null,
                           "SelectedTab": null,
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ActivitiesHolder",
+                            "ActivityFolder",
+                            "RuminantActivityGrazeAll"
+                          ],
                           "Name": "Graze all",
                           "Children": [],
-                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -804,21 +1150,34 @@
                           "StopFeedingWhenSatisfied": false,
                           "TransactionCategory": "Livestock.Feed",
                           "OnPartialResourcesAvailableAction": 2,
+                          "Notes": null,
                           "SelectedTab": null,
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ActivitiesHolder",
+                            "ActivityFolder",
+                            "RuminantActivityFeed"
+                          ],
                           "Name": "Feed hay",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Groupings.RuminantFeedGroup, Models",
                               "Value": 1.0,
+                              "Notes": null,
                               "SelectedTab": null,
+                              "CurrentAncestorList": [
+                                "ZoneCLEM",
+                                "ActivitiesHolder",
+                                "ActivityFolder",
+                                "RuminantActivityFeed",
+                                "RuminantFeedGroup"
+                              ],
                               "Name": "Feed all",
                               "Children": [],
-                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -828,34 +1187,57 @@
                           "InferStartupPregnancy": false,
                           "TransactionCategory": "Livestock.Manage",
                           "OnPartialResourcesAvailableAction": 0,
+                          "Notes": null,
                           "SelectedTab": null,
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ActivitiesHolder",
+                            "ActivityFolder",
+                            "RuminantActivityBreed"
+                          ],
                           "Name": "Breed",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Activities.RuminantActivityControlledMating, Models",
+                              "MaximumAgeMating": 120.0,
+                              "JoiningsPerMale": 1,
                               "TransactionCategory": "Livestock.Manage",
                               "OnPartialResourcesAvailableAction": 0,
+                              "Notes": null,
                               "SelectedTab": null,
+                              "CurrentAncestorList": [
+                                "ZoneCLEM",
+                                "ActivitiesHolder",
+                                "ActivityFolder",
+                                "RuminantActivityBreed",
+                                "RuminantActivityControlledMating"
+                              ],
                               "Name": "ControlledMating",
                               "Children": [
                                 {
                                   "$type": "Models.CLEM.Activities.ActivityTimerInterval, Models",
                                   "Interval": 12,
                                   "MonthDue": 3,
+                                  "Notes": null,
                                   "SelectedTab": null,
+                                  "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ActivitiesHolder",
+                                    "ActivityFolder",
+                                    "RuminantActivityBreed",
+                                    "RuminantActivityControlledMating",
+                                    "ActivityTimerInterval"
+                                  ],
                                   "Name": "Controlled mating",
                                   "Children": [],
-                                  "IncludeInDocumentation": false,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -867,66 +1249,118 @@
                           "GrazeFoodStoreName": "GrazeFoodStore.NativePasture",
                           "TransactionCategory": "Livestock.Manage",
                           "OnPartialResourcesAvailableAction": 0,
+                          "Notes": null,
                           "SelectedTab": null,
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ActivitiesHolder",
+                            "ActivityFolder",
+                            "RuminantActivityWean"
+                          ],
                           "Name": "Wean",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Activities.ActivityTimerInterval, Models",
                               "Interval": 12,
                               "MonthDue": 4,
+                              "Notes": null,
                               "SelectedTab": null,
+                              "CurrentAncestorList": [
+                                "ZoneCLEM",
+                                "ActivitiesHolder",
+                                "ActivityFolder",
+                                "RuminantActivityWean",
+                                "ActivityTimerInterval"
+                              ],
                               "Name": "Weaning",
                               "Children": [],
-                              "IncludeInDocumentation": false,
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.CLEM.Groupings.RuminantGroup, Models",
+                              "Identifier": "",
+                              "Notes": null,
+                              "SelectedTab": null,
+                              "CurrentAncestorList": [
+                                "ZoneCLEM",
+                                "ActivitiesHolder",
+                                "ActivityFolder",
+                                "RuminantActivityWean",
+                                "RuminantGroup"
+                              ],
+                              "Name": "All",
+                              "Children": [],
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.CLEM.Activities.RuminantActivityManage, Models",
+                          "ManageFemaleBreederNumbers": true,
                           "MaximumBreedersKept": 10,
                           "MinimumBreedersKept": 2,
+                          "MaxBreedersMultiplierToStop": 2.0,
                           "MarkOldBreedersForSale": true,
                           "MaximumBreederAge": 120.0,
                           "MaximumProportionBreedersPerPurchase": 1.0,
+                          "ReturnPregnantMaxAgeToHerd": false,
+                          "RetainFemaleReplacementBreedersFromSaleHerd": true,
+                          "ManageMaleBreederNumbers": true,
                           "MaximumSiresKept": 1.0,
                           "MarkOldSiresForSale": true,
                           "MaximumSireAge": 96.0,
                           "AllowSireReplacement": false,
                           "RestockSiresRelativeToBreeders": false,
                           "MaximumSiresPerPurchase": 1,
-                          "ContinuousMaleSales": false,
+                          "RetainMaleReplacementBreedersFromSaleHerd": true,
+                          "GrowOutYoungMales": false,
+                          "ContinuousGrowOutSales": false,
                           "MarkAgeWeightMalesForSale": true,
-                          "CastrateGrowOutMales": true,
+                          "CastrateMales": true,
                           "MaleSellingAge": 18.0,
                           "MaleSellingWeight": 350.0,
-                          "SellFemalesLikeMales": true,
+                          "GrowOutYoungFemales": false,
                           "FemaleSellingAge": 24.0,
-                          "FemaleSellingWeight": 0.0,
+                          "FemaleSellingWeight": 300.0,
+                          "MarkAgeWeightFemalesForSale": true,
                           "GrazeFoodStoreNameSires": "GrazeFoodStore.NativePasture",
                           "GrazeFoodStoreNameBreeders": "GrazeFoodStore.NativePasture",
-                          "GrazeFoodStoreNameGrowOutFemales": null,
-                          "GrazeFoodStoreNameGrowOutMales": null,
+                          "GrazeFoodStoreNameGrowOutFemales": "GrazeFoodStore.NativePasture",
+                          "GrazeFoodStoreNameGrowOutMales": "GrazeFoodStore.NativePasture",
                           "MinimumPastureBeforeRestock": 1500.0,
                           "AdjustBreedingFemalesAtStartup": false,
                           "AdjustBreedingMalesAtStartup": false,
                           "TransactionCategory": "Livestock.Manage",
                           "OnPartialResourcesAvailableAction": 0,
+                          "Notes": null,
                           "SelectedTab": null,
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ActivitiesHolder",
+                            "ActivityFolder",
+                            "RuminantActivityManage"
+                          ],
                           "Name": "Manage numbers",
                           "Children": [
                             {
                               "$type": "Models.CLEM.Activities.ActivityTimerInterval, Models",
                               "Interval": 12,
                               "MonthDue": 8,
+                              "Notes": null,
                               "SelectedTab": null,
+                              "CurrentAncestorList": [
+                                "ZoneCLEM",
+                                "ActivitiesHolder",
+                                "ActivityFolder",
+                                "RuminantActivityManage",
+                                "ActivityTimerInterval"
+                              ],
                               "Name": "every August",
                               "Children": [],
-                              "IncludeInDocumentation": false,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -934,27 +1368,42 @@
                               "$type": "Models.CLEM.Resources.SpecifyRuminant, Models",
                               "RuminantTypeName": "Ruminants.Bos indicus",
                               "Proportion": 1.0,
+                              "Notes": null,
                               "SelectedTab": null,
+                              "CurrentAncestorList": [
+                                "ZoneCLEM",
+                                "ActivitiesHolder",
+                                "ActivityFolder",
+                                "RuminantActivityManage",
+                                "SpecifyRuminant"
+                              ],
                               "Name": "Breeders",
                               "Children": [
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 1,
+                                  "Sex": 0,
                                   "Age": 24,
                                   "Number": 0.0,
                                   "Weight": 0.0,
                                   "WeightSD": 0.0,
                                   "Suckling": false,
                                   "Sire": false,
+                                  "Notes": null,
                                   "SelectedTab": null,
+                                  "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ActivitiesHolder",
+                                    "ActivityFolder",
+                                    "RuminantActivityManage",
+                                    "SpecifyRuminant",
+                                    "RuminantTypeCohort"
+                                  ],
                                   "Name": "24mth breeder",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             },
@@ -962,32 +1411,46 @@
                               "$type": "Models.CLEM.Resources.SpecifyRuminant, Models",
                               "RuminantTypeName": "Ruminants.Bos indicus",
                               "Proportion": 1.0,
+                              "Notes": null,
                               "SelectedTab": null,
+                              "CurrentAncestorList": [
+                                "ZoneCLEM",
+                                "ActivitiesHolder",
+                                "ActivityFolder",
+                                "RuminantActivityManage",
+                                "SpecifyRuminant"
+                              ],
                               "Name": "Sires",
                               "Children": [
                                 {
                                   "$type": "Models.CLEM.Resources.RuminantTypeCohort, Models",
-                                  "Gender": 0,
+                                  "Sex": 1,
                                   "Age": 36,
                                   "Number": 0.0,
                                   "Weight": 0.0,
                                   "WeightSD": 0.0,
                                   "Suckling": false,
                                   "Sire": true,
+                                  "Notes": null,
                                   "SelectedTab": null,
+                                  "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ActivitiesHolder",
+                                    "ActivityFolder",
+                                    "RuminantActivityManage",
+                                    "SpecifyRuminant",
+                                    "RuminantTypeCohort"
+                                  ],
                                   "Name": "36mth sire",
                                   "Children": [],
-                                  "IncludeInDocumentation": true,
                                   "Enabled": true,
                                   "ReadOnly": false
                                 }
                               ],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -996,45 +1459,79 @@
                           "BankAccountName": "Finances.General account",
                           "TransactionCategory": "Livestock.Manage",
                           "OnPartialResourcesAvailableAction": 0,
+                          "Notes": null,
                           "SelectedTab": null,
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ActivitiesHolder",
+                            "ActivityFolder",
+                            "RuminantActivityBuySell"
+                          ],
                           "Name": "Buy and sell",
                           "Children": [],
-                          "IncludeInDocumentation": false,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.CLEM.SummariseRuminantHerd, Models",
+                      "GroupStyle": 0,
                       "HerdFilters": null,
+                      "Notes": null,
                       "SelectedTab": null,
+                      "CurrentAncestorList": [
+                        "ZoneCLEM",
+                        "ActivitiesHolder",
+                        "SummariseRuminantHerd"
+                      ],
                       "Name": "SummariseHerd",
                       "Children": [],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportRuminantHerd, Models",
-                      "SelectedTab": null,
+                      "ReportAtStart": true,
+                      "Notes": null,
+                      "SelectedTab": "Summary",
+                      "CurrentAncestorList": [
+                        "ZoneCLEM",
+                        "ActivitiesHolder",
+                        "ReportRuminantHerd"
+                      ],
                       "Name": "ReportHerd",
-                      "Children": [],
-                      "IncludeInDocumentation": false,
+                      "Children": [
+                        {
+                          "$type": "Models.CLEM.Groupings.RuminantGroup, Models",
+                          "Identifier": "",
+                          "Notes": null,
+                          "SelectedTab": null,
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ActivitiesHolder",
+                            "ReportRuminantHerd",
+                            "RuminantGroup"
+                          ],
+                          "Name": "RuminantGroup",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.CLEM.CLEMFolder, Models",
-                  "ShowPageOfGraphs": true,
+                  "ShowInDocs": false,
+                  "GraphsPerPage": 6,
                   "Name": "Reports",
                   "Children": [
                     {
@@ -1049,7 +1546,6 @@
                       "GroupByVariableName": null,
                       "Name": "ReportActivitiesPerformed",
                       "Children": [],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1057,7 +1553,8 @@
                       "$type": "Models.CLEM.Reporting.ReportResourceBalances, Models",
                       "ResourceGroupsToReport": [
                         "GrazeFoodStore",
-                        "AnimalFoodStore"
+                        "AnimalFoodStore",
+                        "Ruminants"
                       ],
                       "ReportAmount": true,
                       "ReportValue": false,
@@ -1078,7 +1575,6 @@
                       "GroupByVariableName": null,
                       "Name": "ReportResourceBalances",
                       "Children": [],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1098,17 +1594,18 @@
                       "GroupByVariableName": null,
                       "Name": "ReportResourceShortfalls",
                       "Children": [],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
-                      "ReportStyle": 0,
                       "ResourceGroupsToReport": "GrazeFoodStore",
+                      "ReportStyle": 0,
                       "ReportLossesAsNegative": false,
                       "IncludePrice": false,
+                      "IncludeFinancialYear": false,
                       "IncludeConversions": false,
+                      "SelectedTab": null,
                       "VariableNames": [
                         "GrazeFoodStore"
                       ],
@@ -1116,17 +1613,18 @@
                       "GroupByVariableName": null,
                       "Name": "GrazeFoodStoreLedger",
                       "Children": [],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
-                      "ReportStyle": 0,
                       "ResourceGroupsToReport": "AnimalFoodStore",
+                      "ReportStyle": 0,
                       "ReportLossesAsNegative": false,
                       "IncludePrice": false,
+                      "IncludeFinancialYear": false,
                       "IncludeConversions": false,
+                      "SelectedTab": null,
                       "VariableNames": [
                         "AnimalFoodStore"
                       ],
@@ -1134,17 +1632,18 @@
                       "GroupByVariableName": null,
                       "Name": "AnimalFoodLedger",
                       "Children": [],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
-                      "ReportStyle": 0,
                       "ResourceGroupsToReport": "Finances",
+                      "ReportStyle": 0,
                       "ReportLossesAsNegative": false,
                       "IncludePrice": false,
+                      "IncludeFinancialYear": false,
                       "IncludeConversions": false,
+                      "SelectedTab": null,
                       "VariableNames": [
                         "Finances"
                       ],
@@ -1152,17 +1651,18 @@
                       "GroupByVariableName": null,
                       "Name": "FinancesLedger",
                       "Children": [],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
-                      "ReportStyle": 0,
                       "ResourceGroupsToReport": "Ruminants",
+                      "ReportStyle": 0,
                       "ReportLossesAsNegative": false,
                       "IncludePrice": false,
+                      "IncludeFinancialYear": false,
                       "IncludeConversions": false,
+                      "SelectedTab": null,
                       "VariableNames": [
                         "Ruminants"
                       ],
@@ -1170,7 +1670,6 @@
                       "GroupByVariableName": null,
                       "Name": "HerdLedger",
                       "Children": [],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1196,18 +1695,17 @@
                       "GroupByVariableName": null,
                       "Name": "HerdSummary",
                       "Children": [],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Core.Folder, Models",
-                  "ShowPageOfGraphs": true,
+                  "ShowInDocs": true,
+                  "GraphsPerPage": 6,
                   "Name": "Graphs",
                   "Children": [
                     {
@@ -1215,31 +1713,29 @@
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Axis, Models",
-                          "Type": 3,
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                           "Title": null,
+                          "Position": 3,
                           "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": true,
-                          "CrossesAtZero": true
+                          "CrossesAtZero": true,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
                         },
                         {
-                          "$type": "Models.Axis, Models",
-                          "Type": 0,
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                           "Title": "$ Dollars",
+                          "Position": 0,
                           "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": true,
-                          "CrossesAtZero": false
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
                         }
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
-                      "AnnotationPosition": 0,
+                      "AnnotationLocation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Income vs Expenses",
@@ -1266,10 +1762,9 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "Category = \"Sales\"",
+                          "Filter": "Category = \"Livestock.Manage.All\"",
                           "Name": "Income _ Bos Indicus Sales",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -1295,10 +1790,9 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "Category = \"Purchases\"",
+                          "Filter": "Category = \"Livestock.Manage.All\"",
                           "Name": "Expenses _ Bos Indicus Purchases",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -1327,12 +1821,10 @@
                           "Filter": "Category = \"Transmutation\"",
                           "Name": "Expenses _ Hay Purchases",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1341,42 +1833,39 @@
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Axis, Models",
-                          "Type": 3,
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                           "Title": null,
+                          "Position": 3,
                           "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": true,
-                          "CrossesAtZero": false
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
                         },
                         {
-                          "$type": "Models.Axis, Models",
-                          "Type": 0,
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                           "Title": null,
+                          "Position": 0,
                           "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
                         },
                         {
-                          "$type": "Models.Axis, Models",
-                          "Type": 2,
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                           "Title": null,
+                          "Position": 2,
                           "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": false,
-                          "CrossesAtZero": false
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
                         }
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
-                      "AnnotationPosition": 0,
+                      "AnnotationLocation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Animal numbers vs Feed available",
@@ -1396,7 +1885,7 @@
                           "LineThickness": 0,
                           "TableName": "ReportResourceBalances",
                           "XFieldName": "Date",
-                          "YFieldName": "NativePasture",
+                          "YFieldName": "NativePasture_Amount",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -1406,7 +1895,6 @@
                           "Filter": null,
                           "Name": "Native Pasture Kg",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -1425,7 +1913,7 @@
                           "LineThickness": 0,
                           "TableName": "ReportResourceBalances",
                           "XFieldName": "Date",
-                          "YFieldName": "Hay",
+                          "YFieldName": "Hay_Amount",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -1435,7 +1923,6 @@
                           "Filter": "",
                           "Name": "Hay Kgs Fed",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -1448,13 +1935,13 @@
                           "FactorToVaryColours": null,
                           "FactorToVaryMarkers": null,
                           "FactorToVaryLines": null,
-                          "Marker": 8,
-                          "MarkerSize": 1,
+                          "Marker": 4,
+                          "MarkerSize": 2,
                           "Line": 0,
                           "LineThickness": 0,
                           "TableName": "ReportResourceBalances",
                           "XFieldName": "Date",
-                          "YFieldName": "Bos_indicus",
+                          "YFieldName": "Bos_indicus.Count",
                           "X2FieldName": "",
                           "Y2FieldName": "",
                           "ShowInLegend": true,
@@ -1464,12 +1951,10 @@
                           "Filter": null,
                           "Name": "Animals",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -1478,42 +1963,39 @@
                       "Caption": null,
                       "Axis": [
                         {
-                          "$type": "Models.Axis, Models",
-                          "Type": 3,
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                           "Title": null,
+                          "Position": 3,
                           "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": true,
-                          "CrossesAtZero": false
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
                         },
                         {
-                          "$type": "Models.Axis, Models",
-                          "Type": 0,
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                           "Title": "Pasture Growth",
+                          "Position": 0,
                           "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": true,
-                          "CrossesAtZero": false
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
                         },
                         {
-                          "$type": "Models.Axis, Models",
-                          "Type": 2,
+                          "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                           "Title": "Bos indicus Grazing",
+                          "Position": 2,
                           "Inverted": false,
-                          "Minimum": "NaN",
-                          "Maximum": "NaN",
-                          "Interval": "NaN",
-                          "DateTimeAxis": true,
-                          "CrossesAtZero": false
+                          "CrossesAtZero": false,
+                          "Minimum": null,
+                          "Maximum": null,
+                          "Interval": null
                         }
                       ],
                       "LegendPosition": 0,
                       "LegendOrientation": 0,
-                      "AnnotationPosition": 0,
+                      "AnnotationLocation": 0,
                       "DisabledSeries": [],
                       "LegendOutsideGraph": false,
                       "Name": "Graph_Pasture Growth vs Grazing",
@@ -1543,7 +2025,6 @@
                           "Filter": "Category = \"Growth\"",
                           "Name": "Native Pasture Growth",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -1569,40 +2050,33 @@
                           "IncludeSeriesNameInLegend": true,
                           "Cumulative": false,
                           "CumulativeX": false,
-                          "Filter": "Category = \"Grazing\"",
+                          "Filter": "Category = \"Livestock.Grazing\"",
                           "Name": "Native Pasture Grazed",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }

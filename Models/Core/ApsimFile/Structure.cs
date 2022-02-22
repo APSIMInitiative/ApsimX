@@ -43,7 +43,7 @@
             if (parentSimulation != null && parentSimulation.IsRunning)
             {
                 var links = new Links(parentSimulation.Services);
-                links.Resolve(modelToAdd, true);
+                links.Resolve(modelToAdd, true, throwOnFail: true);
                 var events = new Events(modelToAdd);
                 events.ConnectEvents();
 

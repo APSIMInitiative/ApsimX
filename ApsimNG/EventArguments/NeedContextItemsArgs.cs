@@ -33,12 +33,7 @@
         /// Context item information
         /// </summary>
         public List<string> Items;
-#if NETFRAMEWORK
-        /// <summary>
-        /// Completion data.
-        /// </summary>
-        public List<CompletionData> CompletionData { get; set; }
-#endif
+
         /// <summary>
         /// Co-ordinates at which the intellisense window should be displayed.
         /// </summary>

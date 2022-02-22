@@ -42,7 +42,7 @@
         /// <summary>
         /// The fraction of a full profile.
         /// </summary>
-        private double fractionFull = double.NaN;
+        private double fractionFull = 1;
 
         /// <summary>
         /// The depth of wet soil.
@@ -103,7 +103,10 @@
                     // Convert from total to a fraction.
                     if (totalPAWC > 0)
                     {
-                        return MathUtilities.Bound(PAW / totalPAWC, 0, 100);
+                        // fixme: accessing PAW from here will cause a stack overflow
+                        // because PAW is a function of fraction full.
+                        return 1;
+                        // return MathUtilities.Bound(PAW / totalPAWC, 0, 100);
                     }
                     else
                     {

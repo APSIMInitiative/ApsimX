@@ -1,25 +1,23 @@
-﻿using Models.Core;
+using Models.Core;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>Manage crop product activity</summary>
-    /// <summary>This activity sets aside land for the crop</summary>
+    /// <summary>The child of Manage crop to manage a particular product harvested</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageCrop))]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
-    [Description("This activity is used within a crop management activity to obtain production values from the crop file for crop(s) grown")]
+    [Description("Manage a crop product of the parent ManageCrop and obtain production values from the crop file")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Mixed cropping/multiple products implemented")]
     [Version(1, 0, 3, "Added ability to model multiple harvests from crop using Harvest Tags from input file")]
@@ -60,12 +58,20 @@ namespace Models.CLEM.Activities
         public string StoreItemName { get; set; }
 
         /// <summary>
-        /// Percentage of the crop growth that is kept
+        /// Proportion of the crop harvest that is available
         /// </summary>
-        [Description("Proportion of product kept")]
+        [Description("Harvest achieved multiplier")]
+        [System.ComponentModel.DefaultValueAttribute(1)]
+        [Required]
+        public double ProportionKept { get; set; }
+
+        /// <summary>
+        /// Proportion of the crop area (of parent ManageCrop) used
+        /// </summary>
+        [Description("Crop area multiplier")]
         [System.ComponentModel.DefaultValueAttribute(1)]
         [Required, Proportion]
-        public double ProportionKept { get; set; }
+        public double PlantedMultiplier { get; set; }
 
         /// <summary>
         /// Number of Trees per Hectare 
@@ -188,11 +194,12 @@ namespace Models.CLEM.Activities
 
             fileCrop = simulation.FindAllDescendants().Where(a => a.Name == ModelNameFileCrop).FirstOrDefault() as IFileCrop;
             if (fileCrop == null)
-                throw new ApsimXException(this, String.Format("Unable to locate crop data reader [x={0}] requested by [a={1}]", this.ModelNameFileCrop??"Unknown", this.Name));
+                throw new ApsimXException(this, $"Unable to locate crop data reader [x={this.ModelNameFileCrop ?? "Unknown"}] requested by [a={this.NameWithParent}]");
 
             LinkedResourceItem = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, StoreItemName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-            if((LinkedResourceItem as Model).Parent.GetType() == typeof(GrazeFoodStore))
+            if((LinkedResourceItem as Model).Parent is GrazeFoodStore)
             {
+                // set manager of graze food store if linked
                 (LinkedResourceItem as GrazeFoodStoreType).Manager = (Parent as IPastureManager);
                 addReason = "Growth";
             }
@@ -205,7 +212,7 @@ namespace Models.CLEM.Activities
             HarvestData = fileCrop.GetCropDataForEntireRun(parentManagementActivity.LinkedLandItem.SoilType, CropName,
                                                                clock.StartDate, clock.EndDate).Where(a => a.AmtKg > 0).OrderBy(a => a.Year * 100 + a.Month).ToList<CropDataType>();
             if ((HarvestData == null) || (HarvestData.Count == 0))
-                Summary.WriteWarning(this, $"Unable to locate any harvest data in [x={fileCrop.Name}] using [x={fileCrop.FileName}] for soil type [{parentManagementActivity.LinkedLandItem.SoilType}] and crop name [{CropName}] between the dates [{clock.StartDate.ToShortDateString()}] and [{clock.EndDate.ToShortDateString()}]");
+                Summary.WriteMessage(this, $"Unable to locate any harvest data in [x={fileCrop.Name}] using [x={fileCrop.FileName}] for land id [{parentManagementActivity.LinkedLandItem.SoilType}] and crop name [{CropName}] between the dates [{clock.StartDate.ToShortDateString()}] and [{clock.EndDate.ToShortDateString()}]", MessageType.Warning);
 
             IsTreeCrop = (TreesPerHa == 0) ? false : true;  //using this boolean just makes things more readable.
 
@@ -217,7 +224,16 @@ namespace Models.CLEM.Activities
             // check if harvest type tags have been provided
             HarvestTagsUsed = HarvestData.Where(a => a.HarvestType != "").Count() > 0;
 
-            // set manager of graze food store if linked
+            if (LinkedResourceItem is GrazeFoodStoreType)
+            {
+                double firstMonthsGrowth = 0;
+                CropDataType cropData = HarvestData.Where(a => a.Year == clock.StartDate.Year && a.Month == clock.StartDate.Month).FirstOrDefault();
+                if (cropData != null)
+                    firstMonthsGrowth = cropData.AmtKg;
+
+                (LinkedResourceItem as GrazeFoodStoreType).SetupStartingPasturePools(UnitsToHaConverter*(Parent as CropActivityManageCrop).Area * UnitsToHaConverter, firstMonthsGrowth);
+                addReason = "Growth";
+            }
         }
 
         /// <summary>
@@ -246,11 +262,7 @@ namespace Models.CLEM.Activities
                         if (previousTag == HarvestData.FirstOrDefault().HarvestType)
                         {
                             string warn = $"Invalid sequence of HarvetTags detected in [a={this.Name}]\r\nEnsure tags are ordered first, last in sequence.";
-                            if (!Warnings.Exists(warn))
-                            {
-                                Summary.WriteWarning(this, warn);
-                                Warnings.Add(warn);
-                            }
+                            Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                         }
                         previousTag = HarvestData.FirstOrDefault().HarvestType;
                     }
@@ -575,6 +587,22 @@ namespace Models.CLEM.Activities
                 string[] memberNames = new string[] { "Invalid nesting" };
                 results.Add(new ValidationResult("A crop activity manage product must be placed immediately below a CropActivityManageCrop model component (see rotational cropping) or below the CropActivityManageProduct immediately below the CropActivityManageCrop (see mixed cropping)", memberNames));
             }
+
+            // ensure we don't try and change the crop area planeted when using unallocated land
+            if (PlantedMultiplier != 1)
+            {
+                var parentManageCrop = this.FindAncestor<CropActivityManageCrop>();
+                if (parentManageCrop != null && parentManageCrop.UseAreaAvailable)
+                {
+                    string[] memberNames = new string[] { "Invalid crop area" };
+                    results.Add(new ValidationResult($"You cannot alter the crop area planted for product [a={this.Name}] when the crop [a={parentManageCrop.NameWithParent}] is set to use all available land", memberNames));
+                }
+                if(Parent is CropActivityManageProduct)
+                {
+                    string[] memberNames = new string[] { "Invalid crop area" };
+                    results.Add(new ValidationResult($"You cannot alter the crop area planted for the mixed crop product (nested) [a={this.Name}] of the crop [a={parentManageCrop.NameWithParent}]", memberNames));
+                }
+            }
             return results;
         }
 
@@ -583,7 +611,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -619,13 +647,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
-            return base.ModelSummaryClosingTags(formatForParentControl); 
+            return base.ModelSummaryClosingTags(); 
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
             string html = "";
             // if first child of mixed 
@@ -642,7 +670,7 @@ namespace Models.CLEM.Activities
                 html += "\r\n<div class=\"cropmixedlabel\">Mixed crop</div>";
                 html += "\r\n<div class=\"cropmixedborder\">";
             }
-            html += base.ModelSummaryOpeningTags(formatForParentControl);
+            html += base.ModelSummaryOpeningTags();
             return html;
         } 
         #endregion

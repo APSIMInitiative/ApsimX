@@ -50,6 +50,10 @@ namespace APSIM.Server.Cli
         [Option('p', "port", HelpText = "Port number on which to listen for connections. Only used when accepting connections over network", Default = 27746u)]
         public uint Port { get; set; }
 
+        /// <summary>Maximum number of pending connections to allow.</summary>
+        [Option('b', "backlog", HelpText = "Maximum number of pending connections to allow.", Default = (ushort)1)]
+        public ushort Backlog { get; set; }
+
         /// <summary>IP Address on which to listen for connections.</summary>
         /// <remarks>If not set, will listen on 0.0.0.0.</remarks>
         [Option('a', "address", HelpText = "IP Address on which to listen for connections. Only used when accepting connections over network", Default = "0.0.0.0")]

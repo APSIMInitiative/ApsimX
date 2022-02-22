@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Models.Core;
 
 namespace Models.CLEM.Resources
 {
@@ -11,21 +12,25 @@ namespace Models.CLEM.Resources
     public class RuminantMale: Ruminant
     {
         /// <summary>
+        /// Sex of individual
+        /// </summary>
+        public override Sex Sex { get { return Sex.Male; } }
+
+        /// <summary>
         /// Indicates if individual is breeding sire
         /// Represents any uncastrated male of breeding age
         /// </summary>
+        [FilterByProperty]
         public bool IsSire 
         {
             get
             {
                 if(Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
-                {
                     if (Age >= BreedParams.MinimumAge1stMating)
                     {
                         ReplacementBreeder = false;
                         return true;
                     }
-                }
                 return false;
             }
         }
@@ -34,17 +39,14 @@ namespace Models.CLEM.Resources
         /// Indicates if individual is breeding sire
         /// Represents any uncastrated male of breeding age that is assigned sire and therefroe may have improved genetics/price
         /// </summary>
+        [FilterByProperty]
         public bool IsWildBreeder
         {
             get
             {
                 if (!Attributes.Exists("Sire") & !Attributes.Exists("Castrated"))
-                {
                     if (Age >= BreedParams.MinimumAge1stMating)
-                    {
                         return true;
-                    }
-                }
                 return false;
             }
         }
@@ -52,6 +54,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Indicates if individual is castrated
         /// </summary>
+        [FilterByProperty]
         public bool IsCastrated 
         { 
             get
@@ -74,7 +77,8 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantMale(double setAge, Sex setGender, double setWeight, RuminantType setParams): base(setAge, setGender, setWeight, setParams)
+        public RuminantMale(RuminantType setParams, double setAge, double setWeight)
+            : base(setParams, setAge, setWeight)
         {
         }
 

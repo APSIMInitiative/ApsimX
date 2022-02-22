@@ -67,7 +67,7 @@
                 {
                     this.explorerPresenter.CommandHistory.ModelChanged -= this.OnModelChanged;
 
-                    if (!cultivar.Command.SequenceEqual(view.Lines))
+                    if (cultivar.Command == null || !cultivar.Command.SequenceEqual(view.Lines))
                     {
                         ChangeProperty command = new ChangeProperty(cultivar, nameof(cultivar.Command), this.view.Lines);
                         explorerPresenter.CommandHistory.Add(command);

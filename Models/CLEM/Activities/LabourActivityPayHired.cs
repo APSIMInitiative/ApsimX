@@ -20,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs payment of all hired labour in the time step.")]
+    [Description("Performs payment of all hired labour in the time step")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/PayHiredLabour.htm")]
     public class LabourActivityPayHired : CLEMActivityBase, IValidatableObject
@@ -40,11 +40,18 @@ namespace Models.CLEM.Activities
         public string AccountName { get; set; }
 
         /// <summary>
+        /// Pay labour calculation style
+        /// </summary>
+        [Description("Payment calculation style")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Payment calculation style required")]
+        public PayHiredLabourCalculationStyle PaymentCalculationStyle { get; set; }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public LabourActivityPayHired()
         {
-            TransactionCategory = "Labour";
+            TransactionCategory = "Labour.Hired";
         }
 
         /// <summary>An event handler to allow us to initialise</summary>
@@ -57,73 +64,110 @@ namespace Models.CLEM.Activities
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
             bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-
             labour = Resources.FindResourceGroup<Labour>();
         }
 
         /// <summary>An event handler to allow us to organise payment at start of timestep.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMStartOfTimestep")]
-        private void OnCLEMStartOfTimestep(object sender, EventArgs e)
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
         {
-            GetResourcesRequiredForActivity();
+            if(PaymentCalculationStyle == PayHiredLabourCalculationStyle.ByAvailableLabour)
+                GetResourcesRequiredForActivity();
         }
+
+        /// <summary>An event handler to allow us to organise payment at start of timestep.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMHerdSummary")]
+        private void OnCLEMHerdSummary(object sender, EventArgs e)
+        {
+            if (PaymentCalculationStyle == PayHiredLabourCalculationStyle.ByLabourUsedInTimeStep)
+            {
+                int currentmonth = clock.Today.Month;
+                double total = 0;
+                foreach (LabourType item in labour.Items.Where(a => a.Hired))
+                {
+                    // get days needed
+                    double daysUsed = item.LabourAvailability.GetAvailability(currentmonth - 1) - item.AvailableDays;
+
+                    // calculate rate and amount needed
+                    double rate = item.PayRate();
+                    total += (daysUsed * rate);
+                }
+
+                // take hire cost
+                bankAccount.Remove(new ResourceRequest()
+                {
+                    Resource = bankAccount,
+                    ResourceType = typeof(Finance),
+                    AllowTransmutation = false,
+                    Required = total,
+                    ResourceTypeName = this.AccountName,
+                    ActivityModel = this,
+                    Category = TransactionCategory
+                });
+            }
+        }
+
 
         /// <inheritdoc/>
         public override void DoActivity()
         {
-            Status = ActivityStatus.Warning;
-
-            // get amount of finance needed and provided
-            double financeRequired = 0;
-            double financeProvided = 0;
-            foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == typeof(Finance)))
+            if (PaymentCalculationStyle == PayHiredLabourCalculationStyle.ByAvailableLabour)
             {
-                financeRequired += item.Required;
-                financeProvided += item.Provided;
-                Status = ActivityStatus.NotNeeded;
-            }
+                Status = ActivityStatus.Warning;
 
-            if(financeRequired > 0)
-                Status = ActivityStatus.Success;
-
-            // reduce limiters based on financial shortfall
-            if (financeProvided < financeRequired)
-            {
-                if (this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
+                // get amount of finance needed and provided
+                double financeRequired = 0;
+                double financeProvided = 0;
+                foreach (ResourceRequest item in ResourceRequestList.Where(a => a.ResourceType == typeof(Finance)))
                 {
-                    Status = ActivityStatus.Partial;
-                    int currentmonth = clock.Today.Month;
-                    double currentCost = 0;
+                    financeRequired += item.Required;
+                    financeProvided += item.Provided;
+                    Status = ActivityStatus.NotNeeded;
+                }
 
-                    // step through all hired labour in order and set limiter where needed
-                    foreach (LabourType item in labour.Items.Where(a => a.Hired))
+                if (financeRequired > 0)
+                    Status = ActivityStatus.Success;
+
+                // reduce limiters based on financial shortfall
+                if (financeProvided < financeRequired)
+                {
+                    if (this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable)
                     {
-                        // get days needed
-                        double daysNeeded = item.LabourAvailability.GetAvailability(currentmonth - 1);
-                        // calculate rate and amount needed
-                        double rate = item.PayRate();
+                        Status = ActivityStatus.Partial;
+                        int currentmonth = clock.Today.Month;
+                        double currentCost = 0;
 
-                        double cost = daysNeeded * rate;
+                        // step through all hired labour in order and set limiter where needed
+                        foreach (LabourType item in labour.Items.Where(a => a.Hired))
+                        {
+                            // get days needed
+                            double daysNeeded = item.LabourAvailability.GetAvailability(currentmonth - 1);
+                            // calculate rate and amount needed
+                            double rate = item.PayRate();
 
-                        if (currentCost == financeProvided)
-                        {
-                            item.AvailabilityLimiter = 0;
-                            cost = 0;
+                            double cost = daysNeeded * rate;
+
+                            if (currentCost == financeProvided)
+                            {
+                                item.AvailabilityLimiter = 0;
+                                cost = 0;
+                            }
+                            else if (currentCost + cost > financeProvided)
+                            {
+                                //  reduce limit
+                                double excess = currentCost + cost - financeProvided;
+                                item.AvailabilityLimiter = (cost - excess) / cost;
+                                cost = financeProvided - currentCost;
+                            }
+                            currentCost += cost;
                         }
-                        else if (currentCost + cost > financeProvided)
-                        {
-                            //  reduce limit
-                            double excess = currentCost + cost - financeProvided;
-                            item.AvailabilityLimiter = (cost - excess) / cost;
-                            cost = financeProvided - currentCost;
-                        }
-                        currentCost += cost;
                     }
                 }
             }
-
             return;
         }
 
@@ -137,30 +181,33 @@ namespace Models.CLEM.Activities
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
-            int currentmonth = clock.Today.Month;
-            double total = 0;
-            foreach (LabourType item in labour.Items.Where(a => a.Hired))
+            if (PaymentCalculationStyle == PayHiredLabourCalculationStyle.ByAvailableLabour)
             {
-                // get days needed
-                double daysNeeded = item.LabourAvailability.GetAvailability(currentmonth - 1);
+                int currentmonth = clock.Today.Month;
+                double total = 0;
+                foreach (LabourType item in labour.Items.Where(a => a.Hired))
+                {
+                    // get days needed
+                    double daysNeeded = item.LabourAvailability.GetAvailability(currentmonth - 1);
 
-                // calculate rate and amount needed
-                double rate = item.PayRate();
-                total += (daysNeeded * rate);
-            }
+                    // calculate rate and amount needed
+                    double rate = item.PayRate();
+                    total += (daysNeeded * rate);
+                }
 
-            // create resource request
-            resourcesNeeded.Add(new ResourceRequest()
-            {
-                Resource = bankAccount,
-                ResourceType = typeof(Finance),
-                AllowTransmutation = false,
-                Required = total,
-                ResourceTypeName = this.AccountName,
-                ActivityModel = this,
-                Category = TransactionCategory
+                // create resource request
+                resourcesNeeded.Add(new ResourceRequest()
+                {
+                    Resource = bankAccount,
+                    ResourceType = typeof(Finance),
+                    AllowTransmutation = false,
+                    Required = total,
+                    ResourceTypeName = this.AccountName,
+                    ActivityModel = this,
+                    Category = TransactionCategory
+                }
+                );
             }
-            );
             return resourcesNeeded;
         }
 
@@ -203,11 +250,11 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Pay all hired labour based on PayRates from ");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Pay all hired labour based on labour rate from ");
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
                 return htmlWriter.ToString();

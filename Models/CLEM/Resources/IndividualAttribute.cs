@@ -14,12 +14,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The value of the attribute
         /// </summary>
-        object storedValue { get; set; }
+        object StoredValue { get; set; }
 
         /// <summary>
         /// The value of the attribute of the most recent mate
         /// </summary>
-        object storedMateValue { get; set; }
+        object StoredMateValue { get; set; }
 
         /// <summary>
         /// The style for inheritance of attribute
@@ -33,21 +33,21 @@ namespace Models.CLEM.Resources
         object GetInheritedAttribute();
     }
 
-
     /// <summary>
     /// A ruminant attribute that stores an associated object
     /// </summary>
+    [Serializable]
     public class IndividualAttribute: IIndividualAttribute
     {
         /// <summary>
         /// Value object of attribute
         /// </summary>
-        public object storedValue { get; set; }
+        public object StoredValue { get; set; }
 
         /// <summary>
         /// The value of the attribute of the most recent mate
         /// </summary>
-        public object storedMateValue { get; set; }
+        public object StoredMateValue { get; set; }
 
         /// <summary>
         /// The style of inheritance of the attribute
@@ -61,14 +61,11 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if(float.TryParse(storedValue.ToString(), out float val))
-                {
+                if(float.TryParse(StoredValue.ToString(), System.Globalization.NumberStyles.Float,
+        System.Globalization.CultureInfo.InvariantCulture, out float val))
                     return val;
-                }
                 else
-                {
                     return 0;
-                }
             }
         }
 
@@ -79,17 +76,13 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if (float.TryParse(storedValue.ToString(), out float val))
-                {
+                if (float.TryParse(StoredMateValue.ToString(), System.Globalization.NumberStyles.Float,
+        System.Globalization.CultureInfo.InvariantCulture, out float val))
                     return val;
-                }
                 else
-                {
                     return 0;
-                }
             }
         }
-
 
         /// <summary>
         /// Get the attribute inherited by an offspring given both parent attribute values stored for a breeder
@@ -107,91 +100,65 @@ namespace Models.CLEM.Resources
                 case AttributeInheritanceStyle.None:
                     return null;
                 case AttributeInheritanceStyle.Maternal:
-                    newAttribute.storedValue = storedValue;
+                    newAttribute.StoredValue = StoredValue;
                     break;
                 case AttributeInheritanceStyle.Paternal:
-                    newAttribute.storedValue = storedMateValue;
+                    newAttribute.StoredValue = StoredMateValue;
                     break;
                 case AttributeInheritanceStyle.LeastParentValue:
                     if (this.Value <= this.MateValue)
-                    {
-                        newAttribute.storedValue = storedValue;
-                    }
+                        newAttribute.StoredValue = StoredValue;
                     else
-                    {
-                        newAttribute.storedValue = storedMateValue;
-                    }
+                        newAttribute.StoredValue = StoredMateValue;
                     break;
                 case AttributeInheritanceStyle.GreatestParentValue:
                     if (this.Value >= this.MateValue)
-                    {
-                        newAttribute.storedValue = storedValue;
-                    }
+                        newAttribute.StoredValue = StoredValue;
                     else
-                    {
-                        newAttribute.storedValue = storedMateValue;
-                    }
+                        newAttribute.StoredValue = StoredMateValue;
                     break;
                 case AttributeInheritanceStyle.LeastBothParents:
-                    if (storedValue != null & storedMateValue != null)
-                    {
+                    if (StoredValue != null & StoredMateValue != null)
                         if (this.Value <= this.MateValue)
-                        {
-                            newAttribute.storedValue = storedValue;
-                        }
+                            newAttribute.StoredValue = StoredValue;
                         else
-                        {
-                            newAttribute.storedValue = storedMateValue;
-                        }
-                    }
+                            newAttribute.StoredValue = StoredMateValue;
                     else
-                    {
                         return null;
-                    }
                     break;
                 case AttributeInheritanceStyle.GreatestBothParents:
-                    if (storedValue != null & storedValue != null)
-                    {
+                    if (StoredValue != null & StoredValue != null)
                         if (Value >= MateValue)
-                        {
-                            newAttribute.storedValue = storedValue;
-                        }
+                            newAttribute.StoredValue = StoredValue;
                         else
-                        {
-                            newAttribute.storedValue = storedMateValue;
-                        }
-                    }
+                            newAttribute.StoredValue = StoredMateValue;
                     else
-                    {
                         return null;
-                    }
                     break;
                 case AttributeInheritanceStyle.MeanValueZeroAbsent:
                     float offSpringValue = 0;
-                    if (storedValue != null)
-                    {
+                    if (StoredValue != null)
                         offSpringValue += Value;
-                    }
-                    if (storedMateValue != null)
-                    {
+
+                    if (StoredMateValue != null)
                         offSpringValue += MateValue;
-                    }
-                    newAttribute.storedValue = (offSpringValue / 2.0f);
+
+                    newAttribute.StoredValue = (offSpringValue / 2.0f);
                     break;
                 case AttributeInheritanceStyle.MeanValueIgnoreAbsent:
                     offSpringValue = 0;
                     int cnt = 0;
-                    if (storedValue != null)
+                    if (StoredValue != null)
                     {
                         offSpringValue += Value;
                         cnt++;
                     }
-                    if (storedMateValue != null)
+                    if (StoredMateValue != null)
                     {
                         offSpringValue += MateValue;
                         cnt++;
                     }
-                    newAttribute.storedValue = storedValue = (offSpringValue / (float)cnt);
+                    newAttribute.StoredValue = StoredValue = (offSpringValue / (float)cnt);
                     break;
                 case AttributeInheritanceStyle.AsGeneticTrait:
                     throw new NotImplementedException();
@@ -210,12 +177,12 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Value object of attribute
         /// </summary>
-        public object storedValue { get; set; }
+        public object StoredValue { get; set; }
 
         /// <summary>
         /// The value of the attribute of the most recent mate
         /// </summary>
-        public  object storedMateValue { get; set; }
+        public  object StoredMateValue { get; set; }
 
         /// <summary>
         /// The style of inheritance of the attribute
@@ -229,7 +196,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return storedValue.ToString();
+                return StoredValue.ToString();
             }
         }
 
@@ -240,7 +207,7 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                return storedMateValue.ToString();
+                return StoredMateValue.ToString();
             }
         }
 

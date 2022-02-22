@@ -1,4 +1,4 @@
-﻿using Models.CLEM.Groupings;
+using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -25,14 +25,25 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class RuminantActivityControlledMating : CLEMRuminantActivityBase, IValidatableObject
     {
-        [Link]
-        private List<LabourRequirement> labour;
-
-        private RuminantGroup breederGroup;
         private List<SetAttributeWithValue> attributeList;
         private ActivityTimerBreedForMilking milkingTimer;
         private RuminantActivityBreed breedingParent;
-        private RuminantType breedParams;
+
+        /// <summary>
+        /// Maximum age for mating (months)
+        /// </summary>
+        [Description("Maximum female age for mating")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(120)]
+        public double MaximumAgeMating { get; set; }
+
+        /// <summary>
+        /// Number joinings per male
+        /// </summary>
+        [Description("Number of joinings per male")]
+        [Required, GreaterThanValue(0)]
+        [System.ComponentModel.DefaultValue(1)]
+        public int JoiningsPerMale { get; set; }
 
         /// <summary>
         /// The available attributes for the breeding sires
@@ -44,6 +55,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityControlledMating()
         {
+            SetDefaults();
             this.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
             TransactionCategory = "Livestock.Manage";
         }
@@ -57,25 +69,16 @@ namespace Models.CLEM.Activities
             this.AllocationStyle = ResourceAllocationStyle.Manual;
             this.InitialiseHerd(false, true);
 
-            breederGroup = new RuminantGroup();
-            breederGroup.Children.Add(new RuminantFilter() { Name = "sex", Parameter = RuminantFilterParameters.Gender, Operator = FilterOperators.Equal, Value="Female" });
-            breederGroup.Children.Add(new RuminantFilter() { Name = "abletobreed", Parameter = RuminantFilterParameters.IsAbleToBreed, Operator = FilterOperators.Equal, Value = "True" });
-            // TODO: add sort by condition
-
             attributeList = this.FindAllDescendants<SetAttributeWithValue>().ToList();
-
-            // get labour specifications
-            labour = this.FindAllChildren<LabourRequirement>().ToList();
 
             milkingTimer = FindChild<ActivityTimerBreedForMilking>();
 
             // check that timer exists for controlled mating
             if (!this.TimingExists)
-                Summary.WriteWarning(this, $"Breeding with controlled mating [a={this.Parent.Name}].[a={this.Name}] requires a Timer otherwise breeding will be undertaken every time-step");
+                Summary.WriteMessage(this, $"Breeding with controlled mating [a={this.Parent.Name}].[a={this.Name}] requires a Timer otherwise breeding will be undertaken every time-step", MessageType.Warning);
 
             // get details from parent breeding activity
             breedingParent = this.Parent as RuminantActivityBreed;
-            breedParams = Resources.FindResourceType<RuminantHerd, RuminantType>(this, $"{HerdResource.Name}.{breedingParent.PredictedHerdName}", OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         #region validation
@@ -112,20 +115,12 @@ namespace Models.CLEM.Activities
         /// <returns>A list of breeders to work with before returning to the breed activity</returns>
         private IEnumerable<RuminantFemale> GetBreeders()
         {
-            IEnumerable<RuminantFemale> breedersAvailable = null;
-
-            if (milkingTimer != null)
-            {
-                breedersAvailable = milkingTimer.IndividualsToBreed;
-            }
-            else
-            {
-                // return the full list of breeders currently able to breed
-                // controlled mating respects the max breeding age property of the breed, so reduce
-                // TODO: remove OfType when code handles adding gender property 
-                breedersAvailable = CurrentHerd(true).FilterRuminants(breederGroup).OfType<RuminantFemale>().Where(a => a.Age <= breedParams.MaximumAgeMating);
-            }
-            return breedersAvailable;
+            // return the full list of breeders currently able to breed
+            // controlled mating includes a max breeding age property, so reduces numbers mated
+            return milkingTimer != null
+                ? milkingTimer.IndividualsToBreed
+                : CurrentHerd(true).OfType<RuminantFemale>()
+                    .Where(a => a.IsAbleToBreed & a.Age <= MaximumAgeMating);
         }
 
         /// <summary>
@@ -139,7 +134,7 @@ namespace Models.CLEM.Activities
             if(this.TimingOK) // general Timer or TimeBreedForMilking ok
             {
                 breeders = GetBreeders();
-                if (breeders != null &&  breeders.Count() > 0)
+                if (breeders != null &&  breeders.Any())
                 {
                     // calculate labour and finance costs
                     List<ResourceRequest> resourcesneeded = GetResourcesNeededForActivityLocal(breeders);
@@ -259,20 +254,60 @@ namespace Models.CLEM.Activities
             return null;
         }
 
+        /// <summary>
+        /// Determine the labour required for this activity based on LabourRequired items in tree
+        /// </summary>
+        /// <param name="requirement">Labour requirement model</param>
+        /// <returns></returns>
+        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
+        {
+            IEnumerable<Ruminant> herd = CurrentHerd(false);
+            int head = herd.Where(a => a.Weaned == false).Count();
+
+            double daysNeeded = 0;
+            switch (requirement.UnitType)
+            {
+                case LabourUnitType.Fixed:
+                    daysNeeded = requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perHead:
+                    daysNeeded = head * requirement.LabourPerUnit;
+                    break;
+                case LabourUnitType.perAE:
+                    double sumAE = 0;
+                    daysNeeded = sumAE * requirement.LabourPerUnit;
+                    break;
+                default:
+                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+            }
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
+        }
+
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 // set attribute with value
                 IEnumerable<SetAttributeWithValue> attributeSetters = this.FindAllChildren<SetAttributeWithValue>();
-                if (attributeSetters.Count() > 0)
+                if (attributeSetters.Any())
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
-                    htmlWriter.Write("This activity provides the Attributes of the sire to ensure inheritance to offpsring");
+                    htmlWriter.Write($"The Attributes of the sire are {(attributeSetters.Any()? "specified below" : "selected at random ofrm the herd")} to ensure inheritance to offpsring");
                     htmlWriter.Write("</div>");
+                }
+                else
+                {
+                    // need to check for mandatory attributes
+                    var mandatoryAttributes = this.FindAncestor<Zone>().FindAllDescendants<SetAttributeWithValue>().Where(a => a.Mandatory).Select(a => a.AttributeName).Distinct();
+                    if (mandatoryAttributes.Any())
+                    {
+                        htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                        htmlWriter.Write($"The mandatory attributes <span class=\"setvalue\">{string.Join("</span>,<span class=\"setvalue\">", mandatoryAttributes)}</span> required from the breeding males will be randomally selected from the herd");
+                        htmlWriter.Write("</div>");
+                    }
                 }
                 return htmlWriter.ToString();
             }

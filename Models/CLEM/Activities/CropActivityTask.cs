@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using System;
@@ -18,7 +18,7 @@ namespace Models.CLEM.Activities
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
-    [Description("This is a crop task (e.g. sowing) with associated costs and labour requirements.")]
+    [Description("A crop task (e.g. sowing) with associated costs and labour requirements.")]
     [Version(1, 0, 2, "Added per unit of land as labour unit type")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Crop/CropTask.htm")]
@@ -74,7 +74,7 @@ namespace Models.CLEM.Activities
                         this.Status = ActivityStatus.Warning;
                         if (!timingIssueReported)
                         {
-                            Summary.WriteWarning(this, $"The harvest timer for crop task [a={this.Name}] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.");
+                            Summary.WriteMessage(this, $"The harvest timer for crop task [a={this.NameWithParent}] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.", MessageType.Warning);
                             timingIssueReported = true;
                         }
                     }
@@ -181,7 +181,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
