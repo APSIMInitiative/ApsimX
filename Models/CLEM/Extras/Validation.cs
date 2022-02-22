@@ -136,7 +136,7 @@ namespace Models.CLEM
     [AttributeUsage(AttributeTargets.Property)]
     public class MonthAttribute : ValidationAttribute
     {
-        private string DefaultErrorMessage = "Value must represent a month from [1-January] to [12-December] )";
+        private string DefaultErrorMessage = "Value must represent a month from [1-January] to [12-December]";
 
         /// <summary>
         /// 

@@ -58,6 +58,7 @@ namespace Models.CLEM.Activities
             TransactionCategory = "Livestock.Manage";
         }
 
+        #region validation
         /// <summary>
         /// Validate this model
         /// </summary>
@@ -73,6 +74,7 @@ namespace Models.CLEM.Activities
             }
             return results;
         }
+        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -98,30 +100,18 @@ namespace Models.CLEM.Activities
             // allow multiple filter groups for moving. 
             var filterGroups = FindAllChildren<RuminantGroup>();
             foreach (RuminantGroup item in filterGroups)
-            {
-                foreach (Ruminant ind in item.Filter(CurrentHerd(false)))
+                foreach (Ruminant ind in item.Filter(this.GetIndividuals<Ruminant>( GetRuminantHerdSelectionStyle.AllOnFarm, null, false).Where(a => a.Location != pastureName)).ToList())
                 {
                     // set new location ID
-                    if (ind.Location != pastureName)
-                    {
-                        this.Status = ActivityStatus.Success;
-                        ind.Location = pastureName;
+                    this.Status = ActivityStatus.Success;
+                    ind.Location = pastureName;
 
-                        // check if sucklings are to be moved with mother
-                        if (MoveSucklings)
-                        {
-                            // if female
-                            if (ind is RuminantFemale)
-                            {
-                                RuminantFemale female = ind as RuminantFemale;
-                                // check if mother with sucklings
-                                foreach (var suckling in female.SucklingOffspringList)
-                                    suckling.Location = pastureName;
-                            }
-                        }
-                    }
+                    // check if sucklings are to be moved with mother
+                    if (MoveSucklings && ind is RuminantFemale)
+                        // check if mother with sucklings
+                        foreach (var suckling in (ind as RuminantFemale).SucklingOffspringList)
+                            suckling.Location = pastureName;
                 }
-            }
         }
 
         /// <inheritdoc/>
@@ -165,10 +155,8 @@ namespace Models.CLEM.Activities
         {
             // check if labour provided or PartialResources allowed
             if (this.TimingOK)
-            {
                 if ((this.Status == ActivityStatus.Success || this.Status == ActivityStatus.NotNeeded) || (this.Status == ActivityStatus.Partial && this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
                     Move();
-            }
             else
                 Status = ActivityStatus.Ignored;
         }

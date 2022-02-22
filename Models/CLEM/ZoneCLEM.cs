@@ -51,7 +51,7 @@ namespace Models.CLEM
         /// Index of the simulation Climate Region
         /// </summary>
         [Description("Region id")]
-        [System.ComponentModel.DataAnnotations.Display(Order = -9)]
+        [Core.Display(Order = -9)]
         public int ClimateRegion { get; set; }
 
         /// <summary>
