@@ -363,6 +363,8 @@
 
             AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
             AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
+            AddContextActionWithAccel("Undo", OnUndo, "Ctrl+Z");
+            AddContextActionWithAccel("Undo", OnRedo, "Ctrl+Y");
             AddMenuItem("Change Style", OnChangeStyle);
 
             textEditor.Realized += OnRealized;
@@ -891,7 +893,9 @@
         }
 
         /// <summary>
-        /// The Undo menu item handler
+        /// The Undo menu item handler. This overrides the global undo keyboard
+        /// shortcut which such that the SourceView widget receives the signal,
+        /// rather than the main menu context item handler.
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
@@ -899,8 +903,7 @@
         {
             try
             {
-                // tbi (do we even need this?)
-                //MiscActions.Undo(textEditor.TextArea.GetTextEditorData());
+                GLib.Signal.Emit(textEditor, "undo");
             }
             catch (Exception err)
             {
@@ -909,7 +912,9 @@
         }
 
         /// <summary>
-        /// The Redo menu item handler
+        /// The Redo menu item handler. This overrides the global redo keyboard
+        /// shortcut which such that the SourceView widget receives the signal,
+        /// rather than the main menu context item handler.
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
@@ -917,8 +922,7 @@
         {
             try
             {
-                // tbi (do we even need this?)
-                //MiscActions.Redo(textEditor.TextArea.GetTextEditorData());
+                GLib.Signal.Emit(textEditor, "redo");
             }
             catch (Exception err)
             {
