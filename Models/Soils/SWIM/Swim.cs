@@ -771,12 +771,10 @@ namespace Models.Soils
         {
             get
             {
-                double[] flow = new double[n];
-
                 // Flow represents flow downward out of a layer
                 // and so start at node 1 (not 0)
                 double[] value = new double[n];
-                for (int i = 1; i <= n; i++)
+                for (int i = 1; i < n; i++)
                     value[i] = TD_wflow[i];
                 return value;
             }
@@ -2004,100 +2002,13 @@ namespace Models.Soils
 
         //}
 
-        //private void RegisterSoluteOutputs(int solnum)
-        //{
-        //    string solutename = solute_names[solnum];
-
-        //    string variable_name = "flow_" + solutename;
-        //    flow_id[solnum] = My.RegisterProperty(variable_name, "<type kind=\"double\" array=\"T\" unit=\"kg/ha\"/>", true, false, false, "", "", getPropertyValue);
-
-        //    variable_name = "leach_" + solutename;
-        //    leach_id[solnum] = My.RegisterProperty(variable_name, "<type kind=\"double\" array=\"F\" unit=\"kg/ha\"/>", true, false, false, "", "", getPropertyValue);
-
-        //    variable_name = "exco_" + solutename;
-        //    exco_id[solnum] = My.RegisterProperty(variable_name, "<type kind=\"double\" array=\"T\"/>", true, false, false, "", "", getPropertyValue);
-
-        //    variable_name = "conc_water_" + solutename;
-        //    conc_water_id[solnum] = My.RegisterProperty(variable_name, "<type kind=\"double\" array=\"T\" unit=\"ug/g\"/>", true, false, false, "", "", getPropertyValue);
-
-        //    variable_name = "conc_adsorb_" + solutename;
-        //    conc_adsorb_id[solnum] = My.RegisterProperty(variable_name, "<type kind=\"double\" array=\"T\" unit=\"ug/g\"/>", true, false, false, "", "", getPropertyValue);
-
-        //    variable_name = "subsurface_drain_" + solutename;
-        //    subsurface_drain_id[solnum] = My.RegisterProperty(variable_name, "<type kind=\"double\" array=\"F\" unit=\"mm\"/>", true, false, false, "", "", getPropertyValue);
-        //}
-
-        //public bool getPropertyValue(int propID, ref TPropertyInfo value, bool isReqSet)
-        //{
-        //    double[] valueArray = new double[n + 1];
-        //    bool uflag;
-        //    if (isReqSet)  // currently only handling read requests, so fail if this is not.
-        //        return false;
-        //    for (int crop = 0; crop < num_crops; crop++)
-        //    {
-
-        //        if (uptake_water_id[crop] == propID)
-        //        {
-        //            GetSWUptake(crop, out valueArray, out uflag);
-        //            value.setValue(valueArray);
-        //            return true;
-        //        }
-        //        for (int sol = 0; sol < num_solutes; sol++)
-        //        {
-        //            if (supply_solute_id[crop][sol] == propID)
-        //            {
-        //                GetSupply(crop, sol, out valueArray, out uflag);
-        //                value.setValue(valueArray);
-        //                return true;
-        //            }
-        //        }
-        //    }
-
-        //    for (int solnum = 0; solnum < num_solutes; solnum++)
-        //    {
-        //        if (leach_id[solnum] == propID)
-        //        {
-        //            value.setValue(TD_soldrain[solnum]);
-        //            return true;
-        //        }
-
-        //        if (flow_id[solnum] == propID)
-        //        {
-        //            GetFlow(solute_names[solnum], out valueArray, out uflag);
-        //            value.setValue(valueArray);
-        //            return true;
-        //        }
-
-        //        if (exco_id[solnum] == propID)
-        //        {
-        //            for (int node = 0; node < n; node++)
-        //                valueArray[node] = ex[solnum][node] / rhob[node];
-        //            value.setValue(valueArray);
-        //            return true;
-        //        }
-
-        //        if (conc_water_id[solnum] == propID)
-        //        {
-        //            ConcWaterSolute(solute_names[solnum], ref valueArray);
-        //            value.setValue(valueArray);
-        //            return true;
-        //        }
-
-        //        if (conc_adsorb_id[solnum] == propID)
-        //        {
-        //            ConcAdsorbSolute(solute_names[solnum], ref valueArray);
-        //            value.setValue(valueArray);
-        //            return true;
-        //        }
-
-        //        if (subsurface_drain_id[solnum] == propID)
-        //        {
-        //            value.setValue(TD_slssof[solnum]);
-        //            return true;
-        //        }
-        //    }
-        //    return false;
-        //}
+        private int SoluteIndex(string soluteName)
+        {
+            int soluteIndex = Array.IndexOf(solute_names, soluteName);
+            if (soluteIndex == -1)
+                throw new Exception($"Invalid solute name: {soluteName}");
+            return soluteIndex;
+        }
 
         /// <summary>
         /// 
@@ -3103,13 +3014,15 @@ namespace Models.Soils
             {
                 TD_slssof[sol] = 0.0;
                 TD_soldrain[sol] = 0.0;
-                for (int node = 0; node <= n; node++)
+                for (int node = 0; node <= n + 1; node++)
                     TD_sflow[sol][node] = 0.0;
             }
 
+            for (int node = 0; node <= n+1; node++)
+                TD_wflow[node] = 0.0;
+            
             for (int node = 0; node <= n; node++)
             {
-                TD_wflow[node] = 0.0;
                 for (int vegnum = 0; vegnum < num_crops; vegnum++)
                 {
                     for (int sol = 0; sol < num_solutes; sol++)
@@ -4363,11 +4276,9 @@ namespace Models.Soils
 
         private void GetSoluteVariables()
         {
-            double[] solute_n = new double[n + 1];
-
             for (int solnum = 0; solnum < num_solutes; solnum++)
             {
-                ConcWaterSolute(solnum, ref solute_n);
+                double[] solute_n = ConcWaterSolute(solnum);
                 for (int node = 0; node <= n; node++)
                     csl[solnum][node] = solute_n[node];
             }
@@ -4406,9 +4317,9 @@ namespace Models.Soils
             }
         }
 
-        private void ConcWaterSolute(int solnum, ref double[] concWaterSolute)
+        private double[] ConcWaterSolute(int solnum)
         {
-            concWaterSolute = new double[n + 1]; // Init with zeroes
+            double[] concWaterSolute = new double[n + 1]; // Init with zeroes
             double[] solute_n = new double[n + 1]; // solute at each node
 
             if (solnum >= 0)
@@ -4461,6 +4372,7 @@ namespace Models.Soils
             }
             else
                 throw new Exception("You have asked apswim to use a solute that it does not know about. Number = " + solnum);
+            return concWaterSolute;
         }
 
         private void ConcAdsorbSolute(string solname, ref double[] concAdsorbSolute)
@@ -5729,29 +5641,53 @@ namespace Models.Soils
         [JsonIgnore]
         public double[] LateralOutflow { get { throw new NotImplementedException("SWIM doesn't implement a LateralOutflow property"); } }
 
-        /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>
-        [JsonIgnore]
-        public double LeachNO3 { get { throw new NotImplementedException("SWIM doesn't implement a LeachNO3 property"); } }
+        /// <summary>NO3 movement out of a layer. </summary>
+        public double[] FlowNO3 => TD_sflow[SoluteIndex("NO3")];
 
-        /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>
-        [JsonIgnore]
-        public double LeachNH4 { get { throw new NotImplementedException("SWIM doesn't implement a LeachNH4 property"); } }
+        /// <summary>NH4 movement out of a layer. </summary>
+        public double[] FlowNH4 => TD_sflow[SoluteIndex("NH4")];
 
-        /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>
-        [JsonIgnore]
-        public double LeachUrea { get { throw new NotImplementedException("SWIM doesn't implement a LeachUrea property"); } }
+        /// <summary>NH4 movement out of a layer. </summary>
+        public double[] FlowUrea => TD_sflow[SoluteIndex("Urea")];
 
-        /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
-        [JsonIgnore]
-        public double[] FlowNO3 { get { throw new NotImplementedException("SWIM doesn't implement a FlowNO3 property"); } }
+        /// <summary>CL movement out of a layer. </summary>
+        public double[] FlowCL => TD_sflow[SoluteIndex("CL")];
 
-        /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
-        [JsonIgnore]
-        public double[] FlowNH4 { get { throw new NotImplementedException("SWIM doesn't implement a FlowNH4 property"); } }
+        /// <summary>NO3 movement out of a sub surface drain. </summary>
+        public double SubsurfaceDrainNO3 => TD_slssof[SoluteIndex("NO3")];
 
-        /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>
-        [JsonIgnore]
-        public double[] FlowUrea { get { throw new NotImplementedException("SWIM doesn't implement a FlowUrea property"); } }
+        /// <summary>NH4 movement out of a sub surface drain. </summary>
+        public double SubsurfaceDrainNH4 => TD_slssof[SoluteIndex("NH4")];
+
+        /// <summary>NH4 movement out of a sub surface drain. </summary>
+        public double SubsurfaceDrainUrea => TD_slssof[SoluteIndex("Urea")];
+
+        /// <summary>CL movement out of a sub surface drain. </summary>
+        public double SubsurfaceDrainCL => TD_slssof[SoluteIndex("CL")];
+
+        /// <summary>NO3 leached from the bottom of the profile.</summary>
+        public double LeachNO3 => TD_soldrain[SoluteIndex("NO3")];
+
+        /// <summary>NH4 leached from the bottom of the profile.</summary>
+        public double LeachNH4 => TD_soldrain[SoluteIndex("NH4")];
+
+        /// <summary>Urea leached from the bottom of the profile.</summary>
+        public double LeachUrea => TD_soldrain[SoluteIndex("Urea")];
+
+        /// <summary>CL leached from the bottom of the profile.</summary>
+        public double LeachCL => TD_soldrain[SoluteIndex("CL")];
+
+        /// <summary>Amount of NO3 not adsorbed (ppm).</summary>
+        public double[] ConcWaterNO3 => ConcWaterSolute(SoluteIndex("NO3"));
+
+        /// <summary>Amount of NH4 not adsorbed (ppm).</summary>
+        public double[] ConcWaterNH4 => ConcWaterSolute(SoluteIndex("NH4"));
+
+        /// <summary>Amount of Urea not adsorbed (ppm).</summary>
+        public double[] ConcWaterUrea => ConcWaterSolute(SoluteIndex("Urea"));
+
+        /// <summary>Amount of CL not adsorbed (ppm).</summary>
+        public double[] ConcWaterCL => ConcWaterSolute(SoluteIndex("CL"));
 
         /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>
         [JsonIgnore]
