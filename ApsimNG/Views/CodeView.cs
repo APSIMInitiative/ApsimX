@@ -250,11 +250,6 @@
                 horizScrollPos = value.Width;
                 vertScrollPos = value.Height;
 
-                // Unfortunately, we often can't set the scroller adjustments immediately, as they may not have been set up yet
-                // We make these calls to set the position if we can, but otherwise we'll just hold on to the values until the scrollers are ready
-                Hadjustment_Changed(this, null);
-                Vadjustment_Changed(this, null);
-
                 // x is column, y is line number.
                 TextIter iter = textEditor.Buffer.GetIterAtLineOffset(value.Y, value.X);
                 textEditor.Buffer.PlaceCursor(iter);
@@ -354,8 +349,6 @@
             textEditor.FocusInEvent += OnTextBoxEnter;
             textEditor.FocusOutEvent += OnTextBoxLeave;
             textEditor.KeyPressEvent += OnKeyPress;
-            scroller.Hadjustment.Changed += Hadjustment_Changed;
-            scroller.Vadjustment.Changed += Vadjustment_Changed;
             mainWidget.Destroyed += _mainWidget_Destroyed;
 
             // Attempt to load a style scheme from the user settings.
@@ -370,6 +363,8 @@
 
             AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
             AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
+            AddContextActionWithAccel("Undo", OnUndo, "Ctrl+Z");
+            AddContextActionWithAccel("Undo", OnRedo, "Ctrl+Y");
             AddMenuItem("Change Style", OnChangeStyle);
 
             textEditor.Realized += OnRealized;
@@ -417,8 +412,6 @@
                 textEditor.FocusInEvent -= OnTextBoxEnter;
                 textEditor.FocusOutEvent -= OnTextBoxLeave;
                 textEditor.KeyPressEvent -= OnKeyPress;
-                scroller.Hadjustment.Changed -= Hadjustment_Changed;
-                scroller.Vadjustment.Changed -= Vadjustment_Changed;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
 
                 // It's good practice to disconnect all event handlers, as it makes memory leaks
@@ -461,42 +454,6 @@
                         Configuration.Settings.Save();
                     }
                 }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// The vertical position has changed
-        /// </summary>
-        /// <param name="sender">The sender object</param>
-        /// <param name="e">The event arguments</param>
-        private void Vadjustment_Changed(object sender, EventArgs e)
-        {
-            try
-            {
-                if (vertScrollPos > 0 && vertScrollPos < scroller.Vadjustment.Upper)
-                    scroller.Vadjustment.Value = vertScrollPos;
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// The horizontal position has changed
-        /// </summary>
-        /// <param name="sender">The sender object</param>
-        /// <param name="e">The event arguments</param>
-        private void Hadjustment_Changed(object sender, EventArgs e)
-        {
-            try
-            {
-                if (horizScrollPos > 0 && horizScrollPos < scroller.Hadjustment.Upper)
-                    scroller.Hadjustment.Value = horizScrollPos;
             }
             catch (Exception err)
             {
@@ -936,7 +893,9 @@
         }
 
         /// <summary>
-        /// The Undo menu item handler
+        /// The Undo menu item handler. This overrides the global undo keyboard
+        /// shortcut which such that the SourceView widget receives the signal,
+        /// rather than the main menu context item handler.
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
@@ -944,8 +903,7 @@
         {
             try
             {
-                // tbi (do we even need this?)
-                //MiscActions.Undo(textEditor.TextArea.GetTextEditorData());
+                GLib.Signal.Emit(textEditor, "undo");
             }
             catch (Exception err)
             {
@@ -954,7 +912,9 @@
         }
 
         /// <summary>
-        /// The Redo menu item handler
+        /// The Redo menu item handler. This overrides the global redo keyboard
+        /// shortcut which such that the SourceView widget receives the signal,
+        /// rather than the main menu context item handler.
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
@@ -962,8 +922,7 @@
         {
             try
             {
-                // tbi (do we even need this?)
-                //MiscActions.Redo(textEditor.TextArea.GetTextEditorData());
+                GLib.Signal.Emit(textEditor, "redo");
             }
             catch (Exception err)
             {
