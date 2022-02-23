@@ -4326,7 +4326,7 @@ namespace Models.Soils
 
             if (solnum >= 0)
             {
-                solute_n = solutes[solnum].kgha;
+                solute_n = (double[])solutes[solnum].kgha.Clone();
 
                 for (int node = 0; node <= n; node++)
                 {
