@@ -5687,7 +5687,7 @@ namespace Models.Soils
         public double[] ConcWaterUrea => ConcWaterSolute(SoluteIndex("Urea"));
 
         /// <summary>Amount of CL not adsorbed (ppm).</summary>
-        public double[] ConcWaterCL => ConcWaterSolute(SoluteIndex("Urea"));
+        public double[] ConcWaterCL => ConcWaterSolute(SoluteIndex("CL"));
 
         /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>
         [JsonIgnore]
