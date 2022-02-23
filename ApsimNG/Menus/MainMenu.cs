@@ -122,7 +122,7 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [MainMenu("Split Screen", "<Ctrl>t")]
+        [MainMenu("Split Screen")]
         public void ToggleSecondExplorerViewVisible(object sender, EventArgs e)
         {
             try
