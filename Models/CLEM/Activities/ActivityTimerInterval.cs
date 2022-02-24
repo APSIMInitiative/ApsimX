@@ -42,7 +42,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(12)]
         [Description("The interval (in months, 1 monthly, 12 annual)")]
-        [Required, GreaterThanValue(1)]
+        [Required, GreaterThanEqualValue(1)]
         public int Interval { get; set; }
 
         /// <summary>
@@ -167,7 +167,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("<span class=\"errorlink\">");
                     htmlWriter.Write("NOT SET");
                 }
-                htmlWriter.Write("</span> months from ");
+                htmlWriter.Write($"</span> month{((Interval == 1)?"":"s")} from ");
                 if (MonthDue > 0)
                 {
                     htmlWriter.Write("<span class=\"setvalueextra\">");
