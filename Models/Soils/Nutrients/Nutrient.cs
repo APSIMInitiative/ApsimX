@@ -347,7 +347,7 @@ namespace Models.Soils.Nutrients
             {
                 // Get the denitrification N flow under NO3.
                 var pools = FindAllDescendants<NutrientPool>().Cast<INutrientPool>().ToList();
-                pools.Remove(Inert);
+                //pools.Remove(Inert); this should be included as without it is contrary to user expectations
                 pools.Remove(SurfaceResidue);
 
                 NutrientPool returnPool = new NutrientPool();
@@ -367,7 +367,7 @@ namespace Models.Soils.Nutrients
         }
 
         /// <summary>
-        /// Total N in each soil layer
+        /// Total N in each soil layer, organic and mineral
         /// </summary>
         [Units("kg/ha")]
         public double[] TotalN
@@ -381,22 +381,15 @@ namespace Models.Soils.Nutrients
                     numLayers = FOMLignin.N.Length;
                 double[] values = new double[numLayers];
                 IEnumerable<NutrientPool> Pools = FindAllChildren<NutrientPool>();
+                IEnumerable<Solute> Solutes = FindAllChildren<Solute>();
 
                 foreach (NutrientPool P in Pools)
                     for (int i = 0; i < numLayers; i++)
                         values[i] += P.N[i];
 
-                double[] nh4 = NH4.kgha;
-                double[] no3 = NO3.kgha;
-                values = MathUtilities.Add(values, nh4);
-                values = MathUtilities.Add(values, no3);
-                if (Urea != null)
-                {
-                    double[] urea = Urea.kgha;
-                    values = MathUtilities.Add(values, urea);
-                }
-
-
+                foreach (Solute S in Solutes)
+                    for (int i = 0; i < numLayers; i++)
+                        values[i] += S.kgha[i];
 
                 return values;
             }
