@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
     /// <summary>Ruminant growth activity</summary>
     /// <summary>This activity determines potential intake for the Feeding activities and feeding arbitrator for all ruminants</summary>
     /// <summary>This activity includes deaths</summary>
-    /// <summary>See Breed activity for births, calf mortality etc</summary>
+    /// <summary>See Breed activity for births, suckling mortality etc</summary>
     /// <version>1.1</version>
     /// <updates>First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
@@ -161,7 +161,7 @@ namespace Models.CLEM.Activities
                 // this will be updated to the corrected milk available in the calculate energy section.
                 ind.MilkIntake = Math.Min(ind.MilkPotentialIntake, ind.MothersMilkProductionAvailable);
 
-                // if milk supply low, calf will subsitute forage up to a specified % of bodyweight (R_C60)
+                // if milk supply low, suckling will subsitute forage up to a specified % of bodyweight (R_C60)
                 if (ind.MilkIntake < ind.Weight * ind.BreedParams.MilkLWTFodderSubstitutionProportion)
                     potentialIntake = Math.Max(0.0, ind.Weight * ind.BreedParams.MaxJuvenileIntake - ind.MilkIntake * ind.BreedParams.ProportionalDiscountDueToMilk);
 
@@ -458,7 +458,7 @@ namespace Models.CLEM.Activities
                     kgl = ((ind.MilkIntake * 0.7) + (intakeDaily * kg)) / (ind.MilkIntake + intakeDaily);
                 }
                 double energyMilkConsumed = ind.MilkIntake * 3.2;
-                // limit calf intake of milk per day
+                // limit suckling intake of milk per day
                 energyMilkConsumed = Math.Min(ind.BreedParams.MilkIntakeMaximum * 3.2, energyMilkConsumed);
 
                 energyMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / kml) * Math.Exp(-ind.BreedParams.EMaintExponent * (((ind.Age == 0) ? 0.1 : ind.Age)));
@@ -635,20 +635,20 @@ namespace Models.CLEM.Activities
 
             // TODO: separate foster from real mother for genetics
             // check for death of mother with sucklings and try foster sucklings
-            IEnumerable<RuminantFemale> mothersWithCalf = died.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Any());
+            IEnumerable<RuminantFemale> mothersWithSuckling = died.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Any());
             List<RuminantFemale> wetMothersAvailable = died.OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
             int wetMothersAssigned = 0;
             if (wetMothersAvailable.Any())
             {
-                if(mothersWithCalf.Any())
+                if(mothersWithSuckling.Any())
                 {
-                    foreach (var deadMother in mothersWithCalf)
+                    foreach (var deadMother in mothersWithSuckling)
                     {
-                        foreach (var calf in deadMother.SucklingOffspringList)
+                        foreach (var suckling in deadMother.SucklingOffspringList)
                         {
                             if(wetMothersAssigned < wetMothersAvailable.Count)
                             {
-                                calf.Mother = wetMothersAvailable[wetMothersAssigned];
+                                suckling.Mother = wetMothersAvailable[wetMothersAssigned];
                                 wetMothersAssigned++;
                             }
                             else

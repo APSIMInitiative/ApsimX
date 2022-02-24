@@ -323,12 +323,16 @@ namespace UserInterface.Presenters
                             int catIndex = 0;
                             foreach (var catLabel in catAtt.Category.Split(':'))
                             {
-                                categories.AddCategoryToTree(catLabel);
-                                //add the subcategory name to the list of subcategories for the category
-                                CategoryItem catItem = categories.FindCategoryInTree(catLabel);
-                                var subLabels = catAtt.Subcategory.Split(':');
-                                if(subLabels.Length >= catIndex+1)
-                                    catItem.AddSubcategoryName(subLabels[catIndex]);
+                                if (catLabel != "*")
+                                {
+                                    categories.AddCategoryToTree(catLabel);
+                                    //add the subcategory name to the list of subcategories for the category
+                                    CategoryItem catItem = categories.FindCategoryInTree(catLabel);
+                                    var subLabels = catAtt.Subcategory.Split(':');
+                                    if (subLabels.Length >= catIndex + 1)
+                                        if (subLabels[catIndex] != "*")
+                                            catItem.AddSubcategoryName(subLabels[catIndex]);
+                                }
                                 catIndex++;
                             }
                             //categories.AddCategoryToTree(catAtt.Category);
@@ -390,14 +394,14 @@ namespace UserInterface.Presenters
                 if (Attribute.IsDefined(property, typeof(CategoryAttribute), false))
                 {
                     CategoryAttribute catAtt = (CategoryAttribute)Attribute.GetCustomAttribute(property, typeof(CategoryAttribute));
-                    if (Array.Exists(catAtt.Category.Split(':'), element => element == this.selectedCategory))
+                    if (catAtt.Category.StartsWith("*") || Array.Exists(catAtt.Category.Split(':'), element => element == this.selectedCategory))
                     {
                         if ((selectedSubCategory ?? "") != "") // a sub category has been selected
                         {
                             // The catAtt.Subcategory is by default given a value of 
                             // "Unspecified" if the Subcategory is not assigned in the Category Attribute.
                             // so this line below will also handle "Unspecified" subcategories.
-                            return (Array.Exists(catAtt.Subcategory.Split(':'), element => element == selectedSubCategory));
+                            return (catAtt.Subcategory.StartsWith("*") || Array.Exists(catAtt.Subcategory.Split(':'), element => element == selectedSubCategory));
                         }
                     }
                     else

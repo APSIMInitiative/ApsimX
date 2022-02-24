@@ -1,8 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
   "ExplorerWidth": 300,
-  "Version": 141,
-  "ApsimVersion": "0.0.0.0",
+  "Version": 148,
   "Name": "Simulations",
   "Children": [
     {
@@ -11,7 +10,6 @@
       "CustomFileName": null,
       "Name": "DataStore",
       "Children": [],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     },
@@ -26,7 +24,6 @@
           "Text": "This is a simple simulation demonstrating how an individual animal is fed from an animal store and the resources and activities required to feed and grow the animal. \n\n## Resources\nRuminant Herd defines the individual animals at the start of the simulation, this holds the three models that define the ruminant herd. Firstly, 'ruminant type' determines the ruminant parameters for the breed being used in the simulation. Under this, 'ruminant initial cohorts' and 'ruminant type cohort' define the herd with inputs including gender, age, number of individuals and weight. \n\nIn this case, animals are being fed from an 'animal food store', which is similar to having a barn or shed full of fodder on the farm. A 'food store type' is added for each different type of fodder, in this case it is just rice straw. The fodder's dry matter digestability, nitrogen content and the starting amount is defined by the user. In this example, if their is insufficient fodder then a 'transmutation' is used to purchase more rice straw (i.e. the transmutation converts money to fodder). In this transmutation, 10,000kg of fodder is purchased for $100 every time fodder levels are low.\n\nIn this example, finances are required to purchase fodder. Under finances, the user can define the currency, this is a reference for the user and has no impact on the simulation. Under finance type, the bank balance and banking rules are defined. \n\n## Activities\n'Ruminant activity feed' defines how the livestock are fed including the fodder source and the feeding style used, in this case fodder was supplied as a proportion of potential intake. The 'ruminant feed group' then defined that the animal was fed 100% of their potential intake. \n\nThe only other essential activity is 'rumninant activity grow' which performs the growth and aging of the ruminants and defines the gross energy content of the forage. \n\nThere are also two ruminant activities that generate reports called 'summarise ruminant herd' and 'report ruminant herd'. The outputs of these activities can be read in the reports and graphs section in the 'herd summary' and 'herd report' reports. \n \n## Reports & Graphs\nReports & graphs are stored in a 'CLEM Folder' to make it easier to select CLEM (rather than APSIM) functions. In this case, three blank reports are used to write herd reports, while pre-formed resource ledgers, balances and activity reports are also used. \n",
           "Name": "Individual Animal",
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -36,18 +33,14 @@
           "End": "2009-12-31T00:00:00",
           "Name": "clock",
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Summary, Models",
-          "CaptureErrors": true,
-          "CaptureWarnings": true,
-          "CaptureSummaryText": true,
+          "Verbosity": 100,
           "Name": "summaryfile",
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -57,7 +50,6 @@
           "Iteration": 0,
           "Name": "RandomNumbers",
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -77,13 +69,17 @@
           "Children": [
             {
               "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
+              "Notes": null,
               "SelectedTab": null,
+              "CurrentAncestorList": [],
               "Name": "Resources",
               "Children": [
                 {
                   "$type": "Models.CLEM.Resources.RuminantHerd, Models",
                   "TransactionStyle": 0,
+                  "Notes": null,
                   "SelectedTab": null,
+                  "CurrentAncestorList": [],
                   "Name": "Ruminants",
                   "Children": [
                     {
@@ -158,13 +154,17 @@
                       "MaximumMaleMatingsPerDay": 30.0,
                       "PrenatalMortality": 0.079,
                       "MethaneProductionCoefficient": 35.16,
+                      "Notes": null,
                       "SelectedTab": null,
+                      "CurrentAncestorList": [],
                       "Name": "Bos indicus",
                       "Children": [
                         {
                           "$type": "Models.CLEM.Resources.RuminantInitialCohorts, Models",
                           "WeightWarningOccurred": false,
+                          "Notes": null,
                           "SelectedTab": null,
+                          "CurrentAncestorList": [],
                           "Name": "Initial cohorts",
                           "Children": [
                             {
@@ -176,31 +176,31 @@
                               "WeightSD": 0.0,
                               "Suckling": false,
                               "Sire": false,
+                              "Notes": null,
                               "SelectedTab": null,
+                              "CurrentAncestorList": [],
                               "Name": "WeanerF",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.CLEM.Resources.AnimalFoodStore, Models",
+                  "Notes": null,
                   "SelectedTab": null,
+                  "CurrentAncestorList": [],
                   "Name": "AnimalFoodStore",
                   "Children": [
                     {
@@ -209,7 +209,9 @@
                       "DMD": 45.0,
                       "Nitrogen": 0.75,
                       "StartingAmount": 10000.0,
+                      "Notes": null,
                       "SelectedTab": null,
+                      "CurrentAncestorList": [],
                       "Name": "RiceStraw",
                       "Children": [
                         {
@@ -218,7 +220,9 @@
                           "TransmutationPacketSize": 10000.0,
                           "UseWholePackets": false,
                           "TransactionCategory": "Transmutation",
+                          "Notes": null,
                           "SelectedTab": null,
+                          "CurrentAncestorList": [],
                           "Name": "Purchase",
                           "Children": [
                             {
@@ -228,32 +232,35 @@
                               "TransmuteStyle": 0,
                               "ResourceGroup": null,
                               "FinanceTypeForTransactionsName": "No transactions",
+                              "Notes": null,
                               "SelectedTab": null,
+                              "CurrentAncestorList": [],
                               "Name": "Money",
                               "Children": [],
-                              "IncludeInDocumentation": true,
                               "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.CLEM.Resources.Finance, Models",
                   "CurrencyName": "Dollars",
+                  "FirstMonthOfFinancialYear": 7,
+                  "Notes": null,
                   "SelectedTab": null,
+                  "CurrentAncestorList": [
+                    "Finance"
+                  ],
                   "Name": "Finances",
                   "Children": [
                     {
@@ -263,33 +270,39 @@
                       "WithdrawalLimit": 0.0,
                       "InterestRateCharged": 7.5,
                       "InterestRatePaid": 2.0,
+                      "Notes": null,
                       "SelectedTab": null,
+                      "CurrentAncestorList": [
+                        "Finance",
+                        "FinanceType"
+                      ],
                       "Name": "General account",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
+              "Notes": null,
               "SelectedTab": null,
+              "CurrentAncestorList": [],
               "Name": "Activities",
               "Children": [
                 {
                   "$type": "Models.CLEM.Activities.ActivityFolder, Models",
                   "TransactionCategory": null,
                   "OnPartialResourcesAvailableAction": 0,
+                  "Notes": null,
                   "SelectedTab": null,
+                  "CurrentAncestorList": [],
                   "Name": "Manage herd",
                   "Children": [
                     {
@@ -300,21 +313,23 @@
                       "StopFeedingWhenSatisfied": false,
                       "TransactionCategory": "Livestock.Feed",
                       "OnPartialResourcesAvailableAction": 2,
+                      "Notes": null,
                       "SelectedTab": null,
+                      "CurrentAncestorList": [],
                       "Name": "Feed rice straw",
                       "Children": [
                         {
                           "$type": "Models.CLEM.Groupings.RuminantFeedGroup, Models",
                           "Value": 1.0,
+                          "Notes": null,
                           "SelectedTab": null,
+                          "CurrentAncestorList": [],
                           "Name": "Feed all",
                           "Children": [],
-                          "IncludeInDocumentation": true,
                           "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -324,15 +339,15 @@
                       "MethaneStoreName": "Use store named Methane if present",
                       "OnPartialResourcesAvailableAction": 0,
                       "TransactionCategory": "Livestock.Manage",
+                      "Notes": null,
                       "SelectedTab": null,
+                      "CurrentAncestorList": [],
                       "Name": "Grow all ruminants",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -340,42 +355,45 @@
                   "$type": "Models.CLEM.SummariseRuminantHerd, Models",
                   "GroupStyle": 0,
                   "HerdFilters": null,
+                  "Notes": null,
                   "SelectedTab": null,
+                  "CurrentAncestorList": [],
                   "Name": "SummariseHerd",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.CLEM.Reporting.ReportRuminantHerd, Models",
                   "ReportAtStart": true,
+                  "Notes": null,
                   "SelectedTab": null,
+                  "CurrentAncestorList": [],
                   "Name": "HerdReport",
                   "Children": [
                     {
                       "$type": "Models.CLEM.Groupings.RuminantGroup, Models",
-                      "Reason": 0,
+                      "Identifier": "",
+                      "Notes": null,
                       "SelectedTab": null,
+                      "CurrentAncestorList": [],
                       "Name": "RuminantGroup",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.CLEM.CLEMFolder, Models",
-              "ShowPageOfGraphs": true,
+              "ShowInDocs": false,
+              "GraphsPerPage": 6,
               "Name": "Reports and Graphs",
               "Children": [
                 {
@@ -400,7 +418,6 @@
                   "GroupByVariableName": null,
                   "Name": "HerdSummary",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -417,17 +434,18 @@
                   "GroupByVariableName": null,
                   "Name": "HerdReport",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
-                  "ReportStyle": 0,
                   "ResourceGroupsToReport": "Finances",
+                  "ReportStyle": 0,
                   "ReportLossesAsNegative": false,
                   "IncludePrice": false,
+                  "IncludeFinancialYear": false,
                   "IncludeConversions": false,
+                  "SelectedTab": null,
                   "VariableNames": [
                     "Finances"
                   ],
@@ -435,23 +453,23 @@
                   "GroupByVariableName": null,
                   "Name": "FinancesLedger",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
-                  "ReportStyle": 0,
                   "ResourceGroupsToReport": "Ruminants",
+                  "ReportStyle": 0,
                   "ReportLossesAsNegative": true,
                   "IncludePrice": false,
+                  "IncludeFinancialYear": false,
                   "IncludeConversions": false,
+                  "SelectedTab": null,
                   "VariableNames": null,
                   "EventNames": null,
                   "GroupByVariableName": null,
                   "Name": "HerdLedger",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -480,7 +498,6 @@
                   "GroupByVariableName": null,
                   "Name": "ReportResourceBalances",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -496,7 +513,6 @@
                   "GroupByVariableName": null,
                   "Name": "ReportActivitiesPerformed",
                   "Children": [],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -505,31 +521,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": "Year",
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": "Rice straw (kg)",
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "AnimalFoodStoreBalance",
@@ -559,12 +573,10 @@
                       "Filter": null,
                       "Name": "RiceStrawBalance",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -573,31 +585,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": "Year",
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": "Liveweight (kg)",
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "Liveweight_Individual",
@@ -627,12 +637,10 @@
                       "Filter": null,
                       "Name": "Individual",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -641,31 +649,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": "Year",
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": "Weight gain (kg/month)",
+                      "Position": 0,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": 2.0,
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": 2.0
                     }
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "WeightGain_Individual",
@@ -695,12 +701,10 @@
                       "Filter": null,
                       "Name": "Individual",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -709,31 +713,29 @@
                   "Caption": null,
                   "Axis": [
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 3,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": "Year",
+                      "Position": 3,
                       "Inverted": false,
-                      "Minimum": "NaN",
-                      "Maximum": "NaN",
-                      "Interval": "NaN",
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
                     },
                     {
-                      "$type": "Models.Axis, Models",
-                      "Type": 0,
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": "Bank balance ($)",
+                      "Position": 0,
                       "Inverted": false,
+                      "CrossesAtZero": false,
                       "Minimum": 0.0,
-                      "Maximum": "NaN",
-                      "Interval": 1000.0,
-                      "DateTimeAxis": false,
-                      "CrossesAtZero": false
+                      "Maximum": null,
+                      "Interval": 1000.0
                     }
                   ],
                   "LegendPosition": 1,
                   "LegendOrientation": 0,
-                  "AnnotationPosition": 0,
+                  "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
                   "Name": "BankBalance",
@@ -763,32 +765,26 @@
                       "Filter": null,
                       "Name": "BankBalance",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }
