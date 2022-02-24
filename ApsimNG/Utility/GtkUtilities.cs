@@ -21,29 +21,33 @@ namespace Utility
 
         /// <summary>
         /// Detach all event handlers defined in ApsimNG from the widget.
+        /// This procedure uses reflection to gain access to non-public properties and fields.
+        /// The procedure is not entirely safe, in that it makes assumptions about the internal handling of event
+        /// signalling in Gtk#. This may break in future versions if the Gtk# internals change. This sort of
+        /// breakage has occurred with an earlier version of this routine.
+        /// A "breakage" probably won't be immediately apparent, but may lead to memory leaks, as the main
+        /// reason for having this routine is to remove references that can prevent garbage collection.
         /// </summary>
         /// <param name="widget">The widget.</param>
         public static void DetachHandlers(this Widget widget)
         {
-            PropertyInfo[] signalProperties = new PropertyInfo[]
+            PropertyInfo signals = typeof(GLib.Object).GetProperty("Signals", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            FieldInfo afterHandler = typeof(GLib.Signal).GetField("after_handler", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            FieldInfo beforeHandler = typeof(GLib.Signal).GetField("before_handler", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            if (signals != null && afterHandler != null && beforeHandler != null)
             {
-                widget.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance),
-                widget.GetType().GetProperty("BeforeSignals", BindingFlags.NonPublic | BindingFlags.Instance),
-            };
-            foreach (PropertyInfo pi in signalProperties)
-            {
-                if (pi != null)
+                Dictionary<string, GLib.Signal> widgetSignals = (Dictionary<string, GLib.Signal>) signals.GetValue(widget);
+                foreach (KeyValuePair<string, GLib.Signal> signal in widgetSignals)
                 {
-                    System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(widget);
-                    if (handlers == null)
-                        return;
-                    
-                    foreach (string eventName in handlers.Keys)
+                    if (signal.Key != "destroy")
                     {
-                        Delegate eventDelegate = (Delegate)handlers[eventName];
-                        foreach (Delegate handler in eventDelegate.GetInvocationList())
-                            if (handler.Target != null && handler.Target.GetType().Assembly == Assembly.GetExecutingAssembly())
-                                Delegate.Remove(eventDelegate, handler);
+                        GLib.Signal signalVal = signal.Value;
+                        Delegate afterDel = (Delegate)afterHandler.GetValue(signalVal);
+                        if (afterDel != null)
+                            widget.RemoveSignalHandler(signal.Key, afterDel);
+                        Delegate beforeDel = (Delegate)beforeHandler.GetValue(signalVal);
+                        if (beforeDel != null)
+                            widget.RemoveSignalHandler(signal.Key, beforeDel);
                     }
                 }
             }
