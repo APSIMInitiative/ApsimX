@@ -94,7 +94,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "C:\\aaUnderVC\\ApsimNextGen\\Examples\\WeatherFiles\\lincoln.met",
+                  "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "Children": [],
@@ -2316,7 +2316,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "C:\\aaUnderVC\\ApsimNextGen\\Examples\\WeatherFiles\\lincoln.met",
+                  "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "Children": [],
@@ -4079,7 +4079,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "C:\\aaUnderVC\\ApsimNextGen\\Examples\\WeatherFiles\\lincoln.met",
+                  "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "Children": [],
@@ -5945,7 +5945,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "C:\\aaUnderVC\\ApsimNextGen\\Examples\\WeatherFiles\\lincoln.met",
+                  "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "Children": [],
@@ -7942,7 +7942,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "C:\\aaUnderVC\\ApsimNextGen\\Examples\\WeatherFiles\\lincoln.met",
+                  "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "Children": [],
@@ -9939,7 +9939,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "C:\\aaUnderVC\\ApsimNextGen\\Examples\\WeatherFiles\\lincoln.met",
+                  "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "Children": [],
@@ -11911,7 +11911,7 @@
         {
           "$type": "Models.Climate.Weather, Models",
           "ConstantsFile": null,
-          "FileName": "C:\\aaUnderVC\\ApsimNextGen\\Examples\\WeatherFiles\\lincoln.met",
+          "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "Children": [],
