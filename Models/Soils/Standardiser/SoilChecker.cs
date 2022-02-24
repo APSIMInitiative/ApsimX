@@ -128,7 +128,7 @@
                             message.AppendLine($"OC value missing in layer {layerNumber}");
                         //else if (MathUtilities.LessThan(initial.OC[layer], 0.01, 3))
                         //    message.AppendLine($"OC value of {initial.OC[layer].ToString("f3")} in layer {layerNumber} is less than 0.01");
-                        //VOS commented this out to allow testing. It shoudl really be a warning message
+                        //VOS commented this out to allow testing. It should really be a warning message
 
                         if (initial.PH[layer] == MathUtilities.MissingValue || double.IsNaN(initial.PH[layer]))
                             message.AppendLine($"PH value missing in layer {layerNumber}");
