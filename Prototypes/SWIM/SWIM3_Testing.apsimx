@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 285,
   "Version": 148,
   "Name": "Simulations",
   "Children": [
@@ -11905,7 +11905,7 @@
           "Text": "On hold until the leaching variables are exposed",
           "Name": "Memo",
           "Children": [],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -11915,7 +11915,7 @@
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "Children": [],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -11924,7 +11924,7 @@
           "End": "2000-01-31T00:00:00",
           "Name": "Clock",
           "Children": [],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -11932,14 +11932,14 @@
           "Verbosity": 100,
           "Name": "summaryfile",
           "Children": [],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
           "Name": "SoilArbitrator",
           "Children": [],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -11954,7 +11954,7 @@
           "ReferenceHeight": 2.0,
           "Name": "MicroClimate",
           "Children": [],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -12089,7 +12089,7 @@
           ],
           "Name": "Forages",
           "Children": [],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         },
         {
@@ -12102,10 +12102,10 @@
           "Children": [
             {
               "$type": "Models.Manager, Models",
-              "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.Surface;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Linq;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] ISummary summary;\n        [Link] IWeather weather;\n        [Link] Irrigation irrigation;\n        [Link] private SurfaceOrganicMatter surfaceOM;\n        [Link] private ISoilWater soil;  // and I think this will give solutes as well\n        [Link] private Nutrient nutrient;\n        [Link] private Fertiliser fertiliser;\n\n  \n        // add (no3+nh4) uptake as N uptake to IPlant\n\n        public double NBalanceCumulative  { get; set; }\n        public double NBalanceToday  { get; set; }\n\n        public double SoilNAtInitialisation  { get; set; }\n        public double SoilNYesterday  { get; set; }\n\t\tpublic double SoilNNow  { get; set; }\n\n\t\tpublic double PlantNUptake { get; set; }\n\n        public double NAddedToday  { get; set; }\n        public double NRemovedToday  { get; set; }\n        public double NAddedCumulative  { get; set; }\n        public double NRemovedCumulative  { get; set; }\n\n\n\n        [EventSubscribe(\"DoDailyInitialisation\")] private void DoDailyInitialisation(object sender, EventArgs e)\n        {\n        \tif (clock.Today == clock.StartDate) \n\t        \tSoilNAtInitialisation = surfaceOM.N + nutrient.TotalN.Sum();\n\t\t}\n\n        [EventSubscribe(\"DoReportCalculations\")] private void DoReportCalculations(object sender, EventArgs e)\n        {\n        \tSoilNYesterday = SoilNNow; // capture yesterday's value before overwriting\n        \tSoilNNow = surfaceOM.N + nutrient.TotalN.Sum(); \n\n\t\t\t// fertiliser only as this is a bar soil simulation\n        \tNAddedToday = fertiliser.NitrogenApplied;\n        \tNAddedCumulative+= NAddedToday;\n        \t\n        \t// leached, denitrified, volatilised (but here zero as no component yet), no plant uptake\n        \t//NRemovedToday = soil.LeachUrea + soil.LeachNH4 + soil.LeachNO3;\n        \tNRemovedCumulative += NRemovedToday;\n\n        \tNBalanceToday = NAddedToday - NRemovedToday - (SoilNNow - SoilNYesterday);\n        \tNBalanceCumulative = NAddedCumulative - NRemovedCumulative - (SoilNNow - SoilNAtInitialisation);\n        \t// need to add a warning value and a crash value and make a crash\n\t\t}\n    }\n}\n",
+              "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.Surface;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Linq;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] ISummary summary;\n        [Link] IWeather weather;\n        [Link] Irrigation irrigation;\n        [Link] private SurfaceOrganicMatter surfaceOM;\n        [Link] private ISoilWater soil;  // and I think this will give solutes as well\n        [Link] private Nutrient nutrient;\n        [Link] private Fertiliser fertiliser;\n\n  \n        // add (no3+nh4) uptake as N uptake to IPlant\n\n        public double NBalanceCumulative  { get; set; }\n        public double NBalanceToday  { get; set; }\n\n        public double SoilNAtInitialisation  { get; set; }\n        public double SoilNYesterday  { get; set; }\n\t\tpublic double SoilNNow  { get; set; }\n\n\t\tpublic double PlantNUptake { get; set; }\n\n        public double NAddedToday  { get; set; }\n        public double NRemovedToday  { get; set; }\n        public double NAddedCumulative  { get; set; }\n        public double NRemovedCumulative  { get; set; }\n\n\n\n        [EventSubscribe(\"DoDailyInitialisation\")] private void DoDailyInitialisation(object sender, EventArgs e)\n        {\n        \tif (clock.Today == clock.StartDate) \n\t        {\n\t        \tSoilNAtInitialisation = surfaceOM.N + nutrient.TotalN.Sum();\n\t        \tSoilNYesterday = SoilNAtInitialisation;\n\t        \tSoilNNow = SoilNAtInitialisation;\n\t        }\n\t\t}\n\n        [EventSubscribe(\"DoReportCalculations\")] private void DoReportCalculations(object sender, EventArgs e)\n        {\n        \tSoilNYesterday = SoilNNow; // capture yesterday's value before overwriting\n        \tSoilNNow = surfaceOM.N + nutrient.TotalN.Sum(); \n\n\t\t\t// fertiliser only as this is a bar soil simulation\n        \tNAddedToday = fertiliser.NitrogenApplied;\n        \tNAddedCumulative+= NAddedToday;\n        \t\n        \t// leached, denitrified, volatilised (but here zero as no component yet), no plant uptake\n        \tNRemovedToday = soil.LeachUrea + soil.LeachNH4 + soil.LeachNO3;  \n   \t    \tfor (int i = 0; i < nutrient.DenitrifiedN.Length; i++)\n       \t\t\tNRemovedToday += nutrient.DenitrifiedN[i];\n        \tNRemovedCumulative += NRemovedToday;\n\n        \tNBalanceToday = NAddedToday - NRemovedToday - (SoilNNow - SoilNYesterday);\n        \tNBalanceCumulative = NAddedCumulative - NRemovedCumulative - (SoilNNow - SoilNAtInitialisation);\n        \t// need to add a warning value and a crash value and make a crash\n\t\t}\n    }\n}\n",
               "Parameters": [],
               "Name": "SoilNitrogenBalance",
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -12122,7 +12122,7 @@
                 }
               ],
               "Name": "SWIM3_SetLowerBC",
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -12167,7 +12167,7 @@
                 }
               ],
               "Name": "AutomaticIrrigation",
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -12180,7 +12180,7 @@
               "InitialCNR": 17.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -12210,7 +12210,7 @@
                   "Text": "VS - added kF and nF from HydCurves for exco and fip. Also added 5 (units unclear) for D0\n",
                   "Name": "Notes",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -12384,14 +12384,14 @@
                   "ParticleSizeClayMetadata": null,
                   "Name": "Physical",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                   "ResourceName": "Nutrient",
                   "Name": "Nutrient",
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -12408,14 +12408,14 @@
                     350.0
                   ],
                   "Carbon": [
-                    8.2,
-                    5.5,
-                    3.3,
-                    1.7,
-                    1.7,
-                    1.2,
-                    0.7,
-                    0.1
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01,
+                    0.01
                   ],
                   "SoilCNRatio": [
                     10.649,
@@ -12448,20 +12448,20 @@
                     0.986
                   ],
                   "FOM": [
-                    26.67651879646381,
-                    21.4084077983616,
-                    16.180126544455657,
-                    10.011993583030847,
-                    6.711239999485762,
-                    4.49867870541152,
-                    3.0155545169109996,
-                    1.4974800558798063
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0,
+                    0.0
                   ],
                   "CarbonMetadata": null,
                   "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -12535,7 +12535,7 @@
                   ],
                   "Name": "Chemical",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -12619,7 +12619,7 @@
                   "PHUnits": 0,
                   "Name": "Initial values",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -12694,7 +12694,7 @@
                       ],
                       "Name": "Urea",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -12743,7 +12743,7 @@
                       ],
                       "Name": "NH4",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -12792,7 +12792,7 @@
                       ],
                       "Name": "NO3",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -12841,7 +12841,7 @@
                       ],
                       "Name": "CL",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -12890,7 +12890,7 @@
                       ],
                       "Name": "PlantAvailableNH4",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -12939,7 +12939,7 @@
                       ],
                       "Name": "PlantAvailableNO3",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -12988,7 +12988,7 @@
                       ],
                       "Name": "LabileP",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -13037,18 +13037,18 @@
                       ],
                       "Name": "UnavailableP",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Nutrients.Solute, Models",
                   "Name": "CL",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -13087,40 +13087,114 @@
                   ],
                   "Name": "LayerStructure",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                   "Name": "SoilTemperature",
                   "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Organic, Models",
+                  "FOMCNRatio": 40.0,
+                  "Thickness": [
+                    60.0,
+                    110.0,
+                    140.0,
+                    240.0,
+                    200.0,
+                    200.0,
+                    200.0,
+                    350.0
+                  ],
+                  "Carbon": [
+                    8.2,
+                    5.5,
+                    3.3,
+                    1.7,
+                    1.7,
+                    1.2,
+                    0.7,
+                    0.1
+                  ],
+                  "SoilCNRatio": [
+                    10.649,
+                    10.649,
+                    10.649,
+                    10.649,
+                    10.649,
+                    10.649,
+                    10.649,
+                    10.649
+                  ],
+                  "FBiom": [
+                    0.08,
+                    0.072,
+                    0.026,
+                    0.008,
+                    0.008,
+                    0.008,
+                    0.008,
+                    0.008
+                  ],
+                  "FInert": [
+                    0.597,
+                    0.642,
+                    0.777,
+                    0.896,
+                    0.957,
+                    0.975,
+                    0.992,
+                    0.986
+                  ],
+                  "FOM": [
+                    26.67651879646381,
+                    21.4084077983616,
+                    16.180126544455657,
+                    10.011993583030847,
+                    6.711239999485762,
+                    4.49867870541152,
+                    3.0155545169109996,
+                    1.4974800558798063
+                  ],
+                  "CarbonMetadata": null,
+                  "FOMMetadata": null,
+                  "Name": "Organic1",
+                  "Children": [],
                   "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Irrigation, Models",
               "Name": "Irrigation",
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Fertiliser, Models",
               "ResourceName": "Fertiliser",
               "Name": "Fertiliser",
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Report, Models",
               "VariableNames": [
                 "[Clock].Today as Date",
-                "",
-                "sum([Soil].Nutrient.TotalN) as TotalN"
+                "sum([Soil].Nutrient.TotalN) as TotalN",
+                "[SoilNitrogenBalance].Script.NBalanceToday as NBalanceToday",
+                "[SoilNitrogenBalance].Script.NBalanceCumulative as NBalanceCumulative",
+                "sum([Nutrient].Inert.N) + sum([Nutrient].Organic.N) as OrganicN",
+                "sum([Nutrient].MineralN) as MineralN",
+                "[SoilNitrogenBalance].Script.SoilNNow"
               ],
               "EventNames": [
                 "[Clock].EndOfDay"
@@ -13128,15 +13202,153 @@
               "GroupByVariableName": null,
               "Name": "Report",
               "Children": [],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": false,
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": false,
+          "GraphsPerPage": 6,
+          "Name": "Plots",
+          "Children": [
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Daily NBalance",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -2793984,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Date",
+                  "YFieldName": "NBalanceToday",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Daily NBal",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Cumulative NBalance",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -2793984,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Date",
+                  "YFieldName": "NBalanceCumulative",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Cumulative NBal",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "Enabled": false,
+      "Enabled": true,
       "ReadOnly": false
     }
   ],

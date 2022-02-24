@@ -385,6 +385,19 @@ namespace Models.Soils.Nutrients
                 foreach (NutrientPool P in Pools)
                     for (int i = 0; i < numLayers; i++)
                         values[i] += P.N[i];
+
+                double[] nh4 = NH4.kgha;
+                double[] no3 = NO3.kgha;
+                values = MathUtilities.Add(values, nh4);
+                values = MathUtilities.Add(values, no3);
+                if (Urea != null)
+                {
+                    double[] urea = Urea.kgha;
+                    values = MathUtilities.Add(values, urea);
+                }
+
+
+
                 return values;
             }
         }
