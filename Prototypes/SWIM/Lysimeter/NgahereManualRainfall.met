@@ -3,7 +3,7 @@
 
 allow_sparse_data = true
 
-          xdate           year          month            day       siterain
+          xdate           year          month            day           Rain
    (dd/mm/yyyy)             ()             ()             ()           (mm)
       1/01/2011           2011              1              1              0
       2/01/2011           2011              1              2              0
