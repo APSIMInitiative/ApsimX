@@ -69,7 +69,7 @@
                   "Values": null,
                   "Name": "Gradient",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -81,24 +81,24 @@
                   "Values": null,
                   "Name": "Seepage",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
                     "[SWIM3_SetLowerBC].Script.LowerBCType=potential",
-                    "[SWIM3_SetLowerBC].Script.LowerBCValue=-500"
+                    "[SWIM3_SetLowerBC].Script.LowerBCValue=-1000"
                   ],
                   "Paths": null,
                   "Values": null,
                   "Name": "Potential",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -114,7 +114,7 @@
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -123,7 +123,7 @@
                   "End": "2005-01-31T00:00:00",
                   "Name": "Clock",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -131,14 +131,14 @@
                   "Verbosity": 100,
                   "Name": "summaryfile",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
                   "Name": "SoilArbitrator",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -153,7 +153,7 @@
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -288,7 +288,7 @@
                   ],
                   "Name": "Forages",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -304,7 +304,7 @@
                       "Code": "",
                       "Parameters": [],
                       "Name": "CalculateRollingWaterBalance",
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -312,7 +312,7 @@
                       "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Linq;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] ISummary summary;\n        [Link] IWeather weather;\n        [Link] Irrigation irrigation;\n        [Link] private ISoilWater waterBalance;  // and I think this will give solutes as well\n        [Link] private IPlant[] plants;\n        [Link] private Nutrient nutrient;\n\n  \n        // add (no3+nh4) uptake as N uptake to IPlant\n\n        public double NBalanceCumulative  { get; set; }\n        public double NBalanceToday  { get; set; }\n\n        public double SoilNAtInitialisation  { get; set; }\n        public double SoilNYesterday  { get; set; }\n\t\tpublic double SoilNNow  { get; set; }\n\n\t\tpublic double PlantNUptake { get; set; }\n\n        public double NAddedToday  { get; set; }\n        public double NRemovedToday  { get; set; }\n        public double NAddedCumulative  { get; set; }\n        public double NRemovedCumulative  { get; set; }\n\n\n\n        [EventSubscribe(\"DoDailyInitialisation\")]\n        private void DoDailyInitialisation(object sender, EventArgs e)\n        {\n        \tif (clock.Today == clock.StartDate) \n        \t{\n        \t\t// capture the N in and on the soil as a starting point\n        \t\t// doing this here as need the models to have intialised first\n\t        \tSoilNAtInitialisation = 0.0; // leave this here as a reminder that once surface solutes are enabled will have to add here\n\t        \t//SoilNAtInitialisation += nutrient.Urea.kgha.Sum() + nutrient.NH4.kgha.Sum() + nutrient.NO3.kgha.Sum() + nutrient.TotalN.Urea.kgha.Sum() ;// + nutrient.\n    \t    \t//for (int i = 0; i < waterBalance.SWmm.Length; i++)\n        \t\t\t//SoilNAtInitialisation += waterBalance...SWmm[i];\n\n        \t\t//SoilWaterYesterday = SoilWaterAtInitialisation;\t\t\n        \t\t//WaterAddedCumulative = 0.0;\n        \t\t//WaterRemovedCumulative = 0.0;\n        \t\t//SoilWaterNow = 0.0;\n        \t}\n        \telse\n        \t{\n        \t\t//SoilWaterYesterday = SoilWaterNow;\t\t// SoilWaterNow holds the value calculated at reporting yesterday\n        \t\t//WaterAddedToday = 0.0;\n        \t\t//WaterRemovedToday = 0.0;\n        \t}\n\t\t}\n\n        //[EventSubscribe(\"DoReportCalculations\")]\n        private void DoReportCalculations(object sender, EventArgs e)\n        {\n        \t/* All the WaterBalance variables should be zero. A positive value is a generation of water.\n        \tSoilWaterNow = waterBalance.Pond;\n        \tfor (int i = 0; i < waterBalance.SWmm.Length; i++)\n        \t\tSoilWaterNow += waterBalance.SWmm[i]; // so all the water stored in or on the soil\n\n        \tWaterAddedToday = weather.Rain + irrigation.IrrigationApplied;   // Can there be runon? Probably not but this will throw an error if that ever happens\n        \tWaterAddedCumulative+= WaterAddedToday;\n\n        \tWaterRemovedToday = waterBalance.Drainage + waterBalance.Es + waterBalance.Runoff;\n        \tPlantWaterUptake = 0.0;\n        \tforeach (var plant in plants)\n        \t\tPlantWaterUptake += plant.WaterUptake.Sum();\n\n        \tWaterRemovedToday += PlantWaterUptake;\n        \t// Need to add subsurface drainage here\n\n        \tWaterRemovedCumulative += WaterRemovedToday;\n\n        \tWaterBalanceToday = WaterAddedToday - WaterRemovedToday - (SoilWaterNow - SoilWaterYesterday);\n        \tWaterBalanceCumulative = WaterAddedCumulative - WaterRemovedCumulative - (SoilWaterNow - SoilWaterAtInitialisation);\n        \t// need to add a warning value and a crash value and make a crash\n\t\t*/}\n    }\n}\n",
                       "Parameters": [],
                       "Name": "CalculateRollingSoilNitrogenBalance",
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -329,7 +329,7 @@
                         }
                       ],
                       "Name": "SWIM3_SetLowerBC",
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -374,7 +374,7 @@
                         }
                       ],
                       "Name": "AutomaticIrrigation",
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -520,7 +520,7 @@
                               "XFMetadata": null,
                               "Name": "AgPRyegrassSoil",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -551,18 +551,18 @@
                               "XFMetadata": null,
                               "Name": "AgPWhiteCloverSoil",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Soils.Nutrients.Nutrient, Models",
                           "ResourceName": "Nutrient",
                           "Name": "Nutrient",
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -614,7 +614,7 @@
                           "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -664,7 +664,7 @@
                           "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -751,7 +751,7 @@
                           "PHUnits": 0,
                           "Name": "Initial values",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -814,7 +814,7 @@
                               ],
                               "Name": "Urea",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -851,7 +851,7 @@
                               ],
                               "Name": "NH4",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -888,7 +888,7 @@
                               ],
                               "Name": "NO3",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -925,7 +925,7 @@
                               ],
                               "Name": "CL",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -962,7 +962,7 @@
                               ],
                               "Name": "PlantAvailableNH4",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -999,7 +999,7 @@
                               ],
                               "Name": "PlantAvailableNO3",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1036,7 +1036,7 @@
                               ],
                               "Name": "LabileP",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             },
                             {
@@ -1073,18 +1073,18 @@
                               ],
                               "Name": "UnavailableP",
                               "Children": [],
-                              "Enabled": true,
+                              "Enabled": false,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Soils.Nutrients.Solute, Models",
                           "Name": "CL",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
@@ -1123,32 +1123,32 @@
                           ],
                           "Name": "LayerStructure",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Name": "SoilTemperature",
                           "Children": [],
-                          "Enabled": true,
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Irrigation, Models",
                       "Name": "Irrigation",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Fertiliser, Models",
                       "ResourceName": "Fertiliser",
                       "Name": "Fertiliser",
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1161,7 +1161,7 @@
                       "InitialCNR": 17.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1193,7 +1193,7 @@
                       "SpeciesCutProportions": null,
                       "Name": "SimpleGrazing",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1203,7 +1203,7 @@
                       "InitialRootDepth": 350.0,
                       "ResourceName": "AGPRyegrass",
                       "Name": "AGPRyegrass",
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1213,7 +1213,7 @@
                       "InitialRootDepth": 300.0,
                       "ResourceName": "AGPWhiteClover",
                       "Name": "AGPWhiteClover",
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1241,15 +1241,15 @@
                       "GroupByVariableName": null,
                       "Name": "Report",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -1315,11 +1315,11 @@
                       "Filter": null,
                       "Name": "Daily WaterBal",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -1379,11 +1379,11 @@
                       "Filter": null,
                       "Name": "Cumulative WaterBal",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -1443,11 +1443,11 @@
                       "Filter": null,
                       "Name": "Stored",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -1507,11 +1507,11 @@
                       "Filter": null,
                       "Name": "LowerPot",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -1581,7 +1581,7 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "LowerPot",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1609,11 +1609,11 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Drainage",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -1683,7 +1683,7 @@
                       "Filter": "[SimulationName] LIKE '*Seepage'",
                       "Name": "LowerPot",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1711,11 +1711,11 @@
                       "Filter": "[SimulationName] LIKE '*Seepage'",
                       "Name": "Drainage",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -1785,7 +1785,7 @@
                       "Filter": "[SimulationName] LIKE '*Potential'",
                       "Name": "LowerPot",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1813,7 +1813,7 @@
                       "Filter": "[SimulationName] LIKE '*Potential'",
                       "Name": "Drainage",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     },
                     {
@@ -1841,11 +1841,11 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Rain_Irrig",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -1905,11 +1905,11 @@
                       "Filter": null,
                       "Name": "Drainage",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -1969,11 +1969,11 @@
                       "Filter": null,
                       "Name": "Drainage",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2033,11 +2033,11 @@
                       "Filter": null,
                       "Name": "Uptake",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2097,11 +2097,11 @@
                       "Filter": null,
                       "Name": "Runoff",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2161,11 +2161,11 @@
                       "Filter": null,
                       "Name": "Irrigation",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -2225,19 +2225,19 @@
                       "Filter": null,
                       "Name": "Irrigation",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             }
           ],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         }
       ],
@@ -14136,7 +14136,7 @@
                 {
                   "$type": "Models.Factorial.Factor, Models",
                   "Specification": "[Swim3].CL",
-                  "Name": "None",
+                  "Name": "E000F100",
                   "Children": [
                     {
                       "$type": "Models.Soils.SwimSoluteParameters, Models",
@@ -14194,7 +14194,7 @@
                 {
                   "$type": "Models.Factorial.Factor, Models",
                   "Specification": "[Swim3].CL",
-                  "Name": "Some",
+                  "Name": "E025F100",
                   "Children": [
                     {
                       "$type": "Models.Soils.SwimSoluteParameters, Models",
@@ -14221,14 +14221,14 @@
                         350.0
                       ],
                       "Exco": [
-                        50.0,
-                        50.0,
-                        50.0,
-                        50.0,
-                        50.0,
-                        50.0,
-                        50.0,
-                        50.0
+                        0.25,
+                        0.25,
+                        0.25,
+                        0.25,
+                        0.25,
+                        0.25,
+                        0.25,
+                        0.25
                       ],
                       "FIP": [
                         1.0,
@@ -14239,6 +14239,180 @@
                         1.0,
                         1.0,
                         1.0
+                      ],
+                      "Name": "CL",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[Swim3].CL",
+                  "Name": "E050F100",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SwimSoluteParameters, Models",
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.05,
+                      "Depth": [
+                        "0-6",
+                        "6-17",
+                        "17-31",
+                        "31-55",
+                        "55-75",
+                        "75-95",
+                        "95-115",
+                        "115-150"
+                      ],
+                      "Thickness": [
+                        60.0,
+                        110.0,
+                        140.0,
+                        240.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        350.0
+                      ],
+                      "Exco": [
+                        0.5,
+                        0.5,
+                        0.5,
+                        0.5,
+                        0.5,
+                        0.5,
+                        0.5,
+                        0.5
+                      ],
+                      "FIP": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "CL",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[Swim3].CL",
+                  "Name": "E075F100",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SwimSoluteParameters, Models",
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.05,
+                      "Depth": [
+                        "0-6",
+                        "6-17",
+                        "17-31",
+                        "31-55",
+                        "55-75",
+                        "75-95",
+                        "95-115",
+                        "115-150"
+                      ],
+                      "Thickness": [
+                        60.0,
+                        110.0,
+                        140.0,
+                        240.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        350.0
+                      ],
+                      "Exco": [
+                        0.75,
+                        0.75,
+                        0.75,
+                        0.75,
+                        0.75,
+                        0.75,
+                        0.75,
+                        0.75
+                      ],
+                      "FIP": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "CL",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[Swim3].CL",
+                  "Name": "E050F030",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SwimSoluteParameters, Models",
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.05,
+                      "Depth": [
+                        "0-6",
+                        "6-17",
+                        "17-31",
+                        "31-55",
+                        "55-75",
+                        "75-95",
+                        "95-115",
+                        "115-150"
+                      ],
+                      "Thickness": [
+                        60.0,
+                        110.0,
+                        140.0,
+                        240.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        350.0
+                      ],
+                      "Exco": [
+                        15.0,
+                        15.0,
+                        15.0,
+                        15.0,
+                        15.0,
+                        15.0,
+                        15.0,
+                        15.0
+                      ],
+                      "FIP": [
+                        0.8,
+                        0.8,
+                        0.8,
+                        0.8,
+                        0.8,
+                        0.8,
+                        0.8,
+                        0.8
                       ],
                       "Name": "CL",
                       "Children": [],
@@ -15148,8 +15322,8 @@
                           "PSIDul": -100.0,
                           "VC": true,
                           "DTMin": 0.0,
-                          "DTMax": 1440.0,
-                          "MaxWaterIncrement": 10.0,
+                          "DTMax": 30.0,
+                          "MaxWaterIncrement": 5.0,
                           "SpaceWeightingFactor": 0.0,
                           "SoluteSpaceWeightingFactor": 1.0,
                           "Dis": 0.0,
