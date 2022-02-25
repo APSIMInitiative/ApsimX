@@ -123,7 +123,7 @@ namespace UserInterface.Views
                 //listview.CursorChanged -= OnSelectionChanged;
                 Listview.SelectionChanged -= OnSelectionChanged;
                 Listview.ButtonPressEvent -= OnDoubleClick;
-                popup.DetachHandlers();
+                ClearPopup();
                 popup.Dispose();
                 listmodel.Dispose();
                 accel.Dispose();
@@ -417,7 +417,7 @@ namespace UserInterface.Views
         /// <param name="menuDescriptions">Menu descriptions for each menu item.</param>
         public void PopulateContextMenu(List<MenuDescriptionArgs> menuDescriptions)
         {
-            popup.DetachAllHandlers();
+            ClearPopup();
             foreach (MenuDescriptionArgs description in menuDescriptions)
             {
                 MenuItem item;
@@ -469,6 +469,16 @@ namespace UserInterface.Views
             if (popup.AttachWidget == null)
                 popup.AttachToWidget(Listview, null);
             popup.ShowAll();
+        }
+
+        private void ClearPopup()
+        {
+            foreach (Widget w in popup)
+            {
+                w.DetachHandlers();
+                popup.Remove(w);
+                w.Dispose();
+            }
         }
     }
 }

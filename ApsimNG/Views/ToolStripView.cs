@@ -66,7 +66,7 @@
             foreach (Widget child in toolStrip.Children)
             {
                 if (child is ToolButton)
-                    child.DetachAllHandlers();
+                    child.DetachHandlers();
                 toolStrip.Remove(child);
                 child.Dispose();
             }

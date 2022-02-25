@@ -1276,7 +1276,10 @@
                 {
                     AccelLabel itemText = oldItem.Child as AccelLabel;
                     if (itemText.Text == menuItemText)
-                        throw new ArgumentException($"Item with {menuItemText} already exists");
+                    {
+                        item = oldItem;
+                        item.DetachHandler("activate");
+                    }
                 }
             }
             if (item == null)

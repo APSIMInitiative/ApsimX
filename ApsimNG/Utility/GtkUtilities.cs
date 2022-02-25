@@ -54,6 +54,37 @@ namespace Utility
         }
 
         /// <summary>
+        /// Detach a specific signal from a widget.
+        /// Normally it's better to use the "-=" operator to do this, but it may be that we
+        /// don't actually know the method for the right side of the operator. This uses
+        /// reflection to find that method and detach it. As explained in the DetachHandlers 
+        /// method above, this routine may break in future versions of Gtk#.
+        /// </summary>
+        /// <param name="widget">The widget</param>
+        /// <param name="signalName">Name of the signal</param>
+        public static void DetachHandler(this Widget widget, string signalName)
+        {
+            PropertyInfo signals = typeof(GLib.Object).GetProperty("Signals", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            FieldInfo afterHandler = typeof(GLib.Signal).GetField("after_handler", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+            FieldInfo beforeHandler = typeof(GLib.Signal).GetField("before_handler", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
+
+            if (signals != null && afterHandler != null && beforeHandler != null)
+            {
+                Dictionary<string, GLib.Signal> widgetSignals = (Dictionary<string, GLib.Signal>)signals.GetValue(widget);
+                GLib.Signal signalVal;
+                if (widgetSignals.TryGetValue(signalName, out signalVal))
+                {
+                    Delegate afterDel = (Delegate)afterHandler.GetValue(signalVal);
+                    if (afterDel != null)
+                        widget.RemoveSignalHandler(signalName, afterDel);
+                    Delegate beforeDel = (Delegate)beforeHandler.GetValue(signalVal);
+                    if (beforeDel != null)
+                        widget.RemoveSignalHandler(signalName, beforeDel);
+                }
+            }
+        }
+
+        /// <summary>
         /// Get child widget at the specified row and column.
         /// </summary>
         /// <param name="table">A table</param>
@@ -74,7 +105,6 @@ namespace Utility
                         return child;
                 }
             }
-
             return null;
         }
 
