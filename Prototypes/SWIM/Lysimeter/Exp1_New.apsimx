@@ -439,8 +439,8 @@
                       "PSIDul": -100.0,
                       "VC": true,
                       "DTMin": 0.0,
-                      "DTMax": 1440.0,
-                      "MaxWaterIncrement": 10.0,
+                      "DTMax": 30.0,
+                      "MaxWaterIncrement": 5.0,
                       "SpaceWeightingFactor": 0.0,
                       "SoluteSpaceWeightingFactor": 0.0,
                       "Dis": 0.0,
@@ -545,18 +545,18 @@
                             150.0
                           ],
                           "Exco": [
-                            16.973,
-                            24.523,
-                            29.27,
-                            51.537,
-                            37.322
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
                           ],
                           "FIP": [
-                            0.721,
-                            0.635,
-                            0.586,
-                            0.442,
-                            0.517
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
                           ],
                           "Name": "NH4",
                           "Children": [],
@@ -672,6 +672,43 @@
                           "Name": "UnavailableP",
                           "Children": [],
                           "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SwimSoluteParameters, Models",
+                          "WaterTableConcentration": 0.0,
+                          "D0": 0.05,
+                          "Depth": [
+                            "0-6",
+                            "6-17",
+                            "17-31",
+                            "31-55",
+                            "55-70"
+                          ],
+                          "Thickness": [
+                            60.0,
+                            110.0,
+                            140.0,
+                            240.0,
+                            150.0
+                          ],
+                          "Exco": [
+                            16.973,
+                            24.523,
+                            29.27,
+                            51.537,
+                            37.322
+                          ],
+                          "FIP": [
+                            0.721,
+                            0.635,
+                            0.586,
+                            0.442,
+                            0.517
+                          ],
+                          "Name": "NH41",
+                          "Children": [],
+                          "Enabled": false,
                           "ReadOnly": false
                         }
                       ],
