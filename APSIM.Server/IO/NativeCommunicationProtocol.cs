@@ -26,7 +26,9 @@ namespace APSIM.Server.IO
             Double = 1,
             Boolean = 2,
             Date = 3,
-            String = 4
+            String = 4,
+            IntArray = 5,
+            DoubleArray = 6,
         }
 
         private const string commandRun = "RUN";
@@ -186,6 +188,8 @@ namespace APSIM.Server.IO
                     return ReadDate();
                 case ParamType.String:
                     return ReadString();
+                case ParamType.DoubleArray:
+                    return ReadDoubleArray();
                 default:
                     throw new NotImplementedException($"Unknown parameter type {type}");
             }
@@ -213,6 +217,17 @@ namespace APSIM.Server.IO
         {
             byte[] buffer = PipeUtilities.GetBytesFromPipe(connection);
             return BitConverter.ToDouble(buffer);
+        }
+
+        public double[] ReadDoubleArray()
+        {
+            byte[] buffer = PipeUtilities.GetBytesFromPipe(connection);
+            const int bytesPerNumber = sizeof(double) / sizeof(byte);
+            int length = buffer.Length / bytesPerNumber;
+            double[] result = new double[length];
+            for (int i = 0; i < length; i++)
+                result[i] = BitConverter.ToDouble(new ArraySegment<byte>(buffer, i * bytesPerNumber, bytesPerNumber));
+            return result;
         }
 
         public object ReadBool()
