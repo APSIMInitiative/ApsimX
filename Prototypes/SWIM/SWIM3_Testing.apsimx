@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 300,
   "Version": 148,
   "Name": "Simulations",
   "Children": [
@@ -4079,7 +4079,7 @@
                   "Values": null,
                   "Name": "PowerFunction",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
