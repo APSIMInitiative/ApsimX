@@ -291,8 +291,10 @@ namespace Models.CLEM.Resources
                         reason = "Unknown";
                         break;
                 }
-                foreach (var offspring in (ind as RuminantFemale).SucklingOffspringList)
+
+                while ((ind as RuminantFemale).SucklingOffspringList.Any())
                 {
+                    Ruminant offspring = (ind as RuminantFemale).SucklingOffspringList.FirstOrDefault();
                     offspring.Wean(true, reason);
                     offspring.Mother = null;
                 }
