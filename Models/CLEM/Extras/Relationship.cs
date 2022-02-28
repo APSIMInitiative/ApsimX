@@ -55,13 +55,13 @@ namespace Models.CLEM
         /// <summary>
         /// Name of the x variable
         /// </summary>
-        [Description("Name of the x variable")]
+        [Description("Label for x variable")]
         public string NameOfXVariable { get; set; }
 
         /// <summary>
         /// Name of the y variable
         /// </summary>
-        [Description("Name of the y variable")]
+        [Description("Label for y variable")]
         public string NameOfYVariable { get; set; }
 
         /// <summary>
