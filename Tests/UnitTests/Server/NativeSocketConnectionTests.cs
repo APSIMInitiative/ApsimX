@@ -132,5 +132,38 @@ namespace UnitTests.Server
 
             server.Wait();
         }
+
+        /// <summary>
+        /// Test reading a double array over the native socket connection.
+        /// </summary>
+        [Test]
+        public void TestReadDoubleArray()
+        {
+            double[] array = new double[8] { 2, 1, 0.5, 0.25, -0.25, -0.5, -1, -2 };
+            Task server = Task.Run(() =>
+            {
+                pipe.WaitForConnection();
+                Assert.AreEqual(array, protocol.ReadDoubleArray());
+                Assert.AreEqual(array, protocol.ReadDoubleArray());
+            });
+
+            Socket client = CreateClient();
+
+            // Convert array to binary to send over the socket.
+            byte[] buf = array.SelectMany(n => BitConverter.GetBytes(n)).ToArray();
+            client.Send(BitConverter.GetBytes(buf.Length).Take(4).ToArray());
+            client.Send(buf);
+
+            // Let's also check with a pre-calculated binary representation of
+            // the above array, just for fun. Note: does this depend on the
+            // host system's endian-ness?
+            buf = new byte[64] { 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0X40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XF0, 0X3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XE0, 0X3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XD0, 0X3F, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XD0, 0XBF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XE0, 0XBF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XF0, 0XBF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0XC0 };
+            client.Send(BitConverter.GetBytes(buf.Length).Take(4).ToArray());
+            client.Send(buf);
+
+            client.Disconnect(false);
+
+            server.Wait();
+        }
     }
 }

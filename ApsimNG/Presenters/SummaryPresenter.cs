@@ -60,17 +60,20 @@
 
             string simulationName = summaryView.SimulationDropDown.SelectedValue;
 
-            try
+            if (simulationName != null)
             {
-                messages[simulationName] = summaryModel.GetMessages(simulationName)?.ToArray();
-                initialConditions[simulationName] = summaryModel.GetInitialConditions(simulationName).ToArray();
-            }
-            catch (Exception error)
-            {
-                explorerPresenter.MainPresenter.ShowError(error);
-            }
+                try
+                {
+                    messages[simulationName] = summaryModel.GetMessages(simulationName)?.ToArray();
+                    initialConditions[simulationName] = summaryModel.GetInitialConditions(simulationName).ToArray();
+                }
+                catch (Exception error)
+                {
+                    explorerPresenter.MainPresenter.ShowError(error);
+                }
 
-            UpdateView();
+                UpdateView();
+            }
 
             // Trap the verbosity level change event.
             summaryView.VerbosityDropDown.Changed += OnVerbosityChanged;
@@ -147,6 +150,9 @@
         private void UpdateView()
         {
             string simulationName = summaryView.SimulationDropDown.SelectedValue;
+            if (simulationName == null)
+                return;
+
             StringBuilder markdown = new StringBuilder();
 
             // Show Initial Conditions.
