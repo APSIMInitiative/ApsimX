@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 300,
   "Version": 148,
   "Name": "Simulations",
   "Children": [
@@ -378,9 +378,7 @@
                   "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
                   "Notes": null,
                   "SelectedTab": null,
-                  "CurrentAncestorList": [
-                    "ActivitiesHolder"
-                  ],
+                  "CurrentAncestorList": [],
                   "Name": "Activities",
                   "Children": [
                     {
@@ -392,10 +390,7 @@
                       "OnPartialResourcesAvailableAction": 2,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [
-                        "ActivitiesHolder",
-                        "CropActivityManageCrop"
-                      ],
+                      "CurrentAncestorList": [],
                       "Name": "Manage Maize",
                       "Children": [
                         {
@@ -406,15 +401,18 @@
                           "ProportionKept": 1.0,
                           "PlantedMultiplier": 1.0,
                           "TreesPerHa": 0.0,
+                          "Harvests": {
+                            "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
+                            "Item1": null,
+                            "Item2": null,
+                            "Item3": null,
+                            "Item4": null
+                          },
                           "TransactionCategory": "Crop.[Product]",
                           "OnPartialResourcesAvailableAction": 2,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "ActivitiesHolder",
-                            "CropActivityManageCrop",
-                            "CropActivityManageProduct"
-                          ],
+                          "CurrentAncestorList": [],
                           "Name": "Grow maize crop",
                           "Children": [
                             {
@@ -432,9 +430,6 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
-                                "ActivitiesHolder",
-                                "CropActivityManageCrop",
-                                "CropActivityManageProduct",
                                 "LabourRequirement"
                               ],
                               "Name": "HarvestMaize",
@@ -490,10 +485,7 @@
                       "OnPartialResourcesAvailableAction": 2,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [
-                        "ActivitiesHolder",
-                        "ResourceActivitySell"
-                      ],
+                      "CurrentAncestorList": [],
                       "Name": "Sell Maize",
                       "Children": [],
                       "Enabled": true,
@@ -508,10 +500,7 @@
                       "OnPartialResourcesAvailableAction": 2,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [
-                        "ActivitiesHolder",
-                        "CropActivityManageCrop"
-                      ],
+                      "CurrentAncestorList": [],
                       "Name": "Manage Vegetables",
                       "Children": [
                         {
@@ -522,15 +511,18 @@
                           "ProportionKept": 0.8,
                           "PlantedMultiplier": 1.0,
                           "TreesPerHa": 0.0,
+                          "Harvests": {
+                            "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
+                            "Item1": null,
+                            "Item2": null,
+                            "Item3": null,
+                            "Item4": null
+                          },
                           "TransactionCategory": "Crop.[Product]",
                           "OnPartialResourcesAvailableAction": 2,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "ActivitiesHolder",
-                            "CropActivityManageCrop",
-                            "CropActivityManageProduct"
-                          ],
+                          "CurrentAncestorList": [],
                           "Name": "Grow tomatoes",
                           "Children": [
                             {
@@ -547,21 +539,14 @@
                               "ApplyToAll": false,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [
-                                "ActivitiesHolder",
-                                "CropActivityManageCrop",
-                                "CropActivityManageProduct",
-                                "LabourRequirement"
-                              ],
+                              "CurrentAncestorList": [],
                               "Name": "LabourRequirement",
                               "Children": [
                                 {
                                   "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [
-                                    "LabourFilterGroup"
-                                  ],
+                                  "CurrentAncestorList": [],
                                   "Name": "Female",
                                   "Children": [
                                     {
@@ -572,9 +557,7 @@
                                       "Value": "Female",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [
-                                        "FilterByProperty"
-                                      ],
+                                      "CurrentAncestorList": [],
                                       "Name": "LabourFilter",
                                       "Children": [],
                                       "Enabled": true,
@@ -584,9 +567,7 @@
                                       "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [
-                                        "LabourFilterGroup"
-                                      ],
+                                      "CurrentAncestorList": [],
                                       "Name": "Male",
                                       "Children": [
                                         {
@@ -597,9 +578,7 @@
                                           "Value": "Male",
                                           "Notes": null,
                                           "SelectedTab": null,
-                                          "CurrentAncestorList": [
-                                            "FilterByProperty"
-                                          ],
+                                          "CurrentAncestorList": [],
                                           "Name": "LabourFilter",
                                           "Children": [],
                                           "Enabled": true,
@@ -625,16 +604,18 @@
                               "ProportionKept": 0.8,
                               "PlantedMultiplier": 1.0,
                               "TreesPerHa": 0.0,
+                              "Harvests": {
+                                "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
+                                "Item1": null,
+                                "Item2": null,
+                                "Item3": null,
+                                "Item4": null
+                              },
                               "TransactionCategory": "Crop.[Product]",
                               "OnPartialResourcesAvailableAction": 2,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [
-                                "ActivitiesHolder",
-                                "CropActivityManageCrop",
-                                "CropActivityManageProduct",
-                                "CropActivityManageProduct"
-                              ],
+                              "CurrentAncestorList": [],
                               "Name": "Grow cucumbers",
                               "Children": [
                                 {
@@ -651,22 +632,14 @@
                                   "ApplyToAll": false,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [
-                                    "ActivitiesHolder",
-                                    "CropActivityManageCrop",
-                                    "CropActivityManageProduct",
-                                    "CropActivityManageProduct",
-                                    "LabourRequirement"
-                                  ],
+                                  "CurrentAncestorList": [],
                                   "Name": "LabourRequirement",
                                   "Children": [
                                     {
                                       "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [
-                                        "LabourFilterGroup"
-                                      ],
+                                      "CurrentAncestorList": [],
                                       "Name": "Female",
                                       "Children": [
                                         {
@@ -677,9 +650,7 @@
                                           "Value": "Female",
                                           "Notes": null,
                                           "SelectedTab": null,
-                                          "CurrentAncestorList": [
-                                            "FilterByProperty"
-                                          ],
+                                          "CurrentAncestorList": [],
                                           "Name": "LabourFilter",
                                           "Children": [],
                                           "Enabled": true,
@@ -719,10 +690,7 @@
                       "OnPartialResourcesAvailableAction": 0,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [
-                        "ActivitiesHolder",
-                        "ActivityFolder"
-                      ],
+                      "CurrentAncestorList": [],
                       "Name": "Tomato Paste",
                       "Children": [
                         {
@@ -735,11 +703,7 @@
                           "OnPartialResourcesAvailableAction": 2,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "ActivitiesHolder",
-                            "ActivityFolder",
-                            "ResourceActivityProcess"
-                          ],
+                          "CurrentAncestorList": [],
                           "Name": "Make tomato paste",
                           "Children": [
                             {
@@ -750,12 +714,7 @@
                               "Amount": 0.2,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [
-                                "ActivitiesHolder",
-                                "ActivityFolder",
-                                "ResourceActivityProcess",
-                                "ResourceActivityFee"
-                              ],
+                              "CurrentAncestorList": [],
                               "Name": "Buy jars",
                               "Children": [],
                               "Enabled": true,
@@ -775,25 +734,14 @@
                               "ApplyToAll": false,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [
-                                "ActivitiesHolder",
-                                "ActivityFolder",
-                                "ResourceActivityProcess",
-                                "LabourRequirement"
-                              ],
+                              "CurrentAncestorList": [],
                               "Name": "LabourRequirement",
                               "Children": [
                                 {
                                   "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [
-                                    "ActivitiesHolder",
-                                    "ActivityFolder",
-                                    "ResourceActivityProcess",
-                                    "LabourRequirement",
-                                    "LabourFilterGroup"
-                                  ],
+                                  "CurrentAncestorList": [],
                                   "Name": "Female",
                                   "Children": [
                                     {
@@ -804,14 +752,7 @@
                                       "Value": "Female",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [
-                                        "ActivitiesHolder",
-                                        "ActivityFolder",
-                                        "ResourceActivityProcess",
-                                        "LabourRequirement",
-                                        "LabourFilterGroup",
-                                        "FilterByProperty"
-                                      ],
+                                      "CurrentAncestorList": [],
                                       "Name": "LabourFilter",
                                       "Children": [],
                                       "Enabled": true,
@@ -821,14 +762,7 @@
                                       "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [
-                                        "ActivitiesHolder",
-                                        "ActivityFolder",
-                                        "ResourceActivityProcess",
-                                        "LabourRequirement",
-                                        "LabourFilterGroup",
-                                        "LabourFilterGroup"
-                                      ],
+                                      "CurrentAncestorList": [],
                                       "Name": "Male",
                                       "Children": [
                                         {
@@ -839,15 +773,7 @@
                                           "Value": "Male",
                                           "Notes": null,
                                           "SelectedTab": null,
-                                          "CurrentAncestorList": [
-                                            "ActivitiesHolder",
-                                            "ActivityFolder",
-                                            "ResourceActivityProcess",
-                                            "LabourRequirement",
-                                            "LabourFilterGroup",
-                                            "LabourFilterGroup",
-                                            "FilterByProperty"
-                                          ],
+                                          "CurrentAncestorList": [],
                                           "Name": "LabourFilter",
                                           "Children": [],
                                           "Enabled": true,
@@ -879,11 +805,7 @@
                           "OnPartialResourcesAvailableAction": 2,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "ActivitiesHolder",
-                            "ActivityFolder",
-                            "ResourceActivitySell"
-                          ],
+                          "CurrentAncestorList": [],
                           "Name": "Sell tomato paste",
                           "Children": [
                             {
@@ -892,12 +814,7 @@
                               "MonthDue": 11,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [
-                                "ActivitiesHolder",
-                                "ActivityFolder",
-                                "ResourceActivitySell",
-                                "ActivityTimerInterval"
-                              ],
+                              "CurrentAncestorList": [],
                               "Name": "SellInNovember",
                               "Children": [],
                               "Enabled": true,
@@ -1660,7 +1577,9 @@
                   "HarvestTypeColumnName": "HarvestTag",
                   "Notes": null,
                   "SelectedTab": null,
-                  "CurrentAncestorList": [],
+                  "CurrentAncestorList": [
+                    "FileCrop"
+                  ],
                   "Name": "FileCrop",
                   "Children": [],
                   "Enabled": true,
@@ -1679,9 +1598,7 @@
                       "UnitsOfAreaToHaConversion": 1.0,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [
-                        "Land"
-                      ],
+                      "CurrentAncestorList": [],
                       "Name": "Land",
                       "Children": [
                         {
@@ -1692,10 +1609,7 @@
                           "SoilType": "1",
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "Land",
-                            "LandType"
-                          ],
+                          "CurrentAncestorList": [],
                           "Name": "Padd1",
                           "Children": [],
                           "Enabled": true,
@@ -1708,12 +1622,10 @@
                     {
                       "$type": "Models.CLEM.Resources.Finance, Models",
                       "CurrencyName": null,
-                      "FirstMonthOfFinancialYear": 7,
+                      "FirstMonthOfFinancialYear": 0,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [
-                        "Finance"
-                      ],
+                      "CurrentAncestorList": [],
                       "Name": "Finances",
                       "Children": [
                         {
@@ -1725,10 +1637,7 @@
                           "InterestRatePaid": 0.0,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "Finance",
-                            "FinanceType"
-                          ],
+                          "CurrentAncestorList": [],
                           "Name": "General account",
                           "Children": [],
                           "Enabled": true,
@@ -1876,12 +1785,14 @@
                           "$type": "Models.CLEM.Activities.CropActivityManageCrop, Models",
                           "LandItemNameToUse": "Land.Padd1",
                           "AreaRequested": 80.0,
-                          "UseAreaAvailable": false,
+                          "UseAreaAvailable": true,
                           "TransactionCategory": "Crop",
                           "OnPartialResourcesAvailableAction": 2,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
+                          "CurrentAncestorList": [
+                            "CropActivityManageCrop"
+                          ],
                           "Name": "Manage rotation",
                           "Children": [
                             {
@@ -1892,11 +1803,20 @@
                               "ProportionKept": 1.0,
                               "PlantedMultiplier": 1.0,
                               "TreesPerHa": 0.0,
+                              "Harvests": {
+                                "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
+                                "Item1": null,
+                                "Item2": null,
+                                "Item3": null,
+                                "Item4": null
+                              },
                               "TransactionCategory": "Crop.[Product]",
                               "OnPartialResourcesAvailableAction": 0,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [],
+                              "CurrentAncestorList": [
+                                "CropActivityManageProduct"
+                              ],
                               "Name": "Manage Wheat",
                               "Children": [
                                 {
@@ -1905,7 +1825,10 @@
                                   "OnPartialResourcesAvailableAction": 2,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
+                                  "CurrentAncestorList": [
+                                    "CropActivityManageProduct",
+                                    "CropActivityTask"
+                                  ],
                                   "Name": "Prepare wheat",
                                   "Children": [
                                     {
@@ -1914,7 +1837,11 @@
                                       "OffsetMonthHarvestStop": -11,
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
+                                      "CurrentAncestorList": [
+                                        "CropActivityManageProduct",
+                                        "CropActivityTask",
+                                        "ActivityTimerCropHarvest"
+                                      ],
                                       "Name": "PrepareWheat",
                                       "Children": [],
                                       "Enabled": true,
@@ -1935,6 +1862,8 @@
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "CurrentAncestorList": [
+                                        "CropActivityManageProduct",
+                                        "CropActivityTask",
                                         "LabourRequirement"
                                       ],
                                       "Name": "LabourRequirement",
@@ -1944,6 +1873,9 @@
                                           "Notes": null,
                                           "SelectedTab": null,
                                           "CurrentAncestorList": [
+                                            "CropActivityManageProduct",
+                                            "CropActivityTask",
+                                            "LabourRequirement",
                                             "LabourFilterGroup"
                                           ],
                                           "Name": "LabourFilterGroup",
@@ -1965,7 +1897,10 @@
                                   "OnPartialResourcesAvailableAction": 0,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
+                                  "CurrentAncestorList": [
+                                    "CropActivityManageProduct",
+                                    "CropActivityTask"
+                                  ],
                                   "Name": "Plant wheat",
                                   "Children": [
                                     {
@@ -1974,7 +1909,11 @@
                                       "OffsetMonthHarvestStop": -8,
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
+                                      "CurrentAncestorList": [
+                                        "CropActivityManageProduct",
+                                        "CropActivityTask",
+                                        "ActivityTimerCropHarvest"
+                                      ],
                                       "Name": "PlantWheat",
                                       "Children": [],
                                       "Enabled": true,
@@ -1994,14 +1933,23 @@
                                       "ApplyToAll": false,
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
+                                      "CurrentAncestorList": [
+                                        "CropActivityManageProduct",
+                                        "CropActivityTask",
+                                        "LabourRequirement"
+                                      ],
                                       "Name": "LabourRequirement",
                                       "Children": [
                                         {
                                           "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                           "Notes": null,
                                           "SelectedTab": null,
-                                          "CurrentAncestorList": [],
+                                          "CurrentAncestorList": [
+                                            "CropActivityManageProduct",
+                                            "CropActivityTask",
+                                            "LabourRequirement",
+                                            "LabourFilterGroup"
+                                          ],
                                           "Name": "LabourFilterGroup",
                                           "Children": [],
                                           "Enabled": true,
@@ -2021,7 +1969,10 @@
                                   "OnPartialResourcesAvailableAction": 2,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
+                                  "CurrentAncestorList": [
+                                    "CropActivityManageProduct",
+                                    "CropActivityTask"
+                                  ],
                                   "Name": "Weed spray wheat",
                                   "Children": [
                                     {
@@ -2030,7 +1981,11 @@
                                       "OffsetMonthHarvestStop": -2,
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
+                                      "CurrentAncestorList": [
+                                        "CropActivityManageProduct",
+                                        "CropActivityTask",
+                                        "ActivityTimerCropHarvest"
+                                      ],
                                       "Name": "SprayWheat",
                                       "Children": [],
                                       "Enabled": true,
@@ -2050,14 +2005,23 @@
                                       "ApplyToAll": false,
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
+                                      "CurrentAncestorList": [
+                                        "CropActivityManageProduct",
+                                        "CropActivityTask",
+                                        "LabourRequirement"
+                                      ],
                                       "Name": "LabourRequirement",
                                       "Children": [
                                         {
                                           "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                           "Notes": null,
                                           "SelectedTab": null,
-                                          "CurrentAncestorList": [],
+                                          "CurrentAncestorList": [
+                                            "CropActivityManageProduct",
+                                            "CropActivityTask",
+                                            "LabourRequirement",
+                                            "LabourFilterGroup"
+                                          ],
                                           "Name": "LabourFilterGroup",
                                           "Children": [],
                                           "Enabled": true,
@@ -2077,7 +2041,10 @@
                                   "OnPartialResourcesAvailableAction": 0,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
+                                  "CurrentAncestorList": [
+                                    "CropActivityManageProduct",
+                                    "ActivityFolder"
+                                  ],
                                   "Name": "Harvest activities",
                                   "Children": [
                                     {
@@ -2086,7 +2053,11 @@
                                       "OnPartialResourcesAvailableAction": 2,
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
+                                      "CurrentAncestorList": [
+                                        "CropActivityManageProduct",
+                                        "ActivityFolder",
+                                        "CropActivityTask"
+                                      ],
                                       "Name": "Harvest wheat",
                                       "Children": [
                                         {
@@ -2103,14 +2074,25 @@
                                           "ApplyToAll": false,
                                           "Notes": null,
                                           "SelectedTab": null,
-                                          "CurrentAncestorList": [],
+                                          "CurrentAncestorList": [
+                                            "CropActivityManageProduct",
+                                            "ActivityFolder",
+                                            "CropActivityTask",
+                                            "LabourRequirement"
+                                          ],
                                           "Name": "LabourRequirement",
                                           "Children": [
                                             {
                                               "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                               "Notes": null,
                                               "SelectedTab": null,
-                                              "CurrentAncestorList": [],
+                                              "CurrentAncestorList": [
+                                                "CropActivityManageProduct",
+                                                "ActivityFolder",
+                                                "CropActivityTask",
+                                                "LabourRequirement",
+                                                "LabourFilterGroup"
+                                              ],
                                               "Name": "LabourFilterGroup",
                                               "Children": [],
                                               "Enabled": true,
@@ -2130,7 +2112,12 @@
                                           "OnPartialResourcesAvailableAction": 0,
                                           "Notes": null,
                                           "SelectedTab": null,
-                                          "CurrentAncestorList": [],
+                                          "CurrentAncestorList": [
+                                            "CropActivityManageProduct",
+                                            "ActivityFolder",
+                                            "CropActivityTask",
+                                            "CropActivityFee"
+                                          ],
                                           "Name": "Wheat harvest costs",
                                           "Children": [],
                                           "Enabled": true,
@@ -2146,7 +2133,12 @@
                                           "OnPartialResourcesAvailableAction": 0,
                                           "Notes": null,
                                           "SelectedTab": null,
-                                          "CurrentAncestorList": [],
+                                          "CurrentAncestorList": [
+                                            "CropActivityManageProduct",
+                                            "ActivityFolder",
+                                            "CropActivityTask",
+                                            "CropActivityFee"
+                                          ],
                                           "Name": "Wheat variable costs",
                                           "Children": [],
                                           "Enabled": true,
@@ -2162,7 +2154,11 @@
                                       "OnPartialResourcesAvailableAction": 2,
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
+                                      "CurrentAncestorList": [
+                                        "CropActivityManageProduct",
+                                        "ActivityFolder",
+                                        "CropActivityTask"
+                                      ],
                                       "Name": "Transport wheat",
                                       "Children": [
                                         {
@@ -2179,14 +2175,25 @@
                                           "ApplyToAll": false,
                                           "Notes": null,
                                           "SelectedTab": null,
-                                          "CurrentAncestorList": [],
+                                          "CurrentAncestorList": [
+                                            "CropActivityManageProduct",
+                                            "ActivityFolder",
+                                            "CropActivityTask",
+                                            "LabourRequirement"
+                                          ],
                                           "Name": "LabourRequirement",
                                           "Children": [
                                             {
                                               "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                               "Notes": null,
                                               "SelectedTab": null,
-                                              "CurrentAncestorList": [],
+                                              "CurrentAncestorList": [
+                                                "CropActivityManageProduct",
+                                                "ActivityFolder",
+                                                "CropActivityTask",
+                                                "LabourRequirement",
+                                                "LabourFilterGroup"
+                                              ],
                                               "Name": "LabourFilterGroup",
                                               "Children": [],
                                               "Enabled": true,
@@ -2206,7 +2213,11 @@
                                       "OffsetMonthHarvestStop": 0,
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
+                                      "CurrentAncestorList": [
+                                        "CropActivityManageProduct",
+                                        "ActivityFolder",
+                                        "ActivityTimerCropHarvest"
+                                      ],
                                       "Name": "HarvestWheat",
                                       "Children": [],
                                       "Enabled": true,
@@ -2228,11 +2239,20 @@
                               "ProportionKept": 1.0,
                               "PlantedMultiplier": 1.0,
                               "TreesPerHa": 0.0,
+                              "Harvests": {
+                                "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
+                                "Item1": null,
+                                "Item2": null,
+                                "Item3": null,
+                                "Item4": null
+                              },
                               "TransactionCategory": "Crop.[Product]",
                               "OnPartialResourcesAvailableAction": 2,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [],
+                              "CurrentAncestorList": [
+                                "CropActivityManageProduct"
+                              ],
                               "Name": "Manage Sorghum",
                               "Children": [
                                 {
@@ -2241,7 +2261,10 @@
                                   "OnPartialResourcesAvailableAction": 2,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
+                                  "CurrentAncestorList": [
+                                    "CropActivityManageProduct",
+                                    "CropActivityTask"
+                                  ],
                                   "Name": "Plant sorghum",
                                   "Children": [
                                     {
@@ -2250,7 +2273,11 @@
                                       "OffsetMonthHarvestStop": -5,
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
+                                      "CurrentAncestorList": [
+                                        "CropActivityManageProduct",
+                                        "CropActivityTask",
+                                        "ActivityTimerCropHarvest"
+                                      ],
                                       "Name": "PlantSorghum",
                                       "Children": [],
                                       "Enabled": true,
@@ -2270,14 +2297,23 @@
                                       "ApplyToAll": false,
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
+                                      "CurrentAncestorList": [
+                                        "CropActivityManageProduct",
+                                        "CropActivityTask",
+                                        "LabourRequirement"
+                                      ],
                                       "Name": "LabourRequirement",
                                       "Children": [
                                         {
                                           "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                           "Notes": null,
                                           "SelectedTab": null,
-                                          "CurrentAncestorList": [],
+                                          "CurrentAncestorList": [
+                                            "CropActivityManageProduct",
+                                            "CropActivityTask",
+                                            "LabourRequirement",
+                                            "LabourFilterGroup"
+                                          ],
                                           "Name": "LabourFilterGroup",
                                           "Children": [],
                                           "Enabled": true,
@@ -2297,7 +2333,10 @@
                                   "OnPartialResourcesAvailableAction": 2,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
+                                  "CurrentAncestorList": [
+                                    "CropActivityManageProduct",
+                                    "CropActivityTask"
+                                  ],
                                   "Name": "Spray weeds sorghum",
                                   "Children": [
                                     {
@@ -2306,7 +2345,11 @@
                                       "OffsetMonthHarvestStop": -2,
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
+                                      "CurrentAncestorList": [
+                                        "CropActivityManageProduct",
+                                        "CropActivityTask",
+                                        "ActivityTimerCropHarvest"
+                                      ],
                                       "Name": "SpraySorghum",
                                       "Children": [],
                                       "Enabled": true,
@@ -2326,14 +2369,23 @@
                                       "ApplyToAll": false,
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
+                                      "CurrentAncestorList": [
+                                        "CropActivityManageProduct",
+                                        "CropActivityTask",
+                                        "LabourRequirement"
+                                      ],
                                       "Name": "LabourRequirement",
                                       "Children": [
                                         {
                                           "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                           "Notes": null,
                                           "SelectedTab": null,
-                                          "CurrentAncestorList": [],
+                                          "CurrentAncestorList": [
+                                            "CropActivityManageProduct",
+                                            "CropActivityTask",
+                                            "LabourRequirement",
+                                            "LabourFilterGroup"
+                                          ],
                                           "Name": "LabourFilterGroup",
                                           "Children": [],
                                           "Enabled": true,
@@ -2353,7 +2405,10 @@
                                   "OnPartialResourcesAvailableAction": 0,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [],
+                                  "CurrentAncestorList": [
+                                    "CropActivityManageProduct",
+                                    "ActivityFolder"
+                                  ],
                                   "Name": "Harvest activities",
                                   "Children": [
                                     {
@@ -2362,7 +2417,11 @@
                                       "OnPartialResourcesAvailableAction": 2,
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
+                                      "CurrentAncestorList": [
+                                        "CropActivityManageProduct",
+                                        "ActivityFolder",
+                                        "CropActivityTask"
+                                      ],
                                       "Name": "Harvest sorghum",
                                       "Children": [
                                         {
@@ -2379,14 +2438,25 @@
                                           "ApplyToAll": false,
                                           "Notes": null,
                                           "SelectedTab": null,
-                                          "CurrentAncestorList": [],
+                                          "CurrentAncestorList": [
+                                            "CropActivityManageProduct",
+                                            "ActivityFolder",
+                                            "CropActivityTask",
+                                            "LabourRequirement"
+                                          ],
                                           "Name": "LabourRequirement",
                                           "Children": [
                                             {
                                               "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                               "Notes": null,
                                               "SelectedTab": null,
-                                              "CurrentAncestorList": [],
+                                              "CurrentAncestorList": [
+                                                "CropActivityManageProduct",
+                                                "ActivityFolder",
+                                                "CropActivityTask",
+                                                "LabourRequirement",
+                                                "LabourFilterGroup"
+                                              ],
                                               "Name": "LabourFilterGroup",
                                               "Children": [],
                                               "Enabled": true,
@@ -2406,7 +2476,12 @@
                                           "OnPartialResourcesAvailableAction": 0,
                                           "Notes": null,
                                           "SelectedTab": null,
-                                          "CurrentAncestorList": [],
+                                          "CurrentAncestorList": [
+                                            "CropActivityManageProduct",
+                                            "ActivityFolder",
+                                            "CropActivityTask",
+                                            "CropActivityFee"
+                                          ],
                                           "Name": "Sorghum harvest costs",
                                           "Children": [],
                                           "Enabled": true,
@@ -2422,7 +2497,12 @@
                                           "OnPartialResourcesAvailableAction": 0,
                                           "Notes": null,
                                           "SelectedTab": null,
-                                          "CurrentAncestorList": [],
+                                          "CurrentAncestorList": [
+                                            "CropActivityManageProduct",
+                                            "ActivityFolder",
+                                            "CropActivityTask",
+                                            "CropActivityFee"
+                                          ],
                                           "Name": "Sorghum variable costs",
                                           "Children": [],
                                           "Enabled": true,
@@ -2438,7 +2518,11 @@
                                       "OnPartialResourcesAvailableAction": 2,
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
+                                      "CurrentAncestorList": [
+                                        "CropActivityManageProduct",
+                                        "ActivityFolder",
+                                        "CropActivityTask"
+                                      ],
                                       "Name": "Transport sorghum",
                                       "Children": [
                                         {
@@ -2455,14 +2539,25 @@
                                           "ApplyToAll": false,
                                           "Notes": null,
                                           "SelectedTab": null,
-                                          "CurrentAncestorList": [],
+                                          "CurrentAncestorList": [
+                                            "CropActivityManageProduct",
+                                            "ActivityFolder",
+                                            "CropActivityTask",
+                                            "LabourRequirement"
+                                          ],
                                           "Name": "LabourRequirement",
                                           "Children": [
                                             {
                                               "$type": "Models.CLEM.Groupings.LabourFilterGroup, Models",
                                               "Notes": null,
                                               "SelectedTab": null,
-                                              "CurrentAncestorList": [],
+                                              "CurrentAncestorList": [
+                                                "CropActivityManageProduct",
+                                                "ActivityFolder",
+                                                "CropActivityTask",
+                                                "LabourRequirement",
+                                                "LabourFilterGroup"
+                                              ],
                                               "Name": "LabourFilterGroup",
                                               "Children": [],
                                               "Enabled": true,
@@ -2482,7 +2577,11 @@
                                       "OffsetMonthHarvestStop": 0,
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [],
+                                      "CurrentAncestorList": [
+                                        "CropActivityManageProduct",
+                                        "ActivityFolder",
+                                        "ActivityTimerCropHarvest"
+                                      ],
                                       "Name": "HarvestSorghum",
                                       "Children": [],
                                       "Enabled": true,
@@ -2681,6 +2780,23 @@
                     {
                       "$type": "Models.CLEM.Reporting.ReportLabourRequirements, Models",
                       "Name": "ReportLabourRequirements",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.CLEM.Reporting.ReportResourceLedger, Models",
+                      "ResourceGroupsToReport": "Land",
+                      "ReportStyle": 1,
+                      "ReportLossesAsNegative": false,
+                      "IncludePrice": false,
+                      "IncludeFinancialYear": false,
+                      "IncludeConversions": false,
+                      "SelectedTab": null,
+                      "VariableNames": null,
+                      "EventNames": null,
+                      "GroupByVariableName": null,
+                      "Name": "ReportResourceLedger",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
