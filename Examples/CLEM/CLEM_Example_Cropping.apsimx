@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 285,
   "Version": 148,
   "Name": "Simulations",
   "Children": [
@@ -1578,6 +1578,7 @@
                   "Notes": null,
                   "SelectedTab": null,
                   "CurrentAncestorList": [
+                    "ZoneCLEM",
                     "FileCrop"
                   ],
                   "Name": "FileCrop",
@@ -1589,7 +1590,10 @@
                   "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
                   "Notes": null,
                   "SelectedTab": null,
-                  "CurrentAncestorList": [],
+                  "CurrentAncestorList": [
+                    "ZoneCLEM",
+                    "ResourcesHolder"
+                  ],
                   "Name": "Resources",
                   "Children": [
                     {
@@ -1598,7 +1602,11 @@
                       "UnitsOfAreaToHaConversion": 1.0,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [],
+                      "CurrentAncestorList": [
+                        "ZoneCLEM",
+                        "ResourcesHolder",
+                        "Land"
+                      ],
                       "Name": "Land",
                       "Children": [
                         {
@@ -1609,7 +1617,12 @@
                           "SoilType": "1",
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ResourcesHolder",
+                            "Land",
+                            "LandType"
+                          ],
                           "Name": "Padd1",
                           "Children": [],
                           "Enabled": true,
@@ -1622,10 +1635,12 @@
                     {
                       "$type": "Models.CLEM.Resources.Finance, Models",
                       "CurrencyName": null,
-                      "FirstMonthOfFinancialYear": 0,
+                      "FirstMonthOfFinancialYear": 7,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [],
+                      "CurrentAncestorList": [
+                        "Finance"
+                      ],
                       "Name": "Finances",
                       "Children": [
                         {
@@ -1637,7 +1652,10 @@
                           "InterestRatePaid": 0.0,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
+                          "CurrentAncestorList": [
+                            "Finance",
+                            "FinanceType"
+                          ],
                           "Name": "General account",
                           "Children": [],
                           "Enabled": true,
@@ -1653,7 +1671,11 @@
                       "AllowAging": true,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [],
+                      "CurrentAncestorList": [
+                        "ZoneCLEM",
+                        "ResourcesHolder",
+                        "Labour"
+                      ],
                       "Name": "Labour",
                       "Children": [
                         {
@@ -1664,7 +1686,12 @@
                           "Hired": false,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ResourcesHolder",
+                            "Labour",
+                            "LabourType"
+                          ],
                           "Name": "Male",
                           "Children": [],
                           "Enabled": true,
@@ -1674,7 +1701,12 @@
                           "$type": "Models.CLEM.Resources.LabourAvailabilityList, Models",
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ResourcesHolder",
+                            "Labour",
+                            "LabourAvailabilityList"
+                          ],
                           "Name": "LabourAvailabilityList",
                           "Children": [
                             {
@@ -1682,7 +1714,13 @@
                               "Value": 8.0,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [],
+                              "CurrentAncestorList": [
+                                "ZoneCLEM",
+                                "ResourcesHolder",
+                                "Labour",
+                                "LabourAvailabilityList",
+                                "LabourAvailabilityItem"
+                              ],
                               "Name": "MaleAvailability",
                               "Children": [],
                               "Enabled": true,
@@ -1700,7 +1738,11 @@
                       "$type": "Models.CLEM.Resources.ProductStore, Models",
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [],
+                      "CurrentAncestorList": [
+                        "ZoneCLEM",
+                        "ResourcesHolder",
+                        "ProductStore"
+                      ],
                       "Name": "ProductStore",
                       "Children": [
                         {
@@ -1709,7 +1751,12 @@
                           "StartingAmount": 0.0,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ResourcesHolder",
+                            "ProductStore",
+                            "ProductStoreType"
+                          ],
                           "Name": "Wheat",
                           "Children": [
                             {
@@ -1720,7 +1767,13 @@
                               "PurchaseOrSale": 0,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [],
+                              "CurrentAncestorList": [
+                                "ZoneCLEM",
+                                "ResourcesHolder",
+                                "ProductStore",
+                                "ProductStoreType",
+                                "ResourcePricing"
+                              ],
                               "Name": "WheatPrice",
                               "Children": [],
                               "Enabled": true,
@@ -1736,7 +1789,12 @@
                           "StartingAmount": 0.0,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ResourcesHolder",
+                            "ProductStore",
+                            "ProductStoreType"
+                          ],
                           "Name": "Sorghum",
                           "Children": [
                             {
@@ -1747,7 +1805,13 @@
                               "PurchaseOrSale": 0,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [],
+                              "CurrentAncestorList": [
+                                "ZoneCLEM",
+                                "ResourcesHolder",
+                                "ProductStore",
+                                "ProductStoreType",
+                                "ResourcePricing"
+                              ],
                               "Name": "SorghumPrice",
                               "Children": [],
                               "Enabled": true,
@@ -1769,7 +1833,10 @@
                   "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
                   "Notes": null,
                   "SelectedTab": null,
-                  "CurrentAncestorList": [],
+                  "CurrentAncestorList": [
+                    "ZoneCLEM",
+                    "ActivitiesHolder"
+                  ],
                   "Name": "Activities",
                   "Children": [
                     {
@@ -1778,7 +1845,11 @@
                       "OnPartialResourcesAvailableAction": 0,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [],
+                      "CurrentAncestorList": [
+                        "ZoneCLEM",
+                        "ActivitiesHolder",
+                        "ActivityFolder"
+                      ],
                       "Name": "Manage crops",
                       "Children": [
                         {
@@ -1791,6 +1862,9 @@
                           "Notes": null,
                           "SelectedTab": null,
                           "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ActivitiesHolder",
+                            "ActivityFolder",
                             "CropActivityManageCrop"
                           ],
                           "Name": "Manage rotation",
@@ -1815,6 +1889,10 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
+                                "ZoneCLEM",
+                                "ActivitiesHolder",
+                                "ActivityFolder",
+                                "CropActivityManageCrop",
                                 "CropActivityManageProduct"
                               ],
                               "Name": "Manage Wheat",
@@ -1826,6 +1904,10 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ActivitiesHolder",
+                                    "ActivityFolder",
+                                    "CropActivityManageCrop",
                                     "CropActivityManageProduct",
                                     "CropActivityTask"
                                   ],
@@ -1838,6 +1920,10 @@
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ActivitiesHolder",
+                                        "ActivityFolder",
+                                        "CropActivityManageCrop",
                                         "CropActivityManageProduct",
                                         "CropActivityTask",
                                         "ActivityTimerCropHarvest"
@@ -1862,6 +1948,10 @@
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ActivitiesHolder",
+                                        "ActivityFolder",
+                                        "CropActivityManageCrop",
                                         "CropActivityManageProduct",
                                         "CropActivityTask",
                                         "LabourRequirement"
@@ -1873,6 +1963,10 @@
                                           "Notes": null,
                                           "SelectedTab": null,
                                           "CurrentAncestorList": [
+                                            "ZoneCLEM",
+                                            "ActivitiesHolder",
+                                            "ActivityFolder",
+                                            "CropActivityManageCrop",
                                             "CropActivityManageProduct",
                                             "CropActivityTask",
                                             "LabourRequirement",
@@ -1898,6 +1992,10 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ActivitiesHolder",
+                                    "ActivityFolder",
+                                    "CropActivityManageCrop",
                                     "CropActivityManageProduct",
                                     "CropActivityTask"
                                   ],
@@ -1910,6 +2008,10 @@
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ActivitiesHolder",
+                                        "ActivityFolder",
+                                        "CropActivityManageCrop",
                                         "CropActivityManageProduct",
                                         "CropActivityTask",
                                         "ActivityTimerCropHarvest"
@@ -1934,6 +2036,10 @@
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ActivitiesHolder",
+                                        "ActivityFolder",
+                                        "CropActivityManageCrop",
                                         "CropActivityManageProduct",
                                         "CropActivityTask",
                                         "LabourRequirement"
@@ -1945,6 +2051,10 @@
                                           "Notes": null,
                                           "SelectedTab": null,
                                           "CurrentAncestorList": [
+                                            "ZoneCLEM",
+                                            "ActivitiesHolder",
+                                            "ActivityFolder",
+                                            "CropActivityManageCrop",
                                             "CropActivityManageProduct",
                                             "CropActivityTask",
                                             "LabourRequirement",
@@ -1970,6 +2080,10 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ActivitiesHolder",
+                                    "ActivityFolder",
+                                    "CropActivityManageCrop",
                                     "CropActivityManageProduct",
                                     "CropActivityTask"
                                   ],
@@ -1982,6 +2096,10 @@
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ActivitiesHolder",
+                                        "ActivityFolder",
+                                        "CropActivityManageCrop",
                                         "CropActivityManageProduct",
                                         "CropActivityTask",
                                         "ActivityTimerCropHarvest"
@@ -2006,6 +2124,10 @@
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ActivitiesHolder",
+                                        "ActivityFolder",
+                                        "CropActivityManageCrop",
                                         "CropActivityManageProduct",
                                         "CropActivityTask",
                                         "LabourRequirement"
@@ -2017,6 +2139,10 @@
                                           "Notes": null,
                                           "SelectedTab": null,
                                           "CurrentAncestorList": [
+                                            "ZoneCLEM",
+                                            "ActivitiesHolder",
+                                            "ActivityFolder",
+                                            "CropActivityManageCrop",
                                             "CropActivityManageProduct",
                                             "CropActivityTask",
                                             "LabourRequirement",
@@ -2042,6 +2168,10 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ActivitiesHolder",
+                                    "ActivityFolder",
+                                    "CropActivityManageCrop",
                                     "CropActivityManageProduct",
                                     "ActivityFolder"
                                   ],
@@ -2054,6 +2184,10 @@
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ActivitiesHolder",
+                                        "ActivityFolder",
+                                        "CropActivityManageCrop",
                                         "CropActivityManageProduct",
                                         "ActivityFolder",
                                         "CropActivityTask"
@@ -2075,6 +2209,10 @@
                                           "Notes": null,
                                           "SelectedTab": null,
                                           "CurrentAncestorList": [
+                                            "ZoneCLEM",
+                                            "ActivitiesHolder",
+                                            "ActivityFolder",
+                                            "CropActivityManageCrop",
                                             "CropActivityManageProduct",
                                             "ActivityFolder",
                                             "CropActivityTask",
@@ -2087,6 +2225,10 @@
                                               "Notes": null,
                                               "SelectedTab": null,
                                               "CurrentAncestorList": [
+                                                "ZoneCLEM",
+                                                "ActivitiesHolder",
+                                                "ActivityFolder",
+                                                "CropActivityManageCrop",
                                                 "CropActivityManageProduct",
                                                 "ActivityFolder",
                                                 "CropActivityTask",
@@ -2113,6 +2255,10 @@
                                           "Notes": null,
                                           "SelectedTab": null,
                                           "CurrentAncestorList": [
+                                            "ZoneCLEM",
+                                            "ActivitiesHolder",
+                                            "ActivityFolder",
+                                            "CropActivityManageCrop",
                                             "CropActivityManageProduct",
                                             "ActivityFolder",
                                             "CropActivityTask",
@@ -2134,6 +2280,10 @@
                                           "Notes": null,
                                           "SelectedTab": null,
                                           "CurrentAncestorList": [
+                                            "ZoneCLEM",
+                                            "ActivitiesHolder",
+                                            "ActivityFolder",
+                                            "CropActivityManageCrop",
                                             "CropActivityManageProduct",
                                             "ActivityFolder",
                                             "CropActivityTask",
@@ -2155,6 +2305,10 @@
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ActivitiesHolder",
+                                        "ActivityFolder",
+                                        "CropActivityManageCrop",
                                         "CropActivityManageProduct",
                                         "ActivityFolder",
                                         "CropActivityTask"
@@ -2176,6 +2330,10 @@
                                           "Notes": null,
                                           "SelectedTab": null,
                                           "CurrentAncestorList": [
+                                            "ZoneCLEM",
+                                            "ActivitiesHolder",
+                                            "ActivityFolder",
+                                            "CropActivityManageCrop",
                                             "CropActivityManageProduct",
                                             "ActivityFolder",
                                             "CropActivityTask",
@@ -2188,6 +2346,10 @@
                                               "Notes": null,
                                               "SelectedTab": null,
                                               "CurrentAncestorList": [
+                                                "ZoneCLEM",
+                                                "ActivitiesHolder",
+                                                "ActivityFolder",
+                                                "CropActivityManageCrop",
                                                 "CropActivityManageProduct",
                                                 "ActivityFolder",
                                                 "CropActivityTask",
@@ -2214,6 +2376,10 @@
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ActivitiesHolder",
+                                        "ActivityFolder",
+                                        "CropActivityManageCrop",
                                         "CropActivityManageProduct",
                                         "ActivityFolder",
                                         "ActivityTimerCropHarvest"
@@ -2251,6 +2417,10 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
+                                "ZoneCLEM",
+                                "ActivitiesHolder",
+                                "ActivityFolder",
+                                "CropActivityManageCrop",
                                 "CropActivityManageProduct"
                               ],
                               "Name": "Manage Sorghum",
@@ -2262,6 +2432,10 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ActivitiesHolder",
+                                    "ActivityFolder",
+                                    "CropActivityManageCrop",
                                     "CropActivityManageProduct",
                                     "CropActivityTask"
                                   ],
@@ -2274,6 +2448,10 @@
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ActivitiesHolder",
+                                        "ActivityFolder",
+                                        "CropActivityManageCrop",
                                         "CropActivityManageProduct",
                                         "CropActivityTask",
                                         "ActivityTimerCropHarvest"
@@ -2298,6 +2476,10 @@
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ActivitiesHolder",
+                                        "ActivityFolder",
+                                        "CropActivityManageCrop",
                                         "CropActivityManageProduct",
                                         "CropActivityTask",
                                         "LabourRequirement"
@@ -2309,6 +2491,10 @@
                                           "Notes": null,
                                           "SelectedTab": null,
                                           "CurrentAncestorList": [
+                                            "ZoneCLEM",
+                                            "ActivitiesHolder",
+                                            "ActivityFolder",
+                                            "CropActivityManageCrop",
                                             "CropActivityManageProduct",
                                             "CropActivityTask",
                                             "LabourRequirement",
@@ -2334,6 +2520,10 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ActivitiesHolder",
+                                    "ActivityFolder",
+                                    "CropActivityManageCrop",
                                     "CropActivityManageProduct",
                                     "CropActivityTask"
                                   ],
@@ -2346,6 +2536,10 @@
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ActivitiesHolder",
+                                        "ActivityFolder",
+                                        "CropActivityManageCrop",
                                         "CropActivityManageProduct",
                                         "CropActivityTask",
                                         "ActivityTimerCropHarvest"
@@ -2370,6 +2564,10 @@
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ActivitiesHolder",
+                                        "ActivityFolder",
+                                        "CropActivityManageCrop",
                                         "CropActivityManageProduct",
                                         "CropActivityTask",
                                         "LabourRequirement"
@@ -2381,6 +2579,10 @@
                                           "Notes": null,
                                           "SelectedTab": null,
                                           "CurrentAncestorList": [
+                                            "ZoneCLEM",
+                                            "ActivitiesHolder",
+                                            "ActivityFolder",
+                                            "CropActivityManageCrop",
                                             "CropActivityManageProduct",
                                             "CropActivityTask",
                                             "LabourRequirement",
@@ -2406,6 +2608,10 @@
                                   "Notes": null,
                                   "SelectedTab": null,
                                   "CurrentAncestorList": [
+                                    "ZoneCLEM",
+                                    "ActivitiesHolder",
+                                    "ActivityFolder",
+                                    "CropActivityManageCrop",
                                     "CropActivityManageProduct",
                                     "ActivityFolder"
                                   ],
@@ -2418,6 +2624,10 @@
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ActivitiesHolder",
+                                        "ActivityFolder",
+                                        "CropActivityManageCrop",
                                         "CropActivityManageProduct",
                                         "ActivityFolder",
                                         "CropActivityTask"
@@ -2439,6 +2649,10 @@
                                           "Notes": null,
                                           "SelectedTab": null,
                                           "CurrentAncestorList": [
+                                            "ZoneCLEM",
+                                            "ActivitiesHolder",
+                                            "ActivityFolder",
+                                            "CropActivityManageCrop",
                                             "CropActivityManageProduct",
                                             "ActivityFolder",
                                             "CropActivityTask",
@@ -2451,6 +2665,10 @@
                                               "Notes": null,
                                               "SelectedTab": null,
                                               "CurrentAncestorList": [
+                                                "ZoneCLEM",
+                                                "ActivitiesHolder",
+                                                "ActivityFolder",
+                                                "CropActivityManageCrop",
                                                 "CropActivityManageProduct",
                                                 "ActivityFolder",
                                                 "CropActivityTask",
@@ -2477,6 +2695,10 @@
                                           "Notes": null,
                                           "SelectedTab": null,
                                           "CurrentAncestorList": [
+                                            "ZoneCLEM",
+                                            "ActivitiesHolder",
+                                            "ActivityFolder",
+                                            "CropActivityManageCrop",
                                             "CropActivityManageProduct",
                                             "ActivityFolder",
                                             "CropActivityTask",
@@ -2498,6 +2720,10 @@
                                           "Notes": null,
                                           "SelectedTab": null,
                                           "CurrentAncestorList": [
+                                            "ZoneCLEM",
+                                            "ActivitiesHolder",
+                                            "ActivityFolder",
+                                            "CropActivityManageCrop",
                                             "CropActivityManageProduct",
                                             "ActivityFolder",
                                             "CropActivityTask",
@@ -2519,6 +2745,10 @@
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ActivitiesHolder",
+                                        "ActivityFolder",
+                                        "CropActivityManageCrop",
                                         "CropActivityManageProduct",
                                         "ActivityFolder",
                                         "CropActivityTask"
@@ -2540,6 +2770,10 @@
                                           "Notes": null,
                                           "SelectedTab": null,
                                           "CurrentAncestorList": [
+                                            "ZoneCLEM",
+                                            "ActivitiesHolder",
+                                            "ActivityFolder",
+                                            "CropActivityManageCrop",
                                             "CropActivityManageProduct",
                                             "ActivityFolder",
                                             "CropActivityTask",
@@ -2552,6 +2786,10 @@
                                               "Notes": null,
                                               "SelectedTab": null,
                                               "CurrentAncestorList": [
+                                                "ZoneCLEM",
+                                                "ActivitiesHolder",
+                                                "ActivityFolder",
+                                                "CropActivityManageCrop",
                                                 "CropActivityManageProduct",
                                                 "ActivityFolder",
                                                 "CropActivityTask",
@@ -2578,6 +2816,10 @@
                                       "Notes": null,
                                       "SelectedTab": null,
                                       "CurrentAncestorList": [
+                                        "ZoneCLEM",
+                                        "ActivitiesHolder",
+                                        "ActivityFolder",
+                                        "CropActivityManageCrop",
                                         "CropActivityManageProduct",
                                         "ActivityFolder",
                                         "ActivityTimerCropHarvest"
@@ -2609,7 +2851,12 @@
                           "OnPartialResourcesAvailableAction": 2,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ActivitiesHolder",
+                            "ActivityFolder",
+                            "ResourceActivitySell"
+                          ],
                           "Name": "Sell wheat",
                           "Children": [],
                           "Enabled": true,
@@ -2625,7 +2872,12 @@
                           "OnPartialResourcesAvailableAction": 0,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [],
+                          "CurrentAncestorList": [
+                            "ZoneCLEM",
+                            "ActivitiesHolder",
+                            "ActivityFolder",
+                            "ResourceActivitySell"
+                          ],
                           "Name": "Sell sorghum",
                           "Children": [
                             {
@@ -2634,7 +2886,13 @@
                               "MonthDue": 7,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [],
+                              "CurrentAncestorList": [
+                                "ZoneCLEM",
+                                "ActivitiesHolder",
+                                "ActivityFolder",
+                                "ResourceActivitySell",
+                                "ActivityTimerInterval"
+                              ],
                               "Name": "SellJuly",
                               "Children": [],
                               "Enabled": true,
