@@ -59,7 +59,7 @@ namespace Models.CLEM.Activities
         {
             if (TimingOK)
             {
-                if ((Parent as CropActivityManageProduct).CurrentlyManaged)
+                if (FindAncestor<CropActivityManageProduct>().CurrentlyManaged)
                     Status = ActivityStatus.Success;
                 else
                 {

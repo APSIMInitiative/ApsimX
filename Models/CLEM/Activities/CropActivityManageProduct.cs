@@ -313,9 +313,12 @@ namespace Models.CLEM.Activities
                 }
                 else
                 {
-                    rotationReady = true;
+                    if(CurrentlyManaged)
+                    {
+                        rotationReady = true;
+                        harvests.current = harvests.next;
+                    }
                     harvests.previous = harvests.next;
-                    harvests.current = harvests.next;
                     harvests.next = HarvestData.Skip(1).FirstOrDefault();
                     harvests.first = harvests.next;
                     harvests.last = null;
