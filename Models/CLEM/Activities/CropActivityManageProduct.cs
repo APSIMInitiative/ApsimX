@@ -263,10 +263,7 @@ namespace Models.CLEM.Activities
             if (harvests.first == null)
             {
                 harvests.first = HarvestData.FirstOrDefault();
-                if (!HarvestTagsUsed)
-                {
-                    harvests.next = harvests.first;
-                }
+                harvests.next = harvests.first;
             }
 
             int clockYrMth = CalculateYearMonth(clock.Today);
@@ -280,11 +277,11 @@ namespace Models.CLEM.Activities
                 harvestOffset.last = clockYrMth - CalculateYearMonth(harvests.last.HarvestDate) as int?;
 
             // change setting at time of harvest
-            if (harvestOffset.first == 0 || harvestOffset.current == 0 || harvestOffset.last == 0)
+            if (harvestOffset.current == 0)
             {
                 if (HarvestTagsUsed)
                 {
-                    if (harvests.first.HarvestType == "last" || (harvests.next?.HarvestType??"") == "last")
+                    if ((harvests.next?.HarvestType??"") == "last")
                     {
                         InsideMultiHarvestSequence = false;
                         harvests.previous = harvests.next;
@@ -294,7 +291,7 @@ namespace Models.CLEM.Activities
                         harvests.last = null;
                         rotationReady = true;
                     }
-                    else if (harvests.first.HarvestType == "first")
+                    else if ((harvests.next?.HarvestType ?? "") == "first")
                     {
                         harvests.current = harvests.first;
                         InsideMultiHarvestSequence = true;

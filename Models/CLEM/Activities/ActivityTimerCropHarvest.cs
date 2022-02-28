@@ -92,6 +92,11 @@ namespace Models.CLEM.Activities
                 {
                     seqStart = harvestOffsets.first - OffsetMonthHarvestStart;
                 }
+                // at time of current harvest
+                if (harvestOffsets.current >= OffsetMonthHarvestStart && harvestOffsets.current <= OffsetMonthHarvestStop)
+                {
+                    seqStart = harvestOffsets.current - OffsetMonthHarvestStart;
+                }
                 // if withing the period after the previous 
                 if (harvestOffsets.previous >= OffsetMonthHarvestStart && harvestOffsets.previous <= OffsetMonthHarvestStop)
                 {
