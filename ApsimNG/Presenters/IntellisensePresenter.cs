@@ -468,7 +468,7 @@
         {
             view.ItemSelected -= ContextItemSelected;
             view?.Cleanup();
-            methodCompletionView.Destroy();
+            (methodCompletionView as MethodCompletionView).Dispose();
         }
 
         /// <summary>

@@ -62,8 +62,9 @@ namespace Utility
         /// </summary>
         /// <param name="widget">The widget</param>
         /// <param name="signalName">Name of the signal</param>
-        public static void DetachHandler(this Widget widget, string signalName)
+        public static bool DetachHandler(this Widget widget, string signalName)
         {
+            bool result = false;
             PropertyInfo signals = typeof(GLib.Object).GetProperty("Signals", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
             FieldInfo afterHandler = typeof(GLib.Signal).GetField("after_handler", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
             FieldInfo beforeHandler = typeof(GLib.Signal).GetField("before_handler", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static);
@@ -76,11 +77,37 @@ namespace Utility
                 {
                     Delegate afterDel = (Delegate)afterHandler.GetValue(signalVal);
                     if (afterDel != null)
+                    {
                         widget.RemoveSignalHandler(signalName, afterDel);
+                        result = true;
+                    }
                     Delegate beforeDel = (Delegate)beforeHandler.GetValue(signalVal);
                     if (beforeDel != null)
+                    {
                         widget.RemoveSignalHandler(signalName, beforeDel);
+                        result = true;
+                    }
                 }
+            }
+            return result;    }
+
+        /// <summary>
+        /// Remove all items from a Menu, ensuring that their handlers are detached 
+        /// </summary>
+        /// <param name="menu">The menu</param>
+        public static void Clear (this Menu menu)
+        {
+            foreach (Widget w in menu)
+            {
+                // We're being cautious here. In CodeView.cs, the popup menu is partially
+                // constructed by Gtk.TextView, using who-knows-what magic. "Their" menu
+                // items aren't using the activate signal (I don't know how they work),
+                // but the activate handler is the link we need to break to all garbage collection.
+                // We get nasty problems if we try to dispose of those TextView items
+                bool canDispose = w.DetachHandler("activate") || w is SeparatorMenuItem;
+                menu.Remove(w);
+                if (canDispose)
+                    w.Dispose();
             }
         }
 

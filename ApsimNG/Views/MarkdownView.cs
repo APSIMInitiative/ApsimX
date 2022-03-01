@@ -53,6 +53,7 @@ namespace UserInterface.Views
 		private Cursor regularCursor;
         private MarkdownFindView findView;
         private AccelGroup accelerators = new AccelGroup();
+        private Menu popupMenu = new Menu();
 
         /// <summary>Constructor</summary>
         public MarkdownView() { }
@@ -165,7 +166,7 @@ namespace UserInterface.Views
         {
             try
             {
-                GLib.Signal.Emit(textView, "populate-popup", new Menu());
+                GLib.Signal.Emit(textView, "populate-popup", popupMenu);
             }
             catch (Exception err)
             {
@@ -787,11 +788,18 @@ namespace UserInterface.Views
             try
             {
                 accelerators.Dispose();
-                textView.KeyPressEvent -= OnTextViewKeyPress;
+                popupMenu.Clear();
+                popupMenu.Dispose();
+                findView.Destroy();
+                textView.PopulatePopup -= OnPopulatePopupMenu;
                 textView.VisibilityNotifyEvent -= OnVisibilityNotify;
                 textView.MotionNotifyEvent -= OnMotionNotify;
                 textView.WidgetEventAfter -= OnWidgetEventAfter;
                 mainWidget.Destroyed -= OnDestroyed;
+                mainWidget.Realized -= OnRealized;
+                textView.FocusInEvent -= OnGainFocus;
+                textView.FocusOutEvent -= OnLoseFocus;
+                textView.KeyPressEvent -= OnTextViewKeyPress;
                 owner = null;
             }
             catch (Exception err)

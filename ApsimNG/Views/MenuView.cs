@@ -27,7 +27,7 @@
         /// <summary>Destroy the menu</summary>
         public void Destroy()
         {
-            ClearMenu();
+            menu.Clear();
             menu.Dispose();
         }
 
@@ -35,7 +35,7 @@
         /// <param name="menuDescriptions">Descriptions for each item.</param>
         public void Populate(List<MenuDescriptionArgs> menuDescriptions)
         {
-            ClearMenu();
+            menu.Clear();
             foreach (MenuDescriptionArgs description in menuDescriptions)
             {
                 MenuItem item;
@@ -109,17 +109,6 @@
         public void Show()
         {
             menu.Popup();
-        }
-
-        /// <summary>Clear the menu</summary>
-        private void ClearMenu()
-        {
-            foreach (Widget w in menu)
-            {
-                w.DetachHandlers();
-                menu.Remove(w);
-                w.Dispose();
-            }
         }
     }
 }

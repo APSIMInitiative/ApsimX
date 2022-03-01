@@ -174,9 +174,9 @@
                 plot1.Model.MouseMove -= OnChartMouseMove;
 #pragma warning restore CS0618
                 captionEventBox.ButtonPressEvent -= OnCaptionLabelDoubleClick;
-                popup.DetachAllHandlers();
-                Clear();
+                popup.Clear();
                 popup.Dispose();
+                Clear();
                 plot1.Dispose();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;

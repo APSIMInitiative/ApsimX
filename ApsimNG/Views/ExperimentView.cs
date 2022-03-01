@@ -60,9 +60,9 @@
         {
             try
             {
-                (List as ListView).MainWidget.Dispose();
-                (NumberSimulationsLabel as LabelView).MainWidget.Dispose();
-                (MaximumNumSimulations as EditView).MainWidget.Dispose();
+                (List as ListView).Dispose();
+                (NumberSimulationsLabel as LabelView).Dispose();
+                (MaximumNumSimulations as EditView).Dispose();
                 (RunAPSIMAction as MenuItemView).Destroy();
 
                 mainWidget.Destroyed -= OnMainWidgetDestroyed;

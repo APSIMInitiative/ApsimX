@@ -59,6 +59,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            (genericView as ViewBase).Dispose();
         }
 
     }

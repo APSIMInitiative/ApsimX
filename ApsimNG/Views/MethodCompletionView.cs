@@ -112,6 +112,7 @@
                 masterWindow.FocusOutEvent += OnFocusOut;
                 masterWindow.ButtonPressEvent += OnFocusOut;
             }
+            mainWidget = mainWindow;
             Visible = false;
         }
 

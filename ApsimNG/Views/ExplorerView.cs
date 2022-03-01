@@ -54,16 +54,12 @@ namespace UserInterface.Views
         /// <param name="control">The control to add.</param>
         public void AddRightHandView(object control)
         {
-            // Remove existing right hand view.
-            foreach (var child in rightHandView.Children)
-            {
-                if (child != (descriptionView as ViewBase)?.MainWidget)
-                {
-                    rightHandView.Remove(child);
-                    child.Dispose();
-                }
-            }
 
+            // Remove existing right hand view.
+            if (CurrentRightHandView != null)
+                CurrentRightHandView.Dispose();
+
+            GC.Collect();
             ViewBase view = control as ViewBase;
             if (view != null)
             {
@@ -83,9 +79,10 @@ namespace UserInterface.Views
             {
                 if (descriptionView != null)
                 {
-                    Widget descriptionWidget = (descriptionView as ViewBase).MainWidget;
-                    rightHandView.Remove(descriptionWidget);
-                    descriptionWidget.Dispose();
+                    descriptionView.Dispose();
+                    //Widget descriptionWidget = (descriptionView as ViewBase).MainWidget;
+                    //rightHandView.Remove(descriptionWidget);
+                    //descriptionWidget.Dispose();
                 }
                 descriptionView = null;
             }

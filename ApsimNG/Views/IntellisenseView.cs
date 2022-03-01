@@ -371,9 +371,8 @@
             completionView.KeyPressEvent -= OnContextListKeyDown;
             completionView.KeyReleaseEvent -= OnKeyRelease;
 
-            if (completionForm.IsRealized)
-                completionForm.Dispose();
             completionView.Dispose();
+            completionForm.Destroy();
             completionForm.Dispose();
             completionForm = null;
         }
