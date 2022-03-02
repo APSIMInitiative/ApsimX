@@ -66,6 +66,28 @@
             clock = simulation.Children[2] as Clock;
             report = simulation.Children[3] as Report;
         }
+
+        /// <summary>
+        /// Ensure we can reference another report variabel in a report calculation.
+        /// </summary>
+        [Test]
+        public void ReferenceAnotherReportVariable()
+        {
+            report.VariableNames = new string[]
+            {
+                "[Clock].Today.DayOfYear as n",
+                "2 * n as 2n"
+            };
+            Runner runner = new Runner(simulations);
+            List<Exception> errors = runner.Run();
+            if (errors != null && errors.Count > 0)
+                throw errors[0];
+            double[] actual = storage.Get<double>("2n");
+            double[] expected = new double[10] { 2, 4, 6, 8, 10, 12, 14, 16, 18, 20 };
+
+            Assert.AreEqual(expected, actual);
+        }
+
         /// <summary>
         /// Ensures that multiple components that expose the same variables are reported correctly
         /// 
@@ -106,7 +128,6 @@
             var runners = new[]
             {
                 new Runner(simulation, runType: Runner.RunTypeEnum.MultiThreaded),
-                new Runner(simulation, runType: Runner.RunTypeEnum.MultiProcess)
             };
             foreach (Runner runner in runners)
             {
@@ -185,14 +206,14 @@
             report.VariableNames = new string[]
             {
                 "sum of [Clock].Today.DayOfYear from [Clock].StartOfSimulation to [Clock].EndOfSimulation as totalDoy1",
-                "sum of [Clock].Today.DayOfYear on [Clock].EndOfWeek from [Clock].EndOfSimulation to [Clock].StartOfSimulation as totalDoy2",
+                "sum of [Clock].Today.DayOfYear on [Clock].EndOfWeek from [Clock].StartOfSimulation to [Clock].EndOfSimulation as totalDoy2",
             };
 
             // Run the simulation.
             runner.Run();
 
-            Assert.AreEqual(storage.Get<double>("totalDoy1"), new double[] { 496 });
-            Assert.AreEqual(storage.Get<double>("totalDoy2"), new double[] { 70 });
+            Assert.AreEqual(new double[] { 496 }, storage.Get<double>("totalDoy1"));
+            Assert.AreEqual(new double[] { 70 }, storage.Get<double>("totalDoy2"));
         }
 
         /// <summary>This test ensures an expression with spaces works.</summary>
@@ -379,13 +400,16 @@
             Utilities.InjectLink(report, "clock", new MockClock());
 
             var events = new Events(report);
-            events.Publish("FinalInitialise", new object[] { report, new EventArgs() });
-
+            events.Publish("SubscribeToEvents", new object[] { report, new EventArgs() });
+            Assert.AreEqual(1, storage.tables.Count);
             Assert.AreEqual(storage.tables[0].TableName, "_Factors");
-            Assert.AreEqual(Utilities.TableToString(storage.tables[0]),
-               "ExperimentName,SimulationName,FolderName,FactorName,FactorValue\r\n" +
-               "          exp1,          sim1,         F,  Cultivar,      cult1\r\n" +
-               "          exp1,          sim1,         F,         N,          0\r\n");
+
+
+            Assert.IsTrue(
+                    Utilities.CreateTable(new string[]                      { "ExperimentName", "SimulationName", "FolderName", "FactorName", "FactorValue" },
+                                          new List<object[]> { new object[] {           "exp1",           "sim1",          "F",   "Cultivar",       "cult1" },
+                                                               new object[] {           "exp1",           "sim1",          "F",          "N",            0 } })
+                   .IsSame(storage.tables[0]));
         }
 
         /// <summary>
@@ -399,10 +423,7 @@
         public static void TestReportingOnModelEvents()
         {
             string json = ReflectionUtilities.GetResourceAsString("UnitTests.Report.ReportOnEvents.apsimx");
-            Simulations file = FileFormat.ReadFromString<Simulations>(json, out List<Exception> fileErrors);
-
-            if (fileErrors != null && fileErrors.Count > 0)
-                throw fileErrors[0];
+            Simulations file = FileFormat.ReadFromString<Simulations>(json, e => throw e, false);
 
             // This simulation needs a weather node, but using a legit
             // met component will just slow down the test.
@@ -483,7 +504,9 @@
 
             report.VariableNames = new string[] { "[MockModel].Z[3]", "[MockModel].Z[10]" };
 
-            Assert.IsNull(runner.Run());
+            List<Exception> errors = runner.Run();
+            Assert.NotNull(errors);
+            Assert.AreEqual(0, errors.Count);
 
             Assert.AreEqual(storage.Get<double>("MockModel.Z(3)"),
                             new double[] { 3, 3, 3, 3, 3, 3, 3, 3, 3, 3 });
@@ -506,8 +529,11 @@
 
             report.VariableNames = new string[] { "[MockModel].Z[3:]" };
 
-            Assert.IsNull(runner.Run());
+            List<Exception> errors = runner.Run();
+            Assert.NotNull(errors);
+            Assert.AreEqual(0, errors.Count);
             datastore.Writer.Stop();
+            datastore.Reader.Refresh();
 
             var data = datastore.Reader.GetData("Report");
             var columnNames = DataTableUtilities.GetColumnNames(data);
@@ -538,8 +564,11 @@
 
             report.VariableNames = new string[] { "[MockModel].Z[:2]" };
 
-            Assert.IsNull(runner.Run());
+            List<Exception> errors = runner.Run();
+            Assert.NotNull(errors);
+            Assert.AreEqual(0, errors.Count);
             datastore.Writer.Stop();
+            datastore.Reader.Refresh();
 
             var data = datastore.Reader.GetData("Report");
             var columnNames = DataTableUtilities.GetColumnNames(data);
@@ -569,8 +598,11 @@
 
             report.VariableNames = new string[] { "[MockModel].Z[2:3]" };
 
-            Assert.IsNull(runner.Run());
+            List<Exception> errors = runner.Run();
+            Assert.NotNull(errors);
+            Assert.AreEqual(0, errors.Count);
             datastore.Writer.Stop();
+            datastore.Reader.Refresh();
 
             var data = datastore.Reader.GetData("Report");
             var columnNames = DataTableUtilities.GetColumnNames(data);
@@ -669,7 +701,9 @@ namespace Models
                 "sum of [Mock].B from [Clock].StartOfSimulation to [Clock].EndOfSimulation as SumA" 
             };
 
-            Assert.IsNull(runner.Run());
+            List<Exception> errors = runner.Run();
+            Assert.NotNull(errors);
+            Assert.AreEqual(0, errors.Count);
 
             Assert.AreEqual(storage.Get<double>("SumA"),
                             new double[] { 6, 15, 34 });
@@ -714,5 +748,12 @@ namespace Models
             Assert.AreEqual(storage.Get<double>("Total.DayOfYear"), new double[] { 55 });
         }
 
+        [Test]
+        public void ArrayIndexOnScalarIsIllegal()
+        {
+            report.VariableNames = new[] { "[Clock].Today.DayOfYear[1]" };
+            List<Exception> errors = runner.Run();
+            Assert.AreEqual(1, errors.Count);
+        }
     }
 }

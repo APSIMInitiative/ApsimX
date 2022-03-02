@@ -9,12 +9,11 @@
     using System.Globalization;
 
     /// <summary>
-    /// # [Name]
     /// A function that accumulates values from child functions
     /// </summary>
     [Serializable]
     [Description("Keeps track of a variable")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class TrackerFunction : Model, IFunction
     {
@@ -75,26 +74,16 @@
             return 0;
         }
 
-        /// <summary>Invoked when simulation commences</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        /// <summary>
+        /// Connect event handlers.
+        /// </summary>
+        /// <param name="sender">Sender object..</param>
+        /// <param name="args">Event data.</param>
+        [EventSubscribe("SubscribeToEvents")]
+        private void OnConnectToEvents(object sender, EventArgs args)
         {
             events.Subscribe(StartEventName, OnStartEvent);
             events.Subscribe(EndEventName, OnEndEvent);
-        }
-
-        /// <summary>
-        /// Invoked when simulation has completed.
-        /// </summary>
-        /// <param name="sender">Event sender</param>
-        /// <param name="e">Event arguments</param>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            events.Unsubscribe(StartEventName, OnStartEvent);
-            events.Unsubscribe(StartEventName, OnEndEvent);
         }
 
         /// <summary>

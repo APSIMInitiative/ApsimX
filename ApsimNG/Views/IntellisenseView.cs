@@ -6,6 +6,8 @@
     using EventArguments;
     using Intellisense;
     using System.Linq;
+    using Interfaces;
+    using Extensions;
 
     class IntellisenseView : ViewBase
     {
@@ -52,6 +54,7 @@
                 SkipPagerHint = true,
                 SkipTaskbarHint = true,
             };
+            mainWidget = completionForm;
 
             Frame completionFrame = new Frame();
             completionForm.Add(completionFrame);
@@ -241,24 +244,8 @@
                 completionForm.Resize(completionForm.WidthRequest, completionForm.HeightRequest);
                 completionForm.ShowAll();
                 completionView.SetCursor(new TreePath("0"), null, false);
-                completionView.Columns[2].FixedWidth = completionView.WidthRequest / 10;
-
-                // OK so sometimes the HTMLView's web browser will steal focus. There is a
-                // hack in the HTMLView code which manually gives focus back to the toplevel
-                // window in this situation, but apparently creating the intellisense popup
-                // is enough to trigger this hack if there is a HTMLView onscreen. This is a
-                // problem because giving the focus back to the main window will take focus
-                // away from the intellisense popup which causes the intellisense popup to
-                // disappear. The workaround is to wait for all Gtk events to process, and
-                // then recreate the intellisense popup if need be.
-                while (GLib.MainContext.Iteration()) ;
-                if (!completionForm.Visible)
-                {
-                    // For some reason, the coordinates/sizing get reset if we lose focus.
-                    completionForm.Move(x, y);
-                    completionForm.Resize(completionForm.WidthRequest, completionForm.HeightRequest);
-                    completionForm.ShowAll();
-                }
+                if (completionView.WidthRequest > 0)
+                    completionView.Columns[2].FixedWidth = completionView.WidthRequest / 10;
                 return true;
             }
             return false;
@@ -295,12 +282,18 @@
             // the right hand side of the popup instead.
             // If the popup is too close to the bottom of the screen, we use the y-coordinate as
             // the bottom side of the popup instead.
-            int xres = MainWindow.Screen.Width;
-            int yres = MainWindow.Screen.Height;
+            //
+            // fixme - need to rewrite this using GdkMonitor.
+            // This must have always been broken on multi-monitor setups(?).
 
-            if ((x + completionForm.WidthRequest) > xres)            
+            Gdk.Rectangle workArea = Gdk.Display.Default.GetMonitorAtWindow(((ViewBase)MasterView).MainWidget.Window).Workarea;
+            int xres = workArea.Right;
+            int yres = workArea.Bottom;
+
+
+            if ((x + completionForm.WidthRequest) > xres)
                 // We are very close to the right-hand side of the screen
-                x -= completionForm.WidthRequest;            
+                x -= completionForm.WidthRequest;
             
             if ((y + completionForm.HeightRequest) > yres)
                 // We are very close to the bottom of the screen
@@ -332,13 +325,13 @@
         /// Populates the completion window with data.
         /// </summary>
         /// <param name="items">List of completion data.</param>
-        public void Populate(List<CompletionData> items)
+        public void Populate(List<ICompletionItem> items)
         {
             completionModel.Clear();
 
             // Add empty first row.
-            completionModel.AppendValues("", "", "", "", "", "", "");
-            foreach (CompletionData item in items)
+            completionModel.Append();
+            foreach (ICompletionItem item in items)
             {
                 IEnumerable<string> descriptionLines = item.Description?.Split(Environment.NewLine.ToCharArray()).Select(x => x.Trim()).Where(x => !string.IsNullOrEmpty(x)).Take(2);
                 string description = descriptionLines?.Count() < 2 ? descriptionLines.FirstOrDefault() : descriptionLines?.Aggregate((x, y) => x + Environment.NewLine + y);
@@ -355,7 +348,7 @@
             completionModel.Clear();
 
             // Add empty first row.
-            completionModel.AppendValues("", "", "", "", "", "", "");
+            completionModel.Append();
 
             Gdk.Pixbuf functionPixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Function.png", 16, 16);
             Gdk.Pixbuf propertyPixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.Property.png", 16, 16);
@@ -379,9 +372,9 @@
             completionView.KeyReleaseEvent -= OnKeyRelease;
 
             if (completionForm.IsRealized)
-                completionForm.Destroy();
+                completionForm.Dispose();
             completionView.Dispose();
-            completionForm.Destroy();
+            completionForm.Dispose();
             completionForm = null;
         }
 
@@ -421,8 +414,8 @@
         /// (Mouse) button press event handler. If it is a left mouse double click, consumes 
         /// the ItemSelected event.
         /// </summary>
-        /// <param name="o">Sender</param>
-        /// <param name="e">Event arguments</param>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="e">Event arguments.</param>
         [GLib.ConnectBefore]
         private void OnButtonPress(object sender, ButtonPressEventArgs e)
         {
@@ -472,7 +465,7 @@
         /// Key release event handler. If the key is enter, consumes the ItemSelected event.
         /// </summary>
         /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event arguments.</param>
+        /// <param name="e">Event arguments.</param>
         [GLib.ConnectBefore]
         private void OnKeyRelease(object sender, KeyReleaseEventArgs e)
         {            

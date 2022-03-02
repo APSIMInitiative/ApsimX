@@ -70,7 +70,7 @@ namespace Models.CLEM
         /// <summary>
         /// Excess heifer sold
         /// </summary>
-        ExcessHeiferSale,
+        ExcessPreBreederSale,
         /// <summary>
         /// Excess sire sold
         /// </summary>
@@ -148,7 +148,11 @@ namespace Models.CLEM
         /// <summary>
         /// Value per kg live weight
         /// </summary>
-        perKg
+        perKg,
+        /// <summary>
+        /// Value per adult equivalent
+        /// </summary>
+        perAE,
     }
 
     /// <summary>
@@ -283,6 +287,40 @@ namespace Models.CLEM
     }
 
     /// <summary>
+    /// Labour limit type calculation type
+    /// </summary>
+    public enum LabourLimitType
+    {
+        /// <summary>
+        /// Represents a rate or fixed days specified
+        /// </summary>
+        AsDaysRequired,
+        /// <summary>
+        /// Relates to the total days allowed
+        /// </summary>
+        AsTotalAllowed,
+        /// <summary>
+        /// As proportion of the days required
+        /// </summary>
+        ProportionOfDaysRequired
+    }
+
+    /// <summary>
+    /// Style to calculate hired labour payment
+    /// </summary>
+    public enum PayHiredLabourCalculationStyle
+    {
+        /// <summary>
+        /// Use labour available in LabourAvailability for all hired labour
+        /// </summary>
+        ByAvailableLabour,
+        /// <summary>
+        /// Use the hired labour used in timestep
+        /// </summary>
+        ByLabourUsedInTimeStep
+    }
+
+    /// <summary>
     /// Ruminant feeding styles
     /// </summary>
     public enum RuminantFeedActivityTypes
@@ -406,7 +444,11 @@ namespace Models.CLEM
         /// <summary>
         /// FileReader model
         /// </summary>
-        FileReader
+        FileReader,
+        /// <summary>
+        /// Filter model
+        /// </summary>
+        Filter
     }
 
     /// <summary>
@@ -527,6 +569,325 @@ namespace Models.CLEM
         /// Reserve proportion
         /// </summary>
         ReserveProportion
+    }
+
+    /// <summary>
+    /// Style of ruminant tag application
+    /// </summary>
+    public enum TagApplicationStyle
+    {
+        /// <summary>
+        /// Add tag
+        /// </summary>
+        Add,
+        /// <summary>
+        /// Remove tag
+        /// </summary>
+        Remove
+    }
+
+    /// <summary>
+    /// Style to identify different ruminant groups needed by activities
+    /// </summary>
+    public enum RuminantGroupStyleSecondary
+    {
+        /// <summary>
+        /// No style specified
+        /// </summary>
+        NotSpecified = 0,
+
+        /// <summary>
+        /// Select females to remove
+        /// </summary>
+        Females = 100,
+
+        /// <summary>
+        /// Female pre-breeders to remove
+        /// </summary>
+        FemalePreBreeders = 110,
+
+        /// <summary>
+        /// Female breeders to remove
+        /// </summary>
+        FemaleBreeders = 120,
+
+        /// <summary>
+        /// Select males to remove
+        /// </summary>
+        Males = 200,
+
+        /// <summary>
+        /// Male pre-breeders to remove
+        /// </summary>
+        MalePreBreeders = 210,
+
+        /// <summary>
+        /// Male breeders to remove
+        /// </summary>
+        MaleBreeders = 220,
+    }
+
+    /// <summary>
+    /// Tertiary style to identify different ruminant groups needed by activities
+    /// </summary>
+    public enum RuminantGroupStyleTertiary
+    {
+        /// <summary>
+        /// No style specified
+        /// </summary>
+        NotSpecified = 0,
+
+        /// <summary>
+        /// From the specified herd available
+        /// </summary>
+        FromHerd = 10,
+
+        /// <summary>
+        /// From only individuals flagged for sale
+        /// </summary>
+        FromSales = 20,
+
+        /// <summary>
+        /// From the current list of potential purchases
+        /// </summary>
+        FromPurchases = 30,
+    }
+
+    /// <summary>
+    /// Style of inheriting ruminant attributes from parents
+    /// </summary>
+    public enum AttributeInheritanceStyle
+    {
+        /// <summary>
+        /// Not inheritated
+        /// </summary>
+        None = 0,
+        /// <summary>
+        /// From mother's value if present
+        /// </summary>
+        Maternal = 5,
+        /// <summary>
+        /// From father's value if present
+        /// </summary>
+        Paternal = 10,
+        /// <summary>
+        /// At least one parent has attribute or least of both parents
+        /// </summary>
+        LeastParentValue = 15,
+        /// <summary>
+        /// At least one parent has attribute or greatest of both parents
+        /// </summary>
+        GreatestParentValue = 20,
+        /// <summary>
+        /// Both parents must have attribute and the least value is used
+        /// </summary>
+        LeastBothParents = 25,
+        /// <summary>
+        /// Both parents must have attribute and the greatest value is used
+        /// </summary>
+        GreatestBothParents = 30,
+        /// <summary>
+        /// Mean of the attribute value of parents using zero for those without attribute
+        /// </summary>
+        MeanValueZeroAbsent = 35,
+        /// <summary>
+        /// Mean of the attribute value of parents ignoring those without attribute
+        /// </summary>
+        MeanValueIgnoreAbsent = 40,
+        /// <summary>
+        /// Rules for single genetic trait (punnett square)
+        /// </summary>
+        AsGeneticTrait = 45
+    }
+
+    /// <summary>
+    /// Type of ledger transaction (gain or loss)
+    /// </summary>
+    public enum TransactionType
+    {
+        /// <summary>
+        /// Loss of resource
+        /// </summary>
+        Loss = 0,
+        /// <summary>
+        /// Gain in resource
+        /// </summary>
+        Gain = 1
+    }
+
+    /// <summary>
+    /// Style transaction reporting in resource ledger (style and amount) or (gain and loss)
+    /// </summary>
+    public enum ReportTransactionStyle
+    {
+        /// <summary>
+        /// Reports transaction type and amount
+        /// </summary>
+        TypeAndAmountColumns = 1,
+        /// <summary>
+        /// Reports both gain and loss columns for transaction
+        /// </summary>
+        GainAndLossColumns = 0
+    }
+
+    /// <summary>
+    /// The style of assessing an Attribute for filtering
+    /// </summary>
+    public enum AttributeFilterStyle
+    {
+        /// <summary>
+        /// Use the value associated with the attribute
+        /// </summary>
+        ByValue,
+        /// <summary>
+        /// Use boolean of whether the attribute exists on the individual
+        /// </summary>
+        Exists
+    }
+
+    /// <summary>
+    /// The style of accessing date
+    /// </summary>
+    public enum DateStyle
+    {
+        /// <summary>
+        /// Accept single datestamp (CulturalInvariant)
+        /// </summary>
+        DateStamp,
+        /// <summary>
+        /// Use Year and Month entries
+        /// </summary>
+        YearAndMonth
+    }
+
+    /// <summary>
+    /// Style to report transactions involving individuals in herd
+    /// </summary>
+    public enum RuminantTransactionsGroupingStyle
+    {
+        /// <summary>
+        /// Combine all individuals
+        /// </summary>
+        Combined,
+        /// <summary>
+        /// Grouped by pricing groups
+        /// </summary>
+        ByPriceGroup,
+        /// <summary>
+        /// Grouped by class
+        /// </summary>
+        ByClass,
+        /// <summary>
+        /// Grouped by class and sex
+        /// </summary>
+        BySexAndClass,
+    }
+
+    /// <summary>
+    /// General classes of ruminants
+    /// </summary>
+    public enum RuminantClass
+    {
+        /// <summary>
+        /// Suckling
+        /// </summary>
+        Suckling,
+        /// <summary>
+        /// Weaner
+        /// </summary>
+        Weaner,
+        /// <summary>
+        /// PreBreeder
+        /// </summary>
+        PreBreeder,
+        /// <summary>
+        /// Breeder
+        /// </summary>
+        Breeder,
+        /// <summary>
+        /// Castrate
+        /// </summary>
+        Castrate,
+        /// <summary>
+        /// Sire
+        /// </summary>
+        Sire
+    }
+
+    /// <summary>
+    /// Style of Transmute
+    /// </summary>
+    public enum TransmuteStyle
+    {
+        /// <summary>
+        /// Direct transmute resource (B) to shortfall resource (A) e.g. barter
+        /// </summary>
+        Direct,
+        /// <summary>
+        /// Use pricing details of transmute resource (B) and shortfall resource (A) to calculate exchange rate
+        /// </summary>
+        UsePricing
+    }
+
+    /// <summary>
+    /// Style of taking individuals from a filter group
+    /// </summary>
+    public enum TakeFromFilterStyle
+    {
+        /// <summary>
+        /// Take a proportion of the group selected
+        /// </summary>
+        TakeProportion,
+        /// <summary>
+        /// Take a set number of individuals
+        /// </summary>
+        TakeIndividuals,
+        /// <summary>
+        /// Skip a proportion of the group selected and return the remainder
+        /// </summary>
+        SkipProportion,
+        /// <summary>
+        /// Skip a set number of individuals and return the remainder
+        /// </summary>
+        SkipIndividuals
+    }
+
+    /// <summary>
+    /// Position for reducing individuals from a filter group
+    /// </summary>
+    public enum TakeFromFilteredPositionStyle
+    {
+        /// <summary>
+        /// Take/Skip from start
+        /// </summary>
+        Start,
+        /// <summary>
+        /// Take/Skip from end
+        /// </summary>
+        End
+    }
+
+    /// <summary>
+    /// The overall style of ruminants required
+    /// </summary>
+    public enum GetRuminantHerdSelectionStyle
+    {
+        /// <summary>
+        /// All individuals currently in herd both including marked for sale
+        /// </summary>
+        AllOnFarm,
+        /// <summary>
+        /// Individuals in purchase list yet to be bought
+        /// </summary>
+        ForPurchase,
+        /// <summary>
+        /// Individuals currently marked for sale in the herd
+        /// </summary>
+        MarkedForSale,
+        /// <summary>
+        /// Individuals not marked for sale in the herd
+        /// </summary>
+        NotMarkedForSale,
     }
 
 }

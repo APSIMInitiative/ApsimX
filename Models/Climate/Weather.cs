@@ -74,6 +74,12 @@
         private int windIndex;
 
         /// <summary>
+        /// The index of the co2 column in the weather file, or -1
+        /// if the weather file doesn't contain co2.
+        /// </summary>
+        private int co2Index;
+
+        /// <summary>
         /// The index of the DiffuseFraction column in the weather file
         /// </summary>
         private int DiffuseFractionIndex;
@@ -328,6 +334,7 @@
         /// <summary>
         /// Gets or sets the DF value found in weather file or zero if not specified
         /// </summary>
+        [Units("0-1")]
         [JsonIgnore]
         public double DiffuseFraction { get; set; }
 
@@ -548,12 +555,15 @@
             this.rainfallHoursIndex = 0;
             this.vapourPressureIndex = 0;
             this.windIndex = 0;
+            this.co2Index = -1;
             this.DiffuseFractionIndex = 0;
             this.dayLengthIndex = 0;
             if (CO2 == 0)
                 this.CO2 = 350;
             if (AirPressure == 0)
                 this.AirPressure = 1010;
+            if (DiffuseFraction == 0)
+                this.DiffuseFraction = -1;
             if (reader != null)
             {
                 reader.Close();
@@ -572,6 +582,15 @@
                 FirstDateOfSpring = FirstDateOfAutumn;
                 FirstDateOfAutumn = temp;
             }
+        }
+
+        /// <summary>
+        /// Perform the necessary initialisation at the start of simulation.
+        /// </summary>
+        [EventSubscribe("StartOfSimulation")]
+        private void OnStartOfSimulation(object sender, EventArgs e)
+        {
+            First = true;
         }
 
         /// <summary>
@@ -644,6 +663,8 @@
             this.Wind = TodaysMetData.Wind;
             this.DiffuseFraction = TodaysMetData.DiffuseFraction;
             this.DayLength = TodaysMetData.DayLength;
+            if (co2Index != -1)
+                CO2 = TodaysMetData.CO2;
             
             if (this.PreparingNewWeatherData != null)
                 this.PreparingNewWeatherData.Invoke(this, new EventArgs());
@@ -684,66 +705,77 @@
                 this.reader.SeekToDate(date);
             }
 
-            object[] values;
 
             DailyMetDataFromFile readMetData = new DailyMetDataFromFile();
 
             try
             {
-                values = this.reader.GetNextLineOfData();
+                readMetData.Raw = reader.GetNextLineOfData();
             }
             catch (IndexOutOfRangeException err)
             {
                 throw new Exception($"Unable to retrieve weather data on {date.ToString("yyy-MM-dd")} in file {FileName}", err);
             }
 
-            if (date != this.reader.GetDateFromValues(values))
+            if (date != this.reader.GetDateFromValues(readMetData.Raw))
                 throw new Exception("Non consecutive dates found in file: " + this.FileName + ".  Another posibility is that you have two clock objects in your simulation, there should only be one");
 
             if (this.radiationIndex != -1)
-                readMetData.Radn = Convert.ToSingle(values[this.radiationIndex], CultureInfo.InvariantCulture);
+                readMetData.Radn = Convert.ToSingle(readMetData.Raw[this.radiationIndex], CultureInfo.InvariantCulture);
             else
                 readMetData.Radn = this.reader.ConstantAsDouble("radn");
 
             if (this.maximumTemperatureIndex != -1)
-                readMetData.MaxT = Convert.ToSingle(values[this.maximumTemperatureIndex], CultureInfo.InvariantCulture);
+                readMetData.MaxT = Convert.ToSingle(readMetData.Raw[this.maximumTemperatureIndex], CultureInfo.InvariantCulture);
             else
                 readMetData.MaxT = this.reader.ConstantAsDouble("maxt");
 
             if (this.minimumTemperatureIndex != -1)
-                readMetData.MinT = Convert.ToSingle(values[this.minimumTemperatureIndex], CultureInfo.InvariantCulture);
+                readMetData.MinT = Convert.ToSingle(readMetData.Raw[this.minimumTemperatureIndex], CultureInfo.InvariantCulture);
             else
                 readMetData.MinT = this.reader.ConstantAsDouble("mint");
 
             if (this.rainIndex != -1)
-                readMetData.Rain = Convert.ToSingle(values[this.rainIndex], CultureInfo.InvariantCulture);
+                readMetData.Rain = Convert.ToSingle(readMetData.Raw[this.rainIndex], CultureInfo.InvariantCulture);
             else
                 readMetData.Rain = this.reader.ConstantAsDouble("rain");
 
             if (this.evaporationIndex == -1)
                 readMetData.PanEvap = double.NaN;
             else
-                readMetData.PanEvap = Convert.ToSingle(values[this.evaporationIndex], CultureInfo.InvariantCulture);
+                readMetData.PanEvap = Convert.ToSingle(readMetData.Raw[this.evaporationIndex], CultureInfo.InvariantCulture);
 
             if (this.rainfallHoursIndex == -1)
                 readMetData.RainfallHours = double.NaN;
             else
-                readMetData.RainfallHours = Convert.ToSingle(values[this.rainfallHoursIndex], CultureInfo.InvariantCulture);
+                readMetData.RainfallHours = Convert.ToSingle(readMetData.Raw[this.rainfallHoursIndex], CultureInfo.InvariantCulture);
 
             if (this.vapourPressureIndex == -1)
                 readMetData.VP = Math.Max(0, MetUtilities.svp(readMetData.MinT));
             else
-                readMetData.VP = Convert.ToSingle(values[this.vapourPressureIndex], CultureInfo.InvariantCulture);
+                readMetData.VP = Convert.ToSingle(readMetData.Raw[this.vapourPressureIndex], CultureInfo.InvariantCulture);
 
             if (this.windIndex == -1)
                 readMetData.Wind = 3.0;
             else
-                readMetData.Wind = Convert.ToSingle(values[this.windIndex], CultureInfo.InvariantCulture);
+                readMetData.Wind = Convert.ToSingle(readMetData.Raw[this.windIndex], CultureInfo.InvariantCulture);
+
+            if (co2Index != -1)
+                readMetData.CO2 = Convert.ToDouble(readMetData.Raw[co2Index], CultureInfo.InvariantCulture);
 
             if (this.DiffuseFractionIndex == -1)
-                readMetData.DiffuseFraction = -1;
+            {
+                // Estimate Diffuse Fraction using the Approach of Bristow and Campbell
+                double Qmax = MetUtilities.QMax(clock.Today.DayOfYear + 1, Latitude, MetUtilities.Taz, MetUtilities.Alpha, 0.0); // Radiation for clear and dry sky (ie low humidity)
+                double Q0 = MetUtilities.Q0(clock.Today.DayOfYear + 1, Latitude);
+                double B = Qmax / Q0;
+                double Tt = MathUtilities.Bound(readMetData.Radn / Q0, 0, 1);
+                if (Tt > B) Tt = B;
+                readMetData.DiffuseFraction = (1 - Math.Exp(0.6 * (1 - B / Tt) / (B - 0.4)));
+                if (Tt > 0.5 && readMetData.DiffuseFraction < 0.1) readMetData.DiffuseFraction = 0.1;
+            }
             else
-                readMetData.DiffuseFraction = Convert.ToSingle(values[this.DiffuseFractionIndex], CultureInfo.InvariantCulture);
+                readMetData.DiffuseFraction = Convert.ToSingle(readMetData.Raw[this.DiffuseFractionIndex], CultureInfo.InvariantCulture);
 
             if (this.dayLengthIndex == -1)  // Daylength is not a column - check for a constant
             {
@@ -753,7 +785,7 @@
                     readMetData.DayLength = -1;
             }
             else
-                readMetData.DayLength = Convert.ToSingle(values[this.dayLengthIndex], CultureInfo.InvariantCulture);
+                readMetData.DayLength = Convert.ToSingle(readMetData.Raw[this.dayLengthIndex], CultureInfo.InvariantCulture);
 
             return readMetData;
         }
@@ -839,6 +871,7 @@
                     this.windIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "Wind");
                     this.DiffuseFractionIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DifFr");
                     this.dayLengthIndex = StringUtilities.IndexOfCaseInsensitive(this.reader.Headings, "DayLength");
+                    co2Index = StringUtilities.IndexOfCaseInsensitive(reader.Headings, "CO2");
 
                     if (!string.IsNullOrEmpty(ConstantsFile))
                     {
@@ -885,6 +918,18 @@
             if (reader != null)
                 reader.Close();
             reader = null;
+        }
+
+        /// <summary>
+        /// Read a user-defined value from today's weather data.
+        /// </summary>
+        /// <param name="columnName">Name of the column.</param>
+        public double GetValue(string columnName)
+        {
+            int columnIndex = StringUtilities.IndexOfCaseInsensitive(reader.Headings, columnName);
+            if (columnIndex == -1)
+                throw new InvalidOperationException($"Column {columnName} does not exist in {FileName}");
+            return Convert.ToDouble(TodaysMetData.Raw[columnIndex], CultureInfo.InvariantCulture);
         }
 
         /// <summary>

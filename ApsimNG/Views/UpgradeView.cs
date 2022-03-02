@@ -7,6 +7,7 @@
     using System.Net;
     using System.Reflection;
     using APSIM.Shared.Utilities;
+    using global::UserInterface.Extensions;
     using Gtk;
     using Interfaces;
 
@@ -22,6 +23,7 @@
             public string IssueTitle { get; set; }
             public string IssueURL { get; set; }
             public string ReleaseURL { get; set; }
+            public uint RevisionNumber { get; set; }
         }
 
         /// <summary>
@@ -53,13 +55,13 @@
         private Entry emailBox = null;
         private ComboBox countryBox = null;
         private Label label1 = null;
-        private Alignment htmlAlign = null;
+        private Container licenseContainer = null;
         private CheckButton checkbutton1 = null;
         private Gtk.TreeView listview1 = null;
         private Alignment alignment7 = null;
         private CheckButton oldVersions = null;
         private ListStore listmodel = new ListStore(typeof(string), typeof(string), typeof(string));
-        private HTMLView htmlView;
+        private MarkdownView licenseView;
 
         /// <summary>
         /// Constructor
@@ -78,7 +80,7 @@
             emailBox = (Entry)builder.GetObject("emailBox");
             countryBox = (ComboBox)builder.GetObject("countryBox");
             label1 = (Label)builder.GetObject("label1");
-            htmlAlign = (Alignment)builder.GetObject("HTMLalign");
+            licenseContainer = (Container)builder.GetObject("licenseContainer");
             checkbutton1 = (CheckButton)builder.GetObject("checkbutton1");
             listview1 = (Gtk.TreeView)builder.GetObject("listview1");
             alignment7 = (Alignment)builder.GetObject("alignment7");
@@ -86,7 +88,7 @@
             listview1.Model = listmodel;
 
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            if (version.Revision == 0)
+            if (version.Build == 0)
             {
                 button1.Sensitive = false;
                 table2.Hide();
@@ -121,8 +123,8 @@
             table1.FocusChain = new Widget[] { alignment7, button1, button2 };
             table2.FocusChain = new Widget[] { firstNameBox, lastNameBox, emailBox, organisationBox, countryBox };
 
-            htmlView = new HTMLView(new ViewBase(null));
-            htmlAlign.Add(htmlView.MainWidget);
+            licenseView = new MarkdownView(owner);
+            licenseContainer.Add(licenseView.MainWidget);
             tabbedExplorerView = owner as IMainView;
 
             window1.TransientFor = owner.MainWidget.Toplevel as Window;
@@ -148,13 +150,13 @@
         {
             try
             {
-                window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+                window1.Window.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
                 PopulateForm();
-                window1.GdkWindow.Cursor = null;
+                window1.Window.Cursor = null;
                 if (loadFailure)
-                    window1.Destroy();
+                    window1.Dispose();
             }
             catch (Exception err)
             {
@@ -200,28 +202,15 @@
             if (File.Exists(tempLicenseFileName))
                 File.Delete(tempLicenseFileName);
 
-            if (version.Revision == 0)
+            if (version.Build == 0)
             {
                 button1.Sensitive = false;
                 table2.Hide();
                 checkbutton1.Hide();
-                htmlView.SetContents("<center><span style=\"color:red\"><b>WARNING!</b></span><br/>You are currently using a custom build<br/><b>Upgrade is not available!</b></center>", false, false);
+                licenseView.Text = "You are currently using a custom build - **Upgrade is not available!**";
             }
             else
-            {
-                try
-                {
-                    // web.DownloadFile(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", tempLicenseFileName);
-                    // HTMLview.SetContents(File.ReadAllText(tempLicenseFileName), false, true);
-                    htmlView.SetContents(@"https://apsimdev.apsim.info/APSIM.Registration.Portal/APSIM_NonCommercial_RD_licence.htm", false, true);
-                }
-                catch (Exception)
-                {
-                    ViewBase.MasterView.ShowMsgDialog("Cannot download the license.", "Error", MessageType.Error, ButtonsType.Ok, window1);
-                    loadFailure = true;
-                }
-            }
-
+                licenseView.Text = ReflectionUtilities.GetResourceAsString("ApsimNG.LICENSE.md");
         }
 
         /// <summary>
@@ -237,7 +226,7 @@
                 upgrades = WebUtilities.CallRESTService<Upgrade[]>("https://apsimdev.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=" + version.Revision);
             foreach (Upgrade upgrade in oldVersions.Active ? allUpgrades : upgrades)
             {
-                string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.IssueNumber;
+                string versionNumber = $"{upgrade.ReleaseDate:yyyy.MM}.{upgrade.RevisionNumber}";
                 listmodel.AppendValues(versionNumber, upgrade.IssueTitle, "");
             }
             if (listmodel.IterNChildren() > 0)
@@ -326,13 +315,16 @@
                             throw new Exception("Encountered an error while updating registration information. Please try again later.", err);
                         }
 
-                        window1.GdkWindow.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+                        window1.Window.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
 
                         WebClient web = new WebClient();
 
                         tempSetupFileName = Path.Combine(Path.GetTempPath(), "APSIMSetup.exe");
 
                         string sourceURL;
+
+                        upgrade.ReleaseURL = upgrade.ReleaseURL.Replace("ApsimSetup", "apsim-");
+
                         if (ProcessUtilities.CurrentOS.IsMac)
                         {
                             sourceURL = Path.ChangeExtension(upgrade.ReleaseURL, "dmg");
@@ -369,11 +361,11 @@
                             if (waitDlg != null)
                             {
                                 web.DownloadProgressChanged -= OnDownloadProgressChanged;
-                                waitDlg.Destroy();
+                                waitDlg.Dispose();
                                 waitDlg = null;
                             }
-                            if (window1 != null && window1.GdkWindow != null)
-                                window1.GdkWindow.Cursor = null;
+                            if (window1 != null && window1.Window != null)
+                                window1.Window.Cursor = null;
                         }
 
                     }
@@ -393,7 +385,7 @@
             if (string.IsNullOrWhiteSpace(firstNameBox.Text) || 
                 string.IsNullOrWhiteSpace(lastNameBox.Text) ||
                 string.IsNullOrWhiteSpace(emailBox.Text) || 
-                string.IsNullOrWhiteSpace(countryBox.ActiveText))
+                string.IsNullOrWhiteSpace(countryBox.GetActiveText()))
                 throw new Exception("The mandatory details at the bottom of the screen (denoted with an asterisk) must be completed.");
         }
 
@@ -431,11 +423,14 @@
         {
             try
             {
-                if (waitDlg != null)
+                Application.Invoke((_, __) =>
                 {
-                    waitDlg.Destroy();
-                    waitDlg = null;
-                }
+                    if (waitDlg != null)
+                    {
+                        waitDlg.Dispose();
+                        waitDlg = null;
+                    }
+                });
                 if (!e.Cancelled && !string.IsNullOrEmpty(tempSetupFileName) && versionNumber != null)
                 {
                     try
@@ -445,53 +440,44 @@
 
                         if (File.Exists(tempSetupFileName))
                         {
-                            // Copy the separate upgrader executable to the temp directory.
-                            string sourceUpgraderFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Updater.exe");
-                            string upgraderFileName = Path.Combine(Path.GetTempPath(), "Updater.exe");
 
-                            // Check to see if upgrader is already running for whatever reason.
-                            // Kill them if found.
-                            foreach (Process process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(upgraderFileName)))
-                                process.Kill();
-
-                            // Delete the old upgrader.
-                            if (File.Exists(upgraderFileName))
-                                File.Delete(upgraderFileName);
-                            // Copy in the new upgrader.
-                            File.Copy(sourceUpgraderFileName, upgraderFileName, true);
-
-                            // Run the upgrader.
-                            string binDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                            string ourDirectory = Path.GetFullPath(Path.Combine(binDirectory, ".."));
-                            string newDirectory = Path.GetFullPath(Path.Combine(ourDirectory, "..", "APSIM" + versionNumber));
-                            string arguments = StringUtilities.DQuote(ourDirectory) + " " +
-                                               StringUtilities.DQuote(newDirectory);
-
-                            ProcessStartInfo info = new ProcessStartInfo();
-                            if (ProcessUtilities.CurrentOS.IsMac)
+                            if (ProcessUtilities.CurrentOS.IsWindows)
                             {
-                                info.FileName = "mono";
-                                info.Arguments = upgraderFileName + " " + arguments;
+                                // The InnoSetup installer can be run with the /upgradefrom:xxx parameter
+                                // and will handle the removal of the previous version.
+                                string oldVersion = Models.Core.Simulations.ApsimVersion;
+                                Process.Start(tempSetupFileName, $"/upgradefrom={oldVersion}");
+                            }
+                            else if (ProcessUtilities.CurrentOS.IsMac)
+                            {
+                                string script = Path.Combine(Path.GetTempPath(), $"apsim-upgrade-mac-{Guid.NewGuid()}.sh");
+                                ReflectionUtilities.WriteResourceToFile(GetType().Assembly, "ApsimNG.Resources.Scripts.upgrade-mac.sh", script);
+                                string apsimxDir = PathUtilities.GetAbsolutePath("%root%", null);
+                                Process.Start("/bin/sh", $"{script} {tempSetupFileName} {apsimxDir}");
                             }
                             else
                             {
-                                info.FileName = upgraderFileName;
-                                info.Arguments = arguments;
+                                // Assume (Debian) Linux and hope for the best.
+                                string script = Path.Combine(Path.GetTempPath(), $"apsim-upgrade-debian-{Guid.NewGuid()}.sh");
+                                ReflectionUtilities.WriteResourceToFile(GetType().Assembly, "ApsimNG.Resources.Scripts.upgrade-debian.sh", script);
+                                Process.Start("/bin/sh", $"{script} {tempSetupFileName}");
                             }
-                            info.WorkingDirectory = Path.GetTempPath();
-                            Process.Start(info);
-                            window1.GdkWindow.Cursor = null;
 
-                            // Shutdown the user interface
-                            window1.Destroy();
-                            tabbedExplorerView.Close();
+                            Application.Invoke((_, __) =>
+                            {
+                                window1.Window.Cursor = null;
+
+                                // Shutdown the user interface
+                                window1.Dispose();
+                                tabbedExplorerView.Close();
+                            });
                         }
                     }
                     catch (Exception err)
                     {
-                        window1.GdkWindow.Cursor = null;
                         Application.Invoke(delegate
                         {
+                            window1.Window.Cursor = null;
                             ViewBase.MasterView.ShowMsgDialog(err.Message, "Installation Error", MessageType.Error, ButtonsType.Ok, window1);
                         });
                     }
@@ -513,7 +499,7 @@
 
             url = AddToURL(url, "lastName", lastNameBox.Text);
             url = AddToURL(url, "organisation", organisationBox.Text);
-            url = AddToURL(url, "country", countryBox.ActiveText);
+            url = AddToURL(url, "country", countryBox.GetActiveText());
             url = AddToURL(url, "email", emailBox.Text);
             url = AddToURL(url, "product", "APSIM Next Generation");
             url = AddToURL(url, "version", version);
@@ -566,7 +552,8 @@
                 Utility.Configuration.Settings.LastName = lastNameBox.Text;
                 Utility.Configuration.Settings.Email = emailBox.Text;
                 Utility.Configuration.Settings.Organisation = organisationBox.Text;
-                Utility.Configuration.Settings.Country = countryBox.ActiveText;
+                Utility.Configuration.Settings.Country = countryBox.GetActiveText();
+                Utility.Configuration.Settings.Save();
             }
             catch (Exception err)
             {

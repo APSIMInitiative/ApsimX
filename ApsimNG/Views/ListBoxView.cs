@@ -1,4 +1,9 @@
-﻿namespace UserInterface.Views
+﻿# if NETCOREAPP
+using TreeModel = Gtk.ITreeModel;
+#endif
+using UserInterface.Presenters;
+
+namespace UserInterface.Views
 {
     using APSIM.Shared.Utilities;
     using System;
@@ -9,6 +14,7 @@
     using System.Runtime.InteropServices;
     using Gtk;
     using Interfaces;
+    using Extensions;
 
     /// <summary>An interface for a list box</summary>
     public interface IListBoxView
@@ -50,11 +56,7 @@
     {
         public IkonView(TreeModel model) : base(model) { }
 
-        public int ItemPadding
-        {
-            get { return (int)GetProperty("item-padding"); }
-            set { SetProperty("item-padding", new GLib.Value(value)); }
-        }
+
     }
 
     /// <summary>A list view.</summary>
@@ -85,13 +87,25 @@
         public ListBoxView(ViewBase owner) : base(owner)
         {
             Listview = new IkonView(listmodel);
-            //listview = new TreeView(listmodel);
             mainWidget = Listview;
-            Listview.MarkupColumn = 0;
-            Listview.PixbufColumn = 1;
+
+            // It appears that the gtkiconview has changed considerably
+            // between gtk2 and gtk3. In the gtk3 world, use of the 
+            // set_text_column API is not recommended and in fact it appears
+            // to behave differently to the way it did in gtk2 anyway.
+            // https://bugzilla.gnome.org/show_bug.cgi?id=680953
+            CellRendererPixbuf imageCell = new CellRendererPixbuf();
+            Listview.PackStart(imageCell, false);
+            Listview.AddAttribute(imageCell, "pixbuf", 1);
+            CellRenderer cell = new CellRendererText(){ WrapMode = Pango.WrapMode.Word };
+            Listview.PackStart(cell, true);
+            Listview.AddAttribute(cell, "markup", 0);
+
             Listview.TooltipColumn = 2;
             Listview.SelectionMode = SelectionMode.Browse;
-            Listview.Orientation = Gtk.Orientation.Horizontal;
+
+            Listview.ItemOrientation = Gtk.Orientation.Horizontal;
+
             Listview.RowSpacing = 0;
             Listview.ColumnSpacing = 0;
             Listview.ItemPadding = 0;
@@ -109,7 +123,7 @@
                 Listview.SelectionChanged -= OnSelectionChanged;
                 Listview.ButtonPressEvent -= OnDoubleClick;
                 ClearPopup();
-                popup.Destroy();
+                popup.Dispose();
                 listmodel.Dispose();
                 accel.Dispose();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
@@ -154,15 +168,14 @@
                     else if (isModels)
                     {
                         // lie112 Add model name component of namespace to allow for treeview images to be placed in folders in resources
-                        string resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + addedModelDetails + text + ".png";
-                        if (!MasterView.HasResource(resourceNameForImage))
-                        {
-                            resourceNameForImage = "ApsimNG.Resources.TreeViewImages." + text + ".png";
-                        }
-                        if (MasterView.HasResource(resourceNameForImage))
-                            image = new Gdk.Pixbuf(null, resourceNameForImage);
-                        else
-                            image = new Gdk.Pixbuf(null, "ApsimNG.Resources.TreeViewImages.Simulations.png"); // It there something else we could use as a default?
+                        (bool exists, string resourceName) = ExplorerPresenter.CheckIfIconExists($"{addedModelDetails}{text}");
+                        if (!exists)
+                            (exists, resourceName) = ExplorerPresenter.CheckIfIconExists(text);
+                        
+                        if (!exists)
+                            (exists, resourceName) = ExplorerPresenter.CheckIfIconExists("Simulations");
+
+                        image = new Gdk.Pixbuf(null, resourceName);
                     }
                     string tooltip = isModels ? val : StringUtilities.PangoString(val);
                     listmodel.AppendValues(text, image, tooltip);
@@ -174,26 +187,39 @@
         /// Add a list item based on a file name
         /// </summary>
         /// <param name="fileName">The filename.</param>
+        /// <param name="image">The image.</param>
         private string AddFileNameListItem(string fileName, ref Gdk.Pixbuf image)
         {
-            List<string> resourceNames = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
-            List<string> largeImageNames = resourceNames.FindAll(r => r.Contains(".LargeImages."));
-            string result = $"<span>{Path.GetFileName(fileName)}</span>\n<small><i><span>{Path.GetDirectoryName(fileName)}</span></i></small>";
+            image = null;
             Listview.ItemPadding = 6; // Restore padding if we have images to display
 
-            image = null;
-            // Add an image index.
-            foreach (string largeImageName in largeImageNames)
+            List<string> resourceNames = System.Reflection.Assembly.GetExecutingAssembly().GetManifestResourceNames().ToList();
+
+            List<string> images = resourceNames.FindAll(r => r.EndsWith(".svg"));
+            images.AddRange(resourceNames.FindAll(r => r.Contains(".LargeImages.")));
+
+            string result = $"<span>{Path.GetFileName(fileName)}</span>\n<small><i><span>{Path.GetDirectoryName(fileName)}</span></i></small>";
+            string searchName = Path.GetFileNameWithoutExtension(fileName);
+            (bool exists, string resourceName) = ExplorerPresenter.CheckIfIconExists(searchName);
+            if (exists)
+                image = new Gdk.Pixbuf(null, resourceName);
+            else
             {
-                string shortImageName = StringUtilities.GetAfter(largeImageName, ".LargeImages.").Replace(".png", "").ToLower();
-                if (result.ToLower().Contains(shortImageName))
+                // Add an image index.
+                foreach (string imageName in images)
                 {
-                    image = new Gdk.Pixbuf(null, largeImageName);
-                    break;
+                    string[] parts = imageName.Split('.');
+                    string shortImageName = parts.Length > 1 ? parts[parts.Length - 2] : StringUtilities.GetAfter(imageName, ".LargeImages.").Replace(".png", "");
+                    if (result.ToLower().Contains(shortImageName.ToLower()))
+                    {
+                        image = new Gdk.Pixbuf(null, imageName);
+                        break;
+                    }
                 }
             }
             if (image == null)
                 image = new Gdk.Pixbuf(null, "ApsimNG.Resources.apsim logo32.png");
+
             return result;
         }
 
@@ -402,9 +428,7 @@
                 }
                 else if (!String.IsNullOrEmpty(description.ResourceNameForImage) && MasterView.HasResource(description.ResourceNameForImage))
                 {
-                    ImageMenuItem imageItem = new ImageMenuItem(description.Name);
-                    imageItem.Image = new Image(null, description.ResourceNameForImage);
-                    item = imageItem;
+                    item = WidgetExtensions.CreateImageMenuItem(description.Name, new Image(null, description.ResourceNameForImage));
                 }
                 else
                 {
@@ -464,7 +488,7 @@
                     }
                 }
                 popup.Remove(w);
-                w.Destroy();
+                w.Dispose();
             }
         }
     }

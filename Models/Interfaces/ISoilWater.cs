@@ -14,10 +14,6 @@
         ///<summary>Gets or sets soil thickness for each layer (mm) in the parameter grid(</summary>
         double[] Thickness { get; }
 
-
-        /// <summary>gets or sets the thickness for each layer (layer) that the water balance model computes</summary>
-        double[] LayerThickness { get; }
-
         ///<summary>Gets or sets volumetric soil water content (mm/mm)(</summary>
         double[] SW { get; set; }
 
@@ -41,6 +37,12 @@
         
         /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>
         double Drainage { get; }
+
+        /// <summary>Subsurface drain (mm)</summary>
+        double SubsurfaceDrain { get; }
+
+        /// <summary>Pond depth (mm).</summary>
+        double Pond { get; }
 
         /// <summary>Fraction of incoming radiation reflected from bare soil</summary>
         double Salb { get; }

@@ -6,14 +6,13 @@ using Models.Core;
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
     /// Returns the temperature of the surface soil layer with the weighting: " +
     /// 0.25*DayBeforeYesterday + 0.5*Yesterday + 0.25*Today
     /// </summary>
     [Serializable]
     [Description("Returns the temperature of the surface soil layer with the weighting: " +
                  "0.25*DayBeforeYesterday + 0.5*Yesterday + 0.25*Today")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SoilTemperatureWeightedFunction : Model, IFunction
     {

@@ -5,11 +5,12 @@ namespace UserInterface.Views
     using Gtk;
     using System.Data;
     using System;
-    using Models.Core;
     using System.Drawing;
     using System.IO;
     using System.Drawing.Imaging;
     using System.Collections.Generic;
+    using Models.Core;
+    using Extensions;
 
     public interface IActivityLedgerGridView
     {
@@ -52,17 +53,19 @@ namespace UserInterface.Views
         public Gtk.TreeView Grid { get; set; }
         public Gtk.TreeView Fixedcolview { get; set; }
         private HBox hbox1 = null;
-        private Gtk.Image image1 = null;
+        private Gtk.Image image1 = new Gtk.Image();
         /// <summary>
         /// The splitter between the fixed and non-fixed grids.
         /// </summary>
         private HPaned splitter = null;
 
-
         private Gdk.Pixbuf imagePixbuf = null;
 
         private ListStore gridmodel = new ListStore(typeof(string));
         private Dictionary<CellRenderer, int> colLookup = new Dictionary<CellRenderer, int>();
+
+        private Widget refColWidget = null;
+        private int headerHeight = 0;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="GridView" /> class.
@@ -75,7 +78,7 @@ namespace UserInterface.Views
             Grid = (Gtk.TreeView)builder.GetObject("gridview");
             Fixedcolview = (Gtk.TreeView)builder.GetObject("fixedcolview");
             splitter = (HPaned)builder.GetObject("hpaned1");
-            image1 = (Gtk.Image)builder.GetObject("image1");
+            image1 = new Gtk.Image();
             mainWidget = hbox1;
             Grid.Model = gridmodel;
             Grid.Selection.Mode = SelectionMode.Multiple;
@@ -154,10 +157,31 @@ namespace UserInterface.Views
         /// </summary>
         private void ClearGridColumns()
         {
+            if (refColWidget != null)
+            {
+                refColWidget.SizeAllocated -= RefColWidget_SizeAllocated;
+                refColWidget = null;
+            }
+            while (Fixedcolview.Columns.Length > 0)
+            {
+                TreeViewColumn col = Fixedcolview.GetColumn(0);
+                foreach (CellRenderer render in col.Cells)
+                {
+                    if (render is CellRendererText)
+                    {
+                        CellRendererText textRender = render as CellRendererText;
+                        col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
+                    }
+                }
+
+                Fixedcolview.RemoveColumn(Fixedcolview.GetColumn(0));
+            }
             while (Grid.Columns.Length > 0)
             {
                 TreeViewColumn col = Grid.GetColumn(0);
-                foreach (CellRenderer render in col.CellRenderers)
+
+                foreach (CellRenderer render in col.Cells)
+
                 {
                     if (render is CellRendererText)
                     {
@@ -169,23 +193,9 @@ namespace UserInterface.Views
                         CellRendererPixbuf pixRender = render as CellRendererPixbuf;
                         col.SetCellDataFunc(pixRender, (CellLayoutDataFunc)null);
                     }
-                    render.Destroy();
+                    render.Dispose();
                 }
                 Grid.RemoveColumn(Grid.GetColumn(0));
-            }
-            while (Fixedcolview.Columns.Length > 0)
-            {
-                TreeViewColumn col = Fixedcolview.GetColumn(0);
-                foreach (CellRenderer render in col.CellRenderers)
-                {
-                    if (render is CellRendererText)
-                    {
-                        CellRendererText textRender = render as CellRendererText;
-                        col.SetCellDataFunc(textRender, (CellLayoutDataFunc)null);
-                    }
-                }
-
-                Fixedcolview.RemoveColumn(Fixedcolview.GetColumn(0));
             }
         }
 
@@ -273,19 +283,16 @@ namespace UserInterface.Views
             }
 
             gridmodel = new ListStore(colTypes);
-            Grid.ModifyBase(StateType.Active, Fixedcolview.Style.Base(StateType.Selected));
-            Grid.ModifyText(StateType.Active, Fixedcolview.Style.Text(StateType.Selected));
-            Fixedcolview.ModifyBase(StateType.Active, Grid.Style.Base(StateType.Selected));
-            Fixedcolview.ModifyText(StateType.Active, Grid.Style.Text(StateType.Selected));
+
 
             image1.Visible = false;
             // Now set up the grid columns
             for (int i = 0; i < nCols; i++)
             {
-                /// Design plan: include renderers for text, toggles and combos, but hide all but one of them
+                // Design plan: include renderers for text, toggles and combos, but hide all but one of them
                 CellRendererText textRender = new Gtk.CellRendererText();
                 CellRendererPixbuf pixbufRender = new CellRendererPixbuf();
-                pixbufRender.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Save.png");
+                pixbufRender.Pixbuf = new Gdk.Pixbuf(null, "ApsimNG.Resources.MenuImages.Save.svg");
                 pixbufRender.Xalign = 0.5f;
 
                 if (i == 0 || i == nCols-1)
@@ -340,16 +347,9 @@ namespace UserInterface.Views
                 TreeViewColumn fixedColumn = new TreeViewColumn(this.DataSource.Columns[i].ColumnName, textRender, "text", i);
                 //fixedColumn.Sizing = TreeViewColumnSizing.GrowOnly;
                 fixedColumn.Resizable = false;
-                if (i == 0)
-                {
-                    fixedColumn.SetCellDataFunc(textRender, OnSetCellData);
-                }
-                else
-                {
-                    fixedColumn.SetCellDataFunc(pixbufRender, RenderActivityStatus);
-                }
+                fixedColumn.SetCellDataFunc(textRender, OnSetCellData);
                 fixedColumn.Alignment = 0.0f; // For centered alignment of the column header
-                fixedColumn.Visible = false;
+                fixedColumn.Visible = true;
                 Fixedcolview.AppendColumn(fixedColumn);
             }
 
@@ -381,6 +381,7 @@ namespace UserInterface.Views
 
             Grid.Show();
 
+            Fixedcolview.WidthRequest = 150;
             if (MasterView.MainWindow != null)
             {
                 MasterView.MainWindow.Cursor = null;
@@ -394,7 +395,9 @@ namespace UserInterface.Views
         /// <param name="cell"></param>
         /// <param name="model"></param>
         /// <param name="iter"></param>
-        public void RenderActivityStatus(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
+
+        public void RenderActivityStatus(TreeViewColumn col, CellRenderer cell, ITreeModel model, TreeIter iter)
+
         {
             TreePath path = model.GetPath(iter);
             int rowNo = path.Indices[0];
@@ -446,7 +449,9 @@ namespace UserInterface.Views
         /// <param name="cell"></param>
         /// <param name="model"></param>
         /// <param name="iter"></param>
-        public void OnSetCellData(TreeViewColumn col, CellRenderer cell, TreeModel model, TreeIter iter)
+
+        public void OnSetCellData(TreeViewColumn col, CellRenderer cell, ITreeModel model, TreeIter iter)
+
         {
             TreePath path = model.GetPath(iter);
             Gtk.TreeView view = col.TreeView as Gtk.TreeView;
@@ -486,12 +491,12 @@ namespace UserInterface.Views
                 }
 
                 newLabel.UseMarkup = true;
+                newLabel.Text = System.Security.SecurityElement.Escape(Grid.Columns[i].Title);
                 newLabel.Markup = "<b>" + System.Security.SecurityElement.Escape(Grid.Columns[i].Title) + "</b>";
                 if (this.DataSource.Columns[i].Caption != this.DataSource.Columns[i].ColumnName)
                 {
                     newLabel.Parent.Parent.Parent.TooltipText = this.DataSource.Columns[i].ColumnName;
                 }
-
                 newLabel.Show();
             }
         }
@@ -549,9 +554,9 @@ namespace UserInterface.Views
                 }
                 else if (value < RowCount) // Remove existing rows. But let's check first to be sure they're empty
                 {
-                    /// TBI
+                    // TBI
                 }
-                /// TBI this.Grid.RowCount = value;
+                // TBI this.Grid.RowCount = value;
             }
         }
 
@@ -613,7 +618,7 @@ namespace UserInterface.Views
                 {
                     foreach (TreeViewColumn col in Grid.Columns)
                     {
-                        foreach (CellRenderer render in col.CellRenderers)
+                        foreach (CellRenderer render in col.Cells)
                         {
                             if (render is CellRendererText)
                             {
@@ -662,11 +667,19 @@ namespace UserInterface.Views
                 if (Fixedcolview.Columns.Length > i)
                 {
                     Fixedcolview.Columns[i].Visible = i < number;
+                    if (Fixedcolview.Columns[i].Visible && headerHeight > 0 && Fixedcolview.Columns[i].Widget != null)
+                        Fixedcolview.Columns[i].Widget.HeightRequest = headerHeight;
                 }
 
                 if (Grid.Columns.Length > i)
                 {
                     Grid.Columns[i].Visible = i >= number;
+                    if (refColWidget == null & Grid.Columns[i].Visible)
+                    {
+                        refColWidget = Grid.Columns[i].Widget;
+                        if (refColWidget != null)
+                            refColWidget.SizeAllocated += RefColWidget_SizeAllocated;
+                    }
                 }
             }
             if (number > 0)
@@ -698,11 +711,11 @@ namespace UserInterface.Views
                 int splitterWidth = (int)splitter.StyleGetProperty("handle-size");
                 if (splitter.Allocation.Width > 1)
                 {
-                    splitter.Position = Math.Min(Fixedcolview.SizeRequest().Width + splitterWidth, splitter.Allocation.Width / 2);
+                    splitter.Position = Math.Min(Fixedcolview.WidthRequest + splitterWidth, splitter.Allocation.Width / 2);
                 }
                 else
                 {
-                    splitter.Position = Fixedcolview.SizeRequest().Width + splitterWidth;
+                    splitter.Position = Fixedcolview.WidthRequest + splitterWidth;
                 }
 
             }
@@ -714,24 +727,44 @@ namespace UserInterface.Views
                 Fixedcolview.Selection.Changed -= Fixedcolview_CursorChanged;
                 Fixedcolview.Visible = false;
                 splitter.Position = 0;
-                splitter.Child1.HideAll();
+                splitter.Child1.Hide();
             }
             numberLockedCols = number;
+        }
+
+        /// <summary>
+        /// This is intended to assure the header height of the Fixedcolview grid matches that of the main grid.
+        /// By detecting when Gtk has allocated height for the main grid headers, we adjust the fixed grid headers
+        /// to match. This is not as robust or generalised as it might be, but should suffice for the purposes of this view.
+        /// </summary>
+        /// <param name="o"></param>
+        /// <param name="args"></param>
+        private void RefColWidget_SizeAllocated(object o, SizeAllocatedArgs args)
+        {
+            try
+            {
+                headerHeight = refColWidget.AllocatedHeight;
+                for (int i = 0; i < numberLockedCols; i++)
+                {
+                    Fixedcolview.Columns[i].Widget.HeightRequest = headerHeight;
+                }
+                // We have the value we need, so we can clean up. There's no real need to return, as we don't expect
+                // the column headers to change.
+                refColWidget.SizeAllocated -= RefColWidget_SizeAllocated;
+                refColWidget = null;
+            }
+            catch (Exception err)
+            {
+                ShowError(err);
+            }
         }
 
         /// <summary>Get screenshot of grid.</summary>
         public System.Drawing.Image GetScreenshot()
         {
-            // Create a Bitmap and draw the DataGridView on it.
-            int width;
-            int height;
-            Gdk.Window gridWindow = hbox1.GdkWindow;  // Should we draw from hbox1 or from gridview?
-            gridWindow.GetSize(out width, out height);
-            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(gridWindow, gridWindow.Colormap, 0, 0, 0, 0, width, height);
-            byte[] buffer = screenshot.SaveToBuffer("png");
-            MemoryStream stream = new MemoryStream(buffer);
-            System.Drawing.Bitmap bitmap = new Bitmap(stream);
-            return bitmap;
+
+            throw new NotImplementedException();
+
         }
 
         /// <summary>

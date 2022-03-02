@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Models.Core;
 using Models.Functions;
 using Models.PMF.Phen;
@@ -6,11 +6,13 @@ using Models.PMF.Interfaces;
 using Newtonsoft.Json;
 using Models.PMF.Library;
 using Models.Interfaces;
+using System.Collections.Generic;
+using APSIM.Shared.Documentation;
+using System.Linq;
 
 namespace Models.PMF.Organs
 {
     /// <summary>
-    /// # [Name] 
     /// This organ uses a generic model for plant reproductive components.  Yield is calculated from its components in terms of organ number and size (for example, grain number and grain size).  
     /// </summary>
     [Serializable]
@@ -55,13 +57,11 @@ namespace Models.PMF.Organs
         public Biomass Removed { get; set; }
 
         /// <summary>The amount of mass lost each day from maintenance respiration</summary>
+        [Units("g/m^2")]
         virtual public double MaintenanceRespiration { get { return 0; } set { } }
 
         /// <summary>The dry matter demand</summary>
         public BiomassPoolType DMDemand { get; set; }
-
-        /// <summary>The dry matter demand</summary>
-        public BiomassPoolType DMDemandPriorityFactor { get; set; }
 
         /// <summary>Structural nitrogen demand</summary>
         public BiomassPoolType NDemand { get; set; }
@@ -74,6 +74,7 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets or sets the n fixation cost.</summary>
         [JsonIgnore]
+        [Units("g DM/g N")]
         public double NFixationCost { get { return 0; } }
 
         /// <summary>The water content</summary>
@@ -86,20 +87,24 @@ namespace Models.PMF.Organs
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("/m2")]
         IFunction NumberFunction = null;
+
         /// <summary>The n filling rate</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/m2/d")]
         IFunction NFillingRate = null;
+        
         /// <summary>The maximum n conc</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         IFunction MaximumNConc = null;
         /// <summary>The minimum n conc</summary>
+        
         [Link(Type = LinkType.Child, ByName = true)]
         [Units("g/g")]
         IFunction MinimumNConc = null;
+        
         /// <summary>Carbon concentration</summary>
-        /// [Units("-")]
+        [Units("g/g")]
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction CarbonConcentration = null;
 
@@ -114,15 +119,23 @@ namespace Models.PMF.Organs
 
         /// <summary>Dry matter conversion efficiency</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/g")]
         public IFunction DMConversionEfficiency = null;
 
         /// <summary>The proportion of biomass repired each day</summary>
         [Link(Type = LinkType.Child, ByName = true, IsOptional = true)]
+        [Units("g/m^2")]
         public IFunction MaintenanceRespirationFunction = null;
 
         /// <summary>The cost for remobilisation</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/g")]
         public IFunction RemobilisationCost = null;
+
+        /// <summary>Factors for assigning priority to DM demands</summary>
+        [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/m2/d")]
+        private BiomassDemand dmDemandPriorityFactors = null;
 
         /// <summary>The ripe stage</summary>
         [Description("Stage at which this organ becomes ripe")]
@@ -249,7 +262,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("Cutting")]
         private void OnCutting(object sender, EventArgs e)
         {
-                Summary.WriteMessage(this, "Cutting " + Name + " from " + parentPlant.Name);
+                Summary.WriteMessage(this, "Cutting " + Name + " from " + parentPlant.Name, MessageType.Diagnostic);
 
                 Live.Clear();
                 Dead.Clear();
@@ -277,6 +290,9 @@ namespace Models.PMF.Organs
         private void SetDMDemand(object sender, EventArgs e)
         {
             DMDemand.Structural = DMDemandFunction.Value() / DMConversionEfficiency.Value();
+            DMDemand.QStructuralPriority = dmDemandPriorityFactors.Structural.Value();
+            DMDemand.QMetabolicPriority = dmDemandPriorityFactors.Metabolic.Value();
+            DMDemand.QStoragePriority = dmDemandPriorityFactors.Storage.Value();
         }
 
         /// <summary>Calculate and return the nitrogen demand (g/m2)</summary>
@@ -294,21 +310,7 @@ namespace Models.PMF.Organs
         [EventSubscribe("Commencing")]
         protected void OnSimulationCommencing(object sender, EventArgs e)
         {
-            Live = new Biomass();
-            Dead = new Biomass();
-            DMDemand = new BiomassPoolType();
-            DMDemandPriorityFactor = new BiomassPoolType();
-            DMDemandPriorityFactor.Structural = 1.0;
-            DMDemandPriorityFactor.Metabolic = 1.0;
-            DMDemandPriorityFactor.Storage = 1.0;
-            NDemand = new BiomassPoolType();
-            DMSupply = new BiomassSupplyType();
-            NSupply = new BiomassSupplyType();
-            potentialDMAllocation = new BiomassPoolType();
-            Allocated = new Biomass();
-            Senesced = new Biomass();
-            Detached = new Biomass();
-            Removed = new Biomass();
+            Clear();
         }
 
 
@@ -353,6 +355,7 @@ namespace Models.PMF.Organs
             Allocated.StructuralN = nitrogen.Structural;
         }
         /// <summary>Gets or sets the maximum nconc.</summary>
+        [Units("g/g")]
         public double MaxNconc
         {
             get
@@ -361,6 +364,7 @@ namespace Models.PMF.Organs
             }
         }
         /// <summary>Gets or sets the minimum nconc.</summary>
+        [Units("g/g")]
         public double MinNconc
         {
             get
@@ -373,11 +377,11 @@ namespace Models.PMF.Organs
         public Biomass Total { get { return Live + Dead; } }
 
         /// <summary>Gets the total grain weight</summary>
-        [Units("g/m2")]
+        [Units("g/m^2")]
         public double Wt { get { return Total.Wt; } }
 
         /// <summary>Gets the total grain N</summary>
-        [Units("g/m2")]
+        [Units("g/m^2")]
         public double N { get { return Total.N; } }
 
 
@@ -402,11 +406,40 @@ namespace Models.PMF.Organs
             biomassRemovalModel.RemoveBiomass(biomassRemoveType, amountToRemove, Live, Dead, Removed, Detached);
         }
 
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            // Document Constants
+            var constantTags = new List<ITag>();
+            foreach (var constant in FindAllChildren<Constant>())
+                foreach (var tag in constant.Document())
+                    constantTags.Add(tag);
+            yield return new Section("Constants", constantTags);
+
+            // Document everything else.
+            foreach (var child in Children.Where(child => !(child is Constant)))
+                yield return new Section(child.Name, child.Document());
+
+        }
+
         /// <summary>Clears this instance.</summary>
         private void Clear()
         {
             Live = new Biomass();
             Dead = new Biomass();
+            DMDemand = new BiomassPoolType();
+            NDemand = new BiomassPoolType();
+            DMSupply = new BiomassSupplyType();
+            NSupply = new BiomassSupplyType();
+            potentialDMAllocation = new BiomassPoolType();
+            Allocated = new Biomass();
+            Senesced = new Biomass();
+            Detached = new Biomass();
+            Removed = new Biomass();
+            GrowthRespiration = 0;
         }
 
         /// <summary>Clears the transferring biomass amounts.</summary>

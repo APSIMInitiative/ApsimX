@@ -121,7 +121,16 @@
             List<Subscriber> subscribers = Subscriber.FindAll(eventName, relativeTo, scope);
 
             foreach (Subscriber subscriber in subscribers)
-                subscriber.Invoke(args);
+            {
+                try
+                {
+                    subscriber.Invoke(args);
+                }
+                catch (Exception err)
+                {
+                    throw new Exception($"Failed to publish event {eventName}. Error from subscriber {subscriber.Name}.{subscriber.MethodName}", err);
+                }
+            }
         }
 
         /// <summary>
@@ -154,6 +163,9 @@
 
             /// <summary>Gets or sets the name of the event.</summary>
             public string Name { get; private set; }
+
+            /// <summary>Name of the target method.</summary>
+            public string MethodName { get => methodInfo.Name; }
 
             public Subscriber(string name, IModel model, MethodInfo method)
             {
@@ -260,6 +272,18 @@
             /// <returns>The delegate. Never returns null.</returns>
             internal virtual Delegate CreateDelegate(Type handlerType)
             {
+                if (typeof(EventHandler).IsAssignableFrom(handlerType))
+                {
+                    // We can give a specific error message for EventHandler delegate types.
+                    ParameterInfo[] parameters = methodInfo.GetParameters();
+                    if (parameters.Length != 2)
+                        throw new Exception($"{methodInfo.Name} is a not a valid event handler: should have two arguments, but has {parameters.Length} arguments");
+                    if (parameters[0].ParameterType != typeof(object))
+                        throw new Exception($"{methodInfo.Name} is not a valid event handler: first argument should be of type object, but is {parameters[0].ParameterType}");
+                    if (!typeof(EventArgs).IsAssignableFrom(parameters[1].ParameterType))
+                        throw new Exception($"{methodInfo.Name} is not a valid event handler: second argument should be of type EventArgs, but is {parameters[1].ParameterType}");
+                }
+
                 return Delegate.CreateDelegate(handlerType, Model, methodInfo);
             }
 
@@ -291,8 +315,15 @@
             internal void ConnectSubscriber(Subscriber subscriber)
             {
                 // connect subscriber to the event.
-                Delegate eventDelegate = subscriber.CreateDelegate(EventInfo.EventHandlerType);
-                EventInfo.AddEventHandler(Model, eventDelegate);
+                try
+                {
+                    Delegate eventDelegate = subscriber.CreateDelegate(EventInfo.EventHandlerType);
+                    EventInfo.AddEventHandler(Model, eventDelegate);
+                }
+                catch (Exception err)
+                {
+                    throw new Exception($"Unable to connect event handler function {subscriber.MethodName} in model {subscriber.Model.FullPath} to event {subscriber.Name}", err);
+                }
             }
 
             internal void DisconnectAll()

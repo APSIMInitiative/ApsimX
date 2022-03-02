@@ -1,4 +1,4 @@
-﻿using Models.CLEM.Groupings;
+﻿using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -6,36 +6,37 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
+using System.Linq.Expressions;
+using Display = Models.Core.DisplayAttribute;
 
 namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Activity timer based on crop harvest
+    /// Activity timer based on resource
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
-    [Description("This activity timer is used to determine whether a resource level meets a set criteria.")]
+    [Description("This timer is based on whether a resource level meets a set criteria.")]
     [HelpUri(@"Content/Features/Timers/ResourceLevel.htm")]
     [Version(1, 0, 1, "")]
-    public class ActivityTimerResourceLevel: CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
+    public class ActivityTimerResourceLevel: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
-        ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
 
         /// <summary>
         /// Name of resource to check
         /// </summary>
         [Description("Resource type")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Resource type is required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(Equipment), typeof(Finance), typeof(GrazeFoodStore), typeof(GreenhouseGases), typeof(HumanFoodStore), typeof(Labour), typeof(Land), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(AnimalFoodStore), typeof(Equipment), typeof(Finance), typeof(GrazeFoodStore), typeof(GreenhouseGases), typeof(HumanFoodStore), typeof(Labour), typeof(Land), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) } })]
         public string ResourceTypeName { get; set; }
 
         /// <summary>
@@ -49,7 +50,17 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Operator to use for filtering")]
         [Required]
-        public FilterOperators Operator { get; set; }
+        [Display(Type = DisplayType.DropDown, Values = nameof(GetOperators))]
+        public ExpressionType Operator { get; set; }
+        private object[] GetOperators() => new object[]
+        {
+            ExpressionType.Equal,
+            ExpressionType.NotEqual,
+            ExpressionType.LessThan,
+            ExpressionType.LessThanOrEqual,
+            ExpressionType.GreaterThan,
+            ExpressionType.GreaterThanOrEqual
+        };
 
         /// <summary>
         /// Amount
@@ -70,30 +81,16 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
         }
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            return results;
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            ResourceTypeModel = Resources.GetResourceItem(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
+            ResourceTypeModel = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
-        /// <summary>
-        /// Method to determine whether the activity is due based on harvest details form parent.
-        /// </summary>
-        /// <returns>Whether the activity is due in the current month</returns>
+        /// <inheritdoc/>
         public bool ActivityDue
         {
             get
@@ -101,60 +98,39 @@ namespace Models.CLEM.Activities
                 bool due = false;
                 switch (Operator)
                 {
-                    case FilterOperators.Equal:
+                    case ExpressionType.Equal:
                         due = (ResourceTypeModel.Amount == Amount);
                         break;
-                    case FilterOperators.NotEqual:
+                    case ExpressionType.NotEqual:
                         due = (ResourceTypeModel.Amount != Amount);
                         break;
-                    case FilterOperators.LessThan:
+                    case ExpressionType.LessThan:
                         due = (ResourceTypeModel.Amount < Amount);
                         break;
-                    case FilterOperators.LessThanOrEqual:
+                    case ExpressionType.LessThanOrEqual:
                         due = (ResourceTypeModel.Amount <= Amount);
                         break;
-                    case FilterOperators.GreaterThan:
+                    case ExpressionType.GreaterThan:
                         due = (ResourceTypeModel.Amount > Amount);
                         break;
-                    case FilterOperators.GreaterThanOrEqual:
+                    case ExpressionType.GreaterThanOrEqual:
                         due = (ResourceTypeModel.Amount >= Amount);
                         break;
                     default:
                         break;
                 }
 
-                if (due)
-                {
-                    // report activity performed.
-                    ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
-                    {
-                        Activity = new BlankActivity()
-                        {
-                            Status = ActivityStatus.Timer,
-                            Name = this.Name
-                        }
-                    };
-                    this.OnActivityPerformed(activitye);
-                    activitye.Activity.SetGuID(this.UniqueID);
-                    return true;
-                }
-                return false;
+                return due;
             }
         }
 
-        /// <summary>
-        /// Method to determine whether the activity is due based on a specified date
-        /// </summary>
-        /// <returns>Whether the activity is due based on the specified date</returns>
+        /// <inheritdoc/>
         public bool Check(DateTime dateToCheck)
         {
             return false;
         }
 
-        /// <summary>
-        /// Activity has occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         public virtual void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
@@ -162,91 +138,72 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
-            string html = "";
-            html += "\n<div class=\"filter\">";
-            html += "Perform when ";
-            if (ResourceTypeName is null || ResourceTypeName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">RESOURCE NOT SET</span> ";
+                htmlWriter.Write("\r\n<div class=\"filter\">");
+                htmlWriter.Write("Perform when ");
+                htmlWriter.Write(DisplaySummaryValueSnippet(ResourceTypeName, "Resource not set", HTMLSummaryStyle.Resource));
+                string str = "";
+                switch (Operator)
+                {
+                    case ExpressionType.Equal:
+                        str += "equals";
+                        break;
+                    case ExpressionType.NotEqual:
+                        str += "does not equal";
+                        break;
+                    case ExpressionType.LessThan:
+                        str += "is less than";
+                        break;
+                    case ExpressionType.LessThanOrEqual:
+                        str += "is less than or equal to";
+                        break;
+                    case ExpressionType.GreaterThan:
+                        str += "is greater than";
+                        break;
+                    case ExpressionType.GreaterThanOrEqual:
+                        str += "is greater than or equal to";
+                        break;
+                    default:
+                        break;
+                }
+                htmlWriter.Write(str);
+                if (Amount == 0)
+                    htmlWriter.Write(" <span class=\"errorlink\">NOT SET</span>");
+                else
+                {
+                    htmlWriter.Write(" <span class=\"setvalueextra\">");
+                    htmlWriter.Write(Amount.ToString());
+                    htmlWriter.Write("</span>");
+                }
+                htmlWriter.Write("</div>");
+                if (!this.Enabled)
+                    htmlWriter.Write(" - DISABLED!");
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + ResourceTypeName + "</span> ";
-            }
-            string str = "";
-            switch (Operator)
-            {
-                case FilterOperators.Equal:
-                    str += "equals";
-                    break;
-                case FilterOperators.NotEqual:
-                    str += "does not equal";
-                    break;
-                case FilterOperators.LessThan:
-                    str += "is less than";
-                    break;
-                case FilterOperators.LessThanOrEqual:
-                    str += "is less than or equal to";
-                    break;
-                case FilterOperators.GreaterThan:
-                    str += "is greater than";
-                    break;
-                case FilterOperators.GreaterThanOrEqual:
-                    str += "is greater than or equal to";
-                    break;
-                default:
-                    break;
-            }
-            html += str;
-            if (Amount == 0)
-            {
-                html += " <span class=\"errorlink\">NOT SET</span>";
-            }
-            else
-            {
-                html += " <span class=\"setvalueextra\">";
-                html += Amount.ToString();
-                html += "</span>";
-            }
-            html += "</div>";
-            if (!this.Enabled)
-            {
-                html += " - DISABLED!";
-            }
-            return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
         {
             return "</div>";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
         {
-            string html = "";
-            html += "<div class=\"filtername\">";
-            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += this.Name;
+                htmlWriter.Write("<div class=\"filtername\">");
+                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+                    htmlWriter.Write(this.Name);
+                htmlWriter.Write($"</div>");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
+                return htmlWriter.ToString(); 
             }
-            html += $"</div>";
-            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
-            return html;
         } 
         #endregion
 

@@ -1,19 +1,25 @@
 ﻿using System;
+using APSIM.Shared.Documentation;
 using System.Collections.Generic;
 using Models.Core;
 using Newtonsoft.Json;
 using Models.Functions;
 using APSIM.Shared.Utilities;
 using System.IO;
+using System.Text;
 
 namespace Models.PMF.Phen
 {
-    /// <summary>Describe the phenological development through the emerging phase.</summary>
+    /// <summary>
+    /// This phase goes from a start stage to an end stage and simulates time to 
+    /// emergence as a function of sowing depth.  
+    /// Progress toward emergence is driven by a thermal time accumulation child function.
+    /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class EmergingPhase : Model, IPhase, IPhaseWithTarget, ICustomDocumentation
+    public class EmergingPhase : Model, IPhase, IPhaseWithTarget
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
@@ -115,6 +121,7 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         public virtual void ResetPhase()
         {
+            TTForTimeStep = 0;
             ProgressThroughPhase = 0;
             Target = 0;
             EmergenceDate = null;
@@ -138,38 +145,27 @@ namespace Models.PMF.Phen
         {
             Target = ShootLag + data.Depth * ShootRate;
         }
-       
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading
-                tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
+            // Write description of this class.
+            yield return new Paragraph($"This phase goes from {Start.ToLower()} to {End.ToLower()} and simulates time to {End.ToLower()} as a function of sowing depth. The *ThermalTime Target* for ending this phase is given by:");
+            yield return new Paragraph($"*Target* = *SowingDepth* x *ShootRate* + *ShootLag*");
+            yield return new Paragraph($"Where:");
+            yield return new Paragraph($"*ShootRate* = {ShootRate} (deg day/mm),");
+            yield return new Paragraph($"*ShootLag* = {ShootLag} (deg day), ");
+            yield return new Paragraph($"*SowingDepth* (mm) is sent from the manager with the sowing event.");
 
-                // write description of this class
-                tags.Add(new AutoDocumentation.Paragraph("This phase goes from " + Start + " to " + End + " and simulates time to "
-                    + "emergence as a function of sowing depth.  The <i>ThermalTime Target</i> for ending this phase is given by:<br>"
-                    + "&nbsp;&nbsp;&nbsp;&nbsp;*Target = SowingDepth x ShootRate + ShootLag*<br>"
-                    + "Where:<br>"
-                    + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootRate* = " + ShootRate + " (deg day/mm),<br>"
-                    + "&nbsp;&nbsp;&nbsp;&nbsp;*ShootLag* = " + ShootLag + " (deg day), <br>"
-                    + "and *SowingDepth* (mm) is sent from the manager with the sowing event.", indent));
+            // Write memos.
+            foreach (var tag in DocumentChildren<Memo>())
+                yield return tag;
 
-                // write memos
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // write intro to children
-                tags.Add(new AutoDocumentation.Paragraph("Progress toward emergence is driven by Thermal time accumulation, where thermal time is calculated as:", indent));
-
-                // write children
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
+            IFunction thermalTime = FindChild<IFunction>("ThermalTime");
+            yield return new Paragraph($"Progress toward emergence is driven by thermal time accumulation{(thermalTime == null ? "" : ", where thermal time is calculated as:")}");
+            if (thermalTime != null)
+                foreach (var tag in thermalTime.Document())
+                    yield return tag;
         }
     }
 }

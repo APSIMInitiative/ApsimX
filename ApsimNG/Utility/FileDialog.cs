@@ -4,11 +4,12 @@
     using System;
     using System.IO;
     using System.Linq;
-    using MonoMac;
     using Gtk;
     using APSIM.Shared.Utilities;
     using Models.Core;
-    using MonoMac.AppKit;
+    using UserInterface.Extensions;
+    using UserInterface.Views;
+
 
     /// <summary>
     /// All access to this class should be via <see cref="IFileDialog"/>.
@@ -98,7 +99,10 @@
         {
             string[] files = GetFiles(true);
             if (files != null && files.Any(f => File.Exists(f)))
+            {
                 Configuration.Settings.PreviousFolder = Path.GetDirectoryName(files.First(f => File.Exists(f)));
+                Configuration.Settings.Save();
+            }
             return files;
         }
 
@@ -109,117 +113,9 @@
         /// <returns>Array containing the paths of the chosen files/directories.</returns>
         private string[] GetFiles(bool selectMultiple)
         {
-            if (ProcessUtilities.CurrentOS.IsWindows)
-                return WindowsFileDialog(selectMultiple);
-            else if (ProcessUtilities.CurrentOS.IsMac)
-                return OSXFileDialog(selectMultiple);
-            else
-                return GenericFileDialog(selectMultiple);
-        }
 
-        /// <summary>
-        /// Ask user for a filename to open on Windows.
-        /// </summary>
-        /// <param name="prompt">String to use as dialog heading.</param>
-        /// <param name="fileSpec">The file specification used to filter the files.</param>
-        /// <param name="Action">Action to perform (currently either "Open" or "Save").</param>
-        /// <param name="InitialPath">Optional Initial starting filename or directory.</param>      
-        private string[] WindowsFileDialog(bool selectMultiple)
-        {
-            System.Windows.Forms.FileDialog dialog = null;
-            if (Action == FileActionType.Open)
-            {
-                dialog = new System.Windows.Forms.OpenFileDialog();
-                (dialog as System.Windows.Forms.OpenFileDialog).Multiselect = selectMultiple;
-            }
-            else if (Action == FileActionType.Save)
-                dialog = new System.Windows.Forms.SaveFileDialog();
-            else if (Action == FileActionType.SelectFolder)
-                return WindowsDirectoryDialog(selectMultiple);
+            return GenericFileDialog(selectMultiple);
 
-            dialog.Title = Prompt;
-
-            if (string.IsNullOrEmpty(FileType))
-                dialog.Filter = "All files (*.*)|*.*";
-            else if (FileType.Contains("|"))
-                dialog.Filter = FileType;
-            else
-                dialog.Filter = FileType + "|" + FileType;
-
-            // This almost works, but Windows is buggy.
-            // If the file name is long, it doesn't display in a sensible way. ¯\_(ツ)_/¯
-            dialog.InitialDirectory = InitialDirectory;
-            dialog.FileName = null;
-
-            string[] fileNames = new string[0];
-            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                fileNames = dialog.FileNames;
-            dialog = null;
-            return fileNames;
-        }
-
-        /// <summary>
-        /// Ask user for a filename to open on Windows.
-        /// </summary>
-        /// <param name="Prompt">String to use as dialog heading</param>
-        /// <param name="FileType">The file specification used to filter the files.</param>
-        /// <param name="Action">Action to perform (currently either "Open" or "Save")</param>
-        /// <param name="InitialDirectory">Optional Initial starting filename or directory</param>      
-        private string[] OSXFileDialog(bool selectMultiple)
-        {
-            int result = 0;
-            NSSavePanel panel = null;
-            if (Action  == FileActionType.Open)
-            {
-                panel = new NSOpenPanel();
-                (panel as NSOpenPanel).AllowsMultipleSelection = selectMultiple;
-                (panel as NSOpenPanel).CanChooseDirectories = false;
-                (panel as NSOpenPanel).CanChooseFiles = true;
-            }
-            else if (Action == FileActionType.Save)
-                panel = new NSSavePanel();
-            else if (Action == FileActionType.SelectFolder)
-            {
-                panel = new NSOpenPanel();
-                (panel as NSOpenPanel).AllowsMultipleSelection = selectMultiple;
-                (panel as NSOpenPanel).CanChooseDirectories = true;
-                (panel as NSOpenPanel).CanChooseFiles = false;
-            }
-            else
-                throw new Exception("This file chooser dialog has specified more than one action type.");
-
-            panel.Title = Prompt;
-
-            if (!string.IsNullOrEmpty(FileType))
-            {
-                string[] specParts = FileType.Split(new Char[] { '|' });
-                int nExts = 0;
-                string[] allowed = new string[specParts.Length / 2];
-                for (int i = 0; i < specParts.Length; i += 2)
-                {
-                    string pattern = Path.GetExtension(specParts[i + 1]);
-                    if (!string.IsNullOrEmpty(pattern))
-                    {
-                        pattern = pattern.Substring(1); // Get rid of leading "."
-                        if (!string.IsNullOrEmpty(pattern))
-                            allowed[nExts++] = pattern;
-                    }
-                }
-                if (nExts > 0)
-                {
-                    Array.Resize(ref allowed, nExts);
-                    panel.AllowedFileTypes = allowed;
-                }
-            }
-            panel.AllowsOtherFileTypes = true;
-            panel.DirectoryUrl = new MonoMac.Foundation.NSUrl(InitialDirectory);
-            
-            result = panel.RunModal();
-            string[] fileNames = new string[0];
-            if (result == 1 /*NSFileHandlingPanelOKButton*/)
-                fileNames = panel is NSOpenPanel ? (panel as NSOpenPanel).Urls.Select(u => u.Path).ToArray() : new string[] { panel.Url.Path };
-            panel.Dispose();
-            return fileNames;
         }
 
         /// <summary>
@@ -249,14 +145,16 @@
             else
                 throw new Exception("This file chooser dialog has specified more than one action type.");
 
-            FileChooserDialog fileChooser = new FileChooserDialog(Prompt, null, gtkActionType, "Cancel", ResponseType.Cancel, buttonText, ResponseType.Accept)
-            {
-                SelectMultiple = selectMultiple
-            };
 
+            Window window = (Window)((ViewBase)ViewBase.MasterView).MainWidget;
+            FileChooserNative fileChooser = new FileChooserNative(Prompt, window, gtkActionType, buttonText, "Cancel");
+
+            fileChooser.SelectMultiple = selectMultiple;
+
+            string[] specParts = null;
             if (!string.IsNullOrEmpty(FileType))
             {
-                string[] specParts = FileType.Split(new Char[] { '|' });
+                specParts = FileType.Split(new Char[] { '|' });
                 for (int i = 0; i < specParts.Length; i += 2)
                 {
                     FileFilter fileFilter = new FileFilter();
@@ -270,49 +168,62 @@
             allFilter.AddPattern("*");
             allFilter.Name = "All files";
             fileChooser.AddFilter(allFilter);
-            
-            fileChooser.SetCurrentFolder(InitialDirectory);
 
-            string[] fileNames = new string[0];
-            if (fileChooser.Run() == (int)ResponseType.Accept)
-                fileNames = fileChooser.Filenames;
-            fileChooser.Destroy();
+            fileChooser.SetCurrentFolder(InitialDirectory);
+            fileChooser.DoOverwriteConfirmation = true;
+
+            bool tryAgain;
+            string[] fileNames;
+            do
+            {
+                fileNames = new string[0];
+                if (fileChooser.Run() == (int)ResponseType.Accept)
+                    fileNames = fileChooser.Filenames;
+
+                // The Gtk FileChooser does NOT automatically append extensions based on the currently selected filter
+                // We need to do this somewhat manually when saving files.
+                //
+                // Note that the following makes the assumption that specified filters have the form "*.ext".
+                //
+                // It is perhaps unclear whether, when the filename does not have the selected filter's extension,
+                // an existing extension should be replaced, or added to. That is, if the selected filter
+                // is "*.apsimx" and the user has provided the name "Wheat.json", should the returned name be 
+                // "Wheat.apsimx" or "Wheat.json.apsimx"? I have elected to append, rather than replace.
+                // There is also the question of whether case differences should be considered or not.
+
+                
+                tryAgain = false;
+                if (ProcessUtilities.CurrentOS.IsWindows && Action == FileActionType.Save && fileChooser.Filter != allFilter && specParts != null)
+                {
+                    string filterName = fileChooser.Filter.Name;
+                    for (int i = 0; i < specParts.Length; i += 2)
+                    {
+                        if (filterName == specParts[i])
+                        {
+                            string filterExt = Path.GetExtension(specParts[i + 1]);
+                            for (int j = 0; j < fileNames.Length; j++)
+                            {
+                                if (!Path.GetExtension(fileNames[j]).Equals(filterExt, StringComparison.CurrentCultureIgnoreCase))
+                                {
+                                    fileNames[j] = fileNames[j] + filterExt;
+                                    if (File.Exists(fileNames[j]))
+                                    {
+                                        tryAgain = true;
+                                        fileChooser.SetFilename(fileChooser.Filename + filterExt);
+                                    }
+                                }
+                            }
+                            break; // We've applied one extension; let's not risk trying to apply another
+                        }
+                    }
+                }
+            } while (tryAgain);
+
+            fileChooser.Dispose();
 
             return fileNames;
         }
 
-        /// <summary>Ask user for a directory on Windows.</summary>
-        /// <param name="Prompt">String to use as dialog heading</param>        
-        /// <param name="initialPath">Optional Initial starting filename or directory</param>
-        /// <returns>string containing the path to the chosen directory.</returns>
-        /// <remarks>
-        /// For reasons which are unclear to me, the Windows file chooser dialog cannot not be 
-        /// configured to select directories. Therefore, directory selection on Windows has 
-        /// been moved to a separate method from file selection.
-        /// </remarks>
-        private string[] WindowsDirectoryDialog(bool selectMultiple)
-        {
-            // Windows directory choosers cannot allow multiple directory selection.
-            // Windows file choosers cannot allow directory selection.
-            // Therefore, if we want to select multiple directories, we will need to use the Gtk file chooser
-            // dialog, which may be configured to allow selection of multiple directories.
-            // Side note - this will have the gnome 'look and feel', rather than the Windows one which
-            // you might be expecting.
-            if (selectMultiple)
-                return GenericFileDialog(true);
 
-            System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog()
-            {
-                Description = Prompt,
-                SelectedPath = InitialDirectory
-            };
-            
-            string fileName = string.Empty;
-            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                fileName = dialog.SelectedPath;
-            dialog.Dispose();
-            dialog = null;
-            return new string[] { fileName };
-        }
     }
 }

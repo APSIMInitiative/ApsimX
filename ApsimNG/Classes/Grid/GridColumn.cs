@@ -2,7 +2,9 @@
 {
     using Gtk;
     using Interfaces;
+    using System;
     using System.Drawing;
+    using Utility;
     using Views;
 
     /// <summary>
@@ -46,7 +48,7 @@
 
             set
             {
-                if (value == -1)
+                if (value <= 0)
                 {
                     this.gridView.Grid.Columns[this.ColumnIndex].Sizing = Gtk.TreeViewColumnSizing.Autosize;
                     this.gridView.Grid.Columns[this.ColumnIndex].Resizable = true;
@@ -125,12 +127,13 @@
         {
             get
             {
-                return ""; /// TBI this.gridView.Grid.Columns[this.ColumnIndex].DefaultCellStyle.Format;
+                // TBI this.gridView.Grid.Columns[this.ColumnIndex].DefaultCellStyle.Format;
+                return "";
             }
 
             set
             {
-                /// TBI this.gridView.Grid.Columns[this.ColumnIndex].DefaultCellStyle.Format = value;
+                // TBI this.gridView.Grid.Columns[this.ColumnIndex].DefaultCellStyle.Format = value;
             }
         }
 
@@ -209,7 +212,10 @@
                 Button button = gridView.GetColumnHeaderButton(this.ColumnIndex);
                 if (button != null)
                 {
-                    Gdk.Color bg = button.Style.Backgrounds[0];
+#pragma warning disable 0612
+                    Gdk.Color bg = button.StyleContext.GetBackgroundColor(StateFlags.Normal).ToColour().ToGdk();
+#pragma warning restore 0612
+
                     return Color.FromArgb(bg.Red, bg.Green, bg.Blue);
                 }
                 else
@@ -223,7 +229,9 @@
                 Button button = gridView.GetColumnHeaderButton(this.ColumnIndex);
                 if (button != null)
                 {
-                   button.ModifyBg(StateType.Normal, new Gdk.Color(value.R, value.G, value.B));
+
+                    throw new NotImplementedException("tbi - gtk3 equivalent");
+
                 }
             }
         }
@@ -237,10 +245,7 @@
             {
                 Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
                 if (label != null)
-                {
-                    Gdk.Color fg = label.Style.Foregrounds[0];
-                    return Color.FromArgb(fg.Red, fg.Green, fg.Blue);
-                }
+                    return label.StyleContext.GetColor(StateFlags.Normal).ToColour();
                 else
                    return System.Drawing.Color.Black;
             }
@@ -250,7 +255,9 @@
                 Label label = gridView.GetColumnHeaderLabel(this.ColumnIndex);
                 if (label != null)
                 {
-                    label.ModifyFg(StateType.Normal, new Gdk.Color(value.R, value.G, value.B));
+
+                    throw new NotImplementedException("tbi - gtk3 equivalent");
+
                 }
             }
         }

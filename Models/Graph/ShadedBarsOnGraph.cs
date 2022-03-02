@@ -1,7 +1,9 @@
 ﻿namespace Models
 {
+    using APSIM.Shared.Graphing;
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Models.Core.Run;
     using Models.Storage;
     using System;
     using System.Collections.Generic;
@@ -13,14 +15,14 @@
     /// A class for putting text annotations on a graph.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Series))]
     public class ShadedBarsOnGraph : Model, ICachableGraphable
     {
         /// <summary>The table to search for phenological stage names.</summary>
         [NonSerialized]
-        private DataTable data;
+        private DataView data;
 
         /// <summary>The x variable name</summary>
         private string xFieldName;
@@ -61,9 +63,8 @@
         /// <returns></returns>
         public string[] GetValidSimNames()
         {
-            return FindAncestor<Series>()?.FindSimulationDescriptions()?.Select(s => s.Name)?.ToArray();
+            return GraphPage.FindSimulationDescriptions(FindAncestor<Series>())?.Select(s => s.Name)?.ToArray();
         }
-
 
         /// <summary>Return a list of extra fields that the definition should read.</summary>
         /// <param name="seriesDefinition">The calling series definition.</param>
@@ -77,13 +78,16 @@
         }
         /// <summary>Called by the graph presenter to get a list of all actual series to put on the graph.</summary>
         /// <param name="storage">Storage service</param>
+        /// <param name="simDescriptions">A list of simulation descriptions that are in scope.</param>
         /// <param name="simulationFilter">(Optional) simulation name filter.</param>
-        public IEnumerable<SeriesDefinition> GetSeriesDefinitions(IStorageReader storage, List<string> simulationFilter = null)
+        public IEnumerable<SeriesDefinition> CreateSeriesDefinitions(IStorageReader storage,
+                                                                  List<SimulationDescription> simDescriptions,
+                                                                  List<string> simulationFilter = null)
         {
             Series seriesAncestor = FindAncestor<Series>();
             if (seriesAncestor == null)
                 throw new Exception("ShadedBarsOnGraph model must be a descendant of a series");
-            IEnumerable<SeriesDefinition> definitions = seriesAncestor.GetSeriesDefinitions(storage, simulationFilter);
+            IEnumerable<SeriesDefinition> definitions = seriesAncestor.CreateSeriesDefinitions(storage, simDescriptions, simulationFilter);
 
             return GetSeriesToPutOnGraph(storage, definitions, simulationFilter).ToList();
         }
@@ -105,11 +109,11 @@
                         simulationNameDescriptor = simulationFilter[0];
 
                     if (simulationNameDescriptor != null && simulationNameDescriptor== SimulationName)
-                        data = definition.Data;
+                        data = definition.View;
                 }
 
                 if (data == null)
-                    data = definitions.FirstOrDefault(d => d.Data != null)?.Data;
+                    data = definitions.FirstOrDefault(d => d.View != null)?.View;
                 xFieldName = definitions.First().XFieldName;
             }
             return new List<SeriesDefinition>();
@@ -122,12 +126,12 @@
 
             if (data != null && ColumnName != null && xFieldName != null)
             {
-                string columnName = FindColumn(data);
-                if (columnName != null && data.Columns.Contains(xFieldName))
+                string columnName = FindColumn(data.Table);
+                if (columnName != null && data.Table.Columns.Contains(xFieldName))
                 {
                     string[] names = DataTableUtilities.GetColumnAsStrings(data, columnName);
                     List<object> x;
-                    Type columnType = data.Columns[xFieldName].DataType;
+                    Type columnType = data.Table.Columns[xFieldName].DataType;
                     if (columnType == typeof(DateTime))
                         x = DataTableUtilities.GetColumnAsDates(data, xFieldName).Cast<object>().ToList();
                     else if (columnType == typeof(int))

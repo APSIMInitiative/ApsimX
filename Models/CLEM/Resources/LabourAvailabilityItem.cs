@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -15,13 +16,13 @@ namespace Models.CLEM.Resources
     /// An individual labour availability item with the same days available every month
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourAvailabilityList))]
-    [Description("An individual labour availability with the same days available every month")]
+    [Description("Set the labour availability of specified individuals with the same days available every month")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Labour/LabourAvailabilityItem.htm")]
-    public class LabourAvailabilityItem : LabourSpecificationItem, IFilterGroup
+    public class LabourAvailabilityItem : FilterGroup<LabourType>, ILabourSpecificationItem
     {
         /// <summary>
         /// Single values 
@@ -32,26 +33,14 @@ namespace Models.CLEM.Resources
         public double Value { get; set; }
 
         /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
-
-        /// <summary>
         /// Provide the labour availability
         /// </summary>
         /// <param name="month">Month for labour</param>
         /// <returns></returns>
-        public override double GetAvailability(int month)
+        public double GetAvailability(int month)
         {
             return Value;
         }
-
-        /// <summary>
-        /// Proportion of group to use
-        /// </summary>
-        [JsonIgnore]
-        public double Proportion { get; set; }
 
         /// <summary>
         /// Constructor
@@ -63,102 +52,76 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
-            string html = "";
-            if (!formatForParentControl)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "\n<div class=\"activityentry\">";
-                if (Value <= 0)
+                if (!FormatForParentControl)
                 {
-                    html += "<span class=\"errorlink\">" + Value.ToString() + "</span>";
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    if (Value <= 0)
+                        htmlWriter.Write("<span class=\"errorlink\">" + Value.ToString() + "</span>");
+                    else if (Value > 0)
+                        htmlWriter.Write("<span class=\"setvalue\">" + Value.ToString() + "</span> x ");
+                    htmlWriter.Write(" days available each month</div>");
                 }
-                else if (Value > 0)
-                {
-                    html += "<span class=\"setvalue\">" + Value.ToString() + "</span> x ";
-                }
-                html += " days available each month</div>";
+                return htmlWriter.ToString(); 
             }
-            return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerClosingTags()
         {
-            string html = "";
-            if (formatForParentControl)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                string classstr = "setvalue";
-                if (Value == 0)
+                if (FormatForParentControl)
                 {
-                    classstr = "errorlink";
-                }
-                html += "</td>";
-                html += "<td><span class=\"" + classstr + "\">" + this.Value.ToString() + "</span></td>";
-                for (int i = 1; i < 12; i++)
-                {
-                    html += "<td><span class=\"disabled\">" + this.Value.ToString() + "</span></td>";
-                }
-                html += "</tr>";
-            }
-            else
-            {
-                html += "\n</div>";
-            }
+                    string classstr = "setvalue";
+                    if (Value == 0)
+                        classstr = "errorlink";
 
-            return html;
+                    htmlWriter.Write("</td>");
+                    htmlWriter.Write("<td><span class=\"" + classstr + "\">" + this.Value.ToString() + "</span></td>");
+                    for (int i = 1; i < 12; i++)
+                        htmlWriter.Write("<td><span class=\"disabled\">" + this.Value.ToString() + "</span></td>");
+
+                    htmlWriter.Write("</tr>");
+                }
+                else
+                    htmlWriter.Write("\r\n</div>");
+
+                return htmlWriter.ToString(); 
+            }
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryInnerOpeningTags()
         {
-            string html = "";
-            if (formatForParentControl)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<tr><td>";
-                if ((this.FindAllChildren<LabourFilter>().Count() == 0))
-                {
-                    html += "<div class=\"filter\">Any labour</div>";
-                }
+                if (FormatForParentControl)                
+                    htmlWriter.Write("<tr><td>");                
+                else                
+                    htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");                    
+                
+                if (FindAllChildren<Filter>().Count() < 1)                
+                    htmlWriter.Write("<div class=\"filter\">Any labour</div>");
+                
+                return htmlWriter.ToString();
             }
-            else
-            {
-                html += "\n<div class=\"filterborder clearfix\">";
-                if (!(this.FindAllChildren<LabourFilter>().Count() >= 1))
-                {
-                    html += "<div class=\"filter\">Any labour</div>";
-                }
-            }
-            return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
         {
-            return !formatForParentControl ? base.ModelSummaryClosingTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryClosingTags() : "";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
         {
-            return !formatForParentControl ? base.ModelSummaryOpeningTags(true) : "";
+            return !FormatForParentControl ? base.ModelSummaryOpeningTags() : "";
         }
 
         #endregion

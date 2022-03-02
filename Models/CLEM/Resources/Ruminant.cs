@@ -1,9 +1,10 @@
-﻿using Models.CLEM.Reporting;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Globalization;
+using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
+using Models.CLEM.Reporting;
 using Newtonsoft.Json;
+using Models.Core;
 
 namespace Models.CLEM.Resources
 {
@@ -11,13 +12,46 @@ namespace Models.CLEM.Resources
     /// Object for an individual Ruminant Animal.
     /// </summary>
     [Serializable]
-    public class Ruminant
+    public abstract class Ruminant : IFilterable, IAttributable
     {
         private RuminantFemale mother;
         private double weight;
         private double age;
         private double normalisedWeight;
         private double adultEquivalent;
+
+        /// <summary>
+        /// Get the value to use for the transaction style requested
+        /// </summary>
+        /// <param name="transactionStyle">Style of transaction grouping</param>
+        /// <param name="pricingStyle">Style of pricing if necessary</param>
+        /// <returns>Label to group by</returns>
+        public string GetTransactionCategory(RuminantTransactionsGroupingStyle transactionStyle, PurchaseOrSalePricingStyleType pricingStyle = PurchaseOrSalePricingStyleType.Both)
+        {
+            string result = "N/A";
+            switch (transactionStyle)
+            {
+                case RuminantTransactionsGroupingStyle.Combined:
+                    return "All";
+                case RuminantTransactionsGroupingStyle.ByPriceGroup:
+                    return BreedParams.ValueofIndividual(this, pricingStyle)?.Name??$"{pricingStyle}NotSet";
+                case RuminantTransactionsGroupingStyle.ByClass:
+                    return this.Class;
+                case RuminantTransactionsGroupingStyle.BySexAndClass:
+                    return this.FullCategory;
+                default:
+                    break;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Current animal price group for this individual 
+        /// </summary>
+        public AnimalPriceGroup CurrentPrice { get; set; } = null;
+
+        /// <inheritdoc/>
+        public IndividualAttributeList Attributes { get; set; } = new IndividualAttributeList();
 
         /// <summary>
         /// Reference to the Breed Parameters.
@@ -27,16 +61,19 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Breed of individual
         /// </summary>
+        [FilterByProperty]
         public string Breed { get; set; }
 
         /// <summary>
         /// Herd individual belongs to
         /// </summary>
+        [FilterByProperty]
         public string HerdName { get; set; }
 
         /// <summary>
         /// Unique ID of individual
         /// </summary>
+        [FilterByProperty]
         public int ID { get; set; }
 
         /// <summary>
@@ -52,30 +89,32 @@ namespace Models.CLEM.Resources
             {
                 mother = value;
                 if (mother != null)
-                {
                     MotherID = value.ID;
-                }
             }
         }
+
         /// <summary>
         /// Link to individual's mother
         /// </summary>
         public int MotherID { get; private set; }
 
         /// <summary>
-        /// Gender
+        /// Sex of individual
         /// </summary>
-        public Sex Gender { get; set; }
+        [FilterByProperty]
+        public abstract Sex Sex { get; }
 
         /// <summary>
-        /// Gender as string for reports
+        /// Marked as a replacement breeder
         /// </summary>
-        public string GenderAsString { get { return Gender.ToString().Substring(0,1); } }
+        [FilterByProperty]
+        public bool ReplacementBreeder { get; set; }
 
         /// <summary>
         /// Age (Months)
         /// </summary>
         /// <units>Months</units>
+        [FilterByProperty]
         public double Age
         {
             get
@@ -86,7 +125,6 @@ namespace Models.CLEM.Resources
             {
                 age = value;
                 normalisedWeight = CalculateNormalisedWeight(age);
-                    //StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
             }
         }
 
@@ -104,6 +142,7 @@ namespace Models.CLEM.Resources
         /// The age (months) this individual entered the simulation.
         /// </summary>
         /// <units>Months</units>
+        [FilterByProperty]
         public double AgeEnteredSimulation { get; private set; }
 
         /// <summary>
@@ -120,19 +159,14 @@ namespace Models.CLEM.Resources
         /// Purchase age (Months)
         /// </summary>
         /// <units>Months</units>
+        [FilterByProperty]
         public double PurchaseAge { get; set; }
-
-        /// <summary>
-        /// Will return 0.1 if Age is 0 for calculations (Months)
-        /// </summary>
-        /// <units>Months</units>
-        public double AgeZeroCorrected
-        {  get { return ((Age == 0) ? 0.1 : Age); } }
 
         /// <summary>
         /// Weight (kg)
         /// </summary>
         /// <units>kg</units>
+        [FilterByProperty]
         public double Weight
         {
             get
@@ -147,9 +181,7 @@ namespace Models.CLEM.Resources
 
                 // if highweight has not been defined set to initial weight
                 if (HighWeight == 0)
-                {
                     HighWeight = weight;
-                }
                 HighWeight = Math.Max(HighWeight, weight);
             }
         }
@@ -164,23 +196,27 @@ namespace Models.CLEM.Resources
         /// Weight gain
         /// </summary>
         /// <units>kg</units>
+        [FilterByProperty]
         public double WeightGain { get { return Weight - PreviousWeight; } }
 
         /// <summary>
         /// The adult equivalent of this individual
         /// </summary>
+        [FilterByProperty]
         public double AdultEquivalent { get { return adultEquivalent; } }
-        // Needs to include ind.Number*weight if ever added to this model
+        // TODO: Needs to include ind.Number*weight if ever added to this model
 
         /// <summary>
         /// Highest previous weight
         /// </summary>
         /// <units>kg</units>
+        [FilterByProperty]
         public double HighWeight { get; private set; }
 
         /// <summary>
         /// The current weight as a proportion of High weight achieved
         /// </summary>
+        [FilterByProperty]
         public double ProportionOfHighWeight
         {
             get
@@ -192,6 +228,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// The current weight as a proportion of High weight achieved
         /// </summary>
+        [FilterByProperty]
         public double ProportionOfNormalisedWeight
         {
             get
@@ -201,68 +238,112 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Is this individual a valid breeder and in condition
+        /// The current weight as a proportion of Standard Reference Weight
         /// </summary>
-        public bool IsBreedingCondition 
-        { 
+        [FilterByProperty]
+        public double ProportionOfSRW
+        {
             get
             {
-                return (Gender == Sex.Male && Age >= BreedParams.MinimumAge1stMating) |
-                    (Gender == Sex.Female && (this as RuminantFemale).IsBreeder);
+                return Weight / StandardReferenceWeight;
             }
         }
+
+        /// <summary>
+        /// The current health score -2 to 2 with 0 standard weight
+        /// </summary>
+        [FilterByProperty]
+        public int HealthScore
+        {
+            get
+            {
+                double result = 0;
+                double min = BreedParams.ProportionOfMaxWeightToSurvive * HighWeight;
+                double mid = NormalisedAnimalWeight;
+                double max = BreedParams.MaximumSizeOfIndividual;
+
+                if(weight < mid)
+                    result = Math.Round((mid - Math.Max(min, weight)) / ((mid - min) / 2.5)) * -1;
+                else if (weight > mid)
+                    result = Math.Round((weight - mid) / ((max - mid) / 2.5));
+                return Convert.ToInt32(result, CultureInfo.InvariantCulture);
+            }
+        }
+
+        /// <summary>
+        /// A label combining sex and class for reporting
+        /// </summary>
+        [FilterByProperty]
+        public string SexAndClass
+        {
+            get
+            {
+                return $"{Sex}.{Class}";
+            }
+        }
+
 
         /// <summary>
         /// Determine the category of this individual
         /// </summary>
-        public string Category
+        [FilterByProperty]
+        public string Class
         {
             get
             {
-                if(this.IsCalf)
-                {
-                    return "Calf";
-                }
+                if(this.IsSuckling)
+                    return "Suckling";
                 else if(this.IsWeaner)
-                {
                     return "Weaner";
-                }
                 else
                 {
                     if(this is RuminantFemale)
-                    {
-                        if ((this as RuminantFemale).IsHeifer)
-                        {
-                            return "Heifer";
-                        }
+                        if ((this as RuminantFemale).IsPreBreeder)
+                            return "PreBreeder";
                         else
-                        {
                             return "Breeder";
-                        }
-                    }
                     else
-                    {
                         if((this as RuminantMale).IsSire)
-                        {
                             return "Sire";
-                        }
                         else if((this as RuminantMale).IsCastrated)
-                        {
-                            return "Castraded";
-                        }
+                            return "Castrate";
                         else
                         {
-                            return "Steer";
+                            if((this as RuminantMale).IsWildBreeder)
+                            {
+                                return "Breeder";
+                            }
+                            else
+                            {
+                                return "PreBreeder";
+                            }
                         }
-                    }
                 }
             }
         }
 
+        /// <summary>
+        /// Determine the category of this individual with sex
+        /// </summary>
+        [FilterByProperty]
+        public string FullCategory
+        {
+            get
+            {
+                return $"{Class}{Sex}";
+            }
+        }
+
+        /// <summary>
+        /// Is this individual a valid breeder and in condition
+        /// </summary>
+        [FilterByProperty]
+        public virtual bool IsAbleToBreed { get { return false; } }
 
         /// <summary>
         /// Determine if weaned and less that 12 months old. Weaner
         /// </summary>
+        [FilterByProperty]
         public bool IsWeaner
         {
             get
@@ -272,9 +353,10 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Determine if weaned and less that 12 months old. Weaner
+        /// Determine if unweaned suckling
         /// </summary>
-        public bool IsCalf
+        [FilterByProperty]
+        public bool IsSuckling
         {
             get
             {
@@ -284,13 +366,14 @@ namespace Models.CLEM.Resources
 
 
         /// <summary>
-        /// The current weight as a proportion of Standard Reference Weight
+        /// Determine if unweaned calf - replaced by IsSuckling
         /// </summary>
-        public double ProportionOfSRW
+        [FilterByProperty]
+        public bool IsCalf
         {
             get
             {
-                return Weight / StandardReferenceWeight;
+                throw new NotImplementedException("The IsCalf property is deprecated. Please use new IsSuckling property");
             }
         }
 
@@ -333,18 +416,15 @@ namespace Models.CLEM.Resources
         /// Return intake as a proportion of the potential inake
         /// This includes milk for sucklings
         /// </summary>
+        [FilterByProperty]
         public double ProportionOfPotentialIntakeObtained
         {
             get
             {
                 if (PotentialIntake + MilkPotentialIntake > 0)
-                {
                     return (Intake + MilkIntake) / (PotentialIntake + MilkPotentialIntake);
-                }
                 else
-                {
                     return 0;
-                }
             }
         }
 
@@ -357,20 +437,17 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Number in this class (1 if individual model)
         /// </summary>
+        [FilterByProperty]
         public double Number { get; set; }
 
         /// <summary>
         /// Flag to identify individual ready for sale
         /// </summary>
+        [FilterByProperty]
         public HerdChangeReason SaleFlag { get; set; }
 
         /// <summary>
-        /// List of individual tags
-        /// </summary>
-        public List<string> Tags { get; set; }
-
-        /// <summary>
-        /// Determines if the change resson is her positive or negative
+        /// Determines if the change reason is positive or negative
         /// </summary>
         public int PopulationChangeDirection
         {
@@ -388,7 +465,7 @@ namespace Models.CLEM.Resources
                     case HerdChangeReason.ExcessSireSale:
                     case HerdChangeReason.MaxAgeSale:
                     case HerdChangeReason.AgeWeightSale:
-                    case HerdChangeReason.ExcessHeiferSale:
+                    case HerdChangeReason.ExcessPreBreederSale:
                     case HerdChangeReason.Consumed:
                     case HerdChangeReason.DestockSale:
                     case HerdChangeReason.ReduceInitialHerd:
@@ -409,13 +486,9 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// SaleFlag as string for reports
-        /// </summary>
-        public string SaleFlagAsString { get { return SaleFlag.ToString(); } }
-
-        /// <summary>
         /// Is the individual currently marked for sale?
         /// </summary>
+        [FilterByProperty]
         public bool ReadyForSale { get { return SaleFlag != HerdChangeReason.None; } }
 
         /// <summary>
@@ -444,26 +517,24 @@ namespace Models.CLEM.Resources
         public double EnergyIntake { get; set; }
 
         /// <summary>
-        /// Indicates if this individual has died
+        /// Indicates if this individual has died before removal from herd
         /// </summary>
+        [FilterByProperty]
         public bool Died { get; set; }
 
         /// <summary>
         /// Standard Reference Weight determined from coefficients and gender
         /// </summary>
         /// <units>kg</units>
+        [FilterByProperty]
         public double StandardReferenceWeight
         {
             get
             {
-                if (Gender == Sex.Male)
-                {
+                if (Sex == Sex.Male)
                     return BreedParams.SRWFemale * BreedParams.SRWMaleMultiplier;
-                }
                 else
-                {
                     return BreedParams.SRWFemale;
-                }
             }
         }
 
@@ -471,18 +542,19 @@ namespace Models.CLEM.Resources
         /// Normalised animal weight
         /// </summary>
         /// <units>kg</units>
+        [FilterByProperty]
         public double NormalisedAnimalWeight
         {
             get
             {
                 return normalisedWeight;
-                //return StandardReferenceWeight - ((1 - BreedParams.SRWBirth) * StandardReferenceWeight) * Math.Exp(-(BreedParams.AgeGrowthRateCoefficient * (Age * 30.4)) / (Math.Pow(StandardReferenceWeight, BreedParams.SRWGrowthScalar)));
             }
         }
 
         /// <summary>
         /// Relative size (normalised weight / standard reference weight)
         /// </summary>
+        [FilterByProperty]
         public double RelativeSize
         {
             get
@@ -494,6 +566,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Relative condition (base weight / normalised weight)
         /// </summary>
+        [FilterByProperty]
         public double RelativeCondition
         {
             get
@@ -514,14 +587,16 @@ namespace Models.CLEM.Resources
                 this.Mother.SucklingOffspringList.Remove(this);
                 this.Mother.NumberOfWeaned++;
             }
-            if(report)
+            if (report)
             {
-                RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
                 {
-                    RumObj = this,
-                    Category = reason
-                };
-                (this.BreedParams.Parent as RuminantHerd).OnWeanOccurred(args);
+                    RuminantReportItemEventArgs args = new RuminantReportItemEventArgs
+                    {
+                        RumObj = this,
+                        Category = reason
+                    };
+                    (this.BreedParams.Parent as RuminantHerd).OnWeanOccurred(args);
+                }
             }
 
         }
@@ -539,6 +614,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Weaned individual flag
         /// </summary>
+        [FilterByProperty]
         public bool Weaned { get { return weaned; } }
 
         /// <summary>
@@ -582,16 +658,19 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Unique ID of the managed paddock the individual is located in.
         /// </summary>
+        [FilterByProperty]
         public string Location { get; set; }
 
         /// <summary>
         /// Amount of wool on individual
         /// </summary>
+        [FilterByProperty]
         public double Wool { get; set; }
 
         /// <summary>
         /// Amount of cashmere on individual
         /// </summary>
+        [FilterByProperty]
         public double Cashmere { get; set; }
 
         /// <summary>
@@ -605,22 +684,13 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Constructor
         /// </summary>
-        public Ruminant(double setAge, Sex setGender, double setWeight, RuminantType setParams)
+        public Ruminant(RuminantType setParams, double setAge, double setWeight)
         {
-            this.Gender = setGender;
             this.BreedParams = setParams;
             this.Age = setAge;
             this.AgeEnteredSimulation = setAge;
 
-            if (setWeight <= 0)
-            {
-                // use normalised weight
-                this.Weight = NormalisedAnimalWeight;
-            }
-            else
-            {
-                this.Weight = setWeight;
-            }
+            Weight = setWeight <= 0 ? NormalisedAnimalWeight : setWeight;
 
             this.PreviousWeight = this.Weight;
             this.Number = 1;
@@ -628,8 +698,18 @@ namespace Models.CLEM.Resources
             this.Cashmere = 0;
             this.weaned = true;
             this.SaleFlag = HerdChangeReason.None;
+            this.Attributes = new IndividualAttributeList();
+        }
 
-            this.Tags = new List<string>();
+        /// <summary>
+        /// Factory for creating ruminants based on provided values
+        /// </summary>
+        public static Ruminant Create(Sex sex, RuminantType parameters, double age = 0, double weight = 0)
+        {
+            if (sex == Sex.Male)
+                return new RuminantMale(parameters, age, weight);
+            else
+                return new RuminantFemale(parameters, age, weight);
         }
     }
 
@@ -639,13 +719,13 @@ namespace Models.CLEM.Resources
     public enum Sex
     {
         /// <summary>
-        /// Male
-        /// </summary>
-        Male,
-        /// <summary>
         /// Female
         /// </summary>
-        Female
+        Female,
+        /// <summary>
+        /// Male
+        /// </summary>
+        Male
     };
 
 }

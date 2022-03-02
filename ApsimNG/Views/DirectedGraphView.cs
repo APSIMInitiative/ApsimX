@@ -1,21 +1,29 @@
 ﻿namespace UserInterface.Views
 {
-    using ApsimNG.Classes.DirectedGraph;
     using Cairo;
+    using Extensions;
     using EventArguments;
     using EventArguments.DirectedGraph;
     using Gtk;
-    using Models;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.IO;
     using System.Linq;
+    using Color = System.Drawing.Color;
+    using Point = System.Drawing.Point;
+    using APSIM.Interop.Visualisation;
+    using APSIM.Shared.Graphing;
+    using Utility;
 
     /// <summary>
     /// A view that contains a graph and click zones for the user to allow
     /// editing various parts of the graph.
     /// </summary>
+    /// <remarks>
+    /// This code should be reworked to better work in the gtk3 way of thinking.
+    /// Specifically, the way colours are handled seems to be different between gtk 2/3.
+    /// </remarks>
     public class DirectedGraphView : ViewBase
     {
         /// <summary>
@@ -51,7 +59,7 @@
         /// <summary>
         /// Position of the last moved node.
         /// </summary>
-        private PointD lastPos;
+        private Point lastPos;
 
         /// <summary>
         /// List of nodes. These are currently circles with text in them.
@@ -85,33 +93,45 @@
             | (int)Gdk.EventMask.ButtonPressMask
             | (int)Gdk.EventMask.ButtonReleaseMask);
 
-            drawable.ExposeEvent += OnDrawingAreaExpose;
+
+            drawable.Drawn += OnDrawingAreaExpose;
+
             drawable.ButtonPressEvent += OnMouseButtonPress;
             drawable.ButtonReleaseEvent += OnMouseButtonRelease;
             drawable.MotionNotifyEvent += OnMouseMove;
 
-            ScrolledWindow scroller = new ScrolledWindow(new Adjustment(0, 0, 100, 1, 1, 1), new Adjustment(0, 0, 100, 1, 1, 1))
+            ScrolledWindow scroller = new ScrolledWindow()
             {
                 HscrollbarPolicy = PolicyType.Always,
                 VscrollbarPolicy = PolicyType.Always
             };
-            
-            scroller.AddWithViewport(drawable);
-            
+
+
+            // In gtk3, a viewport will automatically be added if required.
+            scroller.Add(drawable);
+
+
             mainWidget = scroller;
             drawable.Realized += OnRealized;
-            if (owner == null)
+            drawable.SizeAllocated += OnRealized;
+            mainWidget.Destroyed += OnDestroyed;
+        }
+
+        private void OnDestroyed(object sender, EventArgs e)
+        {
+            try
             {
-                DGObject.DefaultOutlineColour = OxyPlot.OxyColors.Black;
+                mainWidget.Destroyed -= OnDestroyed;
+                drawable.Realized -= OnRealized;
+                drawable.SizeAllocated -= OnRealized;
             }
-            else
+            catch (Exception err)
             {
-                DGObject.DefaultOutlineColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Foreground(StateType.Normal));
-                DGObject.DefaultBackgroundColour = Utility.Colour.GtkToOxyColor(owner.MainWidget.Style.Background(StateType.Normal));
+                ShowError(err);
             }
         }
 
-        /// <summary>The description (nodes & arcs) of the directed graph.</summary>
+        /// <summary>The description (nodes and arcs) of the directed graph.</summary>
         public DirectedGraph DirectedGraph
         {
             get
@@ -143,31 +163,50 @@
         /// <summary>Export the view to the image</summary>
         public System.Drawing.Image Export()
         {
-            int width;
-            int height;
-            MainWidget.GdkWindow.GetSize(out width, out height);
-            Gdk.Pixbuf screenshot = Gdk.Pixbuf.FromDrawable(drawable.GdkWindow, drawable.Colormap, 0, 0, 0, 0, width - 20, height - 20);
+
+            var window = new OffscreenWindow();
+            window.Add(MainWidget);
+
+            // Choose a good size for the image (which is square).
+            int maxX = (int)nodes.Max(n => n.Location.X);
+            int maxY = (int)nodes.Max(n => n.Location.Y);
+            int maxSize = nodes.Max(n => n.Width);
+            int size = Math.Max(maxX, maxY) + maxSize;
+
+            MainWidget.WidthRequest = size;
+            MainWidget.HeightRequest = size;
+            window.ShowAll();
+            while (GLib.MainContext.Iteration());
+
+            Gdk.Pixbuf screenshot = window.Pixbuf;
             byte[] buffer = screenshot.SaveToBuffer("png");
-            MemoryStream stream = new MemoryStream(buffer);
-            System.Drawing.Bitmap bitmap = new Bitmap(stream);
-            return bitmap;
+            window.Dispose();
+            using (MemoryStream stream = new MemoryStream(buffer))
+            {
+                System.Drawing.Bitmap bitmap = new Bitmap(stream);
+                return bitmap;
+            }
+
         }
 
         /// <summary>The drawing canvas is being exposed to user.</summary>
-        private void OnDrawingAreaExpose(object sender, ExposeEventArgs args)
+        private void OnDrawingAreaExpose(object sender, DrawnArgs args)
         {
             try
             {
                 DrawingArea area = (DrawingArea)sender;
 
-                Cairo.Context context = Gdk.CairoHelper.Create(area.GdkWindow);
+                Cairo.Context context = args.Cr;
 
-                foreach (DGArc tmpArc in arcs)
-                    tmpArc.Paint(context);
-                foreach (DGNode tmpNode in nodes)
-                    tmpNode.Paint(context);
+                DGObject.DefaultOutlineColour = area.StyleContext.GetColor(StateFlags.Normal).ToColour();
+#pragma warning disable 0612
+                DGObject.DefaultBackgroundColour = area.StyleContext.GetBackgroundColor(StateFlags.Normal).ToColour();
+#pragma warning restore 0612
 
-                ((IDisposable)context.Target).Dispose();
+                CairoContext drawingContext = new CairoContext(context, MainWidget);
+                DirectedGraphRenderer.Draw(drawingContext, arcs, nodes);
+
+                ((IDisposable)context.GetTarget()).Dispose();
                 ((IDisposable)context).Dispose();
             }
             catch (Exception err)
@@ -182,8 +221,8 @@
             try
             {
                 // Get the point clicked by the mouse.
-                PointD clickPoint = new PointD(args.Event.X, args.Event.Y);
-
+                Point clickPoint = new Point((int)args.Event.X, (int)args.Event.Y);
+                
                 if (args.Event.Button == 1)
                 {
                     mouseDown = true;
@@ -238,7 +277,7 @@
             try
             {
                 // Get the point clicked by the mouse.
-                PointD movePoint = new PointD(args.Event.X, args.Event.Y);
+                Point movePoint = new Point((int)args.Event.X, (int)args.Event.Y);
 
                 // If an object is under the mouse then move it
                 if (mouseDown && SelectedObject != null)
@@ -271,7 +310,7 @@
                         OnGraphObjectMoved?.Invoke(this, new ObjectMovedArgs(SelectedObject));
                     else
                     {
-                        PointD clickPoint = new PointD(args.Event.X, args.Event.Y);
+                        Point clickPoint = new Point((int)args.Event.X, (int)args.Event.Y);
                         // Look through nodes for the click point
                         DGObject clickedObject = nodes.FindLast(node => node.HitTest(clickPoint));
 

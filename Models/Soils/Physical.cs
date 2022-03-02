@@ -3,6 +3,7 @@
     using APSIM.Shared.APSoil;
     using APSIM.Shared.Utilities;
     using Models.Core;
+    using Newtonsoft.Json;
     using System;
     using System.Linq;
 
@@ -16,6 +17,8 @@
         /// <summary>Depth strings. Wrapper around Thickness.</summary>
         [Description("Depth")]
         [Units("cm")]
+        [Summary]
+        [JsonIgnore]
         public string[] Depth
         {
             get

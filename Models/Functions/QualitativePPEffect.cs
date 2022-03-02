@@ -5,11 +5,10 @@ namespace Models.Functions
 {
 
     ///<summary>
-    /// # [Name]
     /// Qualitative Photoperiod effect on developmental rate
     ///</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class QualitativePPEffect : Model, IFunction
     {

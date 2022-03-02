@@ -1,22 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text;
+using APSIM.Shared.Documentation;
 using Models.Core;
 using Models.Interfaces;
 
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
-    /// A function that adds values from child functions
+    /// Calculated using a Wang and Engel beta function which has a value of zero
+    /// below the specified minimum temperature, increasing to a maximum value at
+    /// a given optimum temperature, and  decreasing to zero again at a given
+    /// maximum temperature ([WangEngel1998]).
     /// </summary>
     [Serializable]
     [Description("Calculates relative temperature response")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-
-    public class 
-        WangEngelTempFunction: Model, IFunction, ICustomDocumentation, IIndexedFunction
-        {
+    public class WangEngelTempFunction: Model, IFunction, IIndexedFunction
+    {
         
         /// <summary>Minimum Temperature.</summary>
         [Description("Minimum Temperature")]
@@ -47,6 +49,9 @@ namespace Models.Functions
             return ValueIndexed(Tav);
         }
 
+        /// <summary>Gets the optional units</summary>
+        [Description("The optional units of the constant")]
+        public string Units { get; set; }
 
         /// <summary>
         /// returns result of Wang Eagle beta function for given temperature
@@ -74,15 +79,16 @@ namespace Models.Functions
             return RelEff / RelEffRefTemp;
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-                SubtractFunction.DocumentMathFunction(this, '+', tags, headingLevel, indent);
+            StringBuilder text = new StringBuilder();
+            text.Append($"{Name} is calculated using a Wang and Engel beta function which has a value of zero ");
+            text.Append($"below {MinTemp} {Units} increasing to a maximum value at {OptTemp} {Units} and ");
+            text.Append($"decreasing to zero again at {MaxTemp} {Units} ([WangEngel1998]).");
+            yield return new Paragraph(text.ToString());
         }
     }
-
 }

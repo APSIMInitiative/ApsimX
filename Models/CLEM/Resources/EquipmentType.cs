@@ -1,11 +1,8 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 
 namespace Models.CLEM.Resources
@@ -14,10 +11,10 @@ namespace Models.CLEM.Resources
     /// Store for equipment type
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Equipment))]
-    [Description("This resource represents an equipment store type (e.g. Tractor, bore).")]
+    [Description("This resource represents a piece of equipment (e.g. Tractor, bore)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Equipment/Equipmenttype.htm")]
     public class EquipmentType : CLEMResourceTypeBase, IResourceWithTransactionType, IResourceType
@@ -55,6 +52,17 @@ namespace Models.CLEM.Resources
         private double amount { get { return roundedAmount; } set { roundedAmount = Math.Round(value, 9); } }
         private double roundedAmount;
 
+        /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
+            }
+        }
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -71,9 +79,7 @@ namespace Models.CLEM.Resources
         {
             this.amount = 0;
             if (StartingAmount > 0)
-            {
                 Add(StartingAmount, this, "", "Starting value");
-            }
         }
 
         #region transactions
@@ -108,9 +114,8 @@ namespace Models.CLEM.Resources
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             if (resourceAmount.GetType().ToString() != "System.Double")
-            {
                 throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
-            }
+
             double addAmount = (double)resourceAmount;
             if (addAmount > 0)
             {
@@ -118,7 +123,8 @@ namespace Models.CLEM.Resources
 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    Gain = addAmount,
+                    TransactionType = TransactionType.Gain,
+                    Amount = addAmount,
                     Activity = activity,
                     Category = category,
                     RelatesToResource = relatesToResource,
@@ -138,15 +144,11 @@ namespace Models.CLEM.Resources
         public new void Remove(ResourceRequest request)
         {
             if (request.Required == 0)
-            {
                 return;
-            }
 
             // if this request aims to trade with a market see if we need to set up details for the first time
             if (request.MarketTransactionMultiplier > 0)
-            {
                 FindEquivalentMarketStore();
-            }
 
             // avoid taking too much
             double amountRemoved = request.Required;
@@ -155,15 +157,14 @@ namespace Models.CLEM.Resources
 
             // send to market if needed
             if (request.MarketTransactionMultiplier > 0 && EquivalentMarketStore != null)
-            {
                 (EquivalentMarketStore as EquipmentType).Add(amountRemoved * request.MarketTransactionMultiplier, request.ActivityModel, this.NameWithParent, "Farm sales");
-            }
 
             request.Provided = amountRemoved;
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,
-                Loss = amountRemoved,
+                TransactionType = TransactionType.Loss,
+                Amount = amountRemoved,
                 Activity = request.ActivityModel,
                 Category = request.Category,
                 RelatesToResource = request.RelatesToResource

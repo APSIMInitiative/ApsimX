@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Models.Core;
 using APSIM.Shared.Utilities;
 using Models.Soils;
@@ -12,7 +11,7 @@ namespace Models.Functions
     /// \retval fraction of Urea hydrolysed.
     [Serializable]
     [Description("Urea hydrolysis model from CERES-Maize")]
-    public class CERESUreaHydrolysisModel : Model, IFunction, ICustomDocumentation
+    public class CERESUreaHydrolysisModel : Model, IFunction
     {
         [Link]
         Sample initial = null;
@@ -39,24 +38,6 @@ namespace Models.Functions
             double rateModifer = Math.Min(WF, TF);
 
             return potentialRate * rateModifer;
-        }
-
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
-        {
-
-            // add a heading.
-            tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-
-            // write memos.
-            foreach (IModel memo in this.FindAllChildren<Memo>())
-                AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-
         }
     }
 }

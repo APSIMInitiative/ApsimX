@@ -1,12 +1,12 @@
-﻿using Models.Core;
+﻿using Models.CLEM.Interfaces;
+using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -14,7 +14,7 @@ namespace Models.CLEM.Resources
     /// Store for manure
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ProductStore))]
     [Description("This resource represents a manure store. This is a special type of Product Store Type and is needed for manure management and must be named \"Manure\".")]
@@ -74,15 +74,24 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
+            }
+        }
+
+        /// <summary>
         /// Overrides the base class method to allow for clean up
         /// </summary>
         [EventSubscribe("Completed")]
         private void OnSimulationCompleted(object sender, EventArgs e)
         {
             if (UncollectedStores != null)
-            {
                 UncollectedStores.Clear();
-            }
             UncollectedStores = null;
         }
 
@@ -205,9 +214,8 @@ namespace Models.CLEM.Resources
         public new void Add(object resourceAmount, CLEMModel activity, string relatesToResource, string category)
         {
             if (resourceAmount.GetType().ToString() != "System.Double")
-            {
                 throw new Exception(String.Format("ResourceAmount object of type {0} is not supported Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
-            }
+
             double addAmount = (double)resourceAmount;
             if (addAmount > 0)
             {
@@ -215,7 +223,8 @@ namespace Models.CLEM.Resources
 
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    Gain = addAmount,
+                    TransactionType = TransactionType.Gain,
+                    Amount = addAmount,
                     Activity = activity,
                     RelatesToResource = relatesToResource,
                     Category = category,
@@ -235,9 +244,8 @@ namespace Models.CLEM.Resources
         public new void Remove(ResourceRequest request)
         {
             if (request.Required == 0)
-            {
                 return;
-            }
+
             // avoid taking too much
             double amountRemoved = request.Required;
             amountRemoved = Math.Min(this.Amount, amountRemoved);
@@ -247,7 +255,8 @@ namespace Models.CLEM.Resources
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,
-                Loss = amountRemoved,
+                TransactionType = TransactionType.Loss,
+                Amount = amountRemoved,
                 Activity = request.ActivityModel,
                 Category = request.Category,
                 RelatesToResource = request.RelatesToResource
@@ -270,19 +279,18 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
-            string html = "<div class=\"activityentry\">";
-            html += "Manure will decay at a rate of <span class=\"setvalue\">" + this.DecayRate.ToString("0.###") + "</span> each month and will only last for <span class=\"setvalue\">" + this.MaximumAge.ToString("0.#") + "</span> months.</div>";
-            html += "<div class=\"activityentry\">";
-            html += "Fresh manure is <span class=\"setvalue\">" + this.ProportionMoistureFresh.ToString("0.##%") + "</span> moisture and delines by " + this.MoistureDecayRate.ToString("0.###") + "</span> each month.";
-            html += "</div>";
-            return html;
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("<div class=\"activityentry\">");
+                htmlWriter.Write("Manure will decay at a rate of <span class=\"setvalue\">" + this.DecayRate.ToString("0.###") + "</span> each month and will only last for <span class=\"setvalue\">" + this.MaximumAge.ToString("0.#") + "</span> months.</div>");
+                htmlWriter.Write("<div class=\"activityentry\">");
+                htmlWriter.Write("Fresh manure is <span class=\"setvalue\">" + this.ProportionMoistureFresh.ToString("0.##%") + "</span> moisture and delines by " + this.MoistureDecayRate.ToString("0.###") + "</span> each month.");
+                htmlWriter.Write("</div>");
+                return htmlWriter.ToString(); 
+            }
         }
 
         #endregion

@@ -1,13 +1,13 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -15,12 +15,12 @@ namespace Models.CLEM.Activities
     /// Activity to processes one resource into another resource with associated labour and costs
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity processes one resource into another resource with associated labour and costs.")]
+    [Description("Process one resource into another resource with associated labour and costs")]
     [HelpUri(@"Content/Features/Activities/All resources/ProcessResource.htm")]
     [Version(1, 0, 1, "")]
     public class ResourceActivityProcess : CLEMActivityBase
@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
         /// Resource type to process
         /// </summary>
         [Description("Resource to process")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of resource type to process required")]
         public string ResourceTypeProcessedName { get; set; }
 
@@ -37,7 +37,7 @@ namespace Models.CLEM.Activities
         /// Resource type created
         /// </summary>
         [Description("Resource created")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(AnimalFoodStore), typeof(HumanFoodStore), typeof(Equipment), typeof(GreenhouseGases), typeof(OtherAnimals), typeof(ProductStore), typeof(WaterStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Name of resource type created required")]
         public string ResourceTypeCreatedName { get; set; }
 
@@ -73,13 +73,19 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            resourceTypeProcessModel = Resources.GetResourceItem(this, ResourceTypeProcessedName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
-            resourceTypeCreatedModel = Resources.GetResourceItem(this, ResourceTypeCreatedName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IResourceType;
+            resourceTypeProcessModel = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeProcessedName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            resourceTypeCreatedModel = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeCreatedName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <summary>
-        /// Adjust resources for activity based on shortfalls
+        /// constructor
         /// </summary>
+        public ResourceActivityProcess()
+        {
+            TransactionCategory = "Process";
+        }
+
+        /// <inheritdoc/>
         public override void AdjustResourcesNeededForActivity()
         {
             // get labour shortfall
@@ -102,9 +108,7 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Perform activity
-        /// </summary>
+        /// <inheritdoc/>
         public override void DoActivity()
         {
             // processed resource should already be taken
@@ -121,32 +125,33 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Work out the amount of labour required for this activity
-        /// </summary>
-        /// <param name="requirement"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             double daysNeeded;
+
+            // get amount to processed
+            double amountToProcess = resourceTypeProcessModel.Amount;
+            if (Reserve > 0)
+            {
+                amountToProcess = Math.Min(amountToProcess, Reserve);
+            }
+
             switch (requirement.UnitType)
             {
                 case LabourUnitType.Fixed:
                     daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perUnit:
-                    daysNeeded = requirement.UnitSize * requirement.LabourPerUnit;
+                    daysNeeded = amountToProcess / requirement.UnitSize * requirement.LabourPerUnit;
                     break;
                 default:
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, "Process", (resourceTypeCreatedModel as CLEMModel).NameWithParent);
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, (resourceTypeCreatedModel as CLEMModel).NameWithParent);
         }
 
-        /// <summary>
-        /// Resources needed for Activity
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
@@ -192,11 +197,12 @@ namespace Models.CLEM.Activities
                     {
                         AllowTransmutation = false,
                         Required = sumneeded,
+                        Resource = item.BankAccount,
                         ResourceType = typeof(Finance),
                         ResourceTypeName = item.BankAccount.Name,
                         ActivityModel = this,
                         FilterDetails = null,
-                        Category = item.Name,
+                        Category = TransactionCategory,
                         RelatesToResource = (resourceTypeCreatedModel as CLEMModel).NameWithParent
                     }
                     );
@@ -211,10 +217,11 @@ namespace Models.CLEM.Activities
                     {
                         AllowTransmutation = true,
                         Required = amountToProcess,
+                        Resource = resourceTypeProcessModel,
                         ResourceType = (resourceTypeProcessModel as Model).Parent.GetType(),
                         ResourceTypeName = (resourceTypeProcessModel as Model).Name,
                         ActivityModel = this,
-                        Category = "Processed",
+                        Category = TransactionCategory,
                         RelatesToResource = (resourceTypeCreatedModel as CLEMModel).NameWithParent
                     }
                 );
@@ -222,88 +229,31 @@ namespace Models.CLEM.Activities
             return resourcesNeeded;
         }
 
-        /// <summary>
-        /// Resources needed for initialisation
-        /// </summary>
-        /// <returns></returns>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-           return null;
-        }
-
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
-        public override event EventHandler ActivityPerformed;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Process ";
-            if (ResourceTypeProcessedName == null || ResourceTypeProcessedName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">[RESOURCE NOT SET]</span>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Process ");
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeProcessedName, "Resource not set", HTMLSummaryStyle.Resource));
+                htmlWriter.Write(" into ");
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(ResourceTypeCreatedName, "Resource not set", HTMLSummaryStyle.Resource));
+                htmlWriter.Write(" at a rate of ");
+                if (ConversionRate <= 0)
+                    htmlWriter.Write("<span class=\"errorlink\">[RATE NOT SET]</span>");
+                else
+                    htmlWriter.Write("1:<span class=\"resourcelink\">" + ConversionRate.ToString("0.###") + "</span>");
+                htmlWriter.Write("</div>");
+                if (Reserve > 0)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    htmlWriter.Write("<span class=\"setvalue\">" + Reserve.ToString("0.###") + "</span> will be reserved.");
+                    htmlWriter.Write("</div>");
+                }
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + ResourceTypeProcessedName + "</span>";
-            }
-            html += " into ";
-            if (ResourceTypeCreatedName == null || ResourceTypeCreatedName == "")
-            {
-                html += "<span class=\"errorlink\">[RESOURCE NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + ResourceTypeCreatedName + "</span>";
-            }
-            html += " at a rate of ";
-            if (ConversionRate <= 0)
-            {
-                html += "<span class=\"errorlink\">[RATE NOT SET]</span>";
-            }
-            else
-            {
-                html += "1:<span class=\"resourcelink\">" + ConversionRate.ToString("0.###") + "</span>";
-            }
-            html += "</div>";
-            if (Reserve > 0)
-            {
-                html += "\n<div class=\"activityentry\">";
-                html += "<span class=\"setvalue\">" + Reserve.ToString("0.###") + "</span> will be reserved.";
-                html += "</div>";
-            }
-            return html;
         } 
         #endregion
     }

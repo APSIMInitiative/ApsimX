@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
@@ -14,16 +15,16 @@ namespace Models.CLEM.Activities
     /// Target for feed activity
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LabourActivityFeedToTargets))]
-    [Description("This component defines a target to be achieved when trying to feed people to set targets")]
+    [Description("Defines a target to be achieved when trying to feed people to set targets")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeedTarget.htm")]
     public class LabourActivityFeedTarget: CLEMModel
     {
         /// <summary>
-        /// Name of metric to base this target upon
+        /// Name of metric for this target
         /// </summary>
         [Description("Metric name")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Metric name required")]
@@ -33,9 +34,17 @@ namespace Models.CLEM.Activities
         /// Target level
         /// </summary>
         [Description("Target level")]
-        [Units("units per Ae per day")]
+        [Units("units per AE per day")]
         [GreaterThanValue(0)]
         public double TargetValue { get; set; }
+
+        /// <summary>
+        /// Target max level
+        /// </summary>
+        [Description("Target maximum level")]
+        [Units("units per AE per day")]
+        [GreaterThan("TargetValue")]
+        public double TargetMaximumValue { get; set; }
 
         /// <summary>
         /// Amount from other sources
@@ -52,6 +61,12 @@ namespace Models.CLEM.Activities
         public double Target { get; set; }
 
         /// <summary>
+        /// Current target
+        /// </summary>
+        [JsonIgnore]
+        public double TargetMaximum { get; set; }
+
+        /// <summary>
         /// Stored level achieved
         /// </summary>
         [JsonIgnore]
@@ -61,7 +76,13 @@ namespace Models.CLEM.Activities
         /// Has target been achieved
         /// </summary>
         [JsonIgnore]
-        public bool TargetMet { get { return CurrentAchieved >= Target; } }
+        public bool TargetAchieved { get { return Math.Round(CurrentAchieved, 4) >= Math.Round(Target, 4); } }
+
+        /// <summary>
+        /// Has target maximum been achieved
+        /// </summary>
+        [JsonIgnore]
+        public bool TargetMaximumAchieved { get { return Math.Round(CurrentAchieved, 4) >= Math.Round(TargetMaximum, 4); } }
 
         /// <summary>
         /// Constructor
@@ -73,39 +94,41 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
-            string html = "\n<div class=\"activityentry\">";
-            if (Metric is null || Metric == "")
-            {
-                html += "<span class=\"errorlink\">METRIC NOT SET</span>: ";
-            }
-            else
-            {
-                html += "<span class=\"setvalue\">" + Metric + "</span>: ";
-            }
-            if (TargetValue > 0)
-            {
-                html += "<span class=\"setvalue\">";
-                html += TargetValue.ToString("#,##0.##");
-            }
-            else
-            {
-                html += "<span class=\"errorlink\">VALUE NOT SET";
-            }
-            html += "</span> units per AE per day</div>";
 
-            if (OtherSourcesValue > 0)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "\n<div class=\"activityentry\">";
-                html += "<span class=\"setvalue\">" + OtherSourcesValue.ToString("#,##0.##") + "</span> is provided from sources outside the human food store</div>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(Metric, "Metric not set"));
+                if (TargetValue > 0)
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">");
+                    htmlWriter.Write(TargetValue.ToString("#,##0.##"));
+                }
+                else
+                    htmlWriter.Write("<span class=\"errorlink\">VALUE NOT SET");
+
+                htmlWriter.Write("</span> units per AE per day ");
+
+                if (TargetMaximumValue > 0)
+                {
+                    htmlWriter.Write("up to maximum of <span class=\"setvalue\">");
+                    htmlWriter.Write(TargetMaximumValue.ToString("#,##0.##"));
+                }
+                else
+                    htmlWriter.Write("<span class=\"errorlink\">VALUE NOT SET");
+
+                htmlWriter.Write("</span></div>");
+
+                if (OtherSourcesValue > 0)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    htmlWriter.Write("<span class=\"setvalue\">" + OtherSourcesValue.ToString("#,##0.##") + "</span> is provided from sources outside the human food store</div>");
+                }
+                return htmlWriter.ToString(); 
             }
-            return html;
         } 
         #endregion
 

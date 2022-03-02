@@ -13,18 +13,16 @@ using Models.Storage;
 using Newtonsoft.Json.Serialization;
 using Models.Core.ApsimFile;
 using Models.Core.Run;
+using APSIM.Shared.Documentation;
 
 namespace Models.Core
 {
     /// <summary>
-    /// # [Name]
-    /// Encapsulates a collection of simulations. It is responsible for creating this collection,
-    /// changing the structure of the components within the simulations, renaming components, adding
-    /// new ones, deleting components. The user interface talks to an instance of this class.
+    /// Encapsulates a collection of simulations. It is responsible for creating this collection, changing the structure of the components within the simulations, renaming components, adding new ones, deleting components. The user interface talks to an instance of this class.
     /// </summary>
     [Serializable]
     [ScopedModel]
-    [ViewName("UserInterface.Views.HTMLView")]
+    [ViewName("UserInterface.Views.MarkdownView")]
     [PresenterName("UserInterface.Presenters.GenericPresenter")]
     public class Simulations : Model, ISimulationEngine
     {
@@ -102,7 +100,7 @@ namespace Models.Core
         /// <summary>
         /// Return the current APSIM version number.
         /// </summary>
-        public string ApsimVersion
+        public static string ApsimVersion
         {
             get
             {
@@ -156,7 +154,7 @@ namespace Models.Core
                 storage.Reader.Refresh();
             }
             List<Exception> creationExceptions = new List<Exception>();
-            return FileFormat.ReadFromFile<Simulations>(FileName, out creationExceptions);
+            return FileFormat.ReadFromFile<Simulations>(FileName, e => throw e, false);
         }
 
         /// <summary>Write the specified simulation set to the specified filename</summary>
@@ -242,11 +240,20 @@ namespace Models.Core
         public IEnumerable<string> FindAllReferencedFiles()
         {
             SortedSet<string> fileNames = new SortedSet<string>();
-            foreach (IReferenceExternalFiles model in this.FindAllDescendants<IReferenceExternalFiles>())
+            foreach (IReferenceExternalFiles model in this.FindAllDescendants<IReferenceExternalFiles>().Where(m => m.Enabled))
                 foreach (string fileName in model.GetReferencedFileNames())
                     fileNames.Add(PathUtilities.GetAbsolutePath(fileName, FileName));
             
             return fileNames;
+        }
+
+        /// <summary>
+        /// Get a list of tags which describe the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
+        {
+            foreach (ITag tag in Children.SelectMany(c => c.Document()))
+                yield return tag;
         }
 
         /// <summary>Documents the specified model.</summary>
@@ -283,6 +290,10 @@ namespace Models.Core
 
                     Simulation clonedSimulation = simDescription.ToSimulation();
 
+                    // Prepare the simulation for running - this perform misc cleanup tasks such
+                    // as removing disabled models, standardising the soil, resolving links, etc.
+                    clonedSimulation.Prepare();
+                    FindInScope<IDataStore>().Writer.Stop();
                     // Now use the path to get the model we want to document.
                     modelToDocument = clonedSimulation.FindByPath(pathOfModelToDocument)?.Value as IModel;
 
@@ -291,8 +302,6 @@ namespace Models.Core
 
                     // resolve all links in cloned simulation.
                     Links.Resolve(clonedSimulation, true);
-
-                    modelToDocument.IncludeInDocumentation = true;
 
                     // Document the model.
                     AutoDocumentation.DocumentModel(modelToDocument, tags, headingLevel, 0, documentAllChildren:true);

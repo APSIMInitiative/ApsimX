@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Activities;
 using System;
 using System.Collections.Generic;
@@ -9,20 +9,21 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using Newtonsoft.Json;
 using Models.CLEM.Resources;
+using System.IO;
 
 namespace Models.CLEM.Groupings
 {
     ///<summary>
-    /// Contains a group of filters to identify individual ruminants
+    /// Contains a group of filters and sorts to identify individual ruminants
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityFeed))]
-    [Description("This ruminant filter group selects specific individuals from the ruminant herd using any number of Ruminant Filters. This filter group includes feeding rules. No filters will apply rules to current herd. Multiple feeding groups will select groups of individuals required.")]
+    [Description("Set monthly feeding values for specified individual ruminants")]
     [Version(1, 0, 1, "")]
-    [HelpUri(@"Content/Features/Filters/RuminantFeedGroupMonthly.htm")]
-    public class RuminantFeedGroupMonthly: CLEMModel, IValidatableObject, IFilterGroup
+    [HelpUri(@"Content/Features/Filters/Groups/RuminantFeedGroupMonthly.htm")]
+    public class RuminantFeedGroupMonthly : FilterGroup<Ruminant>, IValidatableObject
     {
         /// <summary>
         /// Daily value to supply for each month
@@ -30,18 +31,6 @@ namespace Models.CLEM.Groupings
         [Description("Daily value to supply for each month")]
         [Required, ArrayItemCount(12)]
         public double[] MonthlyValues { get; set; }
-
-        /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
-        /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
-
-        /// <summary>
-        /// Proportion of group to use
-        /// </summary>
-        [JsonIgnore]
-        public double Proportion { get; set; }
 
         /// <summary>
         /// Constructor
@@ -67,7 +56,7 @@ namespace Models.CLEM.Groupings
             {
                 if (MonthlyValues.Max() == 0)
                 {
-                    Summary.WriteWarning(this, $"No feed values were defined for any month in [{this.Name}]. No feeding will be performed for [a={this.Parent.Name}]");
+                    Summary.WriteMessage(this, $"No feed values were defined for any month in [{this.Name}]. No feeding will be performed for [a={this.Parent.Name}]", MessageType.Warning);
                 }
             }
             return results;
@@ -77,140 +66,112 @@ namespace Models.CLEM.Groupings
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
-            string html = "";
-
-            // get amount
-            var grps = MonthlyValues.GroupBy(a => a).OrderBy(a => a.Key);
-
-            RuminantFeedActivityTypes ft = (this.Parent as RuminantActivityFeed).FeedStyle;
-            html += "\n<div class=\"activityentry\">";
-            if (grps.Count() > 1)
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "From ";
-            }
-            html += "<span class=\"setvalue\">";
-            switch (ft)
-            {
-                case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                    html += grps.FirstOrDefault().Key.ToString() + "kg";
-                    break;
-                case RuminantFeedActivityTypes.ProportionOfWeight:
-                case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                    if (grps.LastOrDefault().Key != 1)
-                    {
-                        html += (Convert.ToDecimal(grps.FirstOrDefault().Key, CultureInfo.InvariantCulture)).ToString("0.##%");
-                    }
-                    break;
-                default:
-                    break;
-            }
-            html += "</span>";
+                // get amount
+                var grps = MonthlyValues.GroupBy(a => a).OrderBy(a => a.Key);
 
-            if (grps.Count() > 1)
-            {
-                html += " to ";
-                html += "<span class=\"setvalue\">";
+                RuminantFeedActivityTypes ft = (this.Parent as RuminantActivityFeed).FeedStyle;
+                htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                if (grps.Count() > 1)
+                {
+                    htmlWriter.Write("From ");
+                }
+                htmlWriter.Write("<span class=\"setvalue\">");
                 switch (ft)
                 {
                     case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                        html += grps.LastOrDefault().Key.ToString() + "kg";
+                        htmlWriter.Write(grps.FirstOrDefault().Key.ToString() + "kg");
                         break;
                     case RuminantFeedActivityTypes.ProportionOfWeight:
                     case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
                     case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
                     case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                        html += (Convert.ToDecimal(grps.LastOrDefault().Key, CultureInfo.InvariantCulture)).ToString("0.##%");
+                        if (grps.LastOrDefault().Key != 1)
+                        {
+                            htmlWriter.Write((Convert.ToDecimal(grps.FirstOrDefault().Key, CultureInfo.InvariantCulture)).ToString("0.##%"));
+                        }
                         break;
                     default:
                         break;
                 }
-                html += "</span>";
+                htmlWriter.Write("</span>");
+
+                if (grps.Count() > 1)
+                {
+                    htmlWriter.Write(" to ");
+                    htmlWriter.Write("<span class=\"setvalue\">");
+                    switch (ft)
+                    {
+                        case RuminantFeedActivityTypes.SpecifiedDailyAmount:
+                            htmlWriter.Write(grps.LastOrDefault().Key.ToString() + "kg");
+                            break;
+                        case RuminantFeedActivityTypes.ProportionOfWeight:
+                        case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
+                        case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+                        case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
+                            htmlWriter.Write((Convert.ToDecimal(grps.LastOrDefault().Key, CultureInfo.InvariantCulture)).ToString("0.##%"));
+                            break;
+                        default:
+                            break;
+                    }
+                    htmlWriter.Write("</span>");
+                }
+
+                string starter = " of ";
+                if (grps.Count() == 1 && grps.LastOrDefault().Key == 1)
+                {
+                    starter = "The ";
+                }
+
+                bool overfeed = false;
+
+                htmlWriter.Write("<span class=\"setvalue\">");
+                switch (ft)
+                {
+                    case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
+                        htmlWriter.Write(" feed available");
+                        overfeed = true;
+                        break;
+                    case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
+                        htmlWriter.Write(" per individual per day");
+                        overfeed = true;
+                        break;
+                    case RuminantFeedActivityTypes.SpecifiedDailyAmount:
+                        htmlWriter.Write(" per day");
+                        overfeed = true;
+                        break;
+                    case RuminantFeedActivityTypes.ProportionOfWeight:
+                        htmlWriter.Write(starter + "live weight");
+                        overfeed = true;
+                        break;
+                    case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
+                        htmlWriter.Write(starter + "potential intake");
+                        break;
+                    case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
+                        htmlWriter.Write(starter + "remaining intake");
+                        break;
+                    default:
+                        break;
+                }
+                htmlWriter.Write("</span> is fed each month to the individuals that match the following conditions:");
+
+                htmlWriter.Write("</div>");
+
+                if (overfeed)
+                {
+                    htmlWriter.Write("\r\n<div class=\"activityentry\">");
+                    htmlWriter.Write("Individual's intake will be limited to Potential intake x the modifer for max overfeeding, with excess food still utilised but wasted");
+                    htmlWriter.Write("</div>");
+                }
+
+                return htmlWriter.ToString(); 
             }
-
-            string starter = " of ";
-            if (grps.Count() == 1 && grps.LastOrDefault().Key == 1)
-            {
-                starter = "The ";
-            }
-
-            bool overfeed = false;
-
-            html += "<span class=\"setvalue\">";
-            switch (ft)
-            {
-                case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                    html += " feed available";
-                    overfeed = true;
-                    break;
-                case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
-                    html += " per individual per day";
-                    overfeed = true;
-                    break;
-                case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                    html += " per day";
-                    overfeed = true;
-                    break;
-                case RuminantFeedActivityTypes.ProportionOfWeight:
-                    html += starter + "live weight";
-                    overfeed = true;
-                    break;
-                case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
-                    html += starter + "potential intake";
-                    break;
-                case RuminantFeedActivityTypes.ProportionOfRemainingIntakeRequired:
-                    html += starter + "remaining intake";
-                    break;
-                default:
-                    break;
-            }
-            html += "</span> is fed each month to the individuals that match the following conditions:";
-
-            html += "</div>";
-
-            if (overfeed)
-            {
-                html += "\n<div class=\"activityentry\">";
-                html += "Individual's intake will be limited to Potential intake x the modifer for max overfeeding, with excess food still utilised but wasted";
-                html += "</div>";
-            }
-
-            return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
-        {
-            string html = "";
-            html += "\n</div>";
-            return html;
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
-        {
-            string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
-            if (!(this.FindAllChildren<RuminantFilter>().Count() >= 1))
-            {
-                html += "<div class=\"filter\">All individuals</div>";
-            }
-            return html;
-        } 
         #endregion
 
     }

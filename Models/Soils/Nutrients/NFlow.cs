@@ -8,13 +8,12 @@ namespace Models.Soils.Nutrients
     using Interfaces;
 
     /// <summary>
-    /// # [Name]
     /// Encapsulates a nitrogen flow between mineral N pools.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(Solute))]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     public class NFlow : Model
     {
         [Link(Type = LinkType.Child, ByName = true)]
@@ -56,6 +55,25 @@ namespace Models.Soils.Nutrients
         /// </summary>
         [Description("Name of destination pool")]
         public string destinationName { get; set; }
+
+        [EventSubscribe("StartOfSimulation")]
+        private void OnCommencing(object sender, EventArgs args)
+        {
+            if (sourceSolute == null)
+            {
+                sourceSolute = FindInScope<ISolute>(Parent.Name);
+                destinationSolute = FindInScope<ISolute>(destinationName);
+            }
+
+            double[] source = sourceSolute.kgha;
+            int numLayers = source.Length;
+            if (Value == null)
+                Value = new double[source.Length];
+            if (Natm == null)
+                Natm = new double[source.Length];
+            if (N2Oatm == null)
+                N2Oatm = new double[source.Length];
+        }
 
         /// <summary>
         /// Get the information on potential residue decomposition - perform daily calculations as part of this.

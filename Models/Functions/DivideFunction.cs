@@ -4,15 +4,14 @@ using System.Text;
 using System.Reflection;
 using Models.Core;
 using System.Linq;
+using APSIM.Shared.Documentation;
 
 namespace Models.Functions
 {
-    /// <summary>
-    /// Starting with the first child function, recursively divide by the values of the subsequent child functions
-    /// </summary>
+    /// <summary>A class that divides all child functions.</summary>
     [Serializable]
     [Description("Starting with the first child function, recursively divide by the values of the subsequent child functions")]
-    public class DivideFunction : Model, IFunction, ICustomDocumentation
+    public class DivideFunction : Model, IFunction
     {
         /// <summary>The child functions</summary>
         private List<IFunction> ChildFunctions;
@@ -46,16 +45,10 @@ namespace Models.Functions
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                SubtractFunction.DocumentMathFunction(this, '/', tags, headingLevel, indent);
-            }
+            foreach (var tag in MultiplyFunction.DocumentMathFunction('/', Name, Children))
+                yield return tag;
         }
-
     }
 }

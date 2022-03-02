@@ -4,17 +4,19 @@ using Models.Core;
 using Models.Functions;
 using System.IO;
 using Newtonsoft.Json;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {
     /// <summary>
-    /// A special phase that jumps to another phase.
+    /// When the specified start phase is reached, phenology is rewound to
+    /// a specified phase.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class GotoPhase : Model, IPhase, ICustomDocumentation
+    public class GotoPhase : Model, IPhase
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
@@ -29,9 +31,14 @@ namespace Models.PMF.Phen
         [Description("Start")]
         public string Start { get; set; }
 
-        /// <summary>The end</summary>
-        [Description("End")]
-        public string End { get; set; }
+        /// <summary>The end stage name.</summary>
+        public string End
+        {
+            get
+            {
+                return phenology.FindChild<IPhase>(PhaseNameToGoto)?.Start;
+            }
+        }
 
         /// <summary>The phase name to goto</summary>
         [Description("PhaseNameToGoto")]
@@ -59,24 +66,12 @@ namespace Models.PMF.Phen
         /// <summary>Resets the phase.</summary>
         public virtual void ResetPhase() {}
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
-
-                // Describe the start and end stages
-                tags.Add(new AutoDocumentation.Paragraph("This is a special phase, at " + Start + " the phenology is reset to the " + PhaseNameToGoto + " phase.  ", indent));
-
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-            }
+            yield return new Paragraph($"When the {Start} phase is reached, phenology is rewound to the {PhaseNameToGoto} phase.");
         }
     }
 }

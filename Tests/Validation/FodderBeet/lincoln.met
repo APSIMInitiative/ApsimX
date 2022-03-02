@@ -1,7 +1,7 @@
 [weather.met.weather]                
 Site  =  Lincoln            
-Latitude=-43.624
-Longitude=172.466  ! File is using up to date rainshelter weather data from XXX/XXX/XXX to XXX/XXX/XXX and simulated data in other dates               
+Latitude=-43.62622
+Longitude=172.4704  ! File is using up to date rainshelter weather data from XXX/XXX/XXX to XXX/XXX/XXX and simulated data in other dates               
 tav=11.4  !annual  average  ambient  temperature        
 amp=11.5    !annual  amplitud  in  mean  monthly  temperature    
 year  day  rain  maxt  mint  mean  radn  wind  vp

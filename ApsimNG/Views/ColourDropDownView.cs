@@ -2,8 +2,12 @@
 {
     using System;
     using System.Drawing;
+    using global::UserInterface.Extensions;
     using Gtk;
-    /// using System.Windows.Forms;
+    using Utility;
+    using CellLayout = Gtk.ICellLayout;
+    using TreeModel = Gtk.ITreeModel;
+
 
     /// <summary>An interface for a drop down</summary>
     public interface IColourDropDownView
@@ -46,7 +50,7 @@
                 combobox1.Changed -= OnChanged;
                 combobox1.SetCellDataFunc(comboRender, null);
                 comboModel.Dispose();
-                comboRender.Destroy();
+                comboRender.Dispose();
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;
             }
@@ -60,6 +64,7 @@
         public event EventHandler Changed;
 
         /// <summary>Get or sets the list of valid values. Can be Color or string objects.</summary>
+        /// <remarks>fixme - why is this of type object[]?</remarks>
         public object[] Values
         {
             get
@@ -99,7 +104,15 @@
                     {
                         typeEnum = ColourDropTypeEnum.Text;
                         text = (string)val;
-                        color = combobox1.Style.Base(StateType.Normal);
+
+                        // This is the old (obsolete) way of doing things. Can't just get rid of this
+                        // because changing the background of each cell is the whole point of this view.
+                        // Needs to be reimplemented for gtk3, so I won't suppress this warning.
+
+#pragma warning disable 0612
+                        color = combobox1.Toplevel.StyleContext.GetBackgroundColor(StateFlags.Normal).ToColour().ToGdk();
+#pragma warning restore 0612
+
                     }
                     comboModel.AppendValues(text, color, (int)typeEnum);
                 }
@@ -166,8 +179,10 @@
         /// <summary>
         /// Handles the DrawItem combo box event to display colours.
         /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="cell_layout">The cell layout.</param>
+        /// <param name="cell">The cell.</param>
+        /// <param name="model">The tree model.</param>
+        /// <param name="iter">The TreeIter.</param>
         private void OnDrawColourCombo(CellLayout cell_layout, CellRenderer cell, TreeModel model, TreeIter iter)
         {
             try

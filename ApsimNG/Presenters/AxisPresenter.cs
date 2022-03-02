@@ -1,9 +1,9 @@
 ﻿namespace UserInterface.Presenters
 {
     using System;
-    using Models;
     using Views;
     using Interfaces;
+    using APSIM.Shared.Graphing;
 
     /// <summary>
     /// This presenter connects an instance of a Model.Graph.Axis with a 
@@ -40,6 +40,10 @@
 
             // Trap change event from the model.
             explorerPresenter.CommandHistory.ModelChanged += OnModelChanged;
+            // this.view.IsDateAxis = false/*axis.DateTimeAxis*/ // fixme;
+
+            // Tell the view to populate the axis.
+            PopulateView();
 
             // Trap events from the view.
             this.view.TitleChanged += OnTitleChanged;
@@ -48,10 +52,6 @@
             this.view.MaximumChanged += OnMaximumChanged;
             this.view.IntervalChanged += OnIntervalChanged;
             this.view.CrossesAtZeroChanged += OnCrossesAtZeroChanged;
-            this.view.IsDateAxis = axis.DateTimeAxis;
-
-            // Tell the view to populate the axis.
-            PopulateView();
         }
 
 
@@ -80,9 +80,9 @@
             view.Title = axis.Title;
             view.Inverted = axis.Inverted;
             view.CrossesAtZero = axis.CrossesAtZero;
-            view.SetMinimum(axis.Minimum, axis.DateTimeAxis);
-            view.SetMaximum(axis.Maximum, axis.DateTimeAxis);
-            view.SetInterval(axis.Interval, axis.DateTimeAxis);
+            view.SetMinimum(axis.Minimum ?? double.NaN, false/*axis.DateTimeAxis*/);
+            view.SetMaximum(axis.Maximum ?? double.NaN, false/*axis.DateTimeAxis*/);
+            view.SetInterval(axis.Interval ?? double.NaN, false/*axis.DateTimeAxis*/);
         }
         
         /// <summary>

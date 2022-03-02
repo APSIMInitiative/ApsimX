@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
-
+using APSIM.Shared.Documentation;
 using Models.Core;
-using APSIM.Shared.Utilities;
 using Models.Interfaces;
 
 namespace Models.Functions.SupplyFunctions
 {
     /// <summary>
-    /// # [Name]
     /// Biomass fixation is modelled as the product of intercepted radiation and its conversion efficiency, the radiation use efficiency (RUE) ([Monteith1977]).  
-    ///   This approach simulates net photosynthesis rather than providing separate estimates of growth and respiration.  
-    ///   The potential photosynthesis calculated using RUE is then adjusted according to stress factors, these account for plant nutrition (FN), air temperature (FT), vapour pressure deficit (FVPD), water supply (FW) and atmospheric CO<sub>2</sub> concentration (FCO2).  
-    ///   NOTE: RUE in this model is expressed as g/MJ for a whole plant basis, including both above and below ground growth.
+    /// This approach simulates net photosynthesis rather than providing separate estimates of growth and respiration.  
+    /// The potential photosynthesis calculated using RUE is then adjusted according to stress factors, these account for plant nutrition (FN), air temperature (FT), vapour pressure deficit (FVPD), water supply (FW) and atmospheric CO~2~ concentration (FCO2).  
+    /// NOTE: RUE in this model is expressed as g/MJ for a whole plant basis, including both above and below ground growth.
     /// </summary>
     [Serializable]
     [ValidParent(ParentType = typeof(ILeaf))]
@@ -21,26 +18,32 @@ namespace Models.Functions.SupplyFunctions
     {
         /// <summary>The rue</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("g/MJ")]
         IFunction RUE = null;
 
         /// <summary>The fc o2</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("0-1")]
         IFunction FCO2 = null;
 
         /// <summary>The function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("0-1")]
         IFunction FN = null;
 
         /// <summary>The ft</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("0-1")]
         public IFunction FT = null;
 
         /// <summary>The fw</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("0-1")]
         IFunction FW = null;
 
         /// <summary>The FVPD</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("0-1")]
         public IFunction FVPD = null;
 
         /// <summary>The met data</summary>
@@ -49,15 +52,9 @@ namespace Models.Functions.SupplyFunctions
 
         /// <summary>The radiation interception data</summary>
         [Link(Type = LinkType.Child, ByName = true)]
+        [Units("MJ/m^2/d")]
         public IFunction RadnInt = null;
 
-        #region Class Data Members
-        //[Input]
-        //public NewMetType MetData;
-
-        #endregion
-
-        #region Associated variables
 
         /// <summary>Gets the VPD.</summary>
         /// <value>The VPD.</value>
@@ -96,6 +93,16 @@ namespace Models.Functions.SupplyFunctions
                 throw new Exception("Negative Radiation interception value supplied to RUE model");
             return radiationInterception * RueAct;
         }
-        #endregion
+
+        /// <summary>Document the model.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            // Write description of this class from summary and remarks XML documentation.
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            foreach (var tag in DocumentChildren<IModel>())
+                yield return tag;
+        }
     }
 }

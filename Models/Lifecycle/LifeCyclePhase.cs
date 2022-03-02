@@ -7,7 +7,6 @@
     using Models.Functions;
 
     /// <summary>
-    /// # [Name]
     /// A LifeCyclePhase represents a distinct period in the development or an organisum.
     /// Each LifeCyclePhase assembles an arbitary number of cohorts which represent individuals
     /// that entered this phase at the same time and will have the same PhysiologicalAge.
@@ -36,7 +35,7 @@
     /// </summary>
 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LifeCycle))]
     public class LifeCyclePhase : Model

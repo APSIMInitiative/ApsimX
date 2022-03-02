@@ -10,6 +10,20 @@
     public class PathUtilities
     {
         /// <summary>
+        /// Return the path to the ApsimX directory.
+        /// </summary>
+        /// <remarks>
+        /// When using the installed version, this is usually the
+        /// parent of the bin directory, but we also account for custom
+        /// builds, in which the assemblies may be located somewhere
+        /// like ApsimX/bin/Debug/net472/.
+        /// </remarks>
+        public static string GetApsimXDirectory()
+        {
+            return GetAbsolutePath("%root%", null);
+        }
+
+        /// <summary>
         /// Convert the specified URL to a path.
         /// </summary>
         /// <param name="Url"></param>
@@ -66,7 +80,11 @@
                 return path;
 
             // Remove any %root% macro (even if relative path is null).
-            string apsimxDirectory = Directory.GetParent(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)).FullName;
+            string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            DirectoryInfo directory = new DirectoryInfo(bin).Parent;
+            while (directory.Name == "Debug" || directory.Name == "Release" || directory.Name == "bin")
+                directory = directory.Parent;
+            string apsimxDirectory = directory.FullName;
             path = path.Replace("%root%", apsimxDirectory);
 
             if (string.IsNullOrEmpty(relativePath))

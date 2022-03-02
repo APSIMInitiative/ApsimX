@@ -26,7 +26,9 @@ namespace Models.Core.ApsimFile
         /// <param name="configFilePath">Absolute path to the config file.</param>
         public static Simulations Do(string apsimxFilePath, string configFilePath)
         {
-            return ApplyChanges(apsimxFilePath, GetFactors(configFilePath));
+            Simulations file = FileFormat.ReadFromFile<Simulations>(apsimxFilePath, e => throw e, false);
+
+            return ApplyChanges(file, GetFactors(configFilePath));
         }
 
         /// <summary>
@@ -67,14 +69,10 @@ namespace Models.Core.ApsimFile
         /// <summary>
         /// Edits a single apsimx file according to the changes specified in the config file.
         /// </summary>
-        /// <param name="apsimxFileName">Path to an .apsimx file.</param>
+        /// <param name="file">An .apsimx file.</param>
         /// <param name="factors">Factors to apply to the file.</param>
-        private static Simulations ApplyChanges(string apsimxFileName, List<CompositeFactor> factors)
+        public static Simulations ApplyChanges(Simulations file, IEnumerable<CompositeFactor> factors)
         {
-            Simulations file = FileFormat.ReadFromFile<Simulations>(apsimxFileName, out List<Exception> errors);
-            if (errors != null && errors.Count > 0)
-                throw new Exception($"Error reading file ${apsimxFileName}: {errors[0].ToString()}");
-
             foreach (CompositeFactor factor in factors)
             {
                 IVariable variable = file.FindByPath(factor.Paths[0]);
@@ -147,9 +145,7 @@ namespace Models.Core.ApsimFile
             if (toBeReplaced == null)
                 throw new Exception($"Unable to find model which is to be replaced ({modelToReplace}) in file {topLevel.FileName}");
 
-            IModel extFile = FileFormat.ReadFromFile<IModel>(replacementFile, out List<Exception> errors);
-            if (errors?.Count > 0)
-                throw new Exception($"Error reading replacement file {replacementFile}", errors[0]);
+            IModel extFile = FileFormat.ReadFromFile<IModel>(replacementFile, e => throw e, false);
 
             IModel replacement;
             if (string.IsNullOrEmpty(replacementPath))

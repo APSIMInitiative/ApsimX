@@ -13,10 +13,10 @@ namespace Models.CLEM.Resources
     /// The simplest ruminant conception using a single curve
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantType))]
-    [Description("Advanced ruminant conception for first pregnancy less than 12 months, 12-24 months, 24 months, 2nd calf and 3+ calf")]
+    [Description("Define ruminant conception using a single curve")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Ruminants/RuminantConceptionCurve.htm")]
     public class RuminantConceptionCurve: CLEMModel, IConceptionModel
@@ -44,9 +44,9 @@ namespace Models.CLEM.Resources
         public double ConceptionRateIntercept { get; set; }
 
         /// <summary>
-        /// Conception rate assymtote of breeder
+        /// Conception rate asymptote of breeder
         /// </summary>
-        [Description("Conception rate assymtote")]
+        [Description("Conception rate asymptote")]
         [Required]
         public double ConceptionRateAsymptote { get; set; }
 
@@ -59,27 +59,18 @@ namespace Models.CLEM.Resources
         {
             double rate = 0;
             if (female.StandardReferenceWeight > 0)
-            {
                 rate = ConceptionRateAsymptote / (1 + Math.Exp(ConceptionRateCoefficent * female.Weight / female.StandardReferenceWeight + ConceptionRateIntercept));
-            }
+
             rate = Math.Max(0,Math.Min(rate, 100));
             return rate / 100;
         }
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
-            string html = "";
-            html += "<div class=\"activityentry\">";
-            html += "Conception rates are being calculated for all females using the same curve.";
-            html += "</div>";
-            return html;
+            return "<div class=\"activityentry\">Conception rates are being calculated for all females using the same curve.</div>";
         }
 
         #endregion

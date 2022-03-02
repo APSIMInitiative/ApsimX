@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Reflection;
+using APSIM.Shared.Documentation;
+using APSIM.Shared.Utilities;
 using Models.Core;
 
 namespace Models.Functions
 {
     /// <summary>
-    /// A constant value function
+    /// A constant function (name=value)
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class Constant : Model, IFunction, ICustomDocumentation
+    public class Constant : Model, IFunction
     {
         /// <summary>Gets the value.</summary>
         [Description("The value of the constant")]
@@ -27,33 +30,31 @@ namespace Models.Functions
         }
 
         /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // get description and units.
-                string description = AutoDocumentation.GetDescription(Parent, Name);
-                string units = Units;
-                if (units == null)
-                    units = AutoDocumentation.GetUnits(Parent, Name);
-                if (units != string.Empty)
-                    units = " (" + units + ")";
+            // Write memos
+            foreach (var tag in DocumentChildren<Memo>())
+                yield return tag;
 
-                if (!(Parent is IFunction) && headingLevel > 0)
-                    tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-
-                tags.Add(new AutoDocumentation.Paragraph("<i>" + Name + " = " + FixedValue + units + "</i>", indent));
-
-                if (!String.IsNullOrEmpty(description))
-                    tags.Add(new AutoDocumentation.Paragraph(description, indent));
-
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, -1, indent);
-            }
+            // Write description of this class.
+            yield return new Paragraph($"{Name} = {FixedValue} {FindUnits()}");
         }
+
+        private string FindUnits()
+        {
+            if (!string.IsNullOrEmpty(Units))
+                return $"({Units})";
+
+            var parentType = Parent.GetType();
+            var property = parentType.GetProperty(Name);
+            if (property != null)
+            {
+                var unitsAttribute = ReflectionUtilities.GetAttribute(property, typeof(UnitsAttribute), false) as UnitsAttribute;
+                if (unitsAttribute != null)
+                    return $"({unitsAttribute.ToString()})";
+            }
+            return null;
+        }
+
     }
 }

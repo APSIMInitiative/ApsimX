@@ -1,71 +1,66 @@
 ﻿namespace UserInterface.Views
 {
-    using System;
-    using System.IO;
-    using System.Collections.Generic;
-    using System.Diagnostics;
-    using System.Drawing;
+    using APSIM.Interop.Mapping;
     using APSIM.Shared.Utilities;
-    using System.Globalization;
-    using Models;
-    using SharpMap.Styles;
-    using SharpMap.Layers;
-    using SharpMap.Data.Providers;
-    using System.Drawing.Imaging;
+    using Extensions;
     using GeoAPI.Geometries;
-    using GeoAPI;
-    using NetTopologySuite;
-    using NetTopologySuite.Geometries;
+    using Gtk;
+    using Interfaces;
+    using Models;
+    using System;
+    using System.Collections.Generic;
+    using System.Drawing;
+    using System.Drawing.Imaging;
+    using System.IO;
     using System.Linq;
     using System.Reflection;
-    using Interfaces;
-    using Gtk;
     using Utility;
-    using SharpMap.Data;
-    using SharpMap.Rendering;
+    using ApsimCoordinate = Models.Mapping.Coordinate;
+    using Coordinate = GeoAPI.Geometries.Coordinate;
+    using MapTag = Models.Mapping.MapTag;
 
-    /// <summary>
-    /// Describes an interface for an axis view.
-    /// </summary>
-    interface IMapView
-    {
-        /// <summary>
-        /// Invoked when the zoom level or map center is changed
-        /// </summary>
-        event EventHandler ViewChanged;
-
-        /// <summary>Show the map</summary>
-        void ShowMap(List<Models.Map.Coordinate> coordinates, List<string> locNames, double zoom, Models.Map.Coordinate center);
-
-        /// <summary>Export the map to an image.</summary>
-        System.Drawing.Image Export();
-
-        /// <summary>
-        /// Get or set the zoom factor of the map
-        /// </summary>
-        double Zoom { get; set; }
-
-        /// <summary>
-        /// Get or set the center position of the map
-        /// </summary>
-        Models.Map.Coordinate Center { get; set; }
-
-        /// <summary>
-        /// Store current position and zoom settings
-        /// </summary>
-        void StoreSettings();
-
-        /// <summary>
-        /// Hide zoom controls.
-        /// </summary>
-        void HideZoomControls();
-
-        IGridView Grid { get; }
-    }
-
+    /// <remarks>
+    /// This view is intended to diplay sites on a map. For the most part, in works, but it has a few flaws
+    /// and room for improvement. 
+    /// 
+    /// Probably the main flaw is that maps are often very slow to render, as the basemap needs
+    /// to be downloaded. SharpMap does allow map tiles to be loaded async, but when trying that approach I found
+    /// it difficult to know when to update the map, and when it had been fully loaded (which is required when 
+    /// generating auto-docs).
+    /// 
+    /// Another flaw (a problem with SharpMap) is that it doesn't know how to "wrap" the map at the antimeridion 
+    /// (International Date Line). This makes it impossible to produce a Pacific-centered map.
+    /// 
+    /// One enhancement that should be fairly easy to implement would be to allow the user to select the basemap.
+    /// Currently it's just using OpenStreetMaps, but Bing maps and several others are readily available. The user
+    /// could be presented with a drop-down list of alternative.
+    /// 
+    /// There is a little quirk I don't understand at all - the location marker simply disappears from the map
+    /// at high resolutions. For our purposes, this generally shouldn't be a problem, but it would be nice to 
+    /// know why it happens.
+    /// 
+    /// </remarks>
     public class MapView : ViewBase, IMapView
     {
-        private const double scrollIncrement = 60;
+        /// <summary>
+        /// Width of the map as shown in the GUI. I'm setting
+        /// this to 718 to match the default page width of the autodocs
+        /// documents.
+        /// </summary>
+        /// <remarks>
+        /// todo: should really check the default page size dynamically.
+        /// </remarks>
+        private const int defaultWidth = 718;
+
+        /// <summary>
+        /// Height of the map as shown in the GUI. I'm setting
+        /// this to 718 to match the default page width of the autodocs
+        /// documents.
+        /// </summary>
+        /// <remarks>
+        /// todo: should really check the default page size dynamically.
+        /// </remarks>
+        private const int defaultHeight = 718;
 
         private SharpMap.Map map;
         private Gtk.Image image;
@@ -78,7 +73,7 @@
         /// <summary>
         /// Position of the mouse when the user starts dragging.
         /// </summary>
-        private Map.Coordinate mouseAtDragStart;
+        private ApsimCoordinate mouseAtDragStart;
 
         /// <summary>
         /// Zoom level of the map.
@@ -89,15 +84,18 @@
             {
                 if (map == null)
                     return 0;
-                return map.Zoom;
-            }
+                return Math.Round(Math.Log(map.MaximumZoom / map.Zoom, MapRenderer.GetZoomStepFactor()) + 1.0, 2);
+             }
             set
             {
                 // Refreshing the map is a bit slow, so only do it if
                 // the incoming value is different to the old value.
-                if (map != null && !MathUtilities.FloatsAreEqual(value, map.Zoom))
+                if (map != null && !MathUtilities.FloatsAreEqual(value, Zoom))
                 {
-                    map.Zoom = value;
+                    double setValue = value - 1.0;
+                    if (value >= 60.0) // Convert any "old" zoom levels into whole-world maps
+                        setValue = 0.0;
+                    map.Zoom = map.MaximumZoom / Math.Pow(MapRenderer.GetZoomStepFactor(), setValue);
                     RefreshMap();
                 }
             }
@@ -106,23 +104,25 @@
         /// <summary>
         /// Center of the map.
         /// </summary>
-        public Map.Coordinate Center
+        public ApsimCoordinate Center
         {
             get
             {
                 if (map == null)
                     return null;
-                return new Map.Coordinate(map.Center.Y, map.Center.X);
+                Coordinate centerLatLon = MapRenderer.GetMetresToLatLon().MathTransform.Transform(map.Center);
+                return new ApsimCoordinate(Math.Round(centerLatLon.Y, 4), Math.Round(centerLatLon.X, 4));
             }
             set
             {
+                Coordinate centerMetric = MapRenderer.GetLatLonToMetres().MathTransform.Transform(new Coordinate(value.Longitude, value.Latitude));
                 // Refreshing the map is a bit slow, so only do it if
                 // the incoming value is different to the old value.
                 if (map != null && 
-                    (!MathUtilities.FloatsAreEqual(value.Longitude, map.Center.X)
-                    || !MathUtilities.FloatsAreEqual(value.Latitude, map.Center.Y)) )
+                    (!MathUtilities.FloatsAreEqual(centerMetric.X, map.Center.X)
+                    || !MathUtilities.FloatsAreEqual(centerMetric.Y, map.Center.Y)) )
                 {
-                    map.Center = new Coordinate(value.Longitude, value.Latitude);
+                    map.Center = centerMetric;
                     RefreshMap();
                 }
             }
@@ -131,12 +131,13 @@
         /// <summary>
         /// GridView widget used to show properties. Could be refactored out.
         /// </summary>
-        public IGridView Grid { get; private set; }
+        public IPropertyView PropertiesView { get; private set; }
 
         /// <summary>
         /// Called when the view is changed by the user.
         /// </summary>
         public event EventHandler ViewChanged;
+
 
         /// <summary>
         /// Constructor. Initialises the widget and will show a world
@@ -145,15 +146,21 @@
         /// <param name="owner">Owner view.</param>
         public MapView(ViewBase owner) : base(owner)
         {
-            GeometryServiceProvider.Instance = new NtsGeometryServices();
-
             image = new Gtk.Image();
+
+            image.Halign = Align.Start;
+            image.Valign = Align.Start;
+
             var container = new Gtk.EventBox();
             container.Add(image);
 
             VPaned box = new VPaned();
-            Grid = new GridView(this);
-            box.Pack1(((ViewBase)Grid).MainWidget, true, false);
+            PropertiesView = new PropertyView(this);
+            box.Pack1(((ViewBase)PropertiesView).MainWidget, true, false);
+
+            if ( ((ViewBase)PropertiesView).MainWidget is ScrolledWindow scroller)
+                scroller.VscrollbarPolicy = PolicyType.Never;
+
             box.Pack2(container, true, true);
             
             container.AddEvents(
@@ -162,58 +169,14 @@
             | (int)Gdk.EventMask.ScrollMask);
             container.ButtonPressEvent += OnButtonPress;
             container.ButtonReleaseEvent += OnButtonRelease;
-            image.SizeAllocated += OnSizeAllocated;
-            image.ExposeEvent += OnImageExposed;
+
+            image.Drawn += OnImageExposed;
+
             container.Destroyed += OnMainWidgetDestroyed;
             container.ScrollEvent += OnMouseScroll;
 
             mainWidget = box;
             mainWidget.ShowAll();
-        }
-
-        /// <summary>
-        /// Initialise the map component.
-        /// </summary>
-        private SharpMap.Map InitMap()
-        {
-            var result = new SharpMap.Map();
-            result.MaximumZoom = 720;
-            result.BackColor = Color.LightBlue;
-            result.Center = new Coordinate(0, 0);
-            result.Zoom = result.MaximumZoom;
-            
-            VectorLayer layWorld = new VectorLayer("Countries");
-            string bin = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-            string apsimx = Directory.GetParent(bin).FullName;
-            string shapeFileName = Path.Combine(apsimx, "ApsimNG", "Resources", "world", "countries.shp");
-            layWorld.DataSource = new ShapeFile(shapeFileName, true);
-            layWorld.Style = new VectorStyle();
-            layWorld.Style.EnableOutline = true;
-            Color background = Colour.FromGtk(MainWidget.Style.Background(StateType.Normal));
-            Color foreground = Colour.FromGtk(MainWidget.Style.Foreground(StateType.Normal));
-            layWorld.Style.Fill = new SolidBrush(background);
-            layWorld.Style.Outline.Color = foreground;
-            result.Layers.Add(layWorld);
-
-            // Show country names.
-            // Note this doesn't appear to work under mono for now.
-            LabelLayer countryNames = new LabelLayer("Country labels");
-			countryNames.DataSource = layWorld.DataSource;
-            //countryNames.Enabled = true;
-            countryNames.LabelColumn = "Name";
-            countryNames.MultipartGeometryBehaviour = LabelLayer.MultipartGeometryBehaviourEnum.Largest;
-            countryNames.Style = new LabelStyle();
-            countryNames.Style.CollisionDetection = true;
-            countryNames.Style.CollisionBuffer = new SizeF(5f, 5f);
-            countryNames.LabelFilter = LabelCollisionDetection.ThoroughCollisionDetection;
-            //^countryNames.Style.BackColor = new SolidBrush(foreground);
-            countryNames.Style.ForeColor = foreground;
-            //countryNames.Style.Font = new Font(FontFamily.GenericSerif, 8);
-            //countryNames.MaxVisible = 90;
-            countryNames.Style.HorizontalAlignment = LabelStyle.HorizontalAlignmentEnum.Center;
-            result.Layers.Add(countryNames);
-            
-            return result;
         }
 
         /// <summary>
@@ -241,20 +204,13 @@
         /// <param name="locNames">Names of the marekrs (unused currently).</param>
         /// <param name="zoom">Zoom level of the map.</param>
         /// <param name="center">Location of the center of the map.</param>
-        public void ShowMap(List<Map.Coordinate> coordinates, List<string> locNames, double zoom, Map.Coordinate center)
+        public void ShowMap(List<ApsimCoordinate> coordinates, List<string> locNames, double zoom, ApsimCoordinate center)
         {
             if (map != null)
                 map.Dispose();
-            map = InitMap();
 
-            GeometryFactory gf = new GeometryFactory(new PrecisionModel(), 3857);
-            List<IGeometry> locations = coordinates.Select(c => gf.CreatePoint(new Coordinate(c.Longitude, c.Latitude))).ToList<IGeometry>();
-            VectorLayer markerLayer = new VectorLayer("Markers");
-            markerLayer.Style.Symbol = GetResourceImage("ApsimNG.Resources.Marker.png");
-            markerLayer.DataSource = new GeometryProvider(locations);
-            map.Layers.Add(markerLayer);
-            map.Zoom = zoom;
-            map.Center = new Coordinate(center.Longitude, center.Latitude);
+            map = new MapTag(center, zoom, coordinates).ToSharpMap();
+            map.Size = new Size(defaultWidth, defaultHeight);
             if (image.Allocation.Width > 1 && image.Allocation.Height > 1)
                 RefreshMap();
         }
@@ -267,7 +223,8 @@
         /// </remarks>
         private void RefreshMap()
         {
-            image.Pixbuf = ImageToPixbuf(map.GetMap());
+            if (map != null)
+                image.Pixbuf = ImageToPixbuf(map.GetMap());
         }
 
         /// <summary>
@@ -279,20 +236,9 @@
             using (MemoryStream stream = new MemoryStream())
             {
                 image.Save(stream, ImageFormat.Png);
-                stream.Position = 0;
+                stream.Seek(0, SeekOrigin.Begin);
                 return new Gdk.Pixbuf(stream);
             }
-        }
-
-        /// <summary>
-        /// Get an image from an embedded resource.
-        /// </summary>
-        /// <param name="resourceName">Name of the embedded resource.</param>
-        private static System.Drawing.Image GetResourceImage(string resourceName)
-        {
-            //var resources = Assembly.GetExecutingAssembly().GetManifestResourceNames();
-            using (Stream stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourceName))
-                return System.Drawing.Image.FromStream(stream);
         }
 
         /// <summary>
@@ -305,9 +251,9 @@
         /// <param name="lon">Longitude.</param>
         private void CartesianToGeoCoords(double x, double y, out double lat, out double lon)
         {
-            Envelope viewport = map.Envelope;
-            lat = y / map.Size.Height * (viewport.MinY - viewport.MaxY) + viewport.MaxY;
-            lon = x / map.Size.Width * (viewport.MaxX - viewport.MinX) + viewport.MinX;
+            Coordinate coord = map.ImageToWorld(new PointF((float)x, (float)y), true);
+            lat = coord.Y;
+            lon = coord.X;
         }
     
         /// <summary>
@@ -322,12 +268,14 @@
         /// </summary>
         /// <param name="sender">Sender object.</param>
         /// <param name="args">Event data.</param>
-        private void OnImageExposed(object sender, ExposeEventArgs args)
+        private void OnImageExposed(object sender, DrawnArgs args)
         {
             try
             {
                 RefreshMap();
-                image.ExposeEvent -= OnImageExposed;
+
+                image.Drawn -= OnImageExposed;
+
             }
             catch (Exception err)
             {
@@ -348,7 +296,7 @@
             {
                 isDragging = true;
                 CartesianToGeoCoords(args.Event.X, args.Event.Y, out double lat, out double lon);
-                mouseAtDragStart = new Map.Coordinate(lat, lon);
+                mouseAtDragStart = new ApsimCoordinate(lat, lon);
             }
             catch (Exception err)
             {
@@ -401,8 +349,8 @@
                 if (args.Event.Direction == Gdk.ScrollDirection.Up || args.Event.Direction == Gdk.ScrollDirection.Down)
                 {
                     // Adjust zoom level on map.
-                    double sign = args.Event.Direction == Gdk.ScrollDirection.Up ? -1 : 1;
-                    map.Zoom = MathUtilities.Bound(map.Zoom + scrollIncrement * sign, 1, map.MaximumZoom);
+                    double sign = args.Event.Direction == Gdk.ScrollDirection.Up ? 1 : -1;
+                    Zoom = MathUtilities.Bound(Zoom + sign, 1.0, 25.0);
 
                     // Adjust center of map, so that coordinates at mouse cursor are the same
                     // as previously.
@@ -424,35 +372,6 @@
         }
 
         /// <summary>
-        /// Called when the image widget is allocated space.
-        /// Changes the map's size to match allocated size.
-        /// </summary>
-        /// <param name="sender">Sender object.</param>
-        /// <param name="args">Event data.</param>
-        private void OnSizeAllocated(object sender, EventArgs args)
-        {
-            try
-            {
-                // Update the map size iff the allocated width and height are both > 0,
-                // and width or height have changed.
-                if (image.Allocation.Width > 0 && image.Allocation.Height > 0
-                 && (image.Allocation.Width != map.Size.Width || image.Allocation.Height != map.Size.Height) )
-                {
-                    image.SizeAllocated -= OnSizeAllocated;
-                    map.Size = new Size(image.Allocation.Width, image.Allocation.Height);
-                    //RefreshMap();
-                    image.WidthRequest = image.Allocation.Width;
-                    image.HeightRequest = image.Allocation.Height;
-                    image.SizeAllocated += OnSizeAllocated;
-                }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
         /// Called when the main widget is destroyed.
         /// Detaches event handlers.
         /// </summary>
@@ -465,7 +384,6 @@
                 mainWidget.ButtonPressEvent -= OnButtonPress;
                 mainWidget.ButtonReleaseEvent -= OnButtonRelease;
                 mainWidget.ScrollEvent -= OnMouseScroll;
-                image.SizeAllocated -= OnSizeAllocated;
                 mainWidget.Destroyed -= OnMainWidgetDestroyed;
             }
             catch (Exception err)

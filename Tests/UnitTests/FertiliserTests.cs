@@ -78,7 +78,7 @@
                             new Physical() { Thickness = new double[] { 100, 100, 100 }}
                         }
                     },
-                    new Fertiliser() { Name = "Fertilise" },
+                    new Fertiliser() { Name = "Fertilise", ResourceName = "Fertiliser" },
                     new Operations()
                     {
                         Operation = new List<Operation>()
@@ -93,6 +93,7 @@
                 }
             };
 
+            simulation.Prepare();
             simulation.Run();
 
             var soil = simulation.Children[2] as MockSoil;

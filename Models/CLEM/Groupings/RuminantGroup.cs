@@ -9,14 +9,16 @@ using Models.Core.Attributes;
 using Newtonsoft.Json;
 using Models.CLEM.Resources;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Groupings
 {
     ///<summary>
-    /// Contains a group of filters to identify individual ruminants
+    /// Contains a group of filters and sorters to identify individual ruminants
     ///</summary> 
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ReportRuminantHerd))]
     [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
@@ -25,108 +27,94 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
     [ValidParent(ParentType = typeof(RuminantActivityMove))]
     [ValidParent(ParentType = typeof(RuminantActivityMarkForSale))]
-    [Description("This group selects specific individuals from the ruminant herd using any number of Ruminant Filters.")]
+    [ValidParent(ParentType = typeof(RuminantActivityWean))]
+    [ValidParent(ParentType = typeof(RuminantActivityTag))]
+    [ValidParent(ParentType = typeof(TransmuteRuminant))]
+    [ValidParent(ParentType = typeof(ReportRuminantAttributeSummary))]
+    [Description("Selects specific individuals ruminants from the herd")]
     [Version(1, 0, 1, "Added ability to select random proportion of the group to use")]
-    [HelpUri(@"Content/Features/Filters/RuminantFilterGroup.htm")]
-    public class RuminantGroup : CLEMModel, IFilterGroup
+    [HelpUri(@"Content/Features/Filters/Groups/RuminantGroup.htm")]
+    public class RuminantGroup : FilterGroup<Ruminant>, IValidatableObject, IIdentifiableComponent
     {
         /// <summary>
-        /// Combined ML ruleset for LINQ expression tree
+        /// An identifier for this FilterGroup based on parent requirements
         /// </summary>
-        [JsonIgnore]
-        public object CombinedRules { get; set; } = null;
-
-        /// <summary>
-        /// Proportion of group to use
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(1)]
-        [Description("Proportion of group to use")]
-        [Required, GreaterThanValue(0), Proportion]
-        public double Proportion { get; set; }
+        [Description("Group identifier")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers")]
+        public string Identifier { get; set; }
 
         /// <summary>
         /// Constructor to apply defaults
         /// </summary>
         public RuminantGroup()
         {
+            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
             this.SetDefaults();
+            if (!ParentSuppliedIdentifiers().Contains(Identifier))
+                Identifier = "";
         }
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
-            string html = "<div class=\"filtername\">";
+            return "";
+        }
+
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
+        {
+            return "";
+        }
+
+        /// <summary>
+        /// A method to return the list of identifiers relavent to this ruminant group
+        /// </summary>
+        /// <returns>A list of identifiers as stings</returns>
+        public List<string> ParentSuppliedIdentifiers()
+        {
+            if(Parent is CLEMRuminantActivityBase)
+                return (Parent as CLEMRuminantActivityBase).GetChildComponentIdentifiers<RuminantGroup>();
+            else
+                return new List<string>();
+        }
+
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
+        {
+            using StringWriter htmlWriter = new StringWriter();
+            htmlWriter.Write("<div class=\"filtername\">");
             if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+                htmlWriter.Write($"{Name}");
+            htmlWriter.Write($"</div>");
+            return htmlWriter.ToString();
+        }
+
+        #endregion
+
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            var identifiers = ParentSuppliedIdentifiers();
+            if(identifiers.Any() & Identifier == "")
             {
-                html += this.Name;
+                string[] memberNames = new string[] { "Ruminant group" };
+                results.Add(new ValidationResult($"The group identifier [BLANK] in [f={this.Name}] is not valid for the parent activity [a={Parent.Name}].{Environment.NewLine}Select an option from the list or provide an empty value for the property if no entries are provided", memberNames));
             }
-            html += $"</div>";
-            return html;
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
-        {
-            return "";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
-        {
-            return "";
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
-        {
-            string html = "";
-            html += "\n</div>";
-            return html;
-        }
-
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
-        {
-            string html = "";
-            html += "\n<div class=\"filterborder clearfix\">";
-
-            if (Proportion < 1)
+            if (identifiers.Any() & !ParentSuppliedIdentifiers().Contains(Identifier))
             {
-                html += "<div class=\"filter\">";
-                if (Proportion <= 0)
-                {
-                    html += "<span class=\"errorlink\">[NOT SET%]</span>";
-                }
-                else
-                {
-                    html += $"{Proportion.ToString("P0")} of";
-                }
-                html += "</div>";
+                string[] memberNames = new string[] { "Ruminant group" };
+                results.Add(new ValidationResult($"The group identifier [{Identifier}] in [f={this.Name}] is not valid for the parent activity [a={Parent.Name}].{Environment.NewLine}Select an option from the list or provide an empty value for the property if no entries are provided", memberNames));
             }
-            if (FindAllChildren<RuminantFilter>().Count() < 1)
-            {
-                html += "<div class=\"filter\">All individuals</div>";
-            }
-            return html;
-        } 
+            return results;
+        }
         #endregion
 
     }

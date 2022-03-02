@@ -5,6 +5,7 @@
     using System;
     using System.Collections.Generic;
     using Views;
+    using APSIM.Shared.Graphing;
 
     /// <summary>
     /// Presenter for the <see cref="LinearAfterThresholdFunction"/> class.
@@ -24,7 +25,7 @@
         /// <summary>
         /// The view which displays the properties and graph.
         /// </summary>
-        private XYPairsView view;
+        private LinearAfterThresholdView view;
 
         /// <summary>
         /// The explorer presenter controlling this presenter.
@@ -43,15 +44,15 @@
             if (function == null)
                 throw new ArgumentException(string.Format("Attempted to display a model of type {0} using the LinearAfterThresholdPresenter.", model.GetType().ToString()));
 
-            view = viewObject as XYPairsView;
+            view = viewObject as LinearAfterThresholdView;
             if (view == null)
                 throw new ArgumentException(string.Format("Attempted to use a view of type {0} from the LinearAfterThresholdPresenter. View should be an XYPairsView.", viewObject.GetType().ToString()));
 
             presenter = parent;
             propertiesPresenter = new PropertyPresenter();
-            propertiesPresenter.Attach(function, view.VariablesGrid, presenter);
+            propertiesPresenter.Attach(function, view.Properties, presenter);
             DrawGraph();
-            view.VariablesGrid.CellsChanged += OnCellsChanged;
+            view.Properties.PropertyChanged += OnCellsChanged;
         }
 
         /// <summary>
@@ -59,8 +60,7 @@
         /// </summary>
         public void Detach()
         {
-            view.VariablesGrid.CellsChanged -= OnCellsChanged;
-            view.VariablesGrid.Dispose();
+            view.Properties.PropertyChanged -= OnCellsChanged;
         }
         
         /// <summary>
@@ -94,9 +94,9 @@
             }
 
             view.Graph.Clear();
-            view.Graph.DrawLineAndMarkers("", x, y, null, null, null, null, Axis.AxisType.Bottom, Axis.AxisType.Left, System.Drawing.Color.Blue, LineType.Solid, MarkerType.None, LineThicknessType.Normal, MarkerSizeType.Normal, 1, true);
-            view.Graph.FormatAxis(Axis.AxisType.Bottom, "x", false, double.NaN, double.NaN, double.NaN, false);
-            view.Graph.FormatAxis(Axis.AxisType.Left, "y", false, double.NaN, double.NaN, double.NaN, false);
+            view.Graph.DrawLineAndMarkers("", x, y, null, null, null, null, AxisPosition.Bottom, AxisPosition.Left, System.Drawing.Color.Blue, LineType.Solid, MarkerType.None, LineThickness.Normal, MarkerSize.Normal, 1, true);
+            view.Graph.FormatAxis(AxisPosition.Bottom, "x", false, double.NaN, double.NaN, double.NaN, false);
+            view.Graph.FormatAxis(AxisPosition.Left, "y", false, double.NaN, double.NaN, double.NaN, false);
             view.Graph.FontSize = 10;
             view.Graph.Refresh();
         }

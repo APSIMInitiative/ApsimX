@@ -5,13 +5,12 @@ using Models.Functions;
 namespace Models.LifeCycle
 {
     /// <summary>
-    /// # [Name]
     /// Iterates through each cohort and adds the value of the Expression: 
     /// </summary>
 
     [Serializable]
     [Description("Iterates through each cohort and adds the value of the Expression")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(LifeCyclePhase))]
     public class AccumulateCohortExpression : Model, IFunction

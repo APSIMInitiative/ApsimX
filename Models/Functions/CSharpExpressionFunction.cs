@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Shared.Documentation;
 using System.Collections.Generic;
 using System.Text;
 using System.Linq;
@@ -12,9 +13,9 @@ namespace Models.Functions
     /// A c# expression is evaluated.
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class CSharpExpressionFunction : Model, IFunction, ICustomDocumentation
+    public class CSharpExpressionFunction : Model, IFunction
     {
         [NonSerialized]
         [Link]
@@ -57,26 +58,12 @@ namespace Models.Functions
             return scriptCompiler;
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                string st = Expression?.Replace(".Value()", "");
-                tags.Add(new AutoDocumentation.Paragraph(Name + " = " + st, indent));
-
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
-            }
+            yield return new Paragraph($"{Name} = {Expression?.Replace(".Value()", "")}");
         }
 
         /// <summary>
@@ -116,10 +103,10 @@ namespace Models.Functions
             template = template.Replace("class Script", $"class {Name}Script");
 
             // Replace the link place holder in the template with links created above.
-            template = template.Replace("        [Link] Clock Clock;", links.ToString());
+            template = template.Replace("        [Link] Clock Clock = null;", links.ToString());
 
             // Replace the expression place holder in the template with the real expression.
-            template = template.Replace("return 123456;", "return " + Expression + ";");
+            template = template.Replace("return Clock.FractionComplete;", "return " + Expression + ";");
 
             // Create a new manager that will compile the expression.
             var result = Compiler().Compile(template, this);

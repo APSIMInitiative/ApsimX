@@ -196,7 +196,20 @@ namespace UserInterface.Presenters
                     continue;
 
                 // Ensure that we have enough rows to display all items in this array.
-                Array array = property.Value as Array;
+                Array array = null;
+                try
+                {
+                    // The most likely reason for a failure here would be an error
+                    // in the PAWC calculation due to an inconsistency in layer count
+                    // between variables. In such a case, if we allow the error to
+                    // propagate, the profile grid will not be rendered correctly,
+                    // thus preventing the user from fixing the problem in the GUI.
+                    array = property.Value as Array;
+                }
+                catch (Exception err)
+                {
+                    presenter.MainPresenter.ShowError(err);
+                }
                 if (array == null)
                     continue;
 
@@ -228,8 +241,32 @@ namespace UserInterface.Presenters
                 columnName = crop.Name.Replace("Soil", "") + " " + property.Name;
             }
 
+            if (property.Display != null && property.Display.ShowTotal )
+            {
+                try
+                {
+                    double total = property.Total;
+                    if (double.IsNaN(total) && property.Name == "PAWC")
+                        if (property.Object is SoilCrop soilCrop && soilCrop.Parent is Physical physical)
+                            total = MathUtilities.Multiply((double[])property.Value, physical.Thickness).Sum();
+                    if (!double.IsNaN(total))
+                        columnName += $"\n{total.ToString(property.Format)} ";
+                }
+                catch (Exception err)
+                {
+                    // If the layer values are invalid (e.g. if different variables have
+                    // different number of layers), then attempting to retrieve the total
+                    // value (e.g. for PAWC) will likely fail. In such a scenario, don't
+                    // want to propagate such an error further, as the user will need to
+                    // edit the profile grid to fix the problem.
+                    presenter.MainPresenter.ShowError(err);
+                }
+            }
+            else if (property.Units != null)
+                columnName += "\n";
+
             if (property.Units != null)
-                columnName += $" \n({property.Units})";
+                columnName += $"({property.Units})";
 
             return columnName;
         }
@@ -356,8 +393,7 @@ namespace UserInterface.Presenters
         /// <summary>
         /// Set the value of the specified property
         /// </summary>
-        /// <param name="property">The property to set the value of</param>
-        /// <param name="value">The value to set the property to</param>
+        /// <param name="changedProperty">The property which has been changed.</param>
         private void SetPropertyValue(ChangeProperty changedProperty)
         {
             presenter.CommandHistory.ModelChanged -= OnModelChanged;
@@ -431,6 +467,7 @@ namespace UserInterface.Presenters
         /// Clones an array. Never returns null.
         /// </summary>
         /// <param name="array"></param>
+        /// <param name="elementType">Element type of the array.</param>
         private Array Clone(Array array, Type elementType)
         {
             if (array == null)

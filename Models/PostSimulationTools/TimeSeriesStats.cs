@@ -10,12 +10,13 @@
     using System.Threading;
 
     /// <summary>
-    /// # [Name]
     /// A post processing model that produces time series stats.
     /// </summary>
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(DataStore))]
+    [ValidParent(typeof(ParallelPostSimulationTool))]
+    [ValidParent(ParentType = typeof(SerialPostSimulationTool))]
     [Serializable]
     public class TimeSeriesStats : Model, IPostSimulationTool
     {

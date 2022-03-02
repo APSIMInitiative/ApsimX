@@ -8,13 +8,12 @@ using Models.Soils;
 namespace Models.Functions
 {
     /// <summary>
-    /// # [Name]
     /// Return soil temperature (oC) from a specified soil profile layer.
     /// The source of soil temperature array can be either SoilN ("st" property) or SoilTemp ("ave_soil_temp" property)
     /// </summary>
     [Serializable]
     [Description("Return soil temperature (oC) from a specified soil profile layer.  The source of soil temperature array can be either SoilN (st) or SoilTemp (ave_soil_temp) property")]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     public class SoilTemperatureDepthFunction : Model, IFunction
     {

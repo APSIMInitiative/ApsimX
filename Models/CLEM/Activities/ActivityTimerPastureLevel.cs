@@ -1,40 +1,40 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
     /// <summary>
-    /// Activity timer based on crop harvest
+    /// Activity timer based on pasture level
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
-    [Description("This activity timer is used to determine whether a pasture biomass (t/ha) is within a specified range.")]
+    [Description("This activity is is based on whether a pasture biomass (t/ha) is within a specified range.")]
     [HelpUri(@"Content/Features/Timers/PastureLevel.htm")]
     [Version(1, 0, 1, "")]
-    public class ActivityTimerPastureLevel : CLEMModel, IActivityTimer, IValidatableObject, IActivityPerformedNotifier
+    public class ActivityTimerPastureLevel : CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
         [Link]
-        ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
 
         /// <summary>
         /// Paddock or pasture to graze
         /// </summary>
         [Description("GrazeFoodStore/pasture to graze")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Graze Food Store/pasture required")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(GrazeFoodStore) } })]
         public string GrazeFoodStoreTypeName { get; set; }
 
         /// <summary>
@@ -70,30 +70,16 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
         }
 
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            return results;
-        }
-
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            GrazeFoodStoreModel = Resources.GetResourceItem(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as GrazeFoodStoreType;
+            GrazeFoodStoreModel = resources.FindResourceType<GrazeFoodStore, GrazeFoodStoreType>(this, GrazeFoodStoreTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
-        /// <summary>
-        /// Method to determine whether the activity is due based on harvest details form parent.
-        /// </summary>
-        /// <returns>Whether the activity is due in the current month</returns>
+        /// <inheritdoc/>
         public bool ActivityDue
         {
             get
@@ -102,19 +88,13 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Method to determine whether the activity is due based on a specified date
-        /// </summary>
-        /// <returns>Whether the activity is due based on the specified date</returns>
+        /// <inheritdoc/>
         public bool Check(DateTime dateToCheck)
         {
             return false;
         }
 
-        /// <summary>
-        /// Activity has occurred 
-        /// </summary>
-        /// <param name="e"></param>
+        /// <inheritdoc/>
         public virtual void OnActivityPerformed(EventArgs e)
         {
             ActivityPerformed?.Invoke(this, e);
@@ -122,69 +102,50 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
-            string html = "";
-            html += "\n<div class=\"filter\">";
-            html += "Perform when ";
-            if (GrazeFoodStoreTypeName is null || GrazeFoodStoreTypeName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">RESOURCE NOT SET</span> ";
+                htmlWriter.Write("\r\n<div class=\"filter\">");
+                htmlWriter.Write("Perform when ");
+                htmlWriter.Write(DisplaySummaryValueSnippet(GrazeFoodStoreTypeName, "Resource not set", HTMLSummaryStyle.Resource));
+                htmlWriter.Write(" is between <span class=\"setvalueextra\">");
+                htmlWriter.Write(MinimumPastureLevel.ToString());
+                htmlWriter.Write("</span> and ");
+                if (MaximumPastureLevel <= MinimumPastureLevel)
+                    htmlWriter.Write("<span class=\"resourcelink\">must be > MinimumPastureLevel</span> ");
+                else
+                {
+                    htmlWriter.Write("<span class=\"setvalueextra\">");
+                    htmlWriter.Write(MaximumPastureLevel.ToString());
+                    htmlWriter.Write("</span> ");
+                }
+                htmlWriter.Write(" kg per hectare</div>");
+                if (!this.Enabled)
+                    htmlWriter.Write(" - DISABLED!");
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + GrazeFoodStoreTypeName + "</span> ";
-            }
-            html += " is between <span class=\"setvalueextra\">";
-            html += MinimumPastureLevel.ToString();
-            html += "</span> and ";
-            if (MaximumPastureLevel <= MinimumPastureLevel)
-            {
-                html += "<span class=\"resourcelink\">must be > MinimumPastureLevel</span> ";
-            }
-            else
-            {
-                html += "<span class=\"setvalueextra\">";
-                html += MaximumPastureLevel.ToString();
-                html += "</span> ";
-            }
-            html += " kg per hectare</div>";
-            if (!this.Enabled)
-            {
-                html += " - DISABLED!";
-            }
-            return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
         {
             return "</div>";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
         {
-            string html = "";
-            html += "<div class=\"filtername\">";
-            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += this.Name;
+                htmlWriter.Write("<div class=\"filtername\">");
+                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+                    htmlWriter.Write(this.Name);
+                htmlWriter.Write($"</div>");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
+                return htmlWriter.ToString(); 
             }
-            html += $"</div>";
-            html += "\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
-            return html;
         } 
         #endregion
 

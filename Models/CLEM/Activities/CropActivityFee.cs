@@ -1,9 +1,11 @@
 ﻿using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,19 +15,23 @@ namespace Models.CLEM.Activities
     /// <summary>Crop cost</summary>
     /// <summary>This activity will arrange payment of a crop task expense</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityTask))]
-    [Description("This is a fee required to perform a crop management task.")]
+    [Description("A fee required to perform a crop management task")]
     [HelpUri(@"Content/Features/Activities/Crop/CropFee.htm")]
     [Version(1, 0, 1, "")]
     public class CropActivityFee: CLEMActivityBase, IValidatableObject
     {
+        private string relatesToResourceName = "";
+        private bool timingIssueReported = false;
+        private CropActivityManageProduct managingParent;
+
         /// <summary>
         /// Account to use
         /// </summary>
         [Description("Account to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new Type[] { typeof(Finance) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Account to use required")]
         public string AccountName { get; set; }
 
@@ -50,71 +56,34 @@ namespace Models.CLEM.Activities
         public FinanceType BankAccount { get; set; }
 
         /// <summary>
-        /// Category label to use in ledger
-        /// </summary>
-        [Description("Shortname of fee for reporting")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Shortname required")]
-        public string Category { get; set; }
-
-        private string RelatesToResourceName = "";
-
-        /// <summary>
         /// Constructor
         /// </summary>
         public CropActivityFee()
         {
             this.SetDefaults();
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivityLevel2;
+            TransactionCategory = "Crop.[Activity]";
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>At start of simulation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            BankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
-
-            RelatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
+            BankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
+            managingParent = FindAncestor<CropActivityManageProduct>();
+            if(managingParent != null)
+                relatesToResourceName = managingParent.StoreItemName;
         }
 
-        #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            CropActivityManageProduct productParent = FindAncestor<CropActivityManageProduct>();
-
-            if (!productParent.IsTreeCrop)
-            {
-                if (this.PaymentStyle == CropPaymentStyleType.perTree)
-                {
-                    string[] memberNames = new string[] { this.Name + ".PaymentStyle" };
-                    results.Add(new ValidationResult("The payment style " + this.PaymentStyle.ToString() + " is not supported for crops defined as non tree crops", memberNames));
-                }
-            }
-            return results;
-        } 
-        #endregion
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="requirement"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             return new GetDaysLabourRequiredReturnArgs(0, null, null);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override List<ResourceRequest> GetResourcesNeededForActivity()
         {
             if (this.TimingOK)
@@ -145,107 +114,93 @@ namespace Models.CLEM.Activities
                 }
                 resourcesNeeded.Add(new ResourceRequest()
                 {
+                    Resource = BankAccount,
                     AllowTransmutation = false,
                     Required = sumneeded,
                     ResourceType = typeof(Finance),
                     ResourceTypeName = AccountName,
                     ActivityModel = this,
                     FilterDetails = null,
-                    RelatesToResource = RelatesToResourceName,
-                    Category = Category
+                    RelatesToResource = relatesToResourceName,
+                    Category = TransactionCategory
                 }
                 );
+                if (managingParent.CurrentlyManaged)
+                {
+                    if (sumneeded > 0)
+                        Status = ActivityStatus.Success;
+                    else
+                        Status = ActivityStatus.NotNeeded;
+                }
+                else
+                {
+                    Status = ActivityStatus.Warning;
+                    if (!timingIssueReported)
+                    {
+                        Summary.WriteMessage(this, $"The harvest timer for crop task [a={this.NameWithParent}] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.", MessageType.Warning);
+                        timingIssueReported = true;
+                    }
+                }
+
                 return resourcesNeeded;
             }
             return null;
         }
 
+        #region validation
         /// <summary>
-        /// 
+        /// Validate model
         /// </summary>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
+        /// <param name="validationContext"></param>
         /// <returns></returns>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            return null;
+            var results = new List<ValidationResult>();
+            CropActivityManageProduct productParent = FindAncestor<CropActivityManageProduct>();
+
+            if (!productParent.IsTreeCrop)
+            {
+                if (this.PaymentStyle == CropPaymentStyleType.perTree)
+                {
+                    string[] memberNames = new string[] { this.Name + ".PaymentStyle" };
+                    results.Add(new ValidationResult("The payment style " + this.PaymentStyle.ToString() + " is not supported for crops defined as non tree crops", memberNames));
+                }
+            }
+            return results;
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
-        public override event EventHandler ActivityPerformed;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
+        #endregion
 
         #region descriptive summary
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Pay ";
-            html += "<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> ";
-            html += "<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> from ";
-            if (AccountName == null || AccountName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
-            }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + AccountName + "</span>";
-            }
-            html += "</div>";
-            html += "\n<div class=\"activityentry\">This activity uses a category label ";
-            if (Category != null && Category != "")
-            {
-                html += "<span class=\"setvalue\">" + Category + "</span> ";
-            }
-            else
-            {
-                html += "<span class=\"errorlink\">[NOT SET]</span> ";
-            }
-            html += " for all transactions</div>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Pay ");
+                htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> ");
+                htmlWriter.Write("<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> from ");
+                if (AccountName == null || AccountName == "")
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[ACCOUNT NOT SET]</span>");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"resourcelink\">" + AccountName + "</span>");
+                }
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
+                if (TransactionCategory != null && TransactionCategory != "")
+                {
+                    htmlWriter.Write("<span class=\"setvalue\">" + TransactionCategory + "</span> ");
+                }
+                else
+                {
+                    htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span> ");
+                }
+                htmlWriter.Write(" for all transactions</div>");
 
-            return html;
+                return htmlWriter.ToString(); 
+            }
         } 
         #endregion
 

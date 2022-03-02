@@ -9,27 +9,30 @@ using Models.CLEM;
 using Models.CLEM.Groupings;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
+using System.IO;
 
 namespace Models.CLEM.Activities
 {
     /// <summary>Ruminant herd cost </summary>
     /// <summary>This activity will arrange payment of a herd expense such as vet fees</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity will arange payment of a ruminant herd expense such as dips and drenches based on the current herd filtering.")]
+    [Description("Arrange payment of a ruminant herd expense with specified style")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantHerdCost.htm")]
     public class RuminantActivityHerdCost : CLEMRuminantActivityBase, IValidatableObject
     {
+        private FinanceType bankAccount;
+
         /// <summary>
         /// Amount payable
         /// </summary>
         [Description("Amount payable")]
-        [Required, GreaterThanEqualValue(0)]
+        [Required, GreaterThanValue(0)]
         public double Amount { get; set; }
 
         /// <summary>
@@ -44,16 +47,9 @@ namespace Models.CLEM.Activities
         /// Bank account to use
         /// </summary>
         [Description("Bank account to use")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(Finance) })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Bank account required")]
         public string AccountName { get; set; }
-
-        /// <summary>
-        /// Category label to use in ledger
-        /// </summary>
-        [Description("Shortname of fee for reporting")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Shortname required")]
-        public string Category { get; set; }
 
         #region validation
         /// <summary>
@@ -85,6 +81,7 @@ namespace Models.CLEM.Activities
         public RuminantActivityHerdCost()
         {
             this.SetDefaults();
+            TransactionCategory = "Livestock.Cost";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -94,6 +91,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(true, true);
+            bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning);
         }
 
         /// <summary>
@@ -105,8 +103,8 @@ namespace Models.CLEM.Activities
             List<ResourceRequest> resourcesNeeded = null;
 
             double amountNeeded = 0;
-            List<Ruminant> herd = this.CurrentHerd(false);
-            if (herd.Count() != 0)
+            IEnumerable<Ruminant> herd = this.CurrentHerd(false);
+            if (herd.Any())
             {
                 switch (PaymentStyle)
                 {
@@ -128,8 +126,6 @@ namespace Models.CLEM.Activities
             {
                 // determine breed
                 // this is too much overhead for a simple reason field, especially given large herds.
-                //List<string> res = herd.Select(a => a.Breed).Distinct().ToList();
-                //string breedName = (res.Count() > 1) ? "Multiple breeds" : res.First();
                 string breedName = "Herd cost";
 
                 resourcesNeeded = new List<ResourceRequest>()
@@ -138,145 +134,72 @@ namespace Models.CLEM.Activities
                     {
                         AllowTransmutation = false,
                         Required = amountNeeded,
+                        Resource = bankAccount,
                         ResourceType = typeof(Finance),
                         ResourceTypeName = this.AccountName.Split('.').Last(),
                         ActivityModel = this,
                         RelatesToResource = breedName,
-                        Category = Category
+                        Category = TransactionCategory
                     }
                 };
             }
             return resourcesNeeded;
         }
 
-        /// <summary>
-        /// Method used to perform activity if it can occur as soon as resources are available.
-        /// </summary>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <summary>
-        /// Determine the labour required for this activity based on LabourRequired items in tree
-        /// </summary>
-        /// <param name="requirement">Labour requirement model</param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             // get all potential dry breeders
-            List<Ruminant> herd = this.CurrentHerd(false);
-            int head = herd.Count();
-            double animalEquivalents = herd.Sum(a => a.AdultEquivalent);
+            IEnumerable<Ruminant> herd = this.CurrentHerd(false);
             double daysNeeded = 0;
             double numberUnits = 0;
-            switch (requirement.UnitType)
+            if (herd.Any())
             {
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perHead:
-                    numberUnits = head / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                    {
-                        numberUnits = Math.Ceiling(numberUnits);
-                    }
+                switch (requirement.UnitType)
+                {
+                    case LabourUnitType.Fixed:
+                        daysNeeded = requirement.LabourPerUnit;
+                        break;
+                    case LabourUnitType.perHead:
+                        int head = herd.Count();
+                        numberUnits = head / requirement.UnitSize;
+                        if (requirement.WholeUnitBlocks)
+                            numberUnits = Math.Ceiling(numberUnits);
 
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perAE:
-                    numberUnits = animalEquivalents / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
-                    {
-                        numberUnits = Math.Ceiling(numberUnits);
-                    }
+                        daysNeeded = numberUnits * requirement.LabourPerUnit;
+                        break;
+                    case LabourUnitType.perAE:
+                        double animalEquivalents = herd.Sum(a => a.AdultEquivalent);
+                        numberUnits = animalEquivalents / requirement.UnitSize;
+                        if (requirement.WholeUnitBlocks)
+                            numberUnits = Math.Ceiling(numberUnits);
 
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+                        daysNeeded = numberUnits * requirement.LabourPerUnit;
+                        break;
+                    default:
+                        throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+                } 
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, this.Category, this.PredictedHerdName);
-        }
-
-        /// <summary>
-        /// The method allows the activity to adjust resources requested based on shortfalls (e.g. labour) before they are taken from the pools
-        /// </summary>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <summary>
-        /// Method to determine resources required for initialisation of this activity
-        /// </summary>
-        /// <returns></returns>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <summary>
-        /// Resource shortfall event handler
-        /// </summary>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
-        public override event EventHandler ActivityPerformed;
-
-        /// <summary>
-        /// Shortfall occurred 
-        /// </summary>
-        /// <param name="e"></param>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
         }
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
-            string html = "";
-            html += "\n<div class=\"activityentry\">Pay ";
-            html += "<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> ";
-            html += "<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> from ";
-            if (AccountName == null || AccountName == "")
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "<span class=\"errorlink\">[ACCOUNT NOT SET]</span>";
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Pay ");
+                htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> ");
+                htmlWriter.Write("<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> from ");
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not set"));
+                htmlWriter.Write(" for all transactions</div>");
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "<span class=\"resourcelink\">" + AccountName + "</span>";
-            }
-            html += "</div>";
-            html += "\n<div class=\"activityentry\">This activity uses a category label ";
-            if (Category != null && Category != "")
-            {
-                html += "<span class=\"setvalue\">" + Category + "</span> ";
-            }
-            else
-            {
-                html += "<span class=\"errorlink\">[NOT SET]</span> ";
-            }
-            html += " for all transactions</div>";
-            return html;
         } 
         #endregion
 

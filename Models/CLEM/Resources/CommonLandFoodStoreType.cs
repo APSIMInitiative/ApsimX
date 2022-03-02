@@ -1,14 +1,12 @@
-﻿using Models.CLEM.Activities;
-using Models.CLEM.Reporting;
+﻿using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM.Resources
 {
@@ -16,21 +14,21 @@ namespace Models.CLEM.Resources
     /// This provides a common land store as GrazeFoodStoreType or AnimalFoodStoreType
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(GrazeFoodStore))]
     [ValidParent(ParentType = typeof(AnimalFoodStore))]
-    [Description("This resource represents a common land food store.")]
+    [Description("This resource represents the pasture on common land")]
     [Version(1, 0, 1, "Beta build")]
     [Version(1, 0, 2, "Link to GrazeFoodStore implemented")]
     [HelpUri(@"Content/Features/Resources/AnimalFoodStore/CommonLandStoreType.htm")]
     public class CommonLandFoodStoreType : CLEMResourceTypeBase, IResourceWithTransactionType, IValidatableObject, IResourceType
     {
-        /// <summary>
-        /// 
-        /// </summary>
         [Link]
-        public ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
+
+        [NonSerialized]
+        private object pasture = new object();
 
         /// <summary>
         /// Unit type
@@ -51,13 +49,6 @@ namespace Models.CLEM.Resources
         [Description("Intercept to convert N% to DMD%")]
         [Required]
         public double NToDMDIntercept { get; set; }
-
-        /// <summary>
-        /// Crude protein denominator to convert N% to DMD%
-        /// </summary>
-        [Description("Crude protein denominator to convert N% to DMD%")]
-        [Required]
-        public double NToDMDCrudeProteinDenominator { get; set; }
 
         /// <summary>
         /// Nitrogen of common land pasture (%)
@@ -86,11 +77,9 @@ namespace Models.CLEM.Resources
         /// Link to a AnimalFoodStore or GrazeFoodStore for pasture details
         /// </summary>
         [Description("AnimalFoodStore or GrazeFoodStore type for pasture details")]
-        [Models.Core.Display(Type = DisplayType.CLEMResource, CLEMResourceGroups = new Type[] { typeof(GrazeFoodStore) }, CLEMExtraEntries = new string[] { "Not specified - general yards" })]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } })]
+        [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string PastureLink { get; set; }
-
-        [NonSerialized]
-        private object pasture = new object();
 
         /// <summary>
         /// Proportional reduction of N% from linked pasture
@@ -113,6 +102,18 @@ namespace Models.CLEM.Resources
             }
         }
 
+        /// <summary>
+        /// Total value of resource
+        /// </summary>
+        public double? Value
+        {
+            get
+            {
+                return Price(PurchaseOrSalePricingStyleType.Sale)?.CalculateValue(Amount);
+            }
+        }
+
+
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -126,22 +127,6 @@ namespace Models.CLEM.Resources
                 dryMatterDigestibility = Nitrogen * NToDMDCoefficient + NToDMDIntercept;
                 dryMatterDigestibility = Math.Max(MinimumDMD, dryMatterDigestibility);
             }
-        }
-
-        /// <summary>
-        /// Overrides the base class method to allow for clean up
-        /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-        }
-
-        /// <summary>Clear data stores for utilisation at end of ecological indicators calculation month</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMAgeResources")]
-        private void ONCLEMAgeResources(object sender, EventArgs e)
-        {
         }
 
         /// <summary>Store amount of pasture available for everyone at the start of the step (kg per hectare)</summary>
@@ -201,11 +186,7 @@ namespace Models.CLEM.Resources
 
         #region validation
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
+        /// <inheritdoc/>
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
@@ -221,7 +202,7 @@ namespace Models.CLEM.Resources
             if (PastureLink != null && !PastureLink.StartsWith("Not specified"))
             {
                 // check animalFoodStoreType
-                pasture = Resources.GetResourceItem(this, PastureLink, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+                pasture = resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, PastureLink, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
                 if (pasture == null)
                 {
                     string[] memberNames = new string[] { "Pasture link" };
@@ -234,17 +215,11 @@ namespace Models.CLEM.Resources
                 // no link so need to ensure values are all supplied.
                 List<string> missing = new List<string>();
                 if (NToDMDCoefficient == 0)
-                {
                     missing.Add("NToDMDCoefficient");
-                }
+
                 if (NToDMDIntercept == 0)
-                {
                     missing.Add("NToDMDIntercept");
-                }
-                if (NToDMDCrudeProteinDenominator == 0)
-                {
-                    missing.Add("NToDMDCrudeProteinDenominator");
-                }
+
                 if (missing.Count() > 0)
                 {
                     foreach (var item in missing)
@@ -272,15 +247,11 @@ namespace Models.CLEM.Resources
         {
             // expecting a GrazeFoodStoreResource (PastureManage) or FoodResourcePacket (CropManage)
             if (!(resourceAmount.GetType() == typeof(GrazeFoodStorePool) || resourceAmount.GetType() != typeof(FoodResourcePacket)))
-            {
                 throw new Exception(String.Format("ResourceAmount object of type {0} is not supported in Add method in {1}", resourceAmount.GetType().ToString(), this.Name));
-            }
 
             GrazeFoodStorePool pool;
             if (resourceAmount.GetType() == typeof(GrazeFoodStorePool))
-            {
                 pool = resourceAmount as GrazeFoodStorePool;
-            }
             else
             {
                 pool = new GrazeFoodStorePool();
@@ -292,23 +263,10 @@ namespace Models.CLEM.Resources
 
             if (pool.Amount > 0)
             {
-                // need to check the follwoing code is no longer needed.
-
-                // allow decaying or no pools currently available
-                //if (PastureDecays || Pools.Count() == 0)
-                //{
-                //    Pools.Insert(0, pool);
-                //}
-                //else
-                //{
-                //    Pools[0].Add(pool);
-                //}
-                //// update biomass available
-                //biomassAddedThisYear += pool.Amount;
-
                 ResourceTransaction details = new ResourceTransaction
                 {
-                    Gain = pool.Amount,
+                    TransactionType = TransactionType.Gain,
+                    Amount = pool.Amount,
                     Activity = activity,
                     Category = category,
                     RelatesToResource = relatesToResource,
@@ -321,21 +279,13 @@ namespace Models.CLEM.Resources
             }
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="removeAmount"></param>
-        /// <param name="activityName"></param>
-        /// <param name="reason"></param>
+        /// <inheritdoc/>
         public double Remove(double removeAmount, string activityName, string reason)
         {
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="request"></param>
+        /// <inheritdoc/>
         public new void Remove(ResourceRequest request)
         {
             // grazing or feeding from store treated the same way
@@ -357,7 +307,8 @@ namespace Models.CLEM.Resources
             ResourceTransaction details = new ResourceTransaction
             {
                 ResourceType = this,
-                Loss = request.Provided,
+                TransactionType = TransactionType.Loss,
+                Amount = request.Provided,
                 Activity = request.ActivityModel,
                 Category = request.Category,
                 RelatesToResource = request.RelatesToResource
@@ -367,10 +318,7 @@ namespace Models.CLEM.Resources
             OnTransactionOccurred(te);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="newAmount"></param>
+        /// <inheritdoc/>
         public new void Set(double newAmount)
         {
             throw new NotImplementedException();
@@ -400,43 +348,38 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
-            string html = "";
-            html += "<div class=\"activityentry\">";
-            if (this.Parent.GetType() == typeof(AnimalFoodStore))
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += "This common land can be used by animal feed activities only";
+                htmlWriter.Write("<div class=\"activityentry\">");
+                if (this.Parent.GetType() == typeof(AnimalFoodStore))
+                    htmlWriter.Write("This common land can be used by animal feed activities only");
+                else
+                    htmlWriter.Write("This common land can be used by grazing and cut and carry activities");
+
+                htmlWriter.Write("</div>");
+                if (PastureLink != null)
+                {
+                    htmlWriter.Write("<div class=\"activityentry\">");
+                    htmlWriter.Write("The quality of this common land is based on <span class=\"resourcelink\">" + PastureLink + "</span> with <span class=\"setvalue\">" + (100 - this.NitrogenReductionFromPasture / 100).ToString("0.#") + "</span>% of the current nitrogen percent");
+                    htmlWriter.Write("</div>");
+                }
+                else
+                {
+                    htmlWriter.Write("<div class=\"activityentry\">");
+                    htmlWriter.Write("The nitrogen quality of new pasture is <span class=\"setvalue\">" + this.Nitrogen.ToString("0.###") + "%</span> and can be reduced to <span class=\"setvalue\">" + this.MinimumNitrogen.ToString("0.#") + "%</span>");
+                    htmlWriter.Write("</div>");
+                    htmlWriter.Write("<div class=\"activityentry\">");
+                    htmlWriter.Write("The minimum Dry Matter Digestaibility is <span class=\"setvalue\">" + this.MinimumDMD.ToString("0.###") + "%</span>");
+                    htmlWriter.Write("</div>");
+                    htmlWriter.Write("<div class=\"activityentry\">");
+                    htmlWriter.Write("Dry matter digestibility will be calculated from the N%");
+                    htmlWriter.Write("</div>");
+                }
+                return htmlWriter.ToString(); 
             }
-            else
-            {
-                html += "This common land can be used by grazing and cut and carry activities";
-            }
-            html += "</div>";
-            if (PastureLink != null)
-            {
-                html += "<div class=\"activityentry\">";
-                html += "The quality of this common land is based on <span class=\"resourcelink\">" + PastureLink + "</span> with <span class=\"setvalue\">" + (100 - this.NitrogenReductionFromPasture / 100).ToString("0.#") + "</span>% of the current nitrogen percent";
-                html += "</div>";
-            }
-            else
-            {
-                html += "<div class=\"activityentry\">";
-                html += "The nitrogen quality of new pasture is <span class=\"setvalue\">" + this.Nitrogen.ToString("0.###") + "%</span> and can be reduced to <span class=\"setvalue\">" + this.MinimumNitrogen.ToString("0.#") + "%</span>";
-                html += "</div>";
-                html += "<div class=\"activityentry\">";
-                html += "The minimum Dry Matter Digestaibility is <span class=\"setvalue\">" + this.MinimumDMD.ToString("0.###") + "%</span>";
-                html += "</div>";
-                html += "<div class=\"activityentry\">";
-                html += "Dry matter digestibility will be calculated from the N%";
-                html += "</div>";
-            }
-            return html;
         }
 
         #endregion

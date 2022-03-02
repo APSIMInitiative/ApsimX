@@ -1,4 +1,5 @@
-﻿using Models.Core;
+﻿using APSIM.Shared.JobRunning;
+using Models.Core;
 using Models.Storage;
 using System;
 using System.Collections.Generic;
@@ -54,7 +55,7 @@ namespace UnitTests.Storage
 
         public List<string> TableAndViewNames => throw new NotImplementedException();
 
-        public List<string> TablesModified { get; set; }
+        public List<string> TablesModified { get; set; } = new List<string>();
 
         [Serializable]
         internal class Row
@@ -62,7 +63,7 @@ namespace UnitTests.Storage
             public IList<object> values;
         }
 
-        public DataTable GetData(string tableName, string checkpointName = null, string simulationName = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0, string groupBy = null)
+        public DataTable GetData(string tableName, string checkpointName = null, IEnumerable<string> simulationNames = null, IEnumerable<string> fieldNames = null, string filter = null, int from = 0, int count = 0, IEnumerable<string> groupBy = null, bool b = true)
         {
             return null;
         }
@@ -85,7 +86,7 @@ namespace UnitTests.Storage
             return null;
         }
 
-        public void WriteTable(DataTable table)
+        public void WriteTable(DataTable table, bool deleteAllData)
         {
             tables.Add(table);
         }
@@ -113,11 +114,6 @@ namespace UnitTests.Storage
 
         public void EmptyDataStore()
         {
-        }
-
-        public int GetSimulationID(string simulationName, string folderName)
-        {
-            return 0;
         }
 
         public void AllCompleted()
@@ -279,6 +275,32 @@ namespace UnitTests.Storage
         }
 
         public bool GetCheckpointShowOnGraphs(string checkpointName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public bool TryGetSimulationID(string simulationName, out int simulationID)
+        {
+            simulationID = 0;
+            return true;
+        }
+
+        public int GetSimulationID(string simulationName, string folderName)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IEnumerable<int> ToSimulationIDs(IEnumerable<string> simulationNames)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Clean(IEnumerable<string> names, bool wait)
+        {
+
+        }
+		
+		public void ExecuteSql(string sql)
         {
             throw new NotImplementedException();
         }

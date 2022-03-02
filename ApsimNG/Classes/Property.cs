@@ -170,12 +170,20 @@ namespace UserInterface.Classes
             // ?else if property type isn't a struct?
             else if (Value != null && typeof(IModel).IsAssignableFrom(Value.GetType()))
                 Value = ((IModel)Value).Name;
+            else if (metadata.PropertyType.IsEnum)
+                Value = VariableProperty.GetEnumDescription((Enum)Enum.Parse(metadata.PropertyType, Value?.ToString()));
             else if (metadata.PropertyType != typeof(bool) && metadata.PropertyType != typeof(System.Drawing.Color))
                 Value = ReflectionUtilities.ObjectToString(Value, CultureInfo.CurrentCulture);
 
             // fixme - need to fix this unmaintainable mess brought across from the old PropertyPresenter
             DisplayAttribute attrib = metadata.GetCustomAttribute<DisplayAttribute>();
             DisplayType displayType = attrib?.Type ?? DisplayType.None;
+
+            // For compatibility with the old PropertyPresenter, assume a default of
+            // DisplayType.DropDown if the Values property is specified.
+            if (displayType == DisplayType.None && !string.IsNullOrEmpty(attrib?.Values))
+                displayType = DisplayType.DropDown;
+
             switch (displayType)
             {
                 case DisplayType.None:
@@ -215,9 +223,20 @@ namespace UserInterface.Classes
                     break;
                 case DisplayType.DropDown:
                     string methodName = metadata.GetCustomAttribute<DisplayAttribute>().Values;
+                    if (methodName == null)
+                        throw new ArgumentNullException($"When using DisplayType.DropDown, the Values property must be specified.");
                     BindingFlags flags = BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Static | BindingFlags.FlattenHierarchy;
                     MethodInfo method = model.GetType().GetMethod(methodName, flags);
-                    DropDownOptions = ((IEnumerable<object>)method.Invoke(model, null))?.Select(v => v?.ToString())?.ToArray();
+
+                    object[] args = metadata.GetCustomAttribute<DisplayAttribute>().ValuesArgs;
+
+                    // Attempt to resolve links - populating the dropdown may
+                    // require access to linked models.
+                    Simulations sims = model.FindAncestor<Simulations>();
+                    if (sims != null)
+                        sims.Links.Resolve(model, allLinks: true, throwOnFail: false);
+
+                    DropDownOptions = ((IEnumerable<object>)method.Invoke(model, args))?.Select(v => v?.ToString())?.ToArray();
                     DisplayMethod = PropertyType.DropDown;
                     break;
                 case DisplayType.CultivarName:
@@ -228,7 +247,8 @@ namespace UserInterface.Classes
                         plant = plantProperty.GetValue(model) as IPlant;
                     else
                         plant = model.FindInScope<IPlant>();
-                    DropDownOptions = PropertyPresenterHelpers.GetCultivarNames(plant);
+                    if (plant != null)
+                        DropDownOptions = PropertyPresenterHelpers.GetCultivarNames(plant);
                     break;
                 case DisplayType.TableName:
                     DisplayMethod = PropertyType.DropDown;

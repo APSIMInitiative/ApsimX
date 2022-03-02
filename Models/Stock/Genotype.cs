@@ -9,7 +9,7 @@ namespace Models.GrazPlan
 
     /// <summary>Encapsulates a parameter set for an animal.</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Stock))]
     public class Genotype : Model
@@ -175,6 +175,7 @@ namespace Models.GrazPlan
 
         /// <summary>Animal type</summary>
         [Description("Animal type")]
+        [Units("-")]
         public GrazType.AnimalType Animal { get; set; }
 
         /// <summary>Dairy intake peak (c-idy-0)</summary>
@@ -191,10 +192,12 @@ namespace Models.GrazPlan
 
         /// <summary>Fixed attribute (read in)</summary>
         [Description("Dairy breed?")]
+        [Units("-")]
         public bool bDairyBreed { get; set; }
 
         /// <summary>Background death rate, per day  [1..2]</summary>
         [Description("Background death rate, per day  [1..2] c-d-")]
+        [Units("0-1")]
         public double[] MortRate { get; set; } = new double[3];
 
         /// <summary>Mortality age c-d-</summary>
@@ -203,6 +206,7 @@ namespace Models.GrazPlan
 
         /// <summary>Rate of mortality increase for underweight animals.</summary>
         [Description("Rate of mortality increase for underweight animals c-d-")]
+        [Units("0-1")]
         public double MortIntensity { get; set; }
 
         /// <summary>Fraction of normal body weight in animals of Size=1 at which mortality starts to increase</summary>
@@ -285,19 +289,38 @@ namespace Models.GrazPlan
         [Description("Sulf C c-su-")]
         public double[] SulfC { get; set; } = new double[5];
 
-        /// <summary>Meth C c-h-</summary>
+        /// <summary>Methane C c-h-1,2,3,4,5,6,7  
+        /// 1. gross energy content of DM intake MJ/g
+        /// 2. constant term at maintenance
+        /// 3. M/D term at maintenance kg/MJ
+        /// 4. constant term in feediing level effect
+        /// 5. M/D term in feeding level effect kg/MJ
+        /// 6. weight:energy ratio kg/MJ
+        /// 7. volume:energy ratio m^3/MJ
+        /// </summary>
         [Description("Meth C c-h-")]
         public double[] MethC { get; set; } = new double[8];
 
-        /// <summary>Ash alkalinity C c-aa-</summary>
+        /// <summary>Ash alkalinity C c-aa-1,2,3
+        /// 1. Ash alkalinity of basal weight and conceptus    
+        /// 2. Ash alkalinity of greasy wool  
+        /// 3. Ash alkalinity of faeces  
+        /// </summary>
+        [Units("mol/kg")]
         [Description("Ash alkalinity C c-aa-")]
         public double[] AshAlkC { get; set; } = new double[4];
 
-        /// <summary>Ovulation period c-f</summary>
+        /// <summary>Ovulation period c-f  
+        /// Conception: length of oestrus cycle
+        /// </summary>
         [Description("Ovulation period c-f4")]
         public int OvulationPeriod { get; set; }
 
-        /// <summary>Puberty c-pbt</summary>
+        /// <summary>Puberty c-pbt-1,2  
+        /// 1. Puberty: females
+        /// 2. Puberty: males
+        /// </summary>
+        [Units("d")]
         [Description("Puberty c-pbt-")]
         public int[] Puberty { get; set; } = new int[2];                  //array[Boolean]
 
@@ -361,21 +384,26 @@ namespace Models.GrazPlan
 
         /// <summary>Maximum young</summary>
         [Description("Maximum young")]
+        [Units("-")]
         public int MaxYoung { get; set; }
 
         /// <summary>Breed standard reference weight (kg)</summary>
         [Description("Breed standard reference weight (kg)")]
+        [Units("kg")]
         public double BreedSRW { get; set; }
 
         /// <summary>Potential fleece weight (kg)</summary>
         [Description("Potential fleece weight (kg)")]
+        [Units("kg")]
         public double PotFleeceWt { get; set; }
 
         /// <summary>Potential greasy fleece weight:SRW</summary>
+        [Units("-")]
         public double FleeceRatio { get; set; }
 
         /// <summary>Peak milk</summary>
         [Description("Peak milk")]
+        [Units("kg")]
         public double PeakMilk { get; set; }
 
         /// <summary>ConceiveSigs</summary>
@@ -385,6 +413,7 @@ namespace Models.GrazPlan
         public double FertWtDiff { get; set; }
 
         /// <summary>Fleece yield</summary>
+        [Units("0-1")]
         public double FleeceYield { get { return WoolC[3]; } }
 
         /// <summary>Conception values</summary>

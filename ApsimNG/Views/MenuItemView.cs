@@ -1,5 +1,6 @@
 ﻿namespace UserInterface.Views
 {
+    using Extensions;
     using Gtk;
     using System;
 
@@ -49,7 +50,7 @@
         public void Destroy()
         {
             menuItem.Activated -= OnMenuClicked;
-            menuItem.Destroy();
+            menuItem.Dispose();
         }
 
         private void OnMenuClicked(object sender, EventArgs e)

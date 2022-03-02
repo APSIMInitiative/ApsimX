@@ -7,15 +7,20 @@ using Models.Soils;
 using Models.Functions;
 using APSIM.Shared.Utilities;
 using Models.Interfaces;
+using APSIM.Shared.Documentation;
 
 namespace Models.PMF.Phen
 {
-    /// <summary>Describe the phenological development through the germination.</summary>
+    /// <summary>
+    /// This phase goes from a start stage to an end stage and assumes
+    /// germination will be reached on the day after sowing or the first day 
+    /// thereafter when the extractable soil water at sowing depth is greater than zero."
+    /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Phenology))]
-    public class GerminatingPhase : Model, IPhase, ICustomDocumentation
+    public class GerminatingPhase : Model, IPhase
     {
         // 1. Links
         //----------------------------------------------------------------------------------------------------------------
@@ -38,7 +43,7 @@ namespace Models.PMF.Phen
 
         // 2. Private and protected fields
         //-----------------------------------------------------------------------------------------------------------------
-        
+
         /// <summary>The soil layer in which the seed is sown.</summary>
         private int SowLayer = 0;
 
@@ -113,29 +118,15 @@ namespace Models.PMF.Phen
             SowLayer = SoilUtilities.LayerIndexOfDepth(soilPhysical.Thickness, plant.SowingData.Depth);
         }
 
-        /// <summary>Writes documentation for this class by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                // add a heading
-                tags.Add(new AutoDocumentation.Heading(Name + " Phase", headingLevel));
+            // Write a table containing phase numers and start/end stages.
+            yield return new Paragraph($"The phase goes from {Start.ToLower()} to {End.ToLower()} and assumes {End.ToLower()} will be reached on the day after sowing or the first day thereafter when the extractable soil water at sowing depth is greater than zero.");
 
-                // write description of this class
-                tags.Add(new AutoDocumentation.Paragraph("The model assumes that germination will be completed on the day after sowing, "
-                    + "provided that the extractable soil water is greater than zero.", indent));
-
-                // write memos
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, headingLevel + 1, indent);
-
-                // write children
-                foreach (IModel child in this.FindAllChildren<IFunction>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent);
-            }
+            // Write memos.
+            foreach (var tag in DocumentChildren<Memo>())
+                yield return tag;
         }
     }
 }

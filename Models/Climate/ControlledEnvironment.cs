@@ -11,7 +11,7 @@ namespace Models.Climate
     /// Reads in controlled environment weather data and makes it available to models.
     ///</summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType=typeof(Simulation))]
     public class ControlledEnvironment : Model, IWeather
@@ -127,6 +127,13 @@ namespace Models.Climate
         [Description("Air Pressure")]
         [Units("hPa")]
         public double AirPressure { get; set; }
+
+        /// <summary>
+        /// Gets or sets the diffuse radiation fraction. If not specified in the weather file the default is 1.
+        /// </summary>
+        [Description("Diffuse Fraction")]
+        [Units("0-1")]
+        public double DiffuseFraction { get; set; }
 
         /// <summary>
         /// Gets the latitude

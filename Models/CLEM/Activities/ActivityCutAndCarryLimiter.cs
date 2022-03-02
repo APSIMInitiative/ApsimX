@@ -2,6 +2,7 @@
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,7 +13,7 @@ namespace Models.CLEM.Activities
     /// Cut and carry Activity limiter
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
@@ -21,6 +22,8 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     public class ActivityCutAndCarryLimiter: CLEMModel
     {
+        private double amountUsedThisMonth = 0;
+
         /// <summary>
         /// Monthly weight limit (kg/day)
         /// </summary>
@@ -28,8 +31,6 @@ namespace Models.CLEM.Activities
         [ArrayItemCount(12)]
         [Units("kg/day")]
         public double[] WeightLimitPerDay { get; set; }
-
-        private double amountUsedThisMonth = 0;
 
         /// <summary>
         /// Get the amount of cut and carry available.
@@ -61,52 +62,42 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
-            string html = "";
-            html += "<div class=\"filtername\">";
-            if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += this.Name;
+                htmlWriter.Write("<div class=\"filtername\">");
+                if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
+                    htmlWriter.Write(this.Name);
+
+                htmlWriter.Write($"</div>");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\">");
+                htmlWriter.Write("\r\n<div class=\"filter\">");
+                htmlWriter.Write("Limit cut and carry activities to ");
+                if (!(WeightLimitPerDay is null) && WeightLimitPerDay.Count() >= 1)
+                {
+                    htmlWriter.Write("<span class=\"setvalueextra\">");
+                    htmlWriter.Write(WeightLimitPerDay.ToString());
+                }
+                else
+                    htmlWriter.Write("<span class=\"errorlink\">Not Set");
+
+                htmlWriter.Write("</span> dry kg/day ");
+                htmlWriter.Write("</div>");
+                htmlWriter.Write("\r\n</div>");
+                return htmlWriter.ToString(); 
             }
-            html += $"</div>";
-            html += "\n<div class=\"filterborder clearfix\">";
-            html += "\n<div class=\"filter\">";
-            html += "Limit cut and carry activities to ";
-            if (!(WeightLimitPerDay is null) && WeightLimitPerDay.Count() >= 1)
-            {
-                html += "<span class=\"setvalueextra\">";
-                html += WeightLimitPerDay.ToString();
-            }
-            else
-            {
-                html += "<span class=\"errorlink\">Not Set";
-            }
-            html += "</span> dry kg/day ";
-            html += "</div>";
-            html += "\n</div>";
-            return html;
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
         {
             return "";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
         {
             return "";
         } 

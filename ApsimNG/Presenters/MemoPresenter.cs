@@ -4,9 +4,9 @@
     using Models;
     using Views;
     using System;
-    using System.Windows.Forms;
-    using Microsoft.Azure.Batch.Protocol.BatchRequests;
+    using Interfaces;
     using APSIM.Shared.Utilities;
+    using Commands;
 
     /// <summary>
     /// Presents the text from a memo component.
@@ -23,13 +23,23 @@
         private MarkdownView markdownView;
 
         /// <summary>The raw text view.</summary>
-        private EditorView textView;
+        private TextInputView textView;
 
         /// <summary>The edit button.</summary>
         private ButtonView editButton;
 
         /// <summary>The help button.</summary>
         private ButtonView helpButton;
+
+        /// <summary>
+        /// This box contains the live preview widget.
+        /// </summary>
+        private ContainerView previewBox;
+
+        /// <summary>
+        /// This box contains the editor widget.
+        /// </summary>
+        private ContainerView editorBox;
 
         /// <summary>
         /// Attach the 'Model' and the 'View' to this presenter.
@@ -43,19 +53,22 @@
             explorerPresenter = parentPresenter;
 
             markdownView = (view as ViewBase).GetControl<MarkdownView>("markdownView");
-            textView = (view as ViewBase).GetControl<EditorView>("textEditor");
+            textView = (view as ViewBase).GetControl<TextInputView>("textEditor");
             editButton = (view as ViewBase).GetControl<ButtonView>("editButton");
             helpButton = (view as ViewBase).GetControl<ButtonView>("helpButton");
+            previewBox = (view as ViewBase).GetControl<ContainerView>("previewBox");
+            editorBox = (view as ViewBase).GetControl<ContainerView>("editorBox");
             helpButton.Clicked += HelpBtnClicked;
-            textView.Mode = EditorType.Other;
-            textView.Visible = false;
+            textView.WrapText = true;
+            textView.ModifyFont(Utility.Configuration.Settings.EditorFontName);
             textView.Text = memoModel.Text;
-            textView.TextHasChangedByUser += OnTextHasChanged;
+            textView.Changed += OnTextHasChanged;
             markdownView.ImagePath = Path.GetDirectoryName(explorerPresenter.ApsimXFile.FileName);
             markdownView.Text = memoModel.Text;
             editButton.Clicked += OnEditButtonClick;
             helpButton.Visible = false;
-            //this.memoViewer.SetContents(this.memoModel.Text, true);
+            previewBox.Show();
+            editorBox.Hide();
         }
 
         private void HelpBtnClicked(object sender, EventArgs e)
@@ -91,7 +104,10 @@
             }
         }
 
-        /// <summary>User has changed the text.</summary>
+        /// <summary>
+        /// User has changed the text in the editable textview.
+        /// We need to update the live markdown preview.
+        /// </summary>
         /// <param name="sender">The event sender.</param>
         /// <param name="e">The event arguments.</param>
         private void OnTextHasChanged(object sender, EventArgs e)
@@ -107,13 +123,15 @@
             if (editButton.Text == "Edit")
             {
                 editButton.Text = "Hide";
-                textView.Visible = true;
                 helpButton.Visible = true;
+                editorBox.Show();
+                if (textView.MainWidget.Parent.Parent.Parent is Gtk.Paned paned && paned.Position == 0)
+                    paned.Position = paned.Allocation.Height / 2;
             }
             else
             {
                 editButton.Text = "Edit";
-                textView.Visible = false;
+                editorBox.Hide();
                 helpButton.Visible = false;
             }
         }
@@ -123,19 +141,11 @@
         {
             editButton.Clicked -= OnEditButtonClick;
             helpButton.Clicked -= HelpBtnClicked;
-            memoModel.Text = textView.Text;
-            //try
-            //{
-            //    string markdown = this.memoViewer.GetMarkdown();
-            //    if (markdown != this.memoModel.Text)
-            //    {
-            //        this.explorerPresenter.CommandHistory.Add(new Commands.ChangeProperty(this.memoModel, "Text", markdown));
-            //    }
-            //}
-            //catch (Exception err)
-            //{
-            //    explorerPresenter.MainPresenter.ShowError(err);
-            //}
+            if (memoModel.Text != textView.Text)
+            {
+                ICommand changeText = new ChangeProperty(memoModel, nameof(memoModel.Text), textView.Text);
+                explorerPresenter.CommandHistory.Add(changeText);
+            }
         }
 
         /// <summary>
@@ -145,10 +155,7 @@
         public void OnModelChanged(object changedModel)
         {
             if (changedModel == this.memoModel)
-            {
-                this.markdownView.Text = ((Memo)changedModel).Text;
-            }
+                this.markdownView.Text = memoModel.Text;
         }
-
     }
 }

@@ -9,11 +9,10 @@ using Newtonsoft.Json;
 namespace Models.Agroforestry
 {
     /// <summary>
-    /// # [Name]
     /// Class to calculate and communicate local microclimate in agroforestry systems
     /// </summary>
     [Serializable]
-    [ViewName("UserInterface.Views.GridView")]
+    [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
     [ValidParent(ParentType = typeof(Zone))]
@@ -95,6 +94,12 @@ namespace Models.Agroforestry
         [JsonIgnore]
         public double AirPressure { get { return weather.AirPressure; } set { weather.AirPressure = value; } }
 
+        /// <summary>
+        /// Gets or sets the diffuse radiation fraction. If not specified in the weather file the default is 1.
+        /// </summary>
+        [JsonIgnore]
+        public double DiffuseFraction { get { return weather.DiffuseFraction; } set { weather.DiffuseFraction = value; } }
+
         /// <summary>Gets the latitude</summary>
         [JsonIgnore]
         public double Latitude { get { return weather.Latitude; } }
@@ -117,11 +122,11 @@ namespace Models.Agroforestry
 
         /// <summary>Met Data from yesterday</summary>
         [JsonIgnore]
-        public DailyMetDataFromFile YesterdaysMetData { get; set; }
+        public DailyMetDataFromFile YesterdaysMetData { get { return weather.YesterdaysMetData; } }
 
         /// <summary>Met Data from yesterday</summary>
         [JsonIgnore]
-        public DailyMetDataFromFile TomorrowsMetData { get; set; }
+        public DailyMetDataFromFile TomorrowsMetData { get { return weather.TomorrowsMetData; } }
 
         /// <summary>Gets the duration of the day in hours.</summary>
         public double CalculateDayLength(double Twilight) { return weather.CalculateDayLength(Twilight); }

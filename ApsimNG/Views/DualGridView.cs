@@ -1,5 +1,6 @@
 ﻿using Gtk;
 using System;
+using UserInterface.Extensions;
 using UserInterface.Interfaces;
 
 namespace UserInterface.Views
@@ -12,6 +13,9 @@ namespace UserInterface.Views
 
         /// <summary>bottom grid in view.</summary>
         IGridView Grid2 { get; }
+
+        /// <summary>Show the 2nd grid?</summary>
+        void ShowGrid2(bool show);
     }
 
     /// <summary>A drop down view.</summary>
@@ -29,21 +33,28 @@ namespace UserInterface.Views
             Grid1 = new GridView(owner);
             Grid2 = new GridView(owner);
 
-            Builder builder = BuilderFromResource("ApsimNG.Resources.Glade.DualGridView.glade");
-            VPaned vpaned1 = (VPaned)builder.GetObject("vpaned1");
-            VPaned vpaned2 = (VPaned)builder.GetObject("vpaned2");
-            VBox vbox1 = (VBox)builder.GetObject("vbox1");
-            mainWidget = vpaned1;
-            vbox1.PackStart((Grid1 as GridView).MainWidget, true, true, 0);
-            vpaned2.Pack1((Grid2 as GridView).MainWidget, true, true);
+            VPaned panel = new VPaned();
+            mainWidget = panel;
+            panel.Pack1((Grid1 as GridView).MainWidget, true, true);
+            panel.Pack2((Grid2 as GridView).MainWidget, true, true);
             mainWidget.Destroyed += _mainWidget_Destroyed;
         }
+
+        /// <summary>Show the 2nd grid?</summary>
+        public void ShowGrid2(bool show)
+        {
+            (Grid2 as GridView).MainWidget.Visible = show;
+        }
+
 
         private void _mainWidget_Destroyed(object sender, EventArgs e)
         {
             try
             {
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
+                mainWidget.Dispose();
+                //Grid1.Dispose();
+                //Grid2.Dispose();
                 owner = null;
             }
             catch (Exception err)
