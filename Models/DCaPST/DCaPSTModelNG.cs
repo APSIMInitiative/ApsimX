@@ -94,7 +94,7 @@ namespace Models.DCAPST
                     {
                         new CanopyEnergyBalanceInterceptionlayerType()
                         {
-                            amount = model.InterceptedRadiation,
+                            AmountOnGreen = model.InterceptedRadiation,
                         }
                     };
                     canopy.PotentialEP = canopy.WaterDemand = model.WaterDemanded;
