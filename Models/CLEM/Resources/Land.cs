@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Collections;  //enumerator
 using Newtonsoft.Json;
-using System.Runtime.Serialization;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
@@ -19,7 +16,7 @@ namespace Models.CLEM.Resources
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ResourcesHolder))]
-    [Description("This resource group holds all land types for the simulation.")]
+    [Description("Resource group for all land types in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Resources/Land/Land.htm")]
     public class Land: ResourceBaseWithTransactions
@@ -84,9 +81,7 @@ namespace Models.CLEM.Resources
                     {
                         ReportedLandAllocation = item;
                         if (changeOccurred)
-                        {
                             OnAllocationReported(new EventArgs());
-                        }
                     }
                     total = childModel.AllocatedActivitiesList.Sum(a => a.LandAllocated);
                 }
@@ -119,12 +114,8 @@ namespace Models.CLEM.Resources
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

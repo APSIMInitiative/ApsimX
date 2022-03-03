@@ -387,7 +387,7 @@
                                             "   {\r\n" +
                                             "      [Link]\r\n" +
                                             "      ISummary summary = null;\r\n" +
-                                            "      public void Run() { summary.WriteMessage(this, \"Passed Test\"); }\r\n" +
+                                            "      public void Run() { summary.WriteMessage(this, \"Passed Test\", MessageType.Information); }\r\n" +
                                             "   }\r\n" +
                                             "}"
                                 }
@@ -450,6 +450,60 @@
 
                 database.CloseDatabase();
             }
+        }
+        [Serializable]
+        private class PostSimToolWhichThrows : Model, IPostSimulationTool
+        {
+            public void Run()
+            {
+                throw new Exception("error from post-simulation tool");
+            }
+        }
+
+        /// <summary>
+        /// Ensure that only the post-simulation tools which are "in scope"
+        /// are run.
+        /// </summary>
+        [Test]
+        public void EnsureScopedPostSimulationToolsAreRun()
+        {
+            Simulation sim0 = new Simulation()
+            {
+                Name = "s0",
+                Children = new List<IModel>()
+                {
+                    new MockClock(),
+                    new MockSummary(),
+                    new PostSimToolWhichThrows()
+                }
+            };
+            Simulation sim1 = sim0.Clone();
+            sim1.Name = "s1";
+
+            Simulations sims = new Simulations()
+            {
+                Children = new List<IModel>()
+                {
+                    new MockStorage()
+                    {
+                        Children = new List<IModel>()
+                        {
+                            new PostSimToolWhichThrows()
+                        }
+                    },
+                    sim0,
+                    sim1
+                }
+            };
+            sims.ParentAllDescendants();
+
+            Runner runner = new Runner(sim1);
+            List<Exception> errors = runner.Run();
+
+            // We ran sim1 only. Therefore two post-simulation tools
+            // should have been run (the one under the simulation and the
+            // one under the datastore).
+            Assert.AreEqual(2, errors.Count);
         }
 
         /// <summary>Ensure post simulation tools are run.</summary>

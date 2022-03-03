@@ -17,14 +17,14 @@ namespace Models.CLEM.Activities
     /// <summary>It is designed to consider individuals already marked for sale and add additional individuals before transport and sale.</summary>
     /// <summary>It will check all paddocks that the specified herd are grazing</summary>
     /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
+    /// <updates>1.0 First implementation of this activity using NABSA processes</updates>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages ruminant stocking during the dry season based upon wet season pasture biomass. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
+    [Description("Manage ruminant stocking during the dry season using predicted future pasture biomass")]
     [Version(1, 0, 3, "Avoids double accounting while removing individuals")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Updated assessment calculations and ability to report results")]
@@ -106,14 +106,8 @@ namespace Models.CLEM.Activities
             if (this.FindAllChildren<RuminantGroup>().Count() == 0)
             {
                 string[] memberNames = new string[] { "Ruminant group" };
-                results.Add(new ValidationResult("At least one [f=RuminantGroup] with a [Destock] reason and a [f=RuminantFilter] must be present under this [a=RuminantActivityPredictiveStocking] activity", memberNames));
+                results.Add(new ValidationResult("At least one [f=RuminantGroup] must be present under this [a=RuminantActivityPredictiveStocking] activity", memberNames));
             }
-            else if (this.FindAllChildren<RuminantGroup>().Where(a => a.Reason != RuminantStockGroupStyle.Destock).Count() > 0)
-            {
-                string[] memberNames = new string[] { "Ruminant group" };
-                results.Add(new ValidationResult("Only [f=RuminantGroup] with a [Destock] reason are permitted under this [a=RuminantActivityPredictiveStocking] activity", memberNames));
-            }
-
             return results;
         } 
         #endregion
@@ -220,12 +214,11 @@ namespace Models.CLEM.Activities
             HerdResource.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
             // remove individuals to sale as specified by destock groups
-            foreach (var item in FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock))
+            foreach (var item in FindAllChildren<RuminantGroup>())
             {
                 // works with current filtered herd to obey filtering.
-                var herd = CurrentHerd(false)
-                    .Where(a => a.Location == paddockName && !a.ReadyForSale)
-                    .FilterRuminants(item);
+                var herd = item.Filter(CurrentHerd(false))
+                    .Where(a => a.Location == paddockName && !a.ReadyForSale);
 
                 foreach (Ruminant ruminant in herd)
                 {
@@ -263,7 +256,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -297,13 +290,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public override string ModelSummaryInnerClosingTags()
         {
             return "\r\n</div>";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryInnerOpeningTags()
         {
             string html = "";
             html += "\r\n<div class=\"activitygroupsborder\">";

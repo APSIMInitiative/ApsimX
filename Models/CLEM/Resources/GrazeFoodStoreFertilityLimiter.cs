@@ -108,19 +108,13 @@ namespace Models.CLEM.Resources
         private void OnStartOfMonth(object sender, EventArgs e)
         {
             if(clock.Today.Month == (int)AnnualYieldStartMonth)
-            {
                 annualNUsed = 0;
-            }
         }
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             bool timerpresent = FindAllChildren<ActivityTimerMonthRange>().Count() > 0;
             parentPasture = this.Parent as GrazeFoodStoreType;
@@ -130,9 +124,7 @@ namespace Models.CLEM.Resources
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
                 htmlWriter.Write("\r\nThe nitrogen content of new pasture will be reduced by ");
                 if (NitrogenReduction == 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">Not Set</span>");
-                }
                 else
                 {
                     htmlWriter.Write("<span class=\"setvalue\">");
@@ -150,19 +142,16 @@ namespace Models.CLEM.Resources
 
                 htmlWriter.Write(" an annual nitrogen supply of  ");
                 if (AnnualNitrogenSupply == 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">Not Set</span>");
-                }
                 else
                 {
                     htmlWriter.Write("<span class=\"setvalue\">");
                     htmlWriter.Write(AnnualNitrogenSupply.ToString("N0"));
                     htmlWriter.Write("</span> kg per hectare has been used since ");
                 }
+
                 if (AnnualYieldStartMonth == MonthsOfYear.NotSet)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">Month not set");
-                }
                 else
                 {
                     htmlWriter.Write("<span class=\"setvalue\">");
@@ -174,13 +163,10 @@ namespace Models.CLEM.Resources
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">");
                     if (parentPasture.GreenNitrogen > 0)
-                    {
                         htmlWriter.Write($"This equates to <span class=\"setvalue\">{AnnualNitrogenSupply / (parentPasture.GreenNitrogen / 100)}</span> kg per hectare of pasture production given the new growth nitrogen content of <span class=\"setvalue\">{parentPasture.GreenNitrogen}%</span>.");
-                    }
                     else
-                    {
                         htmlWriter.Write($"This equates to <span class=\"errorlink\">Undefined</span> kg per hectare of pasture production given the green growth nitrogen content of <span class=\"errorlink\">Not set</span>.");
-                    }
+
                     htmlWriter.Write("\r\n</div>");
                 }
 

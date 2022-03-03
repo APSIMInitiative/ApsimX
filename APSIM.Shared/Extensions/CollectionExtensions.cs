@@ -23,6 +23,19 @@ namespace APSIM.Shared.Extensions.Collections
         }
 
         /// <summary>
+        /// Appndend a collection of items to another collection.
+        /// </summary>
+        /// <param name="collection">The collection.</param>
+        /// <param name="appendee">The collection to be appended.</param>
+        public static IEnumerable<T> AppendMany<T>(this IEnumerable<T> collection, IEnumerable<T> appendee)
+        {
+            foreach (T item in collection)
+                yield return item;
+            foreach (T item in appendee)
+                yield return item;
+        }
+
+        /// <summary>
         /// Dequeue a chunk of items from the front of a queue.
         /// </summary>
         /// <remarks>

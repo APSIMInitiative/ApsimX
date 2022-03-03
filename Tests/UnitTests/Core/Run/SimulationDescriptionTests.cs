@@ -243,7 +243,8 @@
                                 Thickness = new double[] { 1000 },
                                 NO3 = new double[] { 27 },
                                 OC = new double[] { 1.35 },
-                                SWUnits = Sample.SWUnitsEnum.Volumetric
+                                SWUnits = Sample.SWUnitsEnum.Volumetric,
+                                Name = "Sample2"
                             },
                             new CERESSoilTemperature(),
                         }

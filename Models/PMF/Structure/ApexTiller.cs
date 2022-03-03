@@ -5,7 +5,6 @@
     using Models.PMF.Interfaces;
 
     /// <summary>
-    /// # [Name]
     /// Calculate cohort populations using apex number
     /// </summary>
     [Serializable]

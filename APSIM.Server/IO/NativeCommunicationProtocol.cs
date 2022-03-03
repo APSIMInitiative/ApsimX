@@ -26,7 +26,9 @@ namespace APSIM.Server.IO
             Double = 1,
             Boolean = 2,
             Date = 3,
-            String = 4
+            String = 4,
+            IntArray = 5,
+            DoubleArray = 6,
         }
 
         private const string commandRun = "RUN";
@@ -81,24 +83,40 @@ namespace APSIM.Server.IO
         /// <param name="error">Error encountered by the command.</param>
         public void OnCommandFinished(ICommand command, Exception error = null)
         {
-            if (error == null)
+            try
             {
-                if (command is ReadCommand reader)
+                if (error == null)
                 {
-                    foreach (string param in reader.Parameters)
+                    // Need to check that ReadCommand columns all exist so that
+                    // we can send error instead of FIN if necessary.
+                    if (command is ReadCommand read)
+                        foreach (string param in read.Parameters)
+                            if (read.Result.Columns[param] == null)
+                                throw new Exception($"Column {param} does not exist in table {read.Result.TableName}");
+
+                    // Now send FIN - command has executed successfully.
+                    SendMessage(fin);
+
+                    // In the case of READ commands, we need to send through the results.
+                    if (command is ReadCommand reader)
                     {
-                        if (reader.Result.Columns[param] == null)
-                            throw new Exception($"Columns {param} does not exist in table {reader.Result.TableName}");
-                        Array data = reader.Result.AsEnumerable().Select(r => r[param]).ToArray();
-                        SendArray(data);
                         ValidateResponse(ReadString(), ack);
+                        foreach (string param in reader.Parameters)
+                        {
+                            Array data = reader.Result.AsEnumerable().Select(r => r[param]).ToArray();
+                            SendArray(data);
+                            ValidateResponse(ReadString(), ack);
+                        }
                     }
                 }
                 else
-                    SendMessage(fin);
+                    SendMessage(error.ToString());
             }
-            else
-                SendMessage(error.ToString());
+            catch (Exception err)
+            {
+                SendMessage(err.ToString());
+                throw;
+            }
         }
 
         /// <summary>
@@ -170,6 +188,8 @@ namespace APSIM.Server.IO
                     return ReadDate();
                 case ParamType.String:
                     return ReadString();
+                case ParamType.DoubleArray:
+                    return ReadDoubleArray();
                 default:
                     throw new NotImplementedException($"Unknown parameter type {type}");
             }
@@ -197,6 +217,17 @@ namespace APSIM.Server.IO
         {
             byte[] buffer = PipeUtilities.GetBytesFromPipe(connection);
             return BitConverter.ToDouble(buffer);
+        }
+
+        public double[] ReadDoubleArray()
+        {
+            byte[] buffer = PipeUtilities.GetBytesFromPipe(connection);
+            const int bytesPerNumber = sizeof(double) / sizeof(byte);
+            int length = buffer.Length / bytesPerNumber;
+            double[] result = new double[length];
+            for (int i = 0; i < length; i++)
+                result[i] = BitConverter.ToDouble(new ArraySegment<byte>(buffer, i * bytesPerNumber, bytesPerNumber));
+            return result;
         }
 
         public object ReadBool()

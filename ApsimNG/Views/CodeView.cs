@@ -1,5 +1,4 @@
-﻿#if NETCOREAPP
-namespace UserInterface.Views
+﻿namespace UserInterface.Views
 {
     using System;
     using System.Reflection;
@@ -15,6 +14,7 @@ namespace UserInterface.Views
     using Interfaces;
     using GtkSource;
     using Extensions;
+    using System.Text;
 
     /// <summary>
     /// This class provides an intellisense editor and has the option of syntax highlighting keywords.
@@ -26,6 +26,20 @@ namespace UserInterface.Views
     /// </remarks>
     public class EditorView : ViewBase, IEditorView
     {
+        /// <summary>
+        /// Default style for dark mode, used when the user has either
+        /// not selected a style, or has selected a style which cannot
+        /// be loaded.
+        /// </summary>
+        private const string defaultDarkStyle = "oblivion";
+
+        /// <summary>
+        /// Default style for light mode, used when the user has either
+        /// not selected a style, or has selected a style which cannot
+        /// be loaded.
+        /// </summary>
+        private const string defaultLightStyle = "Classic";
+
         /// <summary>
         /// The find-and-replace form
         /// </summary>
@@ -236,11 +250,6 @@ namespace UserInterface.Views
                 horizScrollPos = value.Width;
                 vertScrollPos = value.Height;
 
-                // Unfortunately, we often can't set the scroller adjustments immediately, as they may not have been set up yet
-                // We make these calls to set the position if we can, but otherwise we'll just hold on to the values until the scrollers are ready
-                Hadjustment_Changed(this, null);
-                Vadjustment_Changed(this, null);
-
                 // x is column, y is line number.
                 TextIter iter = textEditor.Buffer.GetIterAtLineOffset(value.Y, value.X);
                 textEditor.Buffer.PlaceCursor(iter);
@@ -340,26 +349,22 @@ namespace UserInterface.Views
             textEditor.FocusInEvent += OnTextBoxEnter;
             textEditor.FocusOutEvent += OnTextBoxLeave;
             textEditor.KeyPressEvent += OnKeyPress;
-            scroller.Hadjustment.Changed += Hadjustment_Changed;
-            scroller.Vadjustment.Changed += Vadjustment_Changed;
             mainWidget.Destroyed += _mainWidget_Destroyed;
 
             // Attempt to load a style scheme from the user settings.
             StyleScheme style = StyleSchemeManager.Default.GetScheme(Configuration.Settings.EditorStyleName);
             if (style == null)
             {
-                // If there's no style scheme specified in user settings (or if it's an unknown
-                // scheme), then fallback to adwaita, or adwaita-dark if dark mode is active.
-                if (Configuration.Settings.DarkTheme)
-                    style = StyleSchemeManager.Default.GetScheme("Adwaita-dark");
-                else
-                    style = StyleSchemeManager.Default.GetScheme("Adwaita");
+                string defaultStyle = Configuration.Settings.DarkTheme ? defaultDarkStyle : defaultLightStyle;
+                style = StyleSchemeManager.Default.GetScheme(defaultStyle);
             }
             if (style != null)
                 textEditor.Buffer.StyleScheme = style;
 
             AddContextActionWithAccel("Find", OnFind, "Ctrl+F");
             AddContextActionWithAccel("Replace", OnReplace, "Ctrl+H");
+            AddContextActionWithAccel("Undo", OnUndo, "Ctrl+Z");
+            AddContextActionWithAccel("Undo", OnRedo, "Ctrl+Y");
             AddMenuItem("Change Style", OnChangeStyle);
 
             textEditor.Realized += OnRealized;
@@ -407,8 +412,6 @@ namespace UserInterface.Views
                 textEditor.FocusInEvent -= OnTextBoxEnter;
                 textEditor.FocusOutEvent -= OnTextBoxLeave;
                 textEditor.KeyPressEvent -= OnKeyPress;
-                scroller.Hadjustment.Changed -= Hadjustment_Changed;
-                scroller.Vadjustment.Changed -= Vadjustment_Changed;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
 
                 // It's good practice to disconnect all event handlers, as it makes memory leaks
@@ -419,7 +422,7 @@ namespace UserInterface.Views
                 // This may break if Gtk# changes the way they implement event handlers.
                 textEditor.DetachAllHandlers();
                 accel.Dispose();
-                textEditor.Cleanup();
+                textEditor.Dispose();
                 textEditor = null;
                 owner = null;
             }
@@ -448,42 +451,9 @@ namespace UserInterface.Views
                     {
                         textEditor.Buffer.StyleScheme = styleChooser.StyleScheme;
                         Configuration.Settings.EditorStyleName = styleChooser.StyleScheme.Id;
+                        Configuration.Settings.Save();
                     }
                 }
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// The vertical position has changed
-        /// </summary>
-        /// <param name="sender">The sender object</param>
-        /// <param name="e">The event arguments</param>
-        private void Vadjustment_Changed(object sender, EventArgs e)
-        {
-            try
-            {
-                scroller.Vadjustment.SetValue(vertScrollPos);
-            }
-            catch (Exception err)
-            {
-                ShowError(err);
-            }
-        }
-
-        /// <summary>
-        /// The horizontal position has changed
-        /// </summary>
-        /// <param name="sender">The sender object</param>
-        /// <param name="e">The event arguments</param>
-        private void Hadjustment_Changed(object sender, EventArgs e)
-        {
-            try
-            {
-                scroller.Hadjustment.SetValue(horizScrollPos);
             }
             catch (Exception err)
             {
@@ -518,14 +488,23 @@ namespace UserInterface.Views
                     args.RetVal = true;
                     return;
                 }
-                char previousChar = 'x';
+
+                // If the user typed a period, we will need to ask the owner for
+                // completion items. However, if the user typed a period in the
+                // middle of a number (ie as a decimal separator), we don't want
+                // to trigger a completion request. Moreover, we need to check the
+                // entire previous word (not just the previous character). E.g.
+                // If the user types "123.", then we don't want to trigger a completion
+                // request. If the user types "Swim3.", then we *do* want to trigger
+                // a completion requests.
+                string previousWord = "";
                 if (textEditor.Buffer.CursorPosition > 0)
                 {
                     TextIter prevIter = textEditor.Buffer.GetIterAtOffset(textEditor.Buffer.CursorPosition - 1);
-                    previousChar = prevIter.Char.ToCharArray().FirstOrDefault();
+                    previousWord = GetPreviousWord(prevIter);
                 }
                 char keyChar = (char)Gdk.Keyval.ToUnicode(args.Event.KeyValue);
-                if (keyChar == '.' && !char.IsDigit(previousChar))
+                if (keyChar == '.' && !IsNumber(previousWord))
                 {
                     if (ContextItemsNeeded != null)
                     {
@@ -548,6 +527,34 @@ namespace UserInterface.Views
             {
                 ShowError(err);
             }
+        }
+
+        /// <summary>
+        /// Check if a string is a number.
+        /// </summary>
+        /// <param name="word">Any text.</param>
+        private bool IsNumber(string word)
+        {
+            return double.TryParse(word, NumberStyles.Any, CultureInfo.CurrentCulture, out _);
+        }
+
+        /// <summary>
+        /// Get the word which occurs immediately before the given location.
+        /// </summary>
+        /// <param name="iter">The location.</param>
+        private string GetPreviousWord(TextIter iter)
+        {
+            StringBuilder builder = new StringBuilder();
+            do
+            {
+                char previousChar = iter.Char.ToCharArray().FirstOrDefault();
+                if (char.IsWhiteSpace(previousChar) || previousChar == '.')
+                    break;
+                builder.Append(previousChar);
+            }
+            while (iter.BackwardChar());
+
+            return builder.ToString();
         }
 
         /// <summary>
@@ -886,7 +893,9 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// The Undo menu item handler
+        /// The Undo menu item handler. This overrides the global undo keyboard
+        /// shortcut which such that the SourceView widget receives the signal,
+        /// rather than the main menu context item handler.
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
@@ -894,8 +903,7 @@ namespace UserInterface.Views
         {
             try
             {
-                // tbi (do we even need this?)
-                //MiscActions.Undo(textEditor.TextArea.GetTextEditorData());
+                GLib.Signal.Emit(textEditor, "undo");
             }
             catch (Exception err)
             {
@@ -904,7 +912,9 @@ namespace UserInterface.Views
         }
 
         /// <summary>
-        /// The Redo menu item handler
+        /// The Redo menu item handler. This overrides the global redo keyboard
+        /// shortcut which such that the SourceView widget receives the signal,
+        /// rather than the main menu context item handler.
         /// </summary>
         /// <param name="sender">The sending object</param>
         /// <param name="e">The event arguments</param>
@@ -912,8 +922,7 @@ namespace UserInterface.Views
         {
             try
             {
-                // tbi (do we even need this?)
-                //MiscActions.Redo(textEditor.TextArea.GetTextEditorData());
+                GLib.Signal.Emit(textEditor, "redo");
             }
             catch (Exception err)
             {
@@ -975,6 +984,7 @@ namespace UserInterface.Views
                 }
 
                 Utility.Configuration.Settings.EditorStyleName = caption;
+                Configuration.Settings.Save();
                 //textEditor.Options.ColorScheme = caption;
                 textEditor.QueueDraw();
 
@@ -1006,4 +1016,3 @@ namespace UserInterface.Views
         #endregion
     }
 }
-#endif

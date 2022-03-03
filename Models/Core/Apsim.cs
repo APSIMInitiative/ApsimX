@@ -90,6 +90,9 @@
         /// <returns>True if child can be added.</returns>
         public static bool IsChildAllowable(object parent, Type childType)
         {
+            if (childType.IsInterface || childType.IsAbstract)
+                return false;
+
             if (childType == typeof(Simulations))
                 return false;
 

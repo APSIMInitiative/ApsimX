@@ -285,14 +285,11 @@
             //
             // fixme - need to rewrite this using GdkMonitor.
             // This must have always been broken on multi-monitor setups(?).
-#if NETFRAMEWORK
-            int xres = MainWindow.Screen.Width;
-            int yres = MainWindow.Screen.Height;
-#else
+
             Gdk.Rectangle workArea = Gdk.Display.Default.GetMonitorAtWindow(((ViewBase)MasterView).MainWidget.Window).Workarea;
             int xres = workArea.Right;
             int yres = workArea.Bottom;
-#endif
+
 
             if ((x + completionForm.WidthRequest) > xres)
                 // We are very close to the right-hand side of the screen
@@ -375,9 +372,9 @@
             completionView.KeyReleaseEvent -= OnKeyRelease;
 
             if (completionForm.IsRealized)
-                completionForm.Cleanup();
-            completionView.Cleanup();
-            completionForm.Cleanup();
+                completionForm.Dispose();
+            completionView.Dispose();
+            completionForm.Dispose();
             completionForm = null;
         }
 

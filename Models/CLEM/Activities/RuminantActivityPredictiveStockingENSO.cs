@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Utilities;
+using APSIM.Shared.Utilities;
 using Models.Core;
 using Models.CLEM.Resources;
 using System;
@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages ruminant stocking based on predicted seasonal outlooks. It requires a RuminantActivityBuySell to undertake the sales and removal of individuals.")]
+    [Description("Manage ruminant stocking based on predicted seasonal outlooks")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPredictiveStockingENSO.htm")]
     public class RuminantActivityPredictiveStockingENSO: CLEMRuminantActivityBase, IValidatableObject
@@ -166,7 +166,7 @@ namespace Models.CLEM.Activities
                 }
             }
             else
-                Summary.WriteError(this, String.Format("Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, this.Name));
+                Summary.WriteMessage(this, String.Format("Could not find ENSO-SOI datafile [x={0}] for [a={1}]", MonthlySOIFile, this.Name), MessageType.Error);
 
             this.InitialiseHerd(false, true);
 
@@ -257,11 +257,7 @@ namespace Models.CLEM.Activities
                     {
                         string warn = $"No pasture biomass to herd change proportion [Relationship] provided for {((forecastEnsoState== ENSOState.ElNino)? "El Niño":"La Niña")} phase in [a={this.Name}]\r\nNo stock management will be performed in this phase.";
                         this.Status = ActivityStatus.Warning;
-                        if (!Warnings.Exists(warn))
-                        {
-                            Summary.WriteWarning(this, warn);
-                            Warnings.Add(warn);
-                        } 
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                     }
 
                     if (herdChange> 1.0)
@@ -308,24 +304,19 @@ namespace Models.CLEM.Activities
             // This does not change the shortfall AE as they were not counted in TotalAE pressure.
             HerdResource.PurchaseIndividuals.RemoveAll(a => a.Location == paddockName);
 
-            var destockGroups = FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock);
+            var destockGroups = FindAllChildren<RuminantGroup>();
             if (!destockGroups.Any())
             {
-                string warn = $"No [f=FilterGroup]s with a [Destock] Reason were provided in [a={this.Name}]\r\nNo destocking will be performed.";
+                string warn = $"No [f=FilterGroup]s with were provided in [a={this.Name}]\r\nNo destocking will be performed.";
                 this.Status = ActivityStatus.Warning;
-                if (!Warnings.Exists(warn))
-                {
-                    Summary.WriteWarning(this, warn);
-                    Warnings.Add(warn);
-                }
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
             }
 
             foreach (var item in destockGroups)
             {
                 // works with current filtered herd to obey filtering.
-                var herd = CurrentHerd(false)
-                    .Where(a => a.Location == paddockName && !a.ReadyForSale)
-                    .FilterRuminants(item);
+                var herd = item.Filter(CurrentHerd(false))
+                    .Where(a => a.Location == paddockName && !a.ReadyForSale);
 
                 foreach (Ruminant ruminant in herd)
                 {
@@ -364,11 +355,7 @@ namespace Models.CLEM.Activities
                 {
                     string warn = $"No [f=SpecifyRuminant]s were provided in [a={this.Name}]\r\nNo restocking will be performed.";
                     this.Status = ActivityStatus.Warning;
-                    if (!Warnings.Exists(warn))
-                    {
-                        Summary.WriteWarning(this, warn);
-                        Warnings.Add(warn);
-                    }
+                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning);
                 }
 
                 // buy animals specified in restock ruminant groups
@@ -405,7 +392,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -464,9 +451,9 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("\r\n<div class=\"activitybannerlight\">Herd change</div>");
                 // Destock
                 htmlWriter.Write("\r\n<div class=\"activitycontentlight\">");
-                var rumGrps = FindAllChildren<RuminantGroup>().Where(a => a.Reason == RuminantStockGroupStyle.Destock);
+                var rumGrps = FindAllChildren<RuminantGroup>();
                 if (rumGrps.Count() == 0)
-                    htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"filterlink\">RuminantGroups</span> with Reason <span class=\"setvalue\">Destock</span> were provided</span>. No destocking will be performed</div>");
+                    htmlWriter.Write($"\r\n<div class=\"activityentry\"><span class=\"errorlink\">No <span class=\"filterlink\">RuminantGroups</span> were provided</span>. No destocking will be performed</div>");
                 else
                 {
                     extracomps = true;
@@ -497,7 +484,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryInnerClosingTags(bool formatForParentControl)
+        public override string ModelSummaryInnerClosingTags()
         {
             return "</div>";
         }

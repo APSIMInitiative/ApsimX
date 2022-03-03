@@ -2,12 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
-using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using System.IO;
 
@@ -22,7 +20,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs grazing of a specified herd and pasture (paddock) in the simulation.")]
+    [Description("Performs grazing of a specified herd and pasture (paddock)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
     class RuminantActivityGrazePastureHerd : CLEMRuminantActivityBase
@@ -363,7 +361,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

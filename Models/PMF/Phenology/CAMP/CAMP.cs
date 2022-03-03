@@ -104,12 +104,15 @@ namespace Models.PMF.Phen
         {
             if (camp.Params != null)
             {
-                double dBP = camp.dBP / 24;  //divide by 24 to make hourly
+                double dTt = camp.dHS / 24;  //divide by 24 to make hourly
                 double UdVrn1 = camp.Params.MaxDVrn1 * Math.Exp(k.Value() * dX);
                 if (dX < DeVernalisationTemp.Value())
-                    return UdVrn1 * dBP;
+                    return UdVrn1 * dTt;
                 else
-                    return DeVernalisationRate.Value();
+                {
+                    dTt = (dX - DeVernalisationTemp.Value())/24;
+                    return DeVernalisationRate.Value() * dTt;
+                }
             }
             else return 0.0;
         }
@@ -134,12 +137,6 @@ namespace Models.PMF.Phen
         IFunction tt = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
-        IFunction PTQ = null;
-
-        [Link(Type = LinkType.Child, ByName = true)]
-        IFunction haunStage = null;
-
-        [Link(Type = LinkType.Child, ByName = true)]
         IFunction DailyColdVrn1 = null;
 
         [Link(Type = LinkType.Child, ByName = true)]
@@ -160,48 +157,52 @@ namespace Models.PMF.Phen
         [Link(Type = LinkType.Ancestor, ByName = true)]
         Phenology phenology = null;
 
+        /// <summary>The ancestor CAMP model and some relations</summary>
+        [Link(Type = LinkType.Path, Path = "[Phenology].HaunStage")]
+        IFunction haunStage = null;
+
         /// <summary>
         /// Calculate delta of upregulation for photo period (Pp) sensitive genes
         /// </summary>
         /// <param name="baseUR">dVrn/HS below 8h Pp</param>
         /// <param name="maxUR">dVrn/HS above 16h Pp</param>
-        /// <param name="dBP">delta base phyllochron</param>
+        /// <param name="dTt">delta base phyllochron</param>
         /// <returns></returns>
-        private double CalcdPPVrn(double baseUR, double maxUR, double dBP)
+        private double CalcdPPVrn(double baseUR, double maxUR, double dTt)
         {
-            return (baseUR + (maxUR - baseUR) * PpResponse.Value()) * dBP;
+            return (baseUR + (maxUR - baseUR) * PpResponse.Value()) * dTt;
         }
 
         /// <summary>
         /// Calculate upregulation of base Vrn1
         /// </summary>
-        /// <param name="Tt">Thermal time</param>
-        /// <param name="dBP">delta haun stage</param>
+        /// <param name="dHS">delta haun stage</param>
         /// <param name="BaseDVrn1">delta Vrn1/BP at non-vernalising temperatures</param>
         /// <returns></returns>
-        private double CalcBaseUpRegVrn1(double Tt,double dBP, double BaseDVrn1)
+        private double CalcBaseUpRegVrn1(double dHS, double BaseDVrn1)
         {
-            if (Tt < 0)
+            if (this.dHS < 0)
                 BaseDVrn1 = 0;
-            return BaseDVrn1 * dBP;
+            return BaseDVrn1 * dHS;
         }
 
         /// <summary>
         /// Potential Upregulation of Vrn2 from long photoperiod.  Actual Vrn2 expression will be less than this because it is blocked by Vrn1
         /// </summary>
-        /// <param name="LPpBP">Long photoperiod Base Phyllochrons</param>
+        /// <param name="LPp">Long photoperiod hours</param>
         /// <param name="IpVrn2"> Initial potential Vrn2 at first experience of Pp > 8 (normally at emergence)</param>
         /// <param name="DpVrn2">Delta of potential Vrn2 in response to accumulation of LPpHS</param>
         /// <returns>delta ColdVrn1 representing the additional Vrn1 expression from cold upregulation</returns>
-        private double CalcpVrn2(double LPpBP, double IpVrn2, double DpVrn2)
+        private double CalcpVrn2(double LPp, double IpVrn2, double DpVrn2)
         {
-            if (LPpBP < 1)
+            double InitPhaseLength = 1.0;
+            if (LPp < InitPhaseLength)
             {
-                double InitSlope = (IpVrn2 + DpVrn2) / 1;
-                return LPpBP * InitSlope;
+                double InitSlope = (IpVrn2 + DpVrn2) / InitPhaseLength;
+                return LPp * InitSlope;
             }
             else
-                return IpVrn2 + LPpBP * DpVrn2;
+                return IpVrn2 + LPp * DpVrn2;
         }
 
         /// <summary>
@@ -215,16 +216,6 @@ namespace Models.PMF.Phen
         public double calcTSHS(double FLN, double IntFLNvsTSHS)
         {
             return (FLN - IntFLNvsTSHS) / 1.1;
-        }
-
-        ///<summary>Calculate the daily Base Phyllochron increment</summary>
-        public double CalcdBP(double Tt, double PTQ)
-        {
-            double maxLAR = phenology.FindChild<IFunction>("MaxLAR").Value();
-            double minLAR = phenology.FindChild<IFunction>("MinLAR").Value();
-            double PTQhf = phenology.FindChild<IFunction>("PTQhf").Value();
-            LARPTQmodel LARmodel = phenology.FindChild<LARPTQmodel>("LARPTQmodel");
-            return Tt * LARmodel.CalculateLAR(PTQ, maxLAR, minLAR, PTQhf);
         }
 
         // Class constants, assumed the same for all cultivars
@@ -260,7 +251,7 @@ namespace Models.PMF.Phen
         [JsonIgnore] public bool IsVernalised { get { return isVernalised; }}
 
         /// <summary>Long photoperiod Haunstage accumulation.</summary>
-        [JsonIgnore] public double LPpBP { get; private set; }
+        [JsonIgnore] public double LPp { get; private set; }
 
         /// Vrn gene expression state variables
         /// <summary>The current expression of Vrn1 upregulated at base rate.  
@@ -302,7 +293,7 @@ namespace Models.PMF.Phen
         [JsonIgnore] public double VrnX { get; private set; }
         /// <summary>Long photoperiod dHS equal dHS at Pp > 16 and is a decreasing proporiton of dHS
         /// as Pp decreases reaching zero at 8hPp </summary>
-        [JsonIgnore] public double dLPpBP { get; set; }
+        [JsonIgnore] public double dLPp { get; set; }
         /// <summary>daily delta upregulation of BaseVrn1</summary>
         [JsonIgnore] public double dBaseVrn1 { get; set; }
         /// <summary>daily delta upregulation of ColdVrn1</summary>
@@ -317,7 +308,7 @@ namespace Models.PMF.Phen
         [JsonIgnore] public double dVrnX { get; set; }
 
         /// <summary>daily delta Haun stage, proxy for tt and should be refactored out</summary>
-        [JsonIgnore] public double dBP { get; set; }
+        [JsonIgnore] public double dHS { get; set; }
 
         /// Leaf number variables
         /// <summary>Haun stage of Vernalisation saturation</summary>
@@ -336,6 +327,17 @@ namespace Models.PMF.Phen
         /// <summary>Vernalisation rate parameters for current cultivar</summary>
         [JsonIgnore] public CultivarRateParams Params { get; set; }
 
+        /// <summary>The ancestor CAMP model and some relations</summary>
+        [Link(Type = LinkType.Path, Path = "[Phenology].Phyllochron.BasePhyllochron")]
+        IFunction basePhyllochron = null;
+
+        //[Link(Type = LinkType.Path, Path = "[Phenology].PhyllochronPpSensitivity")]
+        //IFunction phylloPpSens = null;
+
+        [Link(Type = LinkType.Path, Path = "[Phenology].HaunStage.Delta")]
+        IFunction DHS = null;
+
+
         [EventSubscribe("PrePhenology")]
         private void OnPrePhenology(object sender, EventArgs e)
         {
@@ -350,23 +352,23 @@ namespace Models.PMF.Phen
                     double EmergeDurationFactor = 1.0;
                     if (phenology.AccumulatedTT > 90) //Calculate EmergenceDurationFactor to slow accumulation of BP if emergence is taking a long time.  This slows Vrn1 expression under slow emergence and strange responses to delayed sowing
                         EmergeDurationFactor = Math.Exp(-0.015 * (phenology.AccumulatedTT - 90));
-                    dBP = CalcdBP(tt.Value(), 1) * EmergeDurationFactor;
-                    dLPpBP = 0;
+                    dHS = tt.Value() / basePhyllochron.Value() * EmergeDurationFactor;
+                    dLPp = 0;
                 }
                 else
                 { // Crop emerged
-                    dBP = CalcdBP(tt.Value(), PTQ.Value());
-                    // Calculate delta long photoperiod haunstage
-                    dLPpBP = dBP * PpResponse.Value() * PropnOfDay;
+                    dHS = DHS.Value();
+                    // Calculate delta long photoperiod thermal time
+                    dLPp = dHS * PpResponse.Value() * PropnOfDay;
                 }
 
-                LPpBP += dLPpBP;
+                LPp += dLPp;
 
                 // Calculate Vrn gene expression
                 if (isVernalised == false) // do vernalisation calculations if crop not yet vernalised
                 {
                     VSHS = haunStage.Value();
-                    dBaseVrn1 = CalcBaseUpRegVrn1(tt.Value(), dBP, Params.BaseDVrn1);
+                    dBaseVrn1 = CalcBaseUpRegVrn1(dHS, Params.BaseDVrn1);
                     dColdVrn1 = DailyColdVrn1.Value();
                     ColdVrn1 = Math.Max(0.0, ColdVrn1 + dColdVrn1);
 
@@ -388,9 +390,9 @@ namespace Models.PMF.Phen
                     {
                         if (MethColdVrn1 == 0.0)  // VrnX expression only occurs if no methalation of Vrn1 has occured
                         {
-                            dVrnX = CalcdPPVrn(BaseDVrnX, Params.MaxDVrnX, dBP);
+                            dVrnX = CalcdPPVrn(BaseDVrnX, Params.MaxDVrnX, dHS);
                         }
-                        pVrn2 = CalcpVrn2(LPpBP, Params.MaxIpVrn2, Params.MaxDpVrn2);
+                        pVrn2 = CalcpVrn2(LPp, Params.MaxIpVrn2, Params.MaxDpVrn2);
                     }
                 }
 
@@ -414,7 +416,7 @@ namespace Models.PMF.Phen
                     
                 // Then work out Vrn3 expression
                 if ((isVernalised == true) && (isReproductive == false))
-                dVrn3 = CalcdPPVrn(Params.BaseDVrn3, Params.MaxDVrn3, dBP);
+                dVrn3 = CalcdPPVrn(Params.BaseDVrn3, Params.MaxDVrn3, dHS);
                 Vrn3 = Math.Min(1.0, Vrn3 + dVrn3);
 
                 // Then work out phase progression based on Vrn expression
@@ -456,21 +458,20 @@ namespace Models.PMF.Phen
         {
             Reset();
             Params = calcCAMPVrnRates.CalcCultivarParams(FLNparams, EnvData);
-            summary.WriteMessage(this, "The following FLN parameters were used for " + data.Cultivar);
-            summary.WriteMessage(this, "FLN LV = " + FLNparams.LV.ToString());
-            summary.WriteMessage(this, "FLN SV = " + FLNparams.SV.ToString());
-            summary.WriteMessage(this, "FLN LN = " + FLNparams.LN.ToString());
-            summary.WriteMessage(this, "FLN SN = " + FLNparams.SN.ToString());
-            summary.WriteMessage(this, "The following Vrn expression rate parameters have been calculated" );
-            summary.WriteMessage(this, "BaseDVrn1 = " + Params.BaseDVrn1.ToString());
-            summary.WriteMessage(this, "MaxDVrn1  = " + Params.MaxDVrn1.ToString());
-            summary.WriteMessage(this, "MaxIpVrn2 = " + Params.MaxIpVrn2.ToString());
-            summary.WriteMessage(this, "MaxDpVrn2 = " + Params.MaxDpVrn2.ToString());
-            summary.WriteMessage(this, "BaseDVrn3 = " + Params.BaseDVrn3.ToString());
-            summary.WriteMessage(this, "MaxDVrn3  = " + Params.MaxDVrn3.ToString());
-            summary.WriteMessage(this, "MaxDVrnX  = " + Params.MaxDVrnX.ToString());
-            summary.WriteMessage(this, "BasePhyllochron  = " + Params.BasePhyllochron.ToString());
-            summary.WriteMessage(this, "IntFLNvsTSHS     = " + Params.IntFLNvsTSHS.ToString());
+            summary.WriteMessage(this, "The following FLN parameters were used for " + data.Cultivar, MessageType.Diagnostic);
+            summary.WriteMessage(this, "FLN LV = " + FLNparams.LV.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "FLN SV = " + FLNparams.SV.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "FLN LN = " + FLNparams.LN.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "FLN SN = " + FLNparams.SN.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "The following Vrn expression rate parameters have been calculated", MessageType.Diagnostic);
+            summary.WriteMessage(this, "BaseDVrn1 = " + Params.BaseDVrn1.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "MaxDVrn1  = " + Params.MaxDVrn1.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "MaxIpVrn2 = " + Params.MaxIpVrn2.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "MaxDpVrn2 = " + Params.MaxDpVrn2.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "BaseDVrn3 = " + Params.BaseDVrn3.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "MaxDVrn3  = " + Params.MaxDVrn3.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "MaxDVrnX  = " + Params.MaxDVrnX.ToString(), MessageType.Diagnostic);
+            summary.WriteMessage(this, "IntFLNvsTSHS     = " + Params.IntFLNvsTSHS.ToString(), MessageType.Diagnostic);
         }
 
         /// <summary>
@@ -507,7 +508,7 @@ namespace Models.PMF.Phen
         }
         private void ZeroDeltas()
         {
-            dBP = 0;
+            dHS = 0;
             dBaseVrn1 = 0;
             dColdVrn1 = 0;
             dMethColdVrn1 = 0;

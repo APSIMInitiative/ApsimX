@@ -116,5 +116,14 @@
 
         /// <summary> Gets or sets the diffuse radiation fraction. If not specified in the weather file the default is 1010 hPa. </summary>
         public double DayLength { get; set; }
+
+        /// <summary>Daily co2 level.</summary>
+        public double CO2 { get; set; }
+
+        /// <summary>
+        /// Raw data straight from the met file. This can be used to access
+        /// non-standard variables which aren't auto-mapped to properties.
+        /// </summary>
+        public object[] Raw { get; set; }
     }
 }

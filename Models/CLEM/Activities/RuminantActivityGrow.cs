@@ -15,7 +15,7 @@ namespace Models.CLEM.Activities
     /// <summary>Ruminant growth activity</summary>
     /// <summary>This activity determines potential intake for the Feeding activities and feeding arbitrator for all ruminants</summary>
     /// <summary>This activity includes deaths</summary>
-    /// <summary>See Breed activity for births, calf mortality etc</summary>
+    /// <summary>See Breed activity for births, suckling mortality etc</summary>
     /// <version>1.1</version>
     /// <updates>First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs the growth and aging of all ruminants. Only one instance of this activity is permitted.")]
+    [Description("Performs growth and aging of all ruminants. Only one instance of this activity is permitted")]
     [Version(1, 0, 3, "Allows selection of methane store for emissions")]
     [Version(1, 0, 2, "Improved reporting of milk status")]
     [Version(1, 0, 1, "")]
@@ -102,9 +102,9 @@ namespace Models.CLEM.Activities
                 if (ind.Age >= weaningAge)
                 {
                     ind.Wean(true, "Natural");
-                    if (ind.Mother != null)
-                        // report conception status changed when offspring weans.
-                        ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, clock.Today));
+
+                    // report wean. If mother has died create temp female with the mother's ID for reporting only
+                    ind.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, -1, 999) { ID = ind.MotherID }, clock.Today, ind));
                 }
             }
         }
@@ -120,8 +120,6 @@ namespace Models.CLEM.Activities
             // Calculate potential intake and reset stores
             // Order age descending so breeder females calculate milkproduction before suckings grow
 
-            DateTime start = DateTime.Now;
-
             foreach (var ind in herd.GroupBy(a => a.Weaned).OrderByDescending(a => a.Key))
             {
                 foreach (var indi in ind)
@@ -134,8 +132,6 @@ namespace Models.CLEM.Activities
                     CalculatePotentialIntake(indi);
                 }
             }
-
-            var diff = DateTime.Now - start;
         }
 
         private void CalculatePotentialIntake(Ruminant ind)
@@ -165,7 +161,7 @@ namespace Models.CLEM.Activities
                 // this will be updated to the corrected milk available in the calculate energy section.
                 ind.MilkIntake = Math.Min(ind.MilkPotentialIntake, ind.MothersMilkProductionAvailable);
 
-                // if milk supply low, calf will subsitute forage up to a specified % of bodyweight (R_C60)
+                // if milk supply low, suckling will subsitute forage up to a specified % of bodyweight (R_C60)
                 if (ind.MilkIntake < ind.Weight * ind.BreedParams.MilkLWTFodderSubstitutionProportion)
                     potentialIntake = Math.Max(0.0, ind.Weight * ind.BreedParams.MaxJuvenileIntake - ind.MilkIntake * ind.BreedParams.ProportionalDiscountDueToMilk);
 
@@ -187,7 +183,7 @@ namespace Models.CLEM.Activities
                     potentialIntake = ind.BreedParams.IntakeCoefficient * liveWeightForIntake * (ind.BreedParams.IntakeIntercept - liveWeightForIntake / standardReferenceWeight);
                 }
 
-                if (ind.Gender == Sex.Female)
+                if (ind.Sex == Sex.Female)
                 {
                     RuminantFemale femaleind = ind as RuminantFemale;
                     // Increase potential intake for lactating breeder
@@ -375,22 +371,14 @@ namespace Models.CLEM.Activities
                 if (unfed > 0)
                 {
                     string warn = $"individuals of [r={breed}] not fed";
-                    if (!Warnings.Exists(warn))
-                    {
-                        string warnfull = $"Some individuals of [r={breed}] were not fed in some months (e.g. [{unfed}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
-                        Summary.WriteWarning(this, warnfull);
-                        Warnings.Add(warn);
-                    }
+                    string warnfull = $"Some individuals of [r={breed}] were not fed in some months (e.g. [{unfed}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check feeding strategy and ensure animals are moved to pasture or fed in yards";
+                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
                 }
                 if (unfedcalves > 0)
                 {
                     string warn = $"calves of [r={breed}] not fed";
-                    if (!Warnings.Exists(warn))
-                    {
-                        string warnfull = $"Some calves of [r={breed}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
-                        Summary.WriteWarning(this, warnfull);
-                        Warnings.Add(warn);
-                    }
+                    string warnfull = $"Some calves of [r={breed}] were not fed in some months (e.g. [{unfedcalves}] individuals in [{clock.Today.Month}/{clock.Today.Year}])\r\nFix: Check calves are are fed, or have access to pasture (moved with mothers or separately) when no milk is available from mother";
+                    Warnings.CheckAndWrite(warn, Summary, this, MessageType.Warning, warnfull);
                 }
 
                 if (methaneEmissions != null)
@@ -435,7 +423,7 @@ namespace Models.CLEM.Activities
             // Sme 1 for females and castrates
             double sme = 1;
             // Sme 1.15 for all non-castrated males.
-            if (ind.Weaned && ind.Gender == Sex.Male && (ind as RuminantMale).IsCastrated == false)
+            if (ind.Weaned && ind.Sex == Sex.Male && (ind as RuminantMale).IsCastrated == false)
                 sme = 1.15;
 
             double energyDiet = EnergyGross * ind.DietDryMatterDigestibility / 100.0;
@@ -470,7 +458,7 @@ namespace Models.CLEM.Activities
                     kgl = ((ind.MilkIntake * 0.7) + (intakeDaily * kg)) / (ind.MilkIntake + intakeDaily);
                 }
                 double energyMilkConsumed = ind.MilkIntake * 3.2;
-                // limit calf intake of milk per day
+                // limit suckling intake of milk per day
                 energyMilkConsumed = Math.Min(ind.BreedParams.MilkIntakeMaximum * 3.2, energyMilkConsumed);
 
                 energyMaintenance = (ind.BreedParams.EMaintCoefficient * Math.Pow(ind.Weight, 0.75) / kml) * Math.Exp(-ind.BreedParams.EMaintExponent * (((ind.Age == 0) ? 0.1 : ind.Age)));
@@ -496,7 +484,7 @@ namespace Models.CLEM.Activities
                 double energyMilk = 0;
                 double energyFetus = 0;
 
-                if (ind.Gender == Sex.Female)
+                if (ind.Sex == Sex.Female)
                 {
                     RuminantFemale femaleind = ind as RuminantFemale;
 
@@ -647,20 +635,20 @@ namespace Models.CLEM.Activities
 
             // TODO: separate foster from real mother for genetics
             // check for death of mother with sucklings and try foster sucklings
-            IEnumerable<RuminantFemale> mothersWithCalf = died.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Count() > 0);
+            IEnumerable<RuminantFemale> mothersWithSuckling = died.OfType<RuminantFemale>().Where(a => a.SucklingOffspringList.Any());
             List<RuminantFemale> wetMothersAvailable = died.OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count() == 0).OrderBy(a => a.DaysLactating).ToList();
             int wetMothersAssigned = 0;
             if (wetMothersAvailable.Any())
             {
-                if(mothersWithCalf.Any())
+                if(mothersWithSuckling.Any())
                 {
-                    foreach (var deadMother in mothersWithCalf)
+                    foreach (var deadMother in mothersWithSuckling)
                     {
-                        foreach (var calf in deadMother.SucklingOffspringList)
+                        foreach (var suckling in deadMother.SucklingOffspringList)
                         {
-                            if(wetMothersAssigned < wetMothersAvailable.Count())
+                            if(wetMothersAssigned < wetMothersAvailable.Count)
                             {
-                                calf.Mother = wetMothersAvailable[wetMothersAssigned];
+                                suckling.Mother = wetMothersAvailable[wetMothersAssigned];
                                 wetMothersAssigned++;
                             }
                             else
@@ -677,7 +665,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

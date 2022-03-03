@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using System;
@@ -18,15 +18,12 @@ namespace Models.CLEM.Activities
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
-    [Description("This is a crop task (e.g. sowing) with associated costs and labour requirements.")]
+    [Description("A crop task (e.g. sowing) with associated costs and labour requirements.")]
     [Version(1, 0, 2, "Added per unit of land as labour unit type")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Crop/CropTask.htm")]
     public class CropActivityTask: CLEMActivityBase, IValidatableObject
     {
-        [Link]
-        private Clock Clock = null;
-
         private string relatesToResourceName = "";
         private bool timingIssueReported = false;
 
@@ -60,23 +57,21 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMGetResourcesRequired")]
         private void OnGetResourcesRequired(object sender, EventArgs e)
         {
-            // if first step of parent rotation
-            // and timer failed because of harvest data
-            int start = FindAncestor<CropActivityManageProduct>().FirstTimeStepOfRotation;
-            if (Clock.Today.Year * 100 + Clock.Today.Month == start)
+            if (TimingOK)
             {
-                // check if it can only occur before this rotation started
-                ActivityTimerCropHarvest chtimer = this.FindAllChildren<ActivityTimerCropHarvest>().FirstOrDefault();
-                if (chtimer != null)
+                if (FindAncestor<CropActivityManageProduct>().CurrentlyManaged)
+                    Status = ActivityStatus.Success;
+                else
                 {
-                    if (chtimer.ActivityPast)
+                    Status = ActivityStatus.Warning;
+                    foreach (var child in FindAllChildren<CLEMActivityBase>())
                     {
-                        this.Status = ActivityStatus.Warning;
-                        if (!timingIssueReported)
-                        {
-                            Summary.WriteWarning(this, $"The harvest timer for crop task [a={this.Name}] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.");
-                            timingIssueReported = true;
-                        }
+                        child.Status = ActivityStatus.Warning;
+                    }
+                    if (!timingIssueReported)
+                    {
+                        Summary.WriteMessage(this, $"The harvest timer for crop task [a={this.NameWithParent}] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.", MessageType.Warning);
+                        timingIssueReported = true;
                     }
                 }
             }
@@ -181,7 +176,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

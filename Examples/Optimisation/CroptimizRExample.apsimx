@@ -7,8 +7,8 @@
   "Children": [
     {
       "$type": "Models.Memo, Models",
-      "Text": "**An example of optimisation using the Simplex method in CroptimizR**\r\n\r\nThis example of the CroptimizR is optimising the sowing date and initial soil nitrate levels for an experiment containing 6 six fertiliser N rates.\r\nThe initial nitrate levels were extremely low in this experiment, and the sowing date was 17th of June (Day 168).\r\n\r\n*NOTE: The tolerance and maximum number of iterations have been set to reduce execution time of this simple example.  The user should decrease the tolerance, and increase the number of iterations for a more realistic use of the optimiser for this example.*",
-      "Name": "Memo",
+      "Text": "**An example of optimisation using the Simplex method in CroptimizR**\n\nPlease read the [instructions on the website](https://apsimnextgeneration.netlify.app/usage/croptimizr/). Specifically, docker must be installed.\r\n\r\nThis example of the CroptimizR is optimising the sowing date and initial soil nitrate levels for an experiment containing 6 six fertiliser N rates.\r\nThe initial nitrate levels were extremely low in this experiment, and the sowing date was 17th of June (Day 168).\r\n\r\n*NOTE: The tolerance and maximum number of iterations have been set to reduce execution time of this simple example.  The user should decrease the tolerance, and increase the number of iterations for a more realistic use of the optimiser for this example.*",
+      "Name": "README",
       "Children": [],
       "IncludeInDocumentation": true,
       "Enabled": true,
@@ -2156,7 +2156,7 @@
         {
           "$type": "Models.PostSimulationTools.ExcelInput, Models",
           "FileNames": [
-            "%root%\\Examples\\Optimisation\\ObservedExample.xlsx"
+            "ObservedExample.xlsx"
           ],
           "SheetNames": [
             "Observed"
@@ -2384,7 +2384,7 @@
                 {
                   "$type": "Models.Climate.Weather, Models",
                   "ConstantsFile": null,
-                  "FileName": "%root%\\Examples\\Optimisation\\APS6.met",
+                  "FileName": "APS6.met",
                   "ExcelWorkSheetName": null,
                   "Name": "Weather",
                   "Children": [],

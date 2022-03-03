@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using APSIM.Interop.Drawing;
 
 namespace UserInterface.Views
 {
@@ -471,29 +472,24 @@ namespace UserInterface.Views
                     if (text == null)
                         text = string.Empty;
 
-                    cr.Rectangle(cellBounds.ToClippedRectangle(Width-20, Height));
+                    cr.Rectangle(cellBounds.Clip(Width-20, Height).ToRectangle());
                     cr.Clip();
 
                     cr.SetLineWidth(lineWidth);
 
-                    cr.Rectangle(cellBounds);
+                    cr.Rectangle(cellBounds.ToRectangle());
                     if (CellPainter.PaintCell(columnIndex, rowIndex))
                     {
                         // Draw the filled in cell.
-#if NETCOREAPP
+
                         cr.State = CellPainter.GetCellState(columnIndex, rowIndex);
                         cr.DrawFilledRectangle(cellBounds.Left, cellBounds.Top, cellBounds.Width-5, cellBounds.Height-5);
-#else
-                        cr.SetColour(CellPainter.GetBackgroundColour(columnIndex, rowIndex));
-                        cr.DrawFilledRectangle();
-                        cr.SetColour(CellPainter.GetForegroundColour(columnIndex, rowIndex));
 
-#endif
 
                         // Draw cell outline.
                         if (ShowLines)
                         {
-                            cr.Rectangle(cellBounds);
+                            cr.Rectangle(cellBounds.ToRectangle());
                             cr.Stroke();
                         }
 

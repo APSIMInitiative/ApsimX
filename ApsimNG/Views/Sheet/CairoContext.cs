@@ -1,17 +1,26 @@
 ﻿using Cairo;
+using Gtk;
+using Utility;
+using APSIM.Interop.Drawing;
+using Rectangle = System.Drawing.Rectangle;
 
 namespace UserInterface.Views
 {
     internal class CairoContext : IDrawContext
     {
         private Context cr;
-        private SheetWidget sheetWidget;
+        private Widget layoutGenerator;
         private States state;
 
-        public CairoContext(Context cr, SheetWidget sheetWidget)
+        /// <summary>
+        /// Create a new <see cref="CairoContext"/> instance.
+        /// </summary>
+        /// <param name="cr">The cairo context.</param>
+        /// <param name="layoutGenerator">A gtk widget which can be used to create text layouts.</param>
+        public CairoContext(Context cr, Widget layoutGenerator)
         {
             this.cr = cr;
-            this.sheetWidget = sheetWidget;
+            this.layoutGenerator = layoutGenerator;
         }
 
         public void SetLineWidth(double lineWidth)
@@ -28,33 +37,24 @@ namespace UserInterface.Views
             set
             {
                 state = value;
-#if NETCOREAPP
-                if (state == States.Insensitive)
-                    sheetWidget.StyleContext.State = Gtk.StateFlags.Insensitive;
-                else if (state == States.Selected)
-                    sheetWidget.StyleContext.State = Gtk.StateFlags.Selected;
-                else
-                    sheetWidget.StyleContext.State = Gtk.StateFlags.Normal;
-                var c = sheetWidget.StyleContext.GetColor(sheetWidget.StyleContext.State);
-                cr.SetSourceColor(new Cairo.Color(c.Red, c.Green, c.Blue, c.Alpha));
-#endif
-            }
-        }
 
-        /// <summary>
-        /// Set the current colour.
-        /// </summary>
-        /// <param name="colour"></param>
-        public void SetColour((int Red, int Green, int Blue) colour)
-        {
-            cr.SetSourceColor(new Cairo.Color(colour.Red/255.0, colour.Green/255.0, colour.Blue/255.0));
+                if (state == States.Insensitive)
+                    layoutGenerator.StyleContext.State = Gtk.StateFlags.Insensitive;
+                else if (state == States.Selected)
+                    layoutGenerator.StyleContext.State = Gtk.StateFlags.Selected;
+                else
+                    layoutGenerator.StyleContext.State = Gtk.StateFlags.Normal;
+                var c = layoutGenerator.StyleContext.GetColor(layoutGenerator.StyleContext.State);
+                cr.SetSourceColor(new Cairo.Color(c.Red, c.Green, c.Blue, c.Alpha));
+
+            }
         }
 
         public void DrawFilledRectangle(int left, int top, int width, int height)
         {
-#if NETCOREAPP
-            sheetWidget.StyleContext.RenderBackground(cr, left, top, width, height);
-#endif
+
+            layoutGenerator.StyleContext.RenderBackground(cr, left, top, width, height);
+
         }
 
         public void DrawFilledRectangle()
@@ -72,7 +72,7 @@ namespace UserInterface.Views
             Pango.CairoHelper.ShowLayout(cr, CreateTextLayout(text, bold, italics));
         }
 
-        public (int Left, int Right, int Width, int Height) GetPixelExtents(string text, bool bold, bool italics)
+        public (int Left, int Top, int Width, int Height) GetPixelExtents(string text, bool bold, bool italics)
         {
             var layout = CreateTextLayout(text, bold, italics);
             layout.GetPixelExtents(out Pango.Rectangle inkRectangle, out Pango.Rectangle logicalRectangle);
@@ -84,9 +84,9 @@ namespace UserInterface.Views
             cr.MoveTo(x, y);
         }
 
-        public void Rectangle(CellBounds rectangle)
+        public void Rectangle(Rectangle rectangle)
         {
-            cr.Rectangle(rectangle.Left, rectangle.Top, rectangle.Width, rectangle.Height);
+            cr.Rectangle(rectangle.X, rectangle.Y, rectangle.Width, rectangle.Height);
         }
 
         public void ResetClip()
@@ -101,13 +101,64 @@ namespace UserInterface.Views
 
         private Pango.Layout CreateTextLayout(string text, bool bold, bool italics)
         {
-            var layout = sheetWidget.CreatePangoLayout(text);
+            var layout = layoutGenerator.CreatePangoLayout(text);
             layout.FontDescription = new Pango.FontDescription();
             if (italics)
                 layout.FontDescription.Style = Pango.Style.Italic;
             if (bold)
                 layout.FontDescription.Weight = Pango.Weight.Bold;
             return layout;
+        }
+
+        public void SetColour(System.Drawing.Color color)
+        {
+            cr.SetSourceColor(color.ToCairo());
+        }
+
+        public void NewPath()
+        {
+            cr.NewPath();
+        }
+
+        public void CurveTo(double x0, double y0, double x1, double y1, double x2, double y2)
+        {
+            cr.CurveTo(x0, y0, x1, y1, x2, y2);
+        }
+
+        public void LineTo(double x, double y)
+        {
+            cr.LineTo(x, y);
+        }
+
+        public void Arc(double xc, double yc, double radius, double angle1, double angle2)
+        {
+            cr.Arc(xc, yc, radius, angle1, angle2);
+        }
+
+        public void StrokePreserve()
+        {
+            cr.StrokePreserve();
+        }
+
+        public void Fill()
+        {
+            cr.Fill();
+        }
+
+        public void SetFontSize(double size)
+        {
+            cr.SetFontSize(size);
+        }
+
+        public Rectangle GetTextExtents(string text)
+        {
+            TextExtents extents = cr.TextExtents(text);
+            return new Rectangle((int)extents.XBearing, (int)extents.YBearing, (int)extents.Width, (int)extents.Height);
+        }
+
+        public void ShowText(string text)
+        {
+            cr.ShowText(text);
         }
     }
 }

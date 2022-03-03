@@ -1,12 +1,10 @@
 ﻿using Models.Core;
-using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Models.Core.Attributes;
 using System.IO;
 
@@ -19,7 +17,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs milking based upon the current herd filtering.")]
+    [Description("Perform milking of lactating breeders")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMilking.htm")]
     public class RuminantActivityMilking: CLEMRuminantActivityBase
@@ -96,7 +94,6 @@ namespace Models.CLEM.Activities
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             IEnumerable<RuminantFemale> herd = this.CurrentHerd(true).OfType<RuminantFemale>().Where(a => a.IsLactating & a.SucklingOffspringList.Count() == 0);
-            int head = herd.Count();
             double daysNeeded = 0;
             switch (requirement.UnitType)
             {
@@ -104,6 +101,7 @@ namespace Models.CLEM.Activities
                     daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHead:
+                    int head = herd.Count();
                     double numberUnits = head / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
                         numberUnits = Math.Ceiling(numberUnits);
@@ -119,7 +117,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

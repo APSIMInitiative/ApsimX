@@ -1,4 +1,4 @@
-﻿using APSIM.Shared.Utilities;
+using APSIM.Shared.Utilities;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -14,6 +14,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Reporting
 {
@@ -26,24 +27,18 @@ namespace Models.CLEM.Reporting
     [ValidParent(ParentType = typeof(ZoneCLEM))]
     [ValidParent(ParentType = typeof(CLEMFolder))]
     [ValidParent(ParentType = typeof(Folder))]
-    [Description("This report automatically generates a ledger of all shortfalls in CLEM Resource requests.")]
+    [Description("This report automatically generates a ledger of resource transactions")]
     [Version(1, 0, 4, "Report style property allows Type and Amount transaction reporting")]
     [Version(1, 0, 3, "Now includes Category and RelatesTo fields for grouping in analysis.")]
     [Version(1, 0, 2, "Updated to enable ResourceUnitsConverter to be used.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/Ledgers.htm")]
-    public class ReportResourceLedger : Models.Report
+    public class ReportResourceLedger : Models.Report, ICLEMUI
     {
         [Link]
         private ResourcesHolder resources = null;
         [Link]
         private ISummary summary = null;
-
-        /// <summary>
-        /// Style of transaction report to use
-        /// </summary>
-        [Description("Style of report")]
-        public ReportTransactionStyle ReportStyle { get; set; }
 
         /// <summary>
         /// Gets or sets report groups for outputting
@@ -55,10 +50,18 @@ namespace Models.CLEM.Reporting
         public string ResourceGroupsToReport { get; set; }
 
         /// <summary>
+        /// Style of transaction report to use
+        /// </summary>
+        [Description("Style of report")]
+        [Category("General", "Resources")]
+        public ReportTransactionStyle ReportStyle { get; set; }
+
+        /// <summary>
         /// Report all losses as -ve values
         /// </summary>
         [Summary]
         [Description("Report losses as negative")]
+        [Category("General", "Extras")]
         public bool ReportLossesAsNegative { get; set; }
 
         /// <summary>
@@ -66,14 +69,27 @@ namespace Models.CLEM.Reporting
         /// </summary>
         [Summary]
         [Description("Include resource pricing")]
+        [Category("General", "Extras")]
         public bool IncludePrice { get; set; }
+
+        /// <summary>
+        /// Include financial year
+        /// </summary>
+        [Summary]
+        [Description("Include financial year")]
+        [Category("General", "Extras")]
+        public bool IncludeFinancialYear { get; set; }
 
         /// <summary>
         /// Include unit conversion if available
         /// </summary>
         [Summary]
         [Description("Include all unit conversions")]
+        [Category("General", "Extras")]
         public bool IncludeConversions { get; set; }
+
+        /// <inheritdoc/>
+        public string SelectedTab { get; set; }
 
         /// <summary>An event handler to allow us to initialize ourselves.</summary>
         /// <param name="sender">Event sender</param>
@@ -94,15 +110,22 @@ namespace Models.CLEM.Reporting
             {
                 "[Clock].Today as Date"
             };
+            if(IncludeFinancialYear)
+            {
+                Finance financeStore = resources.FindResourceGroup<Finance>();
+                if (financeStore != null)
+                    variableNames.Add($"[Resources].{financeStore.Name}.FinancialYear as FY");
+            }
+
             List<string> eventNames = new List<string>();
 
             if (ResourceGroupsToReport != null && ResourceGroupsToReport.Trim() != "")
             {
                 // check it is a ResourceGroup
-                CLEMModel model = resources.GetResourceGroupByName(ResourceGroupsToReport) as CLEMModel;
+                CLEMModel model = resources.FindResource<ResourceBaseWithTransactions>(ResourceGroupsToReport);
                 if (model == null)
                 {
-                    summary.WriteWarning(this, String.Format("Invalid resource group [{0}] in ReportResourceBalances [{1}]\r\nEntry has been ignored", this.ResourceGroupsToReport, this.Name));
+                    summary.WriteMessage(this, String.Format("Invalid resource group [{0}] in ReportResourceBalances [{1}]\r\nEntry has been ignored", this.ResourceGroupsToReport, this.Name), MessageType.Warning);
                 }
                 else
                 {
@@ -111,16 +134,16 @@ namespace Models.CLEM.Reporting
                     {
                         pricingIncluded = model.FindAllDescendants<AnimalPricing>().Where(a => a.Enabled).Count() > 0;
 
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.ID as uID");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.Breed as Breed");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.Gender as Sex");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.Age as Age");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.Weight as Weight");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.AdultEquivalent as AE");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.SaleFlag as Category");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.Category as Class");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.HerdName as RelatesTo");
-                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ExtraInformation.PopulationChangeDirection as Change");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.ID as uID");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Breed as Breed");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Sex as Sex");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Age as Age");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Weight as Weight");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.AdultEquivalent as AE");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.SaleFlag as Category");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.Class as Class");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.HerdName as RelatesTo");
+                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastIndividualChanged.PopulationChangeDirection as Change");
 
                         // ToDo: add pricing for ruminants including buy and sell pricing
                         // Needs update in CLEMResourceTypeBase and link between ResourcePricing and AnimalPricing.
@@ -150,12 +173,12 @@ namespace Models.CLEM.Reporting
                                 {
                                     if (ReportStyle == ReportTransactionStyle.GainAndLossColumns)
                                     {
-                                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ConvertTo(" + item + $",\"gain\",{ReportLossesAsNegative}) as " + item + "_Gain");
-                                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ConvertTo(" + item + $",\"loss\",{ReportLossesAsNegative}) as " + item + "_Loss");
+                                        variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastTransaction.ConvertTo(\"{item}\",\"gain\",{ReportLossesAsNegative}) as {item}_Gain");
+                                        variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastTransaction.ConvertTo(\"{item}\",\"loss\",{ReportLossesAsNegative}) as {item}_Loss");
                                     }
                                     else
                                     {
-                                        variableNames.Add("[Resources]." + this.ResourceGroupsToReport + ".LastTransaction.ConvertTo(" + item + $"\", {ReportLossesAsNegative}) as " + item + "_Amount");
+                                        variableNames.Add($"[Resources].{this.ResourceGroupsToReport}.LastTransaction.ConvertTo(\"{item}\", {ReportLossesAsNegative}) as {item}_Amount");
                                     }
                                 }
                             } 

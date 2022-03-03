@@ -194,9 +194,9 @@ namespace APSIM.Shared.Utilities
         /// <summary>
         /// Divide value1 by value2. On error, the value errVal will be returned.
         /// </summary>
-        public static double Divide(double value1, double value2, double errVal)
+        public static double Divide(double value1, double value2, double errVal, double tol = tolerance)
         {
-            return MathUtilities.FloatsAreEqual(value2, 0.0) ? errVal : value1 / value2;
+            return MathUtilities.FloatsAreEqual(value2, 0.0, tol) ? errVal : value1 / value2;
         }
 
         /// <summary>
@@ -1741,12 +1741,15 @@ namespace APSIM.Shared.Utilities
         /// </summary>
         /// <param name="items">List to search.</param>
         /// <param name="value">Item to search for.</param>
-        public static int SafeIndexOf(List<double> items, double value)
+        public static int SafeIndexOf(IEnumerable<double> items, double value)
         {
-            items.IndexOf(value);
-            for (int i = 0; i < items.Count; i++)
-                if (FloatsAreEqual(items[i], value))
+            int i = 0;
+            foreach (double item in items)
+            {
+                if (FloatsAreEqual(item, value))
                     return i;
+                i++;
+            }
             return -1;
         }
 
