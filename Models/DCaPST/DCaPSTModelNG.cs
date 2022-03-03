@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Models.Core;
 using Models.DCAPST.Canopy;
@@ -6,6 +7,7 @@ using Models.DCAPST.Environment;
 using Models.DCAPST.Interfaces;
 using Models.Functions;
 using Models.Interfaces;
+using Models.PMF.Interfaces;
 using Models.PMF.Organs;
 
 namespace Models.DCAPST
@@ -14,6 +16,8 @@ namespace Models.DCAPST
     /// APSIM Next Generation wrapper around the DCaPST model.
     /// </summary>
     [Serializable]
+    [ViewName("UserInterface.Views.PropertyView")]
+    [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(typeof(Zone))]
     public class DCaPSTModelNG : Model
     {
@@ -36,17 +40,18 @@ namespace Models.DCAPST
         private ISoilWater soilWater = null;
 
         /// <summary>
-        /// Canopy parameters, as specified by user.
+        /// The crop against which DCaPST will be run.
         /// </summary>
-        [Link(Type = LinkType.Child)]
-        private DCaPSTParameters parameters = null;
+        [Description("The crop against which DCaPST will run")]
+        [Display(Type = DisplayType.DropDown, Values = nameof(GetPlantNames))]
+        public string CropName { get; set; }
 
         /// <summary>
-        /// Link to sorghum leaf - temp hack, need to consider how to
-        /// access SLN in a crop-agnostic manner.
+        /// Canopy parameters, as specified by user.
         /// </summary>
-        [Link]
-        private SorghumLeaf leaf = null;
+        [Display(Type = DisplayType.SubModel)]
+        [Description("DCaPST")]
+        public DCaPSTParameters Parameters { get; set; } = new DCaPSTParameters();
 
         /// <summary>
         /// Performs error checking at start of simulation.
@@ -56,7 +61,7 @@ namespace Models.DCAPST
         [EventSubscribe("StartOfSimulation")]
         private void OnStartOfSimulation(object sender, EventArgs args)
         {
-            if (string.IsNullOrEmpty(parameters.CropName))
+            if (string.IsNullOrEmpty(CropName))
                 throw new ArgumentNullException($"No crop was specified in DCaPST configuration");
         }
 
@@ -68,26 +73,35 @@ namespace Models.DCAPST
         [EventSubscribe("DoDCAPST")]
         private void OnDoDCaPST(object sender, EventArgs args)
         {
-            IModel plant = FindInScope(parameters.CropName);
-            double rootShootRatio = ((IFunction)plant.FindByPath("[ratioRootShoot]").Value).Value();
-            DCAPSTModel model = SetUpModel(parameters.Canopy,
-                                           parameters.Pathway,
+            IPlant plant = FindInScope<IPlant>(CropName);
+            double rootShootRatio = GetRootShootRatio(plant);
+            DCAPSTModel model = SetUpModel(Parameters.Canopy,
+                                           Parameters.Pathway,
                                            clock.Today.DayOfYear,
                                            weather.Latitude,
                                            weather.MaxT,
                                            weather.MinT,
                                            weather.Radn,
-                                           parameters.Rpar);
+                                           Parameters.Rpar);
             // From here, we can set additional options,
             // such as verbosity, BioLimit, Reduction, etc.
 
+            // 0. Get SLN, LAI, total avail SW, root shoot ratio
+            // 1. Perform internal calculations
+            // 2. Set biomass production in leaf
+            // 3. Set water demand and potential EP via ICanopy
+
             // fixme - are we using the right SW??
+            ICanopy leaf = plant.FindChild<ICanopy>("Leaf");
+            if (leaf == null)
+                throw new Exception($"Unable to run DCaPST on plant {plant.Name}: plant has no leaf which implements ICanopy");
             if (leaf.LAI > 0)
             {
-                model.DailyRun(leaf.LAI, leaf.SLN, soilWater.SW.Sum(), rootShootRatio);
+                double sln = GetSln(leaf);
+                model.DailyRun(leaf.LAI, sln, soilWater.SW.Sum(), rootShootRatio);
 
                 // Outputs
-                leaf.BiomassRUE = leaf.BiomassTE = model.ActualBiomass;
+                SetBiomass(leaf, model.ActualBiomass);
                 foreach (ICanopy canopy in plant.FindAllChildren<ICanopy>())
                 {
                     canopy.LightProfile = new CanopyEnergyBalanceInterceptionlayerType[1]
@@ -100,6 +114,38 @@ namespace Models.DCAPST
                     canopy.PotentialEP = canopy.WaterDemand = model.WaterDemanded;
                 }
             }
+        }
+
+        private double GetRootShootRatio(IPlant plant)
+        {
+            IVariable variable = plant.FindByPath("[ratioRootShoot]");
+            if (variable == null)
+                return 0;
+            IFunction function = variable.Value as IFunction;
+            if (function == null)
+                return 0;
+            return function.Value();
+        }
+
+        private void SetBiomass(ICanopy leaf, double actualBiomass)
+        {
+            if (leaf is SorghumLeaf sorghumLeaf)
+            {
+                sorghumLeaf.BiomassRUE = actualBiomass;
+                sorghumLeaf.BiomassTE = actualBiomass;
+            }
+            if (leaf is Leaf complexLeaf)
+                complexLeaf.DMSupply.Fixation = actualBiomass;
+            throw new InvalidOperationException($"Unable to set biomass from unknown leaf type {leaf.GetType()}");
+        }
+
+        private double GetSln(ICanopy leaf)
+        {
+            if (leaf is SorghumLeaf sorghumLeaf)
+                return sorghumLeaf.SLN;
+            if (leaf is IArbitration arbitration)
+                return arbitration.Live.N / leaf.LAI;
+            throw new InvalidOperationException($"Unable to calculate SLN from leaf type {leaf.GetType()}");
         }
 
         /// <summary>
@@ -181,5 +227,10 @@ namespace Models.DCAPST
 
             return DM;
         }
+
+        /// <summary>
+        /// Get the names of all plants in scope.
+        /// </summary>
+        private IEnumerable<string> GetPlantNames() => FindAllInScope<IPlant>().Select(p => p.Name);
     }
 }
