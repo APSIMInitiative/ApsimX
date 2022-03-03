@@ -25,9 +25,13 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Now allows multiple RuminantFilterGroups to identify individuals to be moved")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMove.htm")]
-    public class RuminantActivityMove: CLEMRuminantActivityBase, IValidatableObject
+    public class RuminantActivityMove: CLEMRuminantActivityBase, ICanHandleIdentifiableChildModels
     {
+        private int numberToDo;
+        private int numberToSkip;
         private string pastureName = "";
+        private IEnumerable<Ruminant> uniqueIndividuals;
+        private IEnumerable<RuminantGroup> filterGroups;
 
         /// <summary>
         /// Managed pasture to move to
@@ -59,26 +63,32 @@ namespace Models.CLEM.Activities
             TransactionCategory = "Livestock.Manage";
         }
 
-        #region validation
-        /// <summary>
-        /// Validate this model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        /// <inheritdoc/>
+        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels<T>()
         {
-            var results = new List<ValidationResult>();
-            if (this is ICanHandleIdentifiableChildModels)
+            switch (typeof(T).Name)
             {
-                if (!FindAllChildren<RuminantGroup>().Any())
-                {
-                    string[] memberNames = new string[] { "Specify individuals" };
-                    results.Add(new ValidationResult($"No individuals have been specified by [f=RuminantGroup] to be moved in [a={Name}]. Provide at least an empty RuminantGroup to move all individuals.", memberNames));
-                }
+                case "RuminantGroup":
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>() {
+                            "Individuals to move" },
+                        units: new List<string>()
+                        );
+                case "RuminantActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>() {
+                            "Number moved",
+                        },
+                        units: new List<string>() {
+                            "fixed",
+                            "per head"
+                        }
+                        );
+                default:
+                    return new LabelsForIdentifiableChildren();
             }
-            return results;
         }
-        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -87,8 +97,9 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(true, true);
+            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>("Individuals to move", true, false);
 
-            // link to graze food store type pasture to move to
+            // link to graze food store type (pasture) to move to
             // "Not specified" is general yards.
             pastureName = "";
             if (ManagedPastureName.StartsWith("Not specified"))
@@ -97,76 +108,80 @@ namespace Models.CLEM.Activities
                 pastureName = ManagedPastureName.Split('.')[1];
 
             if (PerformAtStartOfSimulation)
-                Move();
+            {
+                DetermineResourcesForActivity();
+                PerformTasksForActivity();
+            }
         }
 
-        private void Move()
+        /// <inheritdoc/>
+        protected override List<ResourceRequest> DetermineResourcesForActivity()
         {
-            Status = ActivityStatus.NotNeeded;
-            // allow multiple filter groups for moving. 
-            var filterGroups = FindAllChildren<RuminantGroup>();
-            foreach (RuminantGroup item in filterGroups)
-                foreach (Ruminant ind in item.Filter(this.GetIndividuals<Ruminant>( GetRuminantHerdSelectionStyle.AllOnFarm, null, false).Where(a => a.Location != pastureName)).ToList())
-                {
-                    // set new location ID
-                    this.Status = ActivityStatus.Success;
-                    ind.Location = pastureName;
+            numberToDo = 0;
+            numberToSkip = 0;
+            IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Location != pastureName);
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
+            numberToDo = uniqueIndividuals?.Count() ?? 0;
 
-                    // check if sucklings are to be moved with mother
-                    if (MoveSucklings && ind is RuminantFemale)
-                        // check if mother with sucklings
-                        foreach (var suckling in (ind as RuminantFemale).SucklingOffspringList)
-                            suckling.Location = pastureName;
+            // provide updated units of measure for identifiable children
+            foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
+            {
+                int number = numberToDo;
+                switch (valueToSupply.Key.unit)
+                {
+                    case "fixed":
+                        valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                        break;
+                    case "per head":
+                        valuesForIdentifiableModels[valueToSupply.Key] = number;
+                        break;
+                    default:
+                        valuesForIdentifiableModels[valueToSupply.Key] = 0;
+                        break;
                 }
+            }
+            return null;
         }
 
-        ///// <inheritdoc/>
-        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        //{
-        //    double daysNeeded = 0;
-        //    double numberUnits = 0;
-        //    IEnumerable<Ruminant> herd = this.CurrentHerd(false);
-        //    int head = herd.Count();
-        //    double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
-        //    if (herd.Any())
-        //    {
-        //        switch (requirement.UnitType)
-        //        {
-        //            case LabourUnitType.Fixed:
-        //                daysNeeded = requirement.LabourPerUnit;
-        //                break;
-        //            case LabourUnitType.perHead:
-        //                numberUnits = head / requirement.UnitSize;
-        //                if (requirement.WholeUnitBlocks)
-        //                    numberUnits = Math.Ceiling(numberUnits);
+        /// <inheritdoc/>
+        protected override void AdjustResourcesForActivity()
+        {
+            IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
+            if (shortfalls.Any())
+            {
+                // find shortfall by identifiers as these may have different influence on outcome
+                var moveShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "Number moved").FirstOrDefault();
+                if (moveShort != null)
+                    numberToSkip = Convert.ToInt32(numberToDo * moveShort.Required / moveShort.Provided);
 
-        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //                break;
-        //            case LabourUnitType.perAE:
-        //                numberUnits = adultEquivalents / requirement.UnitSize;
-        //                if (requirement.WholeUnitBlocks)
-        //                    numberUnits = Math.Ceiling(numberUnits);
+                this.Status = ActivityStatus.Partial;
+            }
+        }
 
-        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //                break;
-        //            default:
-        //                throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-        //        } 
-        //    }
-        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
-        //}
 
         /// <inheritdoc/>
         protected override void PerformTasksForActivity()
         {
-            // check if labour provided or PartialResources allowed
-            if (this.TimingOK)
+            if (numberToDo - numberToSkip > 0)
             {
-                if ((this.Status == ActivityStatus.Success || this.Status == ActivityStatus.NotNeeded) || (this.Status == ActivityStatus.Partial && this.OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.UseResourcesAvailable))
-                    Move();
+                int moved = 0;
+                foreach (Ruminant ruminant in uniqueIndividuals.SkipLast(numberToSkip).ToList())
+                {
+                    ruminant.Location = pastureName;
+
+                    // check if sucklings are to be moved with mother
+                    if (MoveSucklings && ruminant is RuminantFemale)
+                        // check if mother with sucklings
+                        foreach (var suckling in (ruminant as RuminantFemale).SucklingOffspringList)
+                            suckling.Location = pastureName;
+
+                    moved++;
+                }
+                if (moved == numberToDo)
+                    SetStatusSuccess();
+                else
+                    this.Status = ActivityStatus.Partial;
             }
-            else
-                Status = ActivityStatus.Ignored;
         }
 
         #region descriptive summary

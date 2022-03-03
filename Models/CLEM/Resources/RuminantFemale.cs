@@ -211,6 +211,11 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// Allows an activity to pre calculate conception rate
+        /// </summary>
+        public double? ActivityDeterminedConceptionRate { get; set; }
+
+        /// <summary>
         /// Indicates if the individual is pregnant
         /// </summary>
         [FilterByProperty]

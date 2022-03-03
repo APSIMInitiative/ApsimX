@@ -258,6 +258,17 @@ namespace Models.CLEM.Activities
 
         }
 
+        /// <summary>Function to determine naturally wean individuals at start of timestep</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
+        {
+            // Reset all activity determined conception rates
+            if(useControlledMating)
+                GetIndividuals<RuminantFemale>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.IsBreeder).Select(a => a.ActivityDeterminedConceptionRate == null);
+        }
+
         /// <summary>An event handler to perform herd breeding </summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -421,9 +432,16 @@ namespace Models.CLEM.Activities
                                 }
                             }
 
-                            if (conceptionRate > 0)
+                            // If an activity controlled mating has previously determined conception rate and saved it (it will not be null if mated)
+                            // This conception rate can be used instead of determining conception here. 
+                            if (female.ActivityDeterminedConceptionRate != null)
+                                conceptionRate = female.ActivityDeterminedConceptionRate ?? 0;
+
+
+                            if (female.ActivityDeterminedConceptionRate != null || conceptionRate > 0)
                             {
-                                if (RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
+                                //ActivitydeterminedConception rate > 0, otherwise rate caclulated above versus the random number approach
+                                if ((female.ActivityDeterminedConceptionRate != null)?female.ActivityDeterminedConceptionRate > 0: RandomNumberGenerator.Generator.NextDouble() <= conceptionRate)
                                 {
                                     female.UpdateConceptionDetails(female.CalulateNumberOfOffspringThisPregnancy(), conceptionRate, 0);
 

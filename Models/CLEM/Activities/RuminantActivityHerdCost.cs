@@ -1,5 +1,6 @@
 ﻿using Models.Core;
 using Models.CLEM.Resources;
+using Models.CLEM.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,58 +23,42 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Arrange payment of a ruminant herd expense with specified style")]
+    [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantHerdCost.htm")]
-    public class RuminantActivityHerdCost : CLEMRuminantActivityBase, IValidatableObject
+    public class RuminantActivityHerdCost : CLEMRuminantActivityBase, ICanHandleIdentifiableChildModels
     {
-        private FinanceType bankAccount;
+        //private FinanceType bankAccount;
+        private int numberToDo;
+        private int numberToSkip;
+        private double amountToDo;
+        private double amountToSkip;
 
-        /// <summary>
-        /// Amount payable
-        /// </summary>
-        [Description("Amount payable")]
-        [Required, GreaterThanValue(0)]
-        public double Amount { get; set; }
+        private IEnumerable<Ruminant> uniqueIndividuals;
+        private IEnumerable<RuminantGroup> filterGroups;
 
-        /// <summary>
-        /// Payment style
-        /// </summary>
-        [System.ComponentModel.DefaultValueAttribute(AnimalPaymentStyleType.perHead)]
-        [Description("Payment style")]
-        [Required]
-        public AnimalPaymentStyleType PaymentStyle { get; set; }
+        ///// <summary>
+        ///// Amount payable
+        ///// </summary>
+        //[Description("Amount payable")]
+        //[Required, GreaterThanValue(0)]
+        //public double Amount { get; set; }
 
-        /// <summary>
-        /// Bank account to use
-        /// </summary>
-        [Description("Bank account to use")]
-        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Bank account required")]
-        public string AccountName { get; set; }
+        ///// <summary>
+        ///// Payment style
+        ///// </summary>
+        //[System.ComponentModel.DefaultValueAttribute(AnimalPaymentStyleType.perHead)]
+        //[Description("Payment style")]
+        //[Required]
+        //public AnimalPaymentStyleType PaymentStyle { get; set; }
 
-        #region validation
-        /// <summary>
-        /// Validate object
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            switch (PaymentStyle)
-            {
-                case AnimalPaymentStyleType.Fixed:
-                case AnimalPaymentStyleType.perHead:
-                case AnimalPaymentStyleType.perAE:
-                    break;
-                default:
-                    string[] memberNames = new string[] { "PaymentStyle" };
-                    results.Add(new ValidationResult("Payment style " + PaymentStyle.ToString() + " is not supported", memberNames));
-                    break;
-            }
-            return results;
-        } 
-        #endregion
+        ///// <summary>
+        ///// Bank account to use
+        ///// </summary>
+        //[Description("Bank account to use")]
+        //[Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
+        //[Required(AllowEmptyStrings = false, ErrorMessage = "Bank account required")]
+        //public string AccountName { get; set; }
 
         /// <summary>
         /// Constructor
@@ -91,97 +76,113 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(true, true);
-            bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning);
+            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>("Individuals to cost", true, false);
+
+            //bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning);
         }
 
-        /// <summary>
-        /// Method to determine resources required for this activity in the current month
-        /// </summary>
-        /// <returns>List of required resource requests</returns>
+        /// <inheritdoc/>
+        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels<T>()
+        {
+            switch (typeof(T).Name)
+            {
+                case "RuminantGroup":
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>() {
+                            "Individuals to cost" },
+                        units: new List<string>()
+                        );
+                case "RuminantActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>() {
+                            "Number paid for",
+                        },
+                        units: new List<string>() {
+                            "fixed",
+                            "per head",
+                            "per AE"
+                        }
+                        );
+                default:
+                    return new LabelsForIdentifiableChildren();
+            }
+        }
+
+        /// <inheritdoc/>
         protected override List<ResourceRequest> DetermineResourcesForActivity()
         {
-            List<ResourceRequest> resourcesNeeded = null;
+            numberToDo = 0;
+            numberToSkip = 0;
+            IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale);
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
+            numberToDo = uniqueIndividuals?.Count() ?? 0;
 
-            double amountNeeded = 0;
-            IEnumerable<Ruminant> herd = this.CurrentHerd(false);
-            if (herd.Any())
+            // provide updated units of measure for identifiable children
+            foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
             {
-                switch (PaymentStyle)
+                int number = numberToDo;
+                switch (valueToSupply.Key.unit)
                 {
-                    case AnimalPaymentStyleType.Fixed:
-                        amountNeeded = Amount;
+                    case "fixed":
+                        valuesForIdentifiableModels[valueToSupply.Key] = 1;
                         break;
-                    case AnimalPaymentStyleType.perHead:
-                        amountNeeded = Amount * herd.Count();
+                    case "per head":
+                        valuesForIdentifiableModels[valueToSupply.Key] = number;
                         break;
-                    case AnimalPaymentStyleType.perAE:
-                        amountNeeded = Amount * herd.Sum(a => a.AdultEquivalent);
+                    case "per AE":
+                        amountToDo = uniqueIndividuals.Sum(a => a.AdultEquivalent);
+                        valuesForIdentifiableModels[valueToSupply.Key] = amountToDo;
                         break;
                     default:
-                        break;
+                        throw new NotImplementedException($"Unknown units [{((valueToSupply.Key.unit == "") ? "Blank" : valueToSupply.Key.unit)}] for [{((valueToSupply.Key.identifier == "") ? "Blank" : valueToSupply.Key.identifier)}] identifier in [a={NameWithParent}]");
                 }
             }
-
-            if (amountNeeded > 0)
-            {
-                // determine breed
-                // this is too much overhead for a simple reason field, especially given large herds.
-                string breedName = "Herd cost";
-
-                resourcesNeeded = new List<ResourceRequest>()
-                {
-                    new ResourceRequest()
-                    {
-                        AllowTransmutation = false,
-                        Required = amountNeeded,
-                        Resource = bankAccount,
-                        ResourceType = typeof(Finance),
-                        ResourceTypeName = this.AccountName.Split('.').Last(),
-                        ActivityModel = this,
-                        RelatesToResource = breedName,
-                        Category = TransactionCategory
-                    }
-                };
-            }
-            return resourcesNeeded;
+            return null;
         }
 
-        ///// <inheritdoc/>
-        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        //{
-        //    // get all potential dry breeders
-        //    IEnumerable<Ruminant> herd = this.CurrentHerd(false);
-        //    double daysNeeded = 0;
-        //    double numberUnits = 0;
-        //    if (herd.Any())
-        //    {
-        //        switch (requirement.UnitType)
-        //        {
-        //            case LabourUnitType.Fixed:
-        //                daysNeeded = requirement.LabourPerUnit;
-        //                break;
-        //            case LabourUnitType.perHead:
-        //                int head = herd.Count();
-        //                numberUnits = head / requirement.UnitSize;
-        //                if (requirement.WholeUnitBlocks)
-        //                    numberUnits = Math.Ceiling(numberUnits);
+        /// <inheritdoc/>
+        protected override void AdjustResourcesForActivity()
+        {
+            IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
+            if (shortfalls.Any())
+            {
+                // find shortfall by identifiers as these may have different influence on outcome
+                var shorts = shortfalls.Where(a => a.IdentifiableChildDetails.unit == "per head").FirstOrDefault();
+                if (shorts != null)
+                    numberToSkip = Convert.ToInt32(numberToDo * shorts.Required / shorts.Provided);
 
-        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //                break;
-        //            case LabourUnitType.perAE:
-        //                double animalEquivalents = herd.Sum(a => a.AdultEquivalent);
-        //                numberUnits = animalEquivalents / requirement.UnitSize;
-        //                if (requirement.WholeUnitBlocks)
-        //                    numberUnits = Math.Ceiling(numberUnits);
+                var amountShort = shortfalls.Where(a => a.IdentifiableChildDetails.unit == "per AE").FirstOrDefault();
+                if (amountShort != null)
+                    amountToSkip = Convert.ToInt32(amountToDo * amountShort.Required / amountShort.Provided);
 
-        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //                break;
-        //            default:
-        //                throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-        //        } 
-        //    }
-        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
-        //}
+                this.Status = ActivityStatus.Partial;
+            }
+        }
+
+        /// <inheritdoc/>
+        protected override void PerformTasksForActivity()
+        {
+            if (numberToDo - numberToSkip > 0)
+            {
+                amountToDo -= amountToSkip;
+                double amountDone = 0;
+                int number = 0;
+                foreach (Ruminant ruminant in uniqueIndividuals.SkipLast(numberToSkip).ToList())
+                {
+                    amountDone += ruminant.AdultEquivalent;
+                    amountToDo -= ruminant.AdultEquivalent;
+                    number++;
+                    if (amountToDo <= 0)
+                        break;
+                }
+
+                if (number == numberToDo && amountToDo <= 0)
+                    SetStatusSuccess();
+                else
+                    this.Status = ActivityStatus.Partial;
+            }
+        }
 
         #region descriptive summary
 
@@ -191,9 +192,9 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Pay ");
-                htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> ");
-                htmlWriter.Write("<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> from ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));
+                //htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> ");
+                //htmlWriter.Write("<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> from ");
+                //htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not set"));

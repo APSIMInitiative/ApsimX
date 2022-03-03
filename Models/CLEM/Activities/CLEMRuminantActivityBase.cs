@@ -103,6 +103,46 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
+        /// A method to return the unique individuals from a list and multiple potentially overlapping filter groups
+        /// </summary>
+        /// <param name="filters">The filter groups to include</param>
+        /// <param name="herd">the individuals to filter</param>
+        /// <returns>A list of unique individuals</returns>
+        public IEnumerable<T> GetUniqueIndividuals<T>(IEnumerable<RuminantGroup> filters, IEnumerable<T> herd) where T: Ruminant 
+        {
+            // no filters provided
+            if (!filters.Any())
+            {
+                return herd;
+            }
+            // check that no filters will filter all groups otherwise return all 
+            // account for any sorting or reduced takes
+            var emptyfilters = filters.Where(a => a.FindAllChildren<Filter>().Any() == false);
+            if (emptyfilters.Any())
+            {
+                foreach (var empty in emptyfilters.Where(a => a.FindAllChildren<ISort>().Any() || a.FindAllChildren<TakeFromFiltered>().Any()))
+                    herd = empty.Filter(herd);
+                return herd;
+            }
+            else
+            {
+                // get unique individuals across all filters
+                if (filters.Count() > 1)
+                {
+                    IEnumerable<T> unique = new List<T>();
+                    foreach (var selectFilter in filters)
+                        unique = unique.Union(selectFilter.Filter(herd)).DistinctBy(a => a.ID);
+                    return unique;
+                }
+                else
+                {
+                    return filters.FirstOrDefault().Filter(herd);
+                }
+            }
+        }
+
+
+        /// <summary>
         /// Gets the current herd from all herd filters above
         /// </summary>
         /// <param name="includeCheckHerdMeetsCriteria">Perfrom check and report issues. Only once per activity. Default is false.</param>

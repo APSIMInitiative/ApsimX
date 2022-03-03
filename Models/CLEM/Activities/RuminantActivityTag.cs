@@ -1,4 +1,5 @@
 ﻿using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -21,13 +22,17 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Add or remove a specified tag to/from the specified individuals for customised filtering")]
+    [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 2, "Uses the Attribute feature of Ruminants")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantTag.htm")]
 
-    public class RuminantActivityTag : CLEMRuminantActivityBase, IValidatableObject
+    public class RuminantActivityTag : CLEMRuminantActivityBase, ICanHandleIdentifiableChildModels
     {
-        //private LabourRequirement labourRequirement;
+        private int numberToDo;
+        private int numberToSkip;
+        private IEnumerable<Ruminant> uniqueIndividuals;
+        private IEnumerable<RuminantGroup> filterGroups;
 
         /// <summary>
         /// Tag label
@@ -43,9 +48,6 @@ namespace Models.CLEM.Activities
         [System.ComponentModel.DefaultValueAttribute(TagApplicationStyle.Add)]
         public TagApplicationStyle ApplicationStyle { get; set; }
 
-        private IEnumerable<RuminantGroup> filterGroups;
-        private int numberToTag = 0;
-
         /// <summary>
         /// constructor
         /// </summary>
@@ -53,24 +55,6 @@ namespace Models.CLEM.Activities
         {
             TransactionCategory = "Livestock.Manage";
         }
-
-        #region validation
-        /// <summary>
-        /// Validate this model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            if (!FindAllChildren<RuminantGroup>().Any())
-            {
-                string[] memberNames = new string[] { "Specify individuals" };
-                results.Add(new ValidationResult($"No individuals have been specified by [f=RuminantGroup] for tagging in [a={Name}]. Provide at least an empty RuminantGroup to consider all individuals.", memberNames));
-            }
-            return results;
-        }
-        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -80,140 +64,135 @@ namespace Models.CLEM.Activities
         {
             // get all ui tree herd filters that relate to this activity
             this.InitialiseHerd(true, true);
-            filterGroups = FindAllChildren<RuminantGroup>();
+            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>("Individuals to tag/untag", true, false);
             // activity is performed in ManageAnimals
             this.AllocationStyle = ResourceAllocationStyle.Manual;
+        }
+
+        /// <inheritdoc/>
+        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels<T>()
+        {
+            switch (typeof(T).Name)
+            {
+                case "RuminantGroup":
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>() {
+                            "Individuals to tag/untag" },
+                        units: new List<string>()
+                        );
+                case "RuminantActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>() {
+                            "Number tagged/untagged",
+                        },
+                        units: new List<string>() {
+                            "fixed",
+                            "per head"
+                        }
+                        );
+                default:
+                    return new LabelsForIdentifiableChildren();
+            }
         }
 
         /// <inheritdoc/>
         [EventSubscribe("CLEMAnimalMark")]
         protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {
+            ManageActivityResourcesAndTasks();
         }
 
-        ///// <inheritdoc/>
-        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        //{
-        //    IEnumerable<Ruminant> herd = CurrentHerd(false);
+        /// <inheritdoc/>
+        protected override List<ResourceRequest> DetermineResourcesForActivity()
+        {
+            numberToDo = 0;
+            numberToSkip = 0;
+            IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Attributes.Exists(TagLabel) == (ApplicationStyle != TagApplicationStyle.Add));
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
+            numberToDo = uniqueIndividuals?.Count() ?? 0;
 
-        //    if (filterGroups.Any())
-        //    {
-        //        numberToTag = 0;
-        //        foreach (RuminantGroup item in filterGroups)
-        //        {
-        //            if (ApplicationStyle == TagApplicationStyle.Add)
-        //                numberToTag += item.Filter(herd).Where(a => !a.Attributes.Exists(TagLabel)).Count();
-        //            else
-        //                numberToTag += item.Filter(herd).Where(a => a.Attributes.Exists(TagLabel)).Count();
-        //        }
-        //    }
-        //    else
-        //        numberToTag = herd.Count();
+            // provide updated units of measure for identifiable children
+            foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
+            {
+                int number = numberToDo;
+                switch (valueToSupply.Key.unit)
+                {
+                    case "fixed":
+                        valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                        break;
+                    case "per head":
+                        valuesForIdentifiableModels[valueToSupply.Key] = number;
+                        break;
+                    default:
+                        if(valueToSupply.Key.type != "RuminantGroup")
+                        {
+                            throw new NotImplementedException($"Unknown units [{((valueToSupply.Key.unit == "") ? "Blank" : valueToSupply.Key.unit)}] for [{((valueToSupply.Key.identifier == "") ? "Blank" : valueToSupply.Key.identifier)}] identifier in [a={NameWithParent}]");
+                        }
+                        break;
+                }
+            }
+            return null;
+        }
 
-        //    double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
-        //    double daysNeeded = 0;
-        //    double numberUnits = 0;
-        //    labourRequirement = requirement;
-        //    switch (requirement.UnitType)
-        //    {
-        //        case LabourUnitType.Fixed:
-        //            daysNeeded = requirement.LabourPerUnit;
-        //            break;
-        //        case LabourUnitType.perHead:
-        //            numberUnits = numberToTag / requirement.UnitSize;
-        //            if (requirement.WholeUnitBlocks)
-        //                numberUnits = Math.Ceiling(numberUnits);
+        /// <inheritdoc/>
+        protected override void AdjustResourcesForActivity()
+        {
+            IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
+            if (shortfalls.Any())
+            {
+                // find shortfall by identifiers as these may have different influence on outcome
+                var tagsShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "Number tagged/untagged").FirstOrDefault();
+                if (tagsShort != null)
+                    numberToSkip = Convert.ToInt32(numberToDo * tagsShort.Required / tagsShort.Provided);
 
-        //            daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //            break;
-        //        default:
-        //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-        //    }
-        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
-        //}
-
-        ///// <inheritdoc/>
-        //protected override void AdjustResourcesForActivity()
-        //{
-        //    if (LabourLimitProportion > 0 && LabourLimitProportion < 1 && (labourRequirement != null && labourRequirement.ShortfallAffectsActivity))
-        //    {
-        //        this.Status = ActivityStatus.Partial;
-        //        switch (labourRequirement.UnitType)
-        //        {
-        //            case LabourUnitType.Fixed:
-        //            case LabourUnitType.perHead:
-        //                numberToTag = Convert.ToInt32(numberToTag * LabourLimitProportion, CultureInfo.InvariantCulture);
-        //                break;
-        //            default:
-        //                throw new ApsimXException(this, "Labour requirement type " + labourRequirement.UnitType.ToString() + " is not supported in DoActivity method of [a=" + this.Name + "]");
-        //        }
-        //    }
-        //    return;
-        //}
-
+                this.Status = ActivityStatus.Partial;
+            }
+        }
 
         /// <inheritdoc/>
         protected override void PerformTasksForActivity()
         {
-
-        }
-
-        /// <summary>An event handler to call for performing all marking for sale, tagging and weaning</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMAnimalMark")]
-        private void OnCLEMAnimalMark(object sender, EventArgs e)
-        {
-            if (this.TimingOK)
+            if(numberToDo - numberToSkip > 0)
             {
-                IEnumerable<Ruminant> herd = CurrentHerd(false);
-                if (numberToTag > 0)
+                int tagged = 0;
+                foreach (Ruminant ruminant in uniqueIndividuals.SkipLast(numberToSkip).ToList())
                 {
-                    foreach (RuminantGroup item in filterGroups)
+                    switch (ApplicationStyle)
                     {
-                        foreach (Ruminant ind in item.Filter(GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => (ApplicationStyle == TagApplicationStyle.Add)? !a.Attributes.Exists(TagLabel): a.Attributes.Exists(TagLabel))).Take(numberToTag))
-                        {
-                            if(this.Status != ActivityStatus.Partial)
-                                this.Status = ActivityStatus.Success;
-
-                            switch (ApplicationStyle)
-                            {
-                                case TagApplicationStyle.Add:
-                                    ind.Attributes.Add(TagLabel);
-                                    break;
-                                case TagApplicationStyle.Remove:
-                                    ind.Attributes.Add(TagLabel);
-                                    break;
-                            }
-                            numberToTag--;
-                        }
+                        case TagApplicationStyle.Add:
+                            ruminant.Attributes.Add(TagLabel);
+                            break;
+                        case TagApplicationStyle.Remove:
+                            ruminant.Attributes.Add(TagLabel);
+                            break;
                     }
-                    if(!filterGroups.Any())
-                    {
-                        foreach (Ruminant ind in GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => (ApplicationStyle == TagApplicationStyle.Add) ? !a.Attributes.Exists(TagLabel) : a.Attributes.Exists(TagLabel)).Take(numberToTag))
-                        {
-                            if (this.Status != ActivityStatus.Partial)
-                                this.Status = ActivityStatus.Success;
-
-                            switch (ApplicationStyle)
-                            {
-                                case TagApplicationStyle.Add:
-                                    ind.Attributes.Add(TagLabel);
-                                    break;
-                                case TagApplicationStyle.Remove:
-                                    ind.Attributes.Add(TagLabel);
-                                    break;
-                            }
-                            numberToTag--;
-                        }
-                    }
+                    tagged++;
                 }
+                if (tagged == numberToDo)
+                    SetStatusSuccess();
                 else
-                    this.Status = ActivityStatus.NotNeeded;
+                    this.Status = ActivityStatus.Partial;
             }
-            else
-                this.Status = ActivityStatus.Ignored;
         }
+
+        //#region validation
+        ///// <summary>
+        ///// Validate this model
+        ///// </summary>
+        ///// <param name="validationContext"></param>
+        ///// <returns></returns>
+        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        //{
+        //    var results = new List<ValidationResult>();
+        //    if (!FindAllChildren<RuminantGroup>().Any())
+        //    {
+        //        string[] memberNames = new string[] { "Specify individuals" };
+        //        results.Add(new ValidationResult($"No individuals have been specified by [f=RuminantGroup] for tagging in [a={Name}]. Provide at least an empty RuminantGroup to consider all individuals.", memberNames));
+        //    }
+        //    return results;
+        //}
+        //#endregion
 
         #region descriptive summary
 

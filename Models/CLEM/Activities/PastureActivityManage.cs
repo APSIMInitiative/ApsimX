@@ -45,15 +45,28 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Land type where pasture is located
         /// </summary>
-        [Description("Land type where pasture is located")]
+        [Description("Land type to use")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Land type where pasture is located required")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Land) } })]
         public string LandTypeNameToUse { get; set; }
 
         /// <summary>
+        /// Area requested
+        /// </summary>
+        [Description("Land area requested")]
+        [Required, GreaterThanEqualValue(0)]
+        public double AreaRequested { get; set; }
+
+        /// <summary>
+        /// Use unallocated available
+        /// </summary>
+        [Description("Use Land type's unallocated land")]
+        public bool UseAreaAvailable { get; set; }
+
+        /// <summary>
         /// Pasture type to use
         /// </summary>
-        [Description("Pasture to manage")]
+        [Description("GrazeFoodStore type managed")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture required")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(GrazeFoodStore) } })]
         public string FeedTypeName { get; set; }
@@ -61,7 +74,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Name of the model for the pasture input file
         /// </summary>
-        [Description("Name of pasture data reader")]
+        [Description("Pasture data reader to use")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Pasture production database reader required")]
         [Models.Core.Display(Type = DisplayType.DropDown, Values = "GetNameOfModelsByType", ValuesArgs = new object[] { new Type[] { typeof(FileCrop), typeof(FileSQLitePasture) } })]
         public string PastureDataReader { get; set; }
@@ -69,7 +82,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Starting stocking rate (Adult Equivalents/square km)
         /// </summary>
-        [Description("Starting stocking rate (Adult Equivalents/sqkm)")]
+        [Description("Starting stocking rate (AEs/sqkm)")]
         [Required, GreaterThanEqualValue(0)]
         public double StartingStockingRate { get; set; }
 
@@ -90,19 +103,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         [JsonIgnore]
         public RelationshipRunningValue GrassBasalArea { get; set; }
-
-        /// <summary>
-        /// Area requested
-        /// </summary>
-        [Description("Area of pasture")]
-        [Required, GreaterThanEqualValue(0)]
-        public double AreaRequested { get; set; }
-
-        /// <summary>
-        /// Use unallocated available
-        /// </summary>
-        [Description("Use unallocated land")]
-        public bool UseAreaAvailable { get; set; }
 
         /// <summary>
         /// Feed type

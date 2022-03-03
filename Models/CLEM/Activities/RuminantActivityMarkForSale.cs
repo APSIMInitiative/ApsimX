@@ -1,5 +1,6 @@
 ﻿using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -23,12 +24,16 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Mark the specified individuals for sale with specified sale reason")]
+    [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 2, "Allows specification of sale reason for reporting")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMarkForSale.htm")]
-    public class RuminantActivityMarkForSale: CLEMRuminantActivityBase, IValidatableObject
+    public class RuminantActivityMarkForSale: CLEMRuminantActivityBase, IValidatableObject, ICanHandleIdentifiableChildModels
     {
-        //private LabourRequirement labourRequirement;
+        private int numberToDo;
+        private int numberToSkip;
+        private IEnumerable<Ruminant> uniqueIndividuals;
+        private IEnumerable<RuminantGroup> filterGroups;
 
         /// <summary>
         /// Sale flag to use
@@ -46,9 +51,6 @@ namespace Models.CLEM.Activities
         [System.ComponentModel.DefaultValueAttribute(false)]
         public bool OverwriteFlag { get; set; }
 
-        private int numberToTag = 0;
-        private bool labourShortfall = false;
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -65,131 +67,106 @@ namespace Models.CLEM.Activities
         {
             // get all ui tree herd filters that relate to this activity
             this.InitialiseHerd(true, true);
+            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>("Individuals to sell", true, false);
 
             // activity is performed in ManageAnimals
             this.AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
         /// <inheritdoc/>
+        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels<T>()
+        {
+            switch (typeof(T).Name)
+            {
+                case "RuminantGroup":
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>() {
+                            "Individuals to sell" },
+                        units: new List<string>()
+                        );
+                case "RuminantActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>() {
+                            "Number identified",
+                        },
+                        units: new List<string>() {
+                            "fixed",
+                            "per head"
+                        }
+                        );
+                default:
+                    return new LabelsForIdentifiableChildren();
+            }
+        }
+
+        /// <inheritdoc/>
         [EventSubscribe("CLEMAnimalMark")]
         protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
         {
+            ManageActivityResourcesAndTasks();
         }
 
         /// <inheritdoc/>
         protected override List<ResourceRequest> DetermineResourcesForActivity()
         {
-            numberToTag = NumberToTag();
+            numberToDo = 0;
+            numberToSkip = 0;
+            IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None);
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
+            numberToDo = uniqueIndividuals?.Count() ?? 0;
+
+            // provide updated units of measure for identifiable children
+            foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
+            {
+                int number = numberToDo;
+                switch (valueToSupply.Key.unit)
+                {
+                    case "fixed":
+                        valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                        break;
+                    case "per head":
+                        valuesForIdentifiableModels[valueToSupply.Key] = number;
+                        break;
+                    default:
+                        valuesForIdentifiableModels[valueToSupply.Key] = 0;
+                        break;
+                }
+            }
             return null;
         }
 
-        private int NumberToTag()
+        /// <inheritdoc/>
+        protected override void AdjustResourcesForActivity()
         {
-            IEnumerable<Ruminant> herd = CurrentHerd(false);
-
-            var filterGroups = FindAllChildren<RuminantGroup>();
-            int number = 0;
-            if (filterGroups.Any())
+            IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
+            if (shortfalls.Any())
             {
-                number = 0;
-                foreach (RuminantGroup item in filterGroups)
-                    number += item.Filter(herd).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Count();
+                // find shortfall by identifiers as these may have different influence on outcome
+                var tagsShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "Number identified").FirstOrDefault();
+                if (tagsShort != null)
+                    numberToSkip = Convert.ToInt32(numberToDo * tagsShort.Required / tagsShort.Provided);
 
-                if(number > 0)
-                    number = Math.Min(number, herd.Count());
+                this.Status = ActivityStatus.Partial;
             }
-            else
-                number = herd.Count();
-
-            return number;
         }
 
-        ///// <inheritdoc/>
-        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        //{
-        //    labourRequirement = requirement;
-        //    double daysNeeded;
-        //    switch (requirement.UnitType)
-        //    {
-        //        case LabourUnitType.Fixed:
-        //            daysNeeded = requirement.LabourPerUnit;
-        //            break;
-        //        case LabourUnitType.perHead:
-        //            double numberUnits = numberToTag / requirement.UnitSize;
-        //            if (requirement.WholeUnitBlocks)
-        //                numberUnits = Math.Ceiling(numberUnits);
-
-        //            daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //            break;
-        //        default:
-        //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-        //    }
-        //    return new LabourRequiredArgs(daysNeeded, "Mark", this.PredictedHerdName);
-        //}
-
-        ///// <inheritdoc/>
-        //protected override void AdjustResourcesForActivity()
-        //{
-        //    labourShortfall = false;
-        //    if (LabourLimitProportion < 1 & (labourRequirement != null && labourRequirement.ShortfallAffectsActivity))
-        //    {
-        //        switch (labourRequirement.UnitType)
-        //        {
-        //            case LabourUnitType.Fixed:
-        //            case LabourUnitType.perHead:
-        //                numberToTag = Convert.ToInt32(numberToTag * LabourLimitProportion, CultureInfo.InvariantCulture);
-        //                labourShortfall = true;
-        //                break;
-        //            default:
-        //                throw new ApsimXException(this, "Labour requirement type " + labourRequirement.UnitType.ToString() + " is not supported in DoActivity method of [a=" + this.Name + "]");
-        //        }
-        //    }
-        //    return;
-        //}
-
-        /// <summary>An event handler to call for changing stocking based on prediced pasture biomass</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMAnimalMark")]
-        private void OnCLEMAnimalMark(object sender, EventArgs e)
+        /// <inheritdoc/>
+        protected override void PerformTasksForActivity()
         {
-            if (this.TimingOK)
+            if (numberToDo - numberToSkip > 0)
             {
-                // recalculate numbers and ensure it is not less than number calculated
-                int updatedNumberToTag = NumberToTag(); 
-                if (updatedNumberToTag < numberToTag)
-                    numberToTag = updatedNumberToTag;
-
-                IEnumerable<Ruminant> herd = CurrentHerd(false);
-                if (numberToTag > 0)
+                int number = 0;
+                foreach (Ruminant ruminant in uniqueIndividuals.SkipLast(numberToSkip).ToList())
                 {
-                    var filterGroups = FindAllChildren<RuminantGroup>();
-
-                    foreach (RuminantGroup item in filterGroups)
-                    {
-                        foreach (Ruminant ind in item.Filter(herd).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
-                        {
-                            this.Status = (labourShortfall)?ActivityStatus.Partial:ActivityStatus.Success;
-
-                            ind.SaleFlag = SaleFlagToUse;
-                            numberToTag--;
-                        }
-                    }
-                    if(!filterGroups.Any())
-                    {
-                        foreach (Ruminant ind in herd.Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
-                        {
-                            this.Status = (labourShortfall) ? ActivityStatus.Partial : ActivityStatus.Success;
-                            ind.SaleFlag = SaleFlagToUse;
-                            numberToTag--;
-                        }
-                    }
+                    ruminant.SaleFlag = SaleFlagToUse;
+                    number++;
                 }
+                if (number == numberToDo)
+                    SetStatusSuccess();
                 else
-                    this.Status = ActivityStatus.NotNeeded;
+                    this.Status = ActivityStatus.Partial;
             }
-            else
-                this.Status = ActivityStatus.Ignored;
         }
 
         #region validation

@@ -23,14 +23,19 @@ namespace Models.CLEM.Groupings
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ReportRuminantHerd))]
     [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
-    [ValidParent(ParentType = typeof(ICanHandleIdentifiableChildModels))]
-    //[ValidParent(ParentType = typeof(RuminantActivityManage))]
-    //[ValidParent(ParentType = typeof(RuminantActivityPredictiveStocking))]
-    //[ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
-    //[ValidParent(ParentType = typeof(RuminantActivityMove))]
-    //[ValidParent(ParentType = typeof(RuminantActivityMarkForSale))]
-    //[ValidParent(ParentType = typeof(RuminantActivityWean))]
-    //[ValidParent(ParentType = typeof(RuminantActivityTag))]
+    [ValidParent(ParentType = typeof(RuminantActivityControlledMating))]
+    [ValidParent(ParentType = typeof(RuminantActivityFeed))]
+    [ValidParent(ParentType = typeof(RuminantActivityHerdCost))]
+    [ValidParent(ParentType = typeof(RuminantActivityManage))]
+    [ValidParent(ParentType = typeof(RuminantActivityMarkForSale))]
+    [ValidParent(ParentType = typeof(RuminantActivityMilking))]
+    [ValidParent(ParentType = typeof(RuminantActivityMove))]
+    [ValidParent(ParentType = typeof(RuminantActivityPredictiveStocking))]
+    [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
+    [ValidParent(ParentType = typeof(RuminantActivityShear))]
+    [ValidParent(ParentType = typeof(RuminantActivityTag))]
+    [ValidParent(ParentType = typeof(RuminantActivityTrade))]
+    [ValidParent(ParentType = typeof(RuminantActivityWean))]
     [ValidParent(ParentType = typeof(TransmuteRuminant))]
     [ValidParent(ParentType = typeof(ReportRuminantAttributeSummary))]
     [Description("Selects specific individuals ruminants from the herd")]
@@ -44,7 +49,6 @@ namespace Models.CLEM.Groupings
         /// </summary>
         [Description("Group identifier")]
         [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Identifier required")]
         public string Identifier { get; set; }
 
         /// <inheritdoc/>
@@ -142,7 +146,7 @@ namespace Models.CLEM.Groupings
                 if (identifiers.Any() & !identifiers.Contains(Identifier))
                 {
                     string[] memberNames = new string[] { "Ruminant group" };
-                    results.Add(new ValidationResult($"The identifier [{((Identifier == "") ? "BLANK" : Identifier)}] in [f={this.Name}] is not valid for the parent activity [a={Parent.Name}].{Environment.NewLine}Select an option from the list. If the list is empty this activity does not support custom ruminant filtering", memberNames));
+                    results.Add(new ValidationResult($"The identifier [{(((Identifier??"") == "") ? "BLANK" : Identifier)}] in [f={this.Name}] is not valid for the parent activity [a={Parent.Name}].{Environment.NewLine}Select an option from the list. If the list is empty this activity does not support custom ruminant filtering", memberNames));
                 }
             }
             return results;

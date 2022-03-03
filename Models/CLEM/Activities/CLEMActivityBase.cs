@@ -246,8 +246,8 @@ namespace Models.CLEM.Activities
         /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("FinalInitialise")]
-        protected virtual void OnFinalInitialiseGetIdentifiableChilddModels(object sender, EventArgs e)
+        [EventSubscribe("StartOfSimulation")]
+        protected virtual void OnStartOfSimulationGetIdentifiableChildModels(object sender, EventArgs e)
         {
             // if this activity supports identifiable child models for controlling resource requirements
             if (this is ICanHandleIdentifiableChildModels)
@@ -258,13 +258,13 @@ namespace Models.CLEM.Activities
                     switch (componentType.Name)
                     {
                         case "RuminantGroup":
-                            identifiableModelsPresent.Add(componentType.Name, LocateIdentifiableChildren<RuminantGroup>(true));
+                            identifiableModelsPresent.Add(componentType.Name, LocateIdentifiableChildren<RuminantGroup>());
                             break;
                         case "LabourRequirement":
-                            identifiableModelsPresent.Add(componentType.Name, LocateIdentifiableChildren<LabourRequirement>(false));
+                            identifiableModelsPresent.Add(componentType.Name, LocateIdentifiableChildren<LabourRequirement>());
                             break;
                         case "RuminantActivityFee":
-                            identifiableModelsPresent.Add(componentType.Name, LocateIdentifiableChildren<RuminantActivityFee>(false));
+                            identifiableModelsPresent.Add(componentType.Name, LocateIdentifiableChildren<RuminantActivityFee>());
                             break;
                         default:
                             throw new NotSupportedException($"{componentType.Name} not currently supported as IdentifiableComponent");
@@ -278,24 +278,36 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <typeparam name="T">The Identifiable child model type</typeparam>
         /// <param name="identifier">Identifer label</param>
+        /// <param name="mustBeProvidedByUser">Determines if the parent requesting assumes the user will provide an instance of this child</param>
         /// <param name="addNewIfEmpty">Create IENumuerable with a new() instance of T</param>
-        /// <returns></returns>
-        protected private IEnumerable<T> GetIdentifiableChildrenByIdentifier<T>(string identifier, bool addNewIfEmpty) where T : IIdentifiableChildModel, new()
+        /// <returns>IEnumerable of T found</returns>
+        protected private IEnumerable<T> GetIdentifiableChildrenByIdentifier<T>(string identifier, bool mustBeProvidedByUser, bool addNewIfEmpty) where T : IIdentifiableChildModel, new()
         {
             if (identifiableModelsPresent.ContainsKey(typeof(T).Name))
             {
                 if (identifiableModelsPresent[typeof(T).Name] is Dictionary<string, IEnumerable<T>> foundTypeDictionary)
                 {
                     if (foundTypeDictionary.ContainsKey(identifier))
+                    {
                         return foundTypeDictionary[identifier];
+                    }
                     else
-                        throw new ApsimXException(this, $"The requested identifier [{identifier}] is not supported by [a={NameWithParent}]{Environment.NewLine}Internal code error: see developers!");
+                    {
+                        if(IdentifiableChildModelLabels<T>(IdentifiableChildModelLabelType.Identifiers).Contains(identifier) == false)
+                            throw new NotSupportedException($"[{GetType().Name}] does not support the identifier [{identifier}]{Environment.NewLine}Internal error during request for Identifiable child models: request support from developers.");
+                    }
                 }
             }
-            if (addNewIfEmpty)
-                return new List<T>() { new T() };
+            if (mustBeProvidedByUser)
+            {
+                throw new ApsimXException(this, $"[a={NameWithParent}] requires at least one [{typeof(T).Name}] as a child component with the Identifier set as [{identifier}]");
+            }
             else
-                return null;
+            {
+                if (addNewIfEmpty)
+                    return new List<T>() { new T() };
+            }
+            return null;
         }
 
         /// <summary>
@@ -303,7 +315,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <typeparam name="T">Type of component to consider</typeparam>
         /// <returns></returns>
-        protected private Dictionary<string, IEnumerable<T>> LocateIdentifiableChildren<T>(bool addBlankEntryIfNoneFound) where T : IIdentifiableChildModel, new()
+        protected private Dictionary<string, IEnumerable<T>> LocateIdentifiableChildren<T>() where T : IIdentifiableChildModel, new()
         {
             Dictionary<string, IEnumerable<T>> filters = new Dictionary<string, IEnumerable<T>>();
 
@@ -313,19 +325,23 @@ namespace Models.CLEM.Activities
                 if (iChildren.Any())
                 {
                     filters.Add(id, iChildren);
-                    foreach (var item in iChildren)
+                    // if this type provides units for use by children add them
+                    if (IdentifiableChildModelLabels<T>(IdentifiableChildModelLabelType.Units).Any())
                     {
-                        valuesForIdentifiableModels.Add((typeof(T).Name, id, item.Units), 0);
+                        foreach (var item in iChildren)
+                        {
+                            valuesForIdentifiableModels.Add((typeof(T).Name, id, item.Units), 0);
+                        }
                     }
                 }
-                else
-                {
-                    if (addBlankEntryIfNoneFound)
-                    {
-                        var newEntry = new List<T>() { new T() { Identifier = id } };
-                        filters.Add(id, newEntry);
-                    }
-                }
+                //else
+                //{
+                //    if (addBlankEntryIfNoneFound)
+                //    {
+                //        var newEntry = new List<T>() { new T() { Identifier = id } };
+                //        filters.Add(id, newEntry);
+                //    }
+                //}
             }
             return filters;
         }
@@ -410,14 +426,15 @@ namespace Models.CLEM.Activities
                     // get all identifiable child related expense requests
                     if (this is ICanHandleIdentifiableChildModels)
                     {
-                        foreach (IIdentifiableChildModel identifiableChild in FindAllChildren<IIdentifiableChildModel>())
+                        // get all identifiable children except filter groups
+                        foreach (IIdentifiableChildModel identifiableChild in FindAllChildren<IIdentifiableChildModel>().Where(a => (a is IFilterGroup) == false))
                         {
-                            var unitsProvided = valuesForIdentifiableModels[(identifiableChild.GetType().Name, identifiableChild.Identifier, identifiableChild.Units)];
+                            var unitsProvided = valuesForIdentifiableModels[(identifiableChild.GetType().Name, identifiableChild.Identifier??"", identifiableChild.Units??"")];
                             if (unitsProvided is null)
                                 throw new ApsimXException(this, $"Units for [{identifiableChild.GetType().Name}]-[{identifiableChild.Identifier}]-[{identifiableChild.Units}] have not been calculated by [a={NameWithParent}] before use.{Environment.NewLine}Code issue. See Developers");
                             else
                             {
-                                if (unitsProvided > 0)
+                                if ((unitsProvided??-1) > 0)
                                 {
                                     foreach (ResourceRequest request in identifiableChild.GetResourceRequests(unitsProvided ?? 0))
                                     {
@@ -797,7 +814,7 @@ namespace Models.CLEM.Activities
         {
             if (resourceRequests is null || !resourceRequests.Any())
             {
-                this.Status = ActivityStatus.Success;
+                this.Status = ActivityStatus.NotNeeded;
                 return;
             }
 

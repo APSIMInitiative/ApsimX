@@ -8,6 +8,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using Newtonsoft.Json;
+using Models.CLEM.Groupings;
 
 namespace Models.CLEM.Activities
 {
@@ -22,25 +23,45 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
     [Description("Perform ruminant shearing and place clip in a specified store")]
+    [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantShear.htm")]
-    public class RuminantActivityShear : CLEMRuminantActivityBase
+    public class RuminantActivityShear : CLEMRuminantActivityBase, ICanHandleIdentifiableChildModels
     {
-        //private LabourRequirement labourRequirement;
+        private int numberToDo;
+        private int numberToSkip;
+        private double amountToSkip;
+        private double amountToDo;
+        private IEnumerable<Ruminant> uniqueIndividuals;
+        private IEnumerable<RuminantGroup> filterGroups;
 
         /// <summary>
-        /// Name of Product store to place clip (with Resource Group name appended to the front [separated with a '.'])
+        /// Name of Product store to place wool clip (with Resource Group name appended to the front [separated with a '.'])
         /// </summary>
-        [Description("Store to place clip")]
+        [Description("Store to place wool clip")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(ProductStore) } })]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Product store type required")]
-        public string ProductStoreName { get; set; }
+        public string WoolProductStoreName { get; set; }
 
         /// <summary>
-        /// Produc store for clip
+        /// Name of Product store to place cahsmere clip (with Resource Group name appended to the front [separated with a '.'])
+        /// </summary>
+        [Description("Store to place cashmere clip")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(ProductStore) } })]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Product store type required")]
+        public string CashmereProductStoreName { get; set; }
+
+        /// <summary>
+        /// Product store for wool clip
         /// </summary>
         [JsonIgnore]
-        public ProductStoreType StoreType { get; set; }
+        public ProductStoreType WoolStoreType { get; set; }
+
+        /// <summary>
+        /// Product store for cashmere clip
+        /// </summary>
+        [JsonIgnore]
+        public ProductStoreType CashmereStoreType { get; set; }
 
         /// <summary>
         /// Constructor
@@ -48,6 +69,35 @@ namespace Models.CLEM.Activities
         public RuminantActivityShear()
         {
             TransactionCategory = "Livestock.Shearing";
+        }
+
+        /// <inheritdoc/>
+        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels<T>()
+        {
+            switch (typeof(T).Name)
+            {
+                case "RuminantGroup":
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>() {
+                            "Individuals to shear" },
+                        units: new List<string>()
+                        );
+                case "RuminantActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>() {
+                            "Number shorn",
+                            "Weight of fleece"
+                        },
+                        units: new List<string>() {
+                            "fixed",
+                            "per head",
+                            "per kg fleece"
+                        }
+                        );
+                default:
+                    return new LabelsForIdentifiableChildren();
+            }
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -58,147 +108,116 @@ namespace Models.CLEM.Activities
         {
             // get all ui tree herd filters that relate to this activity
             this.InitialiseHerd(true, true);
+            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>("Individuals to shear", false, true);
 
             // locate StoreType resource
-            StoreType = Resources.FindResourceType<ProductStore, ProductStoreType>(this, ProductStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            WoolStoreType = Resources.FindResourceType<ProductStore, ProductStoreType>(this, WoolProductStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
+            CashmereStoreType = Resources.FindResourceType<ProductStore, ProductStoreType>(this, CashmereProductStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
-        ///// <inheritdoc/>
-        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        //{
-        //    IEnumerable<Ruminant> herd = CurrentHerd(false);
-        //    double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
+        /// <inheritdoc/>
+        protected override List<ResourceRequest> DetermineResourcesForActivity()
+        {
+            amountToDo = 0;
+            amountToSkip = 0;
+            numberToDo = 0;
+            numberToSkip = 0;
+            IEnumerable<Ruminant> herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Wool + a.Cashmere > 0);
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
+            numberToDo = uniqueIndividuals?.Count() ?? 0;
 
-        //    double daysNeeded = 0;
-        //    double numberUnits = 0;
-        //    labourRequirement = requirement;
-        //    if (herd.Any())
-        //    {
-        //        switch (requirement.UnitType)
-        //        {
-        //            case LabourUnitType.Fixed:
-        //                daysNeeded = requirement.LabourPerUnit;
-        //                break;
-        //            case LabourUnitType.perHead:
-        //                int head = herd.Count();
-        //                numberUnits = head / requirement.UnitSize;
-        //                if (requirement.WholeUnitBlocks)
-        //                    numberUnits = Math.Ceiling(numberUnits);
-
-        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //                break;
-        //            case LabourUnitType.perAE:
-        //                numberUnits = adultEquivalents / requirement.UnitSize;
-        //                if (requirement.WholeUnitBlocks)
-        //                    numberUnits = Math.Ceiling(numberUnits);
-
-        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //                break;
-        //            case LabourUnitType.perKg:
-        //                daysNeeded = herd.Sum(a => a.Wool) * requirement.LabourPerUnit;
-        //                break;
-        //            case LabourUnitType.perUnit:
-        //                numberUnits = herd.Sum(a => a.Wool) / requirement.UnitSize;
-        //                if (requirement.WholeUnitBlocks)
-        //                    numberUnits = Math.Ceiling(numberUnits);
-
-        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //                break;
-        //            default:
-        //                throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-        //        } 
-        //    }
-        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
-        //}
+            // provide updated units of measure for identifiable children
+            foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
+            {
+                int number = numberToDo;
+                switch (valueToSupply.Key.identifier)
+                {
+                    case "Number shorn":
+                        switch (valueToSupply.Key.unit)
+                        {
+                            case "fixed":
+                                valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                                break;
+                            case "per head":
+                                valuesForIdentifiableModels[valueToSupply.Key] = number;
+                                break;
+                            case "per kg fleece":
+                                throw new NotImplementedException($"Unable to use units [per kg of fleece] with [Number shorn] identifier in {NameWithParent}");
+                            default:
+                                throw new NotImplementedException($"Unknown units [{((valueToSupply.Key.unit == "") ? "Blank" : valueToSupply.Key.unit)}] for [{((valueToSupply.Key.identifier == "") ? "Blank" : valueToSupply.Key.identifier)}] identifier in [a={NameWithParent}]");
+                        }
+                        break;
+                    case "Weight of fleece":
+                        switch (valueToSupply.Key.unit)
+                        {
+                            case "fixed":
+                                valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                                break;
+                            case "per head":
+                                throw new NotImplementedException($"Unable to use units [per head] with [Weight of fleece] identifier in {NameWithParent}");
+                            case "per kg fleece":
+                                amountToDo = uniqueIndividuals.Sum(a => a.Wool + a.Cashmere);
+                                valuesForIdentifiableModels[valueToSupply.Key] = amountToDo;
+                                break;
+                            default:
+                                throw new NotImplementedException($"Unknown units [{((valueToSupply.Key.unit == "") ? "Blank" : valueToSupply.Key.unit)}] for [{((valueToSupply.Key.identifier == "") ? "Blank" : valueToSupply.Key.identifier)}] identifier in [a={NameWithParent}]");
+                        }
+                        break;
+                    default:
+                        throw new NotImplementedException($"Unknown identifier [{valueToSupply.Key.identifier}] used in {NameWithParent}");
+                }
+            }
+            return null;
+        }
 
         /// <inheritdoc/>
         protected override void AdjustResourcesForActivity()
         {
-            //add limit to amount collected based on labour shortfall
-            double labourLimit = this.LabourLimitProportion;
-            foreach (ResourceRequest item in ResourceRequestList)
-                if (item.ResourceType != typeof(LabourType))
-                    item.Required *= labourLimit;
-            return;
+            IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
+            if (shortfalls.Any())
+            {
+                // find shortfall by identifiers as these may have different influence on outcome
+                var numberShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "Number shorn").FirstOrDefault();
+                if (numberShort != null)
+                    numberToSkip = Convert.ToInt32(numberToDo * numberShort.Required / numberShort.Provided);
+
+                var kgShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "Weight of fleece").FirstOrDefault();
+                if (kgShort != null)
+                    amountToSkip = Convert.ToInt32(amountToDo * kgShort.Required / kgShort.Provided);
+
+                this.Status = ActivityStatus.Partial;
+            }
         }
 
         /// <inheritdoc/>
         protected override void PerformTasksForActivity()
         {
-            IEnumerable<Ruminant> herd = CurrentHerd(false).OrderByDescending(a => a.Wool);
-            if (herd.Any())
+            if (numberToDo - numberToSkip > 0)
             {
-                double woolTotal = 0;
-                //if(LabourLimitProportion == 1 | (labourRequirement != null && !labourRequirement.ShortfallAffectsActivity))
-                //{
-                //    woolTotal = herd.Sum(a => a.Wool);
-                //    herd.ToList().ForEach(a => a.Wool = 0);
-                //}
-                //else
-                //{
-                //    //// limits clip based on labour shortfall
-                //    //switch (labourRequirement.UnitType)
-                //    //{
-                //    //    case LabourUnitType.Fixed:
-                //    //        // no clip taken
-                //    //        break;
-                //    //    case LabourUnitType.perHead:
-                //    //        int numberShorn = Convert.ToInt32(herd.Count() * LabourLimitProportion, CultureInfo.InvariantCulture);
-                //    //        woolTotal = herd.Take(numberShorn).Sum(a => a.Wool);
-                //    //        herd.Take(numberShorn).ToList().ForEach(a => a.Wool = 0);
-                //    //        break;
-                //    //    case LabourUnitType.perAE:
-                //    //        // stop when AE reached
-                //    //        double aELimit = herd.Sum(a => a.AdultEquivalent) * LabourLimitProportion;
-                //    //        double aETrack = 0;
-                //    //        foreach (var item in herd)
-                //    //        {
-                //    //            if(aETrack + item.AdultEquivalent > aELimit)
-                //    //                break;
-                //    //            aETrack += item.AdultEquivalent;
-                //    //            woolTotal += item.Wool;
-                //    //            item.Wool = 0;
-                //    //        }
-                //    //        break;
-                //    //    case LabourUnitType.perKg:
-                //    //        // stop shearing when limit reached
-                //    //        double kgLimit = herd.Sum(a => a.Wool) * LabourLimitProportion;
-                //    //        double kgTrack = 0;
-                //    //        foreach (var item in herd)
-                //    //        {
-                //    //            if (kgTrack + item.Wool > kgLimit)
-                //    //                break;
-                //    //            kgTrack += item.Wool;
-                //    //            woolTotal += item.Wool;
-                //    //            item.Wool = 0;
-                //    //        }
-                //    //        break;
-                //    //    case LabourUnitType.perUnit:
-                //    //        // stop shearing when unit limit reached
-                //    //        double unitLimit = herd.Sum(a => a.Wool) / labourRequirement.UnitSize  * LabourLimitProportion;
-                //    //        if(labourRequirement.WholeUnitBlocks)
-                //    //            unitLimit = Math.Floor(unitLimit);
+                amountToDo -= amountToSkip;
+                double kgWoolShorn = 0;
+                double kgCashmereShorn = 0;
+                int shorn = 0;
+                foreach (Ruminant ruminant in uniqueIndividuals.SkipLast(numberToSkip).ToList())
+                {
+                    kgWoolShorn += ruminant.Wool;
+                    amountToDo -= ruminant.Wool;
+                    kgCashmereShorn += ruminant.Cashmere;
+                    amountToDo -= ruminant.Cashmere;
+                    ruminant.Wool = 0;
+                    ruminant.Cashmere = 0;
+                    shorn++;
+                    if (amountToDo <= 0)
+                        break;
+                }
+                // add clip to stores
+                (WoolStoreType as IResourceType).Add(kgWoolShorn, this, this.PredictedHerdName, TransactionCategory);
+                (CashmereStoreType as IResourceType).Add(kgCashmereShorn, this, this.PredictedHerdName, TransactionCategory);
 
-                //    //        kgLimit = unitLimit * labourRequirement.UnitSize;
-                //    //        kgTrack = 0;
-                //    //        foreach (var item in herd)
-                //    //        {
-                //    //            if (kgTrack + item.Wool > kgLimit)
-                //    //                break;
-                //    //            kgTrack += item.Wool;
-                //    //            woolTotal += item.Wool;
-                //    //            item.Wool = 0;
-                //    //        }
-                //    //        break;
-                //    //    default:
-                //    //        throw new ApsimXException(this, "Labour requirement type " + labourRequirement.UnitType.ToString() + " is not supported in DoActivity method of [a=" + this.Name + "]");
-                //    //}
-                //    this.Status = ActivityStatus.Partial;
-                //}
-
-                // place clip in selected store
-                (StoreType as IResourceType).Add(woolTotal, this, this.PredictedHerdName, TransactionCategory);
-                SetStatusSuccess();
+                if (shorn == numberToDo && amountToDo <= 0)
+                    SetStatusSuccess();
+                else
+                    this.Status = ActivityStatus.Partial;
             }
         }
 
@@ -208,8 +227,10 @@ namespace Models.CLEM.Activities
         public override string ModelSummary()
         {
             string html = "";
-            html += "\r\n<div class=\"activityentry\">Shear selected herd and place clip in ";
-            html += CLEMModel.DisplaySummaryValueSnippet(ProductStoreName, "Store Type not set");
+            html += "\r\n<div class=\"activityentry\">Shear selected herd and place wool clip in ";
+            html += CLEMModel.DisplaySummaryValueSnippet(WoolProductStoreName, "Store Type not set");
+            html += " and place cashmere clip in ";
+            html += CLEMModel.DisplaySummaryValueSnippet(CashmereProductStoreName, "Store Type not set");
             html += "</div>";
             return html;
         } 

@@ -91,26 +91,6 @@ namespace Models.CLEM.Activities
             TransactionCategory = "Livestock.Destock";
         }
 
-        #region validation
-
-        /// <summary>
-        /// Validate this model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            // check that this model contains children RuminantDestockGroups with filters
-            var results = new List<ValidationResult>();
-            // check that this activity contains at least one RuminantGroup with Destock reason (filters optional as someone might want to include entire herd)
-            if (this.FindAllChildren<RuminantGroup>().Count() == 0)
-            {
-                string[] memberNames = new string[] { "Ruminant group" };
-                results.Add(new ValidationResult("At least one [f=RuminantGroup] must be present under this [a=RuminantActivityPredictiveStocking] activity", memberNames));
-            }
-            return results;
-        } 
-        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -252,6 +232,27 @@ namespace Models.CLEM.Activities
         {
             ReportStatus?.Invoke(this, e);
         }
+
+        #region validation
+
+        /// <summary>
+        /// Validate this model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            // check that this model contains children RuminantDestockGroups with filters
+            var results = new List<ValidationResult>();
+            // check that this activity contains at least one RuminantGroup with Destock reason (filters optional as someone might want to include entire herd)
+            if (this.FindAllChildren<RuminantGroup>().Count() == 0)
+            {
+                string[] memberNames = new string[] { "Ruminant group" };
+                results.Add(new ValidationResult("At least one [f=RuminantGroup] must be present under this [a=RuminantActivityPredictiveStocking] activity", memberNames));
+            }
+            return results;
+        }
+        #endregion
 
         #region descriptive summary
 

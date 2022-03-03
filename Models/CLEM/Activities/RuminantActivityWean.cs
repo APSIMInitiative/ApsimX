@@ -28,17 +28,18 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Weaning style added. Allows decision rule (age, weight, or both to be considered.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantWean.htm")]
-    public class RuminantActivityWean: CLEMRuminantActivityBase, IValidatableObject, ICanHandleIdentifiableChildModels
+    public class RuminantActivityWean: CLEMRuminantActivityBase, ICanHandleIdentifiableChildModels
     {
         [Link]
         private Clock clock = null;
 
         private string grazeStore;
-        private IEnumerable<Ruminant> uniqueIndividuals;
-        private int weanToSkip = 0;
+        private int numberToSkip = 0;
         private int sucklingToSkip = 0;
-        private int numberToWean = 0;
+        private int numberToDo = 0;
         private int sucklingsToCheck = 0;
+        private IEnumerable<Ruminant> uniqueIndividuals;
+        private IEnumerable<RuminantGroup> filterGroups = new List<RuminantGroup>();
 
         /// <summary>
         /// Style of weaning rule
@@ -129,6 +130,8 @@ namespace Models.CLEM.Activities
                 if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
                     Summary.WriteMessage(this, String.Format("Individuals weaned by [a={0}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", this.Name), MessageType.Warning);
             }
+
+            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>("Individuals to check", false, true);
         }
 
         /// <inheritdoc/>
@@ -141,36 +144,17 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         protected override List<ResourceRequest> DetermineResourcesForActivity()
         {
-            weanToSkip = 0;
+            numberToSkip = 0;
             sucklingToSkip = 0;
-            numberToWean = 0;
-            sucklingsToCheck = 0;
             IEnumerable<Ruminant> sucklingherd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.AllOnFarm).Where(a => a.Weaned == false);
-            uniqueIndividuals = new List<Ruminant>();
-            IEnumerable<RuminantGroup> filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>("Individuals to check", true);
-            if(filterGroups.Any())
-            {
-                if(filterGroups.Count() >1)
-                {
-                    foreach (var selectFilter in filterGroups)
-                        uniqueIndividuals = uniqueIndividuals.Union(selectFilter.Filter(sucklingherd)).DistinctBy(a => a.ID);
-                }
-                else
-                {
-                    uniqueIndividuals = filterGroups.FirstOrDefault().Filter(sucklingherd);
-                }
-            }
-            else
-            {
-                uniqueIndividuals = sucklingherd;
-            }
+            uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, sucklingherd);
             sucklingsToCheck = uniqueIndividuals?.Count() ?? 0;
-            numberToWean = uniqueIndividuals.Where(a => (a.Age >= WeaningAge && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.AgeOnly)) || (a.Weight >= WeaningWeight && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.WeightOnly)))?.Count() ?? 0; 
+            numberToDo = uniqueIndividuals.Where(a => (a.Age >= WeaningAge && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.AgeOnly)) || (a.Weight >= WeaningWeight && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.WeightOnly)))?.Count() ?? 0; 
 
             // provide updated units of measure for identifiable children
             foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
             {
-                int number = numberToWean;
+                int number = numberToDo;
                 if (valueToSupply.Key.identifier == "Number sucklings checked")
                     number = sucklingsToCheck;
 
@@ -203,7 +187,7 @@ namespace Models.CLEM.Activities
 
                 var weanShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "Number weaned").FirstOrDefault();
                 if (weanShort != null)
-                    weanToSkip = Convert.ToInt32(numberToWean * weanShort.Required / weanShort.Provided);
+                    numberToSkip = Convert.ToInt32(numberToDo * weanShort.Required / weanShort.Provided);
 
                 this.Status = ActivityStatus.Partial;
             }
@@ -212,9 +196,9 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         protected override void PerformTasksForActivity()
         {
-            if (numberToWean > 0)
+            if (numberToDo > 0)
             {
-                if (numberToWean - weanToSkip > 0 && sucklingsToCheck - sucklingToSkip > 0)
+                if (numberToDo - numberToSkip > 0 && sucklingsToCheck - sucklingToSkip > 0)
                 {
                     int weaned = 0;
                     foreach (Ruminant ind in uniqueIndividuals.SkipLast(sucklingToSkip).ToList())
@@ -251,11 +235,11 @@ namespace Models.CLEM.Activities
                             // report wean. If mother has died create temp female with the mother's ID for reporting only
                             ind.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother ?? new RuminantFemale(ind.BreedParams, -1, 999) { ID = ind.MotherID }, clock.Today, ind));
                             weaned++;
-                            if (weaned > numberToWean - weanToSkip)
+                            if (weaned > numberToDo - numberToSkip)
                                 break;
                         }
                     }
-                    if (weaned == numberToWean)
+                    if (weaned == numberToDo)
                         SetStatusSuccess();
                     else
                         this.Status = ActivityStatus.Partial;
@@ -266,24 +250,6 @@ namespace Models.CLEM.Activities
             else
                 this.Status = ActivityStatus.NotNeeded;
         }
-
-        #region validation
-        /// <summary>
-        /// Validate this model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            if (!FindAllChildren<RuminantGroup>().Any())
-            {
-                string[] memberNames = new string[] { "Specify individuals" };
-                results.Add(new ValidationResult($"No individuals have been specified by [f=RuminantGroup] to be considered for weaning in [a={Name}]. Provide at least an empty RuminantGroup to consider all individuals.", memberNames));
-            }
-            return results;
-        }
-        #endregion
 
         #region descriptive summary
 

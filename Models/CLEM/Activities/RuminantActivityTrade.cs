@@ -9,6 +9,7 @@ using System.Text;
 using Models.Core.Attributes;
 using System.Globalization;
 using System.IO;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Activities
 {
@@ -25,7 +26,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Includes improvements such as a relationship to define numbers purchased based on pasture biomass and allows placement of purchased individuals in a specified paddock")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantTrade.htm")]
-    public class RuminantActivityTrade : CLEMRuminantActivityBase, IValidatableObject
+    public class RuminantActivityTrade : CLEMRuminantActivityBase, IValidatableObject, ICanHandleIdentifiableChildModels
     {
         private string grazeStore = "";
         private RuminantType herdToUse;
@@ -68,51 +69,32 @@ namespace Models.CLEM.Activities
             TransactionCategory = "Livestock.Trade";
         }
 
-        #region validation
-        /// <summary>
-        /// Validate this model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        /// <inheritdoc/>
+        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels<T>()
         {
-            var results = new List<ValidationResult>();
-            // check that a RuminantTypeCohort is supplied to identify trade individuals.
-            var specifyRuminants = this.FindAllChildren<SpecifyRuminant>();
-            if (specifyRuminants.Count() == 0)
+            switch (typeof(T).Name)
             {
-                string[] memberNames = new string[] { "PurchaseDetails" };
-                results.Add(new ValidationResult("At least one trade purchase description is required. Provide a [r=SpecifyRuminant] component below this activity specifying the breed and details of individuals to be purchased.", memberNames));
+                case "RuminantGroup":
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>() {
+                            "Individuals to purchase" },
+                        units: new List<string>()
+                        );
+                case "RuminantActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>() {
+                            "Number purchased",
+                        },
+                        units: new List<string>() {
+                            "fixed",
+                            "per head"
+                        }
+                        );
+                default:
+                    return new LabelsForIdentifiableChildren();
             }
-            else
-            {
-                foreach (SpecifyRuminant specRumItem in specifyRuminants)
-                {
-                    // get Cohort
-                    var items = specRumItem.FindAllChildren<RuminantTypeCohort>();
-                    if(items.Count() > 1)
-                    {
-                        string[] memberNames = new string[] { "SpecifyRuminant cohort" };
-                        results.Add(new ValidationResult("Each [r=SpecifyRuminant] can only contain one [r=RuminantTypeCohort]. Additional components will be ignored!", memberNames));
-                    }
-                    if (items.First().Suckling)
-                    {
-                        string[] memberNames = new string[] { "PurchaseDetails[Suckling]" };
-                        results.Add(new ValidationResult("Suckling individuals are not permitted as trade purchases.", memberNames));
-                    }
-                    if (items.First().Sire)
-                    {
-                        string[] memberNames = new string[] { "PurchaseDetails[Sire]" };
-                        results.Add(new ValidationResult("Sires are not permitted as trade purchases.", memberNames));
-                    }
-                }
-                foreach (RuminantTypeCohort specRumItem in this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>())
-                {
-                }
-            }
-            return results;
-        } 
-        #endregion
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -149,6 +131,14 @@ namespace Models.CLEM.Activities
             }
         }
 
+        /// <inheritdoc/>
+        [EventSubscribe("CLEMAnimalManage")]
+        protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
+        {
+            ManageActivityResourcesAndTasks();
+        }
+
+
         /// <summary>An event handler to call for all herd management activities</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -174,8 +164,6 @@ namespace Models.CLEM.Activities
 
                     for (int i = 0; i < Math.Ceiling(number); i++)
                     {
-                        
-
                         double u1 = RandomNumberGenerator.Generator.NextDouble();
                         double u2 = RandomNumberGenerator.Generator.NextDouble();
                         double randStdNormal = Math.Sqrt(-2.0 * Math.Log(u1)) *
@@ -191,6 +179,9 @@ namespace Models.CLEM.Activities
                         ruminant.SaleFlag = HerdChangeReason.TradePurchase;
                         ruminant.Location = grazeStore;
                         ruminant.PreviousWeight = ruminant.Weight;
+
+                        // add trade tag for this trade activity
+                        ruminant.Attributes.Add($"Trade:{Name}");
 
                         if (ruminant is RuminantFemale female)
                         {
@@ -218,6 +209,52 @@ namespace Models.CLEM.Activities
                 }
             }
         }
+
+        #region validation
+        /// <summary>
+        /// Validate this model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            // check that a RuminantTypeCohort is supplied to identify trade individuals.
+            var specifyRuminants = this.FindAllChildren<SpecifyRuminant>();
+            if (specifyRuminants.Count() == 0)
+            {
+                string[] memberNames = new string[] { "PurchaseDetails" };
+                results.Add(new ValidationResult("At least one trade purchase description is required. Provide a [r=SpecifyRuminant] component below this activity specifying the breed and details of individuals to be purchased.", memberNames));
+            }
+            else
+            {
+                foreach (SpecifyRuminant specRumItem in specifyRuminants)
+                {
+                    // get Cohort
+                    var items = specRumItem.FindAllChildren<RuminantTypeCohort>();
+                    if (items.Count() > 1)
+                    {
+                        string[] memberNames = new string[] { "SpecifyRuminant cohort" };
+                        results.Add(new ValidationResult("Each [r=SpecifyRuminant] can only contain one [r=RuminantTypeCohort]. Additional components will be ignored!", memberNames));
+                    }
+                    if (items.First().Suckling)
+                    {
+                        string[] memberNames = new string[] { "PurchaseDetails[Suckling]" };
+                        results.Add(new ValidationResult("Suckling individuals are not permitted as trade purchases.", memberNames));
+                    }
+                    if (items.First().Sire)
+                    {
+                        string[] memberNames = new string[] { "PurchaseDetails[Sire]" };
+                        results.Add(new ValidationResult("Sires are not permitted as trade purchases.", memberNames));
+                    }
+                }
+                foreach (RuminantTypeCohort specRumItem in this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>())
+                {
+                }
+            }
+            return results;
+        }
+        #endregion
 
         #region descriptive summary
 

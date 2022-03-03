@@ -130,30 +130,5 @@ namespace Models.CLEM.Activities
                 }
             }
         }
-
-        ///// <inheritdoc/>
-        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        //{
-        //    double breeders = SelectedOtherAnimalsType.Cohorts.Where(a => a.Age >= this.BreedingAge).Sum(b => b.Number);
-        //    if (breeders == 0)
-        //    {
-        //        return new LabourRequiredArgs(0, TransactionCategory, SelectedOtherAnimalsType.NameWithParent);
-        //    }
-
-        //    double daysNeeded = 0;
-        //    switch (requirement.UnitType)
-        //    {
-        //        case LabourUnitType.Fixed:
-        //            daysNeeded = requirement.LabourPerUnit;
-        //            break;
-        //        case LabourUnitType.perHead:
-        //            daysNeeded = Math.Ceiling(breeders / requirement.UnitSize) * requirement.LabourPerUnit;
-        //            break;
-        //        default:
-        //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-        //    }
-        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, SelectedOtherAnimalsType.NameWithParent);
-        //}
-
     }
 }
