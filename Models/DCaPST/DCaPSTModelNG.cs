@@ -134,9 +134,10 @@ namespace Models.DCAPST
                 sorghumLeaf.BiomassRUE = actualBiomass;
                 sorghumLeaf.BiomassTE = actualBiomass;
             }
-            if (leaf is Leaf complexLeaf)
+            else if (leaf is Leaf complexLeaf)
                 complexLeaf.DMSupply.Fixation = actualBiomass;
-            throw new InvalidOperationException($"Unable to set biomass from unknown leaf type {leaf.GetType()}");
+            else
+                throw new InvalidOperationException($"Unable to set biomass from unknown leaf type {leaf.GetType()}");
         }
 
         private double GetSln(ICanopy leaf)
