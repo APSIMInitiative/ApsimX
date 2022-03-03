@@ -572,7 +572,7 @@ namespace Models.CLEM.Resources
         /// </summary>
         public void Wean(bool report, string reason)
         {
-            weaned = true;
+            weaned = Convert.ToInt32(Math.Round(Age,3), CultureInfo.InvariantCulture);
             if (this.Mother != null)
             {
                 this.Mother.SucklingOffspringList.Remove(this);
@@ -590,21 +590,33 @@ namespace Models.CLEM.Resources
 
         }
 
-        private bool weaned = true;
+        private int weaned = -1;
 
         /// <summary>
         /// Method to set the weaned status to unweaned for new born individuals.
         /// </summary>
         public void SetUnweaned()
         {
-            weaned = false;
+            weaned = -1;
         }
 
         /// <summary>
         /// Weaned individual flag
         /// </summary>
         [FilterByProperty]
-        public bool Weaned { get { return weaned; } }
+        public bool Weaned { get { return (weaned >= 0); } }
+
+        /// <summary>
+        /// Number of months since weaned
+        /// </summary>
+        [FilterByProperty]
+        public int MonthsSinceWeaned 
+        { 
+            get
+            {
+                return Convert.ToInt32(Math.Round(Age - weaned, 4));
+            }
+        }
 
         /// <summary>
         /// Milk production currently available from mother
@@ -685,7 +697,9 @@ namespace Models.CLEM.Resources
             this.Number = 1;
             this.Wool = 0;
             this.Cashmere = 0;
-            this.weaned = true;
+            int ageInt = Convert.ToInt32(Math.Round(Age, 4));
+            int weanage = Convert.ToInt32(Math.Round(BreedParams.GestationLength, 4));
+            this.weaned = (ageInt <= weanage)?ageInt:weaned;
             this.SaleFlag = HerdChangeReason.None;
             this.Attributes = new IndividualAttributeList();
         }
