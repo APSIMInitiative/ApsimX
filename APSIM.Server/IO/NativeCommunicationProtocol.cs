@@ -250,28 +250,16 @@ namespace APSIM.Server.IO
             return Encoding.Default.GetString(buffer);
         }
 
-        private void SendInt(int value)
         {
-            byte[] buffer = BitConverter.GetBytes(value);
-            PipeUtilities.SendToPipe(connection, buffer);
         }
 
-        private void SendDouble(double value)
         {
-            byte[] buffer = BitConverter.GetBytes(value);
-            PipeUtilities.SendToPipe(connection, buffer);
         }
 
-        private void SendBool(bool value)
         {
-            byte[] buffer = BitConverter.GetBytes(value);
-            PipeUtilities.SendToPipe(connection, buffer);
         }
 
-        private void SendDate(DateTime value)
         {
-            // tbi - need to give this one some thought.
-            throw new NotImplementedException();
         }
 
         private void SendArray(Array data)
