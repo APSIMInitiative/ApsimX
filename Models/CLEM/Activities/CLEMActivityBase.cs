@@ -963,6 +963,5 @@ namespace Models.CLEM.Activities
             };
             ActivitiesHolder?.ReportActivityPerformed(activitye);
         }
-
     }
 }

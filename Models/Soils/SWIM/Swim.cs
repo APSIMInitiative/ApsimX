@@ -918,7 +918,7 @@ namespace Models.Soils
 
         /// <summary>Pond depth (mm)</summary>
         [Units("mm")]
-        public double pond
+        public double Pond
         {
             get
             {
@@ -963,8 +963,9 @@ namespace Models.Soils
             }
         }
 
+        /// <summary>Subsurface drain (mm)</summary>
         [Units("mm")]
-        private double subsurface_drain
+        public double SubsurfaceDrain
         {
             get
             {
@@ -3890,8 +3891,11 @@ namespace Models.Soils
                     //_h = Math.Max(0.0, _h + dp[-1]);
                 }
 
-                var msg = it + ",psi," + StringUtilities.Build(_psi, ",") + ",th," + StringUtilities.Build(th, ",");
-                summary.WriteMessage(this, msg, MessageType.Diagnostic);
+                if (Diagnostics)
+                {
+                    var msg = it + ",psi," + StringUtilities.Build(_psi, ",") + ",th," + StringUtilities.Build(th, ",");
+                    summary.WriteMessage(this, msg, MessageType.Diagnostic);
+                }
             }
             while (fail && it < itlim);
 

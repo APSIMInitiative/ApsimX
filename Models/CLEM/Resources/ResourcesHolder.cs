@@ -366,11 +366,12 @@ namespace Models.CLEM.Resources
                                         ResourceType = transmute.ResourceGroup.GetType(),
                                         ActivityModel = request.ActivityModel,
                                         Category = transmutation.TransactionCategory,
+                                        AdditionalDetails = transmutation
                                     };
 
                                     // amount left over after transmute. This will be amount of the resource if query is false as Required passed is 0
                                     double activityCost = requests.Where(a => a.Resource == transmute.TransmuteResourceType).Sum(a => a.Required);
-                                    if (!transmute.DoTransmute(transRequest, packetsNeeded, activityCost, this, queryOnly))
+                                    if (!transmute.DoTransmute(transRequest, request.Required - request.Available, activityCost, this, queryOnly))
                                     {
                                         allTransmutesSucceeed = false;
                                         break;
@@ -395,6 +396,9 @@ namespace Models.CLEM.Resources
                             }
                             else // assumed successful transaction based on where clause in transaction selection
                                 // Add resource: tops up resource from transmutation so available in CheckResources
+
+                                // if pricing based 
+
                                 (resourceTypeInShortfall as IResourceType).Add(packetsNeeded * ((transmutation.TransmutationPacketSize == 0)?1: transmutation.TransmutationPacketSize), request.ActivityModel, request.ResourceTypeName, transmutation.TransactionCategory);
                         }
                     }
