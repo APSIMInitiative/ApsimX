@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Globalization;
 using System.IO;
 using System.IO.Pipes;
 using System.Linq;
@@ -36,6 +37,11 @@ namespace APSIM.Server.IO
         private const string ack = "ACK";
         private const string fin = "FIN";
         private Stream connection;
+
+        // Assumes that we never care about the time of day, and that we won't have issues with timezone conversion changing the date.
+        // We simply convert the DateTime to an ISO date string, e.g. "2022-03-04".
+        private const string dateFormat = "yyyy-MM-dd";
+        private static DateTimeFormatInfo dateFormatInfo = DateTimeFormatInfo.InvariantInfo;
 
         /// <summary>
         /// Create a new <see cref="NativeCommunicationProtocol" /> instance which uses the
@@ -236,10 +242,9 @@ namespace APSIM.Server.IO
             return BitConverter.ToBoolean(buffer);
         }
 
-        public object ReadDate()
+        public DateTime ReadDate()
         {
-            // tbi - need to give this one some thought.
-            throw new NotImplementedException();
+            return StringToDate(ReadString());
         }
 
         public string ReadString()
@@ -250,40 +255,69 @@ namespace APSIM.Server.IO
             return Encoding.Default.GetString(buffer);
         }
 
-        {
-        }
-
-        {
-        }
-
-        {
-        }
-
-        {
-        }
-
         private void SendArray(Array data)
         {
-            PipeUtilities.SendToPipe(connection, GetBytes(data));
+            PipeUtilities.SendToPipe(connection, GetBytes(data).ToArray());
         }
 
-        private byte[] GetBytes(Array data)
+        private IEnumerable<byte> GetBytes(Array data)
         {
             if (data == null || data.Length < 1)
                 return new byte[0];
             Type arrayType = data.GetValue(0).GetType();
             if (arrayType == typeof(int))
-                return data.Cast<int>().SelectMany(i => BitConverter.GetBytes(i)).ToArray();
+                return data.Cast<int>().SelectMany(IntBytes);
             else if (arrayType == typeof(double))
-                return data.Cast<double>().SelectMany(i => BitConverter.GetBytes(i)).ToArray();
+                return data.Cast<double>().SelectMany(DoubleBytes);
             else if (arrayType == typeof(bool))
-                return data.Cast<bool>().SelectMany(i => BitConverter.GetBytes(i)).ToArray();
-            else if (arrayType == typeof(DateTime))
-                throw new NotImplementedException();
-            else if (arrayType == typeof(string))
-                return data.Cast<string>().SelectMany(i => Encoding.Default.GetBytes(i)).ToArray();
+                return data.Cast<bool>().SelectMany(BoolBytes);
+            else if (arrayType == typeof(DateTime)) {
+                return data.Cast<DateTime>().SelectMany(DateBytesWithLength);
+            } else if (arrayType == typeof(string))
+                return data.Cast<string>().SelectMany(StringBytesWithLength);
             else
                 throw new NotImplementedException();
+        }
+
+        private IEnumerable<byte> IntBytes(int i)
+        {
+            return BitConverter.GetBytes(i);
+        }
+
+        private IEnumerable<byte> DoubleBytes(double d)
+        {
+            return BitConverter.GetBytes(d);
+        }
+
+        private IEnumerable<byte> BoolBytes(bool b)
+        {
+            return BitConverter.GetBytes(b);
+        }
+
+        private IEnumerable<byte> DateBytesWithLength(DateTime date)
+        {
+            return StringBytesWithLength(DateToString(date));
+        }
+
+        private IEnumerable<byte> StringBytes(string s)
+        {
+            return Encoding.Default.GetBytes(s);
+        }
+
+        private IEnumerable<byte> StringBytesWithLength(string s)
+        {
+            IEnumerable<byte> data = StringBytes(s);
+            return IntBytes(data.Count()).Concat(data);
+        }
+
+        private string DateToString(DateTime date)
+        {
+            return date.ToString(dateFormat, dateFormatInfo);
+        }
+
+        private DateTime StringToDate(string str)
+        {
+            return DateTime.Parse(str, dateFormatInfo);
         }
 
         public void SendCommand(ICommand command)
