@@ -9337,6 +9337,14 @@
                                   "Children": [
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
+                                      "VariableName": "[DMPlantMaxCalculator].Script.DMPlantMax",
+                                      "Name": "dmPlantMax",
+                                      "Children": [],
+                                      "Enabled": true,
+                                      "ReadOnly": false
+                                    },
+                                    {
+                                      "$type": "Models.Functions.VariableReference, Models",
                                       "VariableName": "[Stem].Live.Wt",
                                       "Name": "dmGreen",
                                       "Children": [],
@@ -9344,19 +9352,10 @@
                                       "ReadOnly": false
                                     },
                                     {
-                                      "$type": "Models.Functions.Constant, Models",
-                                      "FixedValue": 0.0,
-                                      "Units": null,
-                                      "Name": "dmPlantMax",
-                                      "Children": [],
-                                      "Enabled": true,
-                                      "ReadOnly": false
-                                    },
-                                    {
-                                      "$type": "Models.Memo, Models",
-                                      "Text": "Need to implement DMPlantMax to limit the amount of DM that can be allocated once the themral time target is reached.",
-                                      "Name": "Memo",
-                                      "Children": [],
+                                      "$type": "Models.Manager, Models",
+                                      "Code": "using System;\nusing Models.Core;\nusing Models.Interfaces;\nusing Models.PMF;\nusing APSIM.Shared.Utilities;\n\nnamespace Models\n{\n    [Serializable]\n    public class Script : Model\n    {\n        /// <summary>\n        /// Link to summary. Used for diagnostic purposes.\n        /// </summary>\n        [Link]\n        private ISummary summary;\n\n        /// <summary>\n        /// Max stem DM. Once stem DM reaches this amount its demand will\n        /// go to 0.\n        /// </summary>\n        public double DMPlantMax { get; private set; }\n\n        /// <summary>\n        /// Total accumulated thermal time.\n        /// </summary>\n        private double accumTT = 0;\n\n        /// <summary>\n        /// Called at the start of the simulation. Resets the script to its\n        /// initial state.\n        /// </summary>\n        /// <param name=\"sender\">The sender of the event</param>\n        /// <param name=\"e\">Event data.</param>\n        [EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n        {\n            Reset();\n        }\n\n        /// <summary>\n        /// Called at the end of the simulation. Resets the script to its\n        /// initial state.\n        /// </summary>\n        /// <param name=\"sender\">The sender of the event</param>\n        /// <param name=\"e\">Event data.</param>\n        [EventSubscribe(\"EndOfSimulation\")]\n        private void OnEndOfSimulation(object sender, EventArgs e)\n        {\n            Reset();\n        }\n\n        /// <summary>\n        /// Reset the script to its initial state.\n        /// </summary>\n        private void Reset()\n        {\n            DMPlantMax = 9999;\n            accumTT = 0;\n        }\n\n        /// <summary>\n        /// Thermal time accumulator method.\n        /// </summary>\n        [EventSubscribe(\"DoPhenology\")]\n        private void OnEndOfDay(object sender, EventArgs e)\n        {\n            double dltTT = Get(\"[Phenology].DltTT.Value()\");\n            accumTT += dltTT;\n        }\n\n        /// <summary>\n        /// Set DM plant max once we reach a certain point of phenological\n        /// development.\n        /// </summary>\n        [EventSubscribe(\"PostPhenology\")]\n        private void PostPhenology(object sender, EventArgs e)\n        {\n            if (DMPlantMax > 9990)\n            {\n                double ttNow = accumTT;\n                double ttToFlowering = Get(\"[Phenology].TTToFlowering.Value()\");\n                double dmPlantMaxTT = Get(\"[Grain].PgrT1.Value()\");\n                if (ttNow > dmPlantMaxTT + ttToFlowering)\n                {\n                    DMPlantMax = Get(\"[Stem].Live.Wt\");\n                    summary.WriteMessage(this, $\"Setting stem max DM to current DM\", MessageType.Diagnostic);\n                }\n            }\n        }\n\n        /// <summary>\n        /// Get a variable and return its numeric value. Throw if path is invalid.\n        /// </summary>\n        private double Get(string path)\n        {\n            IVariable variable = FindByPath(path);\n            if (variable == null || variable.Value == null)\n                throw new Exception($\"Unable to resolve path {path}\");\n            if ( !(variable.Value is double result) )\n                throw new Exception($\"{path} resolved to a non-numeric type: {variable.Value.GetType()}\");\n            return result;\n        }\n    }\n}\n",
+                                      "Parameters": [],
+                                      "Name": "DMPlantMaxCalculator",
                                       "Enabled": true,
                                       "ReadOnly": false
                                     }
