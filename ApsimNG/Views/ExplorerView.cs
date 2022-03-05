@@ -59,7 +59,6 @@ namespace UserInterface.Views
             if (CurrentRightHandView != null)
                 CurrentRightHandView.Dispose();
 
-            GC.Collect();
             ViewBase view = control as ViewBase;
             if (view != null)
             {

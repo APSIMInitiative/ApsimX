@@ -240,13 +240,11 @@
                 if (disposing && mainWidget != null)
                 {
                     Utility.GtkUtil.DetachAllHandlers(mainWidget);
-                    bool isToplevel = mainWidget.IsToplevel;
                     mainWidget.Destroy();
                     // I'm not sure whether this is necessary, but I was getting rather rare, unpredicatable
                     // access violations as described in https://githubmemory.com/repo/GtkSharp/GtkSharp/issues/248
                     // The suggestion there was to Dispose the Widget, at least if it's top-level
                     // CAUTION: Behaviour is likely to change with new versions of Gtk#
-                    //if (isToplevel)
                      mainWidget.Dispose();
                 }
 
