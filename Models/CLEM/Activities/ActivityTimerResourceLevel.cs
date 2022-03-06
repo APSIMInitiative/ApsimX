@@ -120,22 +120,7 @@ namespace Models.CLEM.Activities
                         break;
                 }
 
-                if (due)
-                {
-                    // report activity performed.
-                    ActivityPerformedEventArgs activitye = new ActivityPerformedEventArgs
-                    {
-                        Activity = new BlankActivity()
-                        {
-                            Status = ActivityStatus.Timer,
-                            Name = this.Name
-                        }
-                    };
-                    this.OnActivityPerformed(activitye);
-                    activitye.Activity.SetGuID(this.UniqueID);
-                    return true;
-                }
-                return false;
+                return due;
             }
         }
 

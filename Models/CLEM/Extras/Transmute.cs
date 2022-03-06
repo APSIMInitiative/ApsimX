@@ -31,6 +31,7 @@ namespace Models.CLEM
         private ResourcePricing shortfallPricing;
         private double shortfallPacketSize = 1;
         private bool shortfallWholePackets = false;
+        private double shortfallPricePacketMultiplier;
         private FinanceType financeType; 
 
         /// <inheritdoc/>
@@ -40,17 +41,20 @@ namespace Models.CLEM
 
         /// <inheritdoc/>
         [Description("Resource to transmute (B)")]
+        [Category("Direct style:By pricing style", "All:All")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(AnimalFoodStore), typeof(Finance), typeof(HumanFoodStore), typeof(GreenhouseGases), typeof(Labour), typeof(ProductStore), typeof(WaterStore) } })]
         [Required]
         public string TransmuteResourceTypeName { get; set; }
 
         /// <inheritdoc/>
         [Description("Amount (B) per packet (A)")]
+        [Category("Direct style", "All")]
         [Required, GreaterThanEqualValue(0)]
         public double AmountPerPacket { get; set; }
 
         /// <inheritdoc/>
         [Description("Transmute style")]
+        [Category("Direct style:By pricing style", "All:All")]
         public TransmuteStyle TransmuteStyle { get; set; }
 
         ///<inheritdoc/>
@@ -58,6 +62,7 @@ namespace Models.CLEM
 
         ///<inheritdoc/>
         [Description("Resource for price-based transactions")]
+        [Category("By pricing style", "All")]
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "No transactions", typeof(Finance) } })]
         [System.ComponentModel.DefaultValueAttribute("No transactions")]
         public string FinanceTypeForTransactionsName { get; set; }
@@ -113,31 +118,43 @@ namespace Models.CLEM
                     else
                         transmutePricing = shortfallPricing;
                 }
+
+                shortfallPricePacketMultiplier = (Parent as Transmutation).TransmutationPacketSize / shortfallPacketSize;
+
             }
         }
 
         ///<inheritdoc/>
-        public bool DoTransmute(ResourceRequest request, double shortfallPacketsNeeded, double requiredByActivities, ResourcesHolder holder, bool queryOnly)
+        public bool DoTransmute(ResourceRequest request, double shortfall, double requiredByActivities, ResourcesHolder holder, bool queryOnly)
         {
+            double transPackets = 0;
+            double shortfallPackets = shortfall / shortfallPacketSize;
             switch (TransmuteStyle)
             {
                 case TransmuteStyle.Direct:
-                    request.Required = shortfallPacketsNeeded * AmountPerPacket;
+                    if ((Parent as Transmutation).UseWholePackets)
+                        shortfallPackets = Math.Ceiling(shortfallPackets);
+                    request.Required = shortfallPackets * AmountPerPacket;
                     break;
                 case TransmuteStyle.UsePricing:
                     if (shortfallPricing.CurrentPrice > 0)
-                        if (transmutePricing.CurrentPrice > 0)
+                    {
+                        if (transmutePricing.CurrentPrice == 0)
                             // no value of transmute resource
                             request.Required = 0;
                         else
-                            request.Required = (shortfallPacketsNeeded * shortfallPricing.CurrentPrice) / transmutePricing.CurrentPrice;
-                    // else, there is no conversion, so assume the required is provided.
+                        {
+                            if (shortfallWholePackets)
+                                shortfallPackets = Math.Ceiling(shortfallPackets);
+                            request.Required = shortfallPackets * shortfallPricing.CurrentPrice;
 
-                    // check that sell whole packets are honoured
-                    if (transmutePricing.UseWholePackets)
-                    {
-                        double pricingWholePacketAdjusted = Math.Ceiling(request.Required / transmutePricing.PacketSize) * transmutePricing.PacketSize;
-                        request.Required = pricingWholePacketAdjusted;
+                            if(transmutePricing != shortfallPricing && transmutePricing.UseWholePackets)
+                            {
+                                transPackets = shortfall / transmutePricing.PacketSize;
+                                if (transmutePricing.UseWholePackets)
+                                    transPackets = Math.Ceiling(transPackets);
+                            }
+                        }
                     }
                     break;
                 default:
@@ -150,23 +167,26 @@ namespace Models.CLEM
             }
             else
             {
-                TransmuteResourceType.Remove(request);
-                if (TransmuteStyle == TransmuteStyle.UsePricing && financeType != null)
+                if (TransmuteStyle == TransmuteStyle.UsePricing && !(TransmuteResourceType is FinanceType))
                 {
                     // add finance transaction to sell transmute
-                    financeType.Add(request.Required * transmutePricing.CurrentPrice, request.ActivityModel, TransmuteResourceTypeName, request.Category);
+                    financeType.Add(transPackets * transmutePricing.CurrentPrice, request.ActivityModel, TransmuteResourceTypeName, request.Category);
 
                     // add finance transaction to buy shortfall
                     ResourceRequest financeRequest = new ResourceRequest()
                     {
                         Resource = financeType,
-                        Required = shortfallPacketsNeeded * shortfallPacketSize * shortfallPricing.CurrentPrice,
+                        Required = shortfallPackets * shortfallPricing.CurrentPrice,
                         RelatesToResource = request.ResourceTypeName,
                         ResourceType = typeof(Finance),
                         ActivityModel = request.ActivityModel,
                         Category = request.Category,
                     };
                     financeType.Remove(financeRequest);
+                }
+                else
+                {
+                    TransmuteResourceType.Remove(request);
                 }
             }
             return true;
@@ -175,11 +195,14 @@ namespace Models.CLEM
         ///<inheritdoc/>
         public double ShortfallPackets(double amount)
         {
+            // if shortfall price packet multiplier != 1
+            // the packet size being used (pricing) is different to the shotfall resource packet size specified
+
             double unitsNeeded = amount / (shortfallPacketSize==0?1: shortfallPacketSize);
             if (shortfallWholePackets)
                 unitsNeeded = Math.Ceiling(unitsNeeded);
 
-            return unitsNeeded;
+            return unitsNeeded / shortfallPricePacketMultiplier;
         }
 
         #region validation
