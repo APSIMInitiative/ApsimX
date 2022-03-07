@@ -787,9 +787,9 @@ namespace UserInterface.Views
         {
             try
             {
-                accelerators.Dispose();
                 popupMenu.Clear();
                 popupMenu.Dispose();
+                accelerators.Dispose();
                 findView.Destroy();
                 textView.PopulatePopup -= OnPopulatePopupMenu;
                 textView.VisibilityNotifyEvent -= OnVisibilityNotify;
