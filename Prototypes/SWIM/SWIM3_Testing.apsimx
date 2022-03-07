@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 285,
   "Version": 148,
   "Name": "Simulations",
   "Children": [
@@ -69,36 +69,40 @@
                   "Values": null,
                   "Name": "Gradient",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
-                    "[SWIM3_SetLowerBC].Script.LowerBCType=seepage"
+                    "[SWIM3_SetLowerBC].Script.LowerBCType=seepage",
+                    "[SWIM3].MaxWaterIncrement=5",
+                    "[SWIM3].DTMax = 30"
                   ],
                   "Paths": null,
                   "Values": null,
                   "Name": "Seepage",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Factorial.CompositeFactor, Models",
                   "Specifications": [
                     "[SWIM3_SetLowerBC].Script.LowerBCType=potential",
-                    "[SWIM3_SetLowerBC].Script.LowerBCValue=-1000"
+                    "[SWIM3_SetLowerBC].Script.LowerBCValue=-1000",
+                    "[SWIM3].MaxWaterIncrement=5",
+                    "[SWIM3].DTMax = 30"
                   ],
                   "Paths": null,
                   "Values": null,
                   "Name": "Potential",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -114,7 +118,7 @@
                   "ExcelWorkSheetName": "",
                   "Name": "Weather",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -123,7 +127,7 @@
                   "End": "2005-01-31T00:00:00",
                   "Name": "Clock",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -131,14 +135,14 @@
                   "Verbosity": 100,
                   "Name": "summaryfile",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
                   "Name": "SoilArbitrator",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -153,7 +157,7 @@
                   "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -288,7 +292,7 @@
                   ],
                   "Name": "Forages",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -304,7 +308,7 @@
                       "Code": "",
                       "Parameters": [],
                       "Name": "CalculateRollingWaterBalance",
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -312,7 +316,7 @@
                       "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Linq;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] ISummary summary;\n        [Link] IWeather weather;\n        [Link] Irrigation irrigation;\n        [Link] private ISoilWater waterBalance;  // and I think this will give solutes as well\n        [Link] private IPlant[] plants;\n        [Link] private Nutrient nutrient;\n\n  \n        // add (no3+nh4) uptake as N uptake to IPlant\n\n        public double NBalanceCumulative  { get; set; }\n        public double NBalanceToday  { get; set; }\n\n        public double SoilNAtInitialisation  { get; set; }\n        public double SoilNYesterday  { get; set; }\n\t\tpublic double SoilNNow  { get; set; }\n\n\t\tpublic double PlantNUptake { get; set; }\n\n        public double NAddedToday  { get; set; }\n        public double NRemovedToday  { get; set; }\n        public double NAddedCumulative  { get; set; }\n        public double NRemovedCumulative  { get; set; }\n\n\n\n        [EventSubscribe(\"DoDailyInitialisation\")]\n        private void DoDailyInitialisation(object sender, EventArgs e)\n        {\n        \tif (clock.Today == clock.StartDate) \n        \t{\n        \t\t// capture the N in and on the soil as a starting point\n        \t\t// doing this here as need the models to have intialised first\n\t        \tSoilNAtInitialisation = 0.0; // leave this here as a reminder that once surface solutes are enabled will have to add here\n\t        \t//SoilNAtInitialisation += nutrient.Urea.kgha.Sum() + nutrient.NH4.kgha.Sum() + nutrient.NO3.kgha.Sum() + nutrient.TotalN.Urea.kgha.Sum() ;// + nutrient.\n    \t    \t//for (int i = 0; i < waterBalance.SWmm.Length; i++)\n        \t\t\t//SoilNAtInitialisation += waterBalance...SWmm[i];\n\n        \t\t//SoilWaterYesterday = SoilWaterAtInitialisation;\t\t\n        \t\t//WaterAddedCumulative = 0.0;\n        \t\t//WaterRemovedCumulative = 0.0;\n        \t\t//SoilWaterNow = 0.0;\n        \t}\n        \telse\n        \t{\n        \t\t//SoilWaterYesterday = SoilWaterNow;\t\t// SoilWaterNow holds the value calculated at reporting yesterday\n        \t\t//WaterAddedToday = 0.0;\n        \t\t//WaterRemovedToday = 0.0;\n        \t}\n\t\t}\n\n        //[EventSubscribe(\"DoReportCalculations\")]\n        private void DoReportCalculations(object sender, EventArgs e)\n        {\n        \t/* All the WaterBalance variables should be zero. A positive value is a generation of water.\n        \tSoilWaterNow = waterBalance.Pond;\n        \tfor (int i = 0; i < waterBalance.SWmm.Length; i++)\n        \t\tSoilWaterNow += waterBalance.SWmm[i]; // so all the water stored in or on the soil\n\n        \tWaterAddedToday = weather.Rain + irrigation.IrrigationApplied;   // Can there be runon? Probably not but this will throw an error if that ever happens\n        \tWaterAddedCumulative+= WaterAddedToday;\n\n        \tWaterRemovedToday = waterBalance.Drainage + waterBalance.Es + waterBalance.Runoff;\n        \tPlantWaterUptake = 0.0;\n        \tforeach (var plant in plants)\n        \t\tPlantWaterUptake += plant.WaterUptake.Sum();\n\n        \tWaterRemovedToday += PlantWaterUptake;\n        \t// Need to add subsurface drainage here\n\n        \tWaterRemovedCumulative += WaterRemovedToday;\n\n        \tWaterBalanceToday = WaterAddedToday - WaterRemovedToday - (SoilWaterNow - SoilWaterYesterday);\n        \tWaterBalanceCumulative = WaterAddedCumulative - WaterRemovedCumulative - (SoilWaterNow - SoilWaterAtInitialisation);\n        \t// need to add a warning value and a crash value and make a crash\n\t\t*/}\n    }\n}\n",
                       "Parameters": [],
                       "Name": "CalculateRollingSoilNitrogenBalance",
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -329,7 +333,7 @@
                         }
                       ],
                       "Name": "SWIM3_SetLowerBC",
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -374,7 +378,7 @@
                         }
                       ],
                       "Name": "AutomaticIrrigation",
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -520,7 +524,7 @@
                               "XFMetadata": null,
                               "Name": "AgPRyegrassSoil",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -551,18 +555,18 @@
                               "XFMetadata": null,
                               "Name": "AgPWhiteCloverSoil",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Soils.Nutrients.Nutrient, Models",
                           "ResourceName": "Nutrient",
                           "Name": "Nutrient",
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -614,7 +618,7 @@
                           "FOMMetadata": null,
                           "Name": "Organic",
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -664,7 +668,7 @@
                           "PHMetadata": null,
                           "Name": "Chemical",
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -751,7 +755,7 @@
                           "PHUnits": 0,
                           "Name": "Initial values",
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -814,7 +818,7 @@
                               ],
                               "Name": "Urea",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -851,7 +855,7 @@
                               ],
                               "Name": "NH4",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -888,7 +892,7 @@
                               ],
                               "Name": "NO3",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -925,7 +929,7 @@
                               ],
                               "Name": "CL",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -962,7 +966,7 @@
                               ],
                               "Name": "PlantAvailableNH4",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -999,7 +1003,7 @@
                               ],
                               "Name": "PlantAvailableNO3",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -1036,7 +1040,7 @@
                               ],
                               "Name": "LabileP",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             },
                             {
@@ -1073,18 +1077,18 @@
                               ],
                               "Name": "UnavailableP",
                               "Children": [],
-                              "Enabled": false,
+                              "Enabled": true,
                               "ReadOnly": false
                             }
                           ],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Soils.Nutrients.Solute, Models",
                           "Name": "CL",
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
@@ -1123,32 +1127,32 @@
                           ],
                           "Name": "LayerStructure",
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         },
                         {
                           "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                           "Name": "SoilTemperature",
                           "Children": [],
-                          "Enabled": false,
+                          "Enabled": true,
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Irrigation, Models",
                       "Name": "Irrigation",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Fertiliser, Models",
                       "ResourceName": "Fertiliser",
                       "Name": "Fertiliser",
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -1161,7 +1165,7 @@
                       "InitialCNR": 17.0,
                       "ResourceName": "SurfaceOrganicMatter",
                       "Name": "SurfaceOrganicMatter",
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -1193,7 +1197,7 @@
                       "SpeciesCutProportions": null,
                       "Name": "SimpleGrazing",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -1203,7 +1207,7 @@
                       "InitialRootDepth": 350.0,
                       "ResourceName": "AGPRyegrass",
                       "Name": "AGPRyegrass",
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -1213,7 +1217,7 @@
                       "InitialRootDepth": 300.0,
                       "ResourceName": "AGPWhiteClover",
                       "Name": "AGPWhiteClover",
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -1241,15 +1245,15 @@
                       "GroupByVariableName": null,
                       "Name": "Report",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             },
             {
@@ -1315,11 +1319,11 @@
                       "Filter": null,
                       "Name": "Daily WaterBal",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1379,11 +1383,11 @@
                       "Filter": null,
                       "Name": "Cumulative WaterBal",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1443,11 +1447,11 @@
                       "Filter": null,
                       "Name": "Stored",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1507,11 +1511,11 @@
                       "Filter": null,
                       "Name": "LowerPot",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1581,7 +1585,7 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "LowerPot",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -1609,11 +1613,11 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Drainage",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1683,7 +1687,7 @@
                       "Filter": "[SimulationName] LIKE '*Seepage'",
                       "Name": "LowerPot",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -1711,11 +1715,11 @@
                       "Filter": "[SimulationName] LIKE '*Seepage'",
                       "Name": "Drainage",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1785,7 +1789,7 @@
                       "Filter": "[SimulationName] LIKE '*Potential'",
                       "Name": "LowerPot",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -1813,7 +1817,7 @@
                       "Filter": "[SimulationName] LIKE '*Potential'",
                       "Name": "Drainage",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     },
                     {
@@ -1841,11 +1845,11 @@
                       "Filter": "[SimulationName] LIKE '*Gradient'",
                       "Name": "Rain_Irrig",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1905,11 +1909,11 @@
                       "Filter": null,
                       "Name": "Drainage",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -1969,11 +1973,11 @@
                       "Filter": null,
                       "Name": "Drainage",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -2033,11 +2037,11 @@
                       "Filter": null,
                       "Name": "Uptake",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -2097,11 +2101,11 @@
                       "Filter": null,
                       "Name": "Runoff",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -2161,11 +2165,11 @@
                       "Filter": null,
                       "Name": "Irrigation",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 },
                 {
@@ -2225,19 +2229,19 @@
                       "Filter": null,
                       "Name": "Irrigation",
                       "Children": [],
-                      "Enabled": false,
+                      "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": false,
+              "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "Enabled": false,
+          "Enabled": true,
           "ReadOnly": false
         }
       ],
@@ -4079,7 +4083,7 @@
                   "Values": null,
                   "Name": "PowerFunction",
                   "Children": [],
-                  "Enabled": false,
+                  "Enabled": true,
                   "ReadOnly": false
                 }
               ],
@@ -14122,12 +14126,12 @@
       "$type": "Models.Core.Folder, Models",
       "ShowInDocs": false,
       "GraphsPerPage": 6,
-      "Name": "SoluteTesting",
+      "Name": "SoluteTestingLinear",
       "Children": [
         {
           "$type": "Models.Factorial.Experiment, Models",
           "DisabledSimNames": null,
-          "Name": "Experiment",
+          "Name": "E5_1_linear",
           "Children": [
             {
               "$type": "Models.Factorial.Factors, Models",
@@ -14171,64 +14175,6 @@
                         0.0,
                         0.0,
                         0.0
-                      ],
-                      "FIP": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                      ],
-                      "Name": "CL",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Factorial.Factor, Models",
-                  "Specification": "[Swim3].CL",
-                  "Name": "E025F100",
-                  "Children": [
-                    {
-                      "$type": "Models.Soils.SwimSoluteParameters, Models",
-                      "WaterTableConcentration": 0.0,
-                      "D0": 0.05,
-                      "Depth": [
-                        "0-6",
-                        "6-17",
-                        "17-31",
-                        "31-55",
-                        "55-75",
-                        "75-95",
-                        "95-115",
-                        "115-150"
-                      ],
-                      "Thickness": [
-                        60.0,
-                        110.0,
-                        140.0,
-                        240.0,
-                        200.0,
-                        200.0,
-                        200.0,
-                        350.0
-                      ],
-                      "Exco": [
-                        0.25,
-                        0.25,
-                        0.25,
-                        0.25,
-                        0.25,
-                        0.25,
-                        0.25,
-                        0.25
                       ],
                       "FIP": [
                         1.0,
@@ -14310,7 +14256,7 @@
                 {
                   "$type": "Models.Factorial.Factor, Models",
                   "Specification": "[Swim3].CL",
-                  "Name": "E075F100",
+                  "Name": "E100F100",
                   "Children": [
                     {
                       "$type": "Models.Soils.SwimSoluteParameters, Models",
@@ -14337,14 +14283,14 @@
                         350.0
                       ],
                       "Exco": [
-                        0.75,
-                        0.75,
-                        0.75,
-                        0.75,
-                        0.75,
-                        0.75,
-                        0.75,
-                        0.75
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
                       ],
                       "FIP": [
                         1.0,
@@ -14368,7 +14314,7 @@
                 {
                   "$type": "Models.Factorial.Factor, Models",
                   "Specification": "[Swim3].CL",
-                  "Name": "E050F030",
+                  "Name": "E150F100",
                   "Children": [
                     {
                       "$type": "Models.Soils.SwimSoluteParameters, Models",
@@ -14395,24 +14341,140 @@
                         350.0
                       ],
                       "Exco": [
-                        15.0,
-                        15.0,
-                        15.0,
-                        15.0,
-                        15.0,
-                        15.0,
-                        15.0,
-                        15.0
+                        1.5,
+                        1.5,
+                        1.5,
+                        1.5,
+                        1.5,
+                        1.5,
+                        1.5,
+                        1.5
                       ],
                       "FIP": [
-                        0.8,
-                        0.8,
-                        0.8,
-                        0.8,
-                        0.8,
-                        0.8,
-                        0.8,
-                        0.8
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "CL",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[Swim3].CL",
+                  "Name": "E300F100",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SwimSoluteParameters, Models",
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.05,
+                      "Depth": [
+                        "0-6",
+                        "6-17",
+                        "17-31",
+                        "31-55",
+                        "55-75",
+                        "75-95",
+                        "95-115",
+                        "115-150"
+                      ],
+                      "Thickness": [
+                        60.0,
+                        110.0,
+                        140.0,
+                        240.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        350.0
+                      ],
+                      "Exco": [
+                        3.0,
+                        3.0,
+                        3.0,
+                        3.0,
+                        3.0,
+                        3.0,
+                        3.0,
+                        3.0
+                      ],
+                      "FIP": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "CL",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[Swim3].CL",
+                  "Name": "E1000F100",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SwimSoluteParameters, Models",
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.05,
+                      "Depth": [
+                        "0-6",
+                        "6-17",
+                        "17-31",
+                        "31-55",
+                        "55-75",
+                        "75-95",
+                        "95-115",
+                        "115-150"
+                      ],
+                      "Thickness": [
+                        60.0,
+                        110.0,
+                        140.0,
+                        240.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        350.0
+                      ],
+                      "Exco": [
+                        10.0,
+                        10.0,
+                        10.0,
+                        10.0,
+                        10.0,
+                        10.0,
+                        10.0,
+                        10.0
+                      ],
+                      "FIP": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
                       ],
                       "Name": "CL",
                       "Children": [],
@@ -14431,7 +14493,7 @@
               "$type": "Models.Core.Simulation, Models",
               "IsRunning": false,
               "Descriptors": null,
-              "Name": "E5",
+              "Name": "Base_SoluteLinear",
               "Children": [
                 {
                   "$type": "Models.Memo, Models",
@@ -14454,7 +14516,7 @@
                 {
                   "$type": "Models.Clock, Models",
                   "Start": "2000-01-01T00:00:00",
-                  "End": "2000-02-28T00:00:00",
+                  "End": "2000-04-30T00:00:00",
                   "Name": "Clock",
                   "Children": [],
                   "Enabled": true,
@@ -14651,9 +14713,9 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.Surface;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Linq;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] ISummary summary;\n        [Link] IWeather weather;\n        [Link] Irrigation irrigation;\n        [Link] private SurfaceOrganicMatter surfaceOM;\n        [Link] private ISoilWater soil;  // and I think this will give solutes as well\n        [Link] private Fertiliser fertiliser;\n        [Link(ByName = true)] private Solute cl;\n        [Link] Swim3 swim3;\n        [Link(ByName = true)] private Solute no3;\n  \n        // add (no3+nh4) uptake as Cl uptake to IPlant\n\n        public double ClBalanceCumulative  { get; set; }\n        public double ClBalanceToday  { get; set; }\n\n        public double SoilClAtInitialisation  { get; set; }\n        public double SoilClYesterday  { get; set; }\n\t\tpublic double SoilClNow  { get; set; }\n\n        public double ClAddedToday  { get; set; }\n        public double ClRemovedToday  { get; set; }\n        public double ClAddedCumulative  { get; set; }\n        public double ClRemovedCumulative  { get; set; }\n\n\n\n        [EventSubscribe(\"DoDailyInitialisation\")] private void DoDailyInitialisation(object sender, EventArgs e)\n        {\n        \tif (clock.Today == clock.StartDate) \n\t        {\n\t        \tcl.AddKgHaDelta(SoluteSetterType.Other, new double[] {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});\n\t        \tno3.AddKgHaDelta(SoluteSetterType.Other, new double[] {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}); \n\t\t\t\tSoilClAtInitialisation = cl.kgha.Sum();  \n\t        \tSoilClYesterday = SoilClAtInitialisation;\n\t        \tSoilClNow = SoilClAtInitialisation;\n\t        }\n\t\t}\n\n        [EventSubscribe(\"DoReportCalculations\")] private void DoReportCalculations(object sender, EventArgs e)\n        {\n        \tSoilClYesterday = SoilClNow; // capture yesterday's value before overwriting\n        \tSoilClNow =  cl.kgha.Sum();  \n\n\t\t\t// fertiliser only as this is a bar soil simulation\n        \tClAddedToday = 0.0; // ???? how to get this\n        \tClAddedCumulative+= ClAddedToday;\n        \t\n        \t// leached only for chloride\n        \tClRemovedToday = swim3.LeachCL;  \n        \tClRemovedCumulative += ClRemovedToday;\n\n        \tClBalanceToday = ClAddedToday - ClRemovedToday - (SoilClNow - SoilClYesterday);\n        \tClBalanceCumulative = ClAddedCumulative - ClRemovedCumulative - (SoilClNow - SoilClAtInitialisation);\n        \t// need to add a warning value and a crash value and make a crash\n\t\t}\n    }\n}\n",
+                      "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.Surface;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Linq;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] ISummary summary;\n        /*[Link] IWeather weather;\n        [Link] Irrigation irrigation;\n        [Link] private SurfaceOrganicMatter surfaceOM;\n        [Link] private ISoilWater soil;  // and I think this will give solutes as well\n        [Link] private Fertiliser fertiliser;\n        [Link] Swim3 swim3;\n        [Link(ByName = true)] private Solute no3; */\n        [Link(ByName = true)] private Solute cl;\n  \n\n\n\n\n        [EventSubscribe(\"DoDailyInitialisation\")] private void DoDailyInitialisation(object sender, EventArgs e)\n        {\n        \tif (clock.Today == clock.StartDate) \n\t        \tcl.AddKgHaDelta(SoluteSetterType.Other, new double[] {100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});\n\t\t}\n    }\n}\n",
                       "Parameters": [],
-                      "Name": "SoilClBalance",
+                      "Name": "SetSoluteInSoil",
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -14861,6 +14923,42 @@
                         {
                           "$type": "Models.Operation, Models",
                           "Date": "2000-03-30",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-04-05",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-04-10",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-04-15",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-04-20",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-04-25",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-04-30",
                           "Action": "[Irrigation].Apply(amount:100,duration:60);",
                           "Enabled": true
                         }
@@ -15867,35 +15965,11 @@
                       "$type": "Models.Report, Models",
                       "VariableNames": [
                         "[Clock].Today as Date",
-                        "[SoilNitrogenBalance].Script.NBalanceToday as NBalanceToday",
-                        "[SoilNitrogenBalance].Script.NBalanceCumulative as NBalanceCumulative",
-                        "sum([Soil].Nutrient.TotalN) as TotalN",
-                        "sum([Nutrient].Inert.N) + sum([Nutrient].Organic.N) as OrganicN",
-                        "sum([Nutrient].MineralN) as MineralN",
-                        "sum([Nutrient].Urea.kgha) as UreaN",
-                        "sum([Nutrient].NH4.kgha) as NH4N",
-                        "sum([Nutrient].NO3.kgha) as NO3N",
-                        "[SWIM3].LeachUrea + [SWIM3].LeachNH4 + [SWIM3].LeachNO3 as LeachN ",
-                        "[SWIM3].LeachUrea as LeachUrea",
-                        "[SWIM3].LeachNH4 as LeachNH4",
-                        "[SWIM3].LeachNO3 as LeachNO3",
-                        "sum([Nutrient].DenitrifiedN) as DenitrifiedN ",
-                        "[SWIM3].Runoff as Runoff",
-                        "[SWIM3].SubsurfaceDrain as SubsurfaceDrain",
-                        "[SWIM3].SubsurfaceDrainUrea as SubsurfaceDrainUrea",
-                        "[SWIM3].SubsurfaceDrainNH4 as SubsurfaceDrainNH4",
-                        "[SWIM3].SubsurfaceDrainNO3 as SubsurfaceDrainNO3",
-                        "[SWIM3].SubsurfaceDrainUrea + [SWIM3].SubsurfaceDrainNH4 + [SWIM3].SubsurfaceDrainNO3 as SubsurfaceDrainN",
-                        "[SWIM3].Drainage as Drainage",
-                        "sum([Soil].CL.kgha) as Cl",
+                        "sum([Soil].CL.kgha) as StoredCl",
                         "[SWIM3].LeachCL as LeachCl",
-                        "[SWIM3].LeachCL / 100.0 as LeachClProp",
-                        "[SWIM3].ConcWaterCL",
-                        "[Soil].CL.kgha as Cl_layer",
-                        "sum([Soil].Physical.DULmm) as DUL",
-                        "sum([Soil].Physical.SATmm) as SAT",
-                        "[Nutrient].NO3.kgha",
-                        "[SWIM3].CL.FIP"
+                        "//sum([Soil].CL.kgha) + [SWIM3].LeachCL - 100.0 as BalanceCl ",
+                        "//Sum of [SWIM3].LeachCL from Start to End + sum([Soil].CL.kgha) - 100.0 as BalanceCl",
+                        "Sum of [SWIM3].LeachCL from Start to End as BalanceCl"
                       ],
                       "EventNames": [
                         "[Clock].EndOfDay"
@@ -15903,6 +15977,2021 @@
                       "GroupByVariableName": null,
                       "Name": "Report",
                       "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.Surface;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Linq;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] ISummary summary;\n        [Link] IWeather weather;\n        [Link] Irrigation irrigation;\n        [Link] private SurfaceOrganicMatter surfaceOM;\n        [Link] private ISoilWater soil;  // and I think this will give solutes as well\n        [Link] private Fertiliser fertiliser;\n        [Link(ByName = true)] private Solute cl;\n        [Link] Swim3 swim3;\n        [Link(ByName = true)] private Solute no3;\n  \n        // add (no3+nh4) uptake as Cl uptake to IPlant\n\n        public double ClBalanceCumulative  { get; set; }\n        public double ClBalanceToday  { get; set; }\n\n        public double SoilClAtInitialisation  { get; set; }\n        public double SoilClYesterday  { get; set; }\n\t\tpublic double SoilClNow  { get; set; }\n\n        public double ClAddedToday  { get; set; }\n        public double ClRemovedToday  { get; set; }\n        public double ClAddedCumulative  { get; set; }\n        public double ClRemovedCumulative  { get; set; }\n\n\n\n        [EventSubscribe(\"DoDailyInitialisation\")] private void DoDailyInitialisation(object sender, EventArgs e)\n        {\n        \tif (clock.Today == clock.StartDate) \n\t        {\n\t        \tcl.AddKgHaDelta(SoluteSetterType.Other, new double[] {100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});\n\t        \tno3.AddKgHaDelta(SoluteSetterType.Other, new double[] {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}); \n\t\t\t\tSoilClAtInitialisation = cl.kgha.Sum();  \n\t        \tSoilClYesterday = SoilClAtInitialisation;\n\t        \tSoilClNow = SoilClAtInitialisation;\n\t        }\n\t\t}\n\n        [EventSubscribe(\"DoReportCalculations\")] private void DoReportCalculations(object sender, EventArgs e)\n        {\n        \tSoilClYesterday = SoilClNow; // capture yesterday's value before overwriting\n        \tSoilClNow =  cl.kgha.Sum();  \n\n\t\t\t// fertiliser only as this is a bar soil simulation\n        \tClAddedToday = 0.0; // ???? how to get this\n        \tClAddedCumulative+= ClAddedToday;\n        \t\n        \t// leached only for chloride\n        \tClRemovedToday = swim3.LeachCL;  \n        \tClRemovedCumulative += ClRemovedToday;\n\n        \tClBalanceToday = ClAddedToday - ClRemovedToday - (SoilClNow - SoilClYesterday);\n        \tClBalanceCumulative = ClAddedCumulative - ClRemovedCumulative - (SoilClNow - SoilClAtInitialisation);\n        \t// need to add a warning value and a crash value and make a crash\n\t\t}\n    }\n}\n",
+                      "Parameters": [],
+                      "Name": "SetSoluteInSoil1",
+                      "Enabled": false,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Folder, Models",
+              "ShowInDocs": false,
+              "GraphsPerPage": 6,
+              "Name": "Plots",
+              "Children": [
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": "LeachCl",
+                      "Position": 2,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "ChlorideLeached",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 2,
+                      "ColourArgb": -2793984,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Date",
+                      "YFieldName": "LeachCl",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": true,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Leached",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": 0.0,
+                      "Maximum": null,
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "ChlorideStored",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -2793984,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Date",
+                      "YFieldName": "StoredCl",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Stored",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "ChlorideBalanced",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -2793984,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Date",
+                      "YFieldName": "BalanceCl",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Balance",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Factorial.Experiment, Models",
+          "DisabledSimNames": null,
+          "Name": "E5_2_nonlinear",
+          "Children": [
+            {
+              "$type": "Models.Factorial.Factors, Models",
+              "Name": "Factors",
+              "Children": [
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[Swim3].CL",
+                  "Name": "E000F100",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SwimSoluteParameters, Models",
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.05,
+                      "Depth": [
+                        "0-6",
+                        "6-17",
+                        "17-31",
+                        "31-55",
+                        "55-75",
+                        "75-95",
+                        "95-115",
+                        "115-150"
+                      ],
+                      "Thickness": [
+                        60.0,
+                        110.0,
+                        140.0,
+                        240.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        350.0
+                      ],
+                      "Exco": [
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                      ],
+                      "FIP": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "Name": "CL",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[Swim3].CL",
+                  "Name": "E000F1001",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SwimSoluteParameters, Models",
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.05,
+                      "Depth": [
+                        "0-6",
+                        "6-17",
+                        "17-31",
+                        "31-55",
+                        "55-75",
+                        "75-95",
+                        "95-115",
+                        "115-150"
+                      ],
+                      "Thickness": [
+                        60.0,
+                        110.0,
+                        140.0,
+                        240.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        350.0
+                      ],
+                      "Exco": [
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                      ],
+                      "FIP": [
+                        0.9,
+                        0.9,
+                        0.9,
+                        0.9,
+                        0.9,
+                        0.9,
+                        0.9,
+                        0.9
+                      ],
+                      "Name": "CL",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[Swim3].CL",
+                  "Name": "E000F1002",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SwimSoluteParameters, Models",
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.05,
+                      "Depth": [
+                        "0-6",
+                        "6-17",
+                        "17-31",
+                        "31-55",
+                        "55-75",
+                        "75-95",
+                        "95-115",
+                        "115-150"
+                      ],
+                      "Thickness": [
+                        60.0,
+                        110.0,
+                        140.0,
+                        240.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        350.0
+                      ],
+                      "Exco": [
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                      ],
+                      "FIP": [
+                        0.8,
+                        0.8,
+                        0.8,
+                        0.8,
+                        0.8,
+                        0.8,
+                        0.8,
+                        0.8
+                      ],
+                      "Name": "CL",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[Swim3].CL",
+                  "Name": "E000F1003",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SwimSoluteParameters, Models",
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.05,
+                      "Depth": [
+                        "0-6",
+                        "6-17",
+                        "17-31",
+                        "31-55",
+                        "55-75",
+                        "75-95",
+                        "95-115",
+                        "115-150"
+                      ],
+                      "Thickness": [
+                        60.0,
+                        110.0,
+                        140.0,
+                        240.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        350.0
+                      ],
+                      "Exco": [
+                        16.9,
+                        24.5,
+                        29.2,
+                        51.5,
+                        37.3,
+                        37.3,
+                        37.3,
+                        37.3
+                      ],
+                      "FIP": [
+                        0.72,
+                        0.64,
+                        0.59,
+                        0.44,
+                        0.52,
+                        0.52,
+                        0.52,
+                        0.52
+                      ],
+                      "Name": "CLx",
+                      "Children": [],
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SwimSoluteParameters, Models",
+                      "WaterTableConcentration": 0.0,
+                      "D0": 0.05,
+                      "Depth": [
+                        "0-6",
+                        "6-17",
+                        "17-31",
+                        "31-55",
+                        "55-75",
+                        "75-95",
+                        "95-115",
+                        "115-150"
+                      ],
+                      "Thickness": [
+                        60.0,
+                        110.0,
+                        140.0,
+                        240.0,
+                        200.0,
+                        200.0,
+                        200.0,
+                        350.0
+                      ],
+                      "Exco": [
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0,
+                        100.0
+                      ],
+                      "FIP": [
+                        0.8,
+                        0.8,
+                        0.8,
+                        0.8,
+                        0.8,
+                        0.8,
+                        0.8,
+                        0.8
+                      ],
+                      "Name": "CL",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Simulation, Models",
+              "IsRunning": false,
+              "Descriptors": null,
+              "Name": "Base_SoluteNonlinear",
+              "Children": [
+                {
+                  "$type": "Models.Memo, Models",
+                  "Text": "On hold until the leaching variables are exposed",
+                  "Name": "Memo",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Climate.Weather, Models",
+                  "ConstantsFile": null,
+                  "FileName": "..\\..\\Examples\\WeatherFiles\\lincoln.met",
+                  "ExcelWorkSheetName": "",
+                  "Name": "Weather",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Clock, Models",
+                  "Start": "2000-01-01T00:00:00",
+                  "End": "2000-04-30T00:00:00",
+                  "Name": "Clock",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Summary, Models",
+                  "Verbosity": 100,
+                  "Name": "summaryfile",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+                  "Name": "SoilArbitrator",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.MicroClimate, Models",
+                  "a_interception": 0.0,
+                  "b_interception": 0.0,
+                  "c_interception": 0.0,
+                  "d_interception": 0.0,
+                  "SoilHeatFluxFraction": 0.0,
+                  "MinimumHeightDiffForNewLayer": 0.0,
+                  "NightInterceptionFraction": 0.0,
+                  "ReferenceHeight": 2.0,
+                  "Name": "MicroClimate",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.Forages, Models",
+                  "Parameters": [
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "SurfaceOrganicMatter.Residue",
+                      "IsLive": true,
+                      "DigestibilityString": "0.7",
+                      "FractionConsumable": 0.0,
+                      "MinimumAmount": 100.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "SurfaceOrganicMatter.Residue",
+                      "IsLive": false,
+                      "DigestibilityString": "0.3",
+                      "FractionConsumable": 0.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPRyegrass.Leaf",
+                      "IsLive": true,
+                      "DigestibilityString": "0.7",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 100.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPRyegrass.Leaf",
+                      "IsLive": false,
+                      "DigestibilityString": "0.3",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPRyegrass.Stem",
+                      "IsLive": true,
+                      "DigestibilityString": "0.7",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 100.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPRyegrass.Stem",
+                      "IsLive": false,
+                      "DigestibilityString": "0.3",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPRyegrass.Stolon",
+                      "IsLive": true,
+                      "DigestibilityString": "0.7",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 100.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPRyegrass.Stolon",
+                      "IsLive": false,
+                      "DigestibilityString": "0.3",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPWhiteClover.Leaf",
+                      "IsLive": true,
+                      "DigestibilityString": "0.7",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 100.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPWhiteClover.Leaf",
+                      "IsLive": false,
+                      "DigestibilityString": "0.3",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPWhiteClover.Stem",
+                      "IsLive": true,
+                      "DigestibilityString": "0.7",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 100.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPWhiteClover.Stem",
+                      "IsLive": false,
+                      "DigestibilityString": "0.3",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPWhiteClover.Stolon",
+                      "IsLive": true,
+                      "DigestibilityString": "0.7",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 100.0,
+                      "UseDigestibilityFromModel": false
+                    },
+                    {
+                      "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                      "Name": "AGPWhiteClover.Stolon",
+                      "IsLive": false,
+                      "DigestibilityString": "0.3",
+                      "FractionConsumable": 1.0,
+                      "MinimumAmount": 0.0,
+                      "UseDigestibilityFromModel": false
+                    }
+                  ],
+                  "Name": "Forages",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Core.Zone, Models",
+                  "Area": 1.0,
+                  "Slope": 0.0,
+                  "AspectAngle": 0.0,
+                  "Altitude": 50.0,
+                  "Name": "paddock",
+                  "Children": [
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "",
+                      "Parameters": [],
+                      "Name": "CalculateRollingWaterBalance",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.Surface;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Linq;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] ISummary summary;\n        [Link] IWeather weather;\n        [Link] Irrigation irrigation;\n        [Link] private SurfaceOrganicMatter surfaceOM;\n        [Link] private ISoilWater soil;  // and I think this will give solutes as well\n        [Link] private Nutrient nutrient;\n        [Link] private Fertiliser fertiliser;\n        \n\n  \n        // add (no3+nh4) uptake as N uptake to IPlant\n\n        public double NBalanceCumulative  { get; set; }\n        public double NBalanceToday  { get; set; }\n\n        public double SoilNAtInitialisation  { get; set; }\n        public double SoilNYesterday  { get; set; }\n\t\tpublic double SoilNNow  { get; set; }\n\n\t\tpublic double PlantNUptake { get; set; }\n\n        public double NAddedToday  { get; set; }\n        public double NRemovedToday  { get; set; }\n        public double NAddedCumulative  { get; set; }\n        public double NRemovedCumulative  { get; set; }\n\n\n\n        [EventSubscribe(\"DoDailyInitialisation\")] private void DoDailyInitialisation(object sender, EventArgs e)\n        {\n        \tif (clock.Today == clock.StartDate) \n\t        {\n\t        \tSoilNAtInitialisation = surfaceOM.N + nutrient.TotalN.Sum();\n\t        \tSoilNYesterday = SoilNAtInitialisation;\n\t        \tSoilNNow = SoilNAtInitialisation;\n\t        }\n\t\t}\n\n        [EventSubscribe(\"DoReportCalculations\")] private void DoReportCalculations(object sender, EventArgs e)\n        {\n        \tSoilNYesterday = SoilNNow; // capture yesterday's value before overwriting\n        \tSoilNNow = surfaceOM.N + nutrient.TotalN.Sum(); \n\n\t\t\t// fertiliser only as this is a bar soil simulation\n        \tNAddedToday = fertiliser.NitrogenApplied;\n        \tNAddedCumulative+= NAddedToday;\n        \t\n        \t// leached, denitrified, volatilised (but here zero as no component yet), no plant uptake\n        \tNRemovedToday = soil.LeachUrea + soil.LeachNH4 + soil.LeachNO3;  \n   \t    \tfor (int i = 0; i < nutrient.DenitrifiedN.Length; i++)\n       \t\t\tNRemovedToday += nutrient.DenitrifiedN[i];\n        \tNRemovedCumulative += NRemovedToday;\n\n        \tNBalanceToday = NAddedToday - NRemovedToday - (SoilNNow - SoilNYesterday);\n        \tNBalanceCumulative = NAddedCumulative - NRemovedCumulative - (SoilNNow - SoilNAtInitialisation);\n        \t// need to add a warning value and a crash value and make a crash\n\t\t}\n    }\n}\n",
+                      "Parameters": [],
+                      "Name": "SoilNitrogenBalance",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.Surface;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Linq;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] ISummary summary;\n        /*[Link] IWeather weather;\n        [Link] Irrigation irrigation;\n        [Link] private SurfaceOrganicMatter surfaceOM;\n        [Link] private ISoilWater soil;  // and I think this will give solutes as well\n        [Link] private Fertiliser fertiliser;\n        [Link] Swim3 swim3;\n        [Link(ByName = true)] private Solute no3; */\n        [Link(ByName = true)] private Solute cl;\n  \n\n\n\n\n        [EventSubscribe(\"DoDailyInitialisation\")] private void DoDailyInitialisation(object sender, EventArgs e)\n        {\n        \tif (clock.Today == clock.StartDate) \n\t        \tcl.AddKgHaDelta(SoluteSetterType.Other, new double[] {100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});\n\t\t}\n    }\n}\n",
+                      "Parameters": [],
+                      "Name": "SetSoluteInSoil",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        //[Link] private PastureSpecies ryegrass;\r\n        //[Link] private SimpleGrazing grazing;\n        \n        public enum LowerBCTypeOptions {gradient,seepage,potential};\r\n\r\n        [Separator(\"Sets the lower boundary condition type (and value if set to 'potential' for SWIM3. The change is applied at the beginning of the first day of the simulation.\")]\n        [Description(\"[Get a dropdown] What lower boundary condition is wanted?\")] public LowerBCTypeOptions LowerBCType { get; set; }\r\n        [Description(\"If 'potential', then what potential? Should be negative (mm) \")] public double LowerBCValue { get; set; }\r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == clock.StartDate)\r\n            {\r\n                summary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType, MessageType.Diagnostic);\r\n                if (LowerBCType == LowerBCTypeOptions.gradient)\r\n                    swim.SetLowerBCForGradient(bbcGradient: 0.0);   // in cm/cm (ibbc=0) Note that this is the default setting\r\n                else if (LowerBCType == LowerBCTypeOptions.potential)\r\n                    swim.SetLowerBCForGivenPotential(bbcPotential: LowerBCValue /10.0 );    //  convert to cm (ibbc=1), DUL is -100 cm so values more positive will often result in inflow to the bottom of the soil profile. Input in mm so divide here.\r\n                else if (LowerBCType == LowerBCTypeOptions.seepage)\r\n                    swim.SetLowerBCForSeepage(bbcPotentialSeepage: 0.0);  // in cm (ibbc=3). This is for zero-tension lysimeters\n                else\n                \tthrow new Exception(\"Wrong lower boundary condition type\");\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                      "Parameters": [
+                        {
+                          "Key": "LowerBCType",
+                          "Value": "gradient"
+                        },
+                        {
+                          "Key": "LowerBCValue",
+                          "Value": "-500"
+                        }
+                      ],
+                      "Name": "SWIM3_SetLowerBC",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using Newtonsoft.Json;\r\nusing APSIM.Shared.Utilities;\r\nusing System.Xml.Serialization;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\n\r\n\r\n\r\n        \r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] private ISummary summary;\r\n        [Link] private Irrigation Irrigation;\r\n        [Link] private Clock Clock;\r\n        [Link] private Soil Soil;\r\n        [Link(IsOptional = true)] private IPlant existingCrop;\r\n        private DateTime StartDate;\r\n        private DateTime EndDate;\r\n        private double TopDUL;\r\n        private double TopLL;\r\n        private int nLayers;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n        [Link]\r\n        private ISoilWater waterBalance;\r\n        //Communication to other modules\r\n       \r\n        //User inputs from properties tab\r\n        [Description(\"Turn irrigation on?\")]\r\n        public bool allowIrrigation { get; set; }\r\n        [Description(\"Start of irrigation season (dd-MMM)\")]\r\n        public string seasonStart { get; set; }\r\n        [Description(\"End of irrigation season (dd-MMM)\")]\r\n        public string seasonEnd { get; set; }\r\n        [Description(\"Season allocation (mm)\")]\r\n        public double seasonsAllocation { get; set; }\r\n        [Description(\"Deficit to trigger irrigation (% PAWC)\")]\r\n        public double triggerDeficit { get; set; }\r\n        [Description(\"Deficit to stop irrigaton (% PAWC)\")]\r\n        public double targetDeficit { get; set; }\r\n        [Description(\"Minimum days for irrigation to return\")]\r\n        public double returndays { get; set; }\r\n        [Description(\"Maximum irrigation application (mm/day)\")]\r\n        public double maximumAmount { get; set; }\r\n        [Description(\"Depth to calculate PAWC (mm)\")]\r\n        public double depthPAWC { get; set; }\r\n\r\n        //Class members\r\n        [JsonIgnore] public double TopSWdeficit { get; set; }\r\n        [JsonIgnore] public double TopSWC { get; set; }\r\n        [JsonIgnore] public double DaysSinceIrrigation { get; set; }\r\n        [JsonIgnore] public double AmountToApply { get; set; }\r\n        [JsonIgnore] public double SeasonAppliedAmount { get; set; }\r\n        \r\n        private bool IrrigationIsAllowed { get; set; }\r\n        private bool SeasonIsOpen { get; set; }\r\n        private bool CropIsActive { get; set; }\r\n        private bool IrrigatorIsAvailable { get; set; }\r\n        private bool SoilIsDry { get; set; }\r\n\r\n    \r\n        //Calculate static soil variables\r\n        [EventSubscribe(\"StartOfSimulation\")]\r\n        private void OnStartOfSimulation(object sender, EventArgs e)\r\n        {   \r\n            //Set the season dates\r\n            StartDate = DateTime.Parse(seasonStart + \"-\" + Clock.Today.Year.ToString());\r\n            EndDate = DateTime.Parse(seasonEnd + \"-\" + Clock.Today.Year.ToString());\r\n            \r\n            //Can we irrigate at all?\r\n            IrrigationIsAllowed = false; \r\n            if (allowIrrigation)\r\n                IrrigationIsAllowed = true; \r\n\r\n            //Calculate soil water variables\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            nLayers = soilPhysical.Thickness.Length;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopLL += soilPhysical.LL15mm[layer] * fracLayer;\r\n                TopDUL += soilPhysical.DULmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n        }\r\n             \r\n        //Determine daily requirement for irrigation\r\n        [EventSubscribe(\"StartOfDay\")]\r\n        private void OnStartOfDay(object sender, EventArgs e)\r\n        {\r\n            //Can we irrigate today?          \r\n            SeasonIsOpen = isBetween(Clock.Today, StartDate, EndDate);\r\n            if (!SeasonIsOpen)\r\n                SeasonAppliedAmount = 0;\r\n\r\n            //Is there a crop in the ground that needs irrigation?\r\n            CropIsActive = false;\r\n            if ((existingCrop != null) && (existingCrop.IsAlive))\r\n                CropIsActive = true;\r\n            //if ((existingCrop.Phenology.Stage >= 3.0) && (existingCrop.Phenology.Stage < 6.0))\r\n          \r\n            //Is the irrigator available?\r\n            IrrigatorIsAvailable = false;\r\n            DaysSinceIrrigation += 1;\r\n            if (DaysSinceIrrigation >= returndays)\r\n                IrrigatorIsAvailable = true;\r\n          \r\n            //Is the soil dry enough to require irrigation?\r\n            SoilIsDry = false;\r\n            double depthFromSurface = 0.0;\r\n            double fracLayer = 0.0;\r\n            TopSWC = 0.0;\r\n            for (int layer = 0; layer < nLayers; layer++)\r\n            //for (int layer = 0; depthFromSurface < depthPAWC + soilPhysical.Thickness[layer]; layer++)\r\n            {\r\n                fracLayer = Math.Min(1.0, (depthPAWC - depthFromSurface) / soilPhysical.Thickness[layer]);\r\n                TopSWC += waterBalance.SWmm[layer] * fracLayer;\r\n                depthFromSurface += soilPhysical.Thickness[layer];\r\n                if (depthFromSurface >= depthPAWC)\r\n                    layer = nLayers;\r\n            }\r\n            \r\n            TopSWdeficit = TopSWC - TopDUL;\r\n            if (Math.Max(0.0, -TopSWdeficit) >= (TopDUL - TopLL) * (100 - triggerDeficit) / 100)\r\n                SoilIsDry = true;\r\n                \r\n            //Are all the conditions ratifying irrigation\r\n            if (IrrigationIsAllowed && SeasonIsOpen && CropIsActive && IrrigatorIsAvailable && SoilIsDry)\r\n            {\r\n                //Lets bloody well irrigate then!!!!\r\n                AmountToApply = TopDUL * targetDeficit / 100 - TopSWC;\r\n                AmountToApply = Math.Max(0.0, Math.Min(AmountToApply, seasonsAllocation - SeasonAppliedAmount));\r\n                AmountToApply = Math.Min(AmountToApply,maximumAmount);\r\n                Irrigation.Apply(AmountToApply);\r\n                DaysSinceIrrigation = 0;\r\n                SeasonAppliedAmount += AmountToApply;\r\n            }\r\n        }\r\n        \r\n        ///Checks whether theDate is between iniDate and endDate (non-year specific)\r\n        private bool isBetween(DateTime theDay, DateTime iniDate, DateTime endDate)\r\n        {\r\n            bool result = false;\r\n            if (iniDate.DayOfYear < endDate.DayOfYear)\r\n            {\r\n                // period is within one year, ex: summer in the northern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) && (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            else\r\n            {\r\n                // period goes over the end of the year, ex: summer in the southern hemisphere\r\n                if ((theDay.DayOfYear >= iniDate.DayOfYear) || (theDay.DayOfYear <= endDate.DayOfYear))\r\n                    result = true;\r\n            }\r\n            \r\n            return result;\r\n        }\r\n    }\r\n}\r\n",
+                      "Parameters": [
+                        {
+                          "Key": "allowIrrigation",
+                          "Value": "False"
+                        },
+                        {
+                          "Key": "seasonStart",
+                          "Value": "1-sep"
+                        },
+                        {
+                          "Key": "seasonEnd",
+                          "Value": "30-mar"
+                        },
+                        {
+                          "Key": "seasonsAllocation",
+                          "Value": "10000"
+                        },
+                        {
+                          "Key": "triggerDeficit",
+                          "Value": "80"
+                        },
+                        {
+                          "Key": "targetDeficit",
+                          "Value": "100"
+                        },
+                        {
+                          "Key": "returndays",
+                          "Value": "3"
+                        },
+                        {
+                          "Key": "maximumAmount",
+                          "Value": "30"
+                        },
+                        {
+                          "Key": "depthPAWC",
+                          "Value": "300"
+                        }
+                      ],
+                      "Name": "AutomaticIrrigation",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                      "InitialResidueName": "grass",
+                      "InitialResidueType": "grass",
+                      "InitialResidueMass": 0.0,
+                      "InitialStandingFraction": 0.0,
+                      "InitialCPR": 0.0,
+                      "InitialCNR": 17.0,
+                      "ResourceName": "SurfaceOrganicMatter",
+                      "Name": "SurfaceOrganicMatter",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Operations, Models",
+                      "Operation": [
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-01-02",
+                          "Action": "[Fertiliser].Apply(Amount: 500, Type: UreaN);",
+                          "Enabled": false
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-01-02",
+                          "Action": "[Fertiliser].Apply(Amount: 500, Type: NO3N);",
+                          "Enabled": false
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-01-02",
+                          "Action": "[Fertiliser].Apply(Amount: 500, Type: Cl);",
+                          "Enabled": false
+                        }
+                      ],
+                      "Name": "AddFertiliser",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Operations, Models",
+                      "Operation": [
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-01-05",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-01-10",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-01-15",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-01-20",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-01-25",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-01-30",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-02-05",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-02-10",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-02-15",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-02-20",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-02-25",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-03-05",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-03-10",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-03-15",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-03-20",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-03-25",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-03-30",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-04-05",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-04-10",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-04-15",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-04-20",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-04-25",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        },
+                        {
+                          "$type": "Models.Operation, Models",
+                          "Date": "2000-04-30",
+                          "Action": "[Irrigation].Apply(amount:100,duration:60);",
+                          "Enabled": true
+                        }
+                      ],
+                      "Name": "AddWater",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Soil, Models",
+                      "RecordNumber": 1232,
+                      "ASCOrder": null,
+                      "ASCSubOrder": null,
+                      "SoilType": "Loam",
+                      "LocalName": "Horotiu",
+                      "Site": "Ruakura, south of Railway Ln",
+                      "NearestTown": "Hamilton",
+                      "Region": "Waikato",
+                      "State": null,
+                      "Country": "New Zealand",
+                      "NaturalVegetation": "long term grass",
+                      "ApsoilNumber": "1320",
+                      "Latitude": -37.779,
+                      "Longitude": 175.304,
+                      "LocationAccuracy": "+/-50 m",
+                      "YearOfSampling": "1984",
+                      "DataSource": "The database of New Zealand soils was compiled by AgResearch (www.agresearch.co.nz) and based on soil properties gathered, mainly from publications, in the course of conducting several simulation-based research projects but particularly from the Pastoral 21 Environment program which was funded by the New Zealand Ministry for Business, Innovation and Employment,  Dairy NZ, Fonterra and Meat & Wool NZ.",
+                      "Comments": "Gravel soil. The bulk density of this APSoil reflects weight of fine-earth fraction per volume of bulk soil. Use with gravimetric water contents measured on the fine-earth fraction. Gravel assumed to not hold water as reflected in low SAT, DUL, LL15, LL and AD. The data is a combination of published or supplied measurements, pedotransfer functions, and expert opinion. See Cichota et al. (2013; Soil Research 51: 92-111, http://dx.doi.org/10.1071/SR12338) for a description of the pedotransfer functions. The soil carbon and fresh organic matter settings have been set as those broadly appropriate for permanent productive pastoral systems, see Cichota el al. (2012; Soil Research 50: 694-707, http://dx.doi.org/10.1071/SR12208). Users should take care to adapt these to local conditions before using the data in simulations. FOM values estimated to be 900 kg/ha of FOM in top 600mm of soil and another 100 kg/ha below.",
+                      "Name": "Soil",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "VS - added kF and nF from HydCurves for exco and fip. Also added 5 (units unclear) for D0\n",
+                          "Name": "Notes",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Physical, Models",
+                          "Thickness": [
+                            60.0,
+                            110.0,
+                            140.0,
+                            240.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            350.0
+                          ],
+                          "ParticleSizeClay": [
+                            17.61,
+                            16.36,
+                            16.42,
+                            29.030000000000005,
+                            18.44,
+                            32.64,
+                            9.49,
+                            1.0
+                          ],
+                          "ParticleSizeSand": [
+                            33.77,
+                            33.90999999999999,
+                            35.91,
+                            46.26,
+                            53.54,
+                            45.98,
+                            63.84,
+                            93.20999999999998
+                          ],
+                          "ParticleSizeSilt": [
+                            48.62,
+                            49.730000000000004,
+                            47.669999999999995,
+                            24.710000000000004,
+                            28.02,
+                            21.38,
+                            26.66999999999998,
+                            5.79
+                          ],
+                          "Rocks": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "Texture": null,
+                          "BD": [
+                            0.865,
+                            0.835,
+                            0.805,
+                            0.83,
+                            0.82,
+                            0.815,
+                            0.944,
+                            1.063
+                          ],
+                          "AirDry": [
+                            0.081,
+                            0.068,
+                            0.067,
+                            0.085,
+                            0.091,
+                            0.094,
+                            0.075,
+                            0.015
+                          ],
+                          "LL15": [
+                            0.246,
+                            0.207,
+                            0.203,
+                            0.259,
+                            0.276,
+                            0.286,
+                            0.227,
+                            0.045
+                          ],
+                          "DUL": [
+                            0.511,
+                            0.451,
+                            0.439,
+                            0.419,
+                            0.414,
+                            0.429,
+                            0.364,
+                            0.092
+                          ],
+                          "SAT": [
+                            0.588,
+                            0.605,
+                            0.616,
+                            0.625,
+                            0.628,
+                            0.633,
+                            0.552,
+                            0.312
+                          ],
+                          "KS": [
+                            13367.955,
+                            7114.419,
+                            6216.357,
+                            3256.961,
+                            6716.918,
+                            2348.283,
+                            18003.598,
+                            62350.094
+                          ],
+                          "BDMetadata": [
+                            "Field measured and checked for sensibility",
+                            "Field measured and checked for sensibility",
+                            "Field measured and checked for sensibility",
+                            "Field measured and checked for sensibility",
+                            "Field measured and checked for sensibility",
+                            "Field measured and checked for sensibility",
+                            "Field measured and checked for sensibility",
+                            "Field measured and checked for sensibility"
+                          ],
+                          "AirDryMetadata": [
+                            "Estimated based on local knowledge",
+                            "Estimated based on local knowledge",
+                            "Estimated based on local knowledge",
+                            "Estimated based on local knowledge",
+                            "Estimated based on local knowledge",
+                            "Estimated based on local knowledge",
+                            "Estimated based on local knowledge",
+                            "Estimated based on local knowledge"
+                          ],
+                          "LL15Metadata": [
+                            "Laboratory measured",
+                            "Laboratory measured",
+                            "Laboratory measured",
+                            "Laboratory measured",
+                            "Laboratory measured",
+                            "Laboratory measured",
+                            "Laboratory measured",
+                            "Laboratory measured"
+                          ],
+                          "DULMetadata": [
+                            "Laboratory measured",
+                            "Laboratory measured",
+                            "Laboratory measured",
+                            "Laboratory measured",
+                            "Laboratory measured",
+                            "Laboratory measured",
+                            "Laboratory measured",
+                            "Laboratory measured"
+                          ],
+                          "SATMetadata": [
+                            "Calculated from measured, estimated or calculated BD",
+                            "Calculated from measured, estimated or calculated BD",
+                            "Calculated from measured, estimated or calculated BD",
+                            "Calculated from measured, estimated or calculated BD",
+                            "Calculated from measured, estimated or calculated BD",
+                            "Calculated from measured, estimated or calculated BD",
+                            "Calculated from measured, estimated or calculated BD",
+                            "Calculated from measured, estimated or calculated BD"
+                          ],
+                          "KSMetadata": null,
+                          "RocksMetadata": null,
+                          "TextureMetadata": null,
+                          "ParticleSizeSandMetadata": null,
+                          "ParticleSizeSiltMetadata": null,
+                          "ParticleSizeClayMetadata": null,
+                          "Name": "Physical",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                          "ResourceName": "Nutrient",
+                          "Name": "Nutrient",
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Organic, Models",
+                          "FOMCNRatio": 40.0,
+                          "Thickness": [
+                            60.0,
+                            110.0,
+                            140.0,
+                            240.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            350.0
+                          ],
+                          "Carbon": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "SoilCNRatio": [
+                            10.649,
+                            10.649,
+                            10.649,
+                            10.649,
+                            10.649,
+                            10.649,
+                            10.649,
+                            10.649
+                          ],
+                          "FBiom": [
+                            0.08,
+                            0.072,
+                            0.026,
+                            0.008,
+                            0.008,
+                            0.008,
+                            0.008,
+                            0.008
+                          ],
+                          "FInert": [
+                            0.597,
+                            0.642,
+                            0.777,
+                            0.896,
+                            0.957,
+                            0.975,
+                            0.992,
+                            0.986
+                          ],
+                          "FOM": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "CarbonMetadata": null,
+                          "FOMMetadata": null,
+                          "Name": "Organic",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Chemical, Models",
+                          "Thickness": [
+                            60.0,
+                            110.0,
+                            140.0,
+                            240.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            350.0
+                          ],
+                          "NO3N": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "NH4N": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "PH": [
+                            6.5,
+                            6.5,
+                            6.5,
+                            6.5,
+                            6.5,
+                            6.5,
+                            6.5,
+                            6.5
+                          ],
+                          "CL": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "EC": null,
+                          "ESP": null,
+                          "LabileP": null,
+                          "UnavailableP": null,
+                          "ECMetadata": null,
+                          "CLMetadata": null,
+                          "ESPMetadata": null,
+                          "PHMetadata": [
+                            "Estimated based on local knowledge",
+                            "Estimated based on local knowledge",
+                            "Estimated based on local knowledge",
+                            "Estimated based on local knowledge",
+                            "Estimated based on local knowledge",
+                            "Estimated based on local knowledge",
+                            "Estimated based on local knowledge",
+                            "Estimated based on local knowledge"
+                          ],
+                          "Name": "Chemical",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Sample, Models",
+                          "Thickness": [
+                            60.0,
+                            110.0,
+                            140.0,
+                            240.0,
+                            200.0,
+                            200.0,
+                            200.0,
+                            350.0
+                          ],
+                          "NO3": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "NH4": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "LabileP": null,
+                          "UnavailableP": null,
+                          "SW": [
+                            0.511,
+                            0.451,
+                            0.439,
+                            0.419,
+                            0.414,
+                            0.429,
+                            0.364,
+                            0.092
+                          ],
+                          "OC": null,
+                          "EC": null,
+                          "CL": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "ESP": [
+                            "NaN",
+                            "NaN",
+                            "NaN",
+                            "NaN",
+                            "NaN",
+                            "NaN",
+                            "NaN",
+                            "NaN"
+                          ],
+                          "PH": [
+                            6.5,
+                            6.5,
+                            6.5,
+                            6.5,
+                            6.5,
+                            6.5,
+                            6.5,
+                            6.5
+                          ],
+                          "SWUnits": 0,
+                          "OCUnits": 0,
+                          "PHUnits": 0,
+                          "Name": "Initial values",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Swim3, Models",
+                          "PrecipitationInterception": 0.0,
+                          "theta": null,
+                          "psi": null,
+                          "Salb": 0.13,
+                          "CN2Bare": 50.0,
+                          "CNRed": 20.0,
+                          "CNCov": 0.8,
+                          "KDul": 1.0,
+                          "PSIDul": -100.0,
+                          "VC": true,
+                          "DTMin": 0.0,
+                          "DTMax": 30.0,
+                          "MaxWaterIncrement": 5.0,
+                          "SpaceWeightingFactor": 0.0,
+                          "SoluteSpaceWeightingFactor": 1.0,
+                          "Dis": 0.0,
+                          "Disp": 1.0,
+                          "A": 2.0,
+                          "DTHC": 0.1,
+                          "DTHP": 2.0,
+                          "Diagnostics": false,
+                          "WaterTable": 0.0,
+                          "Name": "Swim3",
+                          "Children": [
+                            {
+                              "$type": "Models.Soils.SwimSoluteParameters, Models",
+                              "WaterTableConcentration": 0.0,
+                              "D0": 0.05,
+                              "Depth": [
+                                "0-6",
+                                "6-17",
+                                "17-31",
+                                "31-55",
+                                "55-75",
+                                "75-95",
+                                "95-115",
+                                "115-150"
+                              ],
+                              "Thickness": [
+                                60.0,
+                                110.0,
+                                140.0,
+                                240.0,
+                                200.0,
+                                200.0,
+                                200.0,
+                                350.0
+                              ],
+                              "Exco": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "FIP": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "Name": "Urea",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SwimSoluteParameters, Models",
+                              "WaterTableConcentration": 0.0,
+                              "D0": 5.0,
+                              "Depth": [
+                                "0-6",
+                                "6-17",
+                                "17-31",
+                                "31-55",
+                                "55-75",
+                                "75-95",
+                                "95-115",
+                                "115-150"
+                              ],
+                              "Thickness": [
+                                60.0,
+                                110.0,
+                                140.0,
+                                240.0,
+                                200.0,
+                                200.0,
+                                200.0,
+                                350.0
+                              ],
+                              "Exco": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "FIP": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "Name": "NH4",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SwimSoluteParameters, Models",
+                              "WaterTableConcentration": 0.0,
+                              "D0": 0.05,
+                              "Depth": [
+                                "0-6",
+                                "6-17",
+                                "17-31",
+                                "31-55",
+                                "55-75",
+                                "75-95",
+                                "95-115",
+                                "115-150"
+                              ],
+                              "Thickness": [
+                                60.0,
+                                110.0,
+                                140.0,
+                                240.0,
+                                200.0,
+                                200.0,
+                                200.0,
+                                350.0
+                              ],
+                              "Exco": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "FIP": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "Name": "NO3",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SwimSoluteParameters, Models",
+                              "WaterTableConcentration": 0.0,
+                              "D0": 0.05,
+                              "Depth": [
+                                "0-6",
+                                "6-17",
+                                "17-31",
+                                "31-55",
+                                "55-75",
+                                "75-95",
+                                "95-115",
+                                "115-150"
+                              ],
+                              "Thickness": [
+                                60.0,
+                                110.0,
+                                140.0,
+                                240.0,
+                                200.0,
+                                200.0,
+                                200.0,
+                                350.0
+                              ],
+                              "Exco": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "FIP": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "Name": "CL",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SwimSoluteParameters, Models",
+                              "WaterTableConcentration": 0.0,
+                              "D0": 0.05,
+                              "Depth": [
+                                "0-6",
+                                "6-17",
+                                "17-31",
+                                "31-55",
+                                "55-75",
+                                "75-95",
+                                "95-115",
+                                "115-150"
+                              ],
+                              "Thickness": [
+                                60.0,
+                                110.0,
+                                140.0,
+                                240.0,
+                                200.0,
+                                200.0,
+                                200.0,
+                                350.0
+                              ],
+                              "Exco": [
+                                16.98,
+                                24.53,
+                                29.28,
+                                51.55,
+                                37.33,
+                                56.51,
+                                34.12,
+                                14.52
+                              ],
+                              "FIP": [
+                                0.71,
+                                0.62,
+                                0.58,
+                                0.43,
+                                0.51,
+                                0.4,
+                                0.48,
+                                0.47
+                              ],
+                              "Name": "PlantAvailableNH4",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SwimSoluteParameters, Models",
+                              "WaterTableConcentration": 0.0,
+                              "D0": 0.05,
+                              "Depth": [
+                                "0-6",
+                                "6-17",
+                                "17-31",
+                                "31-55",
+                                "55-75",
+                                "75-95",
+                                "95-115",
+                                "115-150"
+                              ],
+                              "Thickness": [
+                                60.0,
+                                110.0,
+                                140.0,
+                                240.0,
+                                200.0,
+                                200.0,
+                                200.0,
+                                350.0
+                              ],
+                              "Exco": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "FIP": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "Name": "PlantAvailableNO3",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SwimSoluteParameters, Models",
+                              "WaterTableConcentration": 0.0,
+                              "D0": 0.05,
+                              "Depth": [
+                                "0-6",
+                                "6-17",
+                                "17-31",
+                                "31-55",
+                                "55-75",
+                                "75-95",
+                                "95-115",
+                                "115-150"
+                              ],
+                              "Thickness": [
+                                60.0,
+                                110.0,
+                                140.0,
+                                240.0,
+                                200.0,
+                                200.0,
+                                200.0,
+                                350.0
+                              ],
+                              "Exco": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "FIP": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "Name": "LabileP",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SwimSoluteParameters, Models",
+                              "WaterTableConcentration": 0.0,
+                              "D0": 0.05,
+                              "Depth": [
+                                "0-6",
+                                "6-17",
+                                "17-31",
+                                "31-55",
+                                "55-75",
+                                "75-95",
+                                "95-115",
+                                "115-150"
+                              ],
+                              "Thickness": [
+                                60.0,
+                                110.0,
+                                140.0,
+                                240.0,
+                                200.0,
+                                200.0,
+                                200.0,
+                                350.0
+                              ],
+                              "Exco": [
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0,
+                                0.0
+                              ],
+                              "FIP": [
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0,
+                                1.0
+                              ],
+                              "Name": "UnavailableP",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SwimSoluteParameters, Models",
+                              "WaterTableConcentration": 0.0,
+                              "D0": 5.0,
+                              "Depth": [
+                                "0-6",
+                                "6-17",
+                                "17-31",
+                                "31-55",
+                                "55-75",
+                                "75-95",
+                                "95-115",
+                                "115-150"
+                              ],
+                              "Thickness": [
+                                60.0,
+                                110.0,
+                                140.0,
+                                240.0,
+                                200.0,
+                                200.0,
+                                200.0,
+                                350.0
+                              ],
+                              "Exco": [
+                                16.98,
+                                24.53,
+                                29.28,
+                                51.55,
+                                37.33,
+                                56.51,
+                                34.12,
+                                14.52
+                              ],
+                              "FIP": [
+                                0.71,
+                                0.62,
+                                0.58,
+                                0.43,
+                                0.51,
+                                0.4,
+                                0.48,
+                                0.47
+                              ],
+                              "Name": "NH41",
+                              "Children": [],
+                              "Enabled": false,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Soils.SwimSubsurfaceDrain, Models",
+                              "DrainDepth": 500.0,
+                              "DrainSpacing": 5000.0,
+                              "DrainRadius": 150.0,
+                              "Klat": 1000.0,
+                              "ImpermDepth": 1000.0,
+                              "Name": "SwimSubsurfaceDrain",
+                              "Children": [],
+                              "Enabled": false,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.Nutrients.Solute, Models",
+                          "Name": "CL",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.LayerStructure, Models",
+                          "Depth": [
+                            "0-1",
+                            "1-3",
+                            "3-6",
+                            "6-10",
+                            "10-15",
+                            "15-20",
+                            "20-25",
+                            "25-30",
+                            "30-40",
+                            "40-50",
+                            "50-55",
+                            "55-60",
+                            "60-65",
+                            "65-70"
+                          ],
+                          "Thickness": [
+                            10.0,
+                            20.0,
+                            30.0,
+                            40.0,
+                            50.0,
+                            50.0,
+                            50.0,
+                            50.0,
+                            100.0,
+                            100.0,
+                            50.0,
+                            50.0,
+                            50.0,
+                            50.0
+                          ],
+                          "Name": "LayerStructure",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                          "Name": "SoilTemperature",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Irrigation, Models",
+                      "Name": "Irrigation",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Fertiliser, Models",
+                      "ResourceName": "Fertiliser",
+                      "Name": "Fertiliser",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Report, Models",
+                      "VariableNames": [
+                        "[Clock].Today as Date",
+                        "sum([Soil].CL.kgha) as StoredCl",
+                        "[SWIM3].LeachCL as LeachCl",
+                        "//sum([Soil].CL.kgha) + [SWIM3].LeachCL - 100.0 as BalanceCl ",
+                        "//Sum of [SWIM3].LeachCL from Start to End + sum([Soil].CL.kgha) - 100.0 as BalanceCl",
+                        "Sum of [SWIM3].LeachCL from Start to End as BalanceCl"
+                      ],
+                      "EventNames": [
+                        "[Clock].EndOfDay"
+                      ],
+                      "GroupByVariableName": null,
+                      "Name": "Report",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Manager, Models",
+                      "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.Surface;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Linq;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] ISummary summary;\n        [Link] IWeather weather;\n        [Link] Irrigation irrigation;\n        [Link] private SurfaceOrganicMatter surfaceOM;\n        [Link] private ISoilWater soil;  // and I think this will give solutes as well\n        [Link] private Fertiliser fertiliser;\n        [Link(ByName = true)] private Solute cl;\n        [Link] Swim3 swim3;\n        [Link(ByName = true)] private Solute no3;\n  \n        // add (no3+nh4) uptake as Cl uptake to IPlant\n\n        public double ClBalanceCumulative  { get; set; }\n        public double ClBalanceToday  { get; set; }\n\n        public double SoilClAtInitialisation  { get; set; }\n        public double SoilClYesterday  { get; set; }\n\t\tpublic double SoilClNow  { get; set; }\n\n        public double ClAddedToday  { get; set; }\n        public double ClRemovedToday  { get; set; }\n        public double ClAddedCumulative  { get; set; }\n        public double ClRemovedCumulative  { get; set; }\n\n\n\n        [EventSubscribe(\"DoDailyInitialisation\")] private void DoDailyInitialisation(object sender, EventArgs e)\n        {\n        \tif (clock.Today == clock.StartDate) \n\t        {\n\t        \tcl.AddKgHaDelta(SoluteSetterType.Other, new double[] {100, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0});\n\t        \tno3.AddKgHaDelta(SoluteSetterType.Other, new double[] {1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0}); \n\t\t\t\tSoilClAtInitialisation = cl.kgha.Sum();  \n\t        \tSoilClYesterday = SoilClAtInitialisation;\n\t        \tSoilClNow = SoilClAtInitialisation;\n\t        }\n\t\t}\n\n        [EventSubscribe(\"DoReportCalculations\")] private void DoReportCalculations(object sender, EventArgs e)\n        {\n        \tSoilClYesterday = SoilClNow; // capture yesterday's value before overwriting\n        \tSoilClNow =  cl.kgha.Sum();  \n\n\t\t\t// fertiliser only as this is a bar soil simulation\n        \tClAddedToday = 0.0; // ???? how to get this\n        \tClAddedCumulative+= ClAddedToday;\n        \t\n        \t// leached only for chloride\n        \tClRemovedToday = swim3.LeachCL;  \n        \tClRemovedCumulative += ClRemovedToday;\n\n        \tClBalanceToday = ClAddedToday - ClRemovedToday - (SoilClNow - SoilClYesterday);\n        \tClBalanceCumulative = ClAddedCumulative - ClRemovedCumulative - (SoilClNow - SoilClAtInitialisation);\n        \t// need to add a warning value and a crash value and make a crash\n\t\t}\n    }\n}\n",
+                      "Parameters": [],
+                      "Name": "SetSoluteInSoil1",
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -15936,144 +18025,6 @@
                     },
                     {
                       "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "Daily NBalance",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -2793984,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "NBalanceToday",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Daily NBal",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "Cumulative NBalance",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -2793984,
-                      "FactorToVaryColours": "SimulationName",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "NBalanceCumulative",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Cumulative NBal",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": 0.0,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                       "Title": "LeachCl",
                       "Position": 2,
                       "Inverted": false,
@@ -16088,43 +18039,15 @@
                   "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
-                  "Name": "Chloride",
+                  "Name": "ChlorideLeached",
                   "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -2793984,
-                      "FactorToVaryColours": "Graph series",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "Cl",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Stored",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
                     {
                       "$type": "Models.Series, Models",
                       "Type": 1,
                       "XAxis": 3,
                       "YAxis": 2,
                       "ColourArgb": -2793984,
-                      "FactorToVaryColours": "Graph series",
+                      "FactorToVaryColours": "SimulationName",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
                       "Marker": 11,
@@ -16138,7 +18061,7 @@
                       "Y2FieldName": null,
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
+                      "Cumulative": true,
                       "CumulativeX": false,
                       "Filter": null,
                       "Name": "Leached",
@@ -16173,16 +18096,6 @@
                       "Minimum": 0.0,
                       "Maximum": null,
                       "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": "LeachClProp",
-                      "Position": 2,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
                     }
                   ],
                   "LegendPosition": 0,
@@ -16190,7 +18103,7 @@
                   "AnnotationLocation": 0,
                   "DisabledSeries": [],
                   "LegendOutsideGraph": false,
-                  "Name": "Drainage",
+                  "Name": "ChlorideStored",
                   "Children": [
                     {
                       "$type": "Models.Series, Models",
@@ -16198,478 +18111,6 @@
                       "XAxis": 3,
                       "YAxis": 0,
                       "ColourArgb": -2793984,
-                      "FactorToVaryColours": "Graph series",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "Drainage",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": true,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Drained",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 2,
-                      "ColourArgb": -2793984,
-                      "FactorToVaryColours": "Graph series",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "LeachClProp",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": true,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Leached",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -2793984,
-                      "FactorToVaryColours": "Graph series",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "DUL",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "DUL",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -2793984,
-                      "FactorToVaryColours": "Graph series",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "SAT",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "SAT",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "MineralN",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -2793984,
-                      "FactorToVaryColours": "Graph series",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "UreaN",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Urea",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -2793984,
-                      "FactorToVaryColours": "Graph series",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "NH4N",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "NH4",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -2793984,
-                      "FactorToVaryColours": "Graph series",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "NO3N",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "NO3",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -2793984,
-                      "FactorToVaryColours": "Graph series",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "MineralN",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Mineral",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "Leaching",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -3376729,
-                      "FactorToVaryColours": "Graph series",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "LeachUrea",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Urea",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -3376729,
-                      "FactorToVaryColours": "Graph series",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "LeachNH4",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "NH4",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -3376729,
-                      "FactorToVaryColours": "Graph series",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "LeachNO3",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": true,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "NO3",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -3376729,
-                      "FactorToVaryColours": "Graph series",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "LeachN",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": false,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Mineral",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -3376729,
-                      "FactorToVaryColours": "Graph series",
-                      "FactorToVaryMarkers": null,
-                      "FactorToVaryLines": null,
-                      "Marker": 11,
-                      "MarkerSize": 0,
-                      "Line": 0,
-                      "LineThickness": 0,
-                      "TableName": "Report",
-                      "XFieldName": "Date",
-                      "YFieldName": "LeachCl",
-                      "X2FieldName": null,
-                      "Y2FieldName": null,
-                      "ShowInLegend": true,
-                      "IncludeSeriesNameInLegend": false,
-                      "Cumulative": true,
-                      "CumulativeX": false,
-                      "Filter": null,
-                      "Name": "Cl",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Graph, Models",
-                  "Caption": null,
-                  "Axis": [
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 3,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    },
-                    {
-                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                      "Title": null,
-                      "Position": 0,
-                      "Inverted": false,
-                      "CrossesAtZero": false,
-                      "Minimum": null,
-                      "Maximum": null,
-                      "Interval": null
-                    }
-                  ],
-                  "LegendPosition": 0,
-                  "LegendOrientation": 0,
-                  "AnnotationLocation": 0,
-                  "DisabledSeries": [],
-                  "LegendOutsideGraph": false,
-                  "Name": "Leaching1",
-                  "Children": [
-                    {
-                      "$type": "Models.Series, Models",
-                      "Type": 1,
-                      "XAxis": 3,
-                      "YAxis": 0,
-                      "ColourArgb": -3376729,
                       "FactorToVaryColours": "SimulationName",
                       "FactorToVaryMarkers": null,
                       "FactorToVaryLines": null,
@@ -16679,15 +18120,79 @@
                       "LineThickness": 0,
                       "TableName": "Report",
                       "XFieldName": "Date",
-                      "YFieldName": "LeachCl",
+                      "YFieldName": "StoredCl",
                       "X2FieldName": null,
                       "Y2FieldName": null,
                       "ShowInLegend": true,
                       "IncludeSeriesNameInLegend": false,
-                      "Cumulative": true,
+                      "Cumulative": false,
                       "CumulativeX": false,
                       "Filter": null,
-                      "Name": "Cl",
+                      "Name": "Stored",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Graph, Models",
+                  "Caption": null,
+                  "Axis": [
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 3,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": null,
+                      "Maximum": null,
+                      "Interval": null
+                    },
+                    {
+                      "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                      "Title": null,
+                      "Position": 0,
+                      "Inverted": false,
+                      "CrossesAtZero": false,
+                      "Minimum": "NaN",
+                      "Maximum": "NaN",
+                      "Interval": null
+                    }
+                  ],
+                  "LegendPosition": 0,
+                  "LegendOrientation": 0,
+                  "AnnotationLocation": 0,
+                  "DisabledSeries": [],
+                  "LegendOutsideGraph": false,
+                  "Name": "ChlorideBalanced",
+                  "Children": [
+                    {
+                      "$type": "Models.Series, Models",
+                      "Type": 1,
+                      "XAxis": 3,
+                      "YAxis": 0,
+                      "ColourArgb": -2793984,
+                      "FactorToVaryColours": "SimulationName",
+                      "FactorToVaryMarkers": null,
+                      "FactorToVaryLines": null,
+                      "Marker": 11,
+                      "MarkerSize": 0,
+                      "Line": 0,
+                      "LineThickness": 0,
+                      "TableName": "Report",
+                      "XFieldName": "Date",
+                      "YFieldName": "BalanceCl",
+                      "X2FieldName": null,
+                      "Y2FieldName": null,
+                      "ShowInLegend": true,
+                      "IncludeSeriesNameInLegend": false,
+                      "Cumulative": false,
+                      "CumulativeX": false,
+                      "Filter": null,
+                      "Name": "Balance",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
