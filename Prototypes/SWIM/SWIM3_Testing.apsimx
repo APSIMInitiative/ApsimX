@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 484,
   "Version": 148,
   "Name": "Simulations",
   "Children": [
@@ -16434,55 +16434,6 @@
                         0.52,
                         0.52
                       ],
-                      "Name": "CLx",
-                      "Children": [],
-                      "Enabled": false,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SwimSoluteParameters, Models",
-                      "WaterTableConcentration": 0.0,
-                      "D0": 0.05,
-                      "Depth": [
-                        "0-6",
-                        "6-17",
-                        "17-31",
-                        "31-55",
-                        "55-75",
-                        "75-95",
-                        "95-115",
-                        "115-150"
-                      ],
-                      "Thickness": [
-                        60.0,
-                        110.0,
-                        140.0,
-                        240.0,
-                        200.0,
-                        200.0,
-                        200.0,
-                        350.0
-                      ],
-                      "Exco": [
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0,
-                        100.0
-                      ],
-                      "FIP": [
-                        0.8,
-                        0.8,
-                        0.8,
-                        0.8,
-                        0.8,
-                        0.8,
-                        0.8,
-                        0.8
-                      ],
                       "Name": "CL",
                       "Children": [],
                       "Enabled": true,
@@ -17377,14 +17328,14 @@
                           "OC": null,
                           "EC": null,
                           "CL": [
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0,
-                            0.0
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1,
+                            0.1
                           ],
                           "ESP": [
                             "NaN",
