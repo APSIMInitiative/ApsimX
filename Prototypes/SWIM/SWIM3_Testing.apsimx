@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 484,
+  "ExplorerWidth": 285,
   "Version": 148,
   "Name": "Simulations",
   "Children": [
@@ -17328,14 +17328,14 @@
                           "OC": null,
                           "EC": null,
                           "CL": [
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1,
-                            0.1
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
                           ],
                           "ESP": [
                             "NaN",

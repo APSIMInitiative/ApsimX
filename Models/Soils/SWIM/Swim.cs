@@ -3934,7 +3934,9 @@ namespace Models.Soils
 
                 //Peter's CHANGE 21/10/98 to ensure zero exchange is treated as linear
                 //         if (p%fip(solnum,j).eq.1.) then
-                if ((MathUtilities.FloatsAreEqual(ex[solnum][j], 0.0, floatComparisonTolerance)) || (MathUtilities.FloatsAreEqual(fip[solnum][j], 1.0, floatComparisonTolerance)))
+                if ((MathUtilities.FloatsAreEqual(ex[solnum][j], 0.0, floatComparisonTolerance))    //eco=0
+                    || (MathUtilities.FloatsAreEqual(fip[solnum][j], 1.0, floatComparisonTolerance)) // fip=1
+                    || (MathUtilities.FloatsAreEqual(csl[solnum][j], 0.0, floatComparisonTolerance))) // solute amount is zero  2022-01-06 Val Snow added this to avoid crashes when solutes initiated with zero concentraion
                 {
                     //           linear exchange isotherm
                     c2[i] = 1.0;
