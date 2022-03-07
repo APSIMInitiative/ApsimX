@@ -204,7 +204,7 @@ namespace APSIM.Server.IO
 
         private void SendMessage(string message)
         {
-            byte[] buffer = Encoding.Default.GetBytes(message);
+            byte[] buffer = Encoding.UTF8.GetBytes(message);
             PipeUtilities.SendToPipe(connection, buffer);
         }
 
@@ -247,7 +247,7 @@ namespace APSIM.Server.IO
             byte[] buffer = PipeUtilities.GetBytesFromPipe(connection);
             if (buffer == null)
                 return null;
-            return Encoding.Default.GetString(buffer);
+            return Encoding.UTF8.GetString(buffer);
         }
 
         private void SendArray(Array data)
@@ -296,7 +296,7 @@ namespace APSIM.Server.IO
 
         private IEnumerable<byte> StringBytes(string s)
         {
-            return Encoding.Default.GetBytes(s);
+            return Encoding.UTF8.GetBytes(s);
         }
 
         private IEnumerable<byte> StringBytesWithLength(string s)
