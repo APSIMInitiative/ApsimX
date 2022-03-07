@@ -38,11 +38,6 @@ namespace APSIM.Server.IO
         private const string fin = "FIN";
         private Stream connection;
 
-        // Assumes that we never care about the time of day, and that we won't have issues with timezone conversion changing the date.
-        // We simply convert the DateTime to an ISO date string, e.g. "2022-03-04".
-        private const string dateFormat = "yyyy-MM-dd";
-        private static DateTimeFormatInfo dateFormatInfo = DateTimeFormatInfo.InvariantInfo;
-
         /// <summary>
         /// Create a new <see cref="NativeCommunicationProtocol" /> instance which uses the
         /// specified connection stream.
@@ -244,7 +239,7 @@ namespace APSIM.Server.IO
 
         public DateTime ReadDate()
         {
-            return StringToDate(ReadString());
+            return IntToDate(ReadInt());
         }
 
         public string ReadString()
@@ -272,7 +267,7 @@ namespace APSIM.Server.IO
             else if (arrayType == typeof(bool))
                 return data.Cast<bool>().SelectMany(BoolBytes);
             else if (arrayType == typeof(DateTime)) {
-                return data.Cast<DateTime>().SelectMany(DateBytesWithLength);
+                return data.Cast<DateTime>().SelectMany(DateBytes);
             } else if (arrayType == typeof(string))
                 return data.Cast<string>().SelectMany(StringBytesWithLength);
             else
@@ -294,9 +289,9 @@ namespace APSIM.Server.IO
             return BitConverter.GetBytes(b);
         }
 
-        private IEnumerable<byte> DateBytesWithLength(DateTime date)
+        private IEnumerable<byte> DateBytes(DateTime date)
         {
-            return StringBytesWithLength(DateToString(date));
+            return IntBytes(DateToInt(date));
         }
 
         private IEnumerable<byte> StringBytes(string s)
@@ -310,14 +305,17 @@ namespace APSIM.Server.IO
             return IntBytes(data.Count()).Concat(data);
         }
 
-        private string DateToString(DateTime date)
+        // Over the wire we represent dates as an int.
+        // This assumes that we never care about the time of day, and that we won't have issues with timezone conversion changing the date.
+        // We simply convert the DateTime to an int, e.g. 20220307 represents the seventh of March, 2022.
+        private int DateToInt(DateTime date)
         {
-            return date.ToString(dateFormat, dateFormatInfo);
+            return date.Year * 10000 + date.Month * 100 + date.Day;
         }
 
-        private DateTime StringToDate(string str)
+        private DateTime IntToDate(int d)
         {
-            return DateTime.Parse(str, dateFormatInfo);
+            return new DateTime(d / 10000, (d % 10000) / 100, d % 100);
         }
 
         public void SendCommand(ICommand command)
