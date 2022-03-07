@@ -26,6 +26,12 @@ namespace Models
     [ValidParent(ParentType = typeof(CLEMFolder))]
     public class Report : Model
     {
+        /// <summary>
+        /// A collection of functions that cause a line of output to be written when they
+        /// evaluate to true (1).
+        /// </summary>
+        private List<CSharpExpressionFunction> functions = new List<CSharpExpressionFunction>();
+
         /// <summary>Link to script compiler.</summary>
         [Link] 
         ScriptCompiler compiler = null;
@@ -37,6 +43,9 @@ namespace Models
         /// <summary>The data to write to the data store.</summary>
         [NonSerialized]
         private ReportData dataToWriteToDb = null;
+
+        /// <summary>List of strings representing dates to report on.</summary>
+        private List<string> dateStringsToReportOn = new List<string>();
 
         /// <summary>Link to a simulation</summary>
         [Link]
@@ -109,6 +118,25 @@ namespace Models
             SubscribeToEvents();
         }
 
+        /// <summary>An event handler called at the end of each day.</summary>
+        /// <param name="sender">Event sender</param>
+        /// <param name="e">Event arguments</param>
+        [EventSubscribe("DoReport")]
+        protected void OnDoReport(object sender, EventArgs e)
+        {
+            foreach (var dateString in dateStringsToReportOn)
+            {
+                if (DateUtilities.DatesAreEqual(dateString, clock.Today))
+                    DoOutput();
+            }
+
+            foreach (var function in functions)
+            {
+                if (function.Value() == 1)
+                    DoOutput();
+            }
+        }
+
         /// <summary>
         /// Subscribe to events provided
         /// </summary>
@@ -123,14 +151,37 @@ namespace Models
             // Locate reporting variables.
             FindVariableMembers();
 
-            // Parse the report frequency lines
-            foreach (string line in EventNames)
+            // Subscribe to events.
+            foreach (string eventName in EventNames)
             {
-                if (!DateReportFrequency.TryParse(line, this, events) &&
-                    !EventReportFrequency.TryParse(line, this, events) &&
-                    !ExpressionReportFrequency.TryParse(line, this, events, compiler))
-                    throw new Exception($"Invalid report frequency found: {line}");
+                if (eventName.StartsWith("if "))
+                    AddFunction(eventName);
+                else
+                    events.Subscribe(eventName, DoOutputEvent);
             }
+        }
+
+        /// <summary>
+        /// A frequency function was entered. Add it to the list of functions so
+        /// that they can be evaluated later.
+        /// </summary>
+        /// <param name="functionString"></param>
+        private void AddFunction(string functionString)
+        {
+            var match = Regex.Match(functionString, "if (?<expression>.+)");
+            if (match.Success)
+            {
+                var expressionFunction = new CSharpExpressionFunction()
+                {
+                    Expression = $"Convert.ToDouble({match.Groups["expression"].Value})",
+                    Parent = this
+                };
+                expressionFunction.SetCompiler(compiler);
+                expressionFunction.CompileExpression();
+                functions.Add(expressionFunction);
+            }
+            else
+                throw new Exception($"Invalid report frequency expression: {functionString}");
         }
 
         /// <summary>
@@ -148,9 +199,14 @@ namespace Models
                 int commentIndex = eventName.IndexOf("//");
                 if (commentIndex >= 0)
                     eventName = eventName.Substring(0, commentIndex);
-                eventName = eventName.Trim();
-                if (!string.IsNullOrEmpty(eventName))
-                    eventNames.Add(eventName);
+
+                if (!string.IsNullOrWhiteSpace(eventName))
+                {
+                    if (DateUtilities.validateDateString(eventName) != null)
+                        dateStringsToReportOn.Add(eventName);                       
+                    else
+                        eventNames.Add(eventName.Trim());
+                }
             }
 
             return eventNames.ToArray();
