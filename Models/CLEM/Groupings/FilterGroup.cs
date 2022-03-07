@@ -133,7 +133,7 @@ namespace Models.CLEM
                         break;
                     case TakeFromFilterStyle.TakeIndividuals:
                     case TakeFromFilterStyle.SkipIndividuals:
-                        number = take.NumberToTake(0);
+                        number = take.NumberToTake(filtered.Count());
                         break;
                 }
                 switch (take.TakeStyle)
