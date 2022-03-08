@@ -2306,6 +2306,9 @@ namespace Models.Soils
                 SwimSoluteParameters soluteParam = FindInScope<SwimSoluteParameters>(solute_names[i]);
                 if (soluteParam == null)
                     throw new Exception("Could not find parameters for solute called " + solute_names[i]);
+                for (int j = 0; j < soluteParam.FIP.Length; j++)
+                    if (soluteParam.FIP[j] < 1.0)
+                        throw new Exception("In the current implementation FIP must be equal to 1 to enforce a linear isotherm. Nonlinear isotherms were causing mass balance errors - this might be resolved in the future, " + solute_names[i]);
                 fip[i] = Layers.MapConcentration(soluteParam.FIP, soluteParam.Thickness, soilPhysical.Thickness, double.NaN);
                 exco[i] = Layers.MapConcentration(soluteParam.Exco, soluteParam.Thickness, soilPhysical.Thickness, double.NaN);
                 ex[i] = MathUtilities.Multiply(exco[i], soilPhysical.BD);
@@ -3934,7 +3937,10 @@ namespace Models.Soils
 
                 //Peter's CHANGE 21/10/98 to ensure zero exchange is treated as linear
                 //         if (p%fip(solnum,j).eq.1.) then
-                if ((MathUtilities.FloatsAreEqual(ex[solnum][j], 0.0, floatComparisonTolerance)) || (MathUtilities.FloatsAreEqual(fip[solnum][j], 1.0, floatComparisonTolerance)))
+                if ((MathUtilities.FloatsAreEqual(ex[solnum][j], 0.0, floatComparisonTolerance))    //exco=0
+                    || (MathUtilities.FloatsAreEqual(fip[solnum][j], 1.0, floatComparisonTolerance)) // fip=1
+
+                    ) // solute amount is zero  2022-01-06 Val Snow added this to avoid crashes when solutes initiated with zero concentraion  || (MathUtilities.FloatsAreEqual(csl[solnum][j], 0.0, 1e-6))
                 {
                     //           linear exchange isotherm
                     c2[i] = 1.0;
