@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 482,
   "Version": 148,
   "Name": "Simulations",
   "Children": [
@@ -1535,145 +1535,14 @@
               "FinalLeafNo": 0.0,
               "dltPotentialLAI": 0.0,
               "dltStressedLAI": 0.0,
-              "NLeaves": 0.0,
               "Name": "LeafCulms",
               "Children": [
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Parameters.appearanceRate1",
-                  "Name": "appearanceRate1",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Parameters.appearanceRate2",
-                  "Name": "appearanceRate2",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Parameters.appearanceRate3",
-                  "Name": "appearanceRate3",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Parameters.noRateChange1",
-                  "Name": "noRateChange1",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Parameters.noRateChange2",
-                  "Name": "noRateChange2",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Parameters.leafNoAtEmergence",
-                  "Name": "leafNoAtEmergence",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Parameters.leafNumSeed",
-                  "Name": "leafNumSeed",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Parameters.leafInitRate",
-                  "Name": "leafInitRate",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Leaf].Parameters.slaMax",
-                  "Name": "slaMax",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.MinimumFunction, Models",
-                  "Name": "ExpansionStress",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "WaterStressEffect",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.1,
-                            1.1
-                          ],
-                          "Y": [
-                            0.0,
-                            1.0
-                          ],
-                          "XVariableName": null,
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Arbitrator].SDRatio",
-                          "Name": "XValue",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "NitrogenStressEffect",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 1.0,
-                      "Units": null,
-                      "Name": "PhosphorusStressEffect",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
                 {
                   "$type": "Models.PMF.Struct.DynamicTillering, Models",
                   "CalculatedTillerNumber": 0.0,
                   "FertileTillerNumber": 0.0,
                   "SupplyDemandRatio": 0.0,
-                  "Name": "dynamicTillering",
+                  "Name": "DynamicTillering",
                   "Children": [
                     {
                       "$type": "Models.PMF.C4LeafArea, Models",
@@ -1905,41 +1774,55 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "LeafAppearanceRate",
+                  "$type": "Models.Functions.MinimumFunction, Models",
+                  "Name": "ExpansionStress",
                   "Children": [
                     {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        3.5,
-                        3.5,
-                        50.0
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "WaterStressEffect",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.1,
+                            1.1
+                          ],
+                          "Y": [
+                            0.0,
+                            1.0
+                          ],
+                          "XVariableName": null,
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Arbitrator].SDRatio",
+                          "Name": "XValue",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
                       ],
-                      "Y": [
-                        20.0,
-                        20.0,
-                        41.0,
-                        41.0
-                      ],
-                      "XVariableName": null,
-                      "Name": "XYPairs",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "NitrogenStressEffect",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "LeafAppearance uses the remaining leaves to calculate a faster appearance rate which is calculated per tiller so must be done dynamicaaly using ValueForX() functionality\n\nPeter Carberry's 2 stage version used here, modified to apply to last few leaves before flag\n",
-                      "Name": "Memo",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "RemainingLeaves",
-                      "Name": "XValue",
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1.0,
+                      "Units": null,
+                      "Name": "PhosphorusStressEffect",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -2045,6 +1928,54 @@
                       "ReadOnly": false
                     }
                   ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Parameters.appearanceRate1",
+                  "Name": "appearanceRate1",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Parameters.appearanceRate2",
+                  "Name": "appearanceRate2",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Parameters.appearanceRate3",
+                  "Name": "appearanceRate3",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Parameters.noRateChange1",
+                  "Name": "noRateChange1",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Parameters.noRateChange2",
+                  "Name": "noRateChange2",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Parameters.leafNoAtEmergence",
+                  "Name": "leafNoAtEmergence",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -4767,7 +4698,7 @@
                                           "Children": [
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Leaf].SlaMin",
+                                              "VariableName": "[Leaf].Parameters.SlaMin",
                                               "Name": "SlaMin",
                                               "Children": [],
                                               "Enabled": true,
@@ -5138,24 +5069,6 @@
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 8000.0,
-                  "Units": null,
-                  "Name": "SlaMin",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Called by DMDemands",
-                      "Name": "Memo",
-                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -5999,6 +5912,24 @@
                       "Units": null,
                       "Name": "slaMax",
                       "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 8000.0,
+                      "Units": null,
+                      "Name": "SlaMin",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Called by DMDemands",
+                          "Name": "Memo",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     },
