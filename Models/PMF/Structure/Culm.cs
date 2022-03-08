@@ -22,9 +22,6 @@ namespace Models.PMF.Struct
 		/// <summary> Vertical leaf adjustment.</summary>
 		public double VertAdjValue { get; set; }
 
-		/// <summary>Culm Parameters </summary>
-		public CulmParams parameters;
-
 		/// <summary>Culm number.</summary>
 		public int CulmNo { get; set; }
 
@@ -58,11 +55,9 @@ namespace Models.PMF.Struct
 
 		/// <summary>Constructor. </summary>
 		/// <param name="leafAppearance"></param>
-		/// <param name="parameters"></param>
-		public Culm(double leafAppearance, CulmParams parameters)
+		public Culm(double leafAppearance)
 		{
 			LeafNoAtAppearance = leafAppearance;
-			this.parameters = parameters;
 			Initialize();
 		}
 
@@ -96,7 +91,7 @@ namespace Models.PMF.Struct
 			// leaf number
 			FinalLeafNo = 0.0;
 			dltLeafNo = 0.0;
-			CurrentLeafNo = parameters.LeafNoAtEmergence?.Value() ?? 0.0;
+			CurrentLeafNo = 0;
 			VertAdjValue = 0.0;
 			Proportion = 1.0;
 			TotalLAI = 0.0;
@@ -104,20 +99,7 @@ namespace Models.PMF.Struct
 			DltStressedLAI = 0.0;
 			CulmNo = 0;
 			LeafSizes = new List<double>();
-			//readParams();
 		}
 
-
-		/// <summary>
-		/// Get leaf appearance rate.
-		/// </summary>
-		/// <param name="remainingLeaves"></param>
-		/// <returns></returns>
-		public double getLeafAppearanceRate(double remainingLeaves)
-		{
-			if (remainingLeaves <= parameters.NoRateChange.Value())
-				return parameters.AppearanceRate2.Value();
-			return parameters.AppearanceRate1.Value();
-		}
 	}
 }

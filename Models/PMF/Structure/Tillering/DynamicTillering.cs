@@ -144,7 +144,7 @@ namespace Models.PMF.Struct
 		private double calcLeafAppearance(Culm culm)
 		{
 			var leavesRemaining = culms.FinalLeafNo - culm.CurrentLeafNo;
-			var leafAppearanceRate = culms.LeafAppearanceRate.ValueForX(leavesRemaining);
+			var leafAppearanceRate = culms.getLeafAppearanceRate(leavesRemaining);
 			// if leaves are still growing, the cumulative number of phyllochrons or fully expanded leaves is calculated from thermal time for the day.
 			var dltLeafNo = MathUtilities.Bound(MathUtilities.Divide(phenology.thermalTime.Value(), leafAppearanceRate, 0), 0.0, leavesRemaining);
 
@@ -152,6 +152,7 @@ namespace Models.PMF.Struct
 
 			return dltLeafNo;
 		}
+
 		double calcTillerNumber(int newLeafNo, int existingLeafNo)
 		{
 			if (CalculatedTillerNumber > 0.0) return CalculatedTillerNumber;
@@ -163,7 +164,7 @@ namespace Models.PMF.Struct
 				var areaMethod = areaCalc as ICulmLeafArea;
 				double L5Area = areaMethod.CalculateIndividualLeafArea(5, culms.FinalLeafNo);
 				double L9Area = areaMethod.CalculateIndividualLeafArea(9, culms.FinalLeafNo);
-				double Phy5 = culms.Culms[0].getLeafAppearanceRate(culms.FinalLeafNo - culms.Culms[0].CurrentLeafNo);
+				double Phy5 = culms.getLeafAppearanceRate(culms.FinalLeafNo - culms.Culms[0].CurrentLeafNo);
 
 				//Calc Demand = LA9 - LA5
 				var demand = L9Area - L5Area;
@@ -207,7 +208,7 @@ namespace Models.PMF.Struct
 
 			if (linearLAI < maxLAIForTillerAddition.Value())
 			{
-				var appRate = culms.Culms[0].getLeafAppearanceRate(5);
+				var appRate = culms.getLeafAppearanceRate(5);
 				return Math.Min(phenology.thermalTime.Value() / appRate, CalculatedTillerNumber - tillersAdded);
 			}
 			return 0.0;
@@ -221,7 +222,7 @@ namespace Models.PMF.Struct
 			double leafNoAtAppearance = 1.0;                            // DEBUG  parameter?
 			double nTillersPresent = culms.Culms.Count - 1;
 
-			Culm newCulm = new Culm(leafNoAtAppearance, culms.Culms[0].parameters);
+			Culm newCulm = new Culm(leafNoAtAppearance);
 
 			newCulm.CulmNo = tillerNumber;
 			newCulm.CurrentLeafNo = initialLeaf;

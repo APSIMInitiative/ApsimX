@@ -125,7 +125,7 @@ namespace Models.PMF.Struct
 		private double calcLeafAppearance(Culm culm)
 		{
 			var leavesRemaining = culms.FinalLeafNo - culm.CurrentLeafNo;
-			var leafAppearanceRate = culms.LeafAppearanceRate.ValueForX(leavesRemaining);
+			var leafAppearanceRate = culms.getLeafAppearanceRate(leavesRemaining);
 			// if leaves are still growing, the cumulative number of phyllochrons or fully expanded leaves is calculated from thermal time for the day.
 			var dltLeafNo = MathUtilities.Bound(MathUtilities.Divide(phenology.thermalTime.Value(), leafAppearanceRate, 0), 0.0, leavesRemaining);
 			
@@ -191,7 +191,7 @@ namespace Models.PMF.Struct
 			//a new tiller is created with each new leaf, up the number of fertileTillers
 			if (tillerFraction + fractionToAdd > 1)
 			{
-				Culm newCulm = new Culm(leafAtAppearance, culms.Culms[0].parameters);
+				Culm newCulm = new Culm(leafAtAppearance);
 
 				//bell curve distribution is adjusted horizontally by moving the curve to the left.
 				//This will cause the first leaf to have the same value as the nth leaf on the main culm.
