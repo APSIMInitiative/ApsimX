@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Shared.Documentation;
 using System.Collections.Generic;
 using System.Text;
 using System.Reflection;
@@ -12,7 +13,7 @@ namespace Models.Functions
     /// </summary>
     [Serializable]
     [Description("Stores the value of its child function (called Integral) from yesterday and returns the difference between that and todays value of the child function")]
-    public class DeltaFunction : Model, IFunction, ICustomDocumentation
+    public class DeltaFunction : Model, IFunction
     {
         //Class members
         /// <summary>The accumulated value</summary>
@@ -74,21 +75,12 @@ namespace Models.Functions
         {
             YesterdaysValue = Integral.Value();
         }
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
-            {
-                //Write what the function is returning
-                tags.Add(new AutoDocumentation.Paragraph("*" + this.Name + "* is the daily differential of", indent));
-
-                // write a description of the child it is returning the differential of.
-                foreach (IModel child in this.FindAllChildren<IModel>())
-                    AutoDocumentation.DocumentModel(child, tags, headingLevel + 1, indent + 1);
-            }
+            yield return new Paragraph($"*{Name}* is the daily differential of");
         }
     }
 }

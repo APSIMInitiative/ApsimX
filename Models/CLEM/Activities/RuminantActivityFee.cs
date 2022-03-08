@@ -18,16 +18,13 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(RuminantActivityBuySell))]
     [ValidParent(ParentType = typeof(RuminantActivityControlledMating))]
-    [Description("This activity defines a specific herd expense for buying and selling ruminants or breeding and is based upon the current herd filtering for the parent activity.")]
+    [Description("Define a herd expense for herd management activities")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFee.htm")]
     public class RuminantActivityFee: CLEMModel
     {
-        /// <summary>
-        /// Link to resources
-        /// </summary>
         [Link]
-        public ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
 
         /// <summary>
         /// Bank account to use
@@ -57,6 +54,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Category for transactions")]
         [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
+        [Models.Core.Display(Order = 500)]
         public string TransactionCategory { get; set; }
 
         /// <summary>
@@ -70,7 +68,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            BankAccount = Resources.GetResourceItem(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
+            BankAccount = resources.FindResourceType<Finance, FinanceType>(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <summary>
@@ -84,12 +82,8 @@ namespace Models.CLEM.Activities
 
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -97,24 +91,12 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.##") + "</span> ");
                 htmlWriter.Write("<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> ");
                 htmlWriter.Write(" from ");
-                if (BankAccountName != null)
-                {
-                    htmlWriter.Write("<span class=\"resourcelink\">" + BankAccountName + "</span> ");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[ACCOUNT NOT SET]</span> ");
-                }
+
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(BankAccountName, "Account not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
-                if (TransactionCategory != null && TransactionCategory != "")
-                {
-                    htmlWriter.Write("<span class=\"setvalue\">" + TransactionCategory + "</span> ");
-                }
-                else
-                {
-                    htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span> ");
-                }
+
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not set"));
                 htmlWriter.Write(" for all transactions</div>");
                 return htmlWriter.ToString(); 
             }

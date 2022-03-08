@@ -15,9 +15,6 @@ using Utility;
 using Pango;
 using UserInterface.Classes;
 using Table = Markdig.Extensions.Tables.Table;
-#if NETCOREAPP
-using StateType = Gtk.StateFlags;
-#endif
 
 namespace UserInterface.Views
 {
@@ -94,6 +91,7 @@ namespace UserInterface.Views
                 textView = (TextView)gtkControl;
                 mainWidget = textView;
             }
+            textView.Margin = 10;
             textView.PopulatePopup += OnPopulatePopupMenu;
             findView = new MarkdownFindView();
 
@@ -202,12 +200,10 @@ namespace UserInterface.Views
                 option.AddAccelerator("activate", accelerators, (uint)Gdk.Key.F, ModifierType.ControlMask, AccelFlags.Visible);
                 option.ShowAll();
                 option.Activated += OnFindText;
-#if NETFRAMEWORK
-                args.Menu.Append(option);
-#else
+
                 if (args.Popup is Menu menu)
                     menu.Append(option);
-#endif
+
             }
             catch (Exception err)
             {
@@ -249,7 +245,6 @@ namespace UserInterface.Views
                 {
                     MarkdownPipeline pipeline = new MarkdownPipelineBuilder().UsePipeTables().UseEmphasisExtras().Build();
                     MarkdownDocument document = Markdown.Parse(value, pipeline);
-                    textView.Buffer.Text = string.Empty;
                     TextIter insertPos = textView.Buffer.GetIterAtOffset(0);
                     insertPos = ProcessMarkdownBlocks(document, ref insertPos, textView, 0);
                     mainWidget.ShowAll();
@@ -511,7 +506,7 @@ namespace UserInterface.Views
             TextIter iter = tmpView.Buffer.StartIter;
             ProcessMarkdownBlocks(cell, ref iter, tmpView, 0, false);
             string result = tmpView.Buffer.Text;
-            tmpView.Cleanup();
+            tmpView.Dispose();
             return result;
         }
 
@@ -522,11 +517,9 @@ namespace UserInterface.Views
         private int MeasureText(string text)
         {
             Label label = new Label();
-#if NETFRAMEWORK
-            label.Layout.FontDescription = owner.MainWidget.Style.FontDescription;
-#else
+
             label.Layout.FontDescription = FontDescription.FromString(Utility.Configuration.Settings.FontName);
-#endif
+
             label.Layout.SetText(text);
             label.Layout.GetPixelSize(out int width, out _);
             return width;
@@ -558,11 +551,9 @@ namespace UserInterface.Views
 
             if (image != null)
             {
-#if NETFRAMEWORK
-                image.SetAlignment(0, 0);
-#else
+
                 image.Halign = image.Valign = 0;
-#endif
+
                 if (!string.IsNullOrWhiteSpace(tooltip))
                     image.TooltipText = tooltip;
 
@@ -775,11 +766,9 @@ namespace UserInterface.Views
         {
             try
             {
-#if NETFRAMEWORK
-                textView.GetPointer(out int wx, out int wy);
-#else
+
                 Gdk.Display.Default.GetPointer(out _, out int wx, out int wy, out _);
-#endif
+
                 textView.WindowToBufferCoords(TextWindowType.Widget, wx, wy,
                                               out int bx, out int by);
                 SetCursorIfAppropriate(textView, bx, by);
@@ -818,11 +807,9 @@ namespace UserInterface.Views
             public LinkTag(string url) : base(url)
             {
                 URL = url;
-#if NETFRAMEWORK
-                ForegroundGdk = (ViewBase.MasterView as ViewBase).MainWidget.GetBackgroundColour(StateType.Selected);
-#else
-                ForegroundGdk = (ViewBase.MasterView as ViewBase).MainWidget.StyleContext.GetColor(StateType.Link).ToGdkColor();
-#endif
+
+                ForegroundGdk = (ViewBase.MasterView as ViewBase).MainWidget.StyleContext.GetColor(StateFlags.Link).ToColour().ToGdk();
+
                 Underline = Pango.Underline.Single;
             }
         }

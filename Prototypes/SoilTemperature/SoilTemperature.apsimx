@@ -1,8 +1,7 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 282,
-  "Version": 126,
-  "ApsimVersion": "0.0.0.0",
+  "ExplorerWidth": 300,
+  "Version": 148,
   "Name": "Simulations",
   "Children": [
     {
@@ -21,7 +20,6 @@
           ],
           "Name": "Observed",
           "Children": [],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -35,7 +33,6 @@
           "AllColumns": false,
           "Name": "PredictedObserved",
           "Children": [],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -49,12 +46,10 @@
           ],
           "Name": "Analytical",
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": false,
       "Enabled": true,
       "ReadOnly": false
     },
@@ -69,7 +64,6 @@
           "Text": "This simulation is a duplicate of the Eucalyptus validation Wagga simulation. The only change is the addition of the soil temperature model.",
           "Name": "Memo",
           "Children": [],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -80,7 +74,6 @@
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "Children": [],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -90,18 +83,14 @@
           "End": "1995-06-30T00:00:00",
           "Name": "Clock",
           "Children": [],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Summary, Models",
-          "CaptureErrors": true,
-          "CaptureWarnings": true,
-          "CaptureSummaryText": true,
+          "Verbosity": 100,
           "Name": "Summary",
           "Children": [],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -109,7 +98,6 @@
           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
           "Name": "Soil Arbitrator",
           "Children": [],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -151,22 +139,11 @@
                   "RelativeTo": null,
                   "Name": "Initial water",
                   "Children": [],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Physical, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-40",
-                    "40-100",
-                    "100-200",
-                    "200-300",
-                    "300-400",
-                    "400-500",
-                    "500-600"
-                  ],
                   "Thickness": [
                     100.0,
                     300.0,
@@ -292,7 +269,6 @@
                       "XFMetadata": null,
                       "Name": "EucalyptusSoil",
                       "Children": [],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -333,12 +309,10 @@
                       "XFMetadata": null,
                       "Name": "SCRUMSoil",
                       "Children": [],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -390,22 +364,11 @@
                   ],
                   "ResourceName": "WaterBalance",
                   "Name": "SoilWater",
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Organic, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-40",
-                    "40-100",
-                    "100-200",
-                    "200-300",
-                    "300-400",
-                    "400-500",
-                    "500-600"
-                  ],
                   "FOMCNRatio": 60.0,
                   "Thickness": [
                     100.0,
@@ -458,12 +421,12 @@
                     0.99
                   ],
                   "FOM": [
-                    0.29406966149543889,
+                    0.2940696614954389,
                     0.25310810327374095,
                     0.18750709470737725,
                     0.11372880185366477,
-                    0.068980005216630655,
-                    0.041838488071023888,
+                    0.06898000521663065,
+                    0.04183848807102389,
                     0.025376325771097264,
                     0.015391519611026323
                   ],
@@ -471,22 +434,11 @@
                   "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.Chemical, Models",
-                  "Depth": [
-                    "0-10",
-                    "10-40",
-                    "40-100",
-                    "100-200",
-                    "200-300",
-                    "300-400",
-                    "400-500",
-                    "500-600"
-                  ],
                   "Thickness": [
                     100.0,
                     300.0,
@@ -530,13 +482,14 @@
                   "CL": null,
                   "EC": null,
                   "ESP": null,
+                  "LabileP": null,
+                  "UnavailableP": null,
                   "ECMetadata": null,
                   "CLMetadata": null,
                   "ESPMetadata": null,
                   "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -544,7 +497,6 @@
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                   "Name": "Temperature",
                   "Children": [],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -552,7 +504,6 @@
                   "$type": "Models.Soils.Nutrients.Nutrient, Models",
                   "ResourceName": "Nutrient",
                   "Name": "Nutrient",
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -560,7 +511,6 @@
                   "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                   "Name": "SoilTemperature",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -594,12 +544,10 @@
                   ],
                   "Name": "LayerStructure",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -607,15 +555,13 @@
               "$type": "Models.Irrigation, Models",
               "Name": "Irrigation",
               "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Fertiliser, Models",
+              "ResourceName": "Fertiliser",
               "Name": "Fertiliser",
-              "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -629,7 +575,6 @@
               "InitialCNR": 80.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -639,14 +584,12 @@
               "b_interception": 1.0,
               "c_interception": 0.0,
               "d_interception": 0.0,
-              "soil_albedo": 0.13,
               "SoilHeatFluxFraction": 0.0,
               "MinimumHeightDiffForNewLayer": 0.0,
               "NightInterceptionFraction": 0.0,
-              "ReferenceHeight": 0.0,
+              "ReferenceHeight": 2.0,
               "Name": "MicroClimate",
               "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -654,7 +597,6 @@
               "$type": "Models.PMF.Plant, Models",
               "ResourceName": "Eucalyptus",
               "Name": "Eucalyptus",
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -662,7 +604,6 @@
               "$type": "Models.PMF.Plant, Models",
               "ResourceName": "SCRUM",
               "Name": "SCRUM",
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -688,7 +629,6 @@
                 }
               ],
               "Name": "TreeTransplantRule",
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -704,7 +644,6 @@
               ],
               "Name": "WeedSowing",
               "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -768,7 +707,6 @@
               ],
               "Name": "FertiliserOperations",
               "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -811,7 +749,6 @@
               "GroupByVariableName": null,
               "Name": "Report",
               "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -845,7 +782,6 @@
                 }
               ],
               "Name": "AutoFertigate",
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -859,18 +795,17 @@
                 }
               ],
               "Name": "Harvesting",
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowPageOfGraphs": true,
+          "ShowInDocs": false,
+          "GraphsPerPage": 6,
           "Name": "Folder",
           "Children": [
             {
@@ -878,30 +813,29 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": true,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Temperature at 10 mm",
@@ -931,7 +865,6 @@
                   "Filter": null,
                   "Name": "Observed",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -960,12 +893,10 @@
                   "Filter": null,
                   "Name": "Predicted",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -974,30 +905,29 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": true,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Temperature at 25 mm",
@@ -1027,7 +957,6 @@
                   "Filter": null,
                   "Name": "Observed",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1056,12 +985,10 @@
                   "Filter": null,
                   "Name": "Predicted",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1070,30 +997,29 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": true,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Temperature at 75 mm",
@@ -1123,7 +1049,6 @@
                   "Filter": null,
                   "Name": "Observed",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1152,12 +1077,10 @@
                   "Filter": null,
                   "Name": "Predicted",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1166,30 +1089,29 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": true,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Temperature at 150 mm",
@@ -1219,7 +1141,6 @@
                   "Filter": null,
                   "Name": "Observed",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1248,12 +1169,10 @@
                   "Filter": null,
                   "Name": "Predicted",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1262,30 +1181,29 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": true,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 0,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Temperature at 250 mm",
@@ -1315,7 +1233,6 @@
                   "Filter": null,
                   "Name": "Observed",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1344,12 +1261,10 @@
                   "Filter": null,
                   "Name": "Predicted",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1358,30 +1273,29 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "P vs O Soil Temp at 10 mm",
@@ -1418,17 +1332,14 @@
                       "showEquation": true,
                       "Name": "Regression",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1437,30 +1348,29 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "P vs O Soil Temp at 25 mm",
@@ -1497,17 +1407,14 @@
                       "showEquation": true,
                       "Name": "Regression",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1516,30 +1423,29 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "P vs O Soil Temp at 75 mm",
@@ -1576,17 +1482,14 @@
                       "showEquation": true,
                       "Name": "Regression",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1595,30 +1498,29 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "P vs O Soil Temp at 150 mm",
@@ -1655,17 +1557,14 @@
                       "showEquation": true,
                       "Name": "Regression",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1674,30 +1573,29 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "P vs O Soil Temp at 250 mm",
@@ -1734,27 +1632,22 @@
                       "showEquation": true,
                       "Name": "Regression",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": false,
       "Enabled": true,
       "ReadOnly": false
     },
@@ -1772,12 +1665,10 @@
               "Specification": "[Weather].ExcelWorkSheetName=Dalby,Lincoln",
               "Name": "Site",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         },
@@ -1792,7 +1683,6 @@
               "Text": "The intention for the analytical solution is to test the numerics and also if the soil layering that most people use (many centimetres even at the surface) with SoilWater are causing any issues with the quality of the solution. This would be under highly idealised conditions but is a necessary step - the advantage is that it is only testing the soil temperature solution (not the water, crop, ...).\n\n* set up the soil water model such that the profile is uniform (all the same water content, bulk density, texture, carbon) with no crop and there are no changes in water content with time. I can't exactly remember how I did this last time but I would try setting it up with the soil at LL15 (are going to need a few different levels of this for testing) and if that didn't work then at SAT with Ksat and swcon = 0\n\n* need a couple of artificial weather files at latitude = 0 degrees, no rainfall, no radiation, and with air temperature of varying amplitude and average as from the spreadsheet\n\nNeed to start with soil layers of about 1 cm each (where are pretty confident that the solution will work) but be set up to expand these out to more normal layering (can probably use the layering component for these).\n\nWith the above, use the spreadsheet outputs as validation/testing data for the idealised setting for various depths in the soil. Would also like to understand how well the model copes with initial soil temperatures.\n\nAfter that, test things that should affect damping depth (bulk density, carbon, water content, texture ...)\n\nNotes:\n\n* The simulation reads dummy weather data from AnalyticalWeather.xlsx.\n\n* The soil physical node has a uniform profile specified.\n\n* The water balance component has been replaced by a manager script (DummyWaterBalance) that ensures water content (a user specified parameter) does not change during the simulation.\n\n* A 'LayerStructure' component can be added to the soil to get 1cm layers. There is a 'LayerStructure' component in the Wagga simulation that can be copied/pasted.\n",
               "Name": "Memo",
               "Children": [],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1802,7 +1692,6 @@
               "End": "2000-12-31T00:00:00",
               "Name": "Clock",
               "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1813,18 +1702,14 @@
               "ExcelWorkSheetName": "Sheet1",
               "Name": "Weather",
               "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
             {
               "$type": "Models.Summary, Models",
-              "CaptureErrors": true,
-              "CaptureWarnings": true,
-              "CaptureSummaryText": true,
+              "Verbosity": 100,
               "Name": "Summary",
               "Children": [],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -1842,24 +1727,22 @@
                   "b_interception": 0.0,
                   "c_interception": 0.0,
                   "d_interception": 0.0,
-                  "soil_albedo": 0.0,
                   "SoilHeatFluxFraction": 0.0,
                   "MinimumHeightDiffForNewLayer": 0.0,
                   "NightInterceptionFraction": 0.0,
-                  "ReferenceHeight": 0.0,
+                  "ReferenceHeight": 2.0,
                   "Name": "MicroClimate",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Manager, Models",
-                  "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model, ISoilWater\r\n    {\r\n        [Link]\r\n        private Physical physical;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n\r\n        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>\r\n        public double[] Thickness { get { return soilPhysical.Thickness; } }\r\n\r\n        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>\r\n        public double[] LayerThickness { get { return soilPhysical.Thickness; } }\r\n\r\n        ///<summary>Gets or sets volumetric soil water content (mm/mm)(</summary>\r\n        [Description(\"Soil water content (mm/mm), comma separated values\")]\r\n        public double[] SW { get; set; }\r\n\r\n        ///<summary>Gets soil water content (mm)</summary>\r\n        public double[] SWmm { get { return MathUtilities.Multiply(SW, Thickness); } }\r\n\r\n        ///<summary>Gets extractable soil water relative to LL15(mm)</summary>\r\n        public double[] ESW { get { throw new NotImplementedException(); } }\r\n\r\n        ///<summary>Gets potential evaporation from soil surface (mm)</summary>\r\n        [Description(\"Eos (mm)\")]\r\n        public double Eos { get; set; }\r\n\r\n        /// <summary>Gets the actual (realised) soil water evaporation (mm)</summary>\r\n        [Description(\"Es (mm)\")]\r\n        public double Es { get; set; }\r\n\r\n        /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>\r\n        [Description(\"Eo (mm)\")]\r\n        public double Eo { get; set; }\r\n\r\n        /// <summary>Gets the amount of water runoff (mm)</summary>\r\n        public double Runoff { get { return 0; } }\r\n        \r\n        /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>\r\n        public double Drainage { get { return 0; } }\r\n\r\n        /// <summary>Fraction of incoming radiation reflected from bare soil</summary>\r\n        [Description(\"Salb\")]\r\n        public double Salb { get; set; }\r\n\r\n        /// <summary>Amount of water moving laterally out of the profile (mm)</summary>\r\n        public double[] LateralOutflow { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachNO3 { get { return 0; } }\r\n\r\n        /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachNH4 { get { return 0; } }\r\n        \r\n        /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachUrea { get { return 0; } }\r\n\r\n        /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>\r\n        public double[] FlowNO3 { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as NH4 from each soil layer (kg /ha)</summary>\r\n        public double[] FlowNH4 { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>\r\n        public double[] FlowUrea { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)</summary>\r\n        public double[] Flow  { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>\r\n        public double[] Flux { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>\r\n        public double PotentialInfiltration { get; set; }\r\n        \r\n        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>\r\n        public double PrecipitationInterception { get; set; }\r\n\r\n        /// <summary>Water table depth (mm)</summary>\r\n        public double WaterTable { get; set; }\r\n\r\n        /// <summary>Sets the water table.</summary>\r\n        /// <param name=\"InitialDepth\">The initial depth.</param> \r\n        public void SetWaterTable(double InitialDepth)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>\r\n        public double[] SoluteFluxEfficiency { get; set; }\r\n\r\n        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>\r\n        public double[] SoluteFlowEfficiency { get; set; }\r\n\r\n        ///<summary>Perform a reset</summary>\r\n        public void Reset()\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Perform tillage</summary>\r\n        public void Tillage(TillageType Data)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Perform tillage</summary>\r\n        public void Tillage(string tillageType)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Remove water from the profile</summary>\r\n        public void RemoveWater(double[] amountToRemove)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n        /// <summary>Plant available water SW-LL15 (mm/mm).</summary>\r\n        [Units(\"mm/mm\")]\r\n        public double[] PAW\r\n        {\r\n            get\r\n            {\r\n                return SoilUtilities.CalcPAWC(soilPhysical.Thickness,\r\n                                              soilPhysical.LL15,\r\n                                              SW,\r\n                                              null);\r\n            }\r\n        }\r\n\r\n        /// <summary>Plant available water SW-LL15 (mm).</summary>\r\n        [Units(\"mm\")]\r\n        public double[] PAWmm\r\n        {\r\n            get\r\n            {\r\n                return MathUtilities.Multiply(PAW, soilPhysical.Thickness);\r\n            }\r\n        }\r\n\r\n    }\r\n}\r\n",
+                  "Code": "using Models.PMF;\r\nusing Models.Core;\r\nusing System;\r\nusing Models.Interfaces;\r\nusing Models.Soils;\r\nusing APSIM.Shared.Utilities;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    public class Script : Model, ISoilWater\r\n    {\r\n        [Link]\r\n        private Physical physical;\r\n        [Link]\r\n        private IPhysical soilPhysical;\r\n\r\n        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>\r\n        public double[] Thickness { get { return soilPhysical.Thickness; } }\r\n\r\n        ///<summary>Gets or sets soil thickness for each layer (mm)(</summary>\r\n        public double[] LayerThickness { get { return soilPhysical.Thickness; } }\r\n\r\n        ///<summary>Gets or sets volumetric soil water content (mm/mm)(</summary>\r\n        [Description(\"Soil water content (mm/mm), comma separated values\")]\r\n        public double[] SW { get; set; }\r\n\r\n        ///<summary>Gets soil water content (mm)</summary>\r\n        public double[] SWmm { get { return MathUtilities.Multiply(SW, Thickness); } }\r\n\r\n        ///<summary>Gets extractable soil water relative to LL15(mm)</summary>\r\n        public double[] ESW { get { throw new NotImplementedException(); } }\r\n\r\n        ///<summary>Gets potential evaporation from soil surface (mm)</summary>\r\n        [Description(\"Eos (mm)\")]\r\n        public double Eos { get; set; }\r\n\r\n        /// <summary>Gets the actual (realised) soil water evaporation (mm)</summary>\r\n        [Description(\"Es (mm)\")]\r\n        public double Es { get; set; }\r\n\r\n        /// <summary>Gets potential evapotranspiration of the whole soil-plant system (mm)</summary>\r\n        [Description(\"Eo (mm)\")]\r\n        public double Eo { get; set; }\r\n\r\n        /// <summary>Gets the amount of water runoff (mm)</summary>\r\n        public double Runoff { get { return 0; } }\r\n        \r\n        /// <summary>Gets the amount of water drainage from bottom of profile(mm)</summary>\r\n        public double Drainage { get { return 0; } }\r\n\r\n        /// <summary>Fraction of incoming radiation reflected from bare soil</summary>\r\n        [Description(\"Salb\")]\r\n        public double Salb { get; set; }\r\n\r\n        /// <summary>Amount of water moving laterally out of the profile (mm)</summary>\r\n        public double[] LateralOutflow { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as NO3-N from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachNO3 { get { return 0; } }\r\n\r\n        /// <summary>Amount of N leaching as NH4-N from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachNH4 { get { return 0; } }\r\n        \r\n        /// <summary>Amount of N leaching as urea-N  from the deepest soil layer (kg /ha)</summary>\r\n        public double LeachUrea { get { return 0; } }\r\n\r\n        /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>\r\n        public double[] FlowNO3 { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as NH4 from each soil layer (kg /ha)</summary>\r\n        public double[] FlowNH4 { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of N leaching as urea from each soil layer (kg /ha)</summary>\r\n        public double[] FlowUrea { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of water moving upward from each soil layer during unsaturated flow (negative value means downward movement) (mm)</summary>\r\n        public double[] Flow  { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>\r\n        public double[] Flux { get { throw new NotImplementedException(); } }\r\n\r\n        /// <summary> This is set by Microclimate and is rainfall less that intercepted by the canopy and residue components </summary>\r\n        public double PotentialInfiltration { get; set; }\r\n        \r\n        /// <summary> The amount of rainfall intercepted by crop and residue canopies </summary>\r\n        public double PrecipitationInterception { get; set; }\r\n\r\n        /// <summary>Water table depth (mm)</summary>\r\n        public double WaterTable { get; set; }\n        \n        /// <summary>Pond depth (mm)</summary>\r\n        public double Pond { get; set; }\r\n\n        /// <summary>Pond depth (mm)</summary>\r\n        public double SubsurfaceDrain { get; set; }\r\n\r\n        /// <summary>Sets the water table.</summary>\r\n        /// <param name=\"InitialDepth\">The initial depth.</param> \r\n        public void SetWaterTable(double InitialDepth)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        /// <summary>The efficiency (0-1) that solutes move down with water.</summary>\r\n        public double[] SoluteFluxEfficiency { get; set; }\r\n\r\n        /// <summary>The efficiency (0-1) that solutes move up with water.</summary>\r\n        public double[] SoluteFlowEfficiency { get; set; }\r\n\r\n        ///<summary>Perform a reset</summary>\r\n        public void Reset()\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Perform tillage</summary>\r\n        public void Tillage(TillageType Data)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Perform tillage</summary>\r\n        public void Tillage(string tillageType)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n\r\n        ///<summary>Remove water from the profile</summary>\r\n        public void RemoveWater(double[] amountToRemove)\r\n        {\r\n            throw new NotImplementedException();\r\n        }\r\n        /// <summary>Plant available water SW-LL15 (mm/mm).</summary>\r\n        [Units(\"mm/mm\")]\r\n        public double[] PAW\r\n        {\r\n            get\r\n            {\r\n                return SoilUtilities.CalcPAWC(soilPhysical.Thickness,\r\n                                              soilPhysical.LL15,\r\n                                              SW,\r\n                                              null);\r\n            }\r\n        }\r\n\r\n        /// <summary>Plant available water SW-LL15 (mm).</summary>\r\n        [Units(\"mm\")]\r\n        public double[] PAWmm\r\n        {\r\n            get\r\n            {\r\n                return MathUtilities.Multiply(PAW, soilPhysical.Thickness);\r\n            }\r\n        }\r\n\r\n    }\r\n}\r\n",
                   "Parameters": [
                     {
                       "Key": "SW",
-                      "Value": "0.05,0.05,0.05,0.05,0.05,0.05,0.05,0.05"
+                      "Value": "0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05"
                     },
                     {
                       "Key": "Eos",
@@ -1876,30 +1759,9 @@
                     {
                       "Key": "Salb",
                       "Value": "0"
-                    },
-                    {
-                      "Key": "PotentialInfiltration",
-                      "Value": "0"
-                    },
-                    {
-                      "Key": "PrecipitationInterception",
-                      "Value": "0"
-                    },
-                    {
-                      "Key": "WaterTable",
-                      "Value": "0"
-                    },
-                    {
-                      "Key": "SoluteFluxEfficiency",
-                      "Value": ""
-                    },
-                    {
-                      "Key": "SoluteFlowEfficiency",
-                      "Value": ""
                     }
                   ],
                   "Name": "DummyWaterBalance",
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1933,22 +1795,11 @@
                       "RelativeTo": null,
                       "Name": "Initial water",
                       "Children": [],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Soils.Physical, Models",
-                      "Depth": [
-                        "0-10",
-                        "10-20",
-                        "20-40",
-                        "40-70",
-                        "70-100",
-                        "100-130",
-                        "130-150",
-                        "150-180"
-                      ],
                       "Thickness": [
                         100.0,
                         100.0,
@@ -2037,22 +1888,11 @@
                       "ParticleSizeClayMetadata": null,
                       "Name": "Physical",
                       "Children": [],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Soils.Organic, Models",
-                      "Depth": [
-                        "0-10",
-                        "10-40",
-                        "40-100",
-                        "100-200",
-                        "200-300",
-                        "300-400",
-                        "400-500",
-                        "500-600"
-                      ],
                       "FOMCNRatio": 60.0,
                       "Thickness": [
                         100.0,
@@ -2105,7 +1945,7 @@
                         0.4
                       ],
                       "FOM": [
-                        0.29406966149543889,
+                        0.2940696614954389,
                         0.294,
                         0.294,
                         0.294,
@@ -2118,22 +1958,11 @@
                       "FOMMetadata": null,
                       "Name": "Organic",
                       "Children": [],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
                       "$type": "Models.Soils.Chemical, Models",
-                      "Depth": [
-                        "0-10",
-                        "10-40",
-                        "40-100",
-                        "100-200",
-                        "200-300",
-                        "300-400",
-                        "400-500",
-                        "500-600"
-                      ],
                       "Thickness": [
                         100.0,
                         300.0,
@@ -2177,13 +2006,14 @@
                       "CL": null,
                       "EC": null,
                       "ESP": null,
+                      "LabileP": null,
+                      "UnavailableP": null,
                       "ECMetadata": null,
                       "CLMetadata": null,
                       "ESPMetadata": null,
                       "PHMetadata": null,
                       "Name": "Chemical",
                       "Children": [],
-                      "IncludeInDocumentation": false,
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -2191,12 +2021,10 @@
                       "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
                       "Name": "SoilTemperature",
                       "Children": [],
-                      "IncludeInDocumentation": true,
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2215,23 +2043,21 @@
                   "GroupByVariableName": null,
                   "Name": "AnalyticalReport",
                   "Children": [],
-                  "IncludeInDocumentation": false,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": false,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": false,
           "Enabled": true,
           "ReadOnly": false
         },
         {
           "$type": "Models.Core.Folder, Models",
-          "ShowPageOfGraphs": true,
+          "ShowInDocs": true,
+          "GraphsPerPage": 6,
           "Name": "Folder",
           "Children": [
             {
@@ -2239,30 +2065,29 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": true,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Temperature at 10 mm",
@@ -2292,7 +2117,6 @@
                   "Filter": null,
                   "Name": "Observed",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2321,12 +2145,10 @@
                   "Filter": null,
                   "Name": "Predicted",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2335,30 +2157,29 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": true,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Temperature at 25 mm",
@@ -2388,7 +2209,6 @@
                   "Filter": null,
                   "Name": "Observed",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2417,12 +2237,10 @@
                   "Filter": null,
                   "Name": "Predicted",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             },
@@ -2431,30 +2249,29 @@
               "Caption": null,
               "Axis": [
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 3,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 3,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": true,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 },
                 {
-                  "$type": "Models.Axis, Models",
-                  "Type": 0,
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
                   "Title": null,
+                  "Position": 0,
                   "Inverted": false,
-                  "Minimum": "NaN",
-                  "Maximum": "NaN",
-                  "Interval": "NaN",
-                  "DateTimeAxis": false,
-                  "CrossesAtZero": false
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
                 }
               ],
               "LegendPosition": 3,
               "LegendOrientation": 0,
+              "AnnotationLocation": 0,
               "DisabledSeries": [],
               "LegendOutsideGraph": false,
               "Name": "Temperature at 150 mm",
@@ -2484,7 +2301,6 @@
                   "Filter": null,
                   "Name": "Observed",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2513,27 +2329,22 @@
                   "Filter": null,
                   "Name": "Predicted",
                   "Children": [],
-                  "IncludeInDocumentation": true,
                   "Enabled": true,
                   "ReadOnly": false
                 }
               ],
-              "IncludeInDocumentation": true,
               "Enabled": true,
               "ReadOnly": false
             }
           ],
-          "IncludeInDocumentation": true,
           "Enabled": true,
           "ReadOnly": false
         }
       ],
-      "IncludeInDocumentation": true,
       "Enabled": true,
       "ReadOnly": false
     }
   ],
-  "IncludeInDocumentation": true,
   "Enabled": true,
   "ReadOnly": false
 }

@@ -9,10 +9,7 @@
     using Models.Core;
     using UserInterface.Extensions;
     using UserInterface.Views;
-#if NETFRAMEWORK
-    using MonoMac;
-    using MonoMac.AppKit;
-#endif
+
 
     /// <summary>
     /// All access to this class should be via <see cref="IFileDialog"/>.
@@ -102,7 +99,10 @@
         {
             string[] files = GetFiles(true);
             if (files != null && files.Any(f => File.Exists(f)))
+            {
                 Configuration.Settings.PreviousFolder = Path.GetDirectoryName(files.First(f => File.Exists(f)));
+                Configuration.Settings.Save();
+            }
             return files;
         }
 
@@ -113,16 +113,9 @@
         /// <returns>Array containing the paths of the chosen files/directories.</returns>
         private string[] GetFiles(bool selectMultiple)
         {
-#if NETCOREAPP
+
             return GenericFileDialog(selectMultiple);
-#else
-            if (ProcessUtilities.CurrentOS.IsWindows)
-                return WindowsFileDialog(selectMultiple);
-            else if (ProcessUtilities.CurrentOS.IsMac)
-                return OSXFileDialog(selectMultiple);
-            else
-                return GenericFileDialog(selectMultiple);
-#endif
+
         }
 
         /// <summary>
@@ -152,12 +145,10 @@
             else
                 throw new Exception("This file chooser dialog has specified more than one action type.");
 
-#if NETFRAMEWORK
-            FileChooserDialog fileChooser = new FileChooserDialog(Prompt, null, gtkActionType, "Cancel", ResponseType.Cancel, buttonText, ResponseType.Accept);
-#else
+
             Window window = (Window)((ViewBase)ViewBase.MasterView).MainWidget;
             FileChooserNative fileChooser = new FileChooserNative(Prompt, window, gtkActionType, buttonText, "Cancel");
-#endif
+
             fileChooser.SelectMultiple = selectMultiple;
 
             string[] specParts = null;
@@ -227,152 +218,12 @@
                     }
                 }
             } while (tryAgain);
-#if NETFRAMEWORK
-            fileChooser.Cleanup();
-#else
+
             fileChooser.Dispose();
-#endif
+
             return fileNames;
         }
 
-#if NETFRAMEWORK
-        /// <summary>
-        /// Ask user for a filename to open on Windows.
-        /// </summary>
-        /// <param name="selectMultiple">Allow the user to select multiple files?</param>
-        private string[] WindowsFileDialog(bool selectMultiple)
-        {
-            System.Windows.Forms.FileDialog dialog = null;
-            if (Action == FileActionType.Open)
-            {
-                dialog = new System.Windows.Forms.OpenFileDialog();
-                (dialog as System.Windows.Forms.OpenFileDialog).Multiselect = selectMultiple;
-            }
-            else if (Action == FileActionType.Save)
-                dialog = new System.Windows.Forms.SaveFileDialog();
-            else if (Action == FileActionType.SelectFolder)
-                return WindowsDirectoryDialog(selectMultiple);
 
-            dialog.Title = Prompt;
-
-            string filterString = String.Empty;
-            if (!string.IsNullOrEmpty(FileType))
-            {
-                if (FileType.Contains("|"))
-                    filterString = FileType;
-                else
-                    filterString = FileType + "|" + FileType;
-                if (!filterString.EndsWith("|"))
-                    filterString += "|";
-            }
-            dialog.Filter = filterString + "All files (*.*)|*.*";
-
-
-            // This almost works, but Windows is buggy.
-            // If the file name is long, it doesn't display in a sensible way. ¯\_(ツ)_/¯
-            dialog.InitialDirectory = InitialDirectory;
-            dialog.FileName = null;
-
-            string[] fileNames = new string[0];
-            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                fileNames = dialog.FileNames;
-            dialog = null;
-            return fileNames;
-        }
-
-        /// <summary>
-        /// Ask user for a filename to open on Windows.
-        /// </summary>
-        /// <param name="selectMultiple">Allow the user to select multiple files?</param>
-        private string[] OSXFileDialog(bool selectMultiple)
-        {
-            int result = 0;
-            NSSavePanel panel = null;
-            if (Action  == FileActionType.Open)
-            {
-                panel = new NSOpenPanel();
-                (panel as NSOpenPanel).AllowsMultipleSelection = selectMultiple;
-                (panel as NSOpenPanel).CanChooseDirectories = false;
-                (panel as NSOpenPanel).CanChooseFiles = true;
-            }
-            else if (Action == FileActionType.Save)
-                panel = new NSSavePanel();
-            else if (Action == FileActionType.SelectFolder)
-            {
-                panel = new NSOpenPanel();
-                (panel as NSOpenPanel).AllowsMultipleSelection = selectMultiple;
-                (panel as NSOpenPanel).CanChooseDirectories = true;
-                (panel as NSOpenPanel).CanChooseFiles = false;
-            }
-            else
-                throw new Exception("This file chooser dialog has specified more than one action type.");
-
-            panel.Title = Prompt;
-
-            if (!string.IsNullOrEmpty(FileType))
-            {
-                string[] specParts = FileType.Split(new Char[] { '|' });
-                int nExts = 0;
-                string[] allowed = new string[specParts.Length / 2];
-                for (int i = 0; i < specParts.Length; i += 2)
-                {
-                    string pattern = Path.GetExtension(specParts[i + 1]);
-                    if (!string.IsNullOrEmpty(pattern))
-                    {
-                        pattern = pattern.Substring(1); // Get rid of leading "."
-                        if (!string.IsNullOrEmpty(pattern))
-                            allowed[nExts++] = pattern;
-                    }
-                }
-                if (nExts > 0)
-                {
-                    Array.Resize(ref allowed, nExts);
-                    panel.AllowedFileTypes = allowed;
-                }
-            }
-            panel.AllowsOtherFileTypes = true;
-            panel.DirectoryUrl = new MonoMac.Foundation.NSUrl(InitialDirectory);
-            
-            result = panel.RunModal();
-            string[] fileNames = new string[0];
-            if (result == 1 /*NSFileHandlingPanelOKButton*/)
-                fileNames = panel is NSOpenPanel ? (panel as NSOpenPanel).Urls.Select(u => u.Path).ToArray() : new string[] { panel.Url.Path };
-            panel.Dispose();
-            return fileNames;
-        }
-
-        /// <summary>Ask user for a directory on Windows.</summary>
-        /// <param name="selectMultiple">Allow the user to select multiple directories?</param>
-        /// <returns>string containing the path to the chosen directory.</returns>
-        /// <remarks>
-        /// For reasons which are unclear to me, the Windows file chooser dialog cannot not be 
-        /// configured to select directories. Therefore, directory selection on Windows has 
-        /// been moved to a separate method from file selection.
-        /// </remarks>
-        private string[] WindowsDirectoryDialog(bool selectMultiple)
-        {
-            // Windows directory choosers cannot allow multiple directory selection.
-            // Windows file choosers cannot allow directory selection.
-            // Therefore, if we want to select multiple directories, we will need to use the Gtk file chooser
-            // dialog, which may be configured to allow selection of multiple directories.
-            // Side note - this will have the gnome 'look and feel', rather than the Windows one which
-            // you might be expecting.
-            if (selectMultiple)
-                return GenericFileDialog(true);
-
-            System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog()
-            {
-                Description = Prompt,
-                SelectedPath = InitialDirectory
-            };
-            
-            string fileName = string.Empty;
-            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                fileName = dialog.SelectedPath;
-            dialog.Dispose();
-            dialog = null;
-            return new string[] { fileName };
-        }
-#endif
     }
 }

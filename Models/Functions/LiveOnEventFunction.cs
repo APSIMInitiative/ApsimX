@@ -1,4 +1,5 @@
 ﻿using System;
+using APSIM.Shared.Documentation;
 using System.Collections.Generic;
 using Models.Core;
 using Models.PMF.Phen;
@@ -13,7 +14,7 @@ namespace Models.Functions
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    public class LiveOnEventFunction : Model, IFunction, ICustomDocumentation
+    public class LiveOnEventFunction : Model, IFunction
     {
         /// <summary>The set event</summary>
         [Description("The event that triggers change from pre to post event value")]
@@ -72,32 +73,23 @@ namespace Models.Functions
             return preEvent ? PreEventValue.Value() : PostEventValue.Value();
         }
 
-        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
-        /// <param name="tags">The list of tags to add to.</param>
-        /// <param name="headingLevel">The level (e.g. H2) of the headings.</param>
-        /// <param name="indent">The level of indentation 1, 2, 3 etc.</param>
-        public void Document(List<AutoDocumentation.ITag> tags, int headingLevel, int indent)
+        /// <summary>
+        /// Document the model.
+        /// </summary>
+        public override IEnumerable<ITag> Document()
         {
-            if (IncludeInDocumentation)
+            if (PreEventValue != null)
             {
-                // add a heading.
-                tags.Add(new AutoDocumentation.Heading(Name, headingLevel));
+                yield return new Paragraph($"Before {SetEvent}");
+                foreach (ITag tag in PreEventValue.Document())
+                    yield return tag;
+            }
 
-                // write memos.
-                foreach (IModel memo in this.FindAllChildren<Memo>())
-                    AutoDocumentation.DocumentModel(memo, tags, -1, indent);
-
-                if (PreEventValue != null)
-                {
-                    tags.Add(new AutoDocumentation.Paragraph("Before " + SetEvent, indent));
-                    AutoDocumentation.DocumentModel(PreEventValue as IModel, tags, headingLevel + 1, indent + 1);
-                }
-
-                if (PostEventValue != null)
-                {
-                    tags.Add(new AutoDocumentation.Paragraph("On " + SetEvent + " the value is set to:", indent));
-                    AutoDocumentation.DocumentModel(PostEventValue as IModel, tags, headingLevel + 1, indent + 1);
-                }
+            if (PostEventValue != null)
+            {
+                yield return new Paragraph($"On {SetEvent} the value is set to:");
+                foreach (ITag tag in PostEventValue.Document())
+                    yield return tag;
             }
         }
     }

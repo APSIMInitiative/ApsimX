@@ -1,4 +1,4 @@
-﻿// -----------------------------------------------------------------------
+// -----------------------------------------------------------------------
 // GrazPlan Supplement model
 // -----------------------------------------------------------------------
 
@@ -1244,7 +1244,7 @@ namespace Models.GrazPlan
         /// <param name="supplement">The supplement.</param>
         public void Buy(double amount, string supplement)
         {
-            OutputSummary.WriteMessage(this, "Purchase " + amount.ToString() + "kg of " + supplement);
+            OutputSummary.WriteMessage(this, "Purchase " + amount.ToString() + "kg of " + supplement, MessageType.Diagnostic);
             theModel.AddToStore(amount, supplement);
         }
 
@@ -1271,7 +1271,7 @@ namespace Models.GrazPlan
                 throw new NotImplementedException("The feedSuppFirst argument to Supplement.Feed is not yet implemented. See GitHub issue #4440.");
 
             string firstly = feedSuppFirst ? " (Feeding supplement before pasture)" : string.Empty;
-            OutputSummary.WriteMessage(this, "Feeding " + amount.ToString() + "kg of " + supplement + " into " + paddock + firstly);
+            OutputSummary.WriteMessage(this, "Feeding " + amount.ToString() + "kg of " + supplement + " into " + paddock + firstly, MessageType.Diagnostic);
             theModel.FeedOut(supplement, amount, paddock, feedSuppFirst);
         }
 
@@ -1286,7 +1286,7 @@ namespace Models.GrazPlan
         /// <param name="feedSuppFirst">Feed supplement before pasture. Bail feeding.</param>
         public void FeedBegin(string name, string supplement, double amount, string paddock, bool feedSuppFirst = false)
         {
-            OutputSummary.WriteMessage(this, "Beginning feed schedule: " + name);
+            OutputSummary.WriteMessage(this, "Beginning feed schedule: " + name, MessageType.Diagnostic);
             var feeding = new SupplementFeeding(name, supplement, amount, paddock, feedSuppFirst);
             feedingSchedule.Add(feeding);
             if (haveReceivedDoManagementToday)
@@ -1299,7 +1299,7 @@ namespace Models.GrazPlan
         /// <param name="name">Feeding name. Matches name passed into FeedBegin.</param>
         public void FeedEnd(string name)
         {
-            OutputSummary.WriteMessage(this, "Ending feed schedule: " + name);
+            OutputSummary.WriteMessage(this, "Ending feed schedule: " + name, MessageType.Diagnostic);
             feedingSchedule.RemoveAll(feed => feed.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
         }
 

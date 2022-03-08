@@ -30,8 +30,7 @@
     /// Water lost by evaporation is removed from the surface layer of the soil profile thus this layer can dry 
     /// below the wilting point or lower limit (LL) to a specified air-dry water content (air_dry). 
     /// 
-    /// ![Alt Text](CurveNumberCover.png) 
-    /// Figure: Cumulative Soil Evaporation through time for U = 6 mm and CONA = 3.5.
+    /// ![Cumulative Soil Evaporation through time for U = 6 mm and CONA = 3.5.](CurveNumberCover.png) 
     ///
     /// For t &lt;=  t~1~
     ///    Es = Eos

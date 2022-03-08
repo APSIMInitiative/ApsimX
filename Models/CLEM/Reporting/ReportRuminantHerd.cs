@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Reporting
 {
@@ -19,14 +20,21 @@ namespace Models.CLEM.Reporting
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
-    [Description("This component will generate a report of individual ruminant details. It uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
+    [Description("Provides individual ruminant details for reporting. This uses the current timing rules and herd filters applied to its branch of the user interface tree. It also requires a suitable report object to be present.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Reporting/RuminantHerdReport.htm")]
-    public class ReportRuminantHerd : CLEMModel
+    public class ReportRuminantHerd : CLEMModel, IValidatableObject
     {
         [Link]
-        private ResourcesHolder Resources = null;
+        private ResourcesHolder resources = null;
         private RuminantHerd ruminantHerd;
+
+        /// <summary>
+        /// Report at initialisation
+        /// </summary>
+        [Description("Report at start of simulation")]
+        [System.ComponentModel.DefaultValue(true)]
+        public bool ReportAtStart { get; set; }
 
         /// <summary>
         /// Report item was generated event handler
@@ -38,6 +46,14 @@ namespace Models.CLEM.Reporting
         /// </summary>
         [JsonIgnore]
         public RuminantReportItemEventArgs ReportDetails { get; set; }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public ReportRuminantHerd()
+        {
+            SetDefaults();
+        }
 
         /// <summary>
         /// Report item generated and ready for reporting 
@@ -56,8 +72,36 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("CLEMHerdSummary")]
         private void OnCLEMHerdSummary(object sender, EventArgs e)
         {
-            ReportHerd();
+            if(TimingOK)
+                ReportHerd();
         }
+
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            ruminantHerd = resources.FindResourceGroup<RuminantHerd>();
+            var results = new List<ValidationResult>();
+            // check that this activity has a parent of type CropActivityManageProduct
+
+            if (ruminantHerd is null)
+            {
+                string[] memberNames = new string[] { "Missing resource" };
+                results.Add(new ValidationResult($"No ruminant herd resource could be found for [ReportRuminantHerd] [{this.Name}]", memberNames));
+            }
+            if (!this.FindAllChildren<RuminantGroup>().Any())
+            {
+                string[] memberNames = new string[] { "Missing ruminant filter group" };
+                results.Add(new ValidationResult($"The [ReportRuminantHerd] [{this.Name}] requires at least one filter group to identify individuals to report", memberNames));
+            }
+            return results;
+        }
+
+        #endregion
 
         /// <summary>
         /// Function to report herd individuals each month
@@ -67,8 +111,8 @@ namespace Models.CLEM.Reporting
         [EventSubscribe("CLEMValidate")]
         private void OncCLEMValidate(object sender, EventArgs e)
         {
-            ruminantHerd = Resources.FindResourceGroup<RuminantHerd>();
-            ReportHerd();
+            if(ReportAtStart)
+                ReportHerd();
         }
 
         /// <summary>
@@ -79,51 +123,23 @@ namespace Models.CLEM.Reporting
         {
             // warning if the same individual is in multiple filter groups it will be entered more than once
 
-            var allRumGroups = this.FindAllChildren<RuminantGroup>();
-            if (allRumGroups.Count() > 0)
+            // get all filter groups below.
+            foreach (var fgroup in this.FindAllChildren<RuminantGroup>())
             {
-                // get all filter groups below.
-                foreach (var fgroup in allRumGroups)
-                {
-                    foreach (Ruminant item in ruminantHerd?.Herd.FilterRuminants(fgroup))
-                    {
-                        ReportDetails = new RuminantReportItemEventArgs();
-                        if (item is RuminantFemale)
-                        {
-                            ReportDetails.RumObj = item as RuminantFemale;
-                        }
-                        else
-                        {
-                            ReportDetails.RumObj = item as RuminantMale;
-                        }
-                        ReportItemGenerated(ReportDetails);
-                    }
-                }
-            }
-            else // no filter. Use entire herd
-            {
-                foreach (Ruminant item in ruminantHerd?.Herd)
+                foreach (Ruminant item in fgroup.Filter(ruminantHerd?.Herd))
                 {
                     ReportDetails = new RuminantReportItemEventArgs();
                     if (item is RuminantFemale)
-                    {
                         ReportDetails.RumObj = item as RuminantFemale;
-                    }
                     else
-                    {
                         ReportDetails.RumObj = item as RuminantMale;
-                    }
                     ReportItemGenerated(ReportDetails);
                 }
             }
         }
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             string html = "";
             return html;

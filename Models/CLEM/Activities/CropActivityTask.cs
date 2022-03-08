@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
 using System;
@@ -18,16 +18,13 @@ namespace Models.CLEM.Activities
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityManageProduct))]
-    [Description("This is a crop task (e.g. sowing) with associated costs and labour requirements.")]
+    [Description("A crop task (e.g. sowing) with associated costs and labour requirements.")]
     [Version(1, 0, 2, "Added per unit of land as labour unit type")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Crop/CropTask.htm")]
     public class CropActivityTask: CLEMActivityBase, IValidatableObject
     {
-        [Link]
-        Clock Clock = null;
-
-        private string RelatesToResourceName = "";
+        private string relatesToResourceName = "";
         private bool timingIssueReported = false;
 
         /// <summary>
@@ -51,7 +48,7 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            RelatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
+            relatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
         }
 
         /// <summary>An event handler to allow to call all Activities in tree to request their resources in order.</summary>
@@ -60,23 +57,21 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMGetResourcesRequired")]
         private void OnGetResourcesRequired(object sender, EventArgs e)
         {
-            // if first step of parent rotation
-            // and timer failed because of harvest data
-            int start = FindAncestor<CropActivityManageProduct>().FirstTimeStepOfRotation;
-            if (Clock.Today.Year * 100 + Clock.Today.Month == start)
+            if (TimingOK)
             {
-                // check if it can only occur before this rotation started
-                ActivityTimerCropHarvest chtimer = this.FindAllChildren<ActivityTimerCropHarvest>().FirstOrDefault();
-                if (chtimer != null)
+                if (FindAncestor<CropActivityManageProduct>().CurrentlyManaged)
+                    Status = ActivityStatus.Success;
+                else
                 {
-                    if (chtimer.ActivityPast)
+                    Status = ActivityStatus.Warning;
+                    foreach (var child in FindAllChildren<CLEMActivityBase>())
                     {
-                        this.Status = ActivityStatus.Warning;
-                        if (!timingIssueReported)
-                        {
-                            Summary.WriteWarning(this, $"The harvest timer for crop task [a={this.Name}] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.");
-                            timingIssueReported = true;
-                        }
+                        child.Status = ActivityStatus.Warning;
+                    }
+                    if (!timingIssueReported)
+                    {
+                        Summary.WriteMessage(this, $"The harvest timer for crop task [a={this.NameWithParent}] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.", MessageType.Warning);
+                        timingIssueReported = true;
                     }
                 }
             }
@@ -147,43 +142,7 @@ namespace Models.CLEM.Activities
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
 
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, RelatesToResourceName);
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
+            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, relatesToResourceName);
         }
 
         #region validation
@@ -200,9 +159,8 @@ namespace Models.CLEM.Activities
             while(!(follow is ActivitiesHolder))
             {
                 if(follow is CropActivityManageProduct)
-                {
                     return results;
-                }
+
                 if(!(follow is ActivityFolder))
                 {
                     string[] memberNames = new string[] { "Parent model" };
@@ -218,25 +176,16 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 if (this.FindAllChildren<CropActivityFee>().Count() + this.FindAllChildren<LabourRequirement>().Count() == 0)
-                {
                     htmlWriter.Write("<div class=\"errorlink\">This task is not needed as it has no fee or labour requirement</div>");
-                }
                 else
                 {
                     htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
-                    if (TransactionCategory != null && TransactionCategory != "")
-                    {
-                        htmlWriter.Write("<span class=\"setvalue\">" + TransactionCategory + "</span> ");
-                    }
-                    else
-                    {
-                        htmlWriter.Write("<span class=\"errorlink\">[NOT SET]</span> ");
-                    }
+                    htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not Set"));
                     htmlWriter.Write(" for all transactions</div>");
                 }
                 return htmlWriter.ToString(); 

@@ -1,8 +1,8 @@
 ﻿using Models.Core;
 using Models.Core.Attributes;
+using Models.CLEM.Interfaces;
 using Models.Storage;
 using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 
@@ -21,8 +21,6 @@ namespace Models.CLEM.Reporting
     {
         [Link]
         private IDataStore dataStore = null;
-        [Link]
-        private Summary summary = null;
 
         /// <summary>
         /// The line by line SQL query, separated for display purposes
@@ -43,10 +41,8 @@ namespace Models.CLEM.Reporting
             var storage = FindInScope<IDataStore>();
             if (storage != null)
             {
-                if(SaveView(storage))
-                {
-                    return storage.Reader.GetDataUsingSql(SQL);
-                }
+                SaveView(storage);
+                return storage.Reader.GetDataUsingSql(SQL);                
             }
             return new DataTable();
         }
@@ -55,16 +51,13 @@ namespace Models.CLEM.Reporting
         /// Saves the view post-simulation
         /// </summary>
         [EventSubscribe("Completed")]
-        private void OnCompleted(object sender, EventArgs e)
-        {
-            if(!SaveView(dataStore))
-            {
-                summary.WriteWarning(this, $"Invalid SQL: Unable to create query report [{this.Name}] using SQL provided \r\nIf your SQL contains links to other ReportQueries you may need to run this Report after the others have been created.");
-            }
-        }
+        private void OnCompleted(object sender, EventArgs e) => SaveView(dataStore);        
 
-        private bool SaveView(IDataStore store)
+        private void SaveView(IDataStore store)
         {
+            if (Name.Any(c => c == ' '))
+                throw new Exception($"Invalid name: {Name}\nNames cannot contain spaces.");
+
             try
             {
                 if (SQL != null && SQL != "")
@@ -72,13 +65,14 @@ namespace Models.CLEM.Reporting
                     (store.Reader as DataStoreReader).ExecuteSql(SQL);
                     store.AddView(Name, SQL);
                 }
-                return true;
             }
             catch (Exception ex)
             {
-                System.Diagnostics.Debug.WriteLine(ex.ToString());
+                var msg = $"Invalid SQL: Unable to create query report [{Name}] using SQL provided" +
+                    $"\r\nError: {ex.Message}" +
+                    $"\r\nIf your SQL contains links to other ReportQueries you may need to run this Report after the others have been created by disabling it in the first run and then enabling again.";
+                throw new ApsimXException(this, msg);
             }
-            return false;
         }
     }
 }

@@ -44,13 +44,10 @@
                 this.view.ModelTypeText = model.GetType().ToString().Substring("Models.".Length);
                 DescriptionAttribute descAtt = ReflectionUtilities.GetAttribute(model.GetType(), typeof(DescriptionAttribute), false) as DescriptionAttribute;
                 if (descAtt != null)
-                {
                     this.view.ModelDescriptionText = descAtt.ToString();
-                }
                 else
-                {
                     this.view.ModelDescriptionText = "";
-                }
+
                 // Set CLEM specific colours for title
                 if (this.view.ModelTypeText.Contains(".Resources."))
                 {
@@ -86,9 +83,7 @@
                 HelpUriAttribute helpAtt = ReflectionUtilities.GetAttribute(model.GetType(), typeof(HelpUriAttribute), false) as HelpUriAttribute;
                 this.view.ModelHelpURL = "";
                 if (helpAtt!=null)
-                {
                     this.view.ModelHelpURL = helpAtt.ToString();
-                }
 
                 var vs = ReflectionUtilities.GetAttributes(model.GetType(), typeof(VersionAttribute), false);
                 if (vs.Count() > 0)
@@ -101,29 +96,19 @@
                         this.view.ModelVersionText = v;
                     }
                     else
-                    {
                         this.view.ModelVersionText = "";
-                    }
                 }
 
                 if (viewName != null && presenterName != null)
-                {
                     // if model CLEMModel
                     if(model.GetType().IsSubclassOf(typeof(CLEMModel)) | model is ZoneCLEM | model is Market | model is RandomNumberGenerator | model is ReportResourceLedger)
-                    {
                         // all CLEMModels will handle this presenter
                         ShowInLowerPanel(model, "UserInterface.Views.CLEMView", "UserInterface.Presenters.CLEMPresenter");
-                    }
                     else if (typeof(ICLEMPresenter).IsAssignableFrom(Assembly.GetExecutingAssembly().GetType(presenterName.ToString())))
-                    {
                         // apply this if the presenter has ICLEMPresenter interface and is ready to create presenters
                         ShowInLowerPanel(model, "UserInterface.Views.CLEMView", "UserInterface.Presenters.CLEMPresenter");
-                    }
                     else
-                    {
                         ShowInLowerPanel(model, viewName.ToString(), presenterName.ToString());
-                    }
-                }
             }
         }
 
@@ -155,10 +140,7 @@
         public void Detach()
         {
             if (currentLowerPresenter != null)
-            {
                 currentLowerPresenter.Detach();
-            }
-
             return;
         }
     }

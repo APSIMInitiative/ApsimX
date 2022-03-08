@@ -1,12 +1,10 @@
-﻿using Models.CLEM.Resources;
+﻿using Models.CLEM.Interfaces;
+using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
 using Models.CLEM.Reporting;
@@ -24,14 +22,15 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ResourcePricing))]
     [ValidParent(ParentType = typeof(ReportResourceBalances))]
-    [Description("This activity time defines a start month and interval upon which to perform activities.")]
+    [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
+    [ValidParent(ParentType = typeof(ReportRuminantHerd))]
+    [Description("This timer defines a start month and interval upon which to perform activities.")]
     [HelpUri(@"Content/Features/Timers/Interval.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityTimerInterval: CLEMModel, IActivityTimer, IActivityPerformedNotifier
     {
-        [JsonIgnore]
         [Link]
-        Clock Clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Notify CLEM that timer was ok
@@ -43,7 +42,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         [System.ComponentModel.DefaultValueAttribute(12)]
         [Description("The interval (in months, 1 monthly, 12 annual)")]
-        [Required, GreaterThanValue(1)]
+        [Required, GreaterThanEqualValue(1)]
         public int Interval { get; set; }
 
         /// <summary>
@@ -55,7 +54,7 @@ namespace Models.CLEM.Activities
         public MonthsOfYear MonthDue { get; set; }
 
         /// <summary>
-        /// Month this overhead is next due.
+        /// Month this timer is next due.
         /// </summary>
         [JsonIgnore]
         public DateTime NextDueDate { get; set; }
@@ -73,7 +72,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                return (this.NextDueDate.Year == Clock.Today.Year && this.NextDueDate.Month == Clock.Today.Month);
+                return (this.NextDueDate.Year == clock.Today.Year && this.NextDueDate.Month == clock.Today.Month);
             }
         }
 
@@ -81,7 +80,7 @@ namespace Models.CLEM.Activities
         public bool Check(DateTime dateToCheck)
         {
             // compare with next due date
-            if (this.NextDueDate.Year == Clock.Today.Year && this.NextDueDate.Month == Clock.Today.Month)
+            if (this.NextDueDate.Year == clock.Today.Year && this.NextDueDate.Month == clock.Today.Month)
             {
                 return true;
             }
@@ -94,9 +93,7 @@ namespace Models.CLEM.Activities
                 while(dd2c<=dd)
                 {
                     if (dd2c == dd)
-                    {
                         return true;
-                    }
 
                     dd = dd.AddMonths(Interval*-1);
                 }
@@ -107,9 +104,7 @@ namespace Models.CLEM.Activities
                 while (dd2c >= dd)
                 {
                     if (dd2c == dd)
-                    {
                         return true;
-                    }
 
                     dd = dd.AddMonths(Interval);
                 }
@@ -117,16 +112,14 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler to move timer setting to next timing.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("EndOfMonth")]
         private void OnEndOfMonth(object sender, EventArgs e)
         {
             if (this.ActivityDue)
-            {
                 NextDueDate = NextDueDate.AddMonths(Interval);
-            }
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -138,17 +131,13 @@ namespace Models.CLEM.Activities
             int monthDue = (int)MonthDue;
             if (monthDue != 0)
             {
-                if (monthDue >= Clock.StartDate.Month)
-                {
-                    NextDueDate = new DateTime(Clock.StartDate.Year, monthDue, Clock.StartDate.Day);
-                }
+                if (monthDue >= clock.StartDate.Month)
+                    NextDueDate = new DateTime(clock.StartDate.Year, monthDue, clock.StartDate.Day);
                 else
                 {
-                    NextDueDate = new DateTime(Clock.StartDate.Year, monthDue, Clock.StartDate.Day);
-                    while (Clock.StartDate > NextDueDate)
-                    {
+                    NextDueDate = new DateTime(clock.StartDate.Year, monthDue, clock.StartDate.Day);
+                    while (clock.StartDate > NextDueDate)
                         NextDueDate = NextDueDate.AddMonths(Interval);
-                    }
                 }
             }
         }
@@ -162,7 +151,7 @@ namespace Models.CLEM.Activities
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -178,7 +167,7 @@ namespace Models.CLEM.Activities
                     htmlWriter.Write("<span class=\"errorlink\">");
                     htmlWriter.Write("NOT SET");
                 }
-                htmlWriter.Write("</span> months from ");
+                htmlWriter.Write($"</span> month{((Interval == 1)?"":"s")} from ");
                 if (MonthDue > 0)
                 {
                     htmlWriter.Write("<span class=\"setvalueextra\">");
@@ -191,31 +180,28 @@ namespace Models.CLEM.Activities
                 }
                 htmlWriter.Write("</span></div>");
                 if (!this.Enabled)
-                {
                     htmlWriter.Write(" - DISABLED!");
-                }
                 return htmlWriter.ToString(); 
             }
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
             return "</div>";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("<div class=\"filtername\">");
                 if (!this.Name.Contains(this.GetType().Name.Split('.').Last()))
-                {
                     htmlWriter.Write(this.Name);
-                }
+
                 htmlWriter.Write($"</div>");
-                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">");
+                htmlWriter.Write("\r\n<div class=\"filterborder clearfix\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">");
                 return htmlWriter.ToString(); 
             }
         } 

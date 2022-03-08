@@ -18,7 +18,7 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs the collection of manure from all paddocks and yards in the simulation.")]
+    [Description("Undertake the collection of manure from all paddocks and yards in the simulation")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Manure/CollectManureAll.htm")]
     public class ManureActivityCollectAll : CLEMActivityBase
@@ -34,7 +34,7 @@ namespace Models.CLEM.Activities
             // activity is performed in CLEMCollectManure not CLEMGetResources
             this.AllocationStyle = ResourceAllocationStyle.Manual;
 
-            manureStore = Resources.GetResourceItem(this, typeof(ProductStore), "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as ProductStoreTypeManure;
+            manureStore = Resources.FindResourceType<ProductStore, ProductStoreTypeManure>(this, "Manure", OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
         /// <summary>
@@ -51,9 +51,8 @@ namespace Models.CLEM.Activities
             double amountAvailable = 0;
             // determine wet weight to move
             foreach (ManureStoreUncollected msu in manureStore.UncollectedStores)
-            {
                 amountAvailable = msu.Pools.Sum(a => a.WetWeight(manureStore.MoistureDecayRate, manureStore.ProportionMoistureFresh));
-            }
+
             double daysNeeded = 0;
             switch (requirement.UnitType)
             {
@@ -67,12 +66,6 @@ namespace Models.CLEM.Activities
                     throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
             }
             return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, manureStore.NameWithParent);
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
         }
 
         /// <inheritdoc/>
@@ -99,51 +92,19 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler to allow us to perform manure collection</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMCollectManure")]
         private void OnCLEMCollectManure(object sender, EventArgs e)
         {
             if (manureStore != null)
-            {
                 // get resources
                 GetResourcesRequiredForActivity();
-            }
         }
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        ///<inheritdoc/>
+        public override string ModelSummary()
         {
             return "\r\n<div class=\"activityentry\">Collect manure from all pasture</div>";
         }

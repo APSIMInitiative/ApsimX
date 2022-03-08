@@ -1,16 +1,15 @@
 ﻿using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
-using Models.Storage;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Newtonsoft.Json;
+using System.IO;
 
 namespace Models.CLEM
 {
@@ -21,7 +20,7 @@ namespace Models.CLEM
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(Simulation))]
-    [Description("This represents a shared market place for CLEM farms")]
+    [Description("A shared market place for CLEM farms")]
     [HelpUri(@"Content/Features/Market.htm")]
     [Version(1, 0, 2, "Tested and functioning for targeted feeding including transmutations but still needs movement of goods to market.")]
     [Version(1, 0, 1, "Early implementation of market place for multi-farm simulations. This is a major addition and is not checked for full functionality.")]
@@ -29,7 +28,9 @@ namespace Models.CLEM
     public class Market: Zone, IValidatableObject, ICLEMUI
     {
         [Link]
-        Summary Summary = null;
+        private Summary summary = null;
+
+        private ResourcesHolder resources;
 
         /// <summary>Area of the zone.</summary>
         /// <value>The area.</value>
@@ -57,16 +58,13 @@ namespace Models.CLEM
         [JsonIgnore]
         public string SelectedTab { get; set; }
 
-        private ResourcesHolder resources;
         /// <summary>
         /// ResourceHolder for the market
         /// </summary>
         public ResourcesHolder Resources { get
             {
                 if(resources == null)
-                {
                     resources = this.FindAllChildren<ResourcesHolder>().FirstOrDefault();
-                }
                 return resources; 
             }
         }
@@ -80,42 +78,21 @@ namespace Models.CLEM
             get
             {
                 if (bankAccount == null)
-                {
                     bankAccount = Resources.FindResourceGroup<Finance>()?.FindAllChildren<FinanceType>().FirstOrDefault() as FinanceType;
-                }
                 return bankAccount;
             }
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An event handler to allow us to perform validation</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMValidate")]
         private void OnCLEMValidate(object sender, EventArgs e)
         {
             // validation is performed here
-            // this event fires after Activity and Resource validation so that resources are available to check in the validation.
-            // commencing is too early as Summary has not been created for reporting.
-            // some values assigned in commencing will not be checked before processing, but will be caught here
-            // each ZoneCLEM and Market will call this validation for all children
-            // CLEM components above ZoneCLEM (e.g. RandomNumberGenerator) needs to validate itself
-            if (!ZoneCLEM.Validate(this, "", this, Summary))
-            {
-                string error = "@i:Invalid parameters in model";
-
-                // get all validations 
-                if (Summary.Messages() != null)
-                {
-                    foreach (DataRow item in Summary.Messages().Rows)
-                    {
-                        if (item[3].ToString().StartsWith("Invalid"))
-                        {
-                            error += "\r\n" + item[3].ToString();
-                        }
-                    }
-                }
-                throw new ApsimXException(this, error.Replace("&shy;", "."));
-            }
+            // see ZoneCLEM OnCLEMValidate for more details
+            if (!ZoneCLEM.Validate(this, "", this, summary))
+                ZoneCLEM.ReportInvalidParameters(this);
         }
 
         #region validation
@@ -154,29 +131,33 @@ namespace Models.CLEM
             }
 
             return results;
-        } 
+        }
         #endregion
 
         #region descriptive summary
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="model"></param>
-        /// <param name="useFullDescription">Use full verbose description</param>
-        /// <param name="htmlString"></param>
-        /// <returns></returns>
-        public string GetFullSummary(object model, bool useFullDescription, string htmlString)
+
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public List<string> CurrentAncestorList { get; set; } = new List<string>();
+
+        /// <inheritdoc/>
+        public bool FormatForParentControl { get { return CurrentAncestorList.Count > 1; } }
+
+        /// <inheritdoc/>
+        public string GetFullSummary(object model, List<string> parentControls, string htmlString, Func<string, string> markdown2Html = null)
         {
-            string html = "";
-            html += "\r\n<div class=\"holdermain\" style=\"opacity: " + ((!this.Enabled) ? "0.4" : "1") + "\">";
-
-            foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>().Cast<CLEMModel>())
+            using (StringWriter htmlWriter = new StringWriter())
             {
-                html += cm.GetFullSummary(cm, true, "");
-            }
+                var parents = parentControls.ToList();
+                parents.Add(model.GetType().Name);
 
-            html += "</div>";
-            return html;
+                htmlWriter.Write($"\r\n<div class=\"holdermain\" style=\"opacity: {((!this.Enabled) ? "0.4" : "1")}\">");
+                foreach (CLEMModel cm in this.FindAllChildren<CLEMModel>())
+                    htmlWriter.Write(cm.GetFullSummary(cm, parents, "", markdown2Html));
+                htmlWriter.Write("</div>");
+
+                return htmlWriter.ToString();
+            }
         } 
         #endregion
 

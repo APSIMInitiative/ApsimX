@@ -11,17 +11,14 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Models.CLEM.Activities
 {
-    /// <summary>manage enterprise activity</summary>
-    /// <summary>This activity undertakes the overheads of running the enterprise.</summary>
-    /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
+    /// <summary>An folder to manage activity grouping</summary>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity folder holds groups of activities and is used to arrange activities and apply timers to groups")]
+    [Description("This activity folder holds groups of activities and is used to arrange activities and apply timers to the group")]
     [HelpUri(@"Content/Features/Activities/ActivitiesFolder.htm")]
     [Version(1, 0, 1, "")]
     public class ActivityFolder : CLEMActivityBase
@@ -41,82 +38,24 @@ namespace Models.CLEM.Activities
             TransactionCategory = "Folder";
         }
 
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
         #region descriptive summary
 
-        /// <summary>
-        /// Provides the description of the model settings for summary (GetFullSummary)
-        /// </summary>
-        /// <param name="formatForParentControl">Use full verbose description</param>
-        /// <returns></returns>
-        public override string ModelSummary(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
             return "\r\n<div class=folder>" + this.Name + " folder " + ((!this.Enabled) ? " - DISABLED!" : "") + "</div>";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryClosingTags()
         {
             return "\r\n</div>";
         }
 
-        /// <summary>
-        /// Provides the closing html tags for object
-        /// </summary>
-        /// <returns></returns>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        /// <inheritdoc/>
+        public override string ModelSummaryOpeningTags()
         {
-            return "\r\n<div class=\"activityborder\" style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + ";\">";
+            return "\r\n<div class=\"activityborder\" style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + ";\">";
         } 
         #endregion
 

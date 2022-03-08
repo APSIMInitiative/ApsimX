@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
@@ -23,13 +23,13 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity performs grazing of all herds and pastures (paddocks) in the simulation.")]
+    [Description("Perform grazing of all herds and pastures (paddocks)")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantGraze.htm")]
     public class RuminantActivityGrazeAll : CLEMRuminantActivityBase
     {
         [Link]
-        private Clock Clock = null;
+        private Clock clock = null;
 
         /// <summary>
         /// Number of hours grazed
@@ -65,13 +65,13 @@ namespace Models.CLEM.Activities
                     RuminantActivityGrazePasture ragp = new RuminantActivityGrazePasture
                     {
                         GrazeFoodStoreModel = pastureType,
-                        Clock = Clock,
+                        Clock = clock,
                         Parent = this,
                         Name = "Graze_" + (pastureType as Model).Name,
                         OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction
                     };
                     ragp.ActivityPerformed += BubblePaddock_ActivityPerformed;
-                    ragp.Resources = this.Resources;
+                    ragp.SetLinkedModels(Resources);
                     ragp.InitialiseHerd(true, true);
 
                     foreach (RuminantType herdType in HerdResource.FindAllChildren<RuminantType>())
@@ -85,35 +85,27 @@ namespace Models.CLEM.Activities
                             Name = ragp.Name + "_" + herdType.Name,
                             OnPartialResourcesAvailableAction = this.OnPartialResourcesAvailableAction
                         };
-                        if (ragpb.Resources == null)
-                        {
-                            ragpb.Resources = this.Resources;
-                        }
+
+                        ragpb.SetLinkedModels(Resources);
+
                         if (ragpb.Clock == null)
-                        {
-                            ragpb.Clock = this.Clock;
-                        }
+                            ragpb.Clock = this.clock;
+
                         ragpb.InitialiseHerd(true, true);
                         if (ragp.ActivityList == null)
-                        {
                             ragp.ActivityList = new List<CLEMActivityBase>();
-                        }
+
                         ragp.ActivityList.Add(ragpb);
                         ragpb.ResourceShortfallOccurred += GrazeAll_ResourceShortfallOccurred;
                         ragpb.ActivityPerformed += BubblePaddock_ActivityPerformed;
                     }
                     if (ActivityList == null)
-                    {
                         ActivityList = new List<CLEMActivityBase>();
-                    }
                     ActivityList.Add(ragp);
-
                 }
             }
             else
-            {
-                Summary.WriteWarning(this, $"No GrazeFoodStore is available for the ruminant grazing activity [a={this.Name}]!");
-            }
+                Summary.WriteMessage(this, $"No GrazeFoodStore is available for the ruminant grazing activity [a={this.Name}]!", MessageType.Warning);
         }
 
         /// <summary>
@@ -143,21 +135,13 @@ namespace Models.CLEM.Activities
 
         private void BubblePaddock_ActivityPerformed(object sender, EventArgs e)
         {
-            ActivityPerformed?.Invoke(sender, e);
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
+            OnActivityPerformed(e);
         }
 
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             IEnumerable<Ruminant> herd = this.CurrentHerd(false).Where(a => a.Location != "");
-            int head = herd.Count();
-            double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
             double daysNeeded = 0;
             double numberUnits = 0;
             switch (requirement.UnitType)
@@ -166,20 +150,18 @@ namespace Models.CLEM.Activities
                     daysNeeded = requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perHead:
+                    int head = herd.Count();
                     numberUnits = head / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
 
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 case LabourUnitType.perAE:
+                    double adultEquivalents = herd.Sum(a => a.AdultEquivalent);
                     numberUnits = adultEquivalents / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
 
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
@@ -190,61 +172,25 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
         public override void DoActivity()
         {
             if(Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
-            {
                 Status = ActivityStatus.NoTask;
-            }
             return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
         }
 
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">All individuals in managed pastures will graze for ");
                 if (HoursGrazed <= 0)
-                {
                     htmlWriter.Write("<span class=\"errorlink\">" + HoursGrazed.ToString("0.#") + "</span> hours of ");
-                }
                 else
-                {
                     htmlWriter.Write(((HoursGrazed == 8) ? "" : "<span class=\"setvalue\">" + HoursGrazed.ToString("0.#") + "</span> hours of "));
-                }
 
                 htmlWriter.Write("the maximum 8 hours each day</span>");
                 htmlWriter.Write("</div>");

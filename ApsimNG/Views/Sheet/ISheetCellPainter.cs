@@ -1,4 +1,7 @@
-﻿namespace UserInterface.Views
+﻿using System.Drawing;
+using APSIM.Interop.Drawing;
+
+namespace UserInterface.Views
 {
     /// <summary>
     /// An interface for a class that paints a cell in a sheet widget.
@@ -25,21 +28,13 @@
         /// <param name="rowIndex">The row index of the cell.</param>
         bool PaintCell(int columnIndex, int rowIndex);
 
-#if NETCOREAPP
         /// <summary>Paint a cell in the sheet.</summary>
         /// <param name="columnIndex">The column index of the cell.</param>
         /// <param name="rowIndex">The row index of the cell.</param>
-        Gtk.StateFlags GetCellState(int columnIndex, int rowIndex);
-#else
-        /// <summary>Gets the foreground colour of a cell.</summary>
-        /// <param name="columnIndex">The column index of the cell.</param>
-        /// <param name="rowIndex">The row index of the cell.</param>
-        Cairo.Color GetForegroundColour(int columnIndex, int rowIndex);
+        States GetCellState(int columnIndex, int rowIndex);
 
-        /// <summary>Gets the background colour of a cell.</summary>
-        /// <param name="columnIndex">The column index of the cell.</param>
-        /// <param name="rowIndex">The row index of the cell.</param>
-        Cairo.Color GetBackgroundColour(int columnIndex, int rowIndex);
-#endif
+
+
+
     }
 }

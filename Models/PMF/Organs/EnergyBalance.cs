@@ -6,6 +6,8 @@
     using Models.PMF.Interfaces;
     using System;
     using Newtonsoft.Json;
+    using System.Collections.Generic;
+    using APSIM.Shared.Documentation;
 
     /// <summary>
     /// This organ is simulated using a  organ type.  It provides the core functions of intercepting radiation
@@ -67,8 +69,6 @@
         /// <summary>The area index of dead material</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         IFunction DeadAreaIndex = null;
-
-        #region Canopy interface
 
         /// <summary>Gets the canopy. Should return null if no canopy present.</summary>
         public string CanopyType { get { return Plant.PlantType+ "_" + parentOrgan.Name; } }
@@ -149,10 +149,6 @@
         /// <summary>Sets the light profile. Set by MICROCLIMATE.</summary>
         [JsonIgnore]
         public CanopyEnergyBalanceInterceptionlayerType[] LightProfile { get; set; }
-        #endregion
-
-  
-        #region States and variables
 
         /// <summary>Gets or sets the k dead.</summary>
         public double KDead { get; set; }                  // Extinction Coefficient (Dead)
@@ -208,22 +204,22 @@
                 return totalRadn;
             }
         }
-        #endregion
-
-
-        #region Component Process Functions
 
         /// <summary>Clears this instance.</summary>
         private void Clear()
         {
-              Height = 0;
+            FRGR = 0.0;
+            Height = 0;
             Depth = 0;
+            Width = 0.0;
             LAI = 0;
+            LAIDead = 0.0;
+            KDead = 0.0;
+            WaterAllocation = 0.0;
+            WaterDemand = 0.0;
+            _PotentialEP = 0.0;
         }
 
-        #endregion
-
-        #region Top Level time step functions
         /// <summary>Event from sequencer telling us to do our potential growth.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -242,13 +238,23 @@
                 KDead = DeadExtinctionCoefficient.Value();
              }
         }
-        #endregion
-     
      
         /// <summary>Constructor</summary>
         public EnergyBalance()
         {
         }
+
+        /// <summary>Writes documentation for this function by adding to the list of documentation tags.</summary>
+        public override IEnumerable<ITag> Document()
+        {
+            foreach (var tag in GetModelDescription())
+                yield return tag;
+
+            // Document everything else.
+            foreach (var child in Children)
+                yield return new Section(child.Name, child.Document());
+        }
+
 
         /// <summary>Called when [simulation commencing].</summary>
         /// <param name="sender">The sender.</param>

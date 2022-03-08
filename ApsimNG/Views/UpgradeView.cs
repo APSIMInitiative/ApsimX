@@ -23,6 +23,7 @@
             public string IssueTitle { get; set; }
             public string IssueURL { get; set; }
             public string ReleaseURL { get; set; }
+            public uint RevisionNumber { get; set; }
         }
 
         /// <summary>
@@ -87,7 +88,7 @@
             listview1.Model = listmodel;
 
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
-            if (version.Revision == 0)
+            if (version.Build == 0)
             {
                 button1.Sensitive = false;
                 table2.Hide();
@@ -149,13 +150,13 @@
         {
             try
             {
-                window1.GetGdkWindow().Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+                window1.Window.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
                 while (Gtk.Application.EventsPending())
                     Gtk.Application.RunIteration();
                 PopulateForm();
-                window1.GetGdkWindow().Cursor = null;
+                window1.Window.Cursor = null;
                 if (loadFailure)
-                    window1.Cleanup();
+                    window1.Dispose();
             }
             catch (Exception err)
             {
@@ -201,7 +202,7 @@
             if (File.Exists(tempLicenseFileName))
                 File.Delete(tempLicenseFileName);
 
-            if (version.Revision == 0)
+            if (version.Build == 0)
             {
                 button1.Sensitive = false;
                 table2.Hide();
@@ -225,7 +226,7 @@
                 upgrades = WebUtilities.CallRESTService<Upgrade[]>("https://apsimdev.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=" + version.Revision);
             foreach (Upgrade upgrade in oldVersions.Active ? allUpgrades : upgrades)
             {
-                string versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.IssueNumber;
+                string versionNumber = $"{upgrade.ReleaseDate:yyyy.MM}.{upgrade.RevisionNumber}";
                 listmodel.AppendValues(versionNumber, upgrade.IssueTitle, "");
             }
             if (listmodel.IterNChildren() > 0)
@@ -314,16 +315,16 @@
                             throw new Exception("Encountered an error while updating registration information. Please try again later.", err);
                         }
 
-                        window1.GetGdkWindow().Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
+                        window1.Window.Cursor = new Gdk.Cursor(Gdk.CursorType.Watch);
 
                         WebClient web = new WebClient();
 
                         tempSetupFileName = Path.Combine(Path.GetTempPath(), "APSIMSetup.exe");
 
                         string sourceURL;
-#if NETCOREAPP
+
                         upgrade.ReleaseURL = upgrade.ReleaseURL.Replace("ApsimSetup", "apsim-");
-#endif
+
                         if (ProcessUtilities.CurrentOS.IsMac)
                         {
                             sourceURL = Path.ChangeExtension(upgrade.ReleaseURL, "dmg");
@@ -360,11 +361,11 @@
                             if (waitDlg != null)
                             {
                                 web.DownloadProgressChanged -= OnDownloadProgressChanged;
-                                waitDlg.Cleanup();
+                                waitDlg.Dispose();
                                 waitDlg = null;
                             }
-                            if (window1 != null && window1.GetGdkWindow() != null)
-                                window1.GetGdkWindow().Cursor = null;
+                            if (window1 != null && window1.Window != null)
+                                window1.Window.Cursor = null;
                         }
 
                     }
@@ -426,7 +427,7 @@
                 {
                     if (waitDlg != null)
                     {
-                        waitDlg.Cleanup();
+                        waitDlg.Dispose();
                         waitDlg = null;
                     }
                 });
@@ -439,47 +440,12 @@
 
                         if (File.Exists(tempSetupFileName))
                         {
-#if NETFRAMEWORK
-                            // Copy the separate upgrader executable to the temp directory.
-                            string sourceUpgraderFileName = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Updater.exe");
-                            string upgraderFileName = Path.Combine(Path.GetTempPath(), "Updater.exe");
 
-                            // Check to see if upgrader is already running for whatever reason.
-                            // Kill them if found.
-                            foreach (Process process in Process.GetProcessesByName(Path.GetFileNameWithoutExtension(upgraderFileName)))
-                                process.Kill();
-
-                            // Delete the old upgrader.
-                            if (File.Exists(upgraderFileName))
-                                File.Delete(upgraderFileName);
-                            // Copy in the new upgrader.
-                            File.Copy(sourceUpgraderFileName, upgraderFileName, true);
-
-                            // Run the upgrader.
-                            string ourDirectory = PathUtilities.GetApsimXDirectory();
-                            string newDirectory = Path.GetFullPath(Path.Combine(ourDirectory, "..", "APSIM" + versionNumber));
-                            string arguments = StringUtilities.DQuote(ourDirectory) + " " +
-                                               StringUtilities.DQuote(newDirectory);
-
-                            ProcessStartInfo info = new ProcessStartInfo();
-                            if (ProcessUtilities.CurrentOS.IsMac)
-                            {
-                                info.FileName = "mono";
-                                info.Arguments = upgraderFileName + " " + arguments;
-                            }
-                            else
-                            {
-                                info.FileName = upgraderFileName;
-                                info.Arguments = arguments;
-                            }
-                            info.WorkingDirectory = Path.GetTempPath();
-                            Process.Start(info);
-#else
                             if (ProcessUtilities.CurrentOS.IsWindows)
                             {
                                 // The InnoSetup installer can be run with the /upgradefrom:xxx parameter
                                 // and will handle the removal of the previous version.
-                                string oldVersion = new Models.Core.Simulations().ApsimVersion;
+                                string oldVersion = Models.Core.Simulations.ApsimVersion;
                                 Process.Start(tempSetupFileName, $"/upgradefrom={oldVersion}");
                             }
                             else if (ProcessUtilities.CurrentOS.IsMac)
@@ -496,13 +462,13 @@
                                 ReflectionUtilities.WriteResourceToFile(GetType().Assembly, "ApsimNG.Resources.Scripts.upgrade-debian.sh", script);
                                 Process.Start("/bin/sh", $"{script} {tempSetupFileName}");
                             }
-#endif
+
                             Application.Invoke((_, __) =>
                             {
-                                window1.GetGdkWindow().Cursor = null;
+                                window1.Window.Cursor = null;
 
                                 // Shutdown the user interface
-                                window1.Cleanup();
+                                window1.Dispose();
                                 tabbedExplorerView.Close();
                             });
                         }
@@ -511,7 +477,7 @@
                     {
                         Application.Invoke(delegate
                         {
-                            window1.GetGdkWindow().Cursor = null;
+                            window1.Window.Cursor = null;
                             ViewBase.MasterView.ShowMsgDialog(err.Message, "Installation Error", MessageType.Error, ButtonsType.Ok, window1);
                         });
                     }
@@ -587,6 +553,7 @@
                 Utility.Configuration.Settings.Email = emailBox.Text;
                 Utility.Configuration.Settings.Organisation = organisationBox.Text;
                 Utility.Configuration.Settings.Country = countryBox.GetActiveText();
+                Utility.Configuration.Settings.Save();
             }
             catch (Exception err)
             {

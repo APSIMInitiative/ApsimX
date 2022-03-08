@@ -191,7 +191,7 @@ namespace UserInterface.Views
                     if (IntellisenseItemsNeeded != null)
                     {
                         int x, y;
-                        textentry1.GetGdkWindow().GetOrigin(out x, out y);
+                        textentry1.Window.GetOrigin(out x, out y);
                         System.Drawing.Point coordinates = new System.Drawing.Point(x, y + textentry1.HeightRequest);
                         NeedContextItemsArgs e = new NeedContextItemsArgs()
                         {

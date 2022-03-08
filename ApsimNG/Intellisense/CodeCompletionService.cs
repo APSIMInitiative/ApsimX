@@ -1,4 +1,4 @@
-﻿#if NETCOREAPP
+﻿
 using APSIM.Shared.Utilities;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.Completion;
@@ -227,4 +227,3 @@ namespace UserInterface.Intellisense
         }
     }
 }
-#endif

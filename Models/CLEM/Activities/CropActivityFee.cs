@@ -18,11 +18,15 @@ namespace Models.CLEM.Activities
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(CropActivityTask))]
-    [Description("This is a fee required to perform a crop management task.")]
+    [Description("A fee required to perform a crop management task")]
     [HelpUri(@"Content/Features/Activities/Crop/CropFee.htm")]
     [Version(1, 0, 1, "")]
     public class CropActivityFee: CLEMActivityBase, IValidatableObject
     {
+        private string relatesToResourceName = "";
+        private bool timingIssueReported = false;
+        private CropActivityManageProduct managingParent;
+
         /// <summary>
         /// Account to use
         /// </summary>
@@ -51,8 +55,6 @@ namespace Models.CLEM.Activities
         /// </summary>
         public FinanceType BankAccount { get; set; }
 
-        private string RelatesToResourceName = "";
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -69,33 +71,11 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
-            BankAccount = Resources.GetResourceItem(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop) as FinanceType;
-
-            RelatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
+            BankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
+            managingParent = FindAncestor<CropActivityManageProduct>();
+            if(managingParent != null)
+                relatesToResourceName = managingParent.StoreItemName;
         }
-
-        #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            CropActivityManageProduct productParent = FindAncestor<CropActivityManageProduct>();
-
-            if (!productParent.IsTreeCrop)
-            {
-                if (this.PaymentStyle == CropPaymentStyleType.perTree)
-                {
-                    string[] memberNames = new string[] { this.Name + ".PaymentStyle" };
-                    results.Add(new ValidationResult("The payment style " + this.PaymentStyle.ToString() + " is not supported for crops defined as non tree crops", memberNames));
-                }
-            }
-            return results;
-        }
-        #endregion
 
         /// <inheritdoc/>
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
@@ -134,60 +114,65 @@ namespace Models.CLEM.Activities
                 }
                 resourcesNeeded.Add(new ResourceRequest()
                 {
+                    Resource = BankAccount,
                     AllowTransmutation = false,
                     Required = sumneeded,
                     ResourceType = typeof(Finance),
                     ResourceTypeName = AccountName,
                     ActivityModel = this,
                     FilterDetails = null,
-                    RelatesToResource = RelatesToResourceName,
+                    RelatesToResource = relatesToResourceName,
                     Category = TransactionCategory
                 }
                 );
+                if (managingParent.CurrentlyManaged)
+                {
+                    if (sumneeded > 0)
+                        Status = ActivityStatus.Success;
+                    else
+                        Status = ActivityStatus.NotNeeded;
+                }
+                else
+                {
+                    Status = ActivityStatus.Warning;
+                    if (!timingIssueReported)
+                    {
+                        Summary.WriteMessage(this, $"The harvest timer for crop task [a={this.NameWithParent}] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.", MessageType.Warning);
+                        timingIssueReported = true;
+                    }
+                }
+
                 return resourcesNeeded;
             }
             return null;
         }
 
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
+        #region validation
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            return;
+            var results = new List<ValidationResult>();
+            CropActivityManageProduct productParent = FindAncestor<CropActivityManageProduct>();
+
+            if (!productParent.IsTreeCrop)
+            {
+                if (this.PaymentStyle == CropPaymentStyleType.perTree)
+                {
+                    string[] memberNames = new string[] { this.Name + ".PaymentStyle" };
+                    results.Add(new ValidationResult("The payment style " + this.PaymentStyle.ToString() + " is not supported for crops defined as non tree crops", memberNames));
+                }
+            }
+            return results;
         }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
+        #endregion
 
         #region descriptive summary
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {

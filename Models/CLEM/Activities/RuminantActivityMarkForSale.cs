@@ -4,6 +4,7 @@ using Models.Core;
 using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -21,11 +22,11 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity marks the specified individuals for sale by RuminantAcitivtyBuySell.")]
+    [Description("Mark the specified individuals for sale with specified sale reason")]
     [Version(1, 0, 2, "Allows specification of sale reason for reporting")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMarkForSale.htm")]
-    public class RuminantActivityMarkForSale: CLEMRuminantActivityBase
+    public class RuminantActivityMarkForSale: CLEMRuminantActivityBase, IValidatableObject
     {
         private LabourRequirement labourRequirement;
 
@@ -34,8 +35,9 @@ namespace Models.CLEM.Activities
         /// </summary>
         [Description("Sale reason to apply")]
         [System.ComponentModel.DefaultValueAttribute("MarkedSale")]
-        [GreaterThanEqualValue(4, ErrorMessage = "A sale reason must be provided")]
-        public MarkForSaleReason SaleFlagToUse { get; set; }
+        [GreaterThanValue(0, ErrorMessage = "A sale reason must be provided")]
+        [HerdSaleReason("sale", ErrorMessage = "The herd change reason provided must relate to a sale")]
+        public HerdChangeReason SaleFlagToUse { get; set; }
 
         /// <summary>
         /// Overwrite any currently recorded sale flag
@@ -46,7 +48,6 @@ namespace Models.CLEM.Activities
 
         private int numberToTag = 0;
         private bool labourShortfall = false;
-        private HerdChangeReason changeReason;
 
         /// <summary>
         /// Constructor
@@ -64,7 +65,6 @@ namespace Models.CLEM.Activities
         {
             // get all ui tree herd filters that relate to this activity
             this.InitialiseHerd(true, true);
-            changeReason = (HerdChangeReason)SaleFlagToUse;
         }
 
         /// <inheritdoc/>
@@ -84,14 +84,13 @@ namespace Models.CLEM.Activities
             {
                 number = 0;
                 foreach (RuminantGroup item in filterGroups)
-                {
-                    number += herd.FilterRuminants(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Count();
-                }
+                    number += item.Filter(herd).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Count();
+
+                if(number > 0)
+                    number = Math.Min(number, herd.Count());
             }
             else
-            {
                 number = herd.Count();
-            }
 
             return number;
         }
@@ -109,9 +108,8 @@ namespace Models.CLEM.Activities
                 case LabourUnitType.perHead:
                     double numberUnits = numberToTag / requirement.UnitSize;
                     if (requirement.WholeUnitBlocks)
-                    {
                         numberUnits = Math.Ceiling(numberUnits);
-                    }
+
                     daysNeeded = numberUnits * requirement.LabourPerUnit;
                     break;
                 default:
@@ -151,9 +149,7 @@ namespace Models.CLEM.Activities
                 // recalculate numbers and ensure it is not less than number calculated
                 int updatedNumberToTag = NumberToTag(); 
                 if (updatedNumberToTag < numberToTag)
-                {
                     numberToTag = updatedNumberToTag;
-                }
 
                 IEnumerable<Ruminant> herd = CurrentHerd(false);
                 if (numberToTag > 0)
@@ -162,10 +158,11 @@ namespace Models.CLEM.Activities
 
                     foreach (RuminantGroup item in filterGroups)
                     {
-                        foreach (Ruminant ind in herd.FilterRuminants(item).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
+                        foreach (Ruminant ind in item.Filter(herd).Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
                         {
                             this.Status = (labourShortfall)?ActivityStatus.Partial:ActivityStatus.Success;
-                            ind.SaleFlag = changeReason;
+
+                            ind.SaleFlag = SaleFlagToUse;
                             numberToTag--;
                         }
                     }
@@ -174,56 +171,42 @@ namespace Models.CLEM.Activities
                         foreach (Ruminant ind in herd.Where(a => OverwriteFlag || a.SaleFlag == HerdChangeReason.None).Take(numberToTag))
                         {
                             this.Status = (labourShortfall) ? ActivityStatus.Partial : ActivityStatus.Success;
-                            ind.SaleFlag = changeReason;
+                            ind.SaleFlag = SaleFlagToUse;
                             numberToTag--;
                         }
                     }
                 }
                 else
-                {
                     this.Status = ActivityStatus.NotNeeded;
-                }
             }
             else
-            {
                 this.Status = ActivityStatus.Ignored;
+        }
+
+        #region validation
+
+        /// <summary>
+        /// Validate this model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if (!FindAllChildren<RuminantGroup>().Any())
+            {
+                string[] memberNames = new string[] { "Specify individuals" };
+                results.Add(new ValidationResult($"No individuals have been specified by [f=RuminantGroup] to be marked in [a={Name}]. Provide at least an empty RuminantGroup to mark all individuals.", memberNames));
             }
+            return results;
         }
 
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            // nothing to do. This is performed in the AnimalMark event.
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
-        }
+        #endregion
 
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             return $"\r\n<div class=\"activityentry\">Flag individuals for sale as [{SaleFlagToUse}] in the following groups:</div>";
         } 

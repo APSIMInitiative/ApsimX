@@ -1,4 +1,4 @@
-﻿using Models.Core;
+using Models.Core;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
@@ -22,14 +22,17 @@ namespace Models.CLEM.Activities
     [ValidParent(ParentType = typeof(CLEMActivityBase))]
     [ValidParent(ParentType = typeof(ActivitiesHolder))]
     [ValidParent(ParentType = typeof(ActivityFolder))]
-    [Description("This activity manages weaning of suckling ruminant individuals.")]
+    [Description("Manages weaning of suckling ruminant individuals based on age and/or weight")]
     [Version(1, 0, 2, "Weaning style added. Allows decision rule (age, weight, or both to be considered.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantWean.htm")]
-    public class RuminantActivityWean: CLEMRuminantActivityBase
+    public class RuminantActivityWean: CLEMRuminantActivityBase, IValidatableObject
     {
         [Link]
-        Clock Clock = null;
+        private Clock clock = null;
+
+        private string grazeStore;
+        private IEnumerable<RuminantGroup> filterGroups;
 
         /// <summary>
         /// Style of weaning rule
@@ -58,9 +61,7 @@ namespace Models.CLEM.Activities
         [Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { "Not specified - general yards", typeof(GrazeFoodStore) } })]
         [System.ComponentModel.DefaultValue("Not specified - general yards")]
         public string GrazeFoodStoreName { get; set; }
-        
-        private string grazeStore; 
-        
+      
         /// <summary>
         /// Constructor
         /// </summary>
@@ -69,6 +70,24 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
             TransactionCategory = "Livestock.Manage";
         }
+
+        #region validation
+        /// <summary>
+        /// Validate this model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+            if (!FindAllChildren<RuminantGroup>().Any())
+            {
+                string[] memberNames = new string[] { "Specify individuals" };
+                 results.Add(new ValidationResult($"No individuals have been specified by [f=RuminantGroup] to be considered for weaning in [a={Name}]. Provide at least an empty RuminantGroup to consider all individuals.", memberNames));
+            }
+            return results;
+        }
+        #endregion
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -88,16 +107,16 @@ namespace Models.CLEM.Activities
             {
                 var ah = this.FindInScope<ActivitiesHolder>();
                 if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
-                {
-                    Summary.WriteWarning(this, String.Format("Individuals weaned by [a={0}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", this.Name));
-                }
+                    Summary.WriteMessage(this, String.Format("Individuals weaned by [a={0}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", this.Name), MessageType.Warning);
             }
+
+            filterGroups = FindAllChildren<RuminantGroup>();
         }
 
         /// <summary>An event handler to call for all herd management activities</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMAnimalManage")]
+        [EventSubscribe("CLEMAnimalMark")]
         private void OnCLEMAnimalManage(object sender, EventArgs e)
         {
             // Weaning is performed in the Management event to ensure weaned individuals are treated as unweaned for their intake calculations
@@ -110,57 +129,54 @@ namespace Models.CLEM.Activities
                 int weanedCount = 0;
                 ResourceRequest labour = ResourceRequestList.Where(a => a.ResourceType == typeof(LabourType)).FirstOrDefault<ResourceRequest>();
                 // Perform weaning
-                int count = this.CurrentHerd(false).Where(a => a.Weaned == false).Count();
-                foreach (var ind in this.CurrentHerd(false).Where(a => a.Weaned == false))
-                {
-                    bool readyToWean = false;
-                    string reason = "";
-                    switch (Style)
-                    {
-                        case WeaningStyle.AgeOrWeight:
-                            readyToWean = (ind.Age >= WeaningAge || ind.Weight >= WeaningWeight);
-                            reason = (ind.Age >= WeaningAge) ? ((ind.Weight >= WeaningWeight) ? "AgeAndWeight": "Age") : "Weight";
-                            break;
-                        case WeaningStyle.AgeOnly:
-                            readyToWean = (ind.Age >= WeaningAge);
-                            reason = "Age";
-                            break;
-                        case WeaningStyle.WeightOnly:
-                            readyToWean = (ind.Weight >= WeaningWeight);
-                            reason = "Weight";
-                            break;
-                    }
+                int count = 0;
+                foreach (RuminantGroup item in filterGroups)
+                    count += this.GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale, null, false).Where(a => a.Weaned == false).Count();
 
-                    if (readyToWean)
+                foreach (RuminantGroup item in filterGroups)
+                    foreach (Ruminant ind in item.Filter(this.GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale, null, false).Where(a => a.Weaned == false)).ToList())
                     {
-                        this.Status = ActivityStatus.Success;
-                        ind.Wean(true, reason);
-                        ind.Location = grazeStore;
-                        weanedCount++;
-                        if (ind.Mother != null)
+                        bool readyToWean = false;
+                        string reason = "";
+                        switch (Style)
                         {
-                            // report conception status changed when offspring weaned.
-                            ind.Mother.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother, Clock.Today));
+                            case WeaningStyle.AgeOrWeight:
+                                readyToWean = (ind.Age >= WeaningAge || ind.Weight >= WeaningWeight);
+                                reason = (ind.Age >= WeaningAge) ? ((ind.Weight >= WeaningWeight) ? "AgeAndWeight": "Age") : "Weight";
+                                break;
+                            case WeaningStyle.AgeOnly:
+                                readyToWean = (ind.Age >= WeaningAge);
+                                reason = "Age";
+                                break;
+                            case WeaningStyle.WeightOnly:
+                                readyToWean = (ind.Weight >= WeaningWeight);
+                                reason = "Weight";
+                                break;
+                        }
+
+                        if (readyToWean)
+                        {
+                            this.Status = ActivityStatus.Success;
+                            ind.Wean(true, reason);
+                            ind.Location = grazeStore;
+                            weanedCount++;
+
+                            // report wean. If mother has died create temp female with the mother's ID for reporting only
+                            ind.BreedParams.OnConceptionStatusChanged(new Reporting.ConceptionStatusChangedEventArgs(Reporting.ConceptionStatus.Weaned, ind.Mother?? new RuminantFemale(ind.BreedParams, -1, 999) { ID = ind.MotherID }, clock.Today, ind));
+                        }
+
+                        // stop if labour limited individuals reached and LabourShortfallAffectsActivity
+                        if (weanedCount > Convert.ToInt32(count * labourlimit, CultureInfo.InvariantCulture))
+                        {
+                            this.Status = ActivityStatus.Partial;
+                            break;
                         }
                     }
 
-                    // stop if labour limited individuals reached and LabourShortfallAffectsActivity
-                    if (weanedCount > Convert.ToInt32(count * labourlimit, CultureInfo.InvariantCulture))
-                    {
-                        this.Status = ActivityStatus.Partial;
-                        break;
-                    }
-                }
-
-                if(weanedCount > 0)
-                {
-                    SetStatusSuccess();
-                }
-                else
-                {
-                    this.Status = ActivityStatus.NotNeeded;
-                }
-
+                    if(weanedCount > 0)
+                        SetStatusSuccess();
+                    else
+                        this.Status = ActivityStatus.NotNeeded;
             }
         }
 
@@ -172,78 +188,41 @@ namespace Models.CLEM.Activities
         public override GetDaysLabourRequiredReturnArgs GetDaysLabourRequired(LabourRequirement requirement)
         {
             IEnumerable<Ruminant> herd = CurrentHerd(false);
-            int head = herd.Where(a => a.Weaned == false).Count();
-
             double daysNeeded = 0;
-            switch (requirement.UnitType)
+            var returnArgs = new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
+            if (requirement.UnitType == LabourUnitType.Fixed)
+                returnArgs.DaysNeeded = requirement.LabourPerUnit;
+            else
             {
-                case LabourUnitType.Fixed:
-                    daysNeeded = requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perHead:
-                    daysNeeded = head * requirement.LabourPerUnit;
-                    break;
-                case LabourUnitType.perUnit:
-                    double numberUnits = head / requirement.UnitSize;
-                    if (requirement.WholeUnitBlocks)
+                foreach (RuminantGroup item in filterGroups)
+                {
+                    int head = item.Filter(GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.NotMarkedForSale).Where(a => a.Weaned == false)).Count();
+                    switch (requirement.UnitType)
                     {
-                        numberUnits = Math.Ceiling(numberUnits);
+                        case LabourUnitType.Fixed:
+                            break;
+                        case LabourUnitType.perHead:
+                            daysNeeded += head * requirement.LabourPerUnit;
+                            break;
+                        case LabourUnitType.perUnit:
+                            double numberUnits = head / requirement.UnitSize;
+                            if (requirement.WholeUnitBlocks)
+                                numberUnits += Math.Ceiling(numberUnits);
+
+                            daysNeeded = numberUnits * requirement.LabourPerUnit;
+                            break;
+                        default:
+                            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
                     }
-
-                    daysNeeded = numberUnits * requirement.LabourPerUnit;
-                    break;
-                default:
-                    throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+                }
             }
-            return new GetDaysLabourRequiredReturnArgs(daysNeeded, TransactionCategory, this.PredictedHerdName);
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForActivity()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override void DoActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override List<ResourceRequest> GetResourcesNeededForinitialisation()
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public override void AdjustResourcesNeededForActivity()
-        {
-            return;
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ResourceShortfallOccurred;
-
-        /// <inheritdoc/>
-        protected override void OnShortfallOccurred(EventArgs e)
-        {
-            ResourceShortfallOccurred?.Invoke(this, e);
-        }
-
-        /// <inheritdoc/>
-        public override event EventHandler ActivityPerformed;
-
-        /// <inheritdoc/>
-        protected override void OnActivityPerformed(EventArgs e)
-        {
-            ActivityPerformed?.Invoke(this, e);
+            return returnArgs;
         }
 
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
@@ -252,9 +231,7 @@ namespace Models.CLEM.Activities
                 {
                     htmlWriter.Write("<span class=\"setvalue\">" + WeaningAge.ToString("#0.#") + "</span> months");
                     if (Style == WeaningStyle.AgeOrWeight)
-                    {
                         htmlWriter.Write(" or  ");
-                    }
                 }
                 if (Style == WeaningStyle.AgeOrWeight | Style == WeaningStyle.WeightOnly)
                 {
@@ -263,16 +240,11 @@ namespace Models.CLEM.Activities
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Weaned individuals will be placed in ");
                 if (GrazeFoodStoreName == null || GrazeFoodStoreName == "")
-                {
                     htmlWriter.Write("<span class=\"resourcelink\">Not specified - general yards</span>");
-                }
                 else
-                {
                     htmlWriter.Write("<span class=\"resourcelink\">" + GrazeFoodStoreName + "</span>");
-                }
                 htmlWriter.Write("</div>");
                 // warn if natural weaning will take place
-
                 return htmlWriter.ToString(); 
             }
         } 

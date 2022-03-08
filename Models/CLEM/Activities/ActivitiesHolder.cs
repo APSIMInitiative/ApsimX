@@ -1,9 +1,9 @@
 ﻿using Models.Core;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Newtonsoft.Json;
 using System.ComponentModel.DataAnnotations;
 using Models.Core.Attributes;
@@ -24,6 +24,22 @@ namespace Models.CLEM.Activities
     public class ActivitiesHolder: CLEMModel, IValidatableObject
     {
         private ActivityFolder timeStep = new ActivityFolder() { Name = "TimeStep", Status= ActivityStatus.NoTask };
+
+        /// <summary>
+        /// Last resource request that was in defecit
+        /// </summary>
+        [JsonIgnore]
+        public ResourceRequest LastShortfallResourceRequest { get; set; }
+
+        /// <summary>
+        /// Resource shortfall occured event handler
+        /// </summary>
+        public event EventHandler ResourceShortfallOccurred;
+
+        /// <summary>
+        /// Resource shortfall occured event handler
+        /// </summary>
+        public event EventHandler ActivityPerformed;
 
         private void BindEvents(IEnumerable<IModel> root)
         {
@@ -64,32 +80,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        #region validation
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-
-            // ensure all folders are not APSIM folders
-            if (FindAllDescendants<Folder>().Any())
-            {
-                string[] memberNames = new string[] { "ActivityHolder" };
-                results.Add(new ValidationResult("Only CLEMFolders should be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", memberNames));
-            }
-            return results;
-        }
-        #endregion
-
-        /// <summary>
-        /// Last resource request that was in defecit
-        /// </summary>
-        [JsonIgnore]
-        public ResourceRequest LastShortfallResourceRequest { get; set; }
-
         /// <summary>
         /// Hander for shortfall
         /// </summary>
@@ -102,11 +92,6 @@ namespace Models.CLEM.Activities
             // call resourceShortfallEventhandler
             OnShortfallOccurred(e);
         }
-
-        /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
-        public event EventHandler ResourceShortfallOccurred;
 
         /// <summary>
         /// Shortfall occurred 
@@ -132,11 +117,6 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Resource shortfall occured event handler
-        /// </summary>
-        public event EventHandler ActivityPerformed;
-
-        /// <summary>
         /// Shortfall occurred 
         /// </summary>
         /// <param name="e"></param>
@@ -145,7 +125,7 @@ namespace Models.CLEM.Activities
             ActivityPerformed?.Invoke(this, e);
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>An method to perform core actions when simulation commences</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
@@ -160,26 +140,7 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <summary>
-        /// Overrides the base class method to allow for clean up
-        /// </summary>
-        [EventSubscribe("Completed")]
-        private void OnSimulationCompleted(object sender, EventArgs e)
-        {
-            UnBindEvents(FindAllChildren<IModel>());
-        }
-
-        /// <summary>An event handler to allow to call all Activities in tree to request their resources in order.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMGetResourcesRequired")]
-        private void OnGetResourcesRequired(object sender, EventArgs e)
-        {
-            foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
-                child.GetResourcesForAllActivities(this);
-        }
-
-        /// <summary>An event handler to allow to call all Activities in tree to request their resources in order.</summary>
+        /// <summary>A method to allow all activities to initialise themselves</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMInitialiseActivity")]
@@ -189,7 +150,28 @@ namespace Models.CLEM.Activities
                 child.GetResourcesForAllActivityInitialisation();
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <summary>A method to allow all activities to get ready for the time step</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMStartOfTimeStep")]
+        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
+        {
+            // clear the activity performed status at start of time step
+            foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
+                child.ClearAllAllActivitiesPerformedStatus();
+        }
+
+        /// <summary>A method to get all resources required in the time step</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMGetResourcesRequired")]
+        private void OnGetResourcesRequired(object sender, EventArgs e)
+        {
+            foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
+                child.GetResourcesForAllActivities(this);
+        }
+
+        /// <summary>A method to allow all activities to perform actions at the end of the time step</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("CLEMEndOfTimeStep")]
@@ -227,33 +209,53 @@ namespace Models.CLEM.Activities
             OnActivityPerformed(ea);
         }
 
-        /// <summary>An event handler to allow us to initialise ourselves.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMStartOfTimeStep")]
-        private void OnCLEMStartOfTimeStep(object sender, EventArgs e)
+        /// <summary>
+        /// A method to clean up at the end of the simulation
+        /// </summary>
+        [EventSubscribe("Completed")]
+        private void OnSimulationCompleted(object sender, EventArgs e)
         {
-            // clear the activity performed status at start of time step
-            foreach (CLEMActivityBase child in FindAllChildren<CLEMActivityBase>())
-                child.ClearAllAllActivitiesPerformedStatus();
+            UnBindEvents(FindAllChildren<IModel>());
         }
+
+        #region validation
+
+        /// <summary>
+        /// Validate model
+        /// </summary>
+        /// <param name="validationContext"></param>
+        /// <returns></returns>
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        {
+            var results = new List<ValidationResult>();
+
+            // ensure all folders are not APSIM folders
+            if (FindAllDescendants<Folder>().Any())
+            {
+                string[] memberNames = new string[] { "ActivityHolder" };
+                results.Add(new ValidationResult("Only CLEMFolders should be used in the Activity holder. This type of folder provides functionality for working with Activities in CLEM. At least one APSIM Folder was used in the Activities section.", memberNames));
+            }
+            return results;
+        }
+
+        #endregion
 
         #region descriptive summary
 
         /// <inheritdoc/>
-        public override string ModelSummary(bool formatForParentControl)
+        public override string ModelSummary()
         {
             return "\r\n<h1>Activities summary</h1>";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryOpeningTags(bool formatForParentControl)
+        public override string ModelSummaryOpeningTags()
         {
-            return "\r\n<div class=\"activity\"style=\"opacity: " + SummaryOpacity(formatForParentControl).ToString() + "\">";
+            return "\r\n<div class=\"activity\"style=\"opacity: " + SummaryOpacity(FormatForParentControl).ToString() + "\">";
         }
 
         /// <inheritdoc/>
-        public override string ModelSummaryClosingTags(bool formatForParentControl)
+        public override string ModelSummaryClosingTags()
         {
             return "\r\n</div>";
         } 
