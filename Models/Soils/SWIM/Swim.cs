@@ -1448,11 +1448,11 @@ namespace Models.Soils
             for (int solnum = 0; solnum < num_solutes; solnum++)
             {
                 double solconc = 0.0;
-                if (solute_names[solnum] == "no3")
+                if (solute_names[solnum].Equals("no3", StringComparison.InvariantCultureIgnoreCase))
                     solconc = Irrigated.NO3;
-                else if (solute_names[solnum] == "nh4")
+                else if (solute_names[solnum].Equals("nh4", StringComparison.InvariantCultureIgnoreCase))
                     solconc = Irrigated.NH4;
-                else if (solute_names[solnum] == "cl")
+                else if (solute_names[solnum].Equals("cl", StringComparison.InvariantCultureIgnoreCase))
                     solconc = Irrigated.CL;
 
                 if (solconc > 0.0)
@@ -2004,7 +2004,7 @@ namespace Models.Soils
 
         private int SoluteIndex(string soluteName)
         {
-            int soluteIndex = Array.IndexOf(solute_names, soluteName);
+            int soluteIndex = Array.FindIndex(solute_names, s => s.Equals(soluteName, StringComparison.InvariantCultureIgnoreCase));
             if (soluteIndex == -1)
                 throw new Exception($"Invalid solute name: {soluteName}");
             return soluteIndex;
