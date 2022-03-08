@@ -413,6 +413,7 @@ namespace UserInterface.Views
         {
             try
             {
+                (PropertiesView as ViewBase).Dispose();
                 mainWidget.Destroyed -= OnDestroyed;
                 
                 RuleList.TextHasChangedByUser -= OnRuleChanged;
@@ -429,6 +430,8 @@ namespace UserInterface.Views
 
                 ContextMenu.SelectionDone -= OnContextMenuDeactivated;
                 ContextMenu.Mapped -= OnContextMenuRendered;
+                ContextMenu.Clear();
+                ContextMenu.Dispose();
             }
             catch (Exception err)
             {

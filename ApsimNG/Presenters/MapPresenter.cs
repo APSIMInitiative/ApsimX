@@ -60,6 +60,7 @@
         /// </summary>
         public void Detach()
         {
+            propertyPresenter.Detach();
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
             if (view != null)
             {

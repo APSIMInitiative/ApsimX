@@ -233,7 +233,7 @@
             this.HideRightHandPanel();
             if (this.view is Views.ExplorerView)
             {
-                (this.view as Views.ExplorerView).MainWidget.Dispose();
+                (this.view as Views.ExplorerView).Dispose();
             }
 
             this.ContextMenu = null;
