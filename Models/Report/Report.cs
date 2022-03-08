@@ -3,6 +3,7 @@ namespace Models
     using APSIM.Shared.Utilities;
     using Models.CLEM;
     using Models.Core;
+    using Models.Functions;
     using Models.Storage;
     using Newtonsoft.Json;
     using System;
@@ -25,6 +26,16 @@ namespace Models
     [ValidParent(ParentType = typeof(CLEMFolder))]
     public class Report : Model
     {
+        /// <summary>
+        /// A collection of functions that cause a line of output to be written when they
+        /// evaluate to true (1).
+        /// </summary>
+        private List<CSharpExpressionFunction> functions = new List<CSharpExpressionFunction>();
+
+        /// <summary>Link to script compiler.</summary>
+        [Link] 
+        ScriptCompiler compiler = null;
+
         /// <summary>The columns to write to the data store.</summary>
         [JsonIgnore]
         public List<IReportColumn> Columns { get; private set; } = null;
@@ -118,6 +129,12 @@ namespace Models
                 if (DateUtilities.DatesAreEqual(dateString, clock.Today))
                     DoOutput();
             }
+
+            foreach (var function in functions)
+            {
+                if (function.Value() == 1)
+                    DoOutput();
+            }
         }
 
         /// <summary>
@@ -136,7 +153,35 @@ namespace Models
 
             // Subscribe to events.
             foreach (string eventName in EventNames)
-                events.Subscribe(eventName, DoOutputEvent);
+            {
+                if (eventName.StartsWith("if "))
+                    AddFunction(eventName);
+                else
+                    events.Subscribe(eventName, DoOutputEvent);
+            }
+        }
+
+        /// <summary>
+        /// A frequency function was entered. Add it to the list of functions so
+        /// that they can be evaluated later.
+        /// </summary>
+        /// <param name="functionString"></param>
+        private void AddFunction(string functionString)
+        {
+            var match = Regex.Match(functionString, "if (?<expression>.+)");
+            if (match.Success)
+            {
+                var expressionFunction = new CSharpExpressionFunction()
+                {
+                    Expression = $"Convert.ToDouble({match.Groups["expression"].Value})",
+                    Parent = this
+                };
+                expressionFunction.SetCompiler(compiler);
+                expressionFunction.CompileExpression();
+                functions.Add(expressionFunction);
+            }
+            else
+                throw new Exception($"Invalid report frequency expression: {functionString}");
         }
 
         /// <summary>
