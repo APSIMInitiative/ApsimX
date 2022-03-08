@@ -60,7 +60,7 @@
         double LeachUrea { get; }
 
         /// <summary>Amount of Cl leaching from the deepest soil layer (kg /ha)</summary>
-        double LeachCL { get; }
+        double LeachCl { get; }
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
         double[] FlowNO3 { get; }

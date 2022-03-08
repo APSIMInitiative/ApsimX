@@ -379,7 +379,7 @@ namespace Models.WaterModel
 
         /// <summary>Amount of Cl leaching from the deepest soil layer (kg /ha). Note that SoilWater does not currently handle chlorid at all!</summary>
         [JsonIgnore]
-        public double LeachCL => 0.0; 
+        public double LeachCl => 0.0; 
 
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
         [JsonIgnore]

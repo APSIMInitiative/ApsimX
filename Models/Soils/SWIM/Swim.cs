@@ -5661,7 +5661,7 @@ namespace Models.Soils
         public double[] FlowUrea => TD_sflow[SoluteIndex("Urea")];
 
         /// <summary>CL movement out of a layer. </summary>
-        public double[] FlowCL => TD_sflow[SoluteIndex("CL")];
+        public double[] FlowCl => TD_sflow[SoluteIndex("Cl")];
 
         /// <summary>NO3 movement out of a sub surface drain. </summary>
         public double SubsurfaceDrainNO3 => TD_slssof[SoluteIndex("NO3")];
@@ -5685,7 +5685,7 @@ namespace Models.Soils
         public double LeachUrea => TD_soldrain[SoluteIndex("Urea")];
 
         /// <summary>CL leached from the bottom of the profile.</summary>
-        public double LeachCL => TD_soldrain[SoluteIndex("CL")];
+        public double LeachCl => TD_soldrain[SoluteIndex("Cl")];
 
         /// <summary>Amount of NO3 not adsorbed (ppm).</summary>
         public double[] ConcWaterNO3 => ConcWaterSolute(SoluteIndex("NO3"));
@@ -5697,7 +5697,7 @@ namespace Models.Soils
         public double[] ConcWaterUrea => ConcWaterSolute(SoluteIndex("Urea"));
 
         /// <summary>Amount of CL not adsorbed (ppm).</summary>
-        public double[] ConcWaterCL => ConcWaterSolute(SoluteIndex("CL"));
+        public double[] ConcWaterCl => ConcWaterSolute(SoluteIndex("Cl"));
 
         /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>
         [JsonIgnore]

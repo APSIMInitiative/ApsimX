@@ -131,7 +131,7 @@ namespace Models.Soils
 
         /// <summary>Amount of Cl leaching from the deepest soil layer (kg /ha)</summary>
         [JsonIgnore]
-        public double LeachCL { get; set; }
+        public double LeachCl { get; set; }
 
         ///<summary> Who knows</summary>
         [JsonIgnore]
