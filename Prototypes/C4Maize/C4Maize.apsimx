@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 397,
+  "ExplorerWidth": 408,
   "Version": 148,
   "Name": "Simulations",
   "Children": [
@@ -1089,7 +1089,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[LeafCulms].appearanceRate1",
+                          "VariableName": "[Leaf].Parameters.appearanceRate1",
                           "Name": "AppearanceRate1",
                           "Children": [],
                           "Enabled": true,
@@ -1130,7 +1130,7 @@
                                 },
                                 {
                                   "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[LeafCulms].noRateChange2",
+                                  "VariableName": "[Leaf].Parameters.noRateChange2",
                                   "Name": "noRateChange2",
                                   "Children": [],
                                   "Enabled": true,
@@ -1150,7 +1150,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[LeafCulms].noRateChange1",
+                                      "VariableName": "[Leaf].Parameters.noRateChange1",
                                       "Name": "noRateChange1",
                                       "Children": [],
                                       "Enabled": true,
@@ -1170,7 +1170,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[LeafCulms].appearanceRate2",
+                          "VariableName": "[Leaf].Parameters.appearanceRate2",
                           "Name": "AppearanceRate2",
                           "Children": [],
                           "Enabled": true,
@@ -1223,7 +1223,7 @@
                                     },
                                     {
                                       "$type": "Models.Functions.VariableReference, Models",
-                                      "VariableName": "[LeafCulms].noRateChange2",
+                                      "VariableName": "[Leaf].Parameters.noRateChange2",
                                       "Name": "noRateChange2",
                                       "Children": [],
                                       "Enabled": true,
@@ -1243,7 +1243,7 @@
                         },
                         {
                           "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[LeafCulms].appearanceRate3",
+                          "VariableName": "[Leaf].Parameters.appearanceRate3",
                           "Name": "AppearanceRate3",
                           "Children": [],
                           "Enabled": true,
@@ -1494,151 +1494,139 @@
               "FinalLeafNo": 0.0,
               "dltPotentialLAI": 0.0,
               "dltStressedLAI": 0.0,
-              "NLeaves": 0.0,
               "Name": "LeafCulms",
               "Children": [
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 65.0,
-                  "Units": null,
-                  "Name": "appearanceRate1",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 36.0,
-                  "Units": null,
-                  "Name": "appearanceRate2",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 36.0,
-                  "Units": null,
-                  "Name": "appearanceRate3",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 2.0,
-                  "Units": null,
-                  "Name": "leafNoCorrection",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 8.0,
-                  "Units": null,
-                  "Name": "noRateChange1",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 3.0,
-                  "Units": null,
-                  "Name": "noRateChange2",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].TTFromEmergToFlag",
-                  "Name": "ttEmergToFlag",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[LeafCulms].TTTargetFI",
-                  "Name": "ttEmergToFI",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.VariableReference, Models",
-                  "VariableName": "[Phenology].DltTT",
-                  "Name": "dltTT",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.5,
-                  "Units": null,
-                  "Name": "leafNoAtEmergence",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -0.82,
-                  "Units": null,
-                  "Name": "tilleringPropensity",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.2065,
-                  "Units": null,
-                  "Name": "tillerSdSlope",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 30.0,
-                  "Units": "%",
-                  "Name": "tillerSlaBound",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.3,
-                  "Units": null,
-                  "Name": "aMaxVert",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.05,
-                  "Units": null,
-                  "Name": "aTillerVert",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0,
-                  "Units": null,
-                  "Name": "leafAreaCalcTypeSwitch",
+                  "$type": "Models.PMF.Struct.DynamicTillering, Models",
+                  "CalculatedTillerNumber": 0.0,
+                  "FertileTillerNumber": 0.0,
+                  "SupplyDemandRatio": 0.0,
+                  "Name": "DynamicTillering",
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "The presence of this switch causes leafCulms to use the alternate potential leaf area calculation used in Maize.",
-                      "Name": "Memo",
+                      "$type": "Models.PMF.C4LeafArea, Models",
+                      "Name": "AreaCalc",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.A0",
+                          "Name": "A0",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.A1",
+                          "Name": "A1",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.B0",
+                          "Name": "B0",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.B1",
+                          "Name": "B1",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.aX0",
+                          "Name": "aX0",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.aMaxSlope",
+                          "Name": "aMaxS",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.aMaxIntercept",
+                          "Name": "aMaxI",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.largestLeafPlateau",
+                          "Name": "largestLeafPlateau",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.leafNoCorrection",
+                          "Name": "leafNoCorrection",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Parameters.slaMax",
+                      "Name": "slaMax",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Parameters.tillerSdIntercept",
+                      "Name": "tillerSdIntercept",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Parameters.tillerSdSlope",
+                      "Name": "tillerSdSlope",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Parameters.tillerSlaBound",
+                      "Name": "tillerSlaBound",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Parameters.maxLAIForTillerAddition",
+                      "Name": "maxLAIForTillerAddition",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Parameters.maxDailyTillerReduction",
+                      "Name": "maxDailyTillerReduction",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -1648,200 +1636,131 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -0.009,
-                  "Units": null,
-                  "Name": "A0",
+                  "$type": "Models.PMF.Struct.FixedTillering, Models",
+                  "FertileTillerNumber": 0.0,
+                  "Name": "FixedTillering",
                   "Children": [
                     {
-                      "$type": "Models.Memo, Models",
-                      "Text": "bellCurveParams[0]",
-                      "Name": "Memo",
-                      "Children": [],
+                      "$type": "Models.PMF.C4LeafAreaM, Models",
+                      "Name": "AreaCalc",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.A0",
+                          "Name": "A0",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.A1",
+                          "Name": "A1",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.B0",
+                          "Name": "B0",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.B1",
+                          "Name": "B1",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.aX0",
+                          "Name": "aX0",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.aMaxA",
+                          "Name": "aMaxA",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.aMaxB",
+                          "Name": "aMaxB",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.aMaxC",
+                          "Name": "aMaxC",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].Parameters.leafNoCorrection",
+                          "Name": "leafNoCorrection",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "slaMax",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.1,
+                            4.0
+                          ],
+                          "Y": [
+                            50000.0,
+                            25000.0
+                          ],
+                          "XVariableName": null,
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "x_lai and y_lai_sla_max in old maize",
+                          "Name": "Memo",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].LAI",
+                          "Name": "XValue",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -0.2,
-                  "Units": null,
-                  "Name": "A1",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "bellCurveParams[1]",
-                      "Name": "Memo",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.0006,
-                  "Units": null,
-                  "Name": "B0",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "bellCurveParams[2]",
-                      "Name": "Memo",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -0.43,
-                  "Units": null,
-                  "Name": "B1",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "bellCurveParams[3]",
-                      "Name": "Memo",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 1000.0,
-                  "Units": null,
-                  "Name": "aMaxA",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "largestLeafParams[0]",
-                      "Name": "Memo",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": -1.17,
-                  "Units": null,
-                  "Name": "aMaxB",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "largestLeafParams[1]",
-                      "Name": "Memo",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.047,
-                  "Units": null,
-                  "Name": "aMaxC",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "largestLeafParams[2]",
-                      "Name": "Memo",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.67,
-                  "Units": null,
-                  "Name": "aX0",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 22.25,
-                  "Units": null,
-                  "Name": "aMaxSlope",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 92.45,
-                  "Units": null,
-                  "Name": "aMaxIntercept",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 6.0,
-                  "Units": null,
-                  "Name": "leafNumSeed",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 23.2,
-                  "Units": "oCd",
-                  "Name": "leafInitRate",
-                  "Children": [
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "Degree days to initiate each leaf primordium until floral init (deg day)",
-                      "Name": "Description",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 5.0,
-                  "Units": null,
-                  "Name": "minLeafNo",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 40.0,
-                  "Units": null,
-                  "Name": "maxLeafNo",
-                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -1900,239 +1819,6 @@
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "slaMax",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.1,
-                        4.0
-                      ],
-                      "Y": [
-                        50000.0,
-                        25000.0
-                      ],
-                      "XVariableName": null,
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "x_lai and y_lai_sla_max in old maize",
-                      "Name": "Memo",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].LAI",
-                      "Name": "XValue",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.PMF.Struct.FixedTillering, Models",
-                  "FertileTillerNumber": 0.0,
-                  "Name": "FixedTillering",
-                  "Children": [
-                    {
-                      "$type": "Models.PMF.C4LeafAreaM, Models",
-                      "Name": "AreaCalc",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[LeafCulms].A0",
-                          "Name": "A0",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[LeafCulms].A1",
-                          "Name": "A1",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[LeafCulms].B0",
-                          "Name": "B0",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[LeafCulms].B1",
-                          "Name": "B1",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[LeafCulms].aX0",
-                          "Name": "aX0",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[LeafCulms].aMaxA",
-                          "Name": "aMaxA",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[LeafCulms].aMaxB",
-                          "Name": "aMaxB",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[LeafCulms].aMaxC",
-                          "Name": "aMaxC",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[LeafCulms].leafNoCorrection",
-                          "Name": "leafNoCorrection",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                      "Name": "slaMax",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.XYPairs, Models",
-                          "X": [
-                            0.1,
-                            4.0
-                          ],
-                          "Y": [
-                            50000.0,
-                            25000.0
-                          ],
-                          "XVariableName": null,
-                          "Name": "XYPairs",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "x_lai and y_lai_sla_max in old maize",
-                          "Name": "Memo",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.VariableReference, Models",
-                          "VariableName": "[Leaf].LAI",
-                          "Name": "XValue",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "LeafAppearanceRate",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.0,
-                        3.0,
-                        8.0,
-                        8.0,
-                        50.0
-                      ],
-                      "Y": [
-                        36.0,
-                        36.0,
-                        36.0,
-                        65.0,
-                        65.0
-                      ],
-                      "XVariableName": null,
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "LeafAppearance uses the remaining leaves to calculate a faster appearance rate which is calculated per tiller so must be done dynamicaaly using ValueForX() functionality\n\nPeter Carberry's 2 stage version used here, modified to apply to last few leaves before flag\n",
-                      "Name": "Memo",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "RemainingLeaves",
-                      "Name": "XValue",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.3,
-                  "Units": null,
-                  "Name": "MaxVerticalTillerAdjustment",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.Constant, Models",
-                  "FixedValue": 0.05,
-                  "Units": null,
-                  "Name": "VerticalTillerAdjustment",
-                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -2217,33 +1903,86 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 23.2,
-                      "Units": "oCd",
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Parameters.LeafInitRate",
                       "Name": "leafInitRate",
-                      "Children": [
-                        {
-                          "$type": "Models.Memo, Models",
-                          "Text": "Degree days to initiate each leaf primordium until floral init (deg day)",
-                          "Name": "Description",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Functions.Constant, Models",
-                      "FixedValue": 6.0,
-                      "Units": null,
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Parameters.LeafNumSeed",
                       "Name": "leafNumSeed",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
                   ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Parameters.appearanceRate1",
+                  "Name": "appearanceRate1",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Parameters.appearanceRate2",
+                  "Name": "appearanceRate2",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Parameters.appearanceRate3",
+                  "Name": "appearanceRate3",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Parameters.noRateChange1",
+                  "Name": "noRateChange1",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Parameters.noRateChange2",
+                  "Name": "noRateChange2",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Parameters.leafNoAtEmergence",
+                  "Name": "leafNoAtEmergence",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Parameters.MaxVerticalTillerAdjustment",
+                  "Name": "MaxVerticalTillerAdjustment",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.VariableReference, Models",
+                  "VariableName": "[Leaf].Parameters.VerticalTillerAdjustment",
+                  "Name": "VerticalTillerAdjustment",
+                  "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
                 }
@@ -6364,7 +6103,7 @@
                                           "Children": [
                                             {
                                               "$type": "Models.Functions.VariableReference, Models",
-                                              "VariableName": "[Leaf].SlaMin",
+                                              "VariableName": "[Leaf].Parameters.SlaMin",
                                               "Name": "SlaMin",
                                               "Children": [],
                                               "Enabled": true,
@@ -6842,46 +6581,6 @@
                           "ReadOnly": false
                         }
                       ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LinearInterpolationFunction, Models",
-                  "Name": "SlaMin",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.XYPairs, Models",
-                      "X": [
-                        0.1,
-                        4.0
-                      ],
-                      "Y": [
-                        8000.0,
-                        8000.0
-                      ],
-                      "XVariableName": null,
-                      "Name": "XYPairs",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Memo, Models",
-                      "Text": "x_lai and lai_sla_min in old maize",
-                      "Name": "Memo",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].LAI",
-                      "Name": "XValue",
-                      "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -7442,9 +7141,440 @@
                     {
                       "$type": "Models.Functions.Constant, Models",
                       "FixedValue": 0.0182,
-                      "Units": null,
+                      "Units": "(0-1)",
                       "Name": "PartitionRate",
                       "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 23.2,
+                      "Units": "oCd",
+                      "Name": "leafInitRate",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "Degree days to initiate each leaf primordium until floral init (deg day)",
+                          "Name": "Description",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 6.0,
+                      "Units": null,
+                      "Name": "leafNumSeed",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.5,
+                      "Units": null,
+                      "Name": "LeafNoAtEmergence",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 65.0,
+                      "Units": null,
+                      "Name": "appearanceRate1",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 36.0,
+                      "Units": null,
+                      "Name": "appearanceRate2",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 36.0,
+                      "Units": null,
+                      "Name": "appearanceRate3",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 2.0,
+                      "Units": null,
+                      "Name": "leafNoCorrection",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 8.0,
+                      "Units": null,
+                      "Name": "noRateChange1",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 3.0,
+                      "Units": null,
+                      "Name": "noRateChange2",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.3,
+                      "Units": null,
+                      "Name": "aMaxVert",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.05,
+                      "Units": null,
+                      "Name": "aTillerVert",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": -0.009,
+                      "Units": null,
+                      "Name": "A0",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "bellCurveParams[0]",
+                          "Name": "Memo",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": -0.2,
+                      "Units": null,
+                      "Name": "A1",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "bellCurveParams[1]",
+                          "Name": "Memo",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.0006,
+                      "Units": null,
+                      "Name": "B0",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "bellCurveParams[2]",
+                          "Name": "Memo",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": -0.43,
+                      "Units": null,
+                      "Name": "B1",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "bellCurveParams[3]",
+                          "Name": "Memo",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.67,
+                      "Units": null,
+                      "Name": "aX0",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 22.25,
+                      "Units": null,
+                      "Name": "aMaxSlope",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 92.45,
+                      "Units": null,
+                      "Name": "aMaxIntercept",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 5.0,
+                      "Units": null,
+                      "Name": "minLeafNo",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 40.0,
+                      "Units": null,
+                      "Name": "maxLeafNo",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.3,
+                      "Units": null,
+                      "Name": "MaxVerticalTillerAdjustment",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.05,
+                      "Units": null,
+                      "Name": "VerticalTillerAdjustment",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 49.25,
+                      "Units": null,
+                      "Name": "largestLeafPlateau",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.329,
+                      "Units": null,
+                      "Name": "tillerSdIntercept",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.3,
+                      "Units": null,
+                      "Name": "tillerSdSlope",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 30.0,
+                      "Units": "%",
+                      "Name": "tillerSlaBound",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.325,
+                      "Units": null,
+                      "Name": "maxLAIForTillerAddition",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.3,
+                      "Units": null,
+                      "Name": "maxDailyTillerReduction",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "slaMax",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.1,
+                            4.0
+                          ],
+                          "Y": [
+                            50000.0,
+                            25000.0
+                          ],
+                          "XVariableName": null,
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "x_lai and y_lai_sla_max in old maize",
+                          "Name": "Memo",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].LAI",
+                          "Name": "XValue",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.LinearInterpolationFunction, Models",
+                      "Name": "SlaMin",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.XYPairs, Models",
+                          "X": [
+                            0.1,
+                            4.0
+                          ],
+                          "Y": [
+                            8000.0,
+                            8000.0
+                          ],
+                          "XVariableName": null,
+                          "Name": "XYPairs",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "x_lai and lai_sla_min in old maize",
+                          "Name": "Memo",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.VariableReference, Models",
+                          "VariableName": "[Leaf].LAI",
+                          "Name": "XValue",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 1000.0,
+                      "Units": null,
+                      "Name": "aMaxA",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "largestLeafParams[0]",
+                          "Name": "Memo",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": -1.17,
+                      "Units": null,
+                      "Name": "aMaxB",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "largestLeafParams[1]",
+                          "Name": "Memo",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.Constant, Models",
+                      "FixedValue": 0.047,
+                      "Units": null,
+                      "Name": "aMaxC",
+                      "Children": [
+                        {
+                          "$type": "Models.Memo, Models",
+                          "Text": "largestLeafParams[2]",
+                          "Name": "Memo",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
                       "Enabled": true,
                       "ReadOnly": false
                     }
@@ -10302,14 +10432,14 @@
                     "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 1",
                     "[Grain].PotKernelWt.FixedValue = 350",
                     "[Leaf].Photosynthesis.RUE.FixedValue = 1.60",
-                    "[LeafCulms].aX0.FixedValue = 0.72",
-                    "[LeafCulms].aMaxA.FixedValue = 1200",
-                    "[LeafCulms].aMaxB.FixedValue = -1.17",
-                    "[LeafCulms].aMaxC.FixedValue = 0.047",
-                    "[LeafCulms].A0.FixedValue = -0.0126",
-                    "[LeafCulms].A1.FixedValue = -0.2071",
-                    "[LeafCulms].B0.FixedValue = 0.000365",
-                    "[LeafCulms].B1.FixedValue = -0.4381",
+                    "[Leaf].Parameters.aX0.FixedValue = 0.72",
+                    "[Leaf].Parameters.aMaxA.FixedValue = 1200",
+                    "[Leaf].Parameters.aMaxB.FixedValue = -1.17",
+                    "[Leaf].Parameters.aMaxC.FixedValue = 0.047",
+                    "[Leaf].Parameters.A0.FixedValue = -0.0126",
+                    "[Leaf].Parameters.A1.FixedValue = -0.2071",
+                    "[Leaf].Parameters.B0.FixedValue = 0.000365",
+                    "[Leaf].Parameters.B1.FixedValue = -0.4381",
                     "[Grain].GNMaxCoeff.FixedValue = 120",
                     "[Grain].PgrBase.FixedValue = 1.5"
                   ],
@@ -10583,14 +10713,14 @@
                     "[Grain].PotKernelWt.FixedValue = 380",
                     "[Leaf].AgeSenescence.LeafNoDeadIntercept.FixedValue = -0.025",
                     "[Leaf].AgeSenescence.LeafNoDeadSlope.FixedValue = 0.0002",
-                    "[LeafCulms].aX0.FixedValue = 0.72",
-                    "[LeafCulms].aMaxA.FixedValue = 1200",
-                    "[LeafCulms].aMaxB.FixedValue = -1.17",
-                    "[LeafCulms].aMaxC.FixedValue = 0.047",
-                    "[LeafCulms].A0.FixedValue = -0.0126",
-                    "[LeafCulms].A1.FixedValue = -0.2071",
-                    "[LeafCulms].B0.FixedValue = 0.000365",
-                    "[LeafCulms].B1.FixedValue = -0.4381",
+                    "[Leaf].Parameters.aX0.FixedValue = 0.72",
+                    "[Leaf].Parameters.aMaxA.FixedValue = 1200",
+                    "[Leaf].Parameters.aMaxB.FixedValue = -1.17",
+                    "[Leaf].Parameters.aMaxC.FixedValue = 0.047",
+                    "[Leaf].Parameters.A0.FixedValue = -0.0126",
+                    "[Leaf].Parameters.A1.FixedValue = -0.2071",
+                    "[Leaf].Parameters.B0.FixedValue = 0.000365",
+                    "[Leaf].Parameters.B1.FixedValue = -0.4381",
                     "[Grain].GNMaxCoeff.FixedValue = 270",
                     "[Grain].PgrBase.FixedValue = 0.7"
                   ],
@@ -10777,11 +10907,11 @@
                     "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 1",
                     "[Grain].PotKernelWt.FixedValue = 300",
                     "[Leaf].Photosynthesis.RUE.FixedValue = 1.60",
-                    "[LeafCulms].aX0.FixedValue = 0.72",
-                    "[LeafCulms].A0.FixedValue = -0.0126",
-                    "[LeafCulms].A1.FixedValue = -0.2071",
-                    "[LeafCulms].B0.FixedValue = 0.000365",
-                    "[LeafCulms].B1.FixedValue = -0.4381"
+                    "[Leaf].Parameters.aX0.FixedValue = 0.72",
+                    "[Leaf].Parameters.A0.FixedValue = -0.0126",
+                    "[Leaf].Parameters.A1.FixedValue = -0.2071",
+                    "[Leaf].Parameters.B0.FixedValue = 0.000365",
+                    "[Leaf].Parameters.B1.FixedValue = -0.4381"
                   ],
                   "Name": "_19leaf",
                   "Children": [],
@@ -11347,14 +11477,14 @@
                     "[Phenology].MaturityToHarvestRipe.Target.FixedValue = 1",
                     "[Grain].PotKernelWt.FixedValue = 300",
                     "[Leaf].Photosynthesis.RUE.FixedValue = 1.60",
-                    "[LeafCulms].aX0.FixedValue = 0.72",
-                    "[LeafCulms].aMaxA.FixedValue = 1200",
-                    "[LeafCulms].aMaxB.FixedValue = -1.17",
-                    "[LeafCulms].aMaxC.FixedValue = 0.047",
-                    "[LeafCulms].A0.FixedValue = -0.0126",
-                    "[LeafCulms].A1.FixedValue = -0.2071",
-                    "[LeafCulms].B0.FixedValue = 0.000365",
-                    "[LeafCulms].B1.FixedValue = -0.4381",
+                    "[Leaf].Parameters.aX0.FixedValue = 0.72",
+                    "[Leaf].Parameters.aMaxA.FixedValue = 1200",
+                    "[Leaf].Parameters.aMaxB.FixedValue = -1.17",
+                    "[Leaf].Parameters.aMaxC.FixedValue = 0.047",
+                    "[Leaf].Parameters.A0.FixedValue = -0.0126",
+                    "[Leaf].Parameters.A1.FixedValue = -0.2071",
+                    "[Leaf].Parameters.B0.FixedValue = 0.000365",
+                    "[Leaf].Parameters.B1.FixedValue = -0.4381",
                     "[Grain].GNMaxCoeff.FixedValue = 120",
                     "[Grain].PgrBase.FixedValue = 1.5",
                     "[Leaf].HeightFunction.XYPairs.X = 0,80",
