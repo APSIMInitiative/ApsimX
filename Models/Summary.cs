@@ -231,6 +231,8 @@
         public IEnumerable<Message> GetMessages(string simulationName)
         {
             IDataStore storage = this.storage ?? FindInScope<IDataStore>();
+            if (storage == null)
+                yield break;
             DataTable messages = storage.Reader.GetData("_Messages", simulationNames: simulationName.ToEnumerable());
             if (messages == null)
                 yield break;
@@ -255,6 +257,8 @@
         public IEnumerable<InitialConditionsTable> GetInitialConditions(string simulationName)
         {
             IDataStore storage = this.storage ?? FindInScope<IDataStore>();
+            if (storage == null)
+                yield break;
             DataTable table = storage.Reader.GetData("_InitialConditions", simulationNames: simulationName.ToEnumerable());
             if (table == null)
                 yield break;

@@ -109,7 +109,7 @@ namespace Models.CLEM.Resources
                         {
                             if (sucklingList.Any())
                             {
-                                Summary.WriteMessage(this, $"Insufficient breeding females to assign [{sucklingList.Count()}] x [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\r\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a calf.", MessageType.Warning);
+                                Summary.WriteMessage(this, $"Insufficient breeding females to assign [{sucklingList.Count()}] x [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\r\nUnassigned sucklings will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a suckling.", MessageType.Warning);
                                 break;
                             }
                         }
@@ -173,7 +173,7 @@ namespace Models.CLEM.Resources
                                 }
                                 else
                                 {
-                                    Summary.WriteMessage(this, $"Insufficient breeding females to assign [{sucklingList.Count() - sucklingCount}] x [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\r\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a calf.", MessageType.Warning);
+                                    Summary.WriteMessage(this, $"Insufficient breeding females to assign [{sucklingList.Count() - sucklingCount}] x [{sucklingList.Key}] month old sucklings for herd [r={herdName}].\r\nUnassigned calves will need to graze or be fed and may have reduced growth until weaned.\r\nBreeding females must be at least minimum breeding age + gestation length + age of sucklings at the start of the simulation to provide a suckling.", MessageType.Warning);
                                     break;
                                 }
                             }
@@ -188,7 +188,7 @@ namespace Models.CLEM.Resources
                     minsizeIPI = Math.Max(minsizeIPI, herd[0].BreedParams.GestationLength + 2);
 
                     // assigning values for the remaining females who haven't just bred.
-                    // i.e met breeding rules and not pregnant or lactating (just assigned calf), but calculate for underweight individuals not previously provided calves.
+                    // i.e met breeding rules and not pregnant or lactating (just assigned suckling), but calculate for underweight individuals not previously provided sucklings.
                     double ageFirstBirth = herd[0].BreedParams.MinimumAge1stMating + herd[0].BreedParams.GestationLength;
                     foreach (RuminantFemale female in herd.OfType<RuminantFemale>().Where(a => !a.IsLactating && !a.IsPregnant && (a.Age >= a.BreedParams.MinimumAge1stMating + a.BreedParams.GestationLength & a.HighWeight >= a.BreedParams.MinimumSize1stMating * a.StandardReferenceWeight)))
                     {
@@ -271,9 +271,34 @@ namespace Models.CLEM.Resources
         public void RemoveRuminant(Ruminant ind, IModel model)
         {
             // Remove mother ID from any suckling offspring
-            if (ind.Sex == Sex.Female)
-                foreach (var offspring in (ind as RuminantFemale).SucklingOffspringList)
+            if (ind is RuminantFemale)
+            {
+                string reason;
+                switch (ind.SaleFlag)
+                {
+                    case HerdChangeReason.Consumed:
+                    case HerdChangeReason.DiedUnderweight:
+                    case HerdChangeReason.DiedMortality:
+                        reason = "MotherDied";
+                        break;
+                    case HerdChangeReason.MarkedSale:
+                    case HerdChangeReason.TradeSale:
+                    case HerdChangeReason.ExcessBreederSale:
+                    case HerdChangeReason.MaxAgeSale:
+                        reason = "MotherSold";
+                        break;
+                    default:
+                        reason = "Unknown";
+                        break;
+                }
+
+                while ((ind as RuminantFemale).SucklingOffspringList.Any())
+                {
+                    Ruminant offspring = (ind as RuminantFemale).SucklingOffspringList.FirstOrDefault();
+                    offspring.Wean(true, reason);
                     offspring.Mother = null;
+                }
+            }
 
             // if sold and unweaned set mothers weaning count + 1 as effectively weaned in process and not death
             if (!ind.Weaned & !ind.SaleFlag.ToString().Contains("Died"))

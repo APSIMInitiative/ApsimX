@@ -271,6 +271,19 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
+        /// A label combining sex and class for reporting
+        /// </summary>
+        [FilterByProperty]
+        public string SexAndClass
+        {
+            get
+            {
+                return $"{Sex}.{Class}";
+            }
+        }
+
+
+        /// <summary>
         /// Determine the category of this individual
         /// </summary>
         [FilterByProperty]
@@ -278,8 +291,8 @@ namespace Models.CLEM.Resources
         {
             get
             {
-                if(this.IsCalf)
-                    return "Calf";
+                if(this.IsSuckling)
+                    return "Suckling";
                 else if(this.IsWeaner)
                     return "Weaner";
                 else
@@ -340,14 +353,27 @@ namespace Models.CLEM.Resources
         }
 
         /// <summary>
-        /// Determine if weaned and less that 12 months old. Weaner
+        /// Determine if unweaned suckling
+        /// </summary>
+        [FilterByProperty]
+        public bool IsSuckling
+        {
+            get
+            {
+                return (!Weaned);
+            }
+        }
+
+
+        /// <summary>
+        /// Determine if unweaned calf - replaced by IsSuckling
         /// </summary>
         [FilterByProperty]
         public bool IsCalf
         {
             get
             {
-                return (!Weaned);
+                throw new NotImplementedException("The IsCalf property is deprecated. Please use new IsSuckling property");
             }
         }
 
