@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 379,
   "Version": 148,
   "Name": "Simulations",
   "Children": [
@@ -4699,7 +4699,7 @@
                           "PSIDul": -100.0,
                           "VC": true,
                           "DTMin": 0.0,
-                          "DTMax": 30.0,
+                          "DTMax": 50.0,
                           "MaxWaterIncrement": 5.0,
                           "SpaceWeightingFactor": 0.0,
                           "SoluteSpaceWeightingFactor": 1.0,
