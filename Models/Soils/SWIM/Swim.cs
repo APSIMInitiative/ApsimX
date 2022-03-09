@@ -358,9 +358,9 @@ namespace Models.Soils
         private double a_to_evap_fact = 0.44;
 
         /// <summary>
-        /// coef. in exp effect of canopy on
+        /// coef. in exp effect of canopy on soil water evaporation. In previous version initialised to 1.7.
         /// </summary>
-        private double canopy_eos_coef = 0;
+        private double canopy_eos_coef = 1.7;
 
         /// <summary>
         /// The effect of residue and canopy cover is implemented as in the soilwat model.
