@@ -4128,7 +4128,7 @@ namespace Models.AgPasture
         private double DefoliationEffectOnTissueTurnover()
         {
             double defoliationEffect = 0.0;
-            cumDefoliationFactor += HarvestedFraction;
+            cumDefoliationFactor += myDefoliatedFraction;
             if (cumDefoliationFactor > 0.0)
             {
                 double todaysFactor = Math.Pow(cumDefoliationFactor, TurnoverDefoliationCoefficient + 1.0);
