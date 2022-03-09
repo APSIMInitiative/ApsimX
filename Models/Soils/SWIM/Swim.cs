@@ -360,7 +360,7 @@ namespace Models.Soils
         /// <summary>
         /// coef. in exp effect of canopy on soil water evaporation. In previous version initialised to 1.7.
         /// </summary>
-        private double canopy_eos_coef = 0; //1.7;
+        private double canopy_eos_coef = 1.7;
 
         /// <summary>
         /// The effect of residue and canopy cover is implemented as in the soilwat model.
@@ -5640,6 +5640,7 @@ namespace Models.Soils
                 double[] newSW = MathUtilities.Divide(dlt_sw_dep, soilPhysical.Thickness, divideTolerance);
                 newSW = MathUtilities.Subtract(th, newSW);
                 ResetWaterBalance(1, ref newSW);
+                run_has_started = false;
             }
         }
 
