@@ -1448,11 +1448,11 @@ namespace Models.Soils
             for (int solnum = 0; solnum < num_solutes; solnum++)
             {
                 double solconc = 0.0;
-                if (solute_names[solnum] == "no3")
+                if (solute_names[solnum].Equals("no3", StringComparison.InvariantCultureIgnoreCase))
                     solconc = Irrigated.NO3;
-                else if (solute_names[solnum] == "nh4")
+                else if (solute_names[solnum].Equals("nh4", StringComparison.InvariantCultureIgnoreCase))
                     solconc = Irrigated.NH4;
-                else if (solute_names[solnum] == "cl")
+                else if (solute_names[solnum].Equals("cl", StringComparison.InvariantCultureIgnoreCase))
                     solconc = Irrigated.CL;
 
                 if (solconc > 0.0)
@@ -2004,7 +2004,7 @@ namespace Models.Soils
 
         private int SoluteIndex(string soluteName)
         {
-            int soluteIndex = Array.IndexOf(solute_names, soluteName);
+            int soluteIndex = Array.FindIndex(solute_names, s => s.Equals(soluteName, StringComparison.InvariantCultureIgnoreCase));
             if (soluteIndex == -1)
                 throw new Exception($"Invalid solute name: {soluteName}");
             return soluteIndex;
@@ -5661,7 +5661,7 @@ namespace Models.Soils
         public double[] FlowUrea => TD_sflow[SoluteIndex("Urea")];
 
         /// <summary>CL movement out of a layer. </summary>
-        public double[] FlowCL => TD_sflow[SoluteIndex("CL")];
+        public double[] FlowCl => TD_sflow[SoluteIndex("Cl")];
 
         /// <summary>NO3 movement out of a sub surface drain. </summary>
         public double SubsurfaceDrainNO3 => TD_slssof[SoluteIndex("NO3")];
@@ -5685,7 +5685,7 @@ namespace Models.Soils
         public double LeachUrea => TD_soldrain[SoluteIndex("Urea")];
 
         /// <summary>CL leached from the bottom of the profile.</summary>
-        public double LeachCL => TD_soldrain[SoluteIndex("CL")];
+        public double LeachCl => TD_soldrain[SoluteIndex("Cl")];
 
         /// <summary>Amount of NO3 not adsorbed (ppm).</summary>
         public double[] ConcWaterNO3 => ConcWaterSolute(SoluteIndex("NO3"));
@@ -5697,7 +5697,7 @@ namespace Models.Soils
         public double[] ConcWaterUrea => ConcWaterSolute(SoluteIndex("Urea"));
 
         /// <summary>Amount of CL not adsorbed (ppm).</summary>
-        public double[] ConcWaterCL => ConcWaterSolute(SoluteIndex("CL"));
+        public double[] ConcWaterCl => ConcWaterSolute(SoluteIndex("Cl"));
 
         /// <summary>Amount of water moving downward out of each soil layer due to gravity drainage (above DUL) (mm)</summary>
         [JsonIgnore]
