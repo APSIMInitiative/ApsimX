@@ -76,6 +76,9 @@
         /// <summary>DM removed from this tissue (kg/ha).</summary>
         public double DMRemoved { get; private set; }
 
+        /// <summary>The fraction of DM removed from this tissue.</summary>
+        public double FractionRemoved { get; private set; }
+
         /// <summary>N removed from this tissue (kg/ha).</summary>
         public double NRemoved { get; private set; }
 
@@ -96,6 +99,7 @@
         {
             DMRemoved = 0;
             NRemoved = 0;
+            FractionRemoved = 0;
             ClearDailyTransferredAmounts();
         }
 
@@ -131,6 +135,7 @@
 
             DMRemoved = totalFraction * dryMatter.Wt;
             NRemoved = totalFraction * dryMatter.N;
+            FractionRemoved = fractionToRemove;
 
             if (totalFraction > 0.0)
             {
