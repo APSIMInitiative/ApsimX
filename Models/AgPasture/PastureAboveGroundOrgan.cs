@@ -195,6 +195,18 @@
         /// <summary>N removed from this tissue (kg/ha).</summary>
         public double NRemoved => Tissue.Sum(t => t.NRemoved);
 
+        /// <summary>Fraction of DM removed from organ.</summary>
+        public double FractionRemoved
+        {
+            get
+            {
+                double preDM = 0.0;
+                foreach (var tissue in Tissue)
+                    preDM += MathUtilities.Divide(tissue.DMRemoved, tissue.FractionRemoved, 0.0);
+                return MathUtilities.Divide(DMRemoved, preDM, 0.0);
+            }
+        }
+
         /// <summary>Average digestibility of all biomass.</summary>
         [Units("kg/kg")]
         public double DigestibilityTotal { get; private set; }
