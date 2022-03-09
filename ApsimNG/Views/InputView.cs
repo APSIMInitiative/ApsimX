@@ -62,7 +62,7 @@ namespace UserInterface.Views
             try
             {
                 button1.Clicked -= OnBrowseButtonClick;
-                grid.MainWidget.Dispose();
+                grid.Dispose();
                 grid = null;
                 mainWidget.Destroyed -= _mainWidget_Destroyed;
                 owner = null;

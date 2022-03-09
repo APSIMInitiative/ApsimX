@@ -6,6 +6,7 @@
     using System;
     using System.Collections.Generic;
     using System.Reflection;
+    using Utility;
 
     /// <summary>
     /// Encapsulates a menu
@@ -26,7 +27,7 @@
         /// <summary>Destroy the menu</summary>
         public void Destroy()
         {
-            ClearMenu();
+            menu.Clear();
             menu.Dispose();
         }
 
@@ -34,7 +35,7 @@
         /// <param name="menuDescriptions">Descriptions for each item.</param>
         public void Populate(List<MenuDescriptionArgs> menuDescriptions)
         {
-            ClearMenu();
+            menu.Clear();
             foreach (MenuDescriptionArgs description in menuDescriptions)
             {
                 MenuItem item;
@@ -108,29 +109,6 @@
         public void Show()
         {
             menu.Popup();
-        }
-
-        /// <summary>Clear the menu</summary>
-        private void ClearMenu()
-        {
-            foreach (Widget w in menu)
-            {
-                if (w is MenuItem)
-                {
-                    PropertyInfo pi = w.GetType().GetProperty("AfterSignals", BindingFlags.NonPublic | BindingFlags.Instance);
-                    if (pi != null)
-                    {
-                        System.Collections.Hashtable handlers = (System.Collections.Hashtable)pi.GetValue(w);
-                        if (handlers != null && handlers.ContainsKey("activate"))
-                        {
-                            EventHandler handler = (EventHandler)handlers["activate"];
-                            (w as MenuItem).Activated -= handler;
-                        }
-                    }
-                }
-                menu.Remove(w);
-                w.Dispose();
-            }
         }
     }
 }

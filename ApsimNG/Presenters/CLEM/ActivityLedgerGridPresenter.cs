@@ -38,6 +38,8 @@
 
         private bool CreateHtml = false;
 
+        private ReportView rv = null;
+
         /// <summary>
         /// Attach inherited class additional presenters is needed
         /// </summary>
@@ -47,7 +49,7 @@
             try
             {
                 ActivityLedgerGridView ledgerView = new ActivityLedgerGridView(clemPresenter.View as ViewBase);
-                ReportView rv = new ReportView(clemPresenter.View as ViewBase);
+                rv = new ReportView(clemPresenter.View as ViewBase);
                 ViewBase reportView = new ViewBase(rv, "ApsimNG.Resources.Glade.DataStoreView.glade");
 
                 Model report = clemPresenter.Model as Model;
@@ -57,7 +59,6 @@
                     dataStore = simulations.FindChild<IDataStore>();
 
                 DataStorePresenter dataStorePresenter = new DataStorePresenter();
-                ActivityLedgerGridPresenter activityGridPresenter = new ActivityLedgerGridPresenter();
                 Simulation simulation = report.FindAncestor<Simulation>();
                 Zone paddock = report.FindAncestor<Zone>();
 
@@ -71,16 +72,16 @@
                         dataStorePresenter.SimulationFilter = simulation;
 
                 dataStorePresenter.Attach(dataStore, reportView, clemPresenter.ExplorerPresenter);
-                activityGridPresenter.CreateHtml = (clemPresenter.Model as ReportActivitiesPerformed).CreateHTML;
-                activityGridPresenter.ModelReport = report as Report;
-                activityGridPresenter.ModelName = report.Name;
-                activityGridPresenter.SimulationName = simulation.Name;
-                activityGridPresenter.ZoneName = paddock.Name;
-                activityGridPresenter.Attach(dataStore, ledgerView, clemPresenter.ExplorerPresenter);
+                this.CreateHtml = (clemPresenter.Model as ReportActivitiesPerformed).CreateHTML;
+                this.ModelReport = report as Report;
+                this.ModelName = report.Name;
+                this.SimulationName = simulation.Name;
+                this.ZoneName = paddock.Name;
+                this.Attach(dataStore, ledgerView, clemPresenter.ExplorerPresenter);
                 dataStorePresenter.tableDropDown.SelectedValue = report.Name;
 
                 (clemPresenter.View as CLEMView).AddTabView("Display", ledgerView);
-                clemPresenter.PresenterList.Add("Display", activityGridPresenter);
+                clemPresenter.PresenterList.Add("Display", this);
 
                 (clemPresenter.View as CLEMView).AddTabView("Data", reportView);
                 clemPresenter.PresenterList.Add("Data", dataStorePresenter);
@@ -121,6 +122,7 @@
         /// <summary>Detach the model from the view.</summary>
         public void Detach()
         {
+            rv?.Dispose();
         }
 
         /// <summary>The selected table has changed.</summary>
