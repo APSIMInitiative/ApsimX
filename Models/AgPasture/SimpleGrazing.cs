@@ -202,7 +202,7 @@ namespace Models.AgPasture
 
         /// <summary></summary>
         [Separator("Grazing species weighting")]
-        [Description("Optional proportion weighting to graze the species. Must add up to the number of species.")]
+        [Description("Optional relative weighting for grazing of forages. Must sum to the number of forages (inc. SurfaceOrganicMatter).")]
         public double[] SpeciesCutProportions { get; set; }
 
         ////////////// Callbacks to enable/disable GUI parameters //////////////
