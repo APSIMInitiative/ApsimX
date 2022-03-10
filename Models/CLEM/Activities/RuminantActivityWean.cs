@@ -76,7 +76,7 @@ namespace Models.CLEM.Activities
         public RuminantActivityWean()
         {
             this.SetDefaults();
-            TransactionCategory = "Livestock.Manage";
+            TransactionCategory = "Livestock.Manage.[Wean]";
         }
 
         /// <inheritdoc/>
@@ -86,8 +86,7 @@ namespace Models.CLEM.Activities
             {
                 case "RuminantGroup":
                     return new LabelsForIdentifiableChildren(
-                        identifiers: new List<string>() {
-                            "Individuals to check" },
+                        identifiers: new List<string>(),
                         units: new List<string>()
                         );
                 case "RuminantActivityFee":
@@ -128,10 +127,10 @@ namespace Models.CLEM.Activities
             {
                 ActivitiesHolder ah = this.FindInScope<ActivitiesHolder>();
                 if (ah.FindAllDescendants<PastureActivityManage>().Count() != 0)
-                    Summary.WriteMessage(this, String.Format("Individuals weaned by [a={0}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", this.Name), MessageType.Warning);
+                    Summary.WriteMessage(this, $"Individuals weaned by [a={NameWithParent}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", MessageType.Warning);
             }
 
-            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>("Individuals to check", false, true);
+            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>(false, true);
         }
 
         /// <inheritdoc/>
@@ -142,7 +141,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override List<ResourceRequest> DetermineResourcesForActivity()
+        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
         {
             numberToSkip = 0;
             sucklingToSkip = 0;
@@ -167,8 +166,9 @@ namespace Models.CLEM.Activities
                         valuesForIdentifiableModels[valueToSupply.Key] = number;
                         break;
                     default:
-                        valuesForIdentifiableModels[valueToSupply.Key] = 0;
-                        break;
+                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+//                        valuesForIdentifiableModels[valueToSupply.Key] = 0;
+//                        break;
                 }
             }
             return null;
@@ -194,7 +194,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override void PerformTasksForActivity()
+        public override void PerformTasksForActivity(double argument = 0)
         {
             if (numberToDo > 0)
             {
@@ -240,7 +240,7 @@ namespace Models.CLEM.Activities
                         }
                     }
                     if (weaned == numberToDo)
-                        SetStatusSuccess();
+                        SetStatusSuccessOrPartial();
                     else
                         this.Status = ActivityStatus.Partial;
                 }

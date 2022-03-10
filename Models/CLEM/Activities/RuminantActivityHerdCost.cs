@@ -28,7 +28,6 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantHerdCost.htm")]
     public class RuminantActivityHerdCost : CLEMRuminantActivityBase, ICanHandleIdentifiableChildModels
     {
-        //private FinanceType bankAccount;
         private int numberToDo;
         private int numberToSkip;
         private double amountToDo;
@@ -37,36 +36,13 @@ namespace Models.CLEM.Activities
         private IEnumerable<Ruminant> uniqueIndividuals;
         private IEnumerable<RuminantGroup> filterGroups;
 
-        ///// <summary>
-        ///// Amount payable
-        ///// </summary>
-        //[Description("Amount payable")]
-        //[Required, GreaterThanValue(0)]
-        //public double Amount { get; set; }
-
-        ///// <summary>
-        ///// Payment style
-        ///// </summary>
-        //[System.ComponentModel.DefaultValueAttribute(AnimalPaymentStyleType.perHead)]
-        //[Description("Payment style")]
-        //[Required]
-        //public AnimalPaymentStyleType PaymentStyle { get; set; }
-
-        ///// <summary>
-        ///// Bank account to use
-        ///// </summary>
-        //[Description("Bank account to use")]
-        //[Core.Display(Type = DisplayType.DropDown, Values = "GetResourcesAvailableByName", ValuesArgs = new object[] { new object[] { typeof(Finance) } })]
-        //[Required(AllowEmptyStrings = false, ErrorMessage = "Bank account required")]
-        //public string AccountName { get; set; }
-
         /// <summary>
         /// Constructor
         /// </summary>
         public RuminantActivityHerdCost()
         {
             this.SetDefaults();
-            TransactionCategory = "Livestock.Cost";
+            TransactionCategory = "Livestock.[Cost]";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -76,9 +52,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(true, true);
-            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>("Individuals to cost", true, false);
-
-            //bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, AccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportWarning);
+            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>(false, true);
         }
 
         /// <inheritdoc/>
@@ -88,15 +62,14 @@ namespace Models.CLEM.Activities
             {
                 case "RuminantGroup":
                     return new LabelsForIdentifiableChildren(
-                        identifiers: new List<string>() {
-                            "Individuals to cost" },
+                        identifiers: new List<string>(),
                         units: new List<string>()
                         );
                 case "RuminantActivityFee":
                 case "LabourRequirement":
                     return new LabelsForIdentifiableChildren(
                         identifiers: new List<string>() {
-                            "Number paid for",
+                            "Number included",
                         },
                         units: new List<string>() {
                             "fixed",
@@ -110,7 +83,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override List<ResourceRequest> DetermineResourcesForActivity()
+        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
         {
             numberToDo = 0;
             numberToSkip = 0;
@@ -135,7 +108,7 @@ namespace Models.CLEM.Activities
                         valuesForIdentifiableModels[valueToSupply.Key] = amountToDo;
                         break;
                     default:
-                        throw new NotImplementedException($"Unknown units [{((valueToSupply.Key.unit == "") ? "Blank" : valueToSupply.Key.unit)}] for [{((valueToSupply.Key.identifier == "") ? "Blank" : valueToSupply.Key.identifier)}] identifier in [a={NameWithParent}]");
+                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
                 }
             }
             return null;
@@ -161,26 +134,14 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override void PerformTasksForActivity()
+        public override void PerformTasksForActivity(double argument = 0)
         {
             if (numberToDo - numberToSkip > 0)
             {
-                amountToDo -= amountToSkip;
-                double amountDone = 0;
-                int number = 0;
-                foreach (Ruminant ruminant in uniqueIndividuals.SkipLast(numberToSkip).ToList())
-                {
-                    amountDone += ruminant.AdultEquivalent;
-                    amountToDo -= ruminant.AdultEquivalent;
-                    number++;
-                    if (amountToDo <= 0)
-                        break;
-                }
-
-                if (number == numberToDo && amountToDo <= 0)
-                    SetStatusSuccess();
+                if (numberToSkip == 0 && amountToSkip == 0)
+                    Status = ActivityStatus.Success;
                 else
-                    this.Status = ActivityStatus.Partial;
+                    Status = ActivityStatus.Partial;
             }
         }
 
@@ -192,9 +153,6 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">Pay ");
-                //htmlWriter.Write("<span class=\"setvalue\">" + Amount.ToString("#,##0.00") + "</span> ");
-                //htmlWriter.Write("<span class=\"setvalue\">" + PaymentStyle.ToString() + "</span> from ");
-                //htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(AccountName, "Account not set", HTMLSummaryStyle.Resource));
                 htmlWriter.Write("</div>");
                 htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
                 htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not set"));

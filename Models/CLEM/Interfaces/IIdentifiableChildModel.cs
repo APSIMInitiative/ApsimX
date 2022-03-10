@@ -24,14 +24,24 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// Determines whether a shortfall of this child request will affect the activity if possible
         /// </summary>
-        bool ShortfallAffectsActivity { get; set; }
+        bool ShortfallCanAffectParentActivity { get; set; }
 
         /// <summary>
-        /// Get the resource requests from the identifiable child
+        /// Label to assign each transactions resulting from this component of an activity in ledgers
         /// </summary>
-        /// <param name="activityMetric">The current metric provided by the Activity</param>
+        string TransactionCategory { get; set; }
+
+        /// <summary>
+        /// Get the resource requests from the identifiable child and pass to parent for processing
+        /// </summary>
         /// <returns></returns>
-        List<ResourceRequest> GetResourceRequests(double activityMetric);
+        List<ResourceRequest> DetermineResourcesForActivity(double argument = 0);
+
+        /// <summary>
+        /// Perform a the task including creating resources by the identifiable child
+        /// </summary>
+        /// <returns></returns>
+        void PerformTasksForActivity(double argument = 0);
 
         /// <summary>
         /// A method to return the list of identifiers relavent to this parent activity

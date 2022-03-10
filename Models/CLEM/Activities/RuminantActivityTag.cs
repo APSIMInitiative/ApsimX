@@ -53,7 +53,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityTag()
         {
-            TransactionCategory = "Livestock.Manage";
+            TransactionCategory = "Livestock.Manage.[Tag]";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -64,7 +64,7 @@ namespace Models.CLEM.Activities
         {
             // get all ui tree herd filters that relate to this activity
             this.InitialiseHerd(true, true);
-            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>("Individuals to tag/untag", true, false);
+            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>(true, false);
             // activity is performed in ManageAnimals
             this.AllocationStyle = ResourceAllocationStyle.Manual;
         }
@@ -76,8 +76,7 @@ namespace Models.CLEM.Activities
             {
                 case "RuminantGroup":
                     return new LabelsForIdentifiableChildren(
-                        identifiers: new List<string>() {
-                            "Individuals to tag/untag" },
+                        identifiers: new List<string>() ,
                         units: new List<string>()
                         );
                 case "RuminantActivityFee":
@@ -104,7 +103,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override List<ResourceRequest> DetermineResourcesForActivity()
+        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
         {
             numberToDo = 0;
             numberToSkip = 0;
@@ -127,7 +126,7 @@ namespace Models.CLEM.Activities
                     default:
                         if(valueToSupply.Key.type != "RuminantGroup")
                         {
-                            throw new NotImplementedException($"Unknown units [{((valueToSupply.Key.unit == "") ? "Blank" : valueToSupply.Key.unit)}] for [{((valueToSupply.Key.identifier == "") ? "Blank" : valueToSupply.Key.identifier)}] identifier in [a={NameWithParent}]");
+                            throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
                         }
                         break;
                 }
@@ -151,7 +150,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override void PerformTasksForActivity()
+        public override void PerformTasksForActivity(double argument = 0)
         {
             if(numberToDo - numberToSkip > 0)
             {
@@ -170,29 +169,11 @@ namespace Models.CLEM.Activities
                     tagged++;
                 }
                 if (tagged == numberToDo)
-                    SetStatusSuccess();
+                    SetStatusSuccessOrPartial();
                 else
                     this.Status = ActivityStatus.Partial;
             }
         }
-
-        //#region validation
-        ///// <summary>
-        ///// Validate this model
-        ///// </summary>
-        ///// <param name="validationContext"></param>
-        ///// <returns></returns>
-        //public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        //{
-        //    var results = new List<ValidationResult>();
-        //    if (!FindAllChildren<RuminantGroup>().Any())
-        //    {
-        //        string[] memberNames = new string[] { "Specify individuals" };
-        //        results.Add(new ValidationResult($"No individuals have been specified by [f=RuminantGroup] for tagging in [a={Name}]. Provide at least an empty RuminantGroup to consider all individuals.", memberNames));
-        //    }
-        //    return results;
-        //}
-        //#endregion
 
         #region descriptive summary
 

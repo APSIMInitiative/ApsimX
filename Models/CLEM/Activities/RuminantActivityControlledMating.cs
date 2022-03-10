@@ -1,3 +1,4 @@
+using APSIM.Shared.Utilities;
 using Models.CLEM.Groupings;
 using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
@@ -68,7 +69,8 @@ namespace Models.CLEM.Activities
         {
             SetDefaults();
             this.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
-            TransactionCategory = "Livestock.Manage";
+            TransactionCategory = "Livestock.Manage.[Mating]";
+            AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
         /// <inheritdoc/>
@@ -78,8 +80,7 @@ namespace Models.CLEM.Activities
             {
                 case "RuminantGroup":
                     return new LabelsForIdentifiableChildren(
-                        identifiers: new List<string>() {
-                            "Breeders to mate" },
+                        identifiers: new List<string>(),
                         units: new List<string>()
                         );
                 case "RuminantActivityFee":
@@ -107,7 +108,7 @@ namespace Models.CLEM.Activities
         {
             this.AllocationStyle = ResourceAllocationStyle.ByParent;
             this.InitialiseHerd(false, true);
-            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>("Females to mate", false, true);
+            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>(false, true);
 
             attributeList = this.FindAllDescendants<SetAttributeWithValue>().ToList();
 
@@ -139,14 +140,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
-        {
-            // this needs to be called by parent by requesting breeders instead ManageActivityResourcesAndTasks();
-        }
-
-
-        /// <inheritdoc/>
-        protected override List<ResourceRequest> DetermineResourcesForActivity()
+        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
         {
             amountToDo = 0;
             amountToSkip = 0;
@@ -172,7 +166,7 @@ namespace Models.CLEM.Activities
                                 valuesForIdentifiableModels[valueToSupply.Key] = number;
                                 break;
                             default:
-                                throw new NotImplementedException($"Unknown units [{((valueToSupply.Key.unit=="")?"Blank":valueToSupply.Key.unit)}] for [{valueToSupply.Key.identifier}] identifier in [a={NameWithParent}]");
+                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
                         }
                         break;
                     case "Number conceived":
@@ -201,11 +195,11 @@ namespace Models.CLEM.Activities
                                 valuesForIdentifiableModels[valueToSupply.Key] = amountToDo;
                                 break;
                             default:
-                                throw new NotImplementedException($"Unknown units [{((valueToSupply.Key.unit == "") ? "Blank" : valueToSupply.Key.unit)}] for [{valueToSupply.Key.identifier}] identifier in [a={NameWithParent}]");
+                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
                         }
                         break;
                     default:
-                        throw new NotImplementedException($"Unknown identifier [{((valueToSupply.Key.unit == "") ? "Blank" : valueToSupply.Key.unit)}] used in [a={NameWithParent}]");
+                        throw new NotImplementedException(UnknownIdentifierErrorText(this, valueToSupply.Key));
                 }
             }
             return null;
@@ -231,31 +225,31 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override void PerformTasksForActivity()
+        public override void PerformTasksForActivity(double argument = 0)
         {
             List<RuminantFemale> selectedBreeders = new List<RuminantFemale>();
             if (numberToDo-numberToSkip > 0)
             {
                 amountToDo -= amountToSkip;
-                int mated = 1;
+                int mated = 0;
                 selectedBreeders = uniqueIndividuals.ToList();
                 foreach (RuminantFemale ruminant in selectedBreeders)
                 {
                     // if no more conceptions allowed
-                    if (mated <= numberToDo || amountToDo <= 0)
+                    if (mated < numberToDo & amountToDo > 0)
                     {
-                        ruminant.ActivityDeterminedConceptionRate = null;
+                        mated++;
+                        if (MathUtilities.IsPositive(ruminant.ActivityDeterminedConceptionRate ?? -1))
+                            amountToDo--;
                     }
                     else
                     {
-                        mated++;
-                        if ((ruminant.ActivityDeterminedConceptionRate ?? -1) > 0)
-                            amountToDo--;
+                        ruminant.ActivityDeterminedConceptionRate = null;
                     }
                 }
 
-                if (mated == numberToDo && amountToDo <= 0)
-                    SetStatusSuccess();
+                if (mated == numberToDo || amountToDo <= 0)
+                    SetStatusSuccessOrPartial();
                 else
                     this.Status = ActivityStatus.Partial;
             }
@@ -273,137 +267,6 @@ namespace Models.CLEM.Activities
             // return resulting list with conception precalculated back to the breeding activity.
             return uniqueIndividuals;
         }
-
-        ///// <summary>
-        ///// Provide the list of breeders to mate accounting for the controlled mating failure rate, and required resources
-        ///// </summary>
-        ///// <returns>A list of breeders for the breeding activity to work with</returns>
-        //public IEnumerable<RuminantFemale> BreedersToMate()
-        //{
-        //    IEnumerable<RuminantFemale> breeders = null;
-        //    this.Status = ActivityStatus.NotNeeded;
-        //    if(this.TimingOK) // general Timer or TimeBreedForMilking ok
-        //    {
-        //        breeders = GetBreeders();
-        //        if (breeders != null &&  breeders.Any())
-        //        {
-        //            // calculate labour and finance costs
-        //            List<ResourceRequest> resourcesneeded = GetResourcesNeededForActivityLocal(breeders);
-        //            CheckResources(resourcesneeded, Guid.NewGuid());
-        //            bool tookRequestedResources = TakeResources(resourcesneeded, true);
-        //            // get all shortfalls
-        //            double limiter = 1;
-        //            if (tookRequestedResources && (ResourceRequestList != null))
-        //            {
-        //                double cashlimit = 1;
-        //                // calculate required and provided for fixed and variable payments
-        //                var payments = resourcesneeded.Where(a => a.ResourceType == typeof(Finance)).GroupBy(a => (a.ActivityModel as RuminantActivityFee).Units.ToUpper() == "FIXED").Select(a => new { key = a.Key, required = a.Sum(b => b.Required), provided = a.Sum(b => b.Provided), });
-        //                double paymentsRequired = payments.Sum(a => a.required);
-        //                double paymentsProvided = payments.Sum(a => a.provided);
-
-        //                double paymentsFixedRequired = payments.Where(a => a.key == true).Sum(a => a.required);
-
-        //                if (paymentsFixedRequired > paymentsProvided)
-        //                {
-        //                    // not enough finances for fixed payments
-        //                    switch (this.OnPartialResourcesAvailableAction)
-        //                    {
-        //                        case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-        //                            throw new ApsimXException(this, $"There were insufficient [r=Finances] to pay the [Fixed] herd expenses for [{this.Name}]\r\nConsider changing OnPartialResourcesAvailableAction to Skip or Use Partial.");
-        //                        case OnPartialResourcesAvailableActionTypes.SkipActivity:
-        //                            Status = ActivityStatus.Ignored;
-        //                            cashlimit = 0;
-        //                            return null;
-        //                        case OnPartialResourcesAvailableActionTypes.UseResourcesAvailable:
-        //                            Status = ActivityStatus.Warning;
-        //                            cashlimit = 0;
-        //                            break;
-        //                        default:
-        //                            break;
-        //                    }
-        //                }
-        //                else
-        //                {
-        //                    // work out if sufficient money for variable payments 
-        //                    double paymentsVariableProvided = paymentsProvided - paymentsFixedRequired;
-        //                    if (paymentsVariableProvided < (paymentsRequired - paymentsFixedRequired))
-        //                    {
-        //                        // not enough finances for variable payments
-        //                        switch (this.OnPartialResourcesAvailableAction)
-        //                        {
-        //                            case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-        //                                throw new ApsimXException(this, $"There were insufficient [r=Finances] to pay the herd expenses for [{this.Name}]\r\nConsider changing OnPartialResourcesAvailableAction to Skip or Use Partial.");
-        //                            case OnPartialResourcesAvailableActionTypes.SkipActivity:
-        //                                Status = ActivityStatus.Ignored;
-        //                                cashlimit = 0;
-        //                                return null;
-        //                            case OnPartialResourcesAvailableActionTypes.UseResourcesAvailable:
-        //                                Status = ActivityStatus.Partial;
-
-        //                                //TODO: calculate true herd serviced based on amount available spread over all fees
-
-        //                                // simply calculates limit as a properotion of the variable costs available
-        //                                cashlimit = paymentsVariableProvided / (paymentsRequired - paymentsFixedRequired);
-        //                                break;
-        //                            default:
-        //                                break;
-        //                        }
-        //                    }
-        //                }
-
-        //                double amountLabourNeeded = resourcesneeded.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Required);
-        //                double amountLabourProvided = resourcesneeded.Where(a => a.ResourceType == typeof(Labour)).Sum(a => a.Provided);
-        //                double labourlimit = 1;
-        //                if (amountLabourNeeded > 0)
-        //                {
-        //                    labourlimit = amountLabourProvided == 0 ? 0 : amountLabourProvided / amountLabourNeeded;
-        //                }
-
-        //                if (labourlimit < 1)
-        //                {
-        //                    // not enough labour for activity
-        //                    switch (this.OnPartialResourcesAvailableAction)
-        //                    {
-        //                        case OnPartialResourcesAvailableActionTypes.ReportErrorAndStop:
-        //                            throw new ApsimXException(this, $"There were insufficient [r=Labour] for [{this.Name}]\r\nConsider changing OnPartialResourcesAvailableAction to Skip or Use Partial.");
-        //                        case OnPartialResourcesAvailableActionTypes.SkipActivity:
-        //                            Status = ActivityStatus.Ignored;
-        //                            labourlimit = 0;
-        //                            return null;
-        //                        case OnPartialResourcesAvailableActionTypes.UseResourcesAvailable:
-        //                            Status = ActivityStatus.Partial;
-        //                            break;
-        //                        default:
-        //                            break;
-        //                    }
-        //                }
-
-        //                limiter = Math.Min(cashlimit, labourlimit);
-        //            }
-
-        //            if (limiter < 1)
-        //                this.Status = ActivityStatus.Partial;
-        //            else if (limiter == 1)
-        //                this.Status = ActivityStatus.Success;
-
-        //            breeders = breeders.Take(Convert.ToInt32(Math.Floor(breeders.Count() * limiter), CultureInfo.InvariantCulture));
-        //        }
-        //        // report that this activity was performed as it does not use base GetResourcesRequired
-        //        this.TriggerOnActivityPerformed();
-        //    }
-        //    return breeders;
-        //}
-
-        ///// <summary>
-        ///// Private method to determine resources required for this activity in the current month
-        ///// This method is local to this activity and not called with CLEMGetResourcesRequired event
-        ///// </summary>
-        ///// <param name="breederList">The breeders being mated</param>
-        ///// <returns>List of resource requests</returns>
-        //private List<ResourceRequest> GetResourcesNeededForActivityLocal(IEnumerable<Ruminant> breederList)
-        //{
-        //    return null;
-        //}
 
         #region validation
         /// <summary>

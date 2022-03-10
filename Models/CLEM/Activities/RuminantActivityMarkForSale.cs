@@ -56,7 +56,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityMarkForSale()
         {
-            TransactionCategory = "Livestock.Manage";
+            TransactionCategory = "Livestock.Manage.[Sell]";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -67,7 +67,7 @@ namespace Models.CLEM.Activities
         {
             // get all ui tree herd filters that relate to this activity
             this.InitialiseHerd(true, true);
-            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>("Individuals to sell", true, false);
+            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>( true, false);
 
             // activity is performed in ManageAnimals
             this.AllocationStyle = ResourceAllocationStyle.Manual;
@@ -80,8 +80,7 @@ namespace Models.CLEM.Activities
             {
                 case "RuminantGroup":
                     return new LabelsForIdentifiableChildren(
-                        identifiers: new List<string>() {
-                            "Individuals to sell" },
+                        identifiers: new List<string>() ,
                         units: new List<string>()
                         );
                 case "RuminantActivityFee":
@@ -89,6 +88,7 @@ namespace Models.CLEM.Activities
                     return new LabelsForIdentifiableChildren(
                         identifiers: new List<string>() {
                             "Number identified",
+                            "Number checked",
                         },
                         units: new List<string>() {
                             "fixed",
@@ -108,7 +108,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override List<ResourceRequest> DetermineResourcesForActivity()
+        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
         {
             numberToDo = 0;
             numberToSkip = 0;
@@ -129,8 +129,9 @@ namespace Models.CLEM.Activities
                         valuesForIdentifiableModels[valueToSupply.Key] = number;
                         break;
                     default:
-                        valuesForIdentifiableModels[valueToSupply.Key] = 0;
-                        break;
+                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+//                        valuesForIdentifiableModels[valueToSupply.Key] = 0;
+//                        break;
                 }
             }
             return null;
@@ -152,7 +153,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override void PerformTasksForActivity()
+        public override void PerformTasksForActivity(double argument = 0)
         {
             if (numberToDo - numberToSkip > 0)
             {
@@ -163,7 +164,7 @@ namespace Models.CLEM.Activities
                     number++;
                 }
                 if (number == numberToDo)
-                    SetStatusSuccess();
+                    SetStatusSuccessOrPartial();
                 else
                     this.Status = ActivityStatus.Partial;
             }

@@ -34,7 +34,7 @@ namespace Models.CLEM.Groupings
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
     [ValidParent(ParentType = typeof(RuminantActivityShear))]
     [ValidParent(ParentType = typeof(RuminantActivityTag))]
-    [ValidParent(ParentType = typeof(RuminantActivityTrade))]
+    [ValidParent(ParentType = typeof(RuminantActivityRequestPurchase))]
     [ValidParent(ParentType = typeof(RuminantActivityWean))]
     [ValidParent(ParentType = typeof(TransmuteRuminant))]
     [ValidParent(ParentType = typeof(ReportRuminantAttributeSummary))]
@@ -51,18 +51,25 @@ namespace Models.CLEM.Groupings
         [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers")]
         public string Identifier { get; set; }
 
+        /// <summary>
+        /// Label to assign each transaction created by this activity child component in ledgers
+        /// </summary>
+        [Description("Category for transactions")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
+        [Models.Core.Display(Order = 500)]
+        public virtual string TransactionCategory { get; set; }
+
         /// <inheritdoc/>
         [XmlIgnore]
         public string Units 
         { 
             get { return ""; }
-            set { units = value; }
+            set { ; }
         }
-        private string units;          
 
         /// <inheritdoc/>
         [XmlIgnore]
-        public bool ShortfallAffectsActivity { get; set; }
+        public bool ShortfallCanAffectParentActivity { get; set; }
 
         /// <summary>
         /// Constructor to apply defaults
@@ -70,18 +77,24 @@ namespace Models.CLEM.Groupings
         public RuminantGroup()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
+            TransactionCategory = "Select.[Ruminants]";
             this.SetDefaults();
         }
 
         /// <inheritdoc/>
-        public List<ResourceRequest> GetResourceRequests(double activityMetric)
+        public List<ResourceRequest> DetermineResourcesForActivity(double activityMetric)
         {
             return new List<ResourceRequest>();
         }
 
+        /// <inheritdoc/>
+        public void PerformTasksForActivity(double activityMetric)
+        {
+        }
+
         #region descriptive summary
 
-        /// <inheritdoc/>
+            /// <inheritdoc/>
         public override string ModelSummary()
         {
             return "";
@@ -112,7 +125,7 @@ namespace Models.CLEM.Groupings
         /// A method to return the list of identifiers relavent to this parent activity
         /// </summary>
         /// <returns>A list of identifiers</returns>
-        public List<string> ParentSuppliedIdentifiers()
+        public virtual List<string> ParentSuppliedIdentifiers()
         {
             if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
                 return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels<RuminantGroup>().Identifiers;
@@ -124,7 +137,7 @@ namespace Models.CLEM.Groupings
         /// A method to return the list of units relavent to this parent activity
         /// </summary>
         /// <returns>A list of units</returns>
-        public List<string> ParentSuppliedUnits()
+        public virtual List<string> ParentSuppliedUnits()
         {
             if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
                 return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels<RuminantGroup>().Units;

@@ -1,5 +1,6 @@
 using Models.Core;
 using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,6 +11,7 @@ using System.Globalization;
 using Newtonsoft.Json;
 using Models.CLEM.Resources;
 using System.IO;
+using System.Xml.Serialization;
 
 namespace Models.CLEM.Groupings
 {
@@ -23,8 +25,11 @@ namespace Models.CLEM.Groupings
     [Description("Set monthly feeding values for specified individual ruminants")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantFeedGroupMonthly.htm")]
-    public class RuminantFeedGroupMonthly : FilterGroup<Ruminant>, IValidatableObject
+    public class RuminantFeedGroupMonthly : RuminantFeedGroup, IValidatableObject
     {
+        [Link]
+        private Clock clock = null;
+
         /// <summary>
         /// Daily value to supply for each month
         /// </summary>
@@ -32,13 +37,17 @@ namespace Models.CLEM.Groupings
         [Required, ArrayItemCount(12)]
         public double[] MonthlyValues { get; set; }
 
+        /// <inheritdoc/>
+        public override double CurrentValue{
+            get { return MonthlyValues[clock.Today.Month - 1]; } 
+        }
+
         /// <summary>
         /// Constructor
         /// </summary>
         public RuminantFeedGroupMonthly()
         {
             MonthlyValues = new double[12];
-            base.ModelSummaryStyle = HTMLSummaryStyle.SubActivity;
         }
 
         #region validation
@@ -48,7 +57,7 @@ namespace Models.CLEM.Groupings
         /// </summary>
         /// <param name="validationContext"></param>
         /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public new IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
 
@@ -57,6 +66,15 @@ namespace Models.CLEM.Groupings
                 if (MonthlyValues.Max() == 0)
                 {
                     Summary.WriteMessage(this, $"No feed values were defined for any month in [{this.Name}]. No feeding will be performed for [a={this.Parent.Name}]", MessageType.Warning);
+                }
+            }
+            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
+            {
+                var identifiers = ParentSuppliedIdentifiers();
+                if (identifiers.Any() & !identifiers.Contains(Identifier))
+                {
+                    string[] memberNames = new string[] { "Ruminant group" };
+                    results.Add(new ValidationResult($"The identifier [{(((Identifier ?? "") == "") ? "BLANK" : Identifier)}] in [f={this.Name}] is not valid for the parent activity [a={Parent.Name}].{Environment.NewLine}Select an option from the list. If the list is empty this activity does not support custom ruminant filtering", memberNames));
                 }
             }
             return results;

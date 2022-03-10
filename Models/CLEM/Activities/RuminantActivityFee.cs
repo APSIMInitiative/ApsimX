@@ -1,4 +1,5 @@
-﻿using Models.CLEM.Interfaces;
+﻿using APSIM.Shared.Utilities;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using Models.Core;
 using Models.Core.Attributes;
@@ -18,23 +19,21 @@ namespace Models.CLEM.Activities
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [ValidParent(ParentType = typeof(ICanHandleIdentifiableChildModels))]
-//    [ValidParent(ParentType = typeof(RuminantActivityBuySell))]
-//    [ValidParent(ParentType = typeof(RuminantActivityControlledMating))]
     [Description("Define a herd expense for herd management activities")]
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFee.htm")]
-    public class RuminantActivityFee: CLEMModel, IIdentifiableChildModel, IValidatableObject
+    public class RuminantActivityFee: CLEMActivityBase, IIdentifiableChildModel, IValidatableObject
     {
         [Link]
         private ResourcesHolder resources = null;
+        private ResourceRequest resourceRequest; 
 
         /// <summary>
         /// An identifier for this Fee based on parent requirements
         /// </summary>
         [Description("Fee identifier")]
         [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Identifier required")]
         public string Identifier { get; set; }
 
         /// <summary>
@@ -49,7 +48,6 @@ namespace Models.CLEM.Activities
         /// Payment style
         /// </summary>
         [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedUnits")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Units of measure required")]
         [Description("Payment style")]
         public string Units { get; set; }
 
@@ -60,42 +58,26 @@ namespace Models.CLEM.Activities
         [Required, GreaterThanEqualValue(0)]
         public double Amount { get; set; }
 
-        /// <summary>
-        /// Label to assign each transaction created by this activity in ledgers
-        /// </summary>
-        [Description("Category for transactions")]
-        [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
-        [Models.Core.Display(Order = 500)]
-        public string TransactionCategory { get; set; }
-
         /// <inheritdoc/>
         [Description("Allow finance shortfall to affect activity")]
         [Required]
         [System.ComponentModel.DefaultValueAttribute(false)]
-        public bool ShortfallAffectsActivity { get; set; }
-
-        /// <inheritdoc/>
-        public List<ResourceRequest> GetResourceRequests(double activityMetric)
-        {
-            double charge;
-            charge = (double)activityMetric * Amount;
-            return new List<ResourceRequest>() { new ResourceRequest()
-            {
-                Resource = BankAccount,
-                ResourceType = typeof(Finance),
-                AllowTransmutation = false,
-                Required = charge,
-                Category = TransactionCategory,
-                AdditionalDetails = this,
-                RelatesToResource = (Parent as CLEMRuminantActivityBase).PredictedHerdName
-            }
-            };
-        }
+        public bool ShortfallCanAffectParentActivity { get; set; }
 
         /// <summary>
         /// Store finance type to use
         /// </summary>
         public FinanceType BankAccount;
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        public RuminantActivityFee()
+        {
+            this.SetDefaults();
+            TransactionCategory = "Livestock.[Fee]";
+            AllocationStyle = ResourceAllocationStyle.Manual;
+        }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>
@@ -106,14 +88,58 @@ namespace Models.CLEM.Activities
             BankAccount = resources.FindResourceType<Finance, FinanceType>(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
         }
 
-        /// <summary>
-        /// Constructor
-        /// </summary>
-        public RuminantActivityFee()
+        /// <inheritdoc/>
+        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
         {
-            this.SetDefaults();
-            TransactionCategory = "Livestock.[Activity]";
+            double metric = (Parent as CLEMActivityBase).ValueForIdentifiableChild(this);
+            double charge = metric* Amount;
+
+            if (MathUtilities.IsPositive(metric))
+                Status = ActivityStatus.NotNeeded;
+
+            resourceRequest = new ResourceRequest()
+            {
+                Resource = BankAccount,
+                ResourceType = typeof(Finance),
+                AllowTransmutation = true,
+                Required = charge,
+                Category = TransactionCategory,
+                AdditionalDetails = this,
+                RelatesToResource = (Parent as CLEMRuminantActivityBase).PredictedHerdName,
+                ActivityModel = this
+            };
+            return new List<ResourceRequest>() { resourceRequest };
         }
+
+        /// <inheritdoc/>
+        public override void PerformTasksForActivity(double argument = 0)
+        {
+            bool shortfalls = MathUtilities.IsLessThan(resourceRequest.Provided, resourceRequest.Required);
+            SetStatusSuccessOrPartial(shortfalls);
+        }
+
+        ///// <inheritdoc/>
+        //public List<ResourceRequest> GetResourceRequests(double activityMetric)
+        //{
+        //    double charge;
+        //    charge = (double)activityMetric * Amount;
+
+        //    if (MathUtilities.IsPositive(charge))
+        //        Status = ActivityStatus.NotNeeded;
+
+        //    resourceRequest = new ResourceRequest()
+        //    {
+        //        Resource = BankAccount,
+        //        ResourceType = typeof(Finance),
+        //        AllowTransmutation = true,
+        //        Required = charge,
+        //        Category = TransactionCategory,
+        //        AdditionalDetails = this,
+        //        RelatesToResource = (Parent as CLEMRuminantActivityBase).PredictedHerdName,
+        //        ActivityModel = this
+        //    };
+        //    return new List<ResourceRequest>() { resourceRequest };
+        //}
 
         #region validation
 
@@ -153,7 +179,7 @@ namespace Models.CLEM.Activities
             if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
             {
                 var identifiers = ParentSuppliedIdentifiers();
-                if (identifiers.Any() & !identifiers.Contains(Identifier))
+                if (identifiers.Any() & !identifiers.Contains(Identifier??""))
                 {
                     string[] memberNames = new string[] { "Ruminant activity fee" };
                     results.Add(new ValidationResult($"The fee identifier [{((Identifier == "") ? "BLANK" : Identifier)}] in [f={this.Name}] is not valid for the parent activity [a={Parent.Name}].{Environment.NewLine}Select an option from the list or provide an empty value for the property if no entries are provided", memberNames));

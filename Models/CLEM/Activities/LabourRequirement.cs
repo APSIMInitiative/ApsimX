@@ -59,6 +59,7 @@ namespace Models.CLEM.Activities
         public LabourRequirement()
         {
             base.ModelSummaryStyle = HTMLSummaryStyle.SubResource;
+            TransactionCategory = "[Task].[Labour]";
             this.SetDefaults();
         }
 
@@ -141,7 +142,7 @@ namespace Models.CLEM.Activities
         [Required]
         [System.ComponentModel.DefaultValueAttribute(false)]
         [Category("Labour", "General")]
-        public bool ShortfallAffectsActivity { get; set; }
+        public bool ShortfallCanAffectParentActivity { get; set; }
 
         /// <summary>
         /// Apply to all matching labour (everyone performs activity)
@@ -150,6 +151,14 @@ namespace Models.CLEM.Activities
         [Required]
         [Category("Labour", "Rate")]
         public bool ApplyToAll { get; set; }
+
+        /// <summary>
+        /// Label to assign each transaction created by this activity child component in ledgers
+        /// </summary>
+        [Description("Category for transactions")]
+        [Required(AllowEmptyStrings = false, ErrorMessage = "Category for transactions required")]
+        [Models.Core.Display(Order = 500)]
+        public virtual string TransactionCategory { get; set; }
 
         /// <inheritdoc/>
         public string Measure { get { return "none"; } }
@@ -203,9 +212,14 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public List<ResourceRequest> GetResourceRequests(double activityMetric)
+        public List<ResourceRequest> DetermineResourcesForActivity(double activityMetric)
         {
             return new List<ResourceRequest>();
+        }
+
+        /// <inheritdoc/>
+        public void PerformTasksForActivity(double activityMetric)
+        {
         }
 
         #region validation

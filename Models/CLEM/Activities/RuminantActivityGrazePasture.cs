@@ -9,6 +9,7 @@ using Newtonsoft.Json;
 using Models.CLEM.Groupings;
 using Models.Core.Attributes;
 using System.IO;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
 {
@@ -68,7 +69,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityGrazePasture()
         {
-            TransactionCategory = "Livestock.Grazing";
+            TransactionCategory = "Livestock.[Graze]";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -109,7 +110,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override List<ResourceRequest> DetermineResourcesForActivity()
+        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
         {
             // This method does not take any resources but is used to arbitrate resources for all breed grazing activities it contains
 
@@ -119,7 +120,7 @@ namespace Models.CLEM.Activities
             double potentialIntakeLimiter = -1;
             foreach (RuminantActivityGrazePastureHerd item in grazeHerdChildren)
             {
-                if(potentialIntakeLimiter < 0)
+                if(MathUtilities.IsNegative(potentialIntakeLimiter))
                     potentialIntakeLimiter = item.CalculatePotentialIntakePastureQualityLimiter();
                 item.ResourceRequestList = null;
                 item.PotentialIntakePastureQualityLimiter = potentialIntakeLimiter;
@@ -133,7 +134,7 @@ namespace Models.CLEM.Activities
             // It does not truly account for how the pasture is provided from pools but will suffice unless more detailed model required
             double available = GrazeFoodStoreModel.Amount;
             double limit = 0;
-            if(totalNeeded>0)
+            if(MathUtilities.IsPositive(totalNeeded))
                 limit = Math.Min(1.0, available / totalNeeded);
 
             // apply limits to children
@@ -144,7 +145,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override void PerformTasksForActivity()
+        public override void PerformTasksForActivity(double argument = 0)
         {
             if (Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
                 Status = ActivityStatus.NoTask;

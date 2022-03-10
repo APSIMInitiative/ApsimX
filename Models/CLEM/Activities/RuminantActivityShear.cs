@@ -68,7 +68,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityShear()
         {
-            TransactionCategory = "Livestock.Shearing";
+            TransactionCategory = "Livestock.[Shear]";
         }
 
         /// <inheritdoc/>
@@ -78,8 +78,7 @@ namespace Models.CLEM.Activities
             {
                 case "RuminantGroup":
                     return new LabelsForIdentifiableChildren(
-                        identifiers: new List<string>() {
-                            "Individuals to shear" },
+                        identifiers: new List<string>(),
                         units: new List<string>()
                         );
                 case "RuminantActivityFee":
@@ -108,7 +107,7 @@ namespace Models.CLEM.Activities
         {
             // get all ui tree herd filters that relate to this activity
             this.InitialiseHerd(true, true);
-            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>("Individuals to shear", false, true);
+            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>( false, true);
 
             // locate StoreType resource
             WoolStoreType = Resources.FindResourceType<ProductStore, ProductStoreType>(this, WoolProductStoreName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
@@ -116,7 +115,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override List<ResourceRequest> DetermineResourcesForActivity()
+        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
         {
             amountToDo = 0;
             amountToSkip = 0;
@@ -141,10 +140,8 @@ namespace Models.CLEM.Activities
                             case "per head":
                                 valuesForIdentifiableModels[valueToSupply.Key] = number;
                                 break;
-                            case "per kg fleece":
-                                throw new NotImplementedException($"Unable to use units [per kg of fleece] with [Number shorn] identifier in {NameWithParent}");
                             default:
-                                throw new NotImplementedException($"Unknown units [{((valueToSupply.Key.unit == "") ? "Blank" : valueToSupply.Key.unit)}] for [{((valueToSupply.Key.identifier == "") ? "Blank" : valueToSupply.Key.identifier)}] identifier in [a={NameWithParent}]");
+                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
                         }
                         break;
                     case "Weight of fleece":
@@ -153,18 +150,16 @@ namespace Models.CLEM.Activities
                             case "fixed":
                                 valuesForIdentifiableModels[valueToSupply.Key] = 1;
                                 break;
-                            case "per head":
-                                throw new NotImplementedException($"Unable to use units [per head] with [Weight of fleece] identifier in {NameWithParent}");
                             case "per kg fleece":
                                 amountToDo = uniqueIndividuals.Sum(a => a.Wool + a.Cashmere);
                                 valuesForIdentifiableModels[valueToSupply.Key] = amountToDo;
                                 break;
                             default:
-                                throw new NotImplementedException($"Unknown units [{((valueToSupply.Key.unit == "") ? "Blank" : valueToSupply.Key.unit)}] for [{((valueToSupply.Key.identifier == "") ? "Blank" : valueToSupply.Key.identifier)}] identifier in [a={NameWithParent}]");
+                                throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
                         }
                         break;
                     default:
-                        throw new NotImplementedException($"Unknown identifier [{valueToSupply.Key.identifier}] used in {NameWithParent}");
+                        throw new NotImplementedException(UnknownIdentifierErrorText(this, valueToSupply.Key));
                 }
             }
             return null;
@@ -190,7 +185,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override void PerformTasksForActivity()
+        public override void PerformTasksForActivity(double argument = 0)
         {
             if (numberToDo - numberToSkip > 0)
             {
@@ -215,7 +210,7 @@ namespace Models.CLEM.Activities
                 (CashmereStoreType as IResourceType).Add(kgCashmereShorn, this, this.PredictedHerdName, TransactionCategory);
 
                 if (shorn == numberToDo && amountToDo <= 0)
-                    SetStatusSuccess();
+                    SetStatusSuccessOrPartial();
                 else
                     this.Status = ActivityStatus.Partial;
             }
