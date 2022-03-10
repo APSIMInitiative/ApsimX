@@ -173,7 +173,11 @@ namespace Models
         public event EventHandler DoReportCalculations;
         /// <summary>Occurs when [do report].</summary>
         public event EventHandler DoReport;
-        /// <summary>Occurs when [do report].</summary>
+
+        /// <summary>
+        /// Occurs when dcaps performs its calculations. This needs to happen
+        /// between DoPotentialPlantGrowth and DoPotentialPlantPartitioning.
+        /// </summary>
         public event EventHandler DoDCAPST;
 
         /// <summary>CLEM initialise Resources occurs once at start of simulation</summary>
