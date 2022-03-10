@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 300,
   "Version": 148,
   "Name": "Simulations",
   "Children": [
@@ -9484,64 +9484,9 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilNitrogen, Models",
-                  "fom_types": [
-                    "default",
-                    "manure",
-                    "mucuna",
-                    "lablab",
-                    "shemp",
-                    "stable"
-                  ],
-                  "fract_carb": [
-                    0.2,
-                    0.3,
-                    0.54,
-                    0.57,
-                    0.45,
-                    0.0
-                  ],
-                  "fract_cell": [
-                    0.7,
-                    0.3,
-                    0.37,
-                    0.37,
-                    0.47,
-                    0.1
-                  ],
-                  "fract_lign": [
-                    0.1,
-                    0.4,
-                    0.09,
-                    0.06,
-                    0.08,
-                    0.9
-                  ],
-                  "NPartitionApproach": 0,
-                  "Name": "SoilNitrogen",
-                  "Children": [
-                    {
-                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
-                      "Name": "NO3",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
-                      "Name": "NH4",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
-                      "Name": "Urea",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "ResourceName": "Nutrient",
+                  "Name": "Nutrient",
                   "Enabled": true,
                   "ReadOnly": false
                 },

@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 285,
+  "ExplorerWidth": 391,
   "Version": 148,
   "Name": "Simulations",
   "Children": [
@@ -9144,7 +9144,7 @@
           "Text": "“Forage Crop Grazing” is a simple single-paddock simulation. The paddock contains a sorghum crop that is irrigated and fertilised. The sorghum is sown in summer of the first year and is rejuvenated thereafter at the frequency set on the sowing rule in the paddock. In this simulation a new mob of animals are ‘bought’ every time the sorghum (or any forage crop or crops) are ready to be grazed. \nThe user sets the characteristics of the stock, the grazing rules and if/how any supplementary feeding is done.\n\n**Stock Type Information** \n\nThis section contains parameters for the genotype (e.g. Jersey, Small merino), reproductive type (e.g. Castrated male), age, weight, and fertility status. Every time the crop is to be grazed the animals of these characteristics are brought into the simulation. They will change status while grazing but will reset at each grazing event (they exit the simulation between grazing events).\n\n**Grazing event information**\n\nThe stock parameters controlling the grazing event are the stocking rate (the numbers of animals bought will be controlled by this and the paddock area) and their location when the simulation is initialised. \n\nThere are several parameters to control the timing of grazing events. Initially the paddock is assessed for the amount of grazable herbage at which the animals can enter and graze the cropand at which they must leave. \n\nThe biomass is the sum of all the grazable components in the paddock. There is an option to set a rough minimum number of days that it might be anticipated that the animals might stay on the paddock if they enter. This is designed to prevent many, very short-duration, grazing events. The estimate is based on a potential intake of 3% of body mass per day and is applied as an additional amount of biomass above the post-grazing biomass. Apart from the biomass based rules there is also an optional no-grazing window. Note that there is no control of grazing based on growth stage (as there might be for a cereal crop for example).\n\n**Supplementary feeding**\n\nThe management script also allows for optional supplementary feeding. A specified supplement can be feed every day and/or when the biomass in the grazed paddock falls below a set value. The supplement can be fed before grazing (i.e. as an intake priority) or animals can choose between offered supplement and forage depending on digestibility and availability (see the Stock Science Documentation for more information). Every time that a supplement about to be fed out the script buys sufficient supplement to last about a month.\n\n**Reporting Outputs**\n\nThere are several example outputs included in the Report model. The documentation for the Report model for the general syntax which here is set up to accommodate means, sums or last values of the reporting interval. In this short example the reporting interval is every day but for longer simulations it might be desirable to set up reporting at the end of each month or grazing event for example.\n\nThe first plots shows the location of the stock (on the paddock or ‘away’), the grazable biomass in the paddock and the supplement remaining in the store. The second plot shows average body mass and average dry matter intake. Note how body mass resets to a consistent value at the start of each grazing event. This is because a new mob of animals is bought at the start of each grazing event.\n\nThe shaded area behind the plots shows the location of the stock (get this to show but adding a \"ShadedBarsOnGraph\" model to a Graph|Series). Clicking on one of the shaded areas will pop up the name of the location.\n",
           "Name": "Memo",
           "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -9153,7 +9153,7 @@
           "End": "2012-08-31T00:00:00",
           "Name": "Clock",
           "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -9163,7 +9163,7 @@
           "ExcelWorkSheetName": "",
           "Name": "Weather",
           "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -9171,14 +9171,14 @@
           "Verbosity": 100,
           "Name": "Summary",
           "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
           "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
           "Name": "Soil Arbitrator",
           "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -9193,7 +9193,7 @@
           "ReferenceHeight": 2.0,
           "Name": "MicroClimate",
           "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -9238,7 +9238,7 @@
           "PaddockList": [],
           "Name": "Supplement",
           "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -9272,19 +9272,38 @@
               "PeakMilk": 0.0,
               "Name": "Small Merino",
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             }
           ],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
           "$type": "Models.ForageDigestibility.Forages, Models",
-          "Parameters": null,
+          "Parameters": [
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "SurfaceOrganicMatter.Residue",
+              "IsLive": true,
+              "DigestibilityString": "0.7",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 100.0,
+              "UseDigestibilityFromModel": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+              "Name": "SurfaceOrganicMatter.Residue",
+              "IsLive": false,
+              "DigestibilityString": "0.3",
+              "FractionConsumable": 1.0,
+              "MinimumAmount": 0.0,
+              "UseDigestibilityFromModel": false
+            }
+          ],
           "Name": "Forages",
           "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -9374,444 +9393,10 @@
             {
               "Key": "TriggerPastureMass",
               "Value": "2100"
-            },
-            {
-              "Key": "NumStock",
-              "Value": "0"
-            },
-            {
-              "Key": "GrazingSeasonIsOpen",
-              "Value": "False"
-            },
-            {
-              "Key": "HarvestableBiomass",
-              "Value": "0"
-            },
-            {
-              "Key": "HarvestableBiomassYesterday",
-              "Value": "0"
             }
           ],
           "Name": "GrazeForageCrop",
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Report, Models",
-          "VariableNames": [
-            "[Clock].Today as Date",
-            "Mean of [Stock].NumberAll from [Report].DayAfterLastOutput to [Clock].Today as NumStock",
-            "Mean of [Stock].IntakeAll.Weight from [Report].DayAfterLastOutput to [Clock].Today as AveDMIntake",
-            "Mean of [Stock].MEIntakeAll from [Report].DayAfterLastOutput to [Clock].Today as AveMEIntake",
-            "Mean of [Stock].WeightAll from [Report].DayAfterLastOutput to [Clock].Today as AveBodyMass",
-            "Mean of [Stock].CondScoreAll from [Report].DayAfterLastOutput to [Clock].Today as AveConditionScore",
-            "Mean of [Stock].MilkWtAll from [Report].DayAfterLastOutput to [Clock].Today as AveMilkWeight4pcCorr",
-            "Mean of ([Stock].MilkWtAll * 0.04 * 1.8) from [Report].DayAfterLastOutput to [Clock].Today as AveMilkSolids // note the \"0.04\" is to convert the 4% fat corrected to dry milk fat, the \"1.8\" is on the assumption that protein is 80% of the fat content",
-            "Last of [GrazeForageCrop].Script.HarvestableBiomass from [Report].DayAfterLastOutput to [Clock].Today as HarvestableBiomass",
-            "Last of [Supplement].stores[2].Stored from [Report].DayAfterLastOutput to [Clock].Today as SupplementRemaining",
-            "Last of [Field].Sorghum.AboveGround.Wt * 10.0 from [Report].DayAfterLastOutput to [Clock].Today as SorghumMass",
-            "Last of [Field].Sorghum.Leaf.LAI from [Report].DayAfterLastOutput to [Clock].Today as SorghumLAI",
-            "Last of [Field].Sorghum.AboveGround.N * 10.0 from [Report].DayAfterLastOutput to [Clock].Today as SorghumN",
-            "//Last of [GrazeForageCrop].Script.CurrentLocation from [Report].DayAfterLastOutput to [Clock].Today as StockLocation",
-            "[GrazeForageCrop].Script.CurrentLocation as StockLocation"
-          ],
-          "EventNames": [
-            "[Clock].EndOfDay"
-          ],
-          "GroupByVariableName": null,
-          "Name": "GrazingReport",
-          "Children": [],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Core.Folder, Models",
-          "ShowInDocs": true,
-          "GraphsPerPage": 6,
-          "Name": "Stock and Biomass Plots",
-          "Children": [
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": "Date",
-                  "Position": 3,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                },
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 0,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                },
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 2,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                }
-              ],
-              "LegendPosition": 0,
-              "LegendOrientation": 0,
-              "AnnotationLocation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "Biomass HeadCount and Supps",
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16736653,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "GrazingReport",
-                  "XFieldName": "Date",
-                  "YFieldName": "HarvestableBiomass",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": true,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Grazable Biomass",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "GrazingReport",
-                  "XFieldName": "Date",
-                  "YFieldName": "SupplementRemaining",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": true,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Supplement Remaining",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 2,
-                  "ColourArgb": -1663232,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "GrazingReport",
-                  "XFieldName": "Date",
-                  "YFieldName": "NumStock",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": true,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "NumStock",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": "Date",
-                  "Position": 3,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                },
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 0,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                },
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 2,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                }
-              ],
-              "LegendPosition": 0,
-              "LegendOrientation": 0,
-              "AnnotationLocation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "Stock Performance",
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16777216,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 1,
-                  "LineThickness": 0,
-                  "TableName": "GrazingReport",
-                  "XFieldName": "Date",
-                  "YFieldName": "AveBodyMass",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": true,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Body Mass",
-                  "Children": [
-                    {
-                      "$type": "Models.ShadedBarsOnGraph, Models",
-                      "ColumnName": "Stock.Paddock(1)",
-                      "SimulationName": "Forage Crop Grazing",
-                      "Name": "ShadedBarsOnGraph",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 2,
-                  "ColourArgb": -16747854,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 1,
-                  "LineThickness": 0,
-                  "TableName": "GrazingReport",
-                  "XFieldName": "Date",
-                  "YFieldName": "AveDMIntake",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": true,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Dry Matter Intake",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": "Date",
-                  "Position": 3,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                },
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 0,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                },
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 2,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                }
-              ],
-              "LegendPosition": 0,
-              "LegendOrientation": 0,
-              "AnnotationLocation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "Sorghum Metrics",
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16736653,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "GrazingReport",
-                  "XFieldName": "Date",
-                  "YFieldName": "HarvestableBiomass",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": true,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Grazable Biomass",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 2,
-                  "ColourArgb": -16747854,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "GrazingReport",
-                  "XFieldName": "Date",
-                  "YFieldName": "SorghumLAI",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": true,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "LAI",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 2,
-                  "ColourArgb": -3376729,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "GrazingReport",
-                  "XFieldName": "Date",
-                  "YFieldName": "SorghumN",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": true,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": null,
-                  "Name": "Sorghum N",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.Memo, Models",
-          "Text": "The first plots shows the location of the stock (on the paddock or ‘away’), the grazable biomass in the paddock and the supplement remaining in the store. The second plot shows average body mass and average dry matter intake. Note how body mass resets to a consistent value at the start of each grazing event. This is because a new mob of animals is bought at the start of each grazing event.\n\nThe shaded area behind the plots shows the location of the stock (get this to show but adding a \"ShadedBarsOnGraph\" model to a Graph|Series). Clicking on one of the shaded areas will pop up the name of the location.",
-          "Name": "Memo1",
-          "Children": [],
-          "Enabled": true,
+          "Enabled": false,
           "ReadOnly": false
         },
         {
@@ -9876,7 +9461,7 @@
                 }
               ],
               "Name": "SowingRule",
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -9918,30 +9503,10 @@
                 {
                   "Key": "depthPAWC",
                   "Value": "500"
-                },
-                {
-                  "Key": "TopSWdeficit",
-                  "Value": "0"
-                },
-                {
-                  "Key": "TopSWC",
-                  "Value": "0"
-                },
-                {
-                  "Key": "DaysSinceIrrigation",
-                  "Value": "0"
-                },
-                {
-                  "Key": "AmountToApply",
-                  "Value": "0"
-                },
-                {
-                  "Key": "SeasonAppliedAmount",
-                  "Value": "0"
                 }
               ],
               "Name": "AutomaticIrrigation",
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -9954,7 +9519,7 @@
                 },
                 {
                   "Key": "Dates",
-                  "Value": "20-sep,20-nov,20-jan,20-mar"
+                  "Value": "20-sep, 20-nov, 20-jan, 20-mar"
                 },
                 {
                   "Key": "UseCritNThreshold",
@@ -9982,21 +9547,21 @@
                 }
               ],
               "Name": "Fertilise on fixed dates",
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
               "$type": "Models.Irrigation, Models",
               "Name": "Irrigation",
               "Children": [],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
               "$type": "Models.Fertiliser, Models",
               "ResourceName": "Fertiliser",
               "Name": "Fertiliser",
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -10009,7 +9574,7 @@
               "InitialCNR": 40.0,
               "ResourceName": "SurfaceOrganicMatter",
               "Name": "SurfaceOrganicMatter",
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
@@ -10170,11 +9735,11 @@
                       "XFMetadata": null,
                       "Name": "SorghumSoil",
                       "Children": [],
-                      "Enabled": true,
+                      "Enabled": false,
                       "ReadOnly": false
                     }
                   ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -10220,69 +9785,7 @@
                   "KLAT": null,
                   "ResourceName": "WaterBalance",
                   "Name": "SoilWater",
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Soils.SoilNitrogen, Models",
-                  "fom_types": [
-                    "default",
-                    "manure",
-                    "mucuna",
-                    "lablab",
-                    "shemp",
-                    "stable"
-                  ],
-                  "fract_carb": [
-                    0.2,
-                    0.3,
-                    0.54,
-                    0.57,
-                    0.45,
-                    0.0
-                  ],
-                  "fract_cell": [
-                    0.7,
-                    0.3,
-                    0.37,
-                    0.37,
-                    0.47,
-                    0.1
-                  ],
-                  "fract_lign": [
-                    0.1,
-                    0.4,
-                    0.09,
-                    0.06,
-                    0.08,
-                    0.9
-                  ],
-                  "NPartitionApproach": 0,
-                  "Name": "SoilNitrogen",
-                  "Children": [
-                    {
-                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
-                      "Name": "NO3",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
-                      "Name": "NH4",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
-                      "Name": "Urea",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -10364,7 +9867,7 @@
                   "FOMMetadata": null,
                   "Name": "Organic",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -10428,7 +9931,7 @@
                   "PHMetadata": null,
                   "Name": "Chemical",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
@@ -10471,33 +9974,513 @@
                   "PHUnits": 0,
                   "Name": "Initial water",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
                   "ReadOnly": false
                 },
                 {
                   "$type": "Models.Soils.CERESSoilTemperature, Models",
                   "Name": "Temperature",
                   "Children": [],
-                  "Enabled": true,
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.SoilNitrogen, Models",
+                  "fom_types": [
+                    "default",
+                    "manure",
+                    "mucuna",
+                    "lablab",
+                    "shemp",
+                    "stable"
+                  ],
+                  "fract_carb": [
+                    0.2,
+                    0.3,
+                    0.54,
+                    0.57,
+                    0.45,
+                    0.0
+                  ],
+                  "fract_cell": [
+                    0.7,
+                    0.3,
+                    0.37,
+                    0.37,
+                    0.47,
+                    0.1
+                  ],
+                  "fract_lign": [
+                    0.1,
+                    0.4,
+                    0.09,
+                    0.06,
+                    0.08,
+                    0.9
+                  ],
+                  "NPartitionApproach": 0,
+                  "Name": "SoilNitrogen",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
+                      "Name": "NO3",
+                      "Children": [],
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
+                      "Name": "NH4",
+                      "Children": [],
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
+                      "Name": "Urea",
+                      "Children": [],
+                      "Enabled": false,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             },
             {
               "$type": "Models.PMF.Plant, Models",
               "ResourceName": "Sorghum",
               "Name": "Sorghum",
-              "Enabled": true,
+              "Enabled": false,
               "ReadOnly": false
             }
           ],
-          "Enabled": true,
+          "Enabled": false,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Report, Models",
+          "VariableNames": [
+            "[Clock].Today as Date",
+            "Mean of [Stock].NumberAll from [Report].DayAfterLastOutput to [Clock].Today as NumStock",
+            "Mean of [Stock].IntakeAll.Weight from [Report].DayAfterLastOutput to [Clock].Today as AveDMIntake",
+            "Mean of [Stock].MEIntakeAll from [Report].DayAfterLastOutput to [Clock].Today as AveMEIntake",
+            "Mean of [Stock].WeightAll from [Report].DayAfterLastOutput to [Clock].Today as AveBodyMass",
+            "Mean of [Stock].CondScoreAll from [Report].DayAfterLastOutput to [Clock].Today as AveConditionScore",
+            "Mean of [Stock].MilkWtAll from [Report].DayAfterLastOutput to [Clock].Today as AveMilkWeight4pcCorr",
+            "Mean of ([Stock].MilkWtAll * 0.04 * 1.8) from [Report].DayAfterLastOutput to [Clock].Today as AveMilkSolids // note the \"0.04\" is to convert the 4% fat corrected to dry milk fat, the \"1.8\" is on the assumption that protein is 80% of the fat content",
+            "Last of [GrazeForageCrop].Script.HarvestableBiomass from [Report].DayAfterLastOutput to [Clock].Today as HarvestableBiomass",
+            "Last of [Supplement].stores[2].Stored from [Report].DayAfterLastOutput to [Clock].Today as SupplementRemaining",
+            "Last of [Field].Sorghum.AboveGround.Wt * 10.0 from [Report].DayAfterLastOutput to [Clock].Today as SorghumMass",
+            "Last of [Field].Sorghum.Leaf.LAI from [Report].DayAfterLastOutput to [Clock].Today as SorghumLAI",
+            "Last of [Field].Sorghum.AboveGround.N * 10.0 from [Report].DayAfterLastOutput to [Clock].Today as SorghumN",
+            "//Last of [GrazeForageCrop].Script.CurrentLocation from [Report].DayAfterLastOutput to [Clock].Today as StockLocation",
+            "[GrazeForageCrop].Script.CurrentLocation as StockLocation"
+          ],
+          "EventNames": [
+            "[Clock].EndOfDay"
+          ],
+          "GroupByVariableName": null,
+          "Name": "GrazingReport",
+          "Children": [],
+          "Enabled": false,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": true,
+          "GraphsPerPage": 6,
+          "Name": "Stock and Biomass Plots",
+          "Children": [
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "Date",
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 2,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Biomass HeadCount and Supps",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16736653,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "GrazingReport",
+                  "XFieldName": "Date",
+                  "YFieldName": "HarvestableBiomass",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Grazable Biomass",
+                  "Children": [],
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "GrazingReport",
+                  "XFieldName": "Date",
+                  "YFieldName": "SupplementRemaining",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Supplement Remaining",
+                  "Children": [],
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "GrazingReport",
+                  "XFieldName": "Date",
+                  "YFieldName": "NumStock",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "NumStock",
+                  "Children": [],
+                  "Enabled": false,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": false,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "Date",
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 2,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Stock Performance",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16777216,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 1,
+                  "LineThickness": 0,
+                  "TableName": "GrazingReport",
+                  "XFieldName": "Date",
+                  "YFieldName": "AveBodyMass",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Body Mass",
+                  "Children": [
+                    {
+                      "$type": "Models.ShadedBarsOnGraph, Models",
+                      "ColumnName": "Stock.Paddock(1)",
+                      "SimulationName": "Forage Crop Grazing",
+                      "Name": "ShadedBarsOnGraph",
+                      "Children": [],
+                      "Enabled": false,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -16747854,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 1,
+                  "LineThickness": 0,
+                  "TableName": "GrazingReport",
+                  "XFieldName": "Date",
+                  "YFieldName": "AveDMIntake",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Dry Matter Intake",
+                  "Children": [],
+                  "Enabled": false,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": false,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "Date",
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 2,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Sorghum Metrics",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -16736653,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "GrazingReport",
+                  "XFieldName": "Date",
+                  "YFieldName": "HarvestableBiomass",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Grazable Biomass",
+                  "Children": [],
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -16747854,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "GrazingReport",
+                  "XFieldName": "Date",
+                  "YFieldName": "SorghumLAI",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "LAI",
+                  "Children": [],
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -3376729,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "GrazingReport",
+                  "XFieldName": "Date",
+                  "YFieldName": "SorghumN",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": true,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Sorghum N",
+                  "Children": [],
+                  "Enabled": false,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": false,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": false,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Memo, Models",
+          "Text": "The first plots shows the location of the stock (on the paddock or ‘away’), the grazable biomass in the paddock and the supplement remaining in the store. The second plot shows average body mass and average dry matter intake. Note how body mass resets to a consistent value at the start of each grazing event. This is because a new mob of animals is bought at the start of each grazing event.\n\nThe shaded area behind the plots shows the location of the stock (get this to show but adding a \"ShadedBarsOnGraph\" model to a Graph|Series). Clicking on one of the shaded areas will pop up the name of the location.",
+          "Name": "Memo1",
+          "Children": [],
+          "Enabled": false,
           "ReadOnly": false
         }
       ],
-      "Enabled": true,
+      "Enabled": false,
       "ReadOnly": false
     },
     {
@@ -11166,64 +11149,9 @@
                   "ReadOnly": false
                 },
                 {
-                  "$type": "Models.Soils.SoilNitrogen, Models",
-                  "fom_types": [
-                    "default",
-                    "manure",
-                    "mucuna",
-                    "lablab",
-                    "shemp",
-                    "stable"
-                  ],
-                  "fract_carb": [
-                    0.2,
-                    0.3,
-                    0.54,
-                    0.57,
-                    0.45,
-                    0.0
-                  ],
-                  "fract_cell": [
-                    0.7,
-                    0.3,
-                    0.37,
-                    0.37,
-                    0.47,
-                    0.1
-                  ],
-                  "fract_lign": [
-                    0.1,
-                    0.4,
-                    0.09,
-                    0.06,
-                    0.08,
-                    0.9
-                  ],
-                  "NPartitionApproach": 0,
-                  "Name": "SoilNitrogen",
-                  "Children": [
-                    {
-                      "$type": "Models.Soils.SoilNitrogenNO3, Models",
-                      "Name": "NO3",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenNH4, Models",
-                      "Name": "NH4",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Soils.SoilNitrogenUrea, Models",
-                      "Name": "Urea",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
+                  "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                  "ResourceName": "Nutrient",
+                  "Name": "Nutrient",
                   "Enabled": true,
                   "ReadOnly": false
                 },
@@ -12096,64 +12024,9 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilNitrogen, Models",
-                      "fom_types": [
-                        "default",
-                        "manure",
-                        "mucuna",
-                        "lablab",
-                        "shemp",
-                        "stable"
-                      ],
-                      "fract_carb": [
-                        0.2,
-                        0.3,
-                        0.54,
-                        0.57,
-                        0.45,
-                        0.0
-                      ],
-                      "fract_cell": [
-                        0.7,
-                        0.3,
-                        0.37,
-                        0.37,
-                        0.47,
-                        0.1
-                      ],
-                      "fract_lign": [
-                        0.1,
-                        0.4,
-                        0.09,
-                        0.06,
-                        0.08,
-                        0.9
-                      ],
-                      "NPartitionApproach": 0,
-                      "Name": "SoilNitrogen",
-                      "Children": [
-                        {
-                          "$type": "Models.Soils.SoilNitrogenNO3, Models",
-                          "Name": "NO3",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.SoilNitrogenNH4, Models",
-                          "Name": "NH4",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.SoilNitrogenUrea, Models",
-                          "Name": "Urea",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                      "ResourceName": "Nutrient",
+                      "Name": "Nutrient",
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -13094,64 +12967,9 @@
                       "ReadOnly": false
                     },
                     {
-                      "$type": "Models.Soils.SoilNitrogen, Models",
-                      "fom_types": [
-                        "default",
-                        "manure",
-                        "mucuna",
-                        "lablab",
-                        "shemp",
-                        "stable"
-                      ],
-                      "fract_carb": [
-                        0.2,
-                        0.3,
-                        0.54,
-                        0.57,
-                        0.45,
-                        0.0
-                      ],
-                      "fract_cell": [
-                        0.7,
-                        0.3,
-                        0.37,
-                        0.37,
-                        0.47,
-                        0.1
-                      ],
-                      "fract_lign": [
-                        0.1,
-                        0.4,
-                        0.09,
-                        0.06,
-                        0.08,
-                        0.9
-                      ],
-                      "NPartitionApproach": 0,
-                      "Name": "SoilNitrogen",
-                      "Children": [
-                        {
-                          "$type": "Models.Soils.SoilNitrogenNO3, Models",
-                          "Name": "NO3",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.SoilNitrogenNH4, Models",
-                          "Name": "NH4",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Soils.SoilNitrogenUrea, Models",
-                          "Name": "Urea",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
+                      "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                      "ResourceName": "Nutrient",
+                      "Name": "Nutrient",
                       "Enabled": true,
                       "ReadOnly": false
                     },
@@ -13780,7 +13598,7 @@
                     },
                     {
                       "$type": "Models.Manager, Models",
-                      "Code": "using Models.Soils;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] SoilNitrogen SoilN;\r\n\t\t\n\t\t[Description(\"Crop\")]\n        public IPlant Crop { get; set; }\r\n        \n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n    \r\n        [Description(\"Threshold amount of NO3 to topup to (kg/ha)\")]\r\n        public double Threshold { get; set;}\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if(Crop.IsAlive)\n            {\n\t            double Amount = Threshold - MathUtilities.Sum(SoilN.NO3.kgha);\r\n\t            Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\n\t        }\r\n        }\r\n    }\r\n}\r\n",
+                      "Code": "using Models.Soils;\r\nusing Models.Soils.Nutrients;\r\nusing System;\r\nusing Models.Core;\r\nusing Models.PMF;\r\nusing APSIM.Shared.Utilities;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock Clock;\r\n        [Link] Fertiliser Fertiliser;\r\n        [Link] Nutrient SoilN;\r\n\t\t\n\t\t[Description(\"Crop\")]\n        public IPlant Crop { get; set; }\r\n        \n        [Description(\"Type of fertiliser to apply? \")] \r\n        public Fertiliser.Types FertiliserType { get; set; }\r\n    \r\n        [Description(\"Threshold amount of NO3 to topup to (kg/ha)\")]\r\n        public double Threshold { get; set;}\r\n        \r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void OnDoManagement(object sender, EventArgs e)\r\n        {\r\n            if(Crop.IsAlive)\n            {\n\t            double Amount = Threshold - MathUtilities.Sum(SoilN.NO3.kgha);\r\n\t            Fertiliser.Apply(Amount: Amount, Type: FertiliserType);\n\t        }\r\n        }\r\n    }\r\n}\r\n",
                       "Parameters": [
                         {
                           "Key": "Crop",
@@ -14157,64 +13975,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilNitrogen, Models",
-                          "fom_types": [
-                            "default",
-                            "manure",
-                            "mucuna",
-                            "lablab",
-                            "shemp",
-                            "stable"
-                          ],
-                          "fract_carb": [
-                            0.2,
-                            0.3,
-                            0.54,
-                            0.57,
-                            0.45,
-                            0.0
-                          ],
-                          "fract_cell": [
-                            0.7,
-                            0.3,
-                            0.37,
-                            0.37,
-                            0.47,
-                            0.1
-                          ],
-                          "fract_lign": [
-                            0.1,
-                            0.4,
-                            0.09,
-                            0.06,
-                            0.08,
-                            0.9
-                          ],
-                          "NPartitionApproach": 0,
-                          "Name": "SoilNitrogen",
-                          "Children": [
-                            {
-                              "$type": "Models.Soils.SoilNitrogenNO3, Models",
-                              "Name": "NO3",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.SoilNitrogenNH4, Models",
-                              "Name": "NH4",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.SoilNitrogenUrea, Models",
-                              "Name": "Urea",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                          "ResourceName": "Nutrient",
+                          "Name": "Nutrient",
                           "Enabled": true,
                           "ReadOnly": false
                         },
@@ -14623,161 +14386,6 @@
                   "Name": "SorghumWt",
                   "Children": [],
                   "Enabled": true,
-                  "ReadOnly": false
-                }
-              ],
-              "Enabled": true,
-              "ReadOnly": false
-            }
-          ],
-          "Enabled": true,
-          "ReadOnly": false
-        },
-        {
-          "$type": "Models.GraphPanel, Models",
-          "HideTitles": false,
-          "FontSize": 14.0,
-          "MarkerSize": 0,
-          "SameXAxes": false,
-          "SameYAxes": true,
-          "LegendOutsideGraph": false,
-          "LegendPosition": 0,
-          "LegendOrientation": 0,
-          "NumCols": 2,
-          "Name": "GraphPanel",
-          "Children": [
-            {
-              "$type": "Models.Manager, Models",
-              "Code": "using System;\r\nusing Models.Core;\r\nusing Models.Core.Run;\r\nusing Models.Factorial;\r\nusing Models;\r\nusing Models.Storage;\r\nusing System.Collections.Generic;\r\nusing System.Linq;\r\n\r\nnamespace Models\r\n{\r\n\t/// <summary>\r\n\t/// This script must implement the IGraphPanelScript interface.\r\n\t/// </summary>\r\n\t[Serializable]\r\n\tpublic class GraphPanelScriptTemplate : Model, IGraphPanelScript\r\n\t{\r\n\t\t/// <summary>\r\n        /// Gets a list of simulation names. One tab of graphs will be generated for each simulation.\r\n        /// </summary>\r\n        /// <param name=\"reader\">Provides access to the datastore.</param>\r\n        /// <param name=\"panel\">Provides access to the graph panel and the simulations tree.</param>\r\n\t\tpublic string[] GetSimulationNames(IStorageReader reader, GraphPanel panel)\r\n\t\t{\r\n\t\t\t// Get a list of all descendants of the panel's parent which are runnable\r\n\t\t\t// (simulations, experiments, etc).\r\n\t\t\tList<ISimulationDescriptionGenerator> runnables = panel.Parent.FindAllDescendants<ISimulationDescriptionGenerator>().Cast<ISimulationDescriptionGenerator>().ToList();\r\n\r\n\t\t\t// Remove all simulations which are children of an experiment.\r\n\t\t\trunnables.RemoveAll(r => r is Simulation && (r as Simulation).Parent is Experiment);\r\n\r\n\t\t\t// Return the names of all simulations generated by these runnables.\r\n\t\t\treturn runnables.SelectMany(r => r.GenerateSimulationDescriptions().Select(d => d.Name)).ToArray();\r\n\t\t}\r\n\r\n        /// <summary>\r\n        /// Called on each graph before it is drawn in a tab.\r\n        /// </summary>\r\n        /// <param name=\"graph\">The graph.</param>\r\n        /// <param name=\"simulationName\">Simulation name for this tab.</param>\r\n        public void TransformGraph(Models.Graph graph, string simulationName)\r\n        {\r\n        }\r\n    }\r\n}",
-              "Parameters": [],
-              "Name": "Config",
-              "Enabled": true,
-              "ReadOnly": false
-            },
-            {
-              "$type": "Models.Graph, Models",
-              "Caption": null,
-              "Axis": [
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 3,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                },
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": null,
-                  "Position": 0,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                },
-                {
-                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
-                  "Title": "Leaf.LAI",
-                  "Position": 2,
-                  "Inverted": false,
-                  "CrossesAtZero": false,
-                  "Minimum": null,
-                  "Maximum": null,
-                  "Interval": null
-                }
-              ],
-              "LegendPosition": 0,
-              "LegendOrientation": 0,
-              "AnnotationLocation": 0,
-              "DisabledSeries": [],
-              "LegendOutsideGraph": false,
-              "Name": "BiomassYield",
-              "Children": [
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -2793984,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 1,
-                  "MarkerSize": 0,
-                  "Line": 4,
-                  "LineThickness": 0,
-                  "TableName": "HarvestReport",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "Sorghum.Grain.Wt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": "",
-                  "Name": "Yield",
-                  "Children": [],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 0,
-                  "ColourArgb": -16736653,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "SowDailyReport",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "Sorghum.AboveGround.Wt",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": "",
-                  "Name": "Biomass",
-                  "Children": [],
-                  "Enabled": false,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Series, Models",
-                  "Type": 1,
-                  "XAxis": 3,
-                  "YAxis": 2,
-                  "ColourArgb": -16747854,
-                  "FactorToVaryColours": null,
-                  "FactorToVaryMarkers": null,
-                  "FactorToVaryLines": null,
-                  "Marker": 11,
-                  "MarkerSize": 0,
-                  "Line": 0,
-                  "LineThickness": 0,
-                  "TableName": "SowDailyReport",
-                  "XFieldName": "Clock.Today",
-                  "YFieldName": "Sorghum.Leaf.LAI",
-                  "X2FieldName": null,
-                  "Y2FieldName": null,
-                  "ShowInLegend": true,
-                  "IncludeSeriesNameInLegend": false,
-                  "Cumulative": false,
-                  "CumulativeX": false,
-                  "Filter": "",
-                  "Name": "LAI",
-                  "Children": [],
-                  "Enabled": false,
                   "ReadOnly": false
                 }
               ],
@@ -15256,64 +14864,9 @@
                           "ReadOnly": false
                         },
                         {
-                          "$type": "Models.Soils.SoilNitrogen, Models",
-                          "fom_types": [
-                            "default",
-                            "manure",
-                            "mucuna",
-                            "lablab",
-                            "shemp",
-                            "stable"
-                          ],
-                          "fract_carb": [
-                            0.2,
-                            0.3,
-                            0.54,
-                            0.57,
-                            0.45,
-                            0.0
-                          ],
-                          "fract_cell": [
-                            0.7,
-                            0.3,
-                            0.37,
-                            0.37,
-                            0.47,
-                            0.1
-                          ],
-                          "fract_lign": [
-                            0.1,
-                            0.4,
-                            0.09,
-                            0.06,
-                            0.08,
-                            0.9
-                          ],
-                          "NPartitionApproach": 0,
-                          "Name": "SoilNitrogen",
-                          "Children": [
-                            {
-                              "$type": "Models.Soils.SoilNitrogenNO3, Models",
-                              "Name": "NO3",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.SoilNitrogenNH4, Models",
-                              "Name": "NH4",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Soils.SoilNitrogenUrea, Models",
-                              "Name": "Urea",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
+                          "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                          "ResourceName": "Nutrient",
+                          "Name": "Nutrient",
                           "Enabled": true,
                           "ReadOnly": false
                         },
