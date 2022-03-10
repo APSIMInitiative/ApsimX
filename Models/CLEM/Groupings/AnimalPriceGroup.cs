@@ -75,7 +75,7 @@ namespace Models.CLEM.Groupings
             }
             else
             {
-                throw new NotImplementedException();
+                throw new ArgumentException("The object passed to CalculateValue in AnimalPriceGroup was not of type Ruminant");
             }
         }
 

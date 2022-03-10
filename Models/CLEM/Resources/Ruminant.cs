@@ -699,7 +699,7 @@ namespace Models.CLEM.Resources
             this.Cashmere = 0;
             int ageInt = Convert.ToInt32(Math.Round(Age, 4));
             int weanage = Convert.ToInt32(Math.Round(BreedParams.GestationLength, 4));
-            this.weaned = (ageInt <= weanage)?ageInt:weaned;
+            this.weaned = (ageInt <= weanage)?ageInt:weanage;
             this.SaleFlag = HerdChangeReason.None;
             this.Attributes = new IndividualAttributeList();
         }
