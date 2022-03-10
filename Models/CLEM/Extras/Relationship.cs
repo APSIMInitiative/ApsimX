@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM
 {
@@ -18,7 +19,7 @@ namespace Models.CLEM
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
-    [ValidParent(ParentType = typeof(RuminantActivityTrade))]
+    [ValidParent(ParentType = typeof(RuminantActivityRequestPurchase))]
     [ValidParent(ParentType = typeof(RuminantActivityPredictiveStockingENSO))]
     [ValidParent(ParentType = typeof(PastureActivityManage))]
     [Description("Specifies a relationship to be used by supplying a series of x and y values.")]
@@ -79,15 +80,15 @@ namespace Models.CLEM
         /// <returns>y value for given x</returns>
         public double SolveY(double xValue)
         {
-            if (xValue <= XValues[0])
+            if (MathUtilities.IsLessThanOrEqual(xValue, XValues[0]))
                 return YValues[0];
 
-            if (xValue >= XValues[XValues.Length - 1])
+            if (MathUtilities.IsGreaterThanOrEqual(xValue, XValues[XValues.Length - 1]))
                 return YValues[YValues.Length - 1];
 
             int k = 0;
             for (int i = 0; i < XValues.Length; i++)
-                if (xValue <= XValues[i + 1])
+                if (MathUtilities.IsLessThanOrEqual(xValue, XValues[i + 1]))
                 {
                     k = i;
                     break;

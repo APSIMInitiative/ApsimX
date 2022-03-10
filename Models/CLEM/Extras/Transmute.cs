@@ -8,6 +8,7 @@ using Newtonsoft.Json;
 using Models.Core.Attributes;
 using Models.CLEM.Interfaces;
 using System.IO;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM
 {
@@ -137,9 +138,9 @@ namespace Models.CLEM
                     request.Required = shortfallPackets * AmountPerPacket;
                     break;
                 case TransmuteStyle.UsePricing:
-                    if (shortfallPricing.CurrentPrice > 0)
+                    if (MathUtilities.IsPositive(shortfallPricing.CurrentPrice))
                     {
-                        if (transmutePricing.CurrentPrice == 0)
+                        if (MathUtilities.FloatsAreEqual(transmutePricing.CurrentPrice, 0))
                             // no value of transmute resource
                             request.Required = 0;
                         else
