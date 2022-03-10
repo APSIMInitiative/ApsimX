@@ -4,9 +4,12 @@
     using System.Globalization;
     using System.IO;
     using System.Net;
+    using System.Net.Http;
     using System.Net.Sockets;
     using System.Text;
+    using System.Text.Json;
     using System.Threading;
+    using System.Threading.Tasks;
     using System.Xml.Serialization;
 
     /// <summary>
@@ -110,6 +113,37 @@
             }
         }
 
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="url"></param>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T PostRestService<T>(string url)
+        {
+            WebRequest wrGETURL;
+            wrGETURL = WebRequest.Create(url);
+            wrGETURL.Method = "POST";
+            wrGETURL.ContentType = @"application/xml; charset=utf-8";
+            wrGETURL.ContentLength = 0;
+            using (HttpWebResponse webresponse = wrGETURL.GetResponse() as HttpWebResponse)
+            {
+                Encoding enc = System.Text.Encoding.GetEncoding("utf-8");
+                // read response stream from response object
+                using (StreamReader loResponseStream = new StreamReader(webresponse.GetResponseStream(), enc))
+                {
+                    string st = loResponseStream.ReadToEnd();
+                    if (typeof(T).Name == "Object")
+                        return default(T);
+    
+                    JsonSerializerOptions options = new JsonSerializerOptions()
+                    {
+                        PropertyNameCaseInsensitive = true
+                    };
+                    return JsonSerializer.Deserialize<T>(st, options);
+                }
+            }
+        }
 
         /// <summary>
         /// Calls a url and returns the web response in a memory stream
