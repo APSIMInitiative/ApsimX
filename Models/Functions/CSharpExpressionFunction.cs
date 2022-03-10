@@ -24,66 +24,75 @@ namespace Models.Functions
         public static bool Compile<T>(string expression, IModel relativeTo, ScriptCompiler compiler,
                                       out T function, out string errorMessages)
         {
-            // From a list of visible models in scope, create [Link] lines e.g.
-            //    [Link] Clock Clock;
-            //    [Link] Weather Weather;
-            // and namespace lines e.g.
-            //    using Models.Clock;
-            //    using Models;
-            var models = relativeTo.FindAllInScope().ToList().Where(model => !model.IsHidden && 
-                                                                    model.GetType() != typeof(Graph) &&
-                                                                    model.GetType() != typeof(Series) &&
-                                                                    model.GetType().Name != "StorageViaSockets");
-            var linkList = new List<string>();
-            var namespaceList = new SortedSet<string>();
-            foreach (var model in models)
+            if (compiler != null)
             {
-                if (expression.Contains(model.Name))
+                // From a list of visible models in scope, create [Link] lines e.g.
+                //    [Link] Clock Clock;
+                //    [Link] Weather Weather;
+                // and namespace lines e.g.
+                //    using Models.Clock;
+                //    using Models;
+                var models = relativeTo.FindAllInScope().ToList().Where(model => !model.IsHidden &&
+                                                                        model.GetType() != typeof(Graph) &&
+                                                                        model.GetType() != typeof(Series) &&
+                                                                        model.GetType().Name != "StorageViaSockets");
+                var linkList = new List<string>();
+                var namespaceList = new SortedSet<string>();
+                foreach (var model in models)
                 {
-                    linkList.Add($"        [Link(ByName=true)] {model.GetType().Name} {model.Name};");
-                    namespaceList.Add("using " + model.GetType().Namespace + ";");
+                    if (expression.Contains(model.Name))
+                    {
+                        linkList.Add($"        [Link(ByName=true)] {model.GetType().Name} {model.Name};");
+                        namespaceList.Add("using " + model.GetType().Namespace + ";");
+                    }
+                }
+                var namespaces = StringUtilities.BuildString(namespaceList.Distinct(), Environment.NewLine);
+                var links = StringUtilities.BuildString(linkList.Distinct(), Environment.NewLine);
+
+                // Get template c# script.
+                string template;
+                if (typeof(T) == typeof(IBooleanFunction))
+                    template = ReflectionUtilities.GetResourceAsString("Models.Resources.Scripts.CSharpBooleanExpressionTemplate.cs");
+                else
+                    template = ReflectionUtilities.GetResourceAsString("Models.Resources.Scripts.CSharpExpressionTemplate.cs");
+
+                // Replace the "using Models;" namespace place holder with the namesspaces above.
+                template = template.Replace("using Models;", namespaces);
+
+                template = template.Replace("class Script", $"class {relativeTo.Name}Script");
+
+                // Replace the link place holder in the template with links created above.
+                template = template.Replace("        [Link] Clock Clock = null;", links.ToString());
+
+                // Replace the expression place holder in the template with the real expression.
+                template = template.Replace("return Clock.FractionComplete;", "return " + expression + ";");
+
+                // Create a new manager that will compile the expression.
+                var result = compiler.Compile(template, relativeTo);
+                if (result.ErrorMessages == null)
+                {
+                    errorMessages = null;
+                    function = (T)result.Instance;
+
+                    // Resolve links
+                    var functionAsModel = function as IModel;
+                    functionAsModel.Parent = relativeTo;
+                    var linkResolver = new Links();
+                    linkResolver.Resolve(functionAsModel, true);
+                    return true;
+                }
+                else
+                {
+                    errorMessages = $"Cannot compile expression: {expression}{Environment.NewLine}" +
+                                    $"{result.ErrorMessages}{Environment.NewLine}" +
+                                    $"Generated code: {Environment.NewLine}{template}";
+                    function = default;
+                    return false;
                 }
             }
-            var namespaces = StringUtilities.BuildString(namespaceList.Distinct(), Environment.NewLine);
-            var links = StringUtilities.BuildString(linkList.Distinct(), Environment.NewLine);
-
-            // Get template c# script.
-            string template;
-            if (typeof(T) == typeof(IBooleanFunction))
-                template = ReflectionUtilities.GetResourceAsString("Models.Resources.Scripts.CSharpBooleanExpressionTemplate.cs");
-            else
-                template = ReflectionUtilities.GetResourceAsString("Models.Resources.Scripts.CSharpExpressionTemplate.cs");
-
-            // Replace the "using Models;" namespace place holder with the namesspaces above.
-            template = template.Replace("using Models;", namespaces);
-
-            template = template.Replace("class Script", $"class {relativeTo.Name}Script");
-
-            // Replace the link place holder in the template with links created above.
-            template = template.Replace("        [Link] Clock Clock = null;", links.ToString());
-
-            // Replace the expression place holder in the template with the real expression.
-            template = template.Replace("return Clock.FractionComplete;", "return " + expression + ";");
-
-            // Create a new manager that will compile the expression.
-            var result = compiler.Compile(template, relativeTo);
-            if (result.ErrorMessages == null)
-            {
-                errorMessages = null;
-                function = (T)result.Instance;
-
-                // Resolve links
-                var functionAsModel = function as IModel;
-                functionAsModel.Parent = relativeTo;
-                var linkResolver = new Links();
-                linkResolver.Resolve(functionAsModel, true);
-                return true;
-            }
             else
             {
-                errorMessages = $"Cannot compile expression: {expression}{Environment.NewLine}" +
-                                $"{result.ErrorMessages}{Environment.NewLine}" +
-                                $"Generated code: {Environment.NewLine}{template}";
+                errorMessages = "Cannot find c# compiler";
                 function = default;
                 return false;
             }
