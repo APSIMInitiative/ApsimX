@@ -25,27 +25,13 @@ namespace Models.CLEM.Activities
     [Description("Manage a herd of individuals as trade herd")]
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Includes improvements such as a relationship to define numbers purchased based on pasture biomass and allows placement of purchased individuals in a specified paddock")]
-    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantTrade.htm")]
-    public class RuminantActivityTrade : CLEMRuminantActivityBase, IValidatableObject, ICanHandleIdentifiableChildModels
+    [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBuy.htm")]
+    public class RuminantActivityRequestPurchase : CLEMRuminantActivityBase, IValidatableObject, ICanHandleIdentifiableChildModels
     {
         private string grazeStore = "";
         private RuminantType herdToUse;
         private Relationship numberToStock;
         private GrazeFoodStoreType foodStore;
-
-        /// <summary>
-        /// Months kept before sale
-        /// </summary>
-        [Description("Months kept before sale")]
-        [Required, GreaterThanEqualValue(1)]
-        public int MinMonthsKept { get; set; }
-
-        /// <summary>
-        /// Weight to achieve before sale
-        /// </summary>
-        [Description("Weight to achieve before sale")]
-        [Required, GreaterThanEqualValue(0)]
-        public double TradeWeight { get; set; }
 
         /// <summary>
         /// GrazeFoodStore (paddock) to place purchases in for grazing
@@ -63,10 +49,10 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Constructor
         /// </summary>
-        public RuminantActivityTrade()
+        public RuminantActivityRequestPurchase()
         {
             this.SetDefaults();
-            TransactionCategory = "Livestock.Trade";
+            TransactionCategory = "Livestock.Buy";
         }
 
         /// <inheritdoc/>
@@ -76,8 +62,7 @@ namespace Models.CLEM.Activities
             {
                 case "RuminantGroup":
                     return new LabelsForIdentifiableChildren(
-                        identifiers: new List<string>() {
-                            "Individuals to purchase" },
+                        identifiers: new List<string>(),
                         units: new List<string>()
                         );
                 case "RuminantActivityFee":
@@ -194,20 +179,6 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
-            // sale details any timestep when conditions are met.
-            foreach (Ruminant ind in this.CurrentHerd(true))
-            {
-                if (ind.Age - ind.PurchaseAge >= MinMonthsKept)
-                {
-                    ind.SaleFlag = HerdChangeReason.TradeSale;
-                    this.Status = ActivityStatus.Success;
-                }
-                if (TradeWeight > 0 && ind.Weight >= TradeWeight)
-                {
-                    ind.SaleFlag = HerdChangeReason.TradeSale;
-                    this.Status = ActivityStatus.Success;
-                }
-            }
         }
 
         #region validation
@@ -240,16 +211,8 @@ namespace Models.CLEM.Activities
                     if (items.First().Suckling)
                     {
                         string[] memberNames = new string[] { "PurchaseDetails[Suckling]" };
-                        results.Add(new ValidationResult("Suckling individuals are not permitted as trade purchases.", memberNames));
+                        results.Add(new ValidationResult("Suckling individuals are not permitted as ruminant purchases.", memberNames));
                     }
-                    if (items.First().Sire)
-                    {
-                        string[] memberNames = new string[] { "PurchaseDetails[Sire]" };
-                        results.Add(new ValidationResult("Sires are not permitted as trade purchases.", memberNames));
-                    }
-                }
-                foreach (RuminantTypeCohort specRumItem in this.Children.Where(a => a.GetType() == typeof(RuminantTypeCohort)).Cast<RuminantTypeCohort>())
-                {
                 }
             }
             return results;
@@ -263,13 +226,7 @@ namespace Models.CLEM.Activities
         {
             using (StringWriter htmlWriter = new StringWriter())
             {
-                htmlWriter.Write("\r\n<div class=\"activityentry\">Trade individuals are kept for ");
-                htmlWriter.Write("<span class=\"setvalue\">" + MinMonthsKept.ToString("#0.#") + "</span> months");
-                if (TradeWeight > 0)
-                {
-                    htmlWriter.Write(" or until");
-                    htmlWriter.Write("<span class=\"setvalue\">" + TradeWeight.ToString("##0.##") + "</span> kg");
-                }
+                htmlWriter.Write("\r\n<div class=\"activityentry\">The following individuals were be requested for purchase ");
                 htmlWriter.Write("</div>");
 
                 htmlWriter.Write("\r\n<div class=\"activityentry\">");
