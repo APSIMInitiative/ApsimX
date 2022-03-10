@@ -157,8 +157,6 @@ namespace UserInterface.Presenters
 
             //Initialise the Right Hand View
             this.propertyPresenter = new PropertyPresenter();
-            this.propertyView = new PropertyView(this.treeview as ViewBase);
-
             this.ShowRightHandView();
         }
 
@@ -168,7 +166,7 @@ namespace UserInterface.Presenters
             this.treeview.SelectedNodeChanged -= this.OnNodeSelected;
 
             this.HideRightHandView();
-            (treeview as ViewBase).MainWidget.Dispose();
+            (treeview as ViewBase).Dispose();
         }
 
         /// <summary>
