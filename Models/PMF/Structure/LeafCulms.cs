@@ -24,14 +24,6 @@ namespace Models.PMF.Struct
 	[PresenterName("UserInterface.Presenters.PropertyPresenter")]
 	public class LeafCulms : Model
 	{
-		/// <summary>Link to the plant model.</summary>
-		[Link]
-		private Plant plant = null;
-
-		/// <summary>The parent leaf class</summary>
-		[Link]
-		SorghumLeaf leaf = null;
-
 		/// <summary> Tillering Method that uses a fixed number of tillers</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
 		private ITilleringMethod fixedTillering = null;
@@ -67,6 +59,11 @@ namespace Models.PMF.Struct
 		[Link(Type = LinkType.Child, ByName = true)]
 		private IFunction leafNoAtEmergence = null;
 
+		/// <summary> Enables Tillering method to be controlled via script</summary>
+		public double TilleringMethod { get; set; }
+		
+		private ITilleringMethod tillering => TilleringMethod == 0 ? fixedTillering : dynamicTillering;
+
 		/// <summary> Subsequent tillers are slightly smaller - adjust that size using a percentage</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
 		public IFunction VerticalTillerAdjustment = null;
@@ -74,11 +71,6 @@ namespace Models.PMF.Struct
 		/// <summary> Maximum values that Subsequent tillers can be adjusted</summary>
 		[Link(Type = LinkType.Child, ByName = true)]
 		public IFunction MaxVerticalTillerAdjustment = null;
-
-		[Link(Type = LinkType.Child, ByName = true)]
-		private IFunction numberOfLeaves = null;
-
-		private ITilleringMethod tillering => leaf.TilleringMethod == 0 ? fixedTillering : dynamicTillering;
 
 		/// <summary>Final leaf number.</summary>
 		public double FinalLeafNo { get; set; }
@@ -139,24 +131,18 @@ namespace Models.PMF.Struct
 			Initialize();
 		}
 
-		/// <summary>Event from sequencer telling us to do our potential growth.</summary>
-		/// <param name="sender">The sender.</param>
-		/// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-		[EventSubscribe("DoPotentialPlantGrowth")]
-		private void OnDoPotentialPlantGrowth(object sender, EventArgs e)
-		{
-			if (plant.IsAlive)
-			{
-				FinalLeafNo = numberOfLeaves.Value();
-				Culms.ForEach(c => c.FinalLeafNo = FinalLeafNo);
+		/// <summary>Calculate Potential Leaf Area</summary>
+		public void CalculatePotentialArea()
+        {
+			//FinalLeafNo = numberOfLeaves.Value();
+			Culms.ForEach(c => c.FinalLeafNo = FinalLeafNo);
 
-				dltLeafNo = tillering.CalcLeafNumber();
+			dltLeafNo = tillering.CalcLeafNumber();
 
-				dltPotentialLAI = tillering.CalcPotentialLeafArea();
-				double expStress = expansionStress.Value();
-				dltStressedLAI = dltPotentialLAI * expStress;
-				Culms.ForEach(c=> c.DltStressedLAI = c.DltLAI * expStress);
-			}
+			dltPotentialLAI = tillering.CalcPotentialLeafArea();
+			double expStress = expansionStress.Value();
+			dltStressedLAI = dltPotentialLAI * expStress;
+			Culms.ForEach(c => c.DltStressedLAI = c.DltLAI * expStress);
 		}
 
 		/// <summary>Calculate Actual Area - adjusts potential growth </summary>

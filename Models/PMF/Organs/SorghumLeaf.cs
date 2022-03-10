@@ -119,6 +119,9 @@ namespace Models.PMF.Organs
         [Units("g/m2/d")]
         private BiomassDemand nDemands = null;
 
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction numberOfLeaves = null;
+
         /// <summary>Light Senescence function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction AgeSenescence = null;
@@ -964,6 +967,7 @@ namespace Models.PMF.Organs
             if (phaseChange.StageName == LeafInitialisationStage)
             {
                 leafInitialised = true;
+                culms.TilleringMethod = TilleringMethod;
 
                 Live.StructuralWt = InitialDMWeight * SowingDensity;
                 Live.StorageWt = 0.0;
@@ -1012,19 +1016,20 @@ namespace Models.PMF.Organs
                 StartLive = ReflectionUtilities.Clone(Live) as Biomass;
             if (leafInitialised)
             {
+                culms.FinalLeafNo = numberOfLeaves.Value();
+                culms.CalculatePotentialArea();
+
                 DltPotentialLAI = culms.dltPotentialLAI;
                 DltStressedLAI = culms.dltStressedLAI;
 
                 //old model calculated BiomRUE at the end of the day
-                //this is done at strat of the day
+                //this is done at staet of the day
                 BiomassRUE = photosynthesis.Value();
                 //var bimT = 0.009 / waterFunction.VPD / 0.001 * Arbitrator.WSupply;
                 BiomassTE = potentialBiomassTEFunction.Value();
 
                 Height = heightFunction.Value();
-
                 LAIDead = SenescedLai;
-                //UpdateArea();
             }
         }
 

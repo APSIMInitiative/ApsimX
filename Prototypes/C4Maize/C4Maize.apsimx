@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 408,
+  "ExplorerWidth": 360,
   "Version": 148,
   "Name": "Simulations",
   "Children": [
@@ -1491,6 +1491,7 @@
               "$type": "Models.PMF.Struct.LeafCulms, Models",
               "dltLeafNo": 0.0,
               "Culms": [],
+              "TilleringMethod": 0.0,
               "FinalLeafNo": 0.0,
               "dltPotentialLAI": 0.0,
               "dltStressedLAI": 0.0,
@@ -1814,106 +1815,6 @@
                       "FixedValue": 1.0,
                       "Units": null,
                       "Name": "PhosphorusStressEffect",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    }
-                  ],
-                  "Enabled": true,
-                  "ReadOnly": false
-                },
-                {
-                  "$type": "Models.Functions.LiveOnEventFunction, Models",
-                  "SetEvent": "FloralInitiation",
-                  "ReSetEvent": "Germination",
-                  "Name": "NumberOfLeaves",
-                  "Children": [
-                    {
-                      "$type": "Models.Functions.BoundFunction, Models",
-                      "Name": "PreEventValue",
-                      "Children": [
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 10.0,
-                          "Units": null,
-                          "Name": "Lower",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.Constant, Models",
-                          "FixedValue": 40.0,
-                          "Units": null,
-                          "Name": "Upper",
-                          "Children": [],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        },
-                        {
-                          "$type": "Models.Functions.AddFunction, Models",
-                          "Name": "AddFunction",
-                          "Children": [
-                            {
-                              "$type": "Models.Functions.DivideFunction, Models",
-                              "Name": "LeavesInitiated",
-                              "Children": [
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[Phenology].TTEmergToFloralInit",
-                                  "Name": "TTFloralInit",
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                },
-                                {
-                                  "$type": "Models.Functions.VariableReference, Models",
-                                  "VariableName": "[NumberOfLeaves].leafInitRate",
-                                  "Name": "leafInitRate",
-                                  "Children": [],
-                                  "Enabled": true,
-                                  "ReadOnly": false
-                                }
-                              ],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            },
-                            {
-                              "$type": "Models.Functions.VariableReference, Models",
-                              "VariableName": "[NumberOfLeaves].leafNumSeed",
-                              "Name": "leafNumSeed",
-                              "Children": [],
-                              "Enabled": true,
-                              "ReadOnly": false
-                            }
-                          ],
-                          "Enabled": true,
-                          "ReadOnly": false
-                        }
-                      ],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[LeafCulms].FinalLeafNo",
-                      "Name": "PostEventValue",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Parameters.LeafInitRate",
-                      "Name": "leafInitRate",
-                      "Children": [],
-                      "Enabled": true,
-                      "ReadOnly": false
-                    },
-                    {
-                      "$type": "Models.Functions.VariableReference, Models",
-                      "VariableName": "[Leaf].Parameters.LeafNumSeed",
-                      "Name": "leafNumSeed",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
@@ -7124,6 +7025,106 @@
                       "FixedValue": 0.00035,
                       "Units": null,
                       "Name": "LeafNoDeadSlope",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Functions.LiveOnEventFunction, Models",
+                  "SetEvent": "FloralInitiation",
+                  "ReSetEvent": "Germination",
+                  "Name": "NumberOfLeaves",
+                  "Children": [
+                    {
+                      "$type": "Models.Functions.BoundFunction, Models",
+                      "Name": "PreEventValue",
+                      "Children": [
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 10.0,
+                          "Units": null,
+                          "Name": "Lower",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.Constant, Models",
+                          "FixedValue": 40.0,
+                          "Units": null,
+                          "Name": "Upper",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Functions.AddFunction, Models",
+                          "Name": "AddFunction",
+                          "Children": [
+                            {
+                              "$type": "Models.Functions.DivideFunction, Models",
+                              "Name": "LeavesInitiated",
+                              "Children": [
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[Phenology].TTEmergToFloralInit",
+                                  "Name": "TTFloralInit",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                },
+                                {
+                                  "$type": "Models.Functions.VariableReference, Models",
+                                  "VariableName": "[NumberOfLeaves].leafInitRate",
+                                  "Name": "leafInitRate",
+                                  "Children": [],
+                                  "Enabled": true,
+                                  "ReadOnly": false
+                                }
+                              ],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            },
+                            {
+                              "$type": "Models.Functions.VariableReference, Models",
+                              "VariableName": "[NumberOfLeaves].leafNumSeed",
+                              "Name": "leafNumSeed",
+                              "Children": [],
+                              "Enabled": true,
+                              "ReadOnly": false
+                            }
+                          ],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[LeafCulms].FinalLeafNo",
+                      "Name": "PostEventValue",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Parameters.LeafInitRate",
+                      "Name": "leafInitRate",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Functions.VariableReference, Models",
+                      "VariableName": "[Leaf].Parameters.LeafNumSeed",
+                      "Name": "leafNumSeed",
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
