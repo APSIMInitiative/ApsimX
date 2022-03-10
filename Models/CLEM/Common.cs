@@ -969,6 +969,7 @@ namespace Models.CLEM
     /// <summary>
     /// A list of labels used for communication between an activity and identifiable children
     /// </summary>
+    [Serializable]
     public struct LabelsForIdentifiableChildren
     {
         /// <summary>

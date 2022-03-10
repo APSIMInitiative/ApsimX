@@ -50,7 +50,7 @@ namespace Models.CLEM.Activities
         /// </summary>
         public RuminantActivityGrazeAll()
         {
-            TransactionCategory = "Livestock.Grazing";
+            TransactionCategory = "Livestock.[Graze]";
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -119,7 +119,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override void PerformTasksForActivity()
+        public override void PerformTasksForActivity(double argument = 0)
         {
             if(Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
                 Status = ActivityStatus.NoTask;

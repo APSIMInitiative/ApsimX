@@ -61,12 +61,12 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override void PerformTasksForActivity()
+        public override void PerformTasksForActivity(double argument = 0)
         {
             if (Amount > 0)
             {
                 bankAccount.Add(Amount, this, "", TransactionCategory);
-                SetStatusSuccess();
+                SetStatusSuccessOrPartial();
             }
         }
 

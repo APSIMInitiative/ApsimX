@@ -91,7 +91,7 @@ namespace Models.CLEM.Activities
         //}
 
         /// <inheritdoc/>
-        protected override void PerformTasksForActivity()
+        public override void PerformTasksForActivity(double argument = 0)
         {
             Status = ActivityStatus.Critical;
             // get all shortfalls
@@ -102,7 +102,7 @@ namespace Models.CLEM.Activities
                 manureStore.Collect(manureStore.Name, labourLimit, this);
                 if (labourLimit == 1)
                 {
-                    SetStatusSuccess();
+                    SetStatusSuccessOrPartial();
                 }
                 else
                 {

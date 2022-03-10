@@ -339,6 +339,7 @@ namespace Models.CLEM
         public virtual HTMLSummaryStyle ModelSummaryStyle { get; set; }
 
         /// <inheritdoc/>
+        [JsonIgnore]
         public List<string> CurrentAncestorList { get; set; } = new List<string>();
 
         /// <inheritdoc/>

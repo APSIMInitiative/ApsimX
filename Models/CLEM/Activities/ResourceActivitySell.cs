@@ -161,7 +161,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override List<ResourceRequest> DetermineResourcesForActivity()
+        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
         {
             unitsAvailable = unitsAvailableForSale;
             return null;
@@ -196,7 +196,7 @@ namespace Models.CLEM.Activities
 
 
         /// <inheritdoc/>
-        protected override void PerformTasksForActivity()
+        public override void PerformTasksForActivity(double argument = 0)
         {
             Status = ActivityStatus.NotNeeded;
             double labourlimit = this.LabourLimitProportion;
@@ -240,7 +240,7 @@ namespace Models.CLEM.Activities
                     }
                 }
 
-                SetStatusSuccess();
+                SetStatusSuccessOrPartial();
             }
         }
 

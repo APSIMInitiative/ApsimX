@@ -491,7 +491,7 @@ namespace Models.CLEM.Activities
         //}
 
         /// <inheritdoc/>
-        protected override void PerformTasksForActivity()
+        public override void PerformTasksForActivity(double argument = 0)
         {
             int year = clock.Today.Year;
             int month = clock.Today.Month;
@@ -558,7 +558,7 @@ namespace Models.CLEM.Activities
                                 packet.DMD = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.PercentN);
                             LinkedResourceItem.Add(packet, this,"", addReason);
                         }
-                        SetStatusSuccess();
+                        SetStatusSuccessOrPartial();
                     }
                     else
                     {

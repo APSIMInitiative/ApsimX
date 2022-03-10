@@ -70,7 +70,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override void PerformTasksForActivity()
+        public override void PerformTasksForActivity(double argument = 0)
         {
             // days provided from labour set in the requests in the resourceResquestList
             // receive payment for labour if bank type exists

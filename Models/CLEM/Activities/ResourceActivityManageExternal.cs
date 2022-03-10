@@ -101,7 +101,7 @@ namespace Models.CLEM.Activities
         #endregion
 
         /// <inheritdoc/>
-        protected override List<ResourceRequest> DetermineResourcesForActivity()
+        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
         {
             List<ResourceRequest> requests = new List<ResourceRequest>();
             earned = 0;
@@ -201,7 +201,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// Method used to perform activity if it can occur as soon as resources are available.
         /// </summary>
-        protected override void PerformTasksForActivity()
+        public override void PerformTasksForActivity(double argument = 0)
         {
             this.Status = ActivityStatus.NotNeeded;
 

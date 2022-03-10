@@ -109,7 +109,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override void PerformTasksForActivity()
+        public override void PerformTasksForActivity(double argument = 0)
         {
             // processed resource should already be taken
             Status = ActivityStatus.NotNeeded;
@@ -152,7 +152,7 @@ namespace Models.CLEM.Activities
         //}
 
         /// <inheritdoc/>
-        protected override List<ResourceRequest> DetermineResourcesForActivity()
+        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
         {
             List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
 

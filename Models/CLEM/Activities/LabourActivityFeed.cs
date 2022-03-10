@@ -74,7 +74,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override List<ResourceRequest> DetermineResourcesForActivity()
+        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
         {
             feedRequired = 0;
 
@@ -186,7 +186,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override void PerformTasksForActivity()
+        public override void PerformTasksForActivity(double argument = 0)
         {
             IEnumerable<LabourType> group = labour?.Items.Where(a => a.Hired != true);
             if (group != null && group.Any())
@@ -239,7 +239,7 @@ namespace Models.CLEM.Activities
                         }
                     }
                 }
-                SetStatusSuccess();
+                SetStatusSuccessOrPartial();
             }
         }
 

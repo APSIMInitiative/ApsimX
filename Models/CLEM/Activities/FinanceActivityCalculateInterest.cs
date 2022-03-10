@@ -42,7 +42,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override void PerformTasksForActivity()
+        public override void PerformTasksForActivity(double argument = 0)
         {
             Status = ActivityStatus.NotNeeded;
             if (finance != null)
@@ -55,7 +55,7 @@ namespace Models.CLEM.Activities
                         if (accnt.InterestRatePaid > 0)
                         {
                             accnt.Add(accnt.Balance * accnt.InterestRatePaid / 1200, this, "", "Interest");
-                            SetStatusSuccess();
+                            SetStatusSuccessOrPartial();
                         }
                     }
                     else if (accnt.Balance < 0)
