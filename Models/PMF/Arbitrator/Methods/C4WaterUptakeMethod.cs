@@ -187,7 +187,12 @@ namespace Models.PMF.Arbitrator
                     myZone.AvailableSW[layer] = Math.Max(waterBalance.SWmm[layer] - llDep[layer] * myZone.LLModifier[layer], 0) * myZone.RootProportions[layer];
                     myZone.PotentialAvailableSW[layer] = Math.Max(soilPhysical.DULmm[layer] - llDep[layer] * myZone.LLModifier[layer], 0) * myZone.RootProportions[layer];
 
-                    var proportion = myZone.RootProportions[layer];
+                    double proportion;
+                    if (myZone.root.RootShape is RootShapeSemiCircle semiCircle)
+                        proportion = semiCircle.CalcRootProportion(myZone, layer);
+                    else
+                        proportion = myZone.RootProportions[layer];
+
                     myZone.Supply[layer] = Math.Max(myZone.AvailableSW[layer] * kl[layer] * proportion, 0.0);
                 }
                 var totalAvail = SWAvail = myZone.AvailableSW.Sum();
