@@ -9,6 +9,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Models.Interfaces;
 using Models.Soils;
+using Models.Functions.RootShape;
 
 namespace Models.PMF.Arbitrator
 {
@@ -53,6 +54,8 @@ namespace Models.PMF.Arbitrator
         ///TotalSupply divided by WaterDemand - used to lookup ExpansionStress table - when calculating Actual LeafArea and calcStressedLeafArea
         public double SDRatio { get; set; }
 
+        /// <summary>Total available SW.</summary>
+        public double SWAvail { get; private set; }
 
         /// <summary>Things the plant model does when the simulation starts</summary>
         /// <param name="sender">The sender.</param>
@@ -187,7 +190,7 @@ namespace Models.PMF.Arbitrator
                     var proportion = myZone.RootProportions[layer];
                     myZone.Supply[layer] = Math.Max(myZone.AvailableSW[layer] * kl[layer] * proportion, 0.0);
                 }
-                var totalAvail = myZone.AvailableSW.Sum();
+                var totalAvail = SWAvail = myZone.AvailableSW.Sum();
                 var totalAvailPot = myZone.PotentialAvailableSW.Sum();
                 var totalSupply = myZone.Supply.Sum();
                 WatSupply = totalSupply;
