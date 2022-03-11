@@ -1,0 +1,3430 @@
+{
+  "$type": "Models.Core.Simulations, Models",
+  "ExplorerWidth": 285,
+  "Version": 148,
+  "Name": "Simulations",
+  "Children": [
+    {
+      "$type": "Models.Storage.DataStore, Models",
+      "useFirebird": false,
+      "CustomFileName": null,
+      "Name": "DataStore",
+      "Children": [
+        {
+          "$type": "Models.PostSimulationTools.ExcelInput, Models",
+          "FileNames": [
+            "Observed.xlsx"
+          ],
+          "SheetNames": [
+            "ObservedDrainage",
+            "ObservedN2O",
+            "ObservedHerbage",
+            "ObservedDailyN2O"
+          ],
+          "Name": "Observed",
+          "Children": [],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Factorial.Experiment, Models",
+      "DisabledSimNames": [],
+      "Name": "Experiment",
+      "Children": [
+        {
+          "$type": "Models.Factorial.Factors, Models",
+          "Name": "FactorsFull",
+          "Children": [
+            {
+              "$type": "Models.Factorial.Permutation, Models",
+              "Name": "Permutation",
+              "Children": [
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[TreatmentFertiliser].Script.FertLevel = 0,4",
+                  "Name": "Fert",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[TreatmentUrine].Script.UrineLevel = Autumn",
+                  "Name": "Urine",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Factorial.Permutation, Models",
+              "Name": "Permutation1",
+              "Children": [
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[TreatmentFertiliser].Script.FertLevel = 0",
+                  "Name": "Fert",
+                  "Children": [],
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[TreatmentUrine].Script.UrineLevel = None",
+                  "Name": "Urine",
+                  "Children": [],
+                  "Enabled": false,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": false,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Factorial.Permutation, Models",
+              "Name": "Permutation2",
+              "Children": [
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[TreatmentFertiliser].Script.FertLevel = 0,2,4",
+                  "Name": "Fert",
+                  "Children": [],
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Factorial.Factor, Models",
+                  "Specification": "[TreatmentUrine].Script.UrineLevel = None,Spring,Autumn",
+                  "Name": "Urine",
+                  "Children": [],
+                  "Enabled": false,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": false,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Simulation, Models",
+          "IsRunning": false,
+          "Descriptors": null,
+          "Name": "Base",
+          "Children": [
+            {
+              "$type": "Models.Climate.Weather, Models",
+              "ConstantsFile": null,
+              "FileName": "Lysimeter Exp.met",
+              "ExcelWorkSheetName": null,
+              "Name": "Weather",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Clock, Models",
+              "Start": "2010-12-15T00:00:00",
+              "End": "2012-08-27T00:00:00",
+              "Name": "Clock",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Summary, Models",
+              "Verbosity": 100,
+              "Name": "Summary",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Manager, Models",
+              "Code": "using APSIM.Shared.Utilities;\nusing Models.PMF;\r\nusing Models.Core;\nusing Models.Interfaces;\r\nusing System;\nusing System.Linq;\nusing System.Data;\nusing System.IO;\nusing System.Collections.Generic;\nusing System.Diagnostics;\r\nnamespace Models\r\n{\r\n    [Serializable]\r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\n        [Link] IWeather weather;\n        [Link] Simulation simulation;\n        \n        private DataTable data;\n        private List<DateTime> dates = new List<DateTime>();\n        private DateTime startDate;\n        private DateTime endDate;\n\n        [Description(\"Name of file containing weather data to patch:\")]\r\n        public string patchFileName { get; set; }\r\n\r\n        [Description(\"Date to start patching weather data (can be blank):\")]\r\n        public string date1 { get; set; }\r\n\r\n        [Description(\"Date to stop patching weather data: (can be blank)\")]\r\n        public string date2 { get; set; }\n\n\t\t[EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n\t\t{\n\t\t\t// Ensure filename is relative to the directory where the .apsimx file is located.\n\t\t\tstring fullFileName = PathUtilities.GetAbsolutePath(patchFileName, simulation.FileName);\n\t\t\n\t\t\t// Read in data.\n\t\t\tdata = ApsimTextFile.ToTable(fullFileName);\n\t\t\tforeach (DataRow row in data.Rows)\n\t\t\t\tdates.Add(DataTableUtilities.GetDateFromRow(row));\n\t\t\t\n\t\t\t// Ensure startDate and endDate always have a value.\n\t\t\tif (string.IsNullOrEmpty(date1))\n\t\t\t\tstartDate = clock.StartDate;\n\t\t\telse\n\t\t\t\tstartDate = DateTime.Parse(date1);\n\n \t\t\tif (string.IsNullOrEmpty(date2))\n\t\t\t\tendDate = clock.EndDate;\n\t\t\telse\n\t\t\t\tendDate = DateTime.Parse(date2);\n\n\t\t}\n\r\n        [EventSubscribe(\"PreparingNewWeatherData\")]\r\n        private void OnPreparingNewWeatherData(object sender, EventArgs e)\r\n        {\r\n\t\t\tif (clock.Today >= startDate && clock.Today <= endDate)\n\t\t\t{\n\t\t\t\t// check to see if we have a row of data for today.\n\t\t\t\tint rowIndex = dates.IndexOf(clock.Today);\n\t\t\t\tif (rowIndex != -1)\n\t\t\t\t{\n\t\t\t\t\t// Yes we do have data for today so patch the data.\n\t\t\t\t\tforeach (DataColumn column in data.Columns)\n\t\t\t\t\t{\n\t\t\t\t\t\tif (column.ColumnName.Equals(\"Rain\", StringComparison.InvariantCultureIgnoreCase))\n\t\t\t\t\t\t\tweather.Rain = Convert.ToDouble(data.Rows[rowIndex][column.ColumnName]);\n\t\t\t\t\t\telse if (column.ColumnName.Equals(\"MaxT\", StringComparison.InvariantCultureIgnoreCase))\n\t\t\t\t\t\t\tweather.MaxT = Convert.ToDouble(data.Rows[rowIndex][column.ColumnName]);\n\t\t\t\t\t\telse if (column.ColumnName.Equals(\"MinT\", StringComparison.InvariantCultureIgnoreCase))\n\t\t\t\t\t\t\tweather.MinT = Convert.ToDouble(data.Rows[rowIndex][column.ColumnName]);\n\t\t\t\t\t\telse if (column.ColumnName.Equals(\"Radn\", StringComparison.InvariantCultureIgnoreCase))\n\t\t\t\t\t\t\tweather.Radn = Convert.ToDouble(data.Rows[rowIndex][column.ColumnName]);\n\t\t\t\t\t\telse if (column.ColumnName.Equals(\"CO2\", StringComparison.InvariantCultureIgnoreCase))\n\t\t\t\t\t\t\tweather.CO2 = Convert.ToDouble(data.Rows[rowIndex][column.ColumnName]);\n\t\t\t\t\t\telse if (column.ColumnName.Equals(\"VP\", StringComparison.InvariantCultureIgnoreCase))\n\t\t\t\t\t\t\tweather.VP = Convert.ToDouble(data.Rows[rowIndex][column.ColumnName]);\n\t\t\t\t\t}\n\t\t\t\t}\n\t\t\t}\r\n        }\r\n    }\r\n}\r\n",
+              "Parameters": [
+                {
+                  "Key": "date1",
+                  "Value": "2011-01-01"
+                },
+                {
+                  "Key": "date2",
+                  "Value": "2012-08-27"
+                },
+                {
+                  "Key": "patchFileName",
+                  "Value": "NgahereManualRainfall.met"
+                }
+              ],
+              "Name": "PatchRainfall",
+              "Enabled": false,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Soils.Arbitrator.SoilArbitrator, Models",
+              "Name": "SoilArbitrator",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.ForageDigestibility.Forages, Models",
+              "Parameters": [
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "SurfaceOrganicMatter.Residue",
+                  "IsLive": true,
+                  "DigestibilityString": "0",
+                  "FractionConsumable": 0.0,
+                  "MinimumAmount": 0.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "SurfaceOrganicMatter.Residue",
+                  "IsLive": false,
+                  "DigestibilityString": "0",
+                  "FractionConsumable": 0.0,
+                  "MinimumAmount": 0.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPRyegrass.Leaf",
+                  "IsLive": true,
+                  "DigestibilityString": "0.7",
+                  "FractionConsumable": 1.0,
+                  "MinimumAmount": 100.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPRyegrass.Leaf",
+                  "IsLive": false,
+                  "DigestibilityString": "0.3",
+                  "FractionConsumable": 1.0,
+                  "MinimumAmount": 0.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPRyegrass.Stem",
+                  "IsLive": true,
+                  "DigestibilityString": "0.7",
+                  "FractionConsumable": 1.0,
+                  "MinimumAmount": 100.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPRyegrass.Stem",
+                  "IsLive": false,
+                  "DigestibilityString": "0.3",
+                  "FractionConsumable": 1.0,
+                  "MinimumAmount": 0.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPRyegrass.Stolon",
+                  "IsLive": true,
+                  "DigestibilityString": "0.7",
+                  "FractionConsumable": 1.0,
+                  "MinimumAmount": 100.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPRyegrass.Stolon",
+                  "IsLive": false,
+                  "DigestibilityString": "0.3",
+                  "FractionConsumable": 1.0,
+                  "MinimumAmount": 0.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPWhiteClover.Leaf",
+                  "IsLive": true,
+                  "DigestibilityString": "0.7",
+                  "FractionConsumable": 1.0,
+                  "MinimumAmount": 100.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPWhiteClover.Leaf",
+                  "IsLive": false,
+                  "DigestibilityString": "0.3",
+                  "FractionConsumable": 1.0,
+                  "MinimumAmount": 0.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPWhiteClover.Stem",
+                  "IsLive": true,
+                  "DigestibilityString": "0.7",
+                  "FractionConsumable": 1.0,
+                  "MinimumAmount": 100.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPWhiteClover.Stem",
+                  "IsLive": false,
+                  "DigestibilityString": "0.3",
+                  "FractionConsumable": 1.0,
+                  "MinimumAmount": 0.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPWhiteClover.Stolon",
+                  "IsLive": true,
+                  "DigestibilityString": "0.7",
+                  "FractionConsumable": 1.0,
+                  "MinimumAmount": 100.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPWhiteClover.Stolon",
+                  "IsLive": false,
+                  "DigestibilityString": "0.3",
+                  "FractionConsumable": 1.0,
+                  "MinimumAmount": 0.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPPaspalum.Leaf",
+                  "IsLive": true,
+                  "DigestibilityString": "0.7",
+                  "FractionConsumable": 1.0,
+                  "MinimumAmount": 100.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPPaspalum.Leaf",
+                  "IsLive": false,
+                  "DigestibilityString": "0.3",
+                  "FractionConsumable": 1.0,
+                  "MinimumAmount": 0.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPPaspalum.Stem",
+                  "IsLive": true,
+                  "DigestibilityString": "0.7",
+                  "FractionConsumable": 1.0,
+                  "MinimumAmount": 100.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPPaspalum.Stem",
+                  "IsLive": false,
+                  "DigestibilityString": "0.3",
+                  "FractionConsumable": 1.0,
+                  "MinimumAmount": 0.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPPaspalum.Stolon",
+                  "IsLive": true,
+                  "DigestibilityString": "0.7",
+                  "FractionConsumable": 1.0,
+                  "MinimumAmount": 100.0,
+                  "UseDigestibilityFromModel": false
+                },
+                {
+                  "$type": "Models.ForageDigestibility.ForageMaterialParameters, Models",
+                  "Name": "AGPPaspalum.Stolon",
+                  "IsLive": false,
+                  "DigestibilityString": "0.3",
+                  "FractionConsumable": 1.0,
+                  "MinimumAmount": 0.0,
+                  "UseDigestibilityFromModel": false
+                }
+              ],
+              "Name": "Forages",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.MicroClimate, Models",
+              "a_interception": 0.0,
+              "b_interception": 0.0,
+              "c_interception": 0.0,
+              "d_interception": 0.0,
+              "SoilHeatFluxFraction": 0.0,
+              "MinimumHeightDiffForNewLayer": 10000.0,
+              "NightInterceptionFraction": 0.0,
+              "ReferenceHeight": 2.0,
+              "Name": "MicroClimate",
+              "Children": [],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Core.Zone, Models",
+              "Area": 1.0,
+              "Slope": 0.0,
+              "AspectAngle": 0.0,
+              "Altitude": 50.0,
+              "Name": "Paddock",
+              "Children": [
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using Models.Climate;\r\nusing APSIM.Shared.Utilities;\r\nusing Models.Soils.Nutrients;\r\nusing Models.Soils;\r\nusing Models.PMF;\r\nusing Models.Core;\r\nusing System.Xml.Serialization;\r\nusing System;\r\nusing Models.AgPasture;\r\nusing Models.Interfaces;\r\n\r\nnamespace Models\r\n{\r\n    [Serializable] \r\n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\r\n    public class Script : Model\r\n    {\r\n        [Link] Clock clock;\r\n        [Link] ISummary summary;\r\n        [Link] private Swim3 swim;\r\n        //[Link] private PastureSpecies ryegrass;\r\n        //[Link] private SimpleGrazing grazing;\n        \n        public enum LowerBCTypeOptions {gradient,seepage,potential};\r\n\r\n        [Separator(\"Sets the lower boundary condition type (and value if set to 'potential' for SWIM3. The change is applied at the beginning of the first day of the simulation.\")]\n        [Description(\"[Get a dropdown] What lower boundary condition is wanted?\")] public LowerBCTypeOptions LowerBCType { get; set; }\r\n        [Description(\"If 'potential', then what potential? Should be negative (mm) \")] public double LowerBCValue { get; set; }\r\n\r\n        public double SoilWaterStart  { get; set; }\r\n        public double SoilWaterEnd  { get; set; }\r\n\r\n        [EventSubscribe(\"DoDailyInitialisation\")]\r\n        private void DoDailyInitialisation(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoReportCalculations\")]\r\n        private void DoReportCalculations(object sender, EventArgs e)\r\n        {\r\n        }\r\n\r\n        [EventSubscribe(\"DoManagement\")]\r\n        private void DoDailyCalculations(object sender, EventArgs e)\r\n        {\r\n            if (clock.Today == clock.StartDate)\r\n            {\r\n                summary.WriteMessage(this, \"Script is setting lower boundary condition to \" + LowerBCType, MessageType.Diagnostic);\r\n                if (LowerBCType == LowerBCTypeOptions.gradient)\r\n                    swim.SetLowerBCForGradient(bbcGradient: 0.0);   // in cm/cm (ibbc=0) Note that this is the default setting\r\n                else if (LowerBCType == LowerBCTypeOptions.potential)\r\n                    swim.SetLowerBCForGivenPotential(bbcPotential: LowerBCValue /10.0 );    //  convert to cm (ibbc=1), DUL is -100 cm so values more positive will often result in inflow to the bottom of the soil profile. Input in mm so divide here.\r\n                else if (LowerBCType == LowerBCTypeOptions.seepage)\r\n                    swim.SetLowerBCForSeepage(bbcPotentialSeepage: 0.0);  // in cm (ibbc=3). This is for zero-tension lysimeters\n                else\n                \tthrow new Exception(\"Wrong lower boundary condition type\");\r\n            }\r\n        }\r\n    }\r\n}\r\n",
+                  "Parameters": [
+                    {
+                      "Key": "LowerBCType",
+                      "Value": "seepage"
+                    },
+                    {
+                      "Key": "LowerBCValue",
+                      "Value": "-500"
+                    }
+                  ],
+                  "Name": "SWIM3_SetLowerBC",
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.Soils.SoilTemp;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Diagnostics;\n\n// This module estimate the amount of NH3 in the soil and its volatilisation\n\n// -->  Last uptaded in: 12/Jul/2011 ..................\n\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n\t\t[Link]\n\t\tprivate IWeather weather;\n\t\t\n\t\t[Link]\n\t\tprivate ISoilWater waterBalance;\n\t\t \n\t\t[Link]\n\t\tprivate Irrigation irrigation;\n\n\t\t[Link]\n\t\tprivate Nutrient nutrient;\n\n\t\t[Link]\n\t\tprivate Swim3 swim;\n\n\t\t[Link]\n\t\tprivate NFlow hydrolysis;\n\n\t\t[Link]\n\t\tprivate NFlow nitrification;\t\t\n\n\t\t[Link]\n\t\tprivate ISolute nh4;\n\t\t\t\t\n\t\t[Link]\n\t\tprivate Physical physical;\n\n\t\t[Link]\n\t\tprivate Chemical chemical;\n\n\t\t[Link(IsOptional=true)]\n\t\tprivate SoilTemperature soilTemperature;\n\t\t\n\t\t[Link(IsOptional=true)]\n\t\tprivate CERESSoilTemperature ceresSoilTemperature;\n\t\t\n\t    // Parameter variables:\n\t    [Separator(\"NH3 volatilisation parameters\")]\n    \t[Description(\"Depth to which NH3 volatilisation is considered (mm):\")]\n    \tpublic double Depth_for_NH3 { get; set; }\n    \n    \t[Separator(\"Base soil and pH change parameters\")]            \n    \t[Description(\"The base soil pH for each soil layer:\")]\n    \tpublic string Soil_pH_base { get; set; }             // The base soil pH, apsim will try to keep to this value, same for all layers\n    \t[Description(\"The CEC for each layer (meq/100g)\")] \n    \tpublic string CEC_strng { get; set; }           // The CEC for each layer (meq/100g)\n    \t[Description(\"Soil buffer capacity factor\")] \n    \tpublic double k_BC { get; set; }                    // Soil buffer capacity factor ()\n    \t[Description(\"Factor to convert urea hydrolysed into H+ changes\")] \n    \tpublic double k_pH_hyd { get; set; }                 // Factor to convert urea hydrolysed into H+ changes ()\n    \t[Description(\"Factor to convert NH4 nitrified into H+ changes\")] \n    \tpublic double k_pH_nit { get; set; }                 // Factor to convert NH4 nitrified into H+ changes ()\n    \t[Description(\"Minimum decrease for pH (fraction/day)\")] \n    \tpublic double k_pH_x { get; set; }                   // Minimum decrease for pH (fraction/day)\n    \t\n    \t[Separator(\"Gas exchange parameters\")]\n    \t[Description(\"Factor for soil/atmosphere gas exchange (AFPV/mm):\")] \n    \tpublic double k_AFPV { get; set; }                   // Factor to transform potential evaporation in air filled pore volumes that are potential exchanged with to atmosphere\n    \t[Description(\"Fractor for volatilisable NH3, per soil layer (0-1):\")] \n    \tpublic string f_NV_strng { get; set; }               // The fraction of potential NH3 volatilisation for each layer that is transpoted to the soil surface ()\n\n\t\t[Separator(\"Additional limits for volatilisation\")]\n    \t[Description(\"Fraction of total soil NH4 that can be volatilised per day:\")] \n    \tpublic double f_AV { get; set; }                     // Fraction of total soil NH4 that can be volatilised per day, limits volatilisation and ensure mass balance ()\n    \t[Description(\"Rain+irrigation below which volatilisation is not limited (mm):\")] \n    \tpublic double CritRain1 { get; set; }                // Critial rainfall. Below this volatilisation is not limited by rainfall or irrigation\n    \t[Description(\"Rain+irrigation above which no volatilisation occur (mm):\")] \n    \tprivate double CritRain2 { get; set; }                // Critial rainfall. Above this no volatilisation occurs\n\t\t\n    \t// Output variables\n\t    [Units(\"ppm\")]\n\t    public double[] nh3ppm { get; set; }  // The estimated amount of NH3 in the soil (ppm)\n\n\t    [Units(\"kgN/ha\")]\n\t    public double[] nh3 { get; set; }               // The estimated amount of NH3 in the soil (kg/ha)\n\t    \n\t    [Units(\"g/ha\")]\n\t    public double[] nh3_gas { get; set; }             // The estimated amount of NH3 in the soil in gaseous form (g/ha)\n    \n    \t[Units(\"kgN/ha\")]\n\t    public double[] emission_nh3 { get; set; }      // The estimated amount of NH3 volatilised (kg/ha/day)\n    \n    \t[Units(\"\")]\n\t    public double[] SoilpH { get; set; }                 // dummy soil pH\n    \n    \t[Units(\"kgN/ha\")]\n\t    public double[] nh4_sol { get; set; }           // The amount of NH4 in the soil solution (kg/ha)   \n    \n    \t[Units(\"oC\")]\n\t    public double[] SoilTemp { get; set; }              // The soil temperature (oC)\n\n    \t[Units(\"AFPV/day\")]\n\t    public double PotGasExchangeNH { get; set; }  // The potential soil-atmosphere gas exchange (Air-filled-pore-spaces/day)\n    \n        [Units(\"L/m2/day\")]\n    \tpublic double[] GasExchangeNH { get; set; }   // The volume of gas exchanged (L/m2/day)\n    \t\n    \t[Units(\"L/m2\")]\n\t    public double[] AirFilledPoreVolume { get; set; } // The volume of air filled pore space in each soil layer (L_air/m2)\n    \n    \t[Units(\"\")]\n\t    public double[] NH3toNHx_ratio { get; set; }          // The ratio between NH3 and NHx in the soil solution\n    \n    \t[Units(\"x1000\")]\n\t    public double[] NH3GtoNH3A_ratio { get; set; }   // The ratio between NH3 liquide and gas in the soil, times 1000\n    \n\t    [Units(\"\")]\n\t    public double[] pK_NHx { get; set; }                  // The equilibrium constant for NH4-NH3\n    \t\n    \t[Units(\"\")]\n    \tpublic double[] pG_NH3 { get; set; }                  // The equilibrium constant for NH3A-NH3G\n\n    \t// Internal variables\n    \tprivate int NH3_z;                           // The layer to consider NH3 volatilization\n    \tprivate double[] f_NV;                           // The fraction of NH3 transport from each layer\n    \tprivate double[] Ini_SoilpH;                     // The initial, or base, soil pH\n    \tprivate double[] SoilCEC;                        // The CEC (mol/kg)\n\n    \t[EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n    \t{\n    \t//Debugger.Break();\n        \tSoilpH = new double[waterBalance.Thickness.Length];\n        \tIni_SoilpH = new double[waterBalance.Thickness.Length];\n\n        \t// Split the read values of f_NV into an array\n        \tf_NV = makeArray(f_NV_strng);\n        \t// Split the read values of pH into an array\n        \tIni_SoilpH = makeArray(Soil_pH_base);\n        \t// Split the read values of CEC into an array\n        \tSoilCEC = makeArray(CEC_strng);\n        \tvar oldIni_SoilpH = Ini_SoilpH;\n        \tIni_SoilpH = new double[waterBalance.Thickness.Length];\n        \tif (oldIni_SoilpH != null)\n\t            Array.Copy(oldIni_SoilpH, Ini_SoilpH, Math.Min(waterBalance.Thickness.Length, oldIni_SoilpH.Length));\n        \tvar oldSoilCEC = SoilCEC;\n        \tSoilCEC = new double[waterBalance.Thickness.Length];\n        \tif (oldSoilCEC != null)\n\t            Array.Copy(oldSoilCEC, SoilCEC, Math.Min(waterBalance.Thickness.Length, oldSoilCEC.Length));\n        \t// Assign initial pH values and convert CEC from meq to mol\n        \tfor (int z = 0; z < waterBalance.Thickness.Length; z++)\n        \t{\n\t            Ini_SoilpH[z] = Math.Max(0, Ini_SoilpH[z]);\n            \tSoilpH[z] = Ini_SoilpH[z];\n            \tSoilCEC[z] = 0.01 * Math.Max(0.1, SoilCEC[z]);     // mol/kg\n        \t}\n\t\n        \t// Identify the layer down to which volatilization is considered\n        \tdouble Depth_from_surface = 0;\n        \tfor (int z = 0; z < waterBalance.Thickness.Length; z++)\n        \t{\n\t            Depth_from_surface = Depth_from_surface + waterBalance.Thickness[z];\n            \tif (Depth_from_surface <= Depth_for_NH3)\n\t                NH3_z = z;\n            \telse\n\t                z = waterBalance.Thickness.Length;\n        \t}\n\n\t        // verify the bounds of the pH converting factor\n        \tk_pH_hyd = Math.Min(1, Math.Max(0, k_pH_hyd));\n        \tk_pH_nit = Math.Min(1, Math.Max(0, k_pH_nit));\n        \tk_pH_x = Math.Min(1, Math.Max(0, k_pH_x));\n        \tk_BC = Math.Max(0, k_BC);\n        \tvar oldF_NV = f_NV;\n        \tf_NV = new double[waterBalance.Thickness.Length];\n        \tif (oldF_NV != null)\n\t            Array.Copy(oldF_NV, f_NV, Math.Min(waterBalance.Thickness.Length, oldF_NV.Length));\n        \tfor (int z = 0; z < waterBalance.Thickness.Length; z++)\n\t            f_NV[z] = Math.Min(1, Math.Max(0, f_NV[z]));\n\t\n        \t// ----------- NH3 volatilization ---------------------------------------------------\n        \tConsole.WriteLine(\"\");\n        \tConsole.WriteLine(\"Volatilization will be calculated by manager\");\n        \tConsole.WriteLine(\"   Top \" + Depth_for_NH3.ToString() + \"mm are considered,\");\n        \tConsole.WriteLine(\"   pH variation is mimicked by dlt_urea_hydrol + dlt_nh4_nitrif\");\n        \tConsole.WriteLine(\"\");\n    \t}\n\n        [EventSubscribe(\"DoManagementCalculations\")]\n        private void DoManagementCalculations(object sender, EventArgs e)\n        {\n            double urea_hydrol;                    // The amount of urea hydrolised (mol/L)\n            double nh4_nitrif;                     // The amount of NH4 nitrified (mol/L)\n            double dlt_H;                          // Estimated variation of H+ in the soil (mol/L)\n            double delta_pH_Hyd = 0;               // Variation in soil pH due to urea hydrolysis\n            double delta_pH_Nit = 0;               // Variation in soil pH due to NH4 nitrification\n            double delta_pH_x = 0;                 // Minimum decrease in soil pH, to ensure pH returns to base after urea deposition\n            double delta_pH_vol = 0;               // Variatin in pH due to volatilisation\n            double Beta = 1;                       // The soil buffer capacity ()\n            double[] delta_nh4 = new double[waterBalance.Thickness.Length];   // The variation in NH4 content due to volatilisation (kg/ha)\n            double RainFactor = 1.0;               // The rain factor\n    \n            if (ceresSoilTemperature == null)  // to get the soil temperature from SoilTemp, otherwise use SoilN's:\n                SoilTemp = soilTemperature.AverageSoilTemp;\n            else\n                SoilTemp = ceresSoilTemperature.Value;\n    \n            nh3ppm = new double[waterBalance.Thickness.Length];\n            nh4_sol = new double[waterBalance.Thickness.Length];\n            nh3 = new double[waterBalance.Thickness.Length];\n            nh3_gas = new double[waterBalance.Thickness.Length];\n            emission_nh3 = new double[waterBalance.Thickness.Length];\n            GasExchangeNH = new double[waterBalance.Thickness.Length];\n            AirFilledPoreVolume = new double[waterBalance.Thickness.Length];\n            NH3toNHx_ratio = new double[waterBalance.Thickness.Length];\n            NH3GtoNH3A_ratio = new double[waterBalance.Thickness.Length];\n            pK_NHx = new double[waterBalance.Thickness.Length];\n            pG_NH3 = new double[waterBalance.Thickness.Length];\n    \n            // Calc the irrigation factor\n            if (weather.Rain + irrigation.IrrigationApplied < CritRain1)\n                RainFactor = 1.0;\n            else if (weather.Rain + irrigation.IrrigationApplied > CritRain2)\n                RainFactor = 0.0;\n            else\n                RainFactor = (weather.Rain + irrigation.IrrigationApplied - CritRain1) / (double)(CritRain2 - CritRain1);\n    \n            // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n            // NOTES:\n            // The RainFactor accounts for the downwards transport of NH3 gas when water from rain or irrigation is being drained throught the soil.\n            // Below RainCrit1, precipitation has no effect, above RainCrit2 volatilisation is zero.  A linear relationship is used between\n            // these two limits:\n            // \n            // |\n            // F   1+                /-----------\n            // R a    |               /:\n            // a c    |              / :\n            // i t    |             /  :\n            // n o    |            /   :\n            // r    |           /    :\n            // |          /     :\n            // |         /      :\n            // 0+========+-------+--------------> Rain + Irrigation\n            // |      Rain    Rain\n            // Crit1   Crit2\n            // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n    \n    \t\tdouble[] dlt_urea_hydrol = hydrolysis.Value;\n    \t\tdouble[] dlt_rntrf = nitrification.Value;\n    \t\tdouble[] conc_water_nh4 = swim.ConcWaterNH4;\n            for (int z = 0; z < waterBalance.Thickness.Length; z++)\n            {\n    \n                // 0-Compute the value of Beta\n                Beta = k_BC * physical.BD[z] * SoilCEC[z] / (double)waterBalance.SW[z];\n    \n                // 1-Compute the consumption of H+ by urea hydrolysis\n                urea_hydrol = dlt_urea_hydrol[z] / (double)(waterBalance.Thickness[z] * 10000);   // kg_urea_N/L_soil\n                urea_hydrol = urea_hydrol * 1000 / (double)waterBalance.SW[z];                 // g_urea_N/L_water\n                urea_hydrol = urea_hydrol / 14.00674;                     // mol_urea_N/L_water  - All N pools as expresseed in kg_N, so molecular mass is 14\n                dlt_H = -2 * urea_hydrol * k_pH_hyd;                      // mol/L\n    \n                // 2-Compute changes in soil pH due to urea hydrolysis\n                if (dlt_H < 0)\n                    delta_pH_Hyd = (14 / (1 + ((14 - SoilpH[z]) / (double)SoilpH[z]) * Math.Pow(10, (dlt_H / (double)Beta)))) - SoilpH[z];\n                else\n                    delta_pH_Hyd = 0;\n                SoilpH[z] = SoilpH[z] + delta_pH_Hyd;\n    \n                // 3-Compute the production of H+ by nitrification and its effect on soil pH\n                nh4_nitrif = dlt_rntrf[z] / (double)(waterBalance.Thickness[z] * 10000);          // kg_nh4_N/L_soil\n                nh4_nitrif = nh4_nitrif * 1000 / (double)waterBalance.SW[z];                   // g_nh4_N/L_water\n                nh4_nitrif = nh4_nitrif / 14.0067;                        // mol_nh4_N/L_water  - All N pools as expresseed in kg_N, so molecular mass is 14\n                dlt_H = 2 * nh4_nitrif * k_pH_nit;                        // mol/L\n                if (dlt_H > 0)\n                    delta_pH_Nit = (14 / (1 + ((14 - SoilpH[z]) / (double)SoilpH[z]) * Math.Pow(10, (dlt_H / (double)Beta)))) - SoilpH[z];\n                else\n                    delta_pH_Nit = 0;\n    \n                // 4-Compute soil forced pH change - this is to ensure pH will decline to its base value\n                if (SoilpH[z] > Ini_SoilpH[z])\n                    delta_pH_x = -(SoilpH[z] - Ini_SoilpH[z]) * k_pH_x;\n                else\n                    delta_pH_x = 0;\n                SoilpH[z] = SoilpH[z] + Math.Min(delta_pH_Nit, delta_pH_x);\n    \n                // 5-bound pH between base and 14\n                SoilpH[z] = Math.Min(14, Math.Max(Ini_SoilpH[z], SoilpH[z]));\n    \n    \n                // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n                // NOTES:\n                // The changes in pH are due to the consumption of H+ as urea is hydrolysed or the production of H+ by nitrification,\n                // in theory for each mol of N hydrolised two mols of H+ are consumed, while two mols are produced by nitrification;\n                // The k_pH_nit ad k_pH_hyd factors allow to control the extent that H+ is affected by hydrolysis and nitrification,\n                // when set to zero there's no effect, while setting it to one causes full theoretical effect\n                // The parameter Beta describes the soil buffer capacity, which is a function of CEC, k_BC is used for adjusting the relationship.\n                // k_pH_x stablish a minimum rate for pH decay, it mimicks soil buffering and other reactions that bring pH down\n                // after urea/urine deposition. Used when nitrification is not enough to bring the pH down.\n                // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n    \n    \n                // 6-compute the NH3 equilibrium factors\n                pK_NHx[z] = pK(\"aq\", SoilTemp[z] + 273.15);      // Aqueous equilibrium [NH4 <--> NH3]\n                pG_NH3[z] = pK(\"gs\", SoilTemp[z] + 273.15);      // Gaseous equilibrium [NH3_liquid <--> NH3_gas]\n    \n                // 7-Calc the proportion of total NHx that is in the form of NH3\n                double NH3toNHx = 1 / (1 + Math.Pow(10, (pK_NHx[z] - SoilpH[z])));\n                NH3toNHx_ratio[z] = NH3toNHx;\n    \n                // 8-Calc the amount of NH3 in aqueous solution (original equation uses mol/L, thus the ratio of molecular mass is needed)\n                nh3ppm[z] = conc_water_nh4[z] * NH3toNHx * (17.03 / 18.04);      // ppm (ug/cm3_water)\n    \n                // 9-Calc the proportion of total NH3 that is in the gaseous form\n                double NH3GtoNH3A = 1 / (1 + Math.Pow(10, (pG_NH3[z])));\n                NH3GtoNH3A_ratio[z] = NH3GtoNH3A * 1000;\n    \n                // 10-Calc the amount of NH3 in gaseous form\n                nh3_gas[z] = nh3ppm[z] * NH3GtoNH3A;                   // ppm (ug/cm3_air in soil = mg/L)\n    \n                // 11-Calc the amount of NH3 in gaseous form and the amount effectivelly lost by volatilization\n                PotGasExchangeNH = waterBalance.Eo * k_AFPV;   // air filled pore volumes/day\n                AirFilledPoreVolume[z] = (physical.SAT[z] - waterBalance.SW[z]) * waterBalance.Thickness[z];    // L_air/m2\n                if (z <= NH3_z)\n                {\n                    GasExchangeNH[z] = PotGasExchangeNH * AirFilledPoreVolume[z];      // L_air/m2/day\n                    GasExchangeNH[z] = GasExchangeNH[z] * RainFactor;\n                    if (GasExchangeNH[z] > 0)\n                    {\n                        emission_nh3[z] = nh3_gas[z] * GasExchangeNH[z] * f_NV[z];      // mg/m2\n                        emission_nh3[z] = emission_nh3[z] * 10E+4;                      // mg/ha\n                        emission_nh3[z] = emission_nh3[z] * 10E-6;                      // kg/ha\n                    }\n                    else\n                        emission_nh3[z] = 0;\n                    // Limit volatilisation to a fraction of NH4 for each layer\n                    emission_nh3[z] = Math.Min(emission_nh3[z], f_AV * nh4.ppm[z]);\n                }\n                else\n                {\n                    GasExchangeNH[z] = 0;\n                    emission_nh3[z] = 0;\n                }\n    \n    \n                // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n                // NOTES:\n                // To estimate the amount of NH3 volatilised during the day, it is assumed that the amount of NH3 in gaseous form in the\n                // beginning of the day represents well the proportion of NHx 'volatilisable'. It is assumed also that the potential evaporation\n                // is a good estimator for the gas exchange between soil and atmosphere (this makes volatilisation sensible to temperature and\n                // wind).  By scaling the gas exchange to the air filled pore space in the soil, we get volatilisation also sensible to water\n                // content, which mimicks the decrease in gas transport when the soil is wet.  Finally a factor (f_NV) is used to limit the\n                // contribution of each soil layer to the overall volatilisation (deep layers would volatilise less because NH3 needs to move\n                // transport to the surface.\n                // +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++\n    \n    \n                // 12-Compute soil pH change due to volatilisation\n                double emission_nh3ised = emission_nh3[z] / (double)(waterBalance.Thickness[z] * 10000);  // kg_nh3_N/L_soil\n                emission_nh3ised = emission_nh3ised * 1000 / (double)waterBalance.SW[z];                      // g_nh3_N/L_water\n                emission_nh3ised = emission_nh3ised / 14.0067;                           // mol_nh3_N/L_water  - All N pools as expresseed in kg_N, so molecular mass is 14\n                dlt_H = emission_nh3ised;                                                // mol/L\n                if (dlt_H > 0)\n                    delta_pH_vol = (14 / (1 + ((14 - SoilpH[z]) / (double)SoilpH[z]) * Math.Pow(10, (dlt_H / (double)Beta)))) - SoilpH[z];\n                else\n                    delta_pH_vol = 0;\n    \n                // 13- Calc new pH and bound it between base and 14\n                SoilpH[z] = SoilpH[z] + delta_pH_vol;\n                SoilpH[z] = Math.Min(14, Math.Max(Ini_SoilpH[z], SoilpH[z]));\n    \n                // 14-Transform variables to publishable units\n                nh3[z] = nh3ppm[z] * waterBalance.SW[z] / (double)1000;                     // mg/cm3_soil = g/L_soil\n                nh3[z] = nh3[z] * waterBalance.Thickness[z] * 10000;                   // g/ha_soil\n                nh3[z] = nh3[z] / (double)1000;                                // kg/ha\n    \n                nh3_gas[z] = nh3_gas[z] * (physical.SAT[z] - waterBalance.SW[z]) / (double)1000;     // mg/cm3_soil = g/L_soil\n                nh3_gas[z] = nh3_gas[z] * waterBalance.Thickness[z] * 10000;           // g/ha_soil\n    \n                nh4_sol[z] = conc_water_nh4[z] * waterBalance.SW[z] / (double)1000;         // mg/cm3_soil = g/L_soil\n                nh4_sol[z] = nh4_sol[z] * waterBalance.Thickness[z] * 10000;           // g/ha_soil\n                nh4_sol[z] = nh4_sol[z] / (double)1000;                        // kg/ha\n    \n                // Compute the delta in nh4 amount\n                delta_nh4[z] = -emission_nh3[z];\n            }\n            \n            nh4.AddKgHaDelta(SoluteSetterType.Other, delta_nh4);\n   \n        }\n\n\n\n    \tpublic double[] makeArray(string ArrayString)\n    \t{\n\n\t        // Get the string with values from the user interface and put the values in an numeric array\n\n        \tstring[] MyArray_string;\n        \tdouble[] MyArray_single;\n        \tchar[] Separator = \" \".ToCharArray();\n\n        \t// 1-Split string into array\n        \tMyArray_string = ArrayString.Split(Separator, StringSplitOptions.RemoveEmptyEntries);\n\n        \t// 2-convert array into type single\n        \tMyArray_single = new double[MyArray_string.Length - 1 + 1];\n        \tfor (int i = 0; i <= MyArray_single.Length - 1; i++)\n\t            MyArray_single[i] = Convert.ToDouble(MyArray_string[i]);\n        \treturn MyArray_single;\n    \t}\n\n\t    public double pK(string n_species, double Temp)\n    \t{\n\n\t        // Calculates the equilibrium constants, \n        \t// if 'aq' then nh4-nh3 equilibrium in water\n        \t// if 'gs' then gas-liquid equilibrium for nh3\n\n\t        double[] a_pK = new[] { 0.09018, -1.69 };\n        \tdouble[] b_pK = new[] { 2729.92, 1477.7 };\n        \tint sp = 0;\n\n        \tif (n_species == \"aq\")\n\t            sp = 0;\n        \telse if (n_species == \"gs\")\n            \tsp = 1;\n        \treturn a_pK[sp] + b_pK[sp] / Temp;\n    \t}\n    \n\t}\n}\n",
+                  "Parameters": [
+                    {
+                      "Key": "Depth_for_NH3",
+                      "Value": "50"
+                    },
+                    {
+                      "Key": "Soil_pH_base",
+                      "Value": "5.7 5.7 5.7 5.3 5.3 5.9 5.9 5.9 6.6 6.6 6.7 6.7 6.7 6.7"
+                    },
+                    {
+                      "Key": "CEC_strng",
+                      "Value": "28.2 28.2 28.2 21 21 17.3 17.3 17.3 12 12 12.9 12.9 12.9 12.9"
+                    },
+                    {
+                      "Key": "k_BC",
+                      "Value": "0.03"
+                    },
+                    {
+                      "Key": "k_pH_hyd",
+                      "Value": "1"
+                    },
+                    {
+                      "Key": "k_pH_nit",
+                      "Value": "1"
+                    },
+                    {
+                      "Key": "k_pH_x",
+                      "Value": "0.2"
+                    },
+                    {
+                      "Key": "k_AFPV",
+                      "Value": "300"
+                    },
+                    {
+                      "Key": "f_NV_strng",
+                      "Value": "1 1 1 0.3 0"
+                    },
+                    {
+                      "Key": "f_AV",
+                      "Value": "0.5"
+                    },
+                    {
+                      "Key": "CritRain1",
+                      "Value": "3"
+                    }
+                  ],
+                  "Name": "nh3_volatilisation",
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Diagnostics;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n    \n    \t//<Link()> Dim MyPaddock As Paddock\n   \t\t[Link] Swim3 swim;\n   \t\t[Link] Nutrient nutrient;\n   \t\t[Link] Clock clock;\n   \t\t[Link] ISoilWater waterBalance;\n\n   \t\t// Parameter variables:\n   \t\t[Description(\"Date that autumn urine is applied\")]\n   \t\tpublic string AutumnUrinePatch_date_str { get; set;}\n   \t\t\n   \t\t[Description(\"Date that spring urine is applied\")]\n   \t\tpublic string SpringUrinePatch_date_str { get; set;}\n\n  \t\t[Description(\"Type the amount of water to apply (mm):\")]\n   \t\t[Units(\"mm\")]\n  \t\tpublic double Urine_Water_to_add { get; set;}\n  \t\t\n   \t\t[Description(\"Type the amount of urea N to apply (kg/ha):\")]\n   \t\t[Units(\"kg/ha\")]\n   \t\tpublic double Urine_N_to_add { get; set;}\n   \t\t\n  \t\t[Description(\"Type the amount of Br to apply (kg/ha):\")]\n   \t\t[Units(\"kg/ha\")] \n   \t\tpublic double Br_to_add { get; set;}\n   \n  \t\t[Description(\"The depth reached by urine (mm):\")]\n   \t\tpublic double Depth_for_urine { get; set;}\n   \n   \t\tpublic enum UrineLevelOptions { None, Autumn, Spring }\n   \t\t\n   \t\t// Variables read from other modules\n\t    [Description(\"The urine level:\")]\n   \t\tpublic UrineLevelOptions UrineLevel {get; set; }    \n\n\t\t// Output variables\n\t\tprivate double Urine;        // Amount of urine applied today\n   \t\tprivate DateTime UrinePatch_date;\n\n   \t\t// Internal variables\n   \t\tprivate DateTime AutumnUrinePatch_date;\n   \t\tprivate DateTime SpringUrinePatch_date;\n   \t\tprivate DateTime AppDate;             // The date when urine applications start (in date format)\n   \t\tprivate DateTime Today;               // The date of today (in date format)\n   \t\tprivate double[] Urine_prop;          // The potential proportion of urine for each soil layer\n   \t\tprivate double[] Urine_prop_cum;      // The potential proportion of urine for each soil layer\n   \t\tprivate double SoilDepth;             // The soil depth (mm)\n   \t\tprivate bool Add_Urine;\n\n\t\t[EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n\t\t{\n\t\t\t//Debugger.Break();\n\t\t\t\n      \t\t// Put the dates into date format:\n      \t\tAutumnUrinePatch_date = DateTime.Parse(AutumnUrinePatch_date_str);\n      \t\tSpringUrinePatch_date = DateTime.Parse(SpringUrinePatch_date_str);\n      \t\n\t      \tif (UrineLevel == UrineLevelOptions.None)\n\t         \tUrinePatch_date = new DateTime(2020, 12, 31);    // ie - not within this simulation\n      \t\telse if (UrineLevel == UrineLevelOptions.Autumn)\n         \t\tUrinePatch_date = AutumnUrinePatch_date; \n      \t\telse if (UrineLevel == UrineLevelOptions.Spring)\n         \t\tUrinePatch_date = SpringUrinePatch_date; \n      \t\telse\n         \t\tthrow new Exception(\"Incorrect urine date information\");\n\n      \t\tUrine_prop = new double[waterBalance.Thickness.Length];\n  \t\t    Urine_prop_cum = new double[waterBalance.Thickness.Length];\n  \n      \t\tSoilDepth = 0.0;\n      \t\tfor (int z = 0; z < waterBalance.Thickness.Length; z++)\n      \t\t{\n\t        \tif (SoilDepth <= Depth_for_urine)   // this is at start depth\n           \t\t\tUrine_prop[z] = waterBalance.Thickness[z] / Depth_for_urine;\n         \t\telse\n            \t\tUrine_prop[z] = 0.0;\n         \n         \t\tSoilDepth += waterBalance.Thickness[z];   // no updated to end current depth\n         \n         \t\tif (z == 0)\n            \t\tUrine_prop_cum[z] = Urine_prop[z];\n         \t\telse\n            \t\tUrine_prop_cum[z] = Urine_prop[z] + Urine_prop_cum[z - 1];\n\n         \t\tif (Urine_prop_cum[z] <= 1.0)\n         \t\t{\n            \t\t// do nothing\n            \t}\n         \t\telse\n         \t\t{\n            \t\tUrine_prop[z] = Math.Max(0.0, 1.0 - Urine_prop_cum[z - 1]);\n            \t\tUrine_prop_cum[z] = Urine_prop[z] + Urine_prop_cum[z - 1];\n         \t\t}\n      \t\t}\n    \t}\n    \t\n\t\t[EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n      \t{\n      \t\tUrine = 0.0;\n   \n\t      \tAdd_Urine = clock.Today == UrinePatch_date;\n      \n      \t\tif (Add_Urine)\n      \t\t{\n         \t\tdouble[] Ini_swdep = waterBalance.SWmm;\n         \t\tdouble[] Ini_urea  = nutrient.Urea.kgha;\n\n\t\t        Urine = Urine_N_to_add;\n\n         \t\tdouble[] New_swdep = new double[waterBalance.Thickness.Length];         \n         \t\tdouble[] New_urea = new double[waterBalance.Thickness.Length];\n\n\t\t        for (int z = 0; z < waterBalance.Thickness.Length; z++)\n\t\t        {\n            \t\tNew_swdep[z] = Ini_swdep[z] + Urine_prop[z] * Urine_Water_to_add;\n            \t\tNew_urea[z] = Ini_urea[z] + Urine_prop[z] * Urine_N_to_add;\n            \t}\n\t         \n\t\t        nutrient.Urea.SetKgHa(SoluteSetterType.Other, New_urea);\n      \t\t}\n      \t}\n\t}\n}    ",
+                  "Parameters": [
+                    {
+                      "Key": "AutumnUrinePatch_date_str",
+                      "Value": "2011-05-04"
+                    },
+                    {
+                      "Key": "SpringUrinePatch_date_str",
+                      "Value": "2011-08-31"
+                    },
+                    {
+                      "Key": "Urine_Water_to_add",
+                      "Value": "10"
+                    },
+                    {
+                      "Key": "Urine_N_to_add",
+                      "Value": "800"
+                    },
+                    {
+                      "Key": "Br_to_add",
+                      "Value": "0"
+                    },
+                    {
+                      "Key": "Depth_for_urine",
+                      "Value": "150"
+                    },
+                    {
+                      "Key": "UrineLevel",
+                      "Value": "None"
+                    }
+                  ],
+                  "Name": "TreatmentUrine",
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Linq;\n\nnamespace Models\n{\n\t// This module estimate the amount of NH3 in the soil and its volatilisation\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n\n\t    [Link]\n    \tprivate Fertiliser fertiliser;\n\n  \t    [Link]\n    \tprivate Clock clock;\n\n\t    [Description(\"Dates for fertiliser applications:\")]\n    \tpublic string FertDates_str { get; set; }\n    \n\t    public int FertLevel { get; set; }\n    \t\n    \n\t    private double FertAmt;\n    \tprivate string[] FertDates_strArr;\n\t    private DateTime[] FertDates;\n\t    private bool Add_fert;\n\n\t\t[EventSubscribe(\"StartOfSimulation\")]\n        private void OnStartOfSimulation(object sender, EventArgs e)\n\t\t{\n\n        \tif (FertLevel == 0)\n\t            FertAmt = 0.0;\n        \telse if (FertLevel == 2)\n        \t    FertAmt = 25.0;\n        \telse if (FertLevel == 4)\n        \t    FertAmt = 50.0;\n        \telse\n        \t    throw new Exception(\"Incorrect fertilser level information\");\n\n        \tFertDates_strArr = makeArray(FertDates_str);\n        \tFertDates = new DateTime[FertDates_strArr.Length];\n        \tfor (int i = 0, loopTo = FertDates_strArr.Length - 1; i <= loopTo; i++)\n            \tFertDates[i] = DateTime.Parse(FertDates_strArr[i]);\n    \t}\n\n\t    [EventSubscribe(\"DoManagement\")]\n        private void OnDoManagement(object sender, EventArgs e)\n\t    {\n\t        Add_fert = false;\n\t        for (int i = 0, loopTo = FertDates.Length - 1; i <= loopTo; i++)\n\t        {\n\t            if (clock.Today == FertDates[i])\n\t            {\n\t                Add_fert = true;\n\t                fertiliser.Apply(FertAmt, Fertiliser.Types.UreaN, Depth:5.0);\n\t            }\n\t        }\n\t    }\n\n    \tpublic string[] makeArray(string ArrayString)\n    \t{\n        \tstring[] MyArray_string;\n        \t// Dim MyArray_single As String()\n        \tchar[] Separator = \" \".ToCharArray();\n\n        \t// 1-Split string into array\n        \tMyArray_string = ArrayString.Split(Separator, StringSplitOptions.RemoveEmptyEntries);\n\n        \t// '2-convert array into type single\n        \t// ReDim MyArray_single(MyArray_string.Length - 1)      \n        \t// For i As Integer = 0 To MyArray_single.length - 1\n        \t// MyArray_single(i) = MyArray_string(i)\n        \t// Next\n        \treturn MyArray_string;\n    \t}\n\t}\n}",
+                  "Parameters": [
+                    {
+                      "Key": "FertDates_str",
+                      "Value": "21-feb-2011 28-mar-2011 04-may-2011 31-may-2011 31-aug-2011 29-sep-2011 7-nov-2011 5-dec-2011 28-feb-2012 30-mar-2012 30-apr-2012 31-may-2012"
+                    }
+                  ],
+                  "Name": "TreatmentFertiliser",
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Linq;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] ISummary summary;\n        [Link] IWeather weather;\n        [Link] Irrigation irrigation;\n        [Link] private ISoilWater waterBalance;\n        [Link] private IPlant[] plants;\n\n  \n        // add (no3+nh4) uptake as N uptake to IPlant\n\n        public double WaterBalanceCumulative  { get; set; }\n        public double WaterBalanceToday  { get; set; }\n\n        public double SoilWaterAtInitialisation  { get; set; }\n        public double SoilWaterYesterday  { get; set; }\n\t\tpublic double SoilWaterNow  { get; set; }\n\n\t\tpublic double PlantWaterUptake { get; set; }\n\n        public double WaterAddedToday  { get; set; }\n        public double WaterRemovedToday  { get; set; }\n        public double WaterAddedCumulative  { get; set; }\n        public double WaterRemovedCumulative  { get; set; }\n\n\n\n        [EventSubscribe(\"DoDailyInitialisation\")]\n        private void DoDailyInitialisation(object sender, EventArgs e)\n        {\n        \tif (clock.Today == clock.StartDate) \n        \t// capture the water in and on the soil as a starting point\n        \t// doing this here as need the models to have intialised first\n        \t{\n\t        \tSoilWaterAtInitialisation = waterBalance.Pond;\n    \t    \tfor (int i = 0; i < waterBalance.SWmm.Length; i++)\n        \t\t\tSoilWaterAtInitialisation += waterBalance.SWmm[i];\n\n        \t\tSoilWaterYesterday = SoilWaterAtInitialisation;\t\t\n        \t\tWaterAddedCumulative = 0.0;\n        \t\tWaterRemovedCumulative = 0.0;\n        \t\tSoilWaterNow = 0.0;\n        \t}\n        \telse\n        \t{\n        \t\tSoilWaterYesterday = SoilWaterNow;\t\t// SoilWaterNow holds the value calculated at reporting yesterday\n        \t\tWaterAddedToday = 0.0;\n        \t\tWaterRemovedToday = 0.0;\n        \t}\n\t\t}\n\n        [EventSubscribe(\"DoReportCalculations\")]\n        private void DoReportCalculations(object sender, EventArgs e)\n        {\n        \t// All the WaterBalance variables should be zero. A positive value is a generation of water.\n        \tSoilWaterNow = waterBalance.Pond;\n        \tfor (int i = 0; i < waterBalance.SWmm.Length; i++)\n        \t\tSoilWaterNow += waterBalance.SWmm[i]; // so all the water stored in or on the soil\n\n        \tWaterAddedToday = weather.Rain + irrigation.IrrigationApplied;   // Can there be runon? Probably not but this will throw an error if that ever happens\n        \tWaterAddedCumulative+= WaterAddedToday;\n\n        \tWaterRemovedToday = waterBalance.Drainage + waterBalance.Es + waterBalance.Runoff;\n        \tPlantWaterUptake = 0.0;\n        \tforeach (var plant in plants)\n        \t\tPlantWaterUptake += plant.WaterUptake.Sum();\n\n        \tWaterRemovedToday += PlantWaterUptake;\n        \t// Need to add subsurface drainage here\n\n        \tWaterRemovedCumulative += WaterRemovedToday;\n\n        \tWaterBalanceToday = WaterAddedToday - WaterRemovedToday - (SoilWaterNow - SoilWaterYesterday);\n        \tWaterBalanceCumulative = WaterAddedCumulative - WaterRemovedCumulative - (SoilWaterNow - SoilWaterAtInitialisation);\n        \t// need to add a warning value and a crash value and make a crash\n\t\t}\n    }\n}\n",
+                  "Parameters": [],
+                  "Name": "CalculateRollingWaterBalance",
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Manager, Models",
+                  "Code": "using Models.Climate;\nusing APSIM.Shared.Utilities;\nusing Models.Soils.Nutrients;\nusing Models.Soils;\nusing Models.PMF;\nusing Models.Core;\nusing System.Xml.Serialization;\nusing System;\nusing Models.AgPasture;\nusing Models.Interfaces;\nusing System.Linq;\nusing Models.Functions;\nusing System.Diagnostics;\n\nnamespace Models\n{\n    [Serializable] \n    [System.Xml.Serialization.XmlInclude(typeof(Model))]\n    public class Script : Model\n    {\n        [Link] Clock clock;\n        [Link] ISummary summary;\n        [Link] IWeather weather;\n        [Link] Irrigation irrigation;\n        [Link] private ISoilWater waterBalance;\n        [Link] private IPlant[] plants;\n        [Link(ByName=true)] PastureSpecies AGPRyegrass;\n        [Link(ByName=true)] PastureSpecies AGPWhiteClover;\n        [Link] private Swim3 Swim;\n       // [Link(ByName=true)] private NutrientPool NO3; \n\n\n        //[Description(\"Winter white clover generic growth limiting factor; default = 1\")]\n        //public double WinterWhiteGlfGeneric { get; set; }\n\n\n\n        [EventSubscribe(\"DoDailyInitialisation\")]\n        private void DoDailyInitialisation(object sender, EventArgs e)\n        {\n        \tif (clock.Today == clock.StartDate) \n\t\t\t{\n\t\t\t\t//AGPWhiteClover.GlfGeneric = 0.5;\n\t\t\t\t//AGPRyegrass.UseColdStressFactor = 0;\n\t\t\t\t//AGPRyegrass.Root.KNO3 = 0.1;\n\t\t\t\t//Swim.ernode = 0.001;\n\t\t\t\t//Swim.ersoil = 0.001;\n\t\t\t\t//Swim.slcerr = 0.001;\n\t\t\t\t\n\t\t\t\t//Debugger.Break();\n\t\t\t\tvar denitrificationModel = FindByPath(\"[Nutrient].NO3.Denitrification.Rate\").Value as CERESDenitrificationModel;\n\t\t\t\tdenitrificationModel.DenitrificationRateModifier = 0.0001; // default is 0.0006\n\n\t\t\t\tvar nitrifN2ORateConst = FindByPath(\"[Nutrient].NH4.Nitrification.NLoss\").Value as Constant;\n\t\t\t\tnitrifN2ORateConst.FixedValue = 0.0002; // default is 0.002\n\n\t\t\t\tdenitrificationModel.IsInertActive = true; // default is true\n\n\t\t\t}\n        \telse\n        \t{\n        \t}\n\n\t\t}\n\n        [EventSubscribe(\"DoReportCalculations\")]\n        private void DoReportCalculations(object sender, EventArgs e)\n        {\n        }\n\n    }\n}\n",
+                  "Parameters": [],
+                  "Name": "Fiddle",
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Operations, Models",
+                  "Operation": [
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2010-12-21",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-01-06",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-02-20",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-03-23",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-04-29",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-04-11",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-05-31",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-06-27",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-07-28",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-09-06",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-09-28",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-10-16",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-11-03",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-11-17",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-12-05",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-12-19",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2012-01-12",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2012-02-07",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2012-03-13",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2012-04-13",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2012-05-17",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2012-07-02",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2012-08-24",
+                      "Action": " [SimpleGrazing].GrazeToResidual(1200)",
+                      "Enabled": true
+                    }
+                  ],
+                  "Name": "Cutting",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Operations, Models",
+                  "Operation": [
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2010-12-21",
+                      "Action": "[Fertiliser].Apply(10, Fertiliser.Types.NO3N, 1);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2010-12-21",
+                      "Action": "[Fertiliser].Apply(10, Fertiliser.Types.NO3N, 10);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2010-12-21",
+                      "Action": "[Fertiliser].Apply(5, Fertiliser.Types.NO3N, 20);",
+                      "Enabled": true
+                    }
+                  ],
+                  "Name": "NonTrt_Fert",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Operations, Models",
+                  "Operation": [
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2010-12-27",
+                      "Action": "[Irrigation].Apply(5.3);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2010-12-31",
+                      "Action": "[Irrigation].Apply(5.3);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-01-03",
+                      "Action": "[Irrigation].Apply(5.3);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-01-05",
+                      "Action": "[Irrigation].Apply(5.3);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-01-07",
+                      "Action": "[Irrigation].Apply(5.3);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-01-11",
+                      "Action": "[Irrigation].Apply(5.3);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-01-12",
+                      "Action": "[Irrigation].Apply(95.4);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-01-13",
+                      "Action": "[Irrigation].Apply(53.0);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-01-14",
+                      "Action": "[Irrigation].Apply(106.0);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-01-17",
+                      "Action": "[Irrigation].Apply(79.5);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-01-18",
+                      "Action": "[Irrigation].Apply(106.0);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-01-19",
+                      "Action": "[Irrigation].Apply(106.0);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-01-20",
+                      "Action": "[Irrigation].Apply(106.0);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-01-25",
+                      "Action": "[Irrigation].Apply(79.5);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-01-26",
+                      "Action": "[Irrigation].Apply(53);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-02-21",
+                      "Action": "[Irrigation].Apply(10);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-03-28",
+                      "Action": "[Irrigation].Apply(10);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-05-04",
+                      "Action": "[Irrigation].Apply(10);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-05-31",
+                      "Action": "[Irrigation].Apply(10);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-08-31",
+                      "Action": "[Irrigation].Apply(10);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-09-29",
+                      "Action": "[Irrigation].Apply(10);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-11-07",
+                      "Action": "[Irrigation].Apply(10);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2011-12-05",
+                      "Action": "[Irrigation].Apply(10);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2012-02-28",
+                      "Action": "[Irrigation].Apply(10);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2012-03-30",
+                      "Action": "[Irrigation].Apply(10);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2012-04-30",
+                      "Action": "[Irrigation].Apply(10);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "2012-05-31",
+                      "Action": "[Irrigation].Apply(10);",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "0001-01-01",
+                      "Action": "",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "0001-01-01",
+                      "Action": "",
+                      "Enabled": true
+                    },
+                    {
+                      "$type": "Models.Operation, Models",
+                      "Date": "0001-01-01",
+                      "Action": "",
+                      "Enabled": true
+                    }
+                  ],
+                  "Name": "Irrig",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Irrigation, Models",
+                  "Name": "Irrigation",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Fertiliser, Models",
+                  "ResourceName": "Fertiliser",
+                  "Name": "Fertiliser",
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.SimpleGrazing, Models",
+                  "GrazingRotationType": 2,
+                  "SimpleGrazingFrequencyString": "21",
+                  "SimpleMinGrazable": 0.0,
+                  "SimpleGrazingResidual": 1500.0,
+                  "PreGrazeDMArray": [
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0,
+                    1000.0
+                  ],
+                  "PostGrazeDMArray": [
+                    2000.0,
+                    2000.0,
+                    2000.0,
+                    2000.0,
+                    2000.0,
+                    2000.0,
+                    2000.0,
+                    2000.0,
+                    2000.0,
+                    2000.0,
+                    2000.0,
+                    2000.0
+                  ],
+                  "FlexibleExpressionForTimingOfGrazing": null,
+                  "FlexibleGrazePostDM": 0.0,
+                  "MaximumRotationLengthArray": null,
+                  "MinimumRotationLengthArray": null,
+                  "NoGrazingStartString": null,
+                  "NoGrazingEndString": null,
+                  "FractionDefoliatedNToSoil": [
+                    0.0
+                  ],
+                  "FractionExcretedNToDung": [
+                    0.45
+                  ],
+                  "CNRatioDung": 0.0,
+                  "DepthUrineIsAdded": 250.0,
+                  "FractionPopulationDecline": 0.0,
+                  "TramplingOn": false,
+                  "MaximumPropLitterMovedToSoil": 0.1,
+                  "PastureConsumedAtMaximumRateOfLitterRemoval": 1200.0,
+                  "SpeciesCutProportions": null,
+                  "Name": "SimpleGrazing",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.PastureSpecies, Models",
+                  "InitialShootDM": 2500.0,
+                  "InitialRootDM": 500.0,
+                  "InitialRootDepth": 500.0,
+                  "ResourceName": "AGPRyegrass",
+                  "Name": "AGPRyegrass",
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.AgPasture.PastureSpecies, Models",
+                  "InitialShootDM": 500.0,
+                  "InitialRootDM": 250.0,
+                  "InitialRootDepth": 0.17,
+                  "ResourceName": "AGPWhiteClover",
+                  "Name": "AGPWhiteClover",
+                  "Enabled": false,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Surface.SurfaceOrganicMatter, Models",
+                  "InitialResidueName": "grass",
+                  "InitialResidueType": "grass",
+                  "InitialResidueMass": 20.0,
+                  "InitialStandingFraction": 0.0,
+                  "InitialCPR": 0.0,
+                  "InitialCNR": 17.0,
+                  "ResourceName": "SurfaceOrganicMatter",
+                  "Name": "SurfaceOrganicMatter",
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Soils.Soil, Models",
+                  "RecordNumber": 0,
+                  "ASCOrder": null,
+                  "ASCSubOrder": null,
+                  "SoilType": "Black Vertosol",
+                  "LocalName": null,
+                  "Site": "Jimbour",
+                  "NearestTown": "Jimbour, Q 4352",
+                  "Region": "South East Queensland",
+                  "State": null,
+                  "Country": null,
+                  "NaturalVegetation": "Grassland, mainly Qld bluegrass",
+                  "ApsoilNumber": null,
+                  "Latitude": 0.0,
+                  "Longitude": 0.0,
+                  "LocationAccuracy": null,
+                  "YearOfSampling": null,
+                  "DataSource": null,
+                  "Comments": null,
+                  "Name": "Soil",
+                  "Children": [
+                    {
+                      "$type": "Models.Soils.Physical, Models",
+                      "Thickness": [
+                        60.0,
+                        110.0,
+                        140.0,
+                        240.0,
+                        150.0
+                      ],
+                      "ParticleSizeClay": [
+                        17.61,
+                        16.36,
+                        16.42,
+                        29.030000000000005,
+                        18.44
+                      ],
+                      "ParticleSizeSand": [
+                        33.77,
+                        33.90999999999999,
+                        35.91,
+                        46.26,
+                        53.54
+                      ],
+                      "ParticleSizeSilt": [
+                        48.62,
+                        49.730000000000004,
+                        47.669999999999995,
+                        24.710000000000004,
+                        28.02
+                      ],
+                      "Rocks": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0,
+                        0.0
+                      ],
+                      "Texture": null,
+                      "BD": [
+                        0.865,
+                        0.835,
+                        0.805,
+                        0.83,
+                        0.82
+                      ],
+                      "AirDry": [
+                        0.077,
+                        0.069,
+                        0.068,
+                        0.088,
+                        0.097
+                      ],
+                      "LL15": [
+                        0.231,
+                        0.207,
+                        0.205,
+                        0.264,
+                        0.29
+                      ],
+                      "DUL": [
+                        0.565,
+                        0.515,
+                        0.514,
+                        0.475,
+                        0.481
+                      ],
+                      "SAT": [
+                        0.6,
+                        0.606,
+                        0.617,
+                        0.62,
+                        0.625
+                      ],
+                      "KS": [
+                        216.0,
+                        1188.0,
+                        2160.0,
+                        3528.0,
+                        5376.0
+                      ],
+                      "BDMetadata": null,
+                      "AirDryMetadata": null,
+                      "LL15Metadata": null,
+                      "DULMetadata": null,
+                      "SATMetadata": null,
+                      "KSMetadata": null,
+                      "RocksMetadata": null,
+                      "TextureMetadata": null,
+                      "ParticleSizeSandMetadata": null,
+                      "ParticleSizeSiltMetadata": null,
+                      "ParticleSizeClayMetadata": null,
+                      "Name": "Physical",
+                      "Children": [
+                        {
+                          "$type": "Models.Soils.SoilCrop, Models",
+                          "LL": [
+                            0.231,
+                            0.207,
+                            0.205,
+                            0.264,
+                            0.29
+                          ],
+                          "KL": [
+                            0.1,
+                            0.1,
+                            0.05,
+                            0.025,
+                            0.0
+                          ],
+                          "XF": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                          ],
+                          "LLMetadata": null,
+                          "KLMetadata": null,
+                          "XFMetadata": null,
+                          "Name": "AgPRyegrassSoil",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SoilCrop, Models",
+                          "LL": [
+                            0.231,
+                            0.231,
+                            0.231,
+                            0.0,
+                            0.0
+                          ],
+                          "KL": [
+                            0.02,
+                            0.01,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "XF": [
+                            1.0,
+                            1.0,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "LLMetadata": null,
+                          "KLMetadata": null,
+                          "XFMetadata": null,
+                          "Name": "AgPWhiteCloverSoil",
+                          "Children": [],
+                          "Enabled": false,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Organic, Models",
+                      "FOMCNRatio": 40.0,
+                      "Thickness": [
+                        60.0,
+                        110.0,
+                        140.0,
+                        240.0,
+                        150.0
+                      ],
+                      "Carbon": [
+                        8.2,
+                        5.5,
+                        3.3,
+                        1.7,
+                        1.7
+                      ],
+                      "SoilCNRatio": [
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5,
+                        12.5
+                      ],
+                      "FBiom": [
+                        0.08,
+                        0.02,
+                        0.015,
+                        0.01,
+                        0.01
+                      ],
+                      "FInert": [
+                        0.58,
+                        0.7,
+                        0.77,
+                        0.9,
+                        0.99
+                      ],
+                      "FOM": [
+                        92.873,
+                        57.963,
+                        31.810856349632882,
+                        11.372932585525932,
+                        5.9797517560712565
+                      ],
+                      "CarbonMetadata": null,
+                      "FOMMetadata": null,
+                      "Name": "Organic",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.InitialWater, Models",
+                      "PercentMethod": 0,
+                      "FractionFull": 0.86,
+                      "DepthWetSoil": "NaN",
+                      "RelativeTo": "LL15",
+                      "Name": "Initial water",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Chemical, Models",
+                      "Thickness": [
+                        60.0,
+                        110.0,
+                        140.0,
+                        240.0,
+                        150.0
+                      ],
+                      "NO3N": [
+                        6.50300344798777,
+                        2.1010011139815896,
+                        2.10100111398159,
+                        1.7010009018956196,
+                        1.7010000000000005
+                      ],
+                      "NH4N": [
+                        2.0,
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                      ],
+                      "PH": [
+                        5.7,
+                        5.3,
+                        5.9,
+                        6.6,
+                        6.7
+                      ],
+                      "CL": null,
+                      "EC": null,
+                      "ESP": null,
+                      "LabileP": null,
+                      "UnavailableP": null,
+                      "ECMetadata": null,
+                      "CLMetadata": null,
+                      "ESPMetadata": null,
+                      "PHMetadata": null,
+                      "Name": "Chemical",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Nutrients.Nutrient, Models",
+                      "ResourceName": "Nutrient",
+                      "Name": "Nutrient",
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.Swim3, Models",
+                      "PrecipitationInterception": 0.0,
+                      "ersoil": 1E-06,
+                      "ernode": 1E-06,
+                      "slcerr": 1E-06,
+                      "theta": null,
+                      "psi": null,
+                      "Salb": 0.13,
+                      "CN2Bare": 0.0,
+                      "CNRed": 20.0,
+                      "CNCov": 0.8,
+                      "KDul": 1.0,
+                      "PSIDul": -100.0,
+                      "VC": true,
+                      "DTMin": 0.0,
+                      "DTMax": 60.0,
+                      "MaxWaterIncrement": 2.0,
+                      "SpaceWeightingFactor": 0.0,
+                      "SoluteSpaceWeightingFactor": 0.0,
+                      "Dis": 0.0,
+                      "Disp": 0.0,
+                      "A": 0.0,
+                      "DTHC": 0.0,
+                      "DTHP": 0.0,
+                      "Diagnostics": false,
+                      "WaterTable": 0.0,
+                      "Name": "Swim",
+                      "Children": [
+                        {
+                          "$type": "Models.Soils.SwimSoluteParameters, Models",
+                          "WaterTableConcentration": 0.0,
+                          "D0": 0.05,
+                          "Depth": [
+                            "0-6",
+                            "6-17",
+                            "17-31",
+                            "31-55",
+                            "55-70"
+                          ],
+                          "Thickness": [
+                            60.0,
+                            110.0,
+                            140.0,
+                            240.0,
+                            150.0
+                          ],
+                          "Exco": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "FIP": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                          ],
+                          "Name": "Urea",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SwimSoluteParameters, Models",
+                          "WaterTableConcentration": 0.0,
+                          "D0": 0.05,
+                          "Depth": [
+                            "0-6",
+                            "6-17",
+                            "17-31",
+                            "31-55",
+                            "55-70"
+                          ],
+                          "Thickness": [
+                            60.0,
+                            110.0,
+                            140.0,
+                            240.0,
+                            150.0
+                          ],
+                          "Exco": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "FIP": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                          ],
+                          "Name": "NO3",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SwimSoluteParameters, Models",
+                          "WaterTableConcentration": 0.0,
+                          "D0": 0.05,
+                          "Depth": [
+                            "0-6",
+                            "6-17",
+                            "17-31",
+                            "31-55",
+                            "55-70"
+                          ],
+                          "Thickness": [
+                            60.0,
+                            110.0,
+                            140.0,
+                            240.0,
+                            150.0
+                          ],
+                          "Exco": [
+                            3.0,
+                            3.0,
+                            3.0,
+                            3.0,
+                            3.0
+                          ],
+                          "FIP": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                          ],
+                          "Name": "NH4",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SwimSoluteParameters, Models",
+                          "WaterTableConcentration": 0.0,
+                          "D0": 0.05,
+                          "Depth": [
+                            "0-6",
+                            "6-17",
+                            "17-31",
+                            "31-55",
+                            "55-70"
+                          ],
+                          "Thickness": [
+                            60.0,
+                            110.0,
+                            140.0,
+                            240.0,
+                            150.0
+                          ],
+                          "Exco": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "FIP": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                          ],
+                          "Name": "CL",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SwimSoluteParameters, Models",
+                          "WaterTableConcentration": 0.0,
+                          "D0": 0.05,
+                          "Depth": [
+                            "0-6",
+                            "6-17",
+                            "17-31",
+                            "31-55",
+                            "55-70"
+                          ],
+                          "Thickness": [
+                            60.0,
+                            110.0,
+                            140.0,
+                            240.0,
+                            150.0
+                          ],
+                          "Exco": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "FIP": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                          ],
+                          "Name": "LabileP",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SwimSoluteParameters, Models",
+                          "WaterTableConcentration": 0.0,
+                          "D0": 0.05,
+                          "Depth": [
+                            "0-6",
+                            "6-17",
+                            "17-31",
+                            "31-55",
+                            "55-70"
+                          ],
+                          "Thickness": [
+                            60.0,
+                            110.0,
+                            140.0,
+                            240.0,
+                            150.0
+                          ],
+                          "Exco": [
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0,
+                            0.0
+                          ],
+                          "FIP": [
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0,
+                            1.0
+                          ],
+                          "Name": "UnavailableP",
+                          "Children": [],
+                          "Enabled": true,
+                          "ReadOnly": false
+                        },
+                        {
+                          "$type": "Models.Soils.SwimSoluteParameters, Models",
+                          "WaterTableConcentration": 0.0,
+                          "D0": 0.05,
+                          "Depth": [
+                            "0-6",
+                            "6-17",
+                            "17-31",
+                            "31-55",
+                            "55-70"
+                          ],
+                          "Thickness": [
+                            60.0,
+                            110.0,
+                            140.0,
+                            240.0,
+                            150.0
+                          ],
+                          "Exco": [
+                            16.973,
+                            24.523,
+                            29.27,
+                            51.537,
+                            37.322
+                          ],
+                          "FIP": [
+                            0.721,
+                            0.635,
+                            0.586,
+                            0.442,
+                            0.517
+                          ],
+                          "Name": "NH41",
+                          "Children": [],
+                          "Enabled": false,
+                          "ReadOnly": false
+                        }
+                      ],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.CERESSoilTemperature, Models",
+                      "Name": "Temperature",
+                      "Children": [],
+                      "Enabled": false,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.LayerStructure, Models",
+                      "Depth": [
+                        "0-1",
+                        "1-3",
+                        "3-6",
+                        "6-10",
+                        "10-15",
+                        "15-20",
+                        "20-25",
+                        "25-30",
+                        "30-40",
+                        "40-50",
+                        "50-55",
+                        "55-60",
+                        "60-65",
+                        "65-70"
+                      ],
+                      "Thickness": [
+                        10.0,
+                        20.0,
+                        30.0,
+                        40.0,
+                        50.0,
+                        50.0,
+                        50.0,
+                        50.0,
+                        100.0,
+                        100.0,
+                        50.0,
+                        50.0,
+                        50.0,
+                        50.0
+                      ],
+                      "Name": "LayerStructure",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Soils.SoilTemp.SoilTemperature, Models",
+                      "Name": "SoilTemperature",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
+                    }
+                  ],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[Weather].Rain",
+                    "[Irrigation].IrrigationApplied",
+                    "[AGPRyegrass].AboveGroundWt + as AboveGroundBiomass",
+                    "[AGPRyegrass].HarvestedWt + as HarvestedWt",
+                    "[AGPRyegrass].HarvestedN + as HarvestedN",
+                    "[Swim].Drainage",
+                    "[Swim].LeachNO3",
+                    "[Swim].LeachNH4",
+                    "sum([Nutrient].DenitrifiedN) as DenitrifiedN",
+                    "sum([Nutrient].N2Oatm[1:8]) as N2Oatm",
+                    "",
+                    "",
+                    "",
+                    "//sum([nh3_volatilisation].Script.emission_nh3) as emission_nh3",
+                    "",
+                    "//CumPrecip",
+                    "// SWdep",
+                    "// Satdep",
+                    "// Duldep",
+                    "// ll15dep",
+                    "// CumDrain",
+                    "// Dul_l as dul",
+                    "// ll15_l as ll15",
+                    "// sw_l as sw",
+                    "// AboveGroundWt as Herbage",
+                    "// AboveGroundLiveWt as Live",
+                    "// AboveGroundDeadWt as Dead",
+                    "// SpeciesLiveWt(1) as RyeGrass",
+                    "// SpeciesLiveWt(2) as Clover",
+                    "// cumHarvestWt",
+                    "// HarvestWt",
+                    "// cumHarvestN",
+                    "// HarvestN",
+                    "// urea_l as urea",
+                    "// nh4_l as nh4",
+                    "// no3_l as no3",
+                    "// leach_urea",
+                    "// leach_nh4",
+                    "// leach_no3",
+                    "// cumleach_no3",
+                    "// cumleach_nh4",
+                    "// dnit() as tot_denit format 3",
+                    "// n2o_atm() as n2o_denit format3",
+                    "// cum_dnit",
+                    "// cum_n2o_atm",
+                    "// SoilpH(1)",
+                    "// min_n_l as min_n",
+                    "// org_n_l as org_n",
+                    "// biom_n_l as biom_n",
+                    "// fom_n_l as fom_n",
+                    "// hum_n_l as hum_n",
+                    "// dlt_biom_n_l as dlt_biom_n",
+                    "// dlt_fom_n_l as dlt_fom_n",
+                    "// dlt_hum_n_l as dlt_hum_n",
+                    "// dlt_org_n_l as dlt_org_n",
+                    "// dlt_min_n_l as dlt_min_n",
+                    "// emission_nh3() as Volat",
+                    "// urea",
+                    "// nh4",
+                    "// n2o_atm() as AllN2O format 6",
+                    "// n2o_atm_denitrification() as DenitN2O format 6 ",
+                    "// n2o_atm_nitrification()  as NitrifN2O format 6",
+                    "// n2o_atm as AllN2OByLayer format 6",
+                    "// carbon_tot",
+                    "// fom_c",
+                    "// hum_c",
+                    "// biom_c"
+                  ],
+                  "EventNames": [
+                    "Clock.Today >= new DateTime(2011, 2, 21)"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "Report",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Report, Models",
+                  "VariableNames": [
+                    "[Clock].Today",
+                    "[MicroClimate].NumLayers",
+                    "[MicroClimate].PetTotal",
+                    "[Swim].Eo",
+                    "[Swim].Eos",
+                    "[Weather].Rain + [Irrigation].IrrigationApplied as RainIrrig",
+                    "[Swim].Drainage",
+                    "[Swim].Es",
+                    "[AgPRyegrass].WaterDemand as RyegrassDemand",
+                    "sum([AgPRyegrass].WaterUptake) as RyegrassUptake",
+                    "sum([AgPRyegrass].WaterUptake) + [Swim].Es as EvapoTran",
+                    "[CalculateRollingWaterBalance].Script.WaterBalanceCumulative"
+                  ],
+                  "EventNames": [
+                    "Clock.Today >= new DateTime(2011, 2, 21)"
+                  ],
+                  "GroupByVariableName": null,
+                  "Name": "WaterBalanceReport",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": false,
+          "GraphsPerPage": 6,
+          "Name": "Graphs",
+          "Children": [
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "CumulativeDrainage",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Swim.Drainage",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "ObservedDrainage",
+                  "XFieldName": "Date",
+                  "YFieldName": "CumulativeDrainage",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Observed",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "LeachNO3",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Swim.LeachNO3",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "ObservedDrainage",
+                  "XFieldName": "Date",
+                  "YFieldName": "CumulativeNO3",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Observed",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "LeachNH4",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Swim.LeachNH4",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "ObservedDrainage",
+                  "XFieldName": "Date",
+                  "YFieldName": "CumulativeNH4",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Observed",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Total Denitrification",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "DenitrifiedN",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted_Total",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "N2OCumulative",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "N2Oatm",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "ObservedN2O",
+                  "XFieldName": "Date",
+                  "YFieldName": "CumulativeN2O",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Observed",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "N2O_PredOnly",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "N2Oatm",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": 0.3,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "N2O",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "N2Oatm",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 9,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "ObservedN2O",
+                  "XFieldName": "Date",
+                  "YFieldName": "N2O",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Observed",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "NH3 Volatilisation",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "emission_nh3",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "HarvestWt",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "HarvestedWt",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "ObservedHerbage",
+                  "XFieldName": "Date",
+                  "YFieldName": "CumulativeHerbage",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Observed",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "HarvestN",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "HarvestedN",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "ObservedHerbage",
+                  "XFieldName": "Date",
+                  "YFieldName": "CumulativeHarvestedN",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Observed",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "AboveGroundWt",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "Report",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "AboveGroundBiomass",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 0,
+                  "MarkerSize": 0,
+                  "Line": 4,
+                  "LineThickness": 0,
+                  "TableName": "ObservedHerbage",
+                  "XFieldName": "Date",
+                  "YFieldName": "StandingDM",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Observed",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        },
+        {
+          "$type": "Models.Core.Folder, Models",
+          "ShowInDocs": false,
+          "GraphsPerPage": 6,
+          "Name": "WaterBalance",
+          "Children": [
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "RainIrrig",
+                  "Position": 2,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "WaterInput",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 0,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "WaterBalanceReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "RainIrrig",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "RainAndIrrigation",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -3376729,
+                  "FactorToVaryColours": null,
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "WaterBalanceReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "RainIrrig",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "RainAndIrrigation1",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "RainIrrig",
+                  "Position": 2,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "WaterOutputs",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 4,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -3376729,
+                  "FactorToVaryColours": "Graph series",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "WaterBalanceReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Swim.Drainage",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Drainage",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 4,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -3376729,
+                  "FactorToVaryColours": "Graph series",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "WaterBalanceReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Swim.Es",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "SoilWaterEvap",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 4,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -3376729,
+                  "FactorToVaryColours": "Graph series",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "WaterBalanceReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "SwardDemand",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Uptake",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "WaterBalanceCheck",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "SimulationName",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "WaterBalanceReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "CalculateRollingWaterBalance.Script.WaterBalanceCumulative",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Predicted",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "RyegrassDemand",
+                  "Position": 2,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Ryegrass",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "Graph series",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "WaterBalanceReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "RyegrassDemand",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Demand",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -3376729,
+                  "FactorToVaryColours": "Graph series",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "WaterBalanceReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "RyegrassUptake",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Uptake",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "Graph series",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "WaterBalanceReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "MicroClimate.PetTotal",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "PET",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "Graph series",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "WaterBalanceReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "RyegrassDemand",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Demand1",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -3376729,
+                  "FactorToVaryColours": "Graph series",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "WaterBalanceReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "RyegrassUptake",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Uptake1",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "Graph series",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "WaterBalanceReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "MicroClimate.PetTotal",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "PET1",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            },
+            {
+              "$type": "Models.Graph, Models",
+              "Caption": null,
+              "Axis": [
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 3,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": null,
+                  "Position": 0,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                },
+                {
+                  "$type": "APSIM.Shared.Graphing.Axis, APSIM.Shared",
+                  "Title": "RainIrrig",
+                  "Position": 2,
+                  "Inverted": false,
+                  "CrossesAtZero": false,
+                  "Minimum": null,
+                  "Maximum": null,
+                  "Interval": null
+                }
+              ],
+              "LegendPosition": 0,
+              "LegendOrientation": 0,
+              "AnnotationLocation": 0,
+              "DisabledSeries": [],
+              "LegendOutsideGraph": false,
+              "Name": "Soil",
+              "Children": [
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "Graph series",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "WaterBalanceReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Swim.Eos",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Demand",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -3376729,
+                  "FactorToVaryColours": "Graph series",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "WaterBalanceReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Swim.Es",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Uptake",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 0,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "Graph series",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "WaterBalanceReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "MicroClimate.PetTotal",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": false,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "PET",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "Graph series",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "WaterBalanceReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Swim.Eos",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Demand1",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -3376729,
+                  "FactorToVaryColours": "Graph series",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "WaterBalanceReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "Swim.Es",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "Uptake1",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                },
+                {
+                  "$type": "Models.Series, Models",
+                  "Type": 1,
+                  "XAxis": 3,
+                  "YAxis": 2,
+                  "ColourArgb": -1663232,
+                  "FactorToVaryColours": "Graph series",
+                  "FactorToVaryMarkers": null,
+                  "FactorToVaryLines": null,
+                  "Marker": 11,
+                  "MarkerSize": 0,
+                  "Line": 0,
+                  "LineThickness": 0,
+                  "TableName": "WaterBalanceReport",
+                  "XFieldName": "Clock.Today",
+                  "YFieldName": "MicroClimate.PetTotal",
+                  "X2FieldName": null,
+                  "Y2FieldName": null,
+                  "ShowInLegend": true,
+                  "IncludeSeriesNameInLegend": false,
+                  "Cumulative": true,
+                  "CumulativeX": false,
+                  "Filter": null,
+                  "Name": "PET1",
+                  "Children": [],
+                  "Enabled": true,
+                  "ReadOnly": false
+                }
+              ],
+              "Enabled": true,
+              "ReadOnly": false
+            }
+          ],
+          "Enabled": true,
+          "ReadOnly": false
+        }
+      ],
+      "Enabled": true,
+      "ReadOnly": false
+    },
+    {
+      "$type": "Models.Memo, Models",
+      "Text": "0.599\n0.100\n0.100\n0.100\n0.100\n",
+      "Name": "Memo",
+      "Children": [],
+      "Enabled": true,
+      "ReadOnly": false
+    }
+  ],
+  "Enabled": true,
+  "ReadOnly": false
+}
