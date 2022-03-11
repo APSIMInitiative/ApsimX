@@ -80,13 +80,34 @@ namespace Models.CLEM.Activities
             }
         }
 
+        /// <summary>
+        /// Provide next GUID based on level specified
+        /// </summary>
+        /// <param name="guid">GuID to add to</param>
+        /// <param name="level">Level to add to</param>
+        /// <returns>New GuID</returns>
+        public string AddToGuID(string guid, int level)
+        {
+            if (level > 0 & level <= 3)
+            {
+                List<string> parts = guid.Split('-').ToList();
+                int number = Convert.ToInt32(parts[level]);
+                number++;
+                parts[level] = number.ToString().PadLeft(4, '0');
+                return string.Join('-', parts);
+            }
+            else
+                throw new ArgumentException("Add to GuID only supports levels 1 to 3");
+        }
+
+
         /// <summary>An method to perform core actions when simulation commences</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("Commencing")]
         private void SetUniqueActivityIDs(object sender, EventArgs e)
         {
-            foreach (var activity in FindAllDescendants<CLEMActivityBase>())
+            foreach (var activity in FindAllDescendants<CLEMModel>())
                 activity.SetGuID(NextGuID);
         }
 
