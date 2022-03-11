@@ -408,12 +408,12 @@ namespace Models.Soils
         /// <summary>
         /// 
         /// </summary>
-        private double ersoil = 0.000001;
+        public double ersoil { get; set; } = 0.000001;
 
         /// <summary>
         /// 
         /// </summary>
-        private double ernode = 0.000001;
+        public double ernode { get; set; } = 0.000001;
 
         /// <summary>
         /// 
@@ -433,7 +433,7 @@ namespace Models.Soils
         /// <summary>
         /// 
         /// </summary>
-        private double slcerr = 0.000001;
+        public double slcerr { get; set; } = 0.000001;
         
         /// <summary>
         /// 
@@ -5640,7 +5640,7 @@ namespace Models.Soils
                 double[] newSW = MathUtilities.Divide(dlt_sw_dep, soilPhysical.Thickness, divideTolerance);
                 newSW = MathUtilities.Subtract(th, newSW);
                 ResetWaterBalance(1, ref newSW);
-                run_has_started = false;
+                //run_has_started = false;
             }
         }
 
