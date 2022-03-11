@@ -1709,7 +1709,7 @@
                     "// biom_c"
                   ],
                   "EventNames": [
-                    "if Clock.Today >= new DateTime(2011, 2, 21)"
+                    "Clock.Today >= new DateTime(2011, 2, 21)"
                   ],
                   "GroupByVariableName": null,
                   "Name": "Report",
@@ -1734,7 +1734,7 @@
                     "[CalculateRollingWaterBalance].Script.WaterBalanceCumulative"
                   ],
                   "EventNames": [
-                    "if Clock.Today >= new DateTime(2011, 2, 21)"
+                    "Clock.Today >= new DateTime(2011, 2, 21)"
                   ],
                   "GroupByVariableName": null,
                   "Name": "WaterBalanceReport",
