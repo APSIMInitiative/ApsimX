@@ -74,9 +74,9 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels<T>()
+        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
         {
-            switch (typeof(T).Name)
+            switch (type)
             {
                 case "RuminantGroup":
                     return new LabelsForIdentifiableChildren(
@@ -130,8 +130,6 @@ namespace Models.CLEM.Activities
                         break;
                     default:
                         throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-//                        valuesForIdentifiableModels[valueToSupply.Key] = 0;
-//                        break;
                 }
             }
             return null;

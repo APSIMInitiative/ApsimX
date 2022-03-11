@@ -1,6 +1,7 @@
 ﻿using Models.Core;
 using Models.CLEM.Groupings;
 using Models.CLEM.Resources;
+using Models.CLEM.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -14,8 +15,6 @@ namespace Models.CLEM.Activities
 {
     /// <summary>Labour (Human) feed activity</summary>
     /// <summary>This activity provides food to specified people based on a feeding style</summary>
-    /// <version>1.0</version>
-    /// <updates>1.0 First implementation of this activity using IAT/NABSA processes</updates>
     [Serializable]
     [ViewName("UserInterface.Views.PropertyView")]
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
@@ -25,7 +24,7 @@ namespace Models.CLEM.Activities
     [Description("Feed people (labour) as selected with a specified feeding style.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeed.htm")]
-    public class LabourActivityFeed : CLEMActivityBase
+    public class LabourActivityFeed : CLEMActivityBase, ICanHandleIdentifiableChildModels
     {
         private double feedRequired = 0;
         private Labour labour;
@@ -60,6 +59,9 @@ namespace Models.CLEM.Activities
             this.SetDefaults();
             TransactionCategory = "Labour.Feed";
         }
+
+
+
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
         /// <param name="sender">The sender.</param>

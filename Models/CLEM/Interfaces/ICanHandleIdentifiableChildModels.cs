@@ -9,8 +9,8 @@ namespace Models.CLEM.Interfaces
         /// <summary>
         /// A method to get a list of activity specified labels for a generic type T 
         /// </summary>
-        /// <typeparam name="T">Identifiable child model type</typeparam>
+        /// <param name="type">The type of model to return labels for</param>
         /// <returns>A LabelsForIdentifiableChildren containing all labels</returns>
-        public LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels<T>() where T : IIdentifiableChildModel;
+        public LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type);
     }
 }

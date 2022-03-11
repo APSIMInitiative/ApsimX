@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFee.htm")]
-    public class RuminantActivityFee: CLEMActivityBase, IIdentifiableChildModel, IValidatableObject
+    public class RuminantActivityFee: CLEMActivityBase, IIdentifiableChildModel
     {
         [Link]
         private ResourcesHolder resources = null;
@@ -117,77 +117,6 @@ namespace Models.CLEM.Activities
             bool shortfalls = MathUtilities.IsLessThan(resourceRequest.Provided, resourceRequest.Required);
             SetStatusSuccessOrPartial(shortfalls);
         }
-
-        ///// <inheritdoc/>
-        //public List<ResourceRequest> GetResourceRequests(double activityMetric)
-        //{
-        //    double charge;
-        //    charge = (double)activityMetric * Amount;
-
-        //    if (MathUtilities.IsPositive(charge))
-        //        Status = ActivityStatus.NotNeeded;
-
-        //    resourceRequest = new ResourceRequest()
-        //    {
-        //        Resource = BankAccount,
-        //        ResourceType = typeof(Finance),
-        //        AllowTransmutation = true,
-        //        Required = charge,
-        //        Category = TransactionCategory,
-        //        AdditionalDetails = this,
-        //        RelatesToResource = (Parent as CLEMRuminantActivityBase).PredictedHerdName,
-        //        ActivityModel = this
-        //    };
-        //    return new List<ResourceRequest>() { resourceRequest };
-        //}
-
-        #region validation
-
-        /// <summary>
-        /// A method to return the list of identifiers relavent to this parent activity
-        /// </summary>
-        /// <returns>A list of identifiers</returns>
-        public List<string> ParentSuppliedIdentifiers()
-        {
-            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
-                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels<RuminantActivityFee>().Identifiers;
-            else
-                return new List<string>();
-        }
-
-        /// <summary>
-        /// A method to return the list of units relavent to this parent activity
-        /// </summary>
-        /// <returns>A list of units</returns>
-        public List<string> ParentSuppliedUnits()
-        {
-            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
-                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels<RuminantActivityFee>().Units;
-            else
-                return new List<string>();
-        }
-
-
-        /// <summary>
-        /// Validate model
-        /// </summary>
-        /// <param name="validationContext"></param>
-        /// <returns></returns>
-        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
-        {
-            var results = new List<ValidationResult>();
-            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
-            {
-                var identifiers = ParentSuppliedIdentifiers();
-                if (identifiers.Any() & !identifiers.Contains(Identifier??""))
-                {
-                    string[] memberNames = new string[] { "Ruminant activity fee" };
-                    results.Add(new ValidationResult($"The fee identifier [{((Identifier == "") ? "BLANK" : Identifier)}] in [f={this.Name}] is not valid for the parent activity [a={Parent.Name}].{Environment.NewLine}Select an option from the list or provide an empty value for the property if no entries are provided", memberNames));
-                }
-            }
-            return results;
-        }
-        #endregion
 
         #region descriptive summary
 

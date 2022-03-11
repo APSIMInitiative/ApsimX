@@ -229,7 +229,7 @@ namespace Models.CLEM.Activities
                 }
                 else
                 {
-                    labels = DefineIdentifiableChildModelLabels<T>();
+                    labels = DefineIdentifiableChildModelLabels(typeof(T).Name);
                     identifiableModelLabels.Add(typeof(T).Name, labels);
                 }
                 switch (labelType)
@@ -250,9 +250,9 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// A method to get a list of activity specified labels for a generic type T 
         /// </summary>
-        /// <typeparam name="T">Identifiable child model type</typeparam>
+        /// <param name="type">The type of child model</param>
         /// <returns>A LabelsForIdentifiableChildren containing all labels</returns>
-        public virtual LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels<T>() where T : IIdentifiableChildModel
+        public virtual LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
         {
             return new LabelsForIdentifiableChildren();
         }
@@ -324,7 +324,8 @@ namespace Models.CLEM.Activities
             }
             if (mustBeProvidedByUser)
             {
-                throw new ApsimXException(this, $"[a={NameWithParent}] requires at least one [{typeof(T).Name}] as a child component {((identifier=="")?"":$"with the Identifier set as [{identifier}]")}to specify individuals");
+                string warn = $"[a={NameWithParent}] requires at least one [{typeof(T).Name}] as a child component {((identifier == "") ? "with the appropriate identifier" : $"with the Identifier set as [{identifier}]")} to specify individuals";
+                Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
             }
             else
             {
@@ -598,6 +599,41 @@ namespace Models.CLEM.Activities
                 } 
             }
             return new List<ResourceRequest>();
+        }
+
+        /// <summary>A method to arrange the activity to be performed on the specified clock event</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseResource")]
+        protected virtual void OnValidateIdenfiableChildrenIdentifiersAndUnits(object sender, EventArgs e)
+        {
+            if (this is ICanHandleIdentifiableChildModels)
+            {
+                foreach (var iChild in FindAllChildren<IIdentifiableChildModel>())
+                {
+                    var identifiers = DefineIdentifiableChildModelLabels(iChild.GetType().Name).Identifiers;
+
+                    // tests for invalid identifier
+                    bool test = ((iChild.Identifier ?? "") == "") == identifiers.Any();
+                    bool test2 = identifiers.Any() && ((iChild.Identifier ?? "") != "") && !identifiers.Contains(iChild.Identifier ?? "");
+
+                    if (test | test2)
+                    {
+                        string warn = $"The identifier [{((iChild.Identifier == "") ? "BLANK" : iChild.Identifier)}] specified in [{iChild.Name}] is not valid for the parent activity [a={NameWithParent}].{Environment.NewLine}Select an option from the list. If only the invalid value is displayed, edit the simulation file or delete and replace the component.";
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
+                    }
+
+                    var units = DefineIdentifiableChildModelLabels(iChild.GetType().Name).Units;
+                    test = ((iChild.Units ?? "") == "") == units.Any();
+                    test2 = units.Any() && ((iChild.Units ?? "") != "") && !units.Contains(iChild.Units ?? "");
+                    if (test | test2)
+                    {
+                        string warn = $"The units [{((iChild.Units == "") ? "BLANK" : iChild.Units)}] specified in [{iChild.GetType().Name}]:[{iChild.Name}] are not valid for the parent activity [{GetType().Name}]:[a={NameWithParent}].{Environment.NewLine}Select an option from the list. If only the invalid value is displayed, edit the simulation file or delete and replace the component.";
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
+                    }
+
+                }
+            }
         }
 
         /// <summary>

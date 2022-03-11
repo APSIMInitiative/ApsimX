@@ -6,6 +6,7 @@ using Models.Core.Attributes;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Text;
 
 namespace Models.CLEM.Activities
@@ -124,52 +125,23 @@ namespace Models.CLEM.Activities
             TransactionCategory = "GreenhouseGas.[Emission]";
         }
 
-        /// <summary>
-        /// A method to return the list of identifiers relavent to this parent activity
-        /// </summary>
-        /// <returns>A list of identifiers</returns>
-        public List<string> ParentSuppliedIdentifiers()
+        #region descriptive summary
+
+        /// <inheritdoc/>
+        public override string ModelSummary()
         {
-            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
-                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels<GreenhouseGasActivityEmission>().Identifiers;
-            else
-                return new List<string>();
+            using (StringWriter htmlWriter = new StringWriter())
+            {
+                htmlWriter.Write("\r\n<div class=\"activityentry\">Produce emissions at rate of ");
+                htmlWriter.Write($"<span class=\"setvalue\">{Amount:#,##0.##}</span> ");
+                htmlWriter.Write($"<span class=\"setvalue\">{Units}</span></div>");
+                htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not set"));
+                htmlWriter.Write(" for all transactions</div>");
+                return htmlWriter.ToString();
+            }
         }
-
-        /// <summary>
-        /// A method to return the list of units relavent to this parent activity
-        /// </summary>
-        /// <returns>A list of units</returns>
-        public List<string> ParentSuppliedUnits()
-        {
-            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
-                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels<GreenhouseGasActivityEmission>().Units;
-            else
-                return new List<string>();
-        }
-
-        //#region descriptive summary
-
-        ///// <inheritdoc/>
-        //public override string ModelSummary()
-        //{
-        //    using (StringWriter htmlWriter = new StringWriter())
-        //    {
-        //        htmlWriter.Write("\r\n<div class=\"activityentry\">Pay ");
-        //        htmlWriter.Write($"<span class=\"setvalue\">{Amount:#,##0.##}</span> ");
-        //        htmlWriter.Write($"<span class=\"setvalue\">{Units}</span> ");
-        //        htmlWriter.Write(" from ");
-
-        //        htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(BankAccountName, "Account not set", HTMLSummaryStyle.Resource));
-        //        htmlWriter.Write("</div>");
-        //        htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
-
-        //        htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not set"));
-        //        htmlWriter.Write(" for all transactions</div>");
-        //        return htmlWriter.ToString();
-        //    }
-        //}
-        //#endregion
+        #endregion
 
 
     }

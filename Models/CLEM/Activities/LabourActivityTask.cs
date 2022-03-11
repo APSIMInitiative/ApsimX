@@ -1,5 +1,6 @@
 ﻿using Models.Core;
 using Models.CLEM.Resources;
+using Models.CLEM.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -24,7 +25,7 @@ namespace Models.CLEM.Activities
     [Description("Arrange payment for a task based on the labour specified in the labour requirement")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourTask.htm")]
     [Version(1, 0, 1, "")]
-    public class LabourActivityTask : CLEMActivityBase
+    public class LabourActivityTask : CLEMActivityBase, ICanHandleIdentifiableChildModels
     {
         /// <summary>
         /// Constructor
@@ -41,6 +42,28 @@ namespace Models.CLEM.Activities
             List<ResourceRequest> resourcesNeeded = null;
             return resourcesNeeded;
         }
+
+        /// <inheritdoc/>
+        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
+        {
+            switch (type)
+            {
+                case "LabourRequirement":
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>()
+                        {
+
+                        },
+                        units: new List<string>() {
+                            "fixed",
+                            "per ha",
+                        }
+                        );
+                default:
+                    return new LabelsForIdentifiableChildren();
+            }
+        }
+
 
         ///// <inheritdoc/>
         //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
@@ -63,7 +86,7 @@ namespace Models.CLEM.Activities
             using (StringWriter htmlWriter = new StringWriter())
             {
                 htmlWriter.Write("\r\n<div class=\"activityentry\">This activity uses a category label ");
-                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Account not set"));
+                htmlWriter.Write(CLEMModel.DisplaySummaryValueSnippet(TransactionCategory, "Not set"));
                 htmlWriter.Write(" for all transactions</div>");
                 return htmlWriter.ToString();
             }

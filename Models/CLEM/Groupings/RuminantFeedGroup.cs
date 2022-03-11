@@ -225,31 +225,6 @@ namespace Models.CLEM.Groupings
             }
         }
 
-        /// <summary>
-        /// A method to return the list of identifiers relavent to this parent activity
-        /// </summary>
-        /// <returns>A list of identifiers</returns>
-        public override List<string> ParentSuppliedIdentifiers()
-        {
-            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
-                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels<RuminantFeedGroup>().Identifiers;
-            else
-                return new List<string>();
-        }
-
-        /// <summary>
-        /// A method to return the list of units relavent to this parent activity
-        /// </summary>
-        /// <returns>A list of units</returns>
-        public override List<string> ParentSuppliedUnits()
-        {
-            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
-                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels<RuminantFeedGroup>().Units;
-            else
-                return new List<string>();
-        }
-
-
         #region descriptive summary
 
         /// <inheritdoc/>

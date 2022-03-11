@@ -225,30 +225,6 @@ namespace Models.CLEM.Activities
         #region validation
 
         /// <summary>
-        /// A method to return the list of identifiers relavent to this parent activity
-        /// </summary>
-        /// <returns>A list of identifiers</returns>
-        public List<string> ParentSuppliedIdentifiers()
-        {
-            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
-                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels<LabourRequirement>().Identifiers;
-            else
-                return new List<string>();
-        }
-
-        /// <summary>
-        /// A method to return the list of units relavent to this parent activity
-        /// </summary>
-        /// <returns>A list of units</returns>
-        public List<string> ParentSuppliedUnits()
-        {
-            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
-                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels<LabourRequirement>().Units;
-            else
-                return new List<string>();
-        }
-
-        /// <summary>
         /// Validate this object
         /// </summary>
         /// <param name="validationContext"></param>

@@ -57,7 +57,7 @@ namespace Models.CLEM.Groupings
         /// </summary>
         /// <param name="validationContext"></param>
         /// <returns></returns>
-        public new IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
+        public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
 
@@ -66,15 +66,6 @@ namespace Models.CLEM.Groupings
                 if (MonthlyValues.Max() == 0)
                 {
                     Summary.WriteMessage(this, $"No feed values were defined for any month in [{this.Name}]. No feeding will be performed for [a={this.Parent.Name}]", MessageType.Warning);
-                }
-            }
-            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
-            {
-                var identifiers = ParentSuppliedIdentifiers();
-                if (identifiers.Any() & !identifiers.Contains(Identifier))
-                {
-                    string[] memberNames = new string[] { "Ruminant group" };
-                    results.Add(new ValidationResult($"The identifier [{(((Identifier ?? "") == "") ? "BLANK" : Identifier)}] in [f={this.Name}] is not valid for the parent activity [a={Parent.Name}].{Environment.NewLine}Select an option from the list. If the list is empty this activity does not support custom ruminant filtering", memberNames));
                 }
             }
             return results;

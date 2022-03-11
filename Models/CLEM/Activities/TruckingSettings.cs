@@ -136,9 +136,9 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels<T>()
+        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
         {
-            switch (typeof(T).Name)
+            switch (type)
             {
                 case "RuminantGroup":
                     return new LabelsForIdentifiableChildren(
@@ -193,18 +193,6 @@ namespace Models.CLEM.Activities
             weightToNumberPerLoadUnit = this.FindAllChildren<Relationship>().FirstOrDefault();
             parentBuySellActivity = Parent as RuminantActivityBuySell;
         }
-
-        ///// <summary>
-        ///// Determine loads based on trucking settings and inividuals to be trucked
-        ///// </summary>
-        ///// <returns>A list of individuals trucked for the buy/sell activity to work with</returns>
-        //public void DetermineLoads()
-        //{
-        //    // fire all nneded processes to account for resources required
-        //    ManageActivityResourcesAndTasks();
-        //    // return resulting list with conception precalculated back to the breeding activity.
-        //    //return new List<Ruminant>();
-        //}
 
         private (double trucks, double loadUnits, double vehicleMass, double payload, int individualsTransported) EstimateTrucking()
         {
@@ -417,36 +405,6 @@ namespace Models.CLEM.Activities
             }
             else
                 Status = ActivityStatus.NoTask;
-        }
-
-        /// <inheritdoc/>
-        public List<ResourceRequest> GetResourceRequests(double activityMetric)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public void CreateResources(double activityMetric)
-        {
-            throw new NotImplementedException();
-        }
-
-        /// <inheritdoc/>
-        public List<string> ParentSuppliedIdentifiers()
-        {
-            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
-                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels<TruckingSettings>().Identifiers;
-            else
-                return new List<string>();
-        }
-
-        /// <inheritdoc/>
-        public List<string> ParentSuppliedUnits()
-        {
-            if (Parent != null && Parent is ICanHandleIdentifiableChildModels)
-                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels<TruckingSettings>().Units;
-            else
-                return new List<string>();
         }
 
         #region descriptive summary

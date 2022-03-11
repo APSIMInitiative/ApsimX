@@ -1,5 +1,5 @@
 using Models.Core;
-using Models.CLEM.Groupings;
+using Models.CLEM.Interfaces;
 using Models.CLEM.Resources;
 using System;
 using System.Collections.Generic;
@@ -22,13 +22,15 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Added per unit of land as labour unit type")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Crop/CropTask.htm")]
-    public class CropActivityTask: CLEMActivityBase, IValidatableObject
+    public class CropActivityTask: CLEMActivityBase, IValidatableObject, ICanHandleIdentifiableChildModels
     {
         [Link]
         private Clock Clock = null;
 
         private string relatesToResourceName = "";
         private bool timingIssueReported = false;
+        private CropActivityManageCrop parentManagementActivity;
+        double amountToSkip = 0;
 
         /// <summary>
         /// Constructor
@@ -40,9 +42,25 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
+        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
         {
-            return null;
+            switch (type)
+            {
+                case "CropActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>()
+                        {
+
+                        },
+                        units: new List<string>() {
+                            "fixed",
+                            "per ha",
+                        }
+                        );
+                default:
+                    return new LabelsForIdentifiableChildren();
+            }
         }
 
         /// <summary>An event handler to allow us to initialise ourselves.</summary>
@@ -52,14 +70,14 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             relatesToResourceName = this.FindAncestor<CropActivityManageProduct>().StoreItemName;
+            parentManagementActivity = FindAncestor<CropActivityManageCrop>();
         }
 
-        /// <summary>An event handler to allow to call all Activities in tree to request their resources in order.</summary>
-        /// <param name="sender">The sender.</param>
-        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
-        [EventSubscribe("CLEMGetResourcesRequired")]
-        private void OnGetResourcesRequired(object sender, EventArgs e)
+        /// <inheritdoc/>
+        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
         {
+            amountToSkip = 0;
+
             // if first step of parent rotation
             // and timer failed because of harvest data
             int start = FindAncestor<CropActivityManageProduct>().FirstTimeStepOfRotation;
@@ -80,75 +98,143 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
+
+            // provide updated units of measure for identifiable children
+            foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
+            {
+                switch (valueToSupply.Key.unit)
+                {
+                    case "fixed":
+                        valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                        break;
+                    case "per ha":
+                        valuesForIdentifiableModels[valueToSupply.Key] = parentManagementActivity?.Area??0;
+                        break;
+                    default:
+                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                }
+            }
+            return null;
         }
 
-        ///// <inheritdoc/>
-        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        //{
-        //    double numberUnits;
-        //    double daysNeeded;
-        //    switch (requirement.UnitType)
-        //    {
-        //        case LabourUnitType.Fixed:
-        //            daysNeeded = requirement.LabourPerUnit;
-        //            break;
-        //        case LabourUnitType.perUnitOfLand:
-        //            CropActivityManageCrop cropParent = FindAncestor<CropActivityManageCrop>();
-        //            numberUnits = cropParent.Area;
-        //            if (requirement.WholeUnitBlocks)
-        //            {
-        //                numberUnits = Math.Ceiling(numberUnits);
-        //            }
-        //            daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //            break;
-        //        case LabourUnitType.perHa:
-        //            cropParent = FindAncestor<CropActivityManageCrop>();
-        //            CropActivityManageProduct productParent = FindAncestor<CropActivityManageProduct>();
-        //            numberUnits = cropParent.Area * productParent.UnitsToHaConverter / requirement.UnitSize;
-        //            if (requirement.WholeUnitBlocks)
-        //            {
-        //                numberUnits = Math.Ceiling(numberUnits);
-        //            }
 
-        //            daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //            break;
-        //        case LabourUnitType.perTree:
-        //            cropParent = FindAncestor<CropActivityManageCrop>();
-        //            productParent = FindAncestor<CropActivityManageProduct>();
-        //            numberUnits = productParent.TreesPerHa * cropParent.Area * productParent.UnitsToHaConverter / requirement.UnitSize;
-        //            if (requirement.WholeUnitBlocks)
-        //            {
-        //                numberUnits = Math.Ceiling(numberUnits);
-        //            }
+        /// <inheritdoc/>
+        protected override void AdjustResourcesForActivity()
+        {
+            IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
+            if (shortfalls.Any())
+            {
+                // find shortfall by identifiers as these may have different influence on outcome
+                var tagsShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "").FirstOrDefault();
+                //if (tagsShort != null)
+                amountToSkip = Convert.ToInt32((1 - tagsShort.Required / tagsShort.Provided));
+            }
+        }
 
-        //            daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //            break;
-        //        case LabourUnitType.perKg:
-        //            productParent = FindAncestor<CropActivityManageProduct>();
-        //            numberUnits = productParent.AmountHarvested;
-        //            if (requirement.WholeUnitBlocks)
-        //            {
-        //                numberUnits = Math.Ceiling(numberUnits);
-        //            }
+        /// <inheritdoc/>
+        public override void PerformTasksForActivity(double argument = 0)
+        {
+            if(ResourceRequestList.Any())
+            {
+                SetStatusSuccessOrPartial(amountToSkip > 0);
+            }
+        }
 
-        //            daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //            break;
-        //        case LabourUnitType.perUnit:
-        //            productParent = FindAncestor<CropActivityManageProduct>();
-        //            numberUnits = productParent.AmountHarvested / requirement.UnitSize;
-        //            if (requirement.WholeUnitBlocks)
-        //            {
-        //                numberUnits = Math.Ceiling(numberUnits);
-        //            }
+            ///// <summary>An event handler to allow to call all Activities in tree to request their resources in order.</summary>
+            ///// <param name="sender">The sender.</param>
+            ///// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+            //[EventSubscribe("CLEMGetResourcesRequired")]
+            //private void OnGetResourcesRequired(object sender, EventArgs e)
+            //{
+            //    // if first step of parent rotation
+            //    // and timer failed because of harvest data
+            //    int start = FindAncestor<CropActivityManageProduct>().FirstTimeStepOfRotation;
+            //    if (Clock.Today.Year * 100 + Clock.Today.Month == start)
+            //    {
+            //        // check if it can only occur before this rotation started
+            //        ActivityTimerCropHarvest chtimer = this.FindAllChildren<ActivityTimerCropHarvest>().FirstOrDefault();
+            //        if (chtimer != null)
+            //        {
+            //            if (chtimer.ActivityPast)
+            //            {
+            //                this.Status = ActivityStatus.Warning;
+            //                if (!timingIssueReported)
+            //                {
+            //                    Summary.WriteMessage(this, $"The harvest timer for crop task [a={this.NameWithParent}] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.", MessageType.Warning);
+            //                    timingIssueReported = true;
+            //                }
+            //            }
+            //        }
+            //    }
+            //}
 
-        //            daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //            break;
-        //        default:
-        //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-        //    }
+            ///// <inheritdoc/>
+            //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+            //{
+            //    double numberUnits;
+            //    double daysNeeded;
+            //    switch (requirement.UnitType)
+            //    {
+            //        case LabourUnitType.Fixed:
+            //            daysNeeded = requirement.LabourPerUnit;
+            //            break;
+            //        case LabourUnitType.perUnitOfLand:
+            //            CropActivityManageCrop cropParent = FindAncestor<CropActivityManageCrop>();
+            //            numberUnits = cropParent.Area;
+            //            if (requirement.WholeUnitBlocks)
+            //            {
+            //                numberUnits = Math.Ceiling(numberUnits);
+            //            }
+            //            daysNeeded = numberUnits * requirement.LabourPerUnit;
+            //            break;
+            //        case LabourUnitType.perHa:
+            //            cropParent = FindAncestor<CropActivityManageCrop>();
+            //            CropActivityManageProduct productParent = FindAncestor<CropActivityManageProduct>();
+            //            numberUnits = cropParent.Area * productParent.UnitsToHaConverter / requirement.UnitSize;
+            //            if (requirement.WholeUnitBlocks)
+            //            {
+            //                numberUnits = Math.Ceiling(numberUnits);
+            //            }
 
-        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, relatesToResourceName);
-        //}
+            //            daysNeeded = numberUnits * requirement.LabourPerUnit;
+            //            break;
+            //        case LabourUnitType.perTree:
+            //            cropParent = FindAncestor<CropActivityManageCrop>();
+            //            productParent = FindAncestor<CropActivityManageProduct>();
+            //            numberUnits = productParent.TreesPerHa * cropParent.Area * productParent.UnitsToHaConverter / requirement.UnitSize;
+            //            if (requirement.WholeUnitBlocks)
+            //            {
+            //                numberUnits = Math.Ceiling(numberUnits);
+            //            }
+
+            //            daysNeeded = numberUnits * requirement.LabourPerUnit;
+            //            break;
+            //        case LabourUnitType.perKg:
+            //            productParent = FindAncestor<CropActivityManageProduct>();
+            //            numberUnits = productParent.AmountHarvested;
+            //            if (requirement.WholeUnitBlocks)
+            //            {
+            //                numberUnits = Math.Ceiling(numberUnits);
+            //            }
+
+            //            daysNeeded = numberUnits * requirement.LabourPerUnit;
+            //            break;
+            //        case LabourUnitType.perUnit:
+            //            productParent = FindAncestor<CropActivityManageProduct>();
+            //            numberUnits = productParent.AmountHarvested / requirement.UnitSize;
+            //            if (requirement.WholeUnitBlocks)
+            //            {
+            //                numberUnits = Math.Ceiling(numberUnits);
+            //            }
+
+            //            daysNeeded = numberUnits * requirement.LabourPerUnit;
+            //            break;
+            //        default:
+            //            throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
+            //    }
+
+            //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, relatesToResourceName);
+            //}
 
         #region validation
 

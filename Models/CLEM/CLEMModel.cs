@@ -192,6 +192,30 @@ namespace Models.CLEM
             return (parents.Where(a => a.ParentType.Name == this.Parent.GetType().Name).Any());
         }
 
+        /// <summary>
+        /// A method to return the list of identifiers relavent to this parent activity
+        /// </summary>
+        /// <returns>A list of identifiers</returns>
+        public List<string> ParentSuppliedIdentifiers()
+        {
+            if (this is IIdentifiableChildModel && Parent != null && Parent is ICanHandleIdentifiableChildModels)
+                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels(GetType().Name).Identifiers;
+            else
+                return new List<string>();
+        }
+
+        /// <summary>
+        /// A method to return the list of units relavent to this parent activity
+        /// </summary>
+        /// <returns>A list of units</returns>
+        public List<string> ParentSuppliedUnits()
+        {
+            if (this is IIdentifiableChildModel && Parent != null && Parent is ICanHandleIdentifiableChildModels)
+                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels(GetType().Name).Units;
+            else
+                return new List<string>();
+        }
+
         #region descriptive summary
 
         /// <summary>

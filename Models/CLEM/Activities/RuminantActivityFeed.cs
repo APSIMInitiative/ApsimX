@@ -98,9 +98,9 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels<T>()
+        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
         {
-            switch (typeof(T).Name)
+            switch (type)
             {
                 case "RuminantFeedGroup":
                 case "RuminantFeedGroupMonthly":
@@ -783,7 +783,7 @@ namespace Models.CLEM.Activities
         {
             var results = new List<ValidationResult>();
 
-            if (filterGroups.Where(a => a.GetType() != typeof(RuminantFeedGroup) && a.GetType() != typeof(RuminantFeedGroupMonthly)).Any())
+            if (filterGroups != null && filterGroups.Where(a => a.GetType() != typeof(RuminantFeedGroup) && a.GetType() != typeof(RuminantFeedGroupMonthly)).Any())
             {
                 string warn = $"[a=RuminantActivityFeed] [{NameWithParent}] only accepts Resource groups of the type [f=RuminantFeedGroup] or [f=RuminantFeedGroupMonthly].{Environment.NewLine}All other groups will be ignored.";
                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);

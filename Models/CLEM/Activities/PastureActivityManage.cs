@@ -122,6 +122,7 @@ namespace Models.CLEM.Activities
         public PastureActivityManage()
         {
             TransactionCategory = "Pasture.Manage";
+            AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
         #region validation
@@ -264,12 +265,6 @@ namespace Models.CLEM.Activities
                 LinkedLandItem.TransactionOccurred -= LinkedLandItem_TransactionOccurred;
         }
 
-        /// <inheritdoc/>
-        [EventSubscribe("CLEMGetResourcesRequired")]
-        protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
-        {
-        }
-
         /// <summary>An event handler to allow us to get next supply of pasture</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -322,7 +317,6 @@ namespace Models.CLEM.Activities
                 }
             };
             activitye.Activity.SetGuID(this.UniqueID);
-//            this.OnActivityPerformed(activitye);
         }
 
         /// <summary>
@@ -419,18 +413,8 @@ namespace Models.CLEM.Activities
         private void GetPastureDataList_TodayToNextEcolCalculation()
         {
             // In IAT it only updates the GrassBA, LandCon and StockingRate (Ecological Indicators) 
-            // every so many months (specified by  not every month.
+            // every so many months (specified by user, not every month.
             // And the month they are updated on each year is whatever the starting month was for the run.
-
-            // Shaun's code. back to front from NABSA
-            //pkGrassBA = (int)(Math.Round(grassBasalArea / 2, 0) * 2); //weird way but this is how NABSA does it.
-            //pkLandCon = (int)(Math.Round((landConditionIndex - 1.1) / 2, 0) * 2 + 1);
-            //
-            // No reason for this grouping so just round.
-            //
-            // NABSA
-            //pkLandCon = (int)(Math.Round(landConditionIndex / 2, 0) * 2); //weird way but this is how NABSA does it.
-            //pkGrassBA = (int)(Math.Round((grassBasalArea - 1.1) / 2, 0) * 2 + 1);
 
             pastureDataList = filePasture.GetIntervalsPastureData(zoneCLEM.ClimateRegion, soilIndex,
                LinkedNativeFoodType.CurrentEcologicalIndicators.GrassBasalArea, LinkedNativeFoodType.CurrentEcologicalIndicators.LandConditionIndex, LinkedNativeFoodType.CurrentEcologicalIndicators.StockingRate, clock.Today.AddDays(1), zoneCLEM.EcologicalIndicatorsCalculationInterval);

@@ -8,6 +8,7 @@ using System.Linq;
 using Newtonsoft.Json;
 using Models.Core.Attributes;
 using System.IO;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
 {
@@ -22,7 +23,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Mixed cropping/multiple products implemented")]
     [Version(1, 0, 3, "Added ability to model multiple harvests from crop using Harvest Tags from input file")]
     [HelpUri(@"Content/Features/Activities/Crop/ManageCropProduct.htm")]
-    public class CropActivityManageProduct: CLEMActivityBase, IValidatableObject
+    public class CropActivityManageProduct: CLEMActivityBase, IValidatableObject, ICanHandleIdentifiableChildModels
     {
         [Link]
         private Clock clock = null;
@@ -33,6 +34,8 @@ namespace Models.CLEM.Activities
         private string addReason = "Harvest";
         private bool performedHarvest = false;
         private string previousTag = "";
+        private double amountToDo;
+        private double amountToSkip;
 
         /// <summary>
         /// Name of the model for the crop input file
@@ -171,7 +174,6 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public bool InsideMultiHarvestSequence { get; set; }
 
-
         /// <summary>
         /// Constructor
         /// </summary>
@@ -179,6 +181,30 @@ namespace Models.CLEM.Activities
         {
             this.SetDefaults();
             TransactionCategory = "Crop.[Product]";
+            AllocationStyle = ResourceAllocationStyle.Manual;
+        }
+
+        /// <inheritdoc/>
+        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
+        {
+            switch (type)
+            {
+                case "CropActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>() {
+
+                        },
+                        units: new List<string>() {
+                            "fixed",
+                            "per kg harvested",
+                            "per ha",
+                            "per ha harvested",
+                        }
+                        );
+                default:
+                    return new LabelsForIdentifiableChildren();
+            }
         }
 
         /// <summary>An event handler to allow us to initialise</summary>
@@ -370,13 +396,6 @@ namespace Models.CLEM.Activities
             }
         }
 
-        /// <inheritdoc/>
-        [EventSubscribe("CLEMGetResourcesRequired")]
-        protected override void OnGetResourcesPerformActivity(object sender, EventArgs e)
-        {
-        }
-
-
         /// <summary>An event handler to allow us to get next supply of pasture</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
@@ -420,157 +439,123 @@ namespace Models.CLEM.Activities
             return limiterFound;
         }
 
-        ///// <inheritdoc/>
-        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        //{
-        //    double daysNeeded = 0;
-        //    if (this.TimingOK)
-        //    {
-        //        int year = clock.Today.Year;
-        //        int month = clock.Today.Month;
-        //        double amount = 0;
-        //        if (NextHarvest != null)
-        //        {
-        //            //if this month is a harvest month for this crop
-        //            if ((year == NextHarvest.HarvestDate.Year) && (month == NextHarvest.HarvestDate.Month))
-        //            {
-        //                if (this.TimingOK)
-        //                {
-        //                    if (IsTreeCrop)
-        //                        amount = NextHarvest.AmtKg * TreesPerHa * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
-        //                    else
-        //                        amount = NextHarvest.AmtKg * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
-
-        //                    if (limiter != null)
-        //                    {
-        //                        double canBeCarried = limiter.GetAmountAvailable(clock.Today.Month);
-        //                        amount = Math.Max(amount, canBeCarried);
-        //                    }
-        //                }
-        //            }
-        //        }
-
-        //        double numberUnits;
-        //        switch (requirement.UnitType)
-        //        {
-        //            case LabourUnitType.Fixed:
-        //                daysNeeded = requirement.LabourPerUnit;
-        //                break;
-        //            case LabourUnitType.perKg:
-        //                daysNeeded = amount * requirement.LabourPerUnit;
-        //                break;
-        //            case LabourUnitType.perUnit:
-        //                numberUnits = amount / requirement.UnitSize;
-        //                if (requirement.WholeUnitBlocks)
-        //                    numberUnits = Math.Ceiling(numberUnits);
-
-        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //                break;
-        //            case LabourUnitType.perUnitOfLand:
-        //                numberUnits = parentManagementActivity.Area / requirement.UnitSize;
-        //                if (requirement.WholeUnitBlocks)
-        //                    numberUnits = Math.Ceiling(numberUnits);
-
-        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //                break;
-        //            case LabourUnitType.perHa:
-        //                numberUnits = parentManagementActivity.Area * UnitsToHaConverter / requirement.UnitSize;
-        //                if (requirement.WholeUnitBlocks)
-        //                    numberUnits = Math.Ceiling(numberUnits);
-
-        //                daysNeeded = numberUnits * requirement.LabourPerUnit;
-        //                break;
-        //            default:
-        //                throw new Exception(String.Format("LabourUnitType {0} is not supported for {1} in {2}", requirement.UnitType, requirement.Name, this.Name));
-        //        }
-
-        //        if (amount <= 0)
-        //            daysNeeded = 0;
-        //    }
-        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, (LinkedResourceItem as CLEMModel).NameWithParent);
-        //}
 
         /// <inheritdoc/>
-        public override void PerformTasksForActivity(double argument = 0)
+        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
         {
             int year = clock.Today.Year;
             int month = clock.Today.Month;
             AmountHarvested = 0;
             AmountAvailableForHarvest = 0;
+            amountToDo = 0;
+            amountToSkip = 0;
 
-            if (this.TimingOK && NextHarvest != null)
+            // move pre placement tasks here
+            if (NextHarvest != null)
             {
                 //if this month is a harvest month for this crop
                 if ((year == NextHarvest.HarvestDate.Year) && (month == NextHarvest.HarvestDate.Month))
                 {
                     if (IsTreeCrop)
-                        AmountHarvested = NextHarvest.AmtKg * TreesPerHa * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
+                        amountToDo = NextHarvest.AmtKg * TreesPerHa * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
                     else
-                        AmountHarvested = NextHarvest.AmtKg * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
+                        amountToDo = NextHarvest.AmtKg * parentManagementActivity.Area * UnitsToHaConverter * ProportionKept;
 
-                    AmountAvailableForHarvest = AmountHarvested;
-                    // reduce amount by limiter if present.
-                    if (limiter != null)
-                    {
-                        double canBeCarried = limiter.GetAmountAvailable(clock.Today.Month);
-                        AmountHarvested = Math.Max(AmountHarvested, canBeCarried);
+                }
+            }
 
-                        // now modify by labour limits as this is the amount labour was calculated for.
-                        double labourLimit = this.LabourLimitProportion;
-                        AmountHarvested *= labourLimit;
+            // provide updated units of measure for identifiable children
+            foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
+            {
+                switch (valueToSupply.Key.unit)
+                {
+                    case "fixed":
+                        valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                        break;
+                    case "per ha":
+                        valuesForIdentifiableModels[valueToSupply.Key] = parentManagementActivity.Area;
+                        break;
+                    case "per ha harvested":
+                        valuesForIdentifiableModels[valueToSupply.Key] = parentManagementActivity.Area;
+                        break;
+                    case "per kg harvested":
+                        valuesForIdentifiableModels[valueToSupply.Key] = amountToDo;
+                        break;
+                    default:
+                        throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
+                }
+            }
 
-                        if(labourLimit < 1)
-                            this.Status = ActivityStatus.Partial;
+            return null;
+        }
 
-                        // TODO: now limit further by fees not paid
-                        double financeLimit = this.LimitProportion(typeof(Finance));
+        /// <inheritdoc/>
+        protected override void AdjustResourcesForActivity()
+        {
+            IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
+            if (shortfalls.Any())
+            {
+                // find shortfall by identifiers as these may have different influence on outcome
+                var tagsShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "").FirstOrDefault();
+                if (tagsShort != null)
+                    amountToSkip = Convert.ToInt32(amountToDo * (1 - tagsShort.Required / tagsShort.Provided));
 
-                        limiter.AddWeightCarried(AmountHarvested);
-                    }
+                this.Status = ActivityStatus.Partial;
+            }
 
-                    if (AmountHarvested > 0)
-                    {
-                        double percentN = 0;
-                        // if no nitrogen provided form file
-                        if (double.IsNaN(NextHarvest.Npct))
-                        {
-                            if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
-                                // grazed pasture with no N read assumes the green biomass N content
-                                percentN = (LinkedResourceItem as GrazeFoodStoreType).GreenNitrogen;
-                        }
-                        else
-                            percentN =  NextHarvest.Npct;
+            AmountHarvested = amountToDo - amountToSkip;
 
-                        if (percentN == 0)
-                        {
-                            //Add without adding any new nitrogen.
-                            //The nitrogen value for this feed item in the store remains the same.
-                            LinkedResourceItem.Add(AmountHarvested, this,"", addReason);
-                        }
-                        else
-                        {
-                            FoodResourcePacket packet = new FoodResourcePacket()
-                            {
-                                Amount = AmountHarvested,
-                                PercentN = percentN
-                            };
-                            if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
-                                packet.DMD = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.PercentN);
-                            LinkedResourceItem.Add(packet, this,"", addReason);
-                        }
-                        SetStatusSuccessOrPartial();
-                    }
-                    else
-                    {
-                        if (Status == ActivityStatus.Success)
-                            Status = ActivityStatus.NotNeeded;
-                    }
+            // reduce amount by limiter if present.
+            if (limiter != null)
+            {
+                double canBeCarried = limiter.GetAmountAvailable(clock.Today.Month);
+                AmountHarvested = Math.Max(AmountHarvested, canBeCarried);
+
+                if (MathUtilities.IsLessThan(canBeCarried, AmountHarvested))
+                    this.Status = ActivityStatus.Partial;
+
+                limiter.AddWeightCarried(AmountHarvested);
+            }
+
+        }
+
+        /// <inheritdoc/>
+        public override void PerformTasksForActivity(double argument = 0)
+        {
+            if (MathUtilities.IsPositive(AmountHarvested))
+            {
+                AmountAvailableForHarvest = AmountHarvested;
+
+                double percentN = 0;
+                // if no nitrogen provided form file
+                if (double.IsNaN(NextHarvest.Npct))
+                {
+                    if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
+                        // grazed pasture with no N read assumes the green biomass N content
+                        percentN = (LinkedResourceItem as GrazeFoodStoreType).GreenNitrogen;
                 }
                 else
-                    this.Status = ActivityStatus.NotNeeded;
+                    percentN =  NextHarvest.Npct;
+
+                if (MathUtilities.FloatsAreEqual(percentN, 0.0))
+                {
+                    //Add without adding any new nitrogen.
+                    //The nitrogen value for this feed item in the store remains the same.
+                    LinkedResourceItem.Add(AmountHarvested, this,"", addReason);
+                }
+                else
+                {
+                    FoodResourcePacket packet = new FoodResourcePacket()
+                    {
+                        Amount = AmountHarvested,
+                        PercentN = percentN
+                    };
+                    if (LinkedResourceItem.GetType() == typeof(GrazeFoodStoreType))
+                        packet.DMD = (LinkedResourceItem as GrazeFoodStoreType).EstimateDMD(packet.PercentN);
+                    LinkedResourceItem.Add(packet, this,"", addReason);
+                }
+                SetStatusSuccessOrPartial(MathUtilities.IsPositive(amountToSkip));
             }
-            else
-                this.Status = ActivityStatus.NotNeeded;
         }
 
         #region validation

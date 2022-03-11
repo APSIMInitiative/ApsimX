@@ -56,9 +56,9 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels<T>()
+        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
         {
-            switch (typeof(T).Name)
+            switch (type)
             {
                 case "RuminantGroup":
                     return new LabelsForIdentifiableChildren(
