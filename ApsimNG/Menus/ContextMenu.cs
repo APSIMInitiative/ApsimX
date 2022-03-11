@@ -698,7 +698,7 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Add model...", FollowsSeparator = true)]
+        [ContextMenu(MenuName = "Add model...", FollowsSeparator = true, ShortcutKey = "Ctrl+N")]
         public void AddModel(object sender, EventArgs e)
         {
             try
