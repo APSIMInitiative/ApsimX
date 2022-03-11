@@ -4348,8 +4348,8 @@
               "Name": "Root",
               "Children": [
                 {
-                  "$type": "Models.Functions.RootShape.RootShapeCylinder, Models",
-                  "Name": "RootShape",
+                  "$type": "Models.Functions.RootShape.RootShapeSemiCircle, Models",
+                  "Name": "RootShapeSemiCircle",
                   "Children": [],
                   "Enabled": true,
                   "ReadOnly": false
