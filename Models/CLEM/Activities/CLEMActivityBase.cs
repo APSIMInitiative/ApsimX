@@ -936,6 +936,7 @@ namespace Models.CLEM.Activities
     /// <summary>
     /// Structure to return values form a labour days request
     /// </summary>
+    [Serializable]
     public class GetDaysLabourRequiredReturnArgs
     {
         /// <summary>

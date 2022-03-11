@@ -467,8 +467,8 @@
         public void Cleanup()
         {
             view.ItemSelected -= ContextItemSelected;
-            view?.Cleanup();
-            methodCompletionView.Destroy();
+            view?.Dispose();
+            (methodCompletionView as MethodCompletionView).Dispose();
         }
 
         /// <summary>

@@ -119,6 +119,9 @@ namespace Models.PMF.Organs
         [Units("g/m2/d")]
         private BiomassDemand nDemands = null;
 
+        [Link(Type = LinkType.Child, ByName = true)]
+        private IFunction numberOfLeaves = null;
+
         /// <summary>Light Senescence function</summary>
         [Link(Type = LinkType.Child, ByName = true)]
         private IFunction AgeSenescence = null;
@@ -152,6 +155,10 @@ namespace Models.PMF.Organs
 
         /// <summary>Gets the canopy type. Should return null if no canopy present.</summary>
         public string CanopyType => plant.PlantType;
+
+        /// <summary>Gets or sets the R50.</summary>
+        [Description("Tillering Method: 0 = Fixed - uses FTN, 1 = Dynamic")]
+        public int TilleringMethod { get; set; } = 0;
 
         /// <summary>The initial biomass dry matter weight</summary>
         [Description("Initial leaf dry matter weight")]
@@ -662,7 +669,7 @@ namespace Models.PMF.Organs
             if (phenology.Between("Germination", "Flowering"))
             {
                 // pre anthesis, get N from dilution, decreasing dltLai and senescence
-                double nProvided = Math.Min(dilutionN, requiredN / 2.0);
+                double nProvided = Math.Min(dilutionN, requiredN / 3.0);
                 DltRetranslocatedN -= nProvided;
                 nGreenToday -= nProvided; //jkb
                 requiredN -= nProvided;
@@ -676,7 +683,7 @@ namespace Models.PMF.Organs
                     // If the RequiredN is large enough, it will result in 0 new growth
                     // Stem and Rachis can technically get to this point, but it doesn't occur in all of the validation data sets
                     double n = DltLAI * NewLeafSLN;
-                    double laiN = Math.Min(n, requiredN / 2.0);
+                    double laiN = Math.Min(n, requiredN);
                     // dh - we don't make this check in old apsim
                     if (MathUtilities.IsPositive(laiN))
                     {
@@ -960,6 +967,7 @@ namespace Models.PMF.Organs
             if (phaseChange.StageName == LeafInitialisationStage)
             {
                 leafInitialised = true;
+                culms.TilleringMethod = TilleringMethod;
 
                 Live.StructuralWt = InitialDMWeight * SowingDensity;
                 Live.StorageWt = 0.0;
@@ -1008,19 +1016,20 @@ namespace Models.PMF.Organs
                 StartLive = ReflectionUtilities.Clone(Live) as Biomass;
             if (leafInitialised)
             {
+                culms.FinalLeafNo = numberOfLeaves.Value();
+                culms.CalculatePotentialArea();
+
                 DltPotentialLAI = culms.dltPotentialLAI;
                 DltStressedLAI = culms.dltStressedLAI;
 
                 //old model calculated BiomRUE at the end of the day
-                //this is done at strat of the day
+                //this is done at staet of the day
                 BiomassRUE = photosynthesis.Value();
                 //var bimT = 0.009 / waterFunction.VPD / 0.001 * Arbitrator.WSupply;
                 BiomassTE = potentialBiomassTEFunction.Value();
 
                 Height = heightFunction.Value();
-
                 LAIDead = SenescedLai;
-                //UpdateArea();
             }
         }
 
@@ -1063,10 +1072,10 @@ namespace Models.PMF.Organs
             NitrogenPhotoStress = nPhotoStressFunction.Value();
 
             NitrogenPhenoStress = 1.0;
-            if (phenology.Between("Emergence", "Flowering"))
+            if (phenology.Between("Emergence", "FlagLeaf"))
             {
-                var phenoStress = (1.0 / 0.7) * SLN * 1.25 - (3.0 / 7.0);
-                NitrogenPhenoStress = MathUtilities.Bound(phenoStress, 0.0, 1.0);
+                var phenoStress = (0.5 + 0.5 / 0.3 * (SLN - 0.7));
+                NitrogenPhenoStress = MathUtilities.Bound(phenoStress, 0.5, 1.0);
             }
         }
 

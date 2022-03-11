@@ -124,8 +124,7 @@
             this.view.EventList.TextHasChangedByUser -= OnEventNamesChanged;
             this.view.GroupByEdit.Changed -= OnGroupByChanged;
             explorerPresenter.CommandHistory.ModelChanged -= OnModelChanged;
-            if(dataStore != null)
-                dataStorePresenter.Detach();
+            dataStorePresenter?.Detach();
             intellisense.ItemSelected -= OnIntellisenseItemSelected;
             intellisense.Cleanup();
         }

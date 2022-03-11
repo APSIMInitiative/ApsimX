@@ -276,6 +276,10 @@ namespace Models.WaterModel
         [JsonIgnore]
         public double Drainage { get { if (Flux == null) return 0; else return Flux[Flux.Length - 1]; } }
 
+        /// <summary>Subsurface drain (mm)</summary>
+        [JsonIgnore]
+        public double SubsurfaceDrain => 0;
+
         /// <summary>Evaporation (mm).</summary>
         [JsonIgnore]
         public double Evaporation { get { return evaporationModel.Es; } }

@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Models.CLEM.Resources;
 using Models.CLEM.Groupings;
 using Newtonsoft.Json;
+using Models.CLEM.Interfaces;
 
 namespace Models.CLEM.Activities
 {
@@ -82,14 +83,71 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
+        /// A method to get a list of activity specified identifiers for a generic type T add by the user
+        /// </summary>
+        /// <returns>A list of identifiers as strings</returns>
+        public virtual List<string> GetChildComponentIdentifiers<T>()
+        {
+            return new List<string>();
+        }
+
+        /// <summary>
+        /// Create a dictionary of groups of components by identifier provided by the parent model
+        /// </summary>
+        /// <typeparam name="T">Type of component to consider</typeparam>
+        /// <returns></returns>
+        public Dictionary<string, IEnumerable<T>> DefineChildComponentGroups<T>(bool addBlankEntryIfNoneFound) where T : IIdentifiableComponent, new()
+        {
+            Dictionary<string, IEnumerable<T>> filters = new Dictionary<string, IEnumerable<T>>();
+
+            foreach (var id in GetChildComponentIdentifiers<T>())
+            {
+                var group = FindAllChildren<T>().Where(a => a.Identifier == id && a.Enabled);
+                if (group.Any())
+                    filters.Add(id, group);
+                else
+                {
+                    if(addBlankEntryIfNoneFound)
+                    {
+                        var newEntry = new List<T>() { new T() { Identifier = id } };
+                        filters.Add(id, newEntry);
+                    }
+                }
+            }
+
+            return filters;
+        }
+
+        /// <summary>
+        /// Get individuals of specified type in current herd
+        /// </summary>
+        /// <typeparam name="T">The type of individuals to return</typeparam>
+        /// <param name="herdStyle">Overall style of individuals selected. Default NotForSale</param>
+        /// <param name="excludeFlags">A list of HerdChangeReasons to exclude individuals matching flag. Default null</param>
+        /// <param name="predictedBreedOnly">Flag to only return the single predicted breed for this activity. Default is true</param>
+        /// <param name="includeCheckHerdMeetsCriteria">Perform check and report issues. Only expected once per activity or if herd changing. Default false</param>
+        /// <returns>A list of individuals in the herd</returns>
+        public IEnumerable<T> GetIndividuals<T>(GetRuminantHerdSelectionStyle herdStyle = GetRuminantHerdSelectionStyle.NotMarkedForSale, List<HerdChangeReason> excludeFlags = null, bool predictedBreedOnly = true, bool includeCheckHerdMeetsCriteria = false) where T: Ruminant
+        {
+            if(herdStyle == GetRuminantHerdSelectionStyle.ForPurchase)
+                return HerdResource.PurchaseIndividuals.OfType<T>().Where(a => !predictedBreedOnly || a.Breed == PredictedHerdBreed);
+            else
+            {
+                bool readyForSale = herdStyle == GetRuminantHerdSelectionStyle.MarkedForSale;
+                return CurrentHerd(includeCheckHerdMeetsCriteria).OfType<T>().Where(a => (!predictedBreedOnly || a.Breed == PredictedHerdBreed) && (herdStyle == GetRuminantHerdSelectionStyle.AllOnFarm || a.ReadyForSale == readyForSale) && (excludeFlags is null || !excludeFlags.Contains(a.SaleFlag)));
+            }
+        }
+
+        /// <summary>
         /// Gets the current herd from all herd filters above
         /// </summary>
-        public IEnumerable<Ruminant> CurrentHerd(bool includeCheckHerdMeetsCriteria)
+        /// <param name="includeCheckHerdMeetsCriteria">Perfrom check and report issues. Only once per activity. Default is false.</param>
+        public IEnumerable<Ruminant> CurrentHerd(bool includeCheckHerdMeetsCriteria = false)
         {
             if (HerdFilters == null)
                 throw new ApsimXException(this, "Herd filters have not been defined for [a="+ this.Name +"]"+ Environment.NewLine + "You need to perform InitialiseHerd() in CLEMInitialiseActivity for this activity. Please report this issue to CLEM developers.");
 
-            if(includeCheckHerdMeetsCriteria)
+            if(includeCheckHerdMeetsCriteria && (!allowMultipleBreeds | !allowMultipleHerds))
                 CheckHerd();
 
             if(HerdResource == null)
