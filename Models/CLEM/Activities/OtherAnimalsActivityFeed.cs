@@ -71,7 +71,7 @@ namespace Models.CLEM.Activities
         /// Method to determine resources required for this activity in the current month
         /// </summary>
         /// <returns></returns>
-        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
 

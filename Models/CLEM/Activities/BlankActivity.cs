@@ -15,29 +15,26 @@ namespace Models.CLEM.Activities
     /// </summary>
     public class BlankActivity : CLEMActivityBase, ICanHandleIdentifiableChildModels
     {
-
-
-
         /// <inheritdoc/>
-        protected override void AdjustResourcesForActivity()
+        protected override void AdjustResourcesForTimestep()
         {
             return;
         }
 
         /// <inheritdoc/>
-        public override void PerformTasksForActivity(double argument = 0)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             throw new NotImplementedException();
         }
 
-        /// <inheritdoc/>
-        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            throw new NotImplementedException();
-        }
+        ///// <inheritdoc/>
+        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             throw new NotImplementedException();
         }

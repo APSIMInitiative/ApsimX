@@ -154,7 +154,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             if (people is null | food is null)
             {
@@ -530,7 +530,7 @@ namespace Models.CLEM.Activities
         //}
 
         /// <inheritdoc/>
-        protected override void AdjustResourcesForActivity()
+        protected override void AdjustResourcesForTimestep()
         {
             // reduce by the smallest of finance and labour limits 
             // The other resource will not be retuned but is lost in transactions
@@ -547,7 +547,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void PerformTasksForActivity(double argument = 0)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             // add all provided requests to the individuals intake pools.
 

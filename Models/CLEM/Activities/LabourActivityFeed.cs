@@ -76,7 +76,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             feedRequired = 0;
 
@@ -175,7 +175,7 @@ namespace Models.CLEM.Activities
         //}
 
         /// <inheritdoc/>
-        protected override void AdjustResourcesForActivity()
+        protected override void AdjustResourcesForTimestep()
         {
             //add limit to amout collected based on labour shortfall
             double labourLimit = this.LabourLimitProportion;
@@ -188,7 +188,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void PerformTasksForActivity(double argument = 0)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             IEnumerable<LabourType> group = labour?.Items.Where(a => a.Hired != true);
             if (group != null && group.Any())

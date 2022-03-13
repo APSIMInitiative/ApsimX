@@ -32,16 +32,21 @@ namespace Models.CLEM.Interfaces
         string TransactionCategory { get; set; }
 
         /// <summary>
-        /// Get the resource requests from the identifiable child and pass to parent for processing
+        /// Method to prepare for the times step after parent activity preparation 
         /// </summary>
-        /// <returns></returns>
-        List<ResourceRequest> DetermineResourcesForActivity(double argument = 0);
+        public void PrepareForTimestep();
+
+        /// <summary>
+        /// Method to provide the resource requests from this identifiable child and pass to parent for processing
+        /// </summary>
+        /// <returns>A list of resource requests</returns>
+        List<ResourceRequest> RequestResourcesForTimestep(double argument = 0);
 
         /// <summary>
         /// Perform a the task including creating resources by the identifiable child
         /// </summary>
         /// <returns></returns>
-        void PerformTasksForActivity(double argument = 0);
+        void PerformTasksForTimestep(double argument = 0);
 
         /// <summary>
         /// A method to return the list of identifiers relavent to this parent activity
@@ -54,7 +59,6 @@ namespace Models.CLEM.Interfaces
         /// </summary>
         /// <returns>A list of units as stings</returns>
         List<string> ParentSuppliedUnits();
-
     }
 }
 

@@ -78,8 +78,8 @@ namespace Models.CLEM.Activities
                 case "RuminantGroup":
                     return new LabelsForIdentifiableChildren(
                         identifiers: new List<string>() {
-                            "Individuals to buy",
-                            "Individuals to sell"
+                            "Purchases",
+                            "Sales"
                         },
                         units: new List<string>()
                         );
@@ -115,8 +115,8 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(false, true);
-            filterGroupsBuy = GetIdentifiableChildrenByIdentifier<RuminantGroup>( false, true, "Individuals to buy");
-            filterGroupsSell = GetIdentifiableChildrenByIdentifier<RuminantGroup>(false, true, "Individuals to sell");
+            filterGroupsBuy = GetIdentifiableChildrenByIdentifier<RuminantGroup>( false, true, "Purchases");
+            filterGroupsSell = GetIdentifiableChildrenByIdentifier<RuminantGroup>(false, true, "Sales");
 
             IEnumerable<Ruminant> testherd = this.CurrentHerd(true);
 
@@ -165,11 +165,8 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
+        public override void PrepareForTimestep()
         {
-            List<ResourceRequest> resources = new List<ResourceRequest>();
-
-            string identifier = "";
             numberToDo = 0;
             numberToSkip = 0;
             numberTrucks = 0;
@@ -183,28 +180,64 @@ namespace Models.CLEM.Activities
                 case "Buy":
                     herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.ForPurchase);
                     filterGroups = filterGroupsBuy;
-                    identifier = "Purchases";
                     uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
                     IndividualsToBeTrucked = uniqueIndividuals;
                     numberToDo = uniqueIndividuals?.Count() ?? 0;
 
-                    foreach (var iChild in truckingBuy)
-                        iChild.ManuallyGetResourcesPerformActivity();
+                    foreach (var trucking in truckingBuy)
+                        trucking.ManuallyGetResourcesPerformActivity();
 
-                    herdValue = uniqueIndividuals.Sum(a => a.BreedParams.ValueofIndividual(a, PurchaseOrSalePricingStyleType.Purchase).CalculateValue(a));
+                    break;
+                case "Sell":
+                    herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.MarkedForSale);
+                    filterGroups = filterGroupsSell;
+                    uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
+                    IndividualsToBeTrucked = uniqueIndividuals;
+                    numberToDo = uniqueIndividuals?.Count() ?? 0;
+
+                    foreach (var trucking in truckingSell)
+                        trucking.ManuallyGetResourcesPerformActivity();
+
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        /// <inheritdoc/>
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
+        {
+            List<ResourceRequest> requestResources = new List<ResourceRequest>();
+            int numberTrucked = 0;
+            double herdValue = 0;
+            string identifier = "";
+            switch (task)
+            {
+                case "Buy":
+                    identifier = "Purchases";
+
+                    // all trucking has been allocated and each trucking component knows its individuals
+                    foreach (var trucking in truckingBuy)
+                    {
+                        herdValue += trucking.IndividualsToBeTrucked.Sum(a => a.BreedParams.ValueofIndividual(a, PurchaseOrSalePricingStyleType.Purchase).CalculateValue(a));
+                        numberTrucked += trucking.IndividualsToBeTrucked.Count();
+                    }
+
                     // add payment request so we can manage by shortfall, place at top of all requests for first access
                     if (bankAccount != null && MathUtilities.IsGreaterThan(herdValue, 0))
                     {
                         // request a single transaction.
                         // this will be deleted and replaced with class based transactions in the adjust section
-                        resources.Add(new ResourceRequest
+                        requestResources.Add(new ResourceRequest
                         {
                             ActivityModel = this,
                             Required = herdValue,
                             AllowTransmutation = false,
                             Category = TransactionCategory,
                             RelatesToResource = this.PredictedHerdName,
-                            AdditionalDetails = "Purchases"
+                            AdditionalDetails = "Purchases",
+                            ResourceType = typeof(Finance),
+                            ResourceTypeName = BankAccountName,
                         });
                     }
                     // provide updated units of measure for identifiable children
@@ -220,7 +253,7 @@ namespace Models.CLEM.Activities
                                         valuesForIdentifiableModels[valueToSupply.Key] = 1;
                                         break;
                                     case "per head":
-                                        valuesForIdentifiableModels[valueToSupply.Key] = number;
+                                        valuesForIdentifiableModels[valueToSupply.Key] = numberTrucked;
                                         break;
                                     case "Value of individuals":
                                         valuesForIdentifiableModels[valueToSupply.Key] = herdValue;
@@ -237,18 +270,13 @@ namespace Models.CLEM.Activities
                     }
                     break;
                 case "Sell":
-                    herd = GetIndividuals<Ruminant>(GetRuminantHerdSelectionStyle.MarkedForSale);
-                    filterGroups = filterGroupsSell;
                     identifier = "Sales";
 
-                    uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
-                    IndividualsToBeTrucked = uniqueIndividuals;
-                    numberToDo = uniqueIndividuals?.Count() ?? 0;
-
-                    foreach (var iChild in truckingSell)
-                        iChild.ManuallyGetResourcesPerformActivity();
-
-                    herdValue = uniqueIndividuals.Sum(a => a.BreedParams.ValueofIndividual(a, PurchaseOrSalePricingStyleType.Sale).CalculateValue(a));
+                    foreach (var trucking in truckingSell)
+                    {
+                        herdValue += trucking.IndividualsToBeTrucked.Sum(a => a.BreedParams.ValueofIndividual(a, PurchaseOrSalePricingStyleType.Sale).CalculateValue(a));
+                        numberTrucked += trucking.IndividualsToBeTrucked.Count();
+                    }
 
                     // provide updated units of measure for identifiable children
                     foreach (var valueToSupply in valuesForIdentifiableModels.Where(a => a.Key.identifier == identifier).ToList())
@@ -263,7 +291,7 @@ namespace Models.CLEM.Activities
                                         valuesForIdentifiableModels[valueToSupply.Key] = 1;
                                         break;
                                     case "per head":
-                                        valuesForIdentifiableModels[valueToSupply.Key] = number;
+                                        valuesForIdentifiableModels[valueToSupply.Key] = numberTrucked;
                                         break;
                                     case "Value of individuals":
                                         valuesForIdentifiableModels[valueToSupply.Key] = herdValue;
@@ -282,11 +310,11 @@ namespace Models.CLEM.Activities
                 default:
                     break;
             }
-            return null;
+            return requestResources;
         }
 
         /// <inheritdoc/>
-        protected override void AdjustResourcesForActivity()
+        protected override void AdjustResourcesForTimestep()
         {
             IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
             if (shortfalls.Any())
@@ -345,8 +373,7 @@ namespace Models.CLEM.Activities
                 var request = ResourceRequestList.Where(a => a.AdditionalDetails.ToString() == "Purchases").FirstOrDefault();
                 if(request != null)
                 {
-                    double available = request.Provided;
-                    if (MathUtilities.IsLessThan(request.Provided, request.Required))
+                    if (MathUtilities.IsLessThan(request.Required, request.Available))
                     {
                         double valueOfSkipped = 0;
                         if (MathUtilities.IsGreaterThan(numberToSkip + numberTrucksToSkipIndividuals, 0))
@@ -404,7 +431,7 @@ namespace Models.CLEM.Activities
                                 ResourceTypeName = request.ResourceTypeName,
                                 ActivityModel = this,
                                 Required = item2.TotalPrice ?? 0,
-                                Provided = item2.TotalPrice ?? 0,
+                                Available = item2.TotalPrice ?? 0,
                                 AllowTransmutation = false,
                                 Category = $"{TransactionCategory}.{item2.GroupName}",
                                 RelatesToResource = this.PredictedHerdName,
@@ -421,7 +448,7 @@ namespace Models.CLEM.Activities
             int head = 0;
             List<Ruminant> taskIndividuals = new List<Ruminant>();
 
-            if (task == "Sell")
+            if (task == "Sell")  // sales
             {
                 double saleValue = 0;
                 foreach (var ind in uniqueIndividuals.SkipLast(numberToSkip+numberTrucksToSkipIndividuals).ToList())
@@ -461,7 +488,7 @@ namespace Models.CLEM.Activities
             }
         }
         /// <inheritdoc/>
-        public override void PerformTasksForActivity(double argument = 0)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             if (numberToDo - numberToSkip > 0)
                 ProcessAnimals();

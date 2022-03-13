@@ -84,7 +84,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             List<ResourceRequest> requests = new List<ResourceRequest>();
 
@@ -140,7 +140,7 @@ namespace Models.CLEM.Activities
         //}
 
         /// <inheritdoc/>
-        protected override void AdjustResourcesForActivity()
+        protected override void AdjustResourcesForTimestep()
         {
             // adjust amount needed by labour shortfall.
             double labprop = this.LabourLimitProportion;
@@ -171,7 +171,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void PerformTasksForActivity(double argument = 0)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             Status = ActivityStatus.NotNeeded;
             // take local equivalent of market from resource

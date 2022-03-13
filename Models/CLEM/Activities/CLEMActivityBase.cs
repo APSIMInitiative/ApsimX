@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
         /// <summary>
         /// A protected link to the CLEM resource holder
         /// </summary>
-        [Link]
+        [Link(ByName = true)]
         protected ResourcesHolder Resources = null;
 
         /// <summary>
@@ -498,12 +498,20 @@ namespace Models.CLEM.Activities
             {
                 if (TimingOK)
                 {
-                    // add any labour resources requirements based on method supplied by activity
-                    // ResourceRequestList.AddRange(GetLabourRequiredForActivity());
-                    // labour will be added when linked up as IIdentifiable
+                    // get ready for time step
+                    PrepareForTimestep();
 
-                    // add any non-labour resources needed based on method supplied by activity
-                    var requests = DetermineResourcesForActivity();
+                    // get all identifiable child related expense requests
+                    if (this is ICanHandleIdentifiableChildModels)
+                    {
+                        // get all identifiable children except filter groups
+                        foreach (IIdentifiableChildModel identifiableChild in FindAllChildren<IIdentifiableChildModel>().Where(a => identifier!=""?(a.Identifier??"") == identifier:true))
+                            identifiableChild.PrepareForTimestep();
+                    }
+
+                    // add resources needed based on method supplied by activity
+                    // set the metric values for identifiabel children as they will follow in next loop
+                    var requests = RequestResourcesForTimestep();
                     if (requests != null)
                         ResourceRequestList.AddRange(requests);
 
@@ -511,20 +519,24 @@ namespace Models.CLEM.Activities
                     if (this is ICanHandleIdentifiableChildModels)
                     {
                         // get all identifiable children except filter groups
-                        foreach (IIdentifiableChildModel identifiableChild in FindAllChildren<IIdentifiableChildModel>().Where(a => a.Identifier == identifier))
+                        foreach (IIdentifiableChildModel identifiableChild in FindAllChildren<IIdentifiableChildModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
                         {
                             if (valuesForIdentifiableModels.Any() && valuesForIdentifiableModels.Where(a => a.Key.type == identifiableChild.GetType().Name).Any())
                             {
                                 var unitsProvided = ValueForIdentifiableChild(identifiableChild);
                                 if (MathUtilities.IsPositive(unitsProvided))
                                 {
-                                    foreach (ResourceRequest request in identifiableChild.DetermineResourcesForActivity(unitsProvided))
+                                    foreach (ResourceRequest request in identifiableChild.RequestResourcesForTimestep(unitsProvided))
                                     {
                                         if(request.ActivityModel is null)
                                             request.ActivityModel = this;
                                         request.IdentifiableChildDetails = (identifiableChild.GetType().Name, identifiableChild.Identifier, identifiableChild.Units);
                                         ResourceRequestList.Add(request);
                                     }
+                                }
+                                else
+                                {
+
                                 }
                             }
                         }
@@ -534,7 +546,7 @@ namespace Models.CLEM.Activities
                     CheckResources(ResourceRequestList, Guid.NewGuid());
 
                     // adjust if needed based on method supplied by activity
-                    AdjustResourcesForActivity();
+                    AdjustResourcesForTimestep();
 
                     // take resources
                     bool tookRequestedResources = TakeResources(ResourceRequestList, false);
@@ -543,13 +555,13 @@ namespace Models.CLEM.Activities
                     // if resources are returned (all available or UseResourcesAvailable action) perform Activity
                     if (tookRequestedResources || (ResourceRequestList.Count == 0))
                     {
-                        PerformTasksForActivity(); //based on method supplied by activity
+                        PerformTasksForTimestep(); //based on method supplied by activity
 
                         // for all identifiable child to generate create resources where needed
                         if (this is ICanHandleIdentifiableChildModels)
                         {
                             // get all identifiable children except filter groups
-                            foreach (IIdentifiableChildModel identifiableChild in FindAllChildren<IIdentifiableChildModel>().Where(a => a.Identifier == identifier))
+                            foreach (IIdentifiableChildModel identifiableChild in FindAllChildren<IIdentifiableChildModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
                             {
                                 if (valuesForIdentifiableModels.Any() && valuesForIdentifiableModels.Where(a => a.Key.type == identifiableChild.GetType().Name).Any())
                                 {
@@ -558,8 +570,13 @@ namespace Models.CLEM.Activities
                                         throw new ApsimXException(this, $"Units for [{identifiableChild.GetType().Name}]-[{identifiableChild.Identifier ?? "BLANK"}]-[{identifiableChild.Units ?? "BLANK"}] have not been calculated by [a={NameWithParent}] before use.{Environment.NewLine}Code issue. See Developers");
                                     else
                                     {
-                                        if ((unitsProvided ?? -1) > 0)
-                                            identifiableChild.PerformTasksForActivity(unitsProvided ?? 0);
+                                        // negative unit value (-99999) means the units were ok, but the model has alerted us to a problem that should eb reported as an error.
+                                        if (MathUtilities.IsNegative(unitsProvided ?? 0) && identifiableChild is CLEMActivityBase)
+                                            (identifiableChild as CLEMActivityBase).Status = ActivityStatus.Warning;
+                                        else
+                                        {
+                                            identifiableChild.PerformTasksForTimestep(unitsProvided ?? 0);
+                                        }
                                     }
                                 }
                             }
@@ -637,19 +654,28 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Base method to determine the number of days labour required based on Activity requirements and labour settings.
+        /// Method to prepare the activitity for the time step 
         /// Functionality provided in derived classes
         /// </summary>
-        protected virtual LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        public virtual void PrepareForTimestep()
         {
-            return null;
+            return;
         }
+
+        ///// <summary>
+        ///// Base method to determine the number of days labour required based on Activity requirements and labour settings.
+        ///// Functionality provided in derived classes
+        ///// </summary>
+        //protected virtual LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        //{
+        //    return null;
+        //}
 
         /// <summary>
         /// Method to determine the list of resources and amounts needed. 
         /// Functionality provided in derived classes
         /// </summary>
-        public virtual List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
+        public virtual List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             return null;
         }
@@ -658,7 +684,7 @@ namespace Models.CLEM.Activities
         /// Method to adjust activities needed based on shortfalls before they are taken from resource pools. 
         /// Functionality provided in derived classes
         /// </summary>
-        protected virtual void AdjustResourcesForActivity()
+        protected virtual void AdjustResourcesForTimestep()
         {
             IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
             if (shortfalls.Any())
@@ -673,49 +699,49 @@ namespace Models.CLEM.Activities
         /// Method to perform activity tasks if expected as soon as resources are available
         /// Functionality provided in derived classes
         /// </summary>
-        public virtual void PerformTasksForActivity(double argument = 0)
+        public virtual void PerformTasksForTimestep(double argument = 0)
         {
             return;
         }
 
-        /// <summary>
-        /// A common method to get the labour resource requests for the activity.
-        /// </summary>
-        /// <returns></returns>
-        protected List<ResourceRequest> GetLabourRequiredForActivity()
-        {
-            List<ResourceRequest> labourResourceRequestList = new List<ResourceRequest>();
-            foreach (LabourRequirement item in FindAllChildren<LabourRequirement>())
-            {
-                LabourRequiredArgs daysResult = GetDaysLabourRequired(item);
-                if (daysResult?.DaysNeeded > 0)
-                {
-                    foreach (LabourFilterGroup fg in item.FindAllChildren<LabourFilterGroup>())
-                    {
-                        int numberOfPpl = 1;
-                        if (item.ApplyToAll)
-                            // how many matches
-                            numberOfPpl = fg.Filter(Resources.FindResourceGroup<Labour>().Items).Count();
-                        for (int i = 0; i < numberOfPpl; i++)
-                        {
-                            labourResourceRequestList.Add(new ResourceRequest()
-                            {
-                                AllowTransmutation = true,
-                                Required = daysResult.DaysNeeded,
-                                ResourceType = typeof(Labour),
-                                ResourceTypeName = "",
-                                ActivityModel = this,
-                                FilterDetails = new List<object>() { fg },
-                                Category = daysResult.Category,
-                                RelatesToResource = daysResult.RelatesToResource
-                            }
-                            ); ;
-                        }
-                    }
-                }
-            }
-            return labourResourceRequestList;
-        }
+        ///// <summary>
+        ///// A common method to get the labour resource requests for the activity.
+        ///// </summary>
+        ///// <returns></returns>
+        //protected List<ResourceRequest> GetLabourRequiredForActivity()
+        //{
+        //    List<ResourceRequest> labourResourceRequestList = new List<ResourceRequest>();
+        //    foreach (LabourRequirement item in FindAllChildren<LabourRequirement>())
+        //    {
+        //        LabourRequiredArgs daysResult = GetDaysLabourRequired(item);
+        //        if (daysResult?.DaysNeeded > 0)
+        //        {
+        //            foreach (LabourFilterGroup fg in item.FindAllChildren<LabourFilterGroup>())
+        //            {
+        //                int numberOfPpl = 1;
+        //                if (item.ApplyToAll)
+        //                    // how many matches
+        //                    numberOfPpl = fg.Filter(Resources.FindResourceGroup<Labour>().Items).Count();
+        //                for (int i = 0; i < numberOfPpl; i++)
+        //                {
+        //                    labourResourceRequestList.Add(new ResourceRequest()
+        //                    {
+        //                        AllowTransmutation = true,
+        //                        Required = daysResult.DaysNeeded,
+        //                        ResourceType = typeof(Labour),
+        //                        ResourceTypeName = "",
+        //                        ActivityModel = this,
+        //                        FilterDetails = new List<object>() { fg },
+        //                        Category = daysResult.Category,
+        //                        RelatesToResource = daysResult.RelatesToResource
+        //                    }
+        //                    ); ;
+        //                }
+        //            }
+        //        }
+        //    }
+        //    return labourResourceRequestList;
+        //}
 
         /// <summary>
         /// Method to provide the proportional limit based on labour shortfall
@@ -776,10 +802,7 @@ namespace Models.CLEM.Activities
         {
             get
             {
-                foreach (LabourRequirement item in FindAllChildren<LabourRequirement>())
-                    if (item.ShortfallCanAffectParentActivity)
-                        return true;
-                return false;
+                return FindAllChildren<LabourRequirement>().Where(a => a.ShortfallCanAffectParentActivity).Any();
             }
         }
 
@@ -1051,12 +1074,13 @@ namespace Models.CLEM.Activities
 
             // remove activity resources 
             // if no shortfalls or not skip activity if they are present
-            if (resourceRequestList.Where(a => Math.Round(a.Available - a.Required, 4)>=0).Any() == false || OnPartialResourcesAvailableAction != OnPartialResourcesAvailableActionTypes.SkipActivity)
+            var shortfallRequests = resourceRequestList.Where(a => MathUtilities.IsNegative(a.Available - a.Required));
+            if (shortfallRequests.Any() == false | (shortfallRequests.Any() & OnPartialResourcesAvailableAction != OnPartialResourcesAvailableActionTypes.SkipActivity))
             {
                 // check if deficit and performWithPartial
-                if (OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
+                if (shortfallRequests.Any() && OnPartialResourcesAvailableAction == OnPartialResourcesAvailableActionTypes.ReportErrorAndStop)
                 {
-                    string resourcelist = string.Join("][r=", resourceRequestList.Where(a => Math.Round(a.Available - a.Required, 4) < 0).Select(a => a.ResourceType.Name));
+                    string resourcelist = string.Join("][r=", resourceRequestList.Where(a => MathUtilities.IsNegative(a.Available - a.Required)).Select(a => a.ResourceType.Name));
                     if (resourcelist.Length > 0)
                     {
                         string errorMessage = $"Insufficient [r={resourcelist}] for [a={this.NameWithParent}]{Environment.NewLine}[Report error and stop] is selected as action when shortfall of resources. Ensure sufficient resources are available or change OnPartialResourcesAvailableAction setting";

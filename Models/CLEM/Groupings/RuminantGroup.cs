@@ -82,13 +82,18 @@ namespace Models.CLEM.Groupings
         }
 
         /// <inheritdoc/>
-        public List<ResourceRequest> DetermineResourcesForActivity(double activityMetric)
+        public virtual void PrepareForTimestep()
+        {
+        }
+
+        /// <inheritdoc/>
+        public virtual List<ResourceRequest> RequestResourcesForTimestep(double activityMetric)
         {
             return new List<ResourceRequest>();
         }
 
         /// <inheritdoc/>
-        public void PerformTasksForActivity(double activityMetric)
+        public virtual void PerformTasksForTimestep(double activityMetric)
         {
         }
 

@@ -89,33 +89,37 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            double metric = (Parent as CLEMActivityBase).ValueForIdentifiableChild(this);
-            double charge = metric* Amount;
-
-            if (MathUtilities.IsPositive(metric))
-                Status = ActivityStatus.NotNeeded;
-
-            resourceRequest = new ResourceRequest()
+            resourceRequest = null;
+            if (MathUtilities.IsPositive(argument))
             {
-                Resource = BankAccount,
-                ResourceType = typeof(Finance),
-                AllowTransmutation = true,
-                Required = charge,
-                Category = TransactionCategory,
-                AdditionalDetails = this,
-                RelatesToResource = (Parent as CLEMRuminantActivityBase).PredictedHerdName,
-                ActivityModel = this
-            };
-            return new List<ResourceRequest>() { resourceRequest };
+                Status = ActivityStatus.NotNeeded;
+                double charge = argument * Amount;
+                resourceRequest = new ResourceRequest()
+                {
+                    Resource = BankAccount,
+                    ResourceType = typeof(Finance),
+                    AllowTransmutation = true,
+                    Required = charge,
+                    Category = TransactionCategory,
+                    AdditionalDetails = this,
+                    RelatesToResource = (Parent as CLEMRuminantActivityBase).PredictedHerdName,
+                    ActivityModel = this
+                };
+                return new List<ResourceRequest>() { resourceRequest };
+            }
+            return null;
         }
 
         /// <inheritdoc/>
-        public override void PerformTasksForActivity(double argument = 0)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
-            bool shortfalls = MathUtilities.IsLessThan(resourceRequest.Provided, resourceRequest.Required);
-            SetStatusSuccessOrPartial(shortfalls);
+            if(resourceRequest != null)
+            {
+                bool shortfalls = MathUtilities.IsLessThan(resourceRequest.Provided, resourceRequest.Required);
+                SetStatusSuccessOrPartial(shortfalls);
+            }
         }
 
         #region descriptive summary

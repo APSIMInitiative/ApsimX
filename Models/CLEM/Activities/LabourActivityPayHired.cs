@@ -119,7 +119,7 @@ namespace Models.CLEM.Activities
 
 
         /// <inheritdoc/>
-        public override void PerformTasksForActivity(double argument = 0)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             if (PaymentCalculationStyle == PayHiredLabourCalculationStyle.ByAvailableLabour)
             {
@@ -177,14 +177,14 @@ namespace Models.CLEM.Activities
             return;
         }
 
-        /// <inheritdoc/>
-        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            return new LabourRequiredArgs(0, TransactionCategory, null);
-        }
+        ///// <inheritdoc/>
+        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        //{
+        //    return new LabourRequiredArgs(0, TransactionCategory, null);
+        //}
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             List<ResourceRequest> resourcesNeeded = new List<ResourceRequest>();
             if (PaymentCalculationStyle == PayHiredLabourCalculationStyle.ByAvailableLabour)

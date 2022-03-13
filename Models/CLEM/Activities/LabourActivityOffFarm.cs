@@ -56,21 +56,21 @@ namespace Models.CLEM.Activities
             labourRequired = this.FindAllChildren<LabourRequirement>().FirstOrDefault() as LabourRequirement;
         }
 
-        /// <inheritdoc/>
-        protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
-        {
-            double daysNeeded = 0;
-            // get fixed days per LabourRequirement
-            if(labourRequired != null)
-            {
-                daysNeeded = labourRequired.LabourPerUnit;
-            }
-            return new LabourRequiredArgs(daysNeeded, TransactionCategory, null);
+        ///// <inheritdoc/>
+        //protected override LabourRequiredArgs GetDaysLabourRequired(LabourRequirement requirement)
+        //{
+        //    double daysNeeded = 0;
+        //    // get fixed days per LabourRequirement
+        //    if(labourRequired != null)
+        //    {
+        //        daysNeeded = labourRequired.LabourPerUnit;
+        //    }
+        //    return new LabourRequiredArgs(daysNeeded, TransactionCategory, null);
 
-        }
+        //}
 
         /// <inheritdoc/>
-        public override void PerformTasksForActivity(double argument = 0)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             // days provided from labour set in the requests in the resourceResquestList
             // receive payment for labour if bank type exists

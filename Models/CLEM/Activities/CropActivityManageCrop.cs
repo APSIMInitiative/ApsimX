@@ -215,7 +215,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void PerformTasksForActivity(double argument = 0)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             Status = ActivityStatus.NoTask;
             return;

@@ -11,6 +11,7 @@ using Models.Core.Attributes;
 using System.IO;
 using System.Text.Json.Serialization;
 using Models.CLEM.Interfaces;
+using APSIM.Shared.Utilities;
 
 namespace Models.CLEM.Activities
 {
@@ -52,6 +53,8 @@ namespace Models.CLEM.Activities
         private double maximumDaysPerPerson = 0;
         private double maximumDaysPerGroup = 0;
         private double minimumDaysPerPerson = 0;
+        private Labour labourResource;
+        private List<ResourceRequest> resourceList = new List<ResourceRequest>();
 
         /// <summary>
         /// Constructor
@@ -181,6 +184,14 @@ namespace Models.CLEM.Activities
         [JsonIgnore]
         public double MinimumDaysPerPerson { get { return minimumDaysPerPerson; } }
 
+        /// <summary>An event handler to allow us to initialise ourselves.</summary>
+        /// <param name="sender">The sender.</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+        [EventSubscribe("CLEMInitialiseActivity")]
+        private void OnCLEMInitialiseActivity(object sender, EventArgs e)
+        {
+            labourResource = Resources.FindResourceGroup<Labour>();
+        }
 
         /// <summary>
         /// Calcuate the limits for people and groups using the style
@@ -212,13 +223,71 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public List<ResourceRequest> DetermineResourcesForActivity(double activityMetric)
+        public void PrepareForTimestep()
         {
-            return new List<ResourceRequest>();
+
         }
 
         /// <inheritdoc/>
-        public void PerformTasksForActivity(double activityMetric)
+        public List<ResourceRequest> RequestResourcesForTimestep(double activityMetric)
+        {
+            resourceList.Clear();
+            IEnumerable<LabourType> labourers = labourResource?.Items.Where(a => a.Hired != true);
+            double daysNeeded = 0;
+            double numberUnits = 0;
+
+            numberUnits = activityMetric / LabourPerUnit;
+            if(WholeUnitBlocks)
+                numberUnits = Math.Ceiling(numberUnits);
+
+            switch (Units)
+            {
+                case "Fixed":
+                    daysNeeded = LabourPerUnit * activityMetric;
+                    break;
+                case "per AE":
+                case "per head":
+                case "per kg":
+                case "per ha":
+                    numberUnits = activityMetric / UnitSize;
+                    if (WholeUnitBlocks)
+                        numberUnits = Math.Ceiling(numberUnits);
+                    daysNeeded = numberUnits * LabourPerUnit;
+                    break;
+                default:
+                    throw new NotImplementedException($"Unknown unit [{Units}] requested in [{GetType().Name}]:[{NameWithParent}]");
+            }
+
+            if (MathUtilities.IsPositive(daysNeeded))
+            {
+                foreach (LabourFilterGroup fg in FindAllChildren<LabourFilterGroup>())
+                {
+                    int numberOfPpl = 1;
+                    if (ApplyToAll)
+                        // how many matches
+                        numberOfPpl = fg.Filter(labourResource.Items).Count();
+                    for (int i = 0; i < numberOfPpl; i++)
+                    {
+                        resourceList.Add(new ResourceRequest()
+                        {
+                            AllowTransmutation = true,
+                            Required = daysNeeded,
+                            ResourceType = typeof(Labour),
+                            ResourceTypeName = "",
+                            ActivityModel = this,
+                            FilterDetails = new List<object>() { fg },
+                            Category = TransactionCategory,
+//                            RelatesToResource = daysResult.RelatesToResource
+                        }
+                        ); ;
+                    }
+                }
+            }
+            return resourceList;
+        }
+
+        /// <inheritdoc/>
+        public void PerformTasksForTimestep(double activityMetric)
         {
         }
 
@@ -235,9 +304,9 @@ namespace Models.CLEM.Activities
             // ensure labour resource added
             Labour lab = Resources.FindResource<Labour>();
             if (lab == null)
-                Summary.WriteMessage(this, "[a=" + this.Parent.Name + "][f=" + this.Name + "] No labour resorces in simulation. Labour requirement will be ignored.", MessageType.Warning);
+                Summary.WriteMessage(this, "[a=" + this.Parent.Name + "][f=" + this.Name + "] No labour resources in simulation. Labour requirement will be ignored.", MessageType.Warning);
             else if (lab.Children.Count <= 0)
-                Summary.WriteMessage(this, "[a=" + this.Parent.Name + "][f=" + this.Name + "] No labour resorce types are provided in the labour resource. Labour requirement will be ignored.", MessageType.Warning);
+                Summary.WriteMessage(this, "[a=" + this.Parent.Name + "][f=" + this.Name + "] No labour resource types are provided in the labour resource. Labour requirement will be ignored.", MessageType.Warning);
 
             // check filter groups present
             if (this.Children.OfType<LabourFilterGroup>().Count() == 0)

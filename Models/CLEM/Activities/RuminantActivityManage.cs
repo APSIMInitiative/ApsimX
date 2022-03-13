@@ -638,7 +638,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             // reset for this time step
             numberMaleSiresInHerd = 0;
@@ -739,7 +739,7 @@ namespace Models.CLEM.Activities
             // provide updated units of measure for identifiable children
             foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
             {
-                int number = 0;
+                int number = -99999;
                 switch (valueToSupply.Key.identifier)
                 {
                     case "Herd size - before activity":
@@ -838,7 +838,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override void AdjustResourcesForActivity()
+        protected override void AdjustResourcesForTimestep()
         {
             // No resource shortfalls are allowed to influence this activity at present.
             IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
@@ -857,7 +857,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void PerformTasksForActivity(double argument = 0)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             // assumed Timing is OK from base class handling of resource provision.
 

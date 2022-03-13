@@ -90,7 +90,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             double metric = (Parent as CLEMActivityBase).ValueForIdentifiableChild(this);
             double charge = metric * Amount;
@@ -113,7 +113,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void PerformTasksForActivity(double argument = 0)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             bool shortfalls = MathUtilities.IsLessThan(resourceRequest.Provided, resourceRequest.Required);
             SetStatusSuccessOrPartial(shortfalls);

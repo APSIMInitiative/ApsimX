@@ -126,6 +126,12 @@ namespace Models.CLEM.Activities
         private Relationship weightToNumberPerLoadUnit { get; set; }
 
         /// <summary>
+        /// The list of individuals remaining to be trucked in the current timestep and task (buy or sell)
+        /// </summary>
+        [JsonIgnore]
+        public IEnumerable<Ruminant> IndividualsToBeTrucked { get { return individualsToBeTrucked; } }
+
+        /// <summary>
         /// Constructor
         /// </summary>
         public TruckingSettings()
@@ -313,9 +319,14 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
+        public override void PrepareForTimestep()
         {
-            List<ResourceRequest> resourceRequests = new List<ResourceRequest>();
+        }
+
+        /// <inheritdoc/>
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
+        {
+            ResourceRequestList.Clear();
 
             // walk through all trucking and reduce parent unique individuals where necessary
             numberToDo = 0;
@@ -323,13 +334,18 @@ namespace Models.CLEM.Activities
             // number provided by the parent for trucking
             parentNumberToDo = parentBuySellActivity.IndividualsToBeTrucked?.Count() ?? 0;
 
+            foreach (var iChild in FindAllChildren<IIdentifiableChildModel>().OfType<CLEMActivityBase>())
+                iChild.Status = (parentNumberToDo > 0)? ActivityStatus.NotNeeded:ActivityStatus.NoTask;
+
             individualsToBeTrucked = GetUniqueIndividuals<Ruminant>(filterGroups.OfType<RuminantGroup>(), parentBuySellActivity.IndividualsToBeTrucked).ToList();
             numberToDo = individualsToBeTrucked?.Count() ?? 0;
 
             // work out how many can be trucked and return to parent of untrucked for next trucking settings if available.
 
             truckDetails = EstimateTrucking();
-            //parentBuySellActivity.IndividualsToBeTrucked = individualsToBeTrucked.Take(truckDetails.individualsTransported);
+
+            //TODO: cehck 
+            parentBuySellActivity.IndividualsToBeTrucked = parentBuySellActivity.IndividualsToBeTrucked.Except(individualsToBeTrucked.Take(truckDetails.individualsTransported));
 
             foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
             {
@@ -374,17 +390,11 @@ namespace Models.CLEM.Activities
                         throw new NotImplementedException(UnknownIdentifierErrorText(this, valueToSupply.Key));
                 }
             }
-
-            // return any identifiable child results with this to be handled by parent as this too is an iidentifiable child.
-            foreach (var iChild in FindAllChildren<IIdentifiableChildModel>())
-            {
-                resourceRequests.AddRange(iChild.DetermineResourcesForActivity(ValueForIdentifiableChild(iChild)));
-            }
-            return resourceRequests;
+            return ResourceRequestList;
         }
 
         /// <inheritdoc/>
-        public override void PerformTasksForActivity(double argument = 0)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             if (parentNumberToDo > 0)
             {
@@ -403,7 +413,7 @@ namespace Models.CLEM.Activities
                     }
                 }
             }
-            else
+            else 
                 Status = ActivityStatus.NoTask;
         }
 

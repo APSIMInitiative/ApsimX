@@ -29,6 +29,7 @@ namespace Models.CLEM.Groupings
         [Link]
         private Summary summary = null;
 
+        private RuminantActivityFeed feedActivityParent;
         private ResourceRequest currentFeedRequest;
         private bool usingPotentialIntakeMultiplier = false;
         private List<Ruminant> individualsToBeFed;
@@ -91,6 +92,8 @@ namespace Models.CLEM.Groupings
         [EventSubscribe("CLEMInitialiseActivity")]
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
+            feedActivityParent = FindAncestor<RuminantActivityFeed>();
+
             RuminantActivityFeed feedParent = Parent as RuminantActivityFeed;
             switch (feedParent.FeedStyle)
             {
@@ -122,13 +125,7 @@ namespace Models.CLEM.Groupings
         }
 
         /// <inheritdoc/>
-        public List<ResourceRequest> GetResourceRequests(double activityMetric)
-        {
-            return null;
-        }
-
-        /// <inheritdoc/>
-        public ResourceRequest GetFeedRequest(RuminantActivityFeed feedActivityParent)
+        public override void PrepareForTimestep()
         {
             // remember individuals and request details for later adjustment based on shortfalls
             individualsToBeFed = Filter(feedActivityParent.IndividualsToBeFed).ToList();
@@ -157,8 +154,12 @@ namespace Models.CLEM.Groupings
 
             // remove fed individuals from temp list to avoid double handling of an individual in the parent activity
             feedActivityParent.IndividualsToBeFed = feedActivityParent.IndividualsToBeFed.Skip(individualsToBeFed.Count);
+        }
 
-            return currentFeedRequest;
+        /// <inheritdoc/>
+        public override List<ResourceRequest> RequestResourcesForTimestep(double activityMetric)
+        {
+            return new List<ResourceRequest> { currentFeedRequest };
         }
 
         /// <summary>
@@ -184,15 +185,12 @@ namespace Models.CLEM.Groupings
                 switch (feedActivityParent.FeedStyle)
                 {
                     case RuminantFeedActivityTypes.SpecifiedDailyAmount:
-                        usingPotentialIntakeMultiplier = true;
                         feedNeeed = value * 30.4;
                         break;
                     case RuminantFeedActivityTypes.SpecifiedDailyAmountPerIndividual:
                         feedNeeed = (value * 30.4) * selectedIndividuals.Count;
-                        usingPotentialIntakeMultiplier = true;
                         break;
                     case RuminantFeedActivityTypes.ProportionOfWeight:
-                        usingPotentialIntakeMultiplier = true;
                         feedNeeed = value * selectedIndividuals.Weight * 30.4;
                         break;
                     case RuminantFeedActivityTypes.ProportionOfPotentialIntake:
@@ -202,7 +200,6 @@ namespace Models.CLEM.Groupings
                         feedNeeed = value * (selectedIndividuals.PotentialIntake - selectedIndividuals.Intake);
                         break;
                     case RuminantFeedActivityTypes.ProportionOfFeedAvailable:
-                        usingPotentialIntakeMultiplier = true;
                         feedNeeed = value * feedActivityParent.FeedType.Amount;
                         break;
                     default:

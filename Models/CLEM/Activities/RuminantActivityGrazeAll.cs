@@ -122,7 +122,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void PerformTasksForActivity(double argument = 0)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             if(Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
                 Status = ActivityStatus.NoTask;

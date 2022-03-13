@@ -407,7 +407,7 @@ namespace Models.CLEM.Activities
                 if (this.TimingOK)
                 {
                     Status = ActivityStatus.NotNeeded;
-                    PerformTasksForActivity();
+                    PerformTasksForTimestep();
                 }
             }
         }
@@ -441,7 +441,7 @@ namespace Models.CLEM.Activities
 
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             int year = clock.Today.Year;
             int month = clock.Today.Month;
@@ -490,7 +490,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override void AdjustResourcesForActivity()
+        protected override void AdjustResourcesForTimestep()
         {
             IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
             if (shortfalls.Any())
@@ -520,7 +520,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void PerformTasksForActivity(double argument = 0)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             if (MathUtilities.IsPositive(AmountHarvested))
             {

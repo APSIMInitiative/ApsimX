@@ -161,7 +161,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             unitsAvailable = unitsAvailableForSale;
             return null;
@@ -186,7 +186,7 @@ namespace Models.CLEM.Activities
         //}
 
         /// <inheritdoc/>
-        protected override void AdjustResourcesForActivity()
+        protected override void AdjustResourcesForTimestep()
         {
             // adjust resources sold based on labour shortfall
             double labourLimit = this.LabourLimitProportion;
@@ -196,7 +196,7 @@ namespace Models.CLEM.Activities
 
 
         /// <inheritdoc/>
-        public override void PerformTasksForActivity(double argument = 0)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             Status = ActivityStatus.NotNeeded;
             double labourlimit = this.LabourLimitProportion;

@@ -73,13 +73,18 @@ namespace Models.CLEM.Activities
         public bool ShortfallCanAffectParentActivity { get; set; }
 
         /// <inheritdoc/>
-        public virtual List<ResourceRequest> DetermineResourcesForActivity(double activityMetric)
+        public void PrepareForTimestep()
+        {
+        }
+
+        /// <inheritdoc/>
+        public virtual List<ResourceRequest> RequestResourcesForTimestep(double activityMetric)
         {
             return new List<ResourceRequest>();
         }
 
         /// <inheritdoc/>
-        public void PerformTasksForActivity(double activityMetric)
+        public void PerformTasksForTimestep(double activityMetric)
         {
             double amountOfEmission;
             switch (Units)
@@ -90,7 +95,7 @@ namespace Models.CLEM.Activities
                 case "total provided":
                     amountOfEmission = activityMetric;
                     break;
-                case "per":
+                case "per tonne km":
                     amountOfEmission = activityMetric * Amount;
                     break;
                 default:

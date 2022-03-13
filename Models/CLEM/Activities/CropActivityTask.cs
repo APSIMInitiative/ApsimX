@@ -74,7 +74,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             amountToSkip = 0;
 
@@ -119,7 +119,7 @@ namespace Models.CLEM.Activities
 
 
         /// <inheritdoc/>
-        protected override void AdjustResourcesForActivity()
+        protected override void AdjustResourcesForTimestep()
         {
             IEnumerable<ResourceRequest> shortfalls = MinimumShortfallProportion();
             if (shortfalls.Any())
@@ -132,7 +132,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void PerformTasksForActivity(double argument = 0)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             if(ResourceRequestList.Any())
             {

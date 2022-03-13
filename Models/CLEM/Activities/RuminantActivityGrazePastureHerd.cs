@@ -171,11 +171,11 @@ namespace Models.CLEM.Activities
         /// </summary>
         public List<ResourceRequest> RequestDetermineResources()
         {
-            return DetermineResourcesForActivity();
+            return RequestResourcesForTimestep();
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             // if this is the first time of this request not being partially managerd by a RuminantActivityGradePaddock work independently
             if (lastResourceRequest != Clock.Today)
@@ -245,7 +245,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        protected override void AdjustResourcesForActivity()
+        protected override void AdjustResourcesForTimestep()
         {
             if (pastureRequest != null && MathUtilities.IsLessThan(Math.Round(GrazingCompetitionLimiter,4), 1))
             {
@@ -256,7 +256,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void PerformTasksForActivity(double argument = 0)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             //Go through amount received and put it into the animals intake with quality measures.
             // get resource list, handles if already called by parent.

@@ -112,7 +112,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override List<ResourceRequest> DetermineResourcesForActivity(double argument = 0)
+        public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             // This method does not take any resources but is used to arbitrate resources for all breed grazing activities it contains
 
@@ -147,7 +147,7 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override void PerformTasksForActivity(double argument = 0)
+        public override void PerformTasksForTimestep(double argument = 0)
         {
             if (Status != ActivityStatus.Partial && Status != ActivityStatus.Critical)
                 Status = ActivityStatus.NoTask;
