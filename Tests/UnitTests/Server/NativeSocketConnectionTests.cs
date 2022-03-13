@@ -10,6 +10,7 @@ using System.IO.Pipes;
 namespace UnitTests.Server
 {
     [TestFixture]
+    [Timeout(5 * 1000)]
     public class NativeSocketConnectionTests
     {
         private const string pipePath = "/tmp/CoreFxPipe_";
