@@ -347,7 +347,7 @@ namespace Models.Soils.Nutrients
             {
                 // Get the denitrification N flow under NO3.
                 var pools = FindAllDescendants<NutrientPool>().Cast<INutrientPool>().ToList();
-                pools.Remove(Inert);
+                //pools.Remove(Inert); this should be included as without it is contrary to user expectations
                 pools.Remove(SurfaceResidue);
 
                 NutrientPool returnPool = new NutrientPool();
@@ -367,10 +367,10 @@ namespace Models.Soils.Nutrients
         }
 
         /// <summary>
-        /// Total N in each soil layer
+        /// Total organic N in each soil layer, organic and mineral
         /// </summary>
         [Units("kg/ha")]
-        public double[] TotalN
+        public double[] TotalOrganicN
         {
             get
             {
@@ -386,6 +386,25 @@ namespace Models.Soils.Nutrients
                     for (int i = 0; i < numLayers; i++)
                         values[i] += P.N[i];
                 return values;
+            }
+        }
+
+        /// <summary>
+        /// Total N in each soil layer, organic, mineral and nitrogen solutes
+        /// </summary>
+        [Units("kg/ha")]
+        public double[] TotalN
+        {
+            get
+            {
+                double[] totalN = TotalOrganicN;
+
+                // I don't like having hard coded solutes here but I can't think of another
+                // way to do this easily.
+                for (int i = 0; i < totalN.Length; i++)
+                    totalN[i] += Urea.kgha[i] + NO3.kgha[i] + NH4.kgha[i];
+                
+                return totalN;
             }
         }
 
