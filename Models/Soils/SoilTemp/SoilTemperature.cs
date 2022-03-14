@@ -409,9 +409,6 @@
         private void OnStartOfSimulation(object sender, EventArgs e)            // JNGH - changed this from Init1.
         {
             doInit1Stuff = true;
-            Console.WriteLine();
-            Console.WriteLine("------- soiltemp Initialisation -----------------------------------------------");
-            Console.WriteLine("     Initialising :");
             getIniVariables();
             getProfileVariables();
             readParam();
