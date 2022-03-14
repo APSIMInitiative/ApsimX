@@ -434,7 +434,7 @@ namespace Models.Soils
         /// 
         /// </summary>
         public double slcerr { get; set; } = 0.000001;
-
+        
         /// <summary>
         /// 
         /// </summary>

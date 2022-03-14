@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 376,
+  "ExplorerWidth": 300,
   "Version": 148,
   "Name": "Simulations",
   "Children": [
@@ -685,6 +685,9 @@
                     {
                       "$type": "Models.Soils.Swim3, Models",
                       "PrecipitationInterception": 0.0,
+                      "ersoil": 1E-06,
+                      "ernode": 1E-06,
+                      "slcerr": 1E-06,
                       "theta": null,
                       "psi": null,
                       "Salb": 0.13,
@@ -3300,6 +3303,9 @@
                             {
                               "$type": "Models.Soils.Swim3, Models",
                               "PrecipitationInterception": 0.0,
+                              "ersoil": 1E-06,
+                              "ernode": 1E-06,
+                              "slcerr": 1E-06,
                               "theta": null,
                               "psi": null,
                               "Salb": 0.13,
@@ -5522,6 +5528,9 @@
                             {
                               "$type": "Models.Soils.Swim3, Models",
                               "PrecipitationInterception": 0.0,
+                              "ersoil": 1E-06,
+                              "ernode": 1E-06,
+                              "slcerr": 1E-06,
                               "theta": null,
                               "psi": null,
                               "Salb": 0.13,
@@ -7228,6 +7237,9 @@
                             {
                               "$type": "Models.Soils.Swim3, Models",
                               "PrecipitationInterception": 0.0,
+                              "ersoil": 1E-06,
+                              "ernode": 1E-06,
+                              "slcerr": 1E-06,
                               "theta": null,
                               "psi": null,
                               "Salb": 0.13,
@@ -9239,6 +9251,9 @@
                             {
                               "$type": "Models.Soils.Swim3, Models",
                               "PrecipitationInterception": 0.0,
+                              "ersoil": 1E-06,
+                              "ernode": 1E-06,
+                              "slcerr": 1E-06,
                               "theta": null,
                               "psi": null,
                               "Salb": 0.13,
@@ -11228,6 +11243,9 @@
                             {
                               "$type": "Models.Soils.Swim3, Models",
                               "PrecipitationInterception": 0.0,
+                              "ersoil": 1E-06,
+                              "ernode": 1E-06,
+                              "slcerr": 1E-06,
                               "theta": null,
                               "psi": null,
                               "Salb": 0.13,
@@ -13217,6 +13235,9 @@
                             {
                               "$type": "Models.Soils.Swim3, Models",
                               "PrecipitationInterception": 0.0,
+                              "ersoil": 1E-06,
+                              "ernode": 1E-06,
+                              "slcerr": 1E-06,
                               "theta": null,
                               "psi": null,
                               "Salb": 0.13,
@@ -15721,6 +15742,9 @@
                             {
                               "$type": "Models.Soils.Swim3, Models",
                               "PrecipitationInterception": 0.0,
+                              "ersoil": 1E-06,
+                              "ernode": 1E-06,
+                              "slcerr": 1E-06,
                               "theta": null,
                               "psi": null,
                               "Salb": 0.13,
@@ -18233,6 +18257,9 @@
                             {
                               "$type": "Models.Soils.Swim3, Models",
                               "PrecipitationInterception": 0.0,
+                              "ersoil": 1E-06,
+                              "ernode": 1E-06,
+                              "slcerr": 1E-06,
                               "theta": null,
                               "psi": null,
                               "Salb": 0.13,
@@ -19617,6 +19644,9 @@
                     {
                       "$type": "Models.Soils.Swim3, Models",
                       "PrecipitationInterception": 0.0,
+                      "ersoil": 1E-06,
+                      "ernode": 1E-06,
+                      "slcerr": 1E-06,
                       "theta": null,
                       "psi": null,
                       "Salb": 0.13,
@@ -20865,6 +20895,9 @@
                     {
                       "$type": "Models.Soils.Swim3, Models",
                       "PrecipitationInterception": 0.0,
+                      "ersoil": 1E-06,
+                      "ernode": 1E-06,
+                      "slcerr": 1E-06,
                       "theta": null,
                       "psi": null,
                       "Salb": 0.13,
@@ -21889,6 +21922,9 @@
                     {
                       "$type": "Models.Soils.Swim3, Models",
                       "PrecipitationInterception": 0.0,
+                      "ersoil": 1E-06,
+                      "ernode": 1E-06,
+                      "slcerr": 1E-06,
                       "theta": null,
                       "psi": null,
                       "Salb": 0.13,
