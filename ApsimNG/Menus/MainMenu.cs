@@ -11,6 +11,7 @@
     using global::UserInterface.Hotkeys;
     using Models.Core;
     using Models.Core.Run;
+    using Utility;
 
     /// <summary>
     /// This class contains methods for all main menu items that the ExplorerView exposes to the user.
@@ -189,6 +190,10 @@
                 ExplorerPresenter explorer = presenter.GetCurrentExplorerPresenter();
                 if (explorer == null)
                     return;
+
+                // Write .apsimx file to disk.
+                if (Configuration.Settings.AutoSave)
+                    explorer.Save();
 
                 IModel model = FindRunnable(explorer.CurrentNode);
                 if (model == null)
