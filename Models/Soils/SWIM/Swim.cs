@@ -5640,7 +5640,7 @@ namespace Models.Soils
                 double[] newSW = MathUtilities.Divide(dlt_sw_dep, soilPhysical.Thickness, divideTolerance);
                 newSW = MathUtilities.Subtract(th, newSW);
                 ResetWaterBalance(1, ref newSW);
-                //run_has_started = false;
+                run_has_started = false;
             }
         }
 
