@@ -792,6 +792,10 @@ namespace Models.AgPasture
         [Units("-")]
         public double TurnoverDefoliationCoefficient { get; set; } = 0.5;
 
+        /// <summary>Coefficient of function increasing the turnover rate due to defoliation (>0.0).</summary>
+        [Units("-")]
+        public double TurnoverDefoliationFactor { get; set; } = 1.0;
+
         /// <summary>Minimum significant daily effect of defoliation on tissue turnover rate (0-1).</summary>
         [Units("/day")]
         public double TurnoverDefoliationEffectMin { get; set; } = 0.025;
@@ -1231,8 +1235,8 @@ namespace Models.AgPasture
 
         ////- Harvest and digestibility >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Fraction of standing DM harvested (0-1), used on tissue turnover.</summary>
-        private double myDefoliatedFraction;
+        /// <summary>Fraction of available dry matter actually harvested (0-1).</summary>
+        private double myDefoliatedFraction = 0.0;
 
         /// <summary>Digestibility of defoliated material (0-1).</summary>
         public double DefoliatedDigestibility { get; private set; }
@@ -2224,7 +2228,7 @@ namespace Models.AgPasture
         [Units("kg/ha")]
         public double HarvestedWt { get { return Leaf.DMRemoved + Stem.DMRemoved + Stolon.DMRemoved; } }
 
-        /// <summary>Fraction of available dry matter actually harvested ().</summary>
+        /// <summary>Fraction of available dry matter actually harvested (0-1).</summary>
         [Units("0-1")]
         public double HarvestedFraction         
         {
@@ -2600,6 +2604,8 @@ namespace Models.AgPasture
 
             senescedNRemobilised = 0.0;
             luxuryNRemobilised = 0.0;
+
+            myDefoliatedFraction = 0.0;
 
             Array.Clear(mySoilWaterAvailable, 0, nLayers);
             Array.Clear(mySoilWaterUptake, 0, nLayers);
@@ -4123,24 +4129,21 @@ namespace Models.AgPasture
         {
             double defoliationEffect = 0.0;
             cumDefoliationFactor += myDefoliatedFraction;
-            if (cumDefoliationFactor > 0.0)
+            if ((cumDefoliationFactor > 0.0) && (TurnoverDefoliationFactor > 0.0))
             {
                 double todaysFactor = Math.Pow(cumDefoliationFactor, TurnoverDefoliationCoefficient + 1.0);
                 todaysFactor /= (TurnoverDefoliationCoefficient + 1.0);
                 if (cumDefoliationFactor - todaysFactor < TurnoverDefoliationEffectMin)
                 {
-                    defoliationEffect = cumDefoliationFactor;
+                    defoliationEffect = cumDefoliationFactor * TurnoverDefoliationFactor;
                     cumDefoliationFactor = 0.0;
                 }
                 else
                 {
-                    defoliationEffect = cumDefoliationFactor - todaysFactor;
+                    defoliationEffect = (cumDefoliationFactor - todaysFactor) * TurnoverDefoliationFactor;
                     cumDefoliationFactor = todaysFactor;
                 }
             }
-
-            // clear fraction defoliated after use
-            myDefoliatedFraction = 0.0;
 
             return defoliationEffect;
         }
