@@ -37,8 +37,6 @@ namespace Models.CLEM.Activities
         private ActivityCutAndCarryLimiter limiter;
         private bool rotationReady = false;
         private string addReason = "Harvest";
-        private bool performedHarvest = false;
-        private string previousTag = "";
         private double amountToDo;
         private double amountToSkip;
         private (int? previous, int? first, int? current, int? last) harvestOffset;

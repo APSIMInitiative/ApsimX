@@ -27,7 +27,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Added ecological indicator calculations")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Pasture/ManagePasture.htm")]
-    public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager
+    public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager, ICanHandleIdentifiableChildModels
     {
         [Link]
         private Clock clock = null;
@@ -41,6 +41,8 @@ namespace Models.CLEM.Activities
         private double ha2sqkm = 0.01; //convert ha to square km
         private bool gotLandRequested = false; //was this pasture able to get the land it requested ?
         private List<PastureDataType> pastureDataList;
+        private Relationship relationshipLC;
+        private Relationship relationshipGBA;
 
         /// <summary>
         /// Land type where pasture is located
@@ -125,6 +127,37 @@ namespace Models.CLEM.Activities
             AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
+        /// <inheritdoc/>
+        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
+        {
+            switch (type)
+            {
+                case "Relationship":
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>() {
+                            "Utilisation % to change in Land condition index relationship",
+                            "Utilisation % to change in Grass basal area relationship"
+                        },
+                        units: new List<string>()
+                        );
+                case "RuminantActivityFee":
+                case "LabourRequirement":
+                    return new LabelsForIdentifiableChildren(
+                        identifiers: new List<string>() {
+                            "Number milked",
+                            "Litres milked",
+                        },
+                        units: new List<string>() {
+                            "fixed",
+                            "per head",
+                            "per L milked"
+                        }
+                        );
+                default:
+                    return new LabelsForIdentifiableChildren();
+            }
+        }
+
         #region validation
         /// <summary>
         /// Validate this object
@@ -134,15 +167,31 @@ namespace Models.CLEM.Activities
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-            if (LandConditionIndex == null)
+            if (relationshipLC == null)
             {
-                string[] memberNames = new string[] { "RelationshipRunningValue for LandConditionIndex" };
-                results.Add(new ValidationResult("Unable to locate the [o=RelationshipRunningValue] for the Land Condition Index [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] named [LC] below a [a=Relationsip] that defines change in land condition with utilisation below this activity", memberNames));
+                string[] memberNames = new string[] { "Relationship for LandConditionIndex" };
+                results.Add(new ValidationResult($"[a={NameWithParent}] requires a [Relationship] as a child component with the identifier [Utilisation % to change in Land condition index relationship]", memberNames));
             }
-            if (GrassBasalArea == null)
+            else
             {
-                string[] memberNames = new string[] { "RelationshipRunningValue for GrassBasalArea" };
-                results.Add(new ValidationResult("Unable to locate the [o=RelationshipRunningValue] for the Grass Basal Area [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] named [GBA] below a [a=Relationsip] that defines change in grass basal area with utilisation below this activity", memberNames));
+                if (LandConditionIndex == null)
+                {
+                    string[] memberNames = new string[] { "RelationshipRunningValue for LandConditionIndex" };
+                    results.Add(new ValidationResult("Unable to locate a [o=RelationshipRunningValue] with the Land Condition Index [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] below the [a=Relationsip] with identifier [Utilisation % to change in Land condition index relationship]", memberNames));
+                }
+            }
+            if (relationshipGBA == null)
+            {
+                string[] memberNames = new string[] { "Relationship for Grass Basal Area" };
+                results.Add(new ValidationResult($"[a={NameWithParent}] requires a [Relationship] as a child component with the identifier [Utilisation % to change in Grass basal area relationship]", memberNames));
+            }
+            else
+            {
+                if (GrassBasalArea == null)
+                {
+                    string[] memberNames = new string[] { "RelationshipRunningValue for GrassBasalArea" };
+                    results.Add(new ValidationResult("Unable to locate a [o=RelationshipRunningValue] with the Grass Basal Area [a=Relationship] for this pasture.\r\nAdd a [o=RelationshipRunningValue] below the [a=Relationsip] with identifier [Utilisation % to change in Grass basal area relationship]", memberNames));
+                }
             }
             if (filePasture == null)
             {
@@ -165,8 +214,17 @@ namespace Models.CLEM.Activities
 
             // locate Land Type resource for this forage.
             LinkedLandItem = Resources.FindResourceType<Land, LandType>(this, LandTypeNameToUse, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
-            LandConditionIndex = FindAllDescendants<RelationshipRunningValue>().Where(a => (new string[] { "lc", "landcondition", "landcon", "landconditionindex" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
-            GrassBasalArea = FindAllDescendants<RelationshipRunningValue>().Where(a => (new string[] { "gba", "basalarea", "grassbasalarea" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
+
+            relationshipLC = FindAllChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Land condition index relationship").FirstOrDefault();
+            if (relationshipLC != null)
+                LandConditionIndex = relationshipLC.FindChild<RelationshipRunningValue>();
+
+            relationshipGBA = FindAllChildren<Relationship>().Where(a => a.Identifier == "Utilisation % to change in Grass basal area relationship").FirstOrDefault();
+            if (relationshipGBA != null)
+                GrassBasalArea = relationshipGBA.FindChild<RelationshipRunningValue>();
+
+            // LandConditionIndex = FindAllDescendants<RelationshipRunningValue>().Where(a => (new string[] { "lc", "landcondition", "landcon", "landconditionindex" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
+            //GrassBasalArea = FindAllDescendants<RelationshipRunningValue>().Where(a => (new string[] { "gba", "basalarea", "grassbasalarea" }).Contains(a.Name.ToLower())).FirstOrDefault() as RelationshipRunningValue;
             filePasture = zoneCLEM.Parent.FindAllDescendants().Where(a => a.Name == PastureDataReader).FirstOrDefault() as IFilePasture;
 
             if (LandConditionIndex is null || GrassBasalArea is null || filePasture is null)

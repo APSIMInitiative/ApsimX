@@ -1,4 +1,5 @@
 ﻿using Models.CLEM.Activities;
+using Models.CLEM.Interfaces;
 using Models.Core;
 using Models.Core.Attributes;
 using System;
@@ -10,6 +11,8 @@ using System.Threading.Tasks;
 using Newtonsoft.Json;
 using System.IO;
 using APSIM.Shared.Utilities;
+using System.Xml.Serialization;
+using Models.CLEM.Resources;
 
 namespace Models.CLEM
 {
@@ -28,8 +31,27 @@ namespace Models.CLEM
     [Version(1, 0, 2, "Added RelationshipCalculationMethod to allow user to define fixed or linear solver")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Relationships/Relationship.htm")]
-    public class Relationship : CLEMModel, IValidatableObject
+    public class Relationship : CLEMModel, IValidatableObject, IIdentifiableChildModel
     {
+        /// <summary>
+        /// An identifier for this Relationship based on parent requirements
+        /// </summary>
+        [Description("Relationship identifier")]
+        [Core.Display(Type = DisplayType.DropDown, Values = "ParentSuppliedIdentifiers")]
+        public string Identifier { get; set; }
+
+        /// <inheritdoc/>
+        [XmlIgnore]
+        public string Units
+        {
+            get { return ""; }
+            set {; }
+        }
+
+        /// <inheritdoc/>
+        [XmlIgnore]
+        public bool ShortfallCanAffectParentActivity { get; set; }
+
         /// <summary>
         /// X values of relationship
         /// </summary>
@@ -64,6 +86,10 @@ namespace Models.CLEM
         /// </summary>
         [Description("Label for y variable")]
         public string NameOfYVariable { get; set; }
+
+        /// <inheritdoc/>
+        [JsonIgnore]
+        public string TransactionCategory { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
 
         /// <summary>
         /// Constructor
@@ -244,6 +270,24 @@ namespace Models.CLEM
                 htmlWriter.Write("\r\n</div>");
                 return htmlWriter.ToString(); 
             }
+        }
+
+        /// <inheritdoc/>
+        public void PrepareForTimestep()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <inheritdoc/>
+        public void PerformTasksForTimestep(double argument = 0)
+        {
+            throw new NotImplementedException();
         }
 
         #endregion

@@ -290,6 +290,9 @@ namespace Models.CLEM.Activities
                         case "GreenhouseGasActivityEmission":
                             identifiableModelsPresent.Add(componentType.Name, LocateIdentifiableChildren<GreenhouseGasActivityEmission>());
                             break;
+                        case "Relationship":
+                            identifiableModelsPresent.Add(componentType.Name, LocateIdentifiableChildren<Relationship>());
+                            break;
                         default:
                             throw new NotSupportedException($"{componentType.Name} not currently supported as IdentifiableComponent");
                     }
@@ -636,7 +639,7 @@ namespace Models.CLEM.Activities
 
                     if (test | test2)
                     {
-                        string warn = $"The identifier [{((iChild.Identifier == "") ? "BLANK" : iChild.Identifier)}] specified in [{iChild.Name}] is not valid for the parent activity [a={NameWithParent}].{Environment.NewLine}Select an option from the list. If only the invalid value is displayed, edit the simulation file or delete and replace the component.";
+                        string warn = $"The identifier [{(((iChild.Identifier??"") == "") ? "BLANK" : iChild.Identifier)}] specified in [{iChild.Name}] is not valid for the parent activity [a={NameWithParent}].{Environment.NewLine}Select an option from the list. If only the invalid value is displayed, edit the simulation file or delete and replace the component.";
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                     }
 
@@ -645,7 +648,7 @@ namespace Models.CLEM.Activities
                     test2 = units.Any() && ((iChild.Units ?? "") != "") && !units.Contains(iChild.Units ?? "");
                     if (test | test2)
                     {
-                        string warn = $"The units [{((iChild.Units == "") ? "BLANK" : iChild.Units)}] specified in [{iChild.GetType().Name}]:[{iChild.Name}] are not valid for the parent activity [{GetType().Name}]:[a={NameWithParent}].{Environment.NewLine}Select an option from the list. If only the invalid value is displayed, edit the simulation file or delete and replace the component.";
+                        string warn = $"The units [{(((iChild.Units ?? "") == "") ? "BLANK" : iChild.Units)}] specified in [{iChild.GetType().Name}]:[{iChild.Name}] are not valid for the parent activity [{GetType().Name}]:[a={NameWithParent}].{Environment.NewLine}Select an option from the list. If only the invalid value is displayed, edit the simulation file or delete and replace the component.";
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                     }
 
