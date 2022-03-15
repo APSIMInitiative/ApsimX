@@ -83,7 +83,6 @@
         public double NRemoved { get; private set; }
 
         /// <summary>Digestibility of this tissue (kg/kg).</summary>
-        /// <remarks>Digestibility of sugars is assumed to be 100%.</remarks>
         public double Digestibility { get; private set; }
 
         //----------------------- Public methods -----------------------
@@ -97,9 +96,9 @@
         /// <summary>Preparation before the main daily processes.</summary>
         public void OnDoDailyInitialisation()
         {
-            DMRemoved = 0;
-            NRemoved = 0;
-            FractionRemoved = 0;
+            DMRemoved = 0.0;
+            NRemoved = 0.0;
+            FractionRemoved = 0.0;
             ClearDailyTransferredAmounts();
         }
 
@@ -135,7 +134,7 @@
 
             DMRemoved = totalFraction * dryMatter.Wt;
             NRemoved = totalFraction * dryMatter.N;
-            FractionRemoved = fractionToRemove;
+            FractionRemoved = totalFraction;
 
             if (totalFraction > 0.0)
             {
@@ -171,11 +170,13 @@
             NRemobilised = 0.0;
             DMRemoved = 0.0;
             NRemoved = 0.0;
+            FractionRemoved = 0.0;
         }
 
         //----------------------- Private methods -----------------------
 
         /// <summary>Calculate the values for calculated states.</summary>
+        /// <remarks>Digestibility of sugars is assumed to be 100%.</remarks>
         private void CalculateDigestibility()
         {
             Digestibility = 0.0;
