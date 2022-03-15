@@ -219,7 +219,7 @@ namespace Models.CLEM.Activities
                     // all trucking has been allocated and each trucking component knows its individuals
                     foreach (var trucking in truckingBuy)
                     {
-                        herdValue += trucking.IndividualsToBeTrucked.Sum(a => a.BreedParams.ValueofIndividual(a, PurchaseOrSalePricingStyleType.Purchase).CalculateValue(a));
+                        herdValue += trucking.IndividualsToBeTrucked.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Purchase).CalculateValue(a));
                         numberTrucked += trucking.IndividualsToBeTrucked.Count();
                     }
 
@@ -274,7 +274,7 @@ namespace Models.CLEM.Activities
 
                     foreach (var trucking in truckingSell)
                     {
-                        herdValue += trucking.IndividualsToBeTrucked.Sum(a => a.BreedParams.ValueofIndividual(a, PurchaseOrSalePricingStyleType.Sale).CalculateValue(a));
+                        herdValue += trucking.IndividualsToBeTrucked.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Sale).CalculateValue(a));
                         numberTrucked += trucking.IndividualsToBeTrucked.Count();
                     }
 
@@ -380,7 +380,7 @@ namespace Models.CLEM.Activities
                         {
                             // adjust to take care of skipped individuals
                             var skipped = uniqueIndividuals.TakeLast(numberToSkip+numberTrucksToSkipIndividuals);
-                            valueOfSkipped = skipped.Sum(a => a.BreedParams.ValueofIndividual(a, PurchaseOrSalePricingStyleType.Sale).CalculateValue(a));
+                            valueOfSkipped = skipped.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, PurchaseOrSalePricingStyleType.Sale).CalculateValue(a));
                         }
                         double shortfall = request.Required - request.Provided - valueOfSkipped;
                         if(MathUtilities.IsGreaterThan(shortfall, 0))
@@ -390,7 +390,7 @@ namespace Models.CLEM.Activities
                             foreach (var ind in uniqueIndividuals.SkipLast(numberToSkip + numberTrucksToSkipIndividuals).Reverse())
                             {
                                 fundsNeededPurchaseSkipIndividuals++;
-                                shortfall -= ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Sale).CalculateValue(ind);
+                                shortfall -= ind.BreedParams.GetPriceGroupOfIndividual(ind, PurchaseOrSalePricingStyleType.Sale).CalculateValue(ind);
                                 if (MathUtilities.IsLessThanOrEqual(shortfall, 0))
                                     break;
                             }
@@ -453,7 +453,7 @@ namespace Models.CLEM.Activities
                 double saleValue = 0;
                 foreach (var ind in uniqueIndividuals.SkipLast(numberToSkip+numberTrucksToSkipIndividuals).ToList())
                 {
-                    var pricing = ind.BreedParams.ValueofIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
+                    var pricing = ind.BreedParams.GetPriceGroupOfIndividual(ind, PurchaseOrSalePricingStyleType.Sale);
                     if (pricing != null)
                         saleValue += pricing.CalculateValue(ind);
                    
