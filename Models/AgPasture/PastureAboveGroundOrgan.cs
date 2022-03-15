@@ -228,8 +228,8 @@
 
         //----------------------- Public methods -----------------------
 
-        /// <summary>Initialise this organ instance.</summary>
-        /// <param name="minimumLiveWt">Minimum live dry matter (kg/ha)</param>
+        /// <summary>Initialise this organ instance (and tissues).</summary>
+        /// <param name="minimumLiveWt">Minimum live DM biomass for this organ (kg/ha).</param>
         public void Initialise(double minimumLiveWt)
         {
             LiveTissue = new GenericTissue[] { EmergingTissue, DevelopingTissue, MatureTissue };

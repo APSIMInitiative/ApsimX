@@ -192,20 +192,20 @@
 
         /// <summary>Move a fraction of the biomass from this tissue to another tissue.</summary>
         /// <param name="fractionToRemove">The fraction to move.</param>
-        /// <param name="toTissue">The tissue to move to biomass to.</param>
-        public void MoveFractionToTissue(double fractionToRemove, RootTissue toTissue)
+        /// <param name="receivingTissue">The tissue to move the biomass to.</param>
+        public void MoveFractionToTissue(double fractionToRemove, RootTissue receivingTissue)
         {
             var removed = RemoveBiomass(fractionToRemove, sendToSoil: false);
-            toTissue.AddBiomass(removed.Wt, removed.N);
+            receivingTissue.AddBiomass(removed.Wt, removed.N);
         }
 
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>
-        /// <param name="turnoverRate">The turnover rate for each tissue</param>
+        /// <param name="turnoverRate">The turnover rate for each tissue.</param>
         /// <param name="bottomLayer">Bottom layer index where roots are located.</param>
-        /// <param name="to">The tissue to move the turned over material to.</param>
+        /// <param name="receivingTissue">The tissue to move the turned over biomass to.</param>
         /// <param name="nConc">The n concentration.</param>
         /// <returns>The DM and N amount removed from this tissue.</returns>
-        public BiomassAndN DoTissueTurnover(double turnoverRate, int bottomLayer, RootTissue to, double nConc)
+        public BiomassAndN DoTissueTurnover(double turnoverRate, int bottomLayer, RootTissue receivingTissue, double nConc)
         {
             if (turnoverRate > 0.0)
             {
@@ -214,9 +214,9 @@
                 dmTransferredOut += turnoverDM;
                 nTransferredOut += turnoverN;
 
-                if (to != null)
+                if (receivingTissue != null)
                 {
-                    to.SetBiomassTurnover(turnoverDM, turnoverN, bottomLayer, FractionWt);
+                    receivingTissue.SetBiomassTurnover(turnoverDM, turnoverN, bottomLayer, FractionWt);
 
                     // get the amounts remobilisable (luxury N)
                     double totalLuxuryN = (DM.Wt + dmTransferredIn - dmTransferredOut) * nConc;

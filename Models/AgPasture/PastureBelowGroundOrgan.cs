@@ -267,8 +267,8 @@
         //----------------------- Public methods -----------------------
 
         /// <summary>Initialise this root instance (and tissues).</summary>
-        /// <param name="zone">The zone the roots belong in.</param>
-        /// <param name="minLiveDM">The minimum biomass for this organ</param>
+        /// <param name="zone">The zone the roots belong to.</param>
+        /// <param name="minLiveDM">Minimum live DM biomass for this organ (kg/ha).</param>
         public void Initialise(Zone zone, double minLiveDM)
         {
             // link to soil models parameters
