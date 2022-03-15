@@ -342,10 +342,7 @@
 
             var rootBiomassWt = MathUtilities.Multiply_Value(CurrentRootDistributionTarget(), rootWt);
             var rootBiomassN = MathUtilities.Multiply_Value(rootBiomassWt, MathUtilities.Divide(rootN, rootWt, 0.0));
-            for (int t = 0; t < tissue.Length; t++)
-            {
-                tissue[t].SetBiomass(rootBiomassWt, rootBiomassN);
-            }
+            tissue[0].SetBiomass(rootBiomassWt, rootBiomassN); // assumes there's no dead material
         }
 
         /// <summary>Removes biomass from root layers when harvest, graze or cut events are called.</summary>
