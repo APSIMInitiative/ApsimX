@@ -29,7 +29,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Manages feeding whole herd a specified daily amount or proportion of available feed")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantFeed.htm")]
-    public class RuminantActivityFeed : CLEMRuminantActivityBase, IValidatableObject, ICanHandleIdentifiableChildModels
+    public class RuminantActivityFeed : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
         private int numberToDo;
         private int numberToSkip;
@@ -98,18 +98,18 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
             switch (type)
             {
                 case "RuminantFeedGroup":
                 case "RuminantFeedGroupMonthly":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
                         units: new List<string>()
                         );
                 case "RuminantActivityFee":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
                             "Number fed",
                             "Feed provided"
@@ -121,7 +121,7 @@ namespace Models.CLEM.Activities
                         }
                         );
                 case "LabourRequirement":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
                             "Number fed",
                             "Feed provided"
@@ -133,7 +133,7 @@ namespace Models.CLEM.Activities
                         }
                         );
                 default:
-                    return new LabelsForIdentifiableChildren();
+                    return new LabelsForCompanionModels();
             }
         }
 
@@ -145,7 +145,7 @@ namespace Models.CLEM.Activities
         {
             // get all ui tree herd filters that relate to this activity
             this.InitialiseHerd(true, true);
-            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantFeedGroup>(true, false);
+            filterGroups = GetCompanionModelsByIdentifier<RuminantFeedGroup>(true, false);
 
             // locate FeedType resource
             FeedType = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, FeedTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop) as IFeedType;
@@ -183,14 +183,14 @@ namespace Models.CLEM.Activities
             //    resourceRequests.AddRange(requests);
             //}
 
-            foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
+            foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 int number = numberToDo;
 
                 switch (valueToSupply.Key.type)
                 {
                     case "RuminantFeedGroup":
-                        valuesForIdentifiableModels[valueToSupply.Key] = 0;
+                        valuesForCompanionModels[valueToSupply.Key] = 0;
                         break;
                     case "LabourGroup":
                     case "RuminantActivityFee":
@@ -200,10 +200,10 @@ namespace Models.CLEM.Activities
                                 switch (valueToSupply.Key.unit)
                                 {
                                     case "fixed":
-                                        valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                                        valuesForCompanionModels[valueToSupply.Key] = 1;
                                         break;
                                     case "per head":
-                                        valuesForIdentifiableModels[valueToSupply.Key] = number;
+                                        valuesForCompanionModels[valueToSupply.Key] = number;
                                         break;
                                     default:
                                         throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
@@ -213,22 +213,22 @@ namespace Models.CLEM.Activities
                                 switch (valueToSupply.Key.unit)
                                 {
                                     case "fixed":
-                                        valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                                        valuesForCompanionModels[valueToSupply.Key] = 1;
                                         break;
                                     case "per kg fed":
                                         amountToDo = feedEstimated;
-                                        valuesForIdentifiableModels[valueToSupply.Key] = feedEstimated;
+                                        valuesForCompanionModels[valueToSupply.Key] = feedEstimated;
                                         break;
                                     default:
                                         throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
                                 }
                                 break;
                             default:
-                                throw new NotImplementedException(UnknownIdentifierErrorText(this, valueToSupply.Key));
+                                throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
                         }
                         break;
                     default:
-                        throw new NotImplementedException(UnknownIdentifiableChildErrorText(this, valueToSupply.Key));
+                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
                 }
             }
             return null;
@@ -242,7 +242,7 @@ namespace Models.CLEM.Activities
             if (shortfalls.Any())
             {
                 // find shortfall by identifiers as these may have different influence on outcome
-                var numberShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "Number fed").FirstOrDefault();
+                var numberShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number fed").FirstOrDefault();
                 if (numberShort != null)
                 {
                     string warn = $"Resource shortfalls reduced the number of animals fed in [a={NameWithParent}] based on specified [ShortfallAffectsActivity] set to true for identifier [Number fed].{Environment.NewLine}The individuals fed will be restricted, but the model does not currenty adjust the amount of feed handled to match the reduced number of individuals";
@@ -251,7 +251,7 @@ namespace Models.CLEM.Activities
                     numberToSkip = Convert.ToInt32(numberToDo * numberShort.Required / numberShort.Provided);
                 }
 
-                var amountShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "Feed provided").FirstOrDefault();
+                var amountShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Feed provided").FirstOrDefault();
                 if (amountShort != null)
                     amountToSkip = Convert.ToInt32(amountToDo * amountShort.Required / amountShort.Provided);
 

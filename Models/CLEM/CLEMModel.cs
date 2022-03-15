@@ -198,8 +198,8 @@ namespace Models.CLEM
         /// <returns>A list of identifiers</returns>
         public List<string> ParentSuppliedIdentifiers()
         {
-            if (this is IIdentifiableChildModel && Parent != null && Parent is ICanHandleIdentifiableChildModels)
-                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels(GetType().Name).Identifiers;
+            if (this is IActivityCompanionModel && Parent != null && Parent is IHandlesActivityCompanionModels)
+                return (Parent as IHandlesActivityCompanionModels).DefineCompanionModelLabels(GetType().Name).Identifiers;
             else
                 return new List<string>();
         }
@@ -210,8 +210,8 @@ namespace Models.CLEM
         /// <returns>A list of units</returns>
         public List<string> ParentSuppliedUnits()
         {
-            if (this is IIdentifiableChildModel && Parent != null && Parent is ICanHandleIdentifiableChildModels)
-                return (Parent as ICanHandleIdentifiableChildModels).DefineIdentifiableChildModelLabels(GetType().Name).Units;
+            if (this is IActivityCompanionModel && Parent != null && Parent is IHandlesActivityCompanionModels)
+                return (Parent as IHandlesActivityCompanionModels).DefineCompanionModelLabels(GetType().Name).Units;
             else
                 return new List<string>();
         }

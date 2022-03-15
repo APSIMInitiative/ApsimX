@@ -30,7 +30,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Updated assessment calculations and ability to report results")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPredictiveStocking.htm")]
-    public class RuminantActivityPredictiveStocking: CLEMRuminantActivityBase, ICanHandleIdentifiableChildModels
+    public class RuminantActivityPredictiveStocking: CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         [Link]
         private Clock clock = null;
@@ -95,18 +95,18 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
             switch (type)
             {
                 case "RuminantGroup":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
                         units: new List<string>()
                         );
                 case "RuminantActivityFee":
                 case "LabourRequirement":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
                             "Destock required"
                         },
@@ -117,7 +117,7 @@ namespace Models.CLEM.Activities
                         }
                         );
                 default:
-                    return new LabelsForIdentifiableChildren();
+                    return new LabelsForCompanionModels();
             }
         }
 
@@ -130,7 +130,7 @@ namespace Models.CLEM.Activities
             AeToDestock = 0;
             AeDestocked = 0;
             this.InitialiseHerd(false, true);
-            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>(true, false);
+            filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(true, false);
             paddocks = Resources.FindResourceGroup<GrazeFoodStore>()?.FindAllChildren<GrazeFoodStoreType>();
             paddockShortfalls = new List<(string paddockName, double number, double AE, double AeShortfall)>();
         }
@@ -221,19 +221,19 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            // provide updated units of measure for identifiable children
-            foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
+            // provide updated units of measure for companion models
+            foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 switch (valueToSupply.Key.unit)
                 {
                     case "fixed":
-                        valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                        valuesForCompanionModels[valueToSupply.Key] = 1;
                         break;
                     case "per head":
-                        valuesForIdentifiableModels[valueToSupply.Key] = numberToDo;
+                        valuesForCompanionModels[valueToSupply.Key] = numberToDo;
                         break;
                     case "per AE":
-                        valuesForIdentifiableModels[valueToSupply.Key] = amountToDo;
+                        valuesForCompanionModels[valueToSupply.Key] = amountToDo;
                         break;
                     default:
                         throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
@@ -249,11 +249,11 @@ namespace Models.CLEM.Activities
             if (shortfalls.Any())
             {
                 // find shortfall by identifiers as these may have different influence on outcome
-                var numberShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "Destock required" && a.IdentifiableChildDetails.unit != "per AE").FirstOrDefault();
+                var numberShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Destock required" && a.CompanionModelDetails.unit != "per AE").FirstOrDefault();
                 if (numberShort != null)
                     numberToSkip = Convert.ToInt32(numberToDo * numberShort.Required / numberShort.Provided);
 
-                var amountShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "Destock required" && a.IdentifiableChildDetails.unit == "per AE").FirstOrDefault();
+                var amountShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Destock required" && a.CompanionModelDetails.unit == "per AE").FirstOrDefault();
                 if (amountShort != null)
                     amountToSkip = Convert.ToInt32(amountToDo * amountShort.Required / amountShort.Provided);
 

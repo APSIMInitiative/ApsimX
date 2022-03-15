@@ -952,9 +952,9 @@ namespace Models.CLEM
     }
 
     /// <summary>
-    /// The types of labels provided for use by Identifiable chilren
+    /// The types of labels provided for use by companion models
     /// </summary>
-    public enum IdentifiableChildModelLabelType
+    public enum CompanionModelLabelType
     {
         /// <summary>
         /// The child identifiers available
@@ -967,10 +967,10 @@ namespace Models.CLEM
     }
 
     /// <summary>
-    /// A list of labels used for communication between an activity and identifiable children
+    /// A list of labels used for communication between an activity and companion models
     /// </summary>
     [Serializable]
-    public struct LabelsForIdentifiableChildren
+    public struct LabelsForCompanionModels
     {
         /// <summary>
         /// List of available identifiers
@@ -986,7 +986,7 @@ namespace Models.CLEM
         /// </summary>
         /// <param name="identifiers"></param>
         /// <param name="units"></param>
-        public LabelsForIdentifiableChildren(List<string> identifiers, List<string> units)
+        public LabelsForCompanionModels(List<string> identifiers, List<string> units)
         {
             Identifiers = identifiers;
             Units = units;

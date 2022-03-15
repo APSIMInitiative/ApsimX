@@ -21,7 +21,7 @@ namespace Models.CLEM.Activities
     [Serializable]
     [ViewName("UserInterface.Views.PropertyCategorisedView")]
     [PresenterName("UserInterface.Presenters.PropertyCategorisedPresenter")]
-    [ValidParent(ParentType = typeof(ICanHandleIdentifiableChildModels))]
+    [ValidParent(ParentType = typeof(IHandlesActivityCompanionModels))]
     //[ValidParent(ParentType = typeof(CropActivityManageProduct))]
     //[ValidParent(ParentType = typeof(CropActivityTask))]
     //[ValidParent(ParentType = typeof(RuminantActivityGrazeAll))]
@@ -43,7 +43,7 @@ namespace Models.CLEM.Activities
     [Description("Defines the amount and type of labour required for an activity. This component must have at least one LabourFilterGroup as a child")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourRequirement.htm")]
-    public class LabourRequirement: CLEMModel, IValidatableObject, IIdentifiableChildModel
+    public class LabourRequirement: CLEMModel, IValidatableObject, IActivityCompanionModel
     {
         /// <summary>
         /// Link to resources

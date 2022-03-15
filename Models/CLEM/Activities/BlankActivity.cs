@@ -13,7 +13,7 @@ namespace Models.CLEM.Activities
     /// <summary>
     /// Blank activity for passing details
     /// </summary>
-    public class BlankActivity : CLEMActivityBase, ICanHandleIdentifiableChildModels
+    public class BlankActivity : CLEMActivityBase, IHandlesActivityCompanionModels
     {
         /// <inheritdoc/>
         protected override void AdjustResourcesForTimestep()

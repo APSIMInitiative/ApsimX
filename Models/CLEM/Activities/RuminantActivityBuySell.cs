@@ -30,7 +30,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Allows for recording transactions by groups of individuals")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBuySell.htm")]
-    public class RuminantActivityBuySell : CLEMRuminantActivityBase, ICanHandleIdentifiableChildModels
+    public class RuminantActivityBuySell : CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         private FinanceType bankAccount = null;
         private IEnumerable<TruckingSettings> truckingBuy = null;
@@ -71,12 +71,12 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
             switch (type)
             {
                 case "RuminantGroup":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
                             "Purchases",
                             "Sales"
@@ -85,7 +85,7 @@ namespace Models.CLEM.Activities
                         );
                 case "RuminantActivityFee":
                 case "LabourRequirement":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
                             "Purchases",
                             "Sales"
@@ -97,14 +97,14 @@ namespace Models.CLEM.Activities
                         }
                         );
                 case "TruckingSettings":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
                             "Purchases",
                             "Sales"
                         },
                         units: new List<string>());
                 default:
-                    return new LabelsForIdentifiableChildren();
+                    return new LabelsForCompanionModels();
             }
         }
 
@@ -115,8 +115,8 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(false, true);
-            filterGroupsBuy = GetIdentifiableChildrenByIdentifier<RuminantGroup>( false, true, "Purchases");
-            filterGroupsSell = GetIdentifiableChildrenByIdentifier<RuminantGroup>(false, true, "Sales");
+            filterGroupsBuy = GetCompanionModelsByIdentifier<RuminantGroup>( false, true, "Purchases");
+            filterGroupsSell = GetCompanionModelsByIdentifier<RuminantGroup>(false, true, "Sales");
 
             IEnumerable<Ruminant> testherd = this.CurrentHerd(true);
 
@@ -130,8 +130,8 @@ namespace Models.CLEM.Activities
                 bankAccount = Resources.FindResourceType<Finance, FinanceType>(this, BankAccountName, OnMissingResourceActionTypes.Ignore, OnMissingResourceActionTypes.ReportErrorAndStop);
 
             // get trucking settings
-            truckingBuy = GetIdentifiableChildrenByIdentifier<TruckingSettings>(false, false, "Purchases");
-            truckingSell = GetIdentifiableChildrenByIdentifier<TruckingSettings>(false, false, "Sales");
+            truckingBuy = GetCompanionModelsByIdentifier<TruckingSettings>(false, false, "Purchases");
+            truckingSell = GetCompanionModelsByIdentifier<TruckingSettings>(false, false, "Sales");
 
             // check if pricing is present
             if (bankAccount != null)
@@ -240,8 +240,8 @@ namespace Models.CLEM.Activities
                             ResourceTypeName = BankAccountName,
                         });
                     }
-                    // provide updated units of measure for identifiable children
-                    foreach (var valueToSupply in valuesForIdentifiableModels.Where(a => a.Key.identifier == identifier).ToList())
+                    // provide updated units of measure for companion models
+                    foreach (var valueToSupply in valuesForCompanionModels.Where(a => a.Key.identifier == identifier).ToList())
                     {
                         int number = numberToDo;
                         switch (valueToSupply.Key.identifier)
@@ -250,13 +250,13 @@ namespace Models.CLEM.Activities
                                 switch (valueToSupply.Key.unit)
                                 {
                                     case "fixed":
-                                        valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                                        valuesForCompanionModels[valueToSupply.Key] = 1;
                                         break;
                                     case "per head":
-                                        valuesForIdentifiableModels[valueToSupply.Key] = numberTrucked;
+                                        valuesForCompanionModels[valueToSupply.Key] = numberTrucked;
                                         break;
                                     case "Value of individuals":
-                                        valuesForIdentifiableModels[valueToSupply.Key] = herdValue;
+                                        valuesForCompanionModels[valueToSupply.Key] = herdValue;
                                         break;
                                     default:
                                         throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
@@ -265,7 +265,7 @@ namespace Models.CLEM.Activities
                             case "Sales":
                                 break;
                             default:
-                                throw new NotImplementedException(UnknownIdentifierErrorText(this, valueToSupply.Key));
+                                throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
                         }
                     }
                     break;
@@ -278,8 +278,8 @@ namespace Models.CLEM.Activities
                         numberTrucked += trucking.IndividualsToBeTrucked.Count();
                     }
 
-                    // provide updated units of measure for identifiable children
-                    foreach (var valueToSupply in valuesForIdentifiableModels.Where(a => a.Key.identifier == identifier).ToList())
+                    // provide updated units of measure for companion models
+                    foreach (var valueToSupply in valuesForCompanionModels.Where(a => a.Key.identifier == identifier).ToList())
                     {
                         int number = numberToDo;
                         switch (valueToSupply.Key.identifier)
@@ -288,13 +288,13 @@ namespace Models.CLEM.Activities
                                 switch (valueToSupply.Key.unit)
                                 {
                                     case "fixed":
-                                        valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                                        valuesForCompanionModels[valueToSupply.Key] = 1;
                                         break;
                                     case "per head":
-                                        valuesForIdentifiableModels[valueToSupply.Key] = numberTrucked;
+                                        valuesForCompanionModels[valueToSupply.Key] = numberTrucked;
                                         break;
                                     case "Value of individuals":
-                                        valuesForIdentifiableModels[valueToSupply.Key] = herdValue;
+                                        valuesForCompanionModels[valueToSupply.Key] = herdValue;
                                         break;
                                     default:
                                         throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
@@ -303,7 +303,7 @@ namespace Models.CLEM.Activities
                             case "Purchases":
                                 break;
                             default:
-                                throw new NotImplementedException(UnknownIdentifierErrorText(this, valueToSupply.Key));
+                                throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
                         }
                     }
                     break;
@@ -320,7 +320,7 @@ namespace Models.CLEM.Activities
             if (shortfalls.Any())
             {
                 // find shortfall by identifiers as these may have different influence on outcome
-                var buySellShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == task && a.IdentifiableChildDetails.unit == "per head").FirstOrDefault();
+                var buySellShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == task && a.CompanionModelDetails.unit == "per head").FirstOrDefault();
                 if (buySellShort != null)
                 {
                     numberToSkip = Convert.ToInt32(numberToDo * buySellShort.Required / buySellShort.Provided);
@@ -328,18 +328,18 @@ namespace Models.CLEM.Activities
                 }
 
                 // now for remaining limiters
-                buySellShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == task && a.IdentifiableChildDetails.unit == "per truck").FirstOrDefault();
+                buySellShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == task && a.CompanionModelDetails.unit == "per truck").FirstOrDefault();
                 if (buySellShort != null)
                 {
                     numberTrucksToSkip = Convert.ToInt32(numberTrucks * buySellShort.Required / buySellShort.Provided);
                     this.Status = ActivityStatus.Partial;
                 }
 
-                buySellShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == task && a.IdentifiableChildDetails.unit == "per km trucked").FirstOrDefault();
+                buySellShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == task && a.CompanionModelDetails.unit == "per km trucked").FirstOrDefault();
                 if (buySellShort != null)
                     throw new Exception($"Unable to limit [{task}] by units [per km trucked] in [a={NameWithParent}]{Environment.NewLine}This resource cost does not support [ShortfallAffectsActivity] in [a=RuminantHerdBuySell]");
 
-                buySellShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == task && a.IdentifiableChildDetails.unit == "per $ value").FirstOrDefault();
+                buySellShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == task && a.CompanionModelDetails.unit == "per $ value").FirstOrDefault();
                 if (buySellShort != null)
                     throw new Exception($"Unable to limit [{task}] by units [per $ value] in [a={NameWithParent}]{Environment.NewLine}This resource cost does not support [ShortfallAffectsActivity] in [a=RuminantHerdBuySell] as costs are already accounted in ruminant purchases.");
             }

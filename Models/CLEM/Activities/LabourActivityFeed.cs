@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [Description("Feed people (labour) as selected with a specified feeding style.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourActivityFeed.htm")]
-    public class LabourActivityFeed : CLEMActivityBase, ICanHandleIdentifiableChildModels
+    public class LabourActivityFeed : CLEMActivityBase, IHandlesActivityCompanionModels
     {
         private double feedRequired = 0;
         private Labour labour;

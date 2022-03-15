@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     [Description("Arrange payment for a task based on the labour specified in the labour requirement")]
     [HelpUri(@"Content/Features/Activities/Labour/LabourTask.htm")]
     [Version(1, 0, 1, "")]
-    public class LabourActivityTask : CLEMActivityBase, ICanHandleIdentifiableChildModels
+    public class LabourActivityTask : CLEMActivityBase, IHandlesActivityCompanionModels
     {
         /// <summary>
         /// Constructor
@@ -44,12 +44,12 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
             switch (type)
             {
                 case "LabourRequirement":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>()
                         {
 
@@ -60,7 +60,7 @@ namespace Models.CLEM.Activities
                         }
                         );
                 default:
-                    return new LabelsForIdentifiableChildren();
+                    return new LabelsForCompanionModels();
             }
         }
 

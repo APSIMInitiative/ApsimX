@@ -42,7 +42,7 @@ namespace Models.CLEM.Groupings
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "Added ability to select random proportion of the group to use")]
     [HelpUri(@"Content/Features/Filters/Groups/RuminantGroup.htm")]
-    public class RuminantGroup : FilterGroup<Ruminant>, IIdentifiableChildModel
+    public class RuminantGroup : FilterGroup<Ruminant>, IActivityCompanionModel
     {
         /// <summary>
         /// An identifier for this FilterGroup based on parent requirements

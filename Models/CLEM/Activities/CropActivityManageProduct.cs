@@ -25,7 +25,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Mixed cropping/multiple products implemented")]
     [Version(1, 0, 3, "Added ability to model multiple harvests from crop using Harvest Tags from input file")]
     [HelpUri(@"Content/Features/Activities/Crop/ManageCropProduct.htm")]
-    public class CropActivityManageProduct: CLEMActivityBase, IValidatableObject, ICanHandleIdentifiableChildModels
+    public class CropActivityManageProduct: CLEMActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
         [Link]
         private Clock clock = null;
@@ -173,13 +173,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
             switch (type)
             {
                 case "CropActivityFee":
                 case "LabourRequirement":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
 
                         },
@@ -191,7 +191,7 @@ namespace Models.CLEM.Activities
                         }
                         );
                 default:
-                    return new LabelsForIdentifiableChildren();
+                    return new LabelsForCompanionModels();
             }
         }
 
@@ -430,22 +430,22 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            // provide updated units of measure for identifiable children
-            foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
+            // provide updated units of measure for comapnion children
+            foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 switch (valueToSupply.Key.unit)
                 {
                     case "fixed":
-                        valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                        valuesForCompanionModels[valueToSupply.Key] = 1;
                         break;
                     case "per ha":
-                        valuesForIdentifiableModels[valueToSupply.Key] = parentManagementActivity.Area;
+                        valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity.Area;
                         break;
                     case "per ha harvested":
-                        valuesForIdentifiableModels[valueToSupply.Key] = parentManagementActivity.Area;
+                        valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity.Area;
                         break;
                     case "per kg harvested":
-                        valuesForIdentifiableModels[valueToSupply.Key] = amountToDo;
+                        valuesForCompanionModels[valueToSupply.Key] = amountToDo;
                         break;
                     default:
                         throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
@@ -462,7 +462,7 @@ namespace Models.CLEM.Activities
             if (shortfalls.Any())
             {
                 // find shortfall by identifiers as these may have different influence on outcome
-                var tagsShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "").FirstOrDefault();
+                var tagsShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "").FirstOrDefault();
                 if (tagsShort != null)
                     amountToSkip = Convert.ToInt32(amountToDo * (1 - tagsShort.Required / tagsShort.Provided));
 

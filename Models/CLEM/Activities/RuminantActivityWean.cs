@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Weaning style added. Allows decision rule (age, weight, or both to be considered.")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantWean.htm")]
-    public class RuminantActivityWean: CLEMRuminantActivityBase, ICanHandleIdentifiableChildModels
+    public class RuminantActivityWean: CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         [Link]
         private Clock clock = null;
@@ -80,18 +80,18 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
             switch (type)
             {
                 case "RuminantGroup":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
                         units: new List<string>()
                         );
                 case "RuminantActivityFee":
                 case "LabourRequirement":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
                             "Number sucklings checked",
                             "Number weaned"
@@ -102,7 +102,7 @@ namespace Models.CLEM.Activities
                         }
                         );
                 default:
-                    return new LabelsForIdentifiableChildren();
+                    return new LabelsForCompanionModels();
             }
         }
 
@@ -130,7 +130,7 @@ namespace Models.CLEM.Activities
                     Summary.WriteMessage(this, $"Individuals weaned by [a={NameWithParent}] will be placed in [Not specified - general yards] while a managed pasture is available. These animals will not graze until moved and will require feeding while in yards.\r\nSolution: Set the [GrazeFoodStore to place weaners in] located in the properties.", MessageType.Warning);
             }
 
-            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>(false, true);
+            filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(false, true);
         }
 
         /// <inheritdoc/>
@@ -150,8 +150,8 @@ namespace Models.CLEM.Activities
             sucklingsToCheck = uniqueIndividuals?.Count() ?? 0;
             numberToDo = uniqueIndividuals.Where(a => (a.Age >= WeaningAge && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.AgeOnly)) || (a.Weight >= WeaningWeight && (Style == WeaningStyle.AgeOrWeight || Style == WeaningStyle.WeightOnly)))?.Count() ?? 0; 
 
-            // provide updated units of measure for identifiable children
-            foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
+            // provide updated units of measure for companion models
+            foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 int number = numberToDo;
                 if (valueToSupply.Key.identifier == "Number sucklings checked")
@@ -160,15 +160,13 @@ namespace Models.CLEM.Activities
                 switch (valueToSupply.Key.unit)
                 {
                     case "fixed":
-                        valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                        valuesForCompanionModels[valueToSupply.Key] = 1;
                         break;
                     case "per head":
-                        valuesForIdentifiableModels[valueToSupply.Key] = number;
+                        valuesForCompanionModels[valueToSupply.Key] = number;
                         break;
                     default:
                         throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
-//                        valuesForIdentifiableModels[valueToSupply.Key] = 0;
-//                        break;
                 }
             }
             return null;
@@ -181,11 +179,11 @@ namespace Models.CLEM.Activities
             if (shortfalls.Any())
             {
                 // find shortfall by identifiers as these may have different influence on outcome
-                var sucklingShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "Number sucklings checked").FirstOrDefault();
+                var sucklingShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number sucklings checked").FirstOrDefault();
                 if(sucklingShort != null)
                     sucklingToSkip = Convert.ToInt32(sucklingsToCheck * sucklingShort.Required / sucklingShort.Provided);
 
-                var weanShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "Number weaned").FirstOrDefault();
+                var weanShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number weaned").FirstOrDefault();
                 if (weanShort != null)
                     numberToSkip = Convert.ToInt32(numberToDo * weanShort.Required / weanShort.Provided);
 

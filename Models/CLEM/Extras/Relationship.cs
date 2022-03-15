@@ -31,7 +31,7 @@ namespace Models.CLEM
     [Version(1, 0, 2, "Added RelationshipCalculationMethod to allow user to define fixed or linear solver")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Relationships/Relationship.htm")]
-    public class Relationship : CLEMModel, IValidatableObject, IIdentifiableChildModel
+    public class Relationship : CLEMModel, IValidatableObject, IActivityCompanionModel
     {
         /// <summary>
         /// An identifier for this Relationship based on parent requirements

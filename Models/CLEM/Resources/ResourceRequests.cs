@@ -86,9 +86,9 @@ namespace Models.CLEM.Resources
         ///</summary> 
         public double MarketTransactionMultiplier { get; set; }
         /// <summary>
-        /// The details if this request comes from an identifiable child managing resources
+        /// The details if this request comes from an companion model managing resources
         /// </summary>
-        public (string type, string identifier, string unit) IdentifiableChildDetails { get; set; }
+        public (string type, string identifier, string unit) CompanionModelDetails { get; set; }
         ///<summary>
         /// ResourceRequest constructor
         ///</summary> 

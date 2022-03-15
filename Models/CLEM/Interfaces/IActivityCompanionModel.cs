@@ -9,7 +9,7 @@ namespace Models.CLEM.Interfaces
     /// <summary>
     /// A CLEM model able to be identified by the parent given a user specified identifier
     /// </summary>
-    public interface IIdentifiableChildModel: IModel
+    public interface IActivityCompanionModel: IModel
     {
         /// <summary>
         /// Identifier of this component 
@@ -37,13 +37,13 @@ namespace Models.CLEM.Interfaces
         public void PrepareForTimestep();
 
         /// <summary>
-        /// Method to provide the resource requests from this identifiable child and pass to parent for processing
+        /// Method to provide the resource requests from this comapnion model and pass to parent for processing
         /// </summary>
         /// <returns>A list of resource requests</returns>
         List<ResourceRequest> RequestResourcesForTimestep(double argument = 0);
 
         /// <summary>
-        /// Perform a the task including creating resources by the identifiable child
+        /// Perform a the task including creating resources by the companion model
         /// </summary>
         /// <returns></returns>
         void PerformTasksForTimestep(double argument = 0);

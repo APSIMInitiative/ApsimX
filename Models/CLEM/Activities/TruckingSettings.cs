@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [Description("Provides trucking settings for the purchase and sale of individuals with costs and emissions included")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/Trucking.htm")]
-    public class TruckingSettings : CLEMRuminantActivityBase, ICanHandleIdentifiableChildModels, IIdentifiableChildModel
+    public class TruckingSettings : CLEMRuminantActivityBase, IHandlesActivityCompanionModels, IActivityCompanionModel
     {
         private int numberToDo;
         private int parentNumberToDo;
@@ -142,17 +142,17 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
             switch (type)
             {
                 case "RuminantGroup":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
                         units: new List<string>()
                         );
                 case "RuminantActivityFee":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
                         units: new List<string>() {
                             "fixed",
@@ -164,7 +164,7 @@ namespace Models.CLEM.Activities
                         }
                         );
                 case "LabourRequirement":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
                         units: new List<string>() {
                             "fixed",
@@ -174,7 +174,7 @@ namespace Models.CLEM.Activities
                         }
                         );
                 case "GreenhouseGasActivityEmission":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
                         units: new List<string>() {
                             "fixed",
@@ -184,7 +184,7 @@ namespace Models.CLEM.Activities
                         }
                         );
                 default:
-                    return new LabelsForIdentifiableChildren();
+                    return new LabelsForCompanionModels();
             }
         }
 
@@ -195,7 +195,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(false, true);
-            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>(false, true);
+            filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(false, true);
             weightToNumberPerLoadUnit = this.FindAllChildren<Relationship>().FirstOrDefault();
             parentBuySellActivity = Parent as RuminantActivityBuySell;
         }
@@ -334,7 +334,7 @@ namespace Models.CLEM.Activities
             // number provided by the parent for trucking
             parentNumberToDo = parentBuySellActivity.IndividualsToBeTrucked?.Count() ?? 0;
 
-            foreach (var iChild in FindAllChildren<IIdentifiableChildModel>().OfType<CLEMActivityBase>())
+            foreach (var iChild in FindAllChildren<IActivityCompanionModel>().OfType<CLEMActivityBase>())
                 iChild.Status = (parentNumberToDo > 0)? ActivityStatus.NotNeeded:ActivityStatus.NoTask;
 
             individualsToBeTrucked = GetUniqueIndividuals<Ruminant>(filterGroups.OfType<RuminantGroup>(), parentBuySellActivity.IndividualsToBeTrucked).ToList();
@@ -347,14 +347,14 @@ namespace Models.CLEM.Activities
             //TODO: cehck 
             parentBuySellActivity.IndividualsToBeTrucked = parentBuySellActivity.IndividualsToBeTrucked.Except(individualsToBeTrucked.Take(truckDetails.individualsTransported));
 
-            foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
+            foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 int number = numberToDo;
 
                 switch (valueToSupply.Key.type)
                 {
                     case "RuminantFeedGroup":
-                        valuesForIdentifiableModels[valueToSupply.Key] = 0;
+                        valuesForCompanionModels[valueToSupply.Key] = 0;
                         break;
                     case "LabourGroup":
                     case "RuminantActivityFee":
@@ -362,32 +362,32 @@ namespace Models.CLEM.Activities
                         switch (valueToSupply.Key.unit)
                         {
                             case "fixed":
-                                valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                                valuesForCompanionModels[valueToSupply.Key] = 1;
                                 break;
                             case "per head":
-                                valuesForIdentifiableModels[valueToSupply.Key] = truckDetails.individualsTransported;
+                                valuesForCompanionModels[valueToSupply.Key] = truckDetails.individualsTransported;
                                 break;
                             case "per truck":
-                                valuesForIdentifiableModels[valueToSupply.Key] = truckDetails.trucks;
+                                valuesForCompanionModels[valueToSupply.Key] = truckDetails.trucks;
                                 break;
                             case "per km":
-                                valuesForIdentifiableModels[valueToSupply.Key] = DistanceToMarket;
+                                valuesForCompanionModels[valueToSupply.Key] = DistanceToMarket;
                                 break;
                             case "per km trucked":
-                                valuesForIdentifiableModels[valueToSupply.Key] = DistanceToMarket * truckDetails.trucks;
+                                valuesForCompanionModels[valueToSupply.Key] = DistanceToMarket * truckDetails.trucks;
                                 break;
                             case "per loading unit":
-                                valuesForIdentifiableModels[valueToSupply.Key] = truckDetails.loadUnits;
+                                valuesForCompanionModels[valueToSupply.Key] = truckDetails.loadUnits;
                                 break;
                             case "per tonne km":
-                                valuesForIdentifiableModels[valueToSupply.Key] = DistanceToMarket * (truckDetails.payload + truckDetails.vehicleMass);
+                                valuesForCompanionModels[valueToSupply.Key] = DistanceToMarket * (truckDetails.payload + truckDetails.vehicleMass);
                                 break;
                             default:
                                 throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
                         }
                         break;
                     default:
-                        throw new NotImplementedException(UnknownIdentifierErrorText(this, valueToSupply.Key));
+                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
                 }
             }
             return ResourceRequestList;

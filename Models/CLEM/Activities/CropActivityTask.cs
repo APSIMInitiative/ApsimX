@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Added per unit of land as labour unit type")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Crop/CropTask.htm")]
-    public class CropActivityTask: CLEMActivityBase, IValidatableObject, ICanHandleIdentifiableChildModels
+    public class CropActivityTask: CLEMActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
         private string relatesToResourceName = "";
         private bool timingIssueReported = false;
@@ -39,13 +39,13 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
             switch (type)
             {
                 case "CropActivityFee":
                 case "LabourRequirement":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>()
                         {
 
@@ -56,7 +56,7 @@ namespace Models.CLEM.Activities
                         }
                         );
                 default:
-                    return new LabelsForIdentifiableChildren();
+                    return new LabelsForCompanionModels();
             }
         }
 
@@ -93,16 +93,16 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            // provide updated units of measure for identifiable children
-            foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
+            // provide updated units of measure for companion models
+            foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 switch (valueToSupply.Key.unit)
                 {
                     case "fixed":
-                        valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                        valuesForCompanionModels[valueToSupply.Key] = 1;
                         break;
                     case "per ha":
-                        valuesForIdentifiableModels[valueToSupply.Key] = parentManagementActivity?.Area??0;
+                        valuesForCompanionModels[valueToSupply.Key] = parentManagementActivity?.Area??0;
                         break;
                     default:
                         throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
@@ -119,7 +119,7 @@ namespace Models.CLEM.Activities
             if (shortfalls.Any())
             {
                 // find shortfall by identifiers as these may have different influence on outcome
-                var tagsShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "").FirstOrDefault();
+                var tagsShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "").FirstOrDefault();
                 //if (tagsShort != null)
                 amountToSkip = Convert.ToInt32((1 - tagsShort.Required / tagsShort.Provided));
             }

@@ -38,9 +38,9 @@ namespace Models.CLEM.Activities
 
         private bool enabled = true;
         private ZoneCLEM parentZone = null;
-        private Dictionary<string, object> identifiableModelsPresent = new Dictionary<string, object>();
-        private protected Dictionary<(string type, string identifier, string unit), double?> valuesForIdentifiableModels = new Dictionary<(string type, string identifier, string unit), double?>();
-        private Dictionary<string, LabelsForIdentifiableChildren> identifiableModelLabels = new Dictionary<string, LabelsForIdentifiableChildren>();
+        private Dictionary<string, object> companionModelsPresent = new Dictionary<string, object>();
+        private protected Dictionary<(string type, string identifier, string unit), double?> valuesForCompanionModels = new Dictionary<(string type, string identifier, string unit), double?>();
+        private Dictionary<string, LabelsForCompanionModels> companionModelLabels = new Dictionary<string, LabelsForCompanionModels>();
 
         /// <summary>
         /// Label to assign each transaction created by this activity in ledgers
@@ -210,33 +210,33 @@ namespace Models.CLEM.Activities
             }
         }
 
-        #region Identifiable child model handling
+        #region Companion child model handling
 
         /// <summary>
-        /// A method to return the list of labels provided by the parent activity for the given identifiable child model type
+        /// A method to return the list of labels provided by the parent activity for the given companion child model type
         /// </summary>
         /// <param name="labelType">The type of labels to provide</param>
-        /// <typeparam name="T">Identifiable child model type</typeparam>
+        /// <typeparam name="T">Companion child model type</typeparam>
         /// <returns>List of labels for the selected style</returns>
-        public List<string> IdentifiableChildModelLabels<T>(IdentifiableChildModelLabelType labelType) where T : IIdentifiableChildModel
+        public List<string> CompanionModelLabels<T>(CompanionModelLabelType labelType) where T : IActivityCompanionModel
         {
-            if (this is ICanHandleIdentifiableChildModels)
+            if (this is IHandlesActivityCompanionModels)
             {
-                LabelsForIdentifiableChildren labels;
-                if (identifiableModelLabels.ContainsKey(typeof(T).Name))
+                LabelsForCompanionModels labels;
+                if (companionModelLabels.ContainsKey(typeof(T).Name))
                 {
-                    labels = identifiableModelLabels[typeof(T).Name];
+                    labels = companionModelLabels[typeof(T).Name];
                 }
                 else
                 {
-                    labels = DefineIdentifiableChildModelLabels(typeof(T).Name);
-                    identifiableModelLabels.Add(typeof(T).Name, labels);
+                    labels = DefineCompanionModelLabels(typeof(T).Name);
+                    companionModelLabels.Add(typeof(T).Name, labels);
                 }
                 switch (labelType)
                 {
-                    case IdentifiableChildModelLabelType.Identifiers:
+                    case CompanionModelLabelType.Identifiers:
                         return labels.Identifiers;
-                    case IdentifiableChildModelLabelType.Units:
+                    case CompanionModelLabelType.Units:
                         return labels.Units;
                     default:
                         break;
@@ -244,75 +244,75 @@ namespace Models.CLEM.Activities
                 return new List<string>();
             }
             else
-                throw new NotImplementedException($"[a={NameWithParent}] does not support Identifiable child models to perform custom tasks with resource provision.");
+                throw new NotImplementedException($"[a={NameWithParent}] does not support Companion models to perform custom tasks with resource provision.");
         }
 
         /// <summary>
         /// A method to get a list of activity specified labels for a generic type T 
         /// </summary>
         /// <param name="type">The type of child model</param>
-        /// <returns>A LabelsForIdentifiableChildren containing all labels</returns>
-        public virtual LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
+        /// <returns>A LabelsForCompanionModels containing all labels</returns>
+        public virtual LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
-            return new LabelsForIdentifiableChildren();
+            return new LabelsForCompanionModels();
         }
 
         /// <summary>An event handler to allow us to make checks after resources and activities initialised.</summary>
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("StartOfSimulation")]
-        protected virtual void OnStartOfSimulationGetIdentifiableChildModels(object sender, EventArgs e)
+        protected virtual void OnStartOfSimulationGetCompanionModels(object sender, EventArgs e)
         {
-            // if this activity supports identifiable child models for controlling resource requirements
-            if (this is ICanHandleIdentifiableChildModels)
+            // if this activity supports companion child models for controlling resource requirements
+            if (this is IHandlesActivityCompanionModels)
             {
-                // for each IIdentifiableChildMlode type in direct children 
-                foreach (Type componentType in FindAllChildren<IIdentifiableChildModel>().Select(a => a.GetType()).Distinct())
+                // for each ICompanion type in direct children 
+                foreach (Type componentType in FindAllChildren<IActivityCompanionModel>().Select(a => a.GetType()).Distinct())
                 {
                     switch (componentType.Name)
                     {
                         case "RuminantGroup":
-                            identifiableModelsPresent.Add(componentType.Name, LocateIdentifiableChildren<RuminantGroup>());
+                            companionModelsPresent.Add(componentType.Name, LocateCompanionModels<RuminantGroup>());
                             break;
                         case "RuminantFeedGroup":
                         case "RuminantFeedGroupMonthly":
-                            identifiableModelsPresent.Add(componentType.Name, LocateIdentifiableChildren<RuminantFeedGroup>());
+                            companionModelsPresent.Add(componentType.Name, LocateCompanionModels<RuminantFeedGroup>());
                             break;
                         case "LabourRequirement":
-                            identifiableModelsPresent.Add(componentType.Name, LocateIdentifiableChildren<LabourRequirement>());
+                            companionModelsPresent.Add(componentType.Name, LocateCompanionModels<LabourRequirement>());
                             break;
                         case "RuminantActivityFee":
-                            identifiableModelsPresent.Add(componentType.Name, LocateIdentifiableChildren<RuminantActivityFee>());
+                            companionModelsPresent.Add(componentType.Name, LocateCompanionModels<RuminantActivityFee>());
                             break;
                         case "TruckingSettings":
-                            identifiableModelsPresent.Add(componentType.Name, LocateIdentifiableChildren<TruckingSettings>());
+                            companionModelsPresent.Add(componentType.Name, LocateCompanionModels<TruckingSettings>());
                             break;
                         case "GreenhouseGasActivityEmission":
-                            identifiableModelsPresent.Add(componentType.Name, LocateIdentifiableChildren<GreenhouseGasActivityEmission>());
+                            companionModelsPresent.Add(componentType.Name, LocateCompanionModels<GreenhouseGasActivityEmission>());
                             break;
                         case "Relationship":
-                            identifiableModelsPresent.Add(componentType.Name, LocateIdentifiableChildren<Relationship>());
+                            companionModelsPresent.Add(componentType.Name, LocateCompanionModels<Relationship>());
                             break;
                         default:
-                            throw new NotSupportedException($"{componentType.Name} not currently supported as IdentifiableComponent");
+                            throw new NotSupportedException($"{componentType.Name} not currently supported as activity companion component");
                     }
                 } 
             }
         }
 
         /// <summary>
-        /// Get the IEnumerable(T) of all activity specified identifiable child models by type and identifer
+        /// Get the IEnumerable(T) of all activity specified companion models by type and identifer
         /// </summary>
-        /// <typeparam name="T">The Identifiable child model type</typeparam>
+        /// <typeparam name="T">The companion model type</typeparam>
         /// <param name="identifier">Identifer label</param>
         /// <param name="mustBeProvidedByUser">Determines if the parent requesting assumes the user will provide an instance of this child</param>
         /// <param name="addNewIfEmpty">Create IENumuerable with a new() instance of T</param>
         /// <returns>IEnumerable of T found</returns>
-        protected private IEnumerable<T> GetIdentifiableChildrenByIdentifier<T>(bool mustBeProvidedByUser, bool addNewIfEmpty, string identifier = "") where T : IIdentifiableChildModel, new()
+        protected private IEnumerable<T> GetCompanionModelsByIdentifier<T>(bool mustBeProvidedByUser, bool addNewIfEmpty, string identifier = "") where T : IActivityCompanionModel, new()
         {
-            if (identifiableModelsPresent.ContainsKey(typeof(T).Name))
+            if (companionModelsPresent.ContainsKey(typeof(T).Name))
             {
-                if (identifiableModelsPresent[typeof(T).Name] is Dictionary<string, IEnumerable<T>> foundTypeDictionary)
+                if (companionModelsPresent[typeof(T).Name] is Dictionary<string, IEnumerable<T>> foundTypeDictionary)
                 {
                     if (foundTypeDictionary.ContainsKey(identifier))
                     {
@@ -320,14 +320,14 @@ namespace Models.CLEM.Activities
                     }
                     else
                     {
-                        if(IdentifiableChildModelLabels<T>(IdentifiableChildModelLabelType.Identifiers).Contains(identifier) == false)
-                            throw new NotSupportedException($"[{GetType().Name}] does not support the identifier [{identifier}]{Environment.NewLine}Internal error during request for Identifiable child models: request support from developers.");
+                        if(CompanionModelLabels<T>(CompanionModelLabelType.Identifiers).Contains(identifier) == false)
+                            throw new NotSupportedException($"[{GetType().Name}] does not support the identifier [{identifier}]{Environment.NewLine}Internal error during request for companion child models: request support from developers.");
                     }
                 }
             }
             if (mustBeProvidedByUser)
             {
-                string warn = $"[a={NameWithParent}] requires at least one [{typeof(T).Name}] as a child component {((identifier == "") ? "with the appropriate identifier" : $"with the Identifier set as [{identifier}]")} to specify individuals";
+                string warn = $"[a={NameWithParent}] requires at least one [{typeof(T).Name}] as a companion component {((identifier == "") ? "with the appropriate identifier" : $"with the Identifier set as [{identifier}]")} to specify individuals";
                 Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
             }
             else
@@ -343,13 +343,13 @@ namespace Models.CLEM.Activities
         /// </summary>
         /// <typeparam name="T">Type of component to consider</typeparam>
         /// <returns></returns>
-        protected private Dictionary<string, IEnumerable<T>> LocateIdentifiableChildren<T>() where T : IIdentifiableChildModel, new()
+        protected private Dictionary<string, IEnumerable<T>> LocateCompanionModels<T>() where T : IActivityCompanionModel, new()
         {
             Dictionary<string, IEnumerable<T>> filters = new Dictionary<string, IEnumerable<T>>();
 
-            var ids = IdentifiableChildModelLabels<T>(IdentifiableChildModelLabelType.Identifiers);
+            var ids = CompanionModelLabels<T>(CompanionModelLabelType.Identifiers);
             if (ids is null)
-                throw new Exception($"Identifiers have not been correctly configured for identifiable child models of type [{typeof(T).Name}] of [{GetType().Name}]{Environment.NewLine}Invalid setup of [{GetType().Name}].LocateIdentifiableChildren<T>(). Contact developers for assistance");
+                throw new Exception($"Identifiers have not been correctly configured for companion models of type [{typeof(T).Name}] of [{GetType().Name}]{Environment.NewLine}Invalid setup of [{GetType().Name}].LocateCompanionModels<T>(). Contact developers for assistance");
 
             if(ids.Any() == false)
                 ids.Add("");
@@ -361,14 +361,14 @@ namespace Models.CLEM.Activities
                 {
                     filters.Add(id, iChildren);
                     // if this type provides units for use by children add them
-                    bool unitsProvided = IdentifiableChildModelLabels<T>(IdentifiableChildModelLabelType.Units).Any();
+                    bool unitsProvided = CompanionModelLabels<T>(CompanionModelLabelType.Units).Any();
                     if (unitsProvided)
                     {
                         foreach (var item in iChildren)
                         {
                             string unitsLabel = (unitsProvided ? item.Units : "");
-                            if (!valuesForIdentifiableModels.ContainsKey((typeof(T).Name, id, unitsLabel)))
-                                valuesForIdentifiableModels.Add((typeof(T).Name, id, unitsLabel), 0);
+                            if (!valuesForCompanionModels.ContainsKey((typeof(T).Name, id, unitsLabel)))
+                                valuesForCompanionModels.Add((typeof(T).Name, id, unitsLabel), 0);
                         } 
                     }
                 }
@@ -380,33 +380,33 @@ namespace Models.CLEM.Activities
         /// Return a error message string for Unknown identifier
         /// </summary>
         /// <param name="model">Model throwing the error</param>
-        /// <param name="identifiableLabels">The details of labels saught</param>
+        /// <param name="companionLabels">The details of labels saught</param>
         /// <returns>Formatted string for exception</returns>
-        public static string UnknownIdentifiableChildErrorText(CLEMActivityBase model, (string type, string identifier, string unit) identifiableLabels)
+        public static string UnknownCompanionModelErrorText(CLEMActivityBase model, (string type, string identifier, string unit) companionLabels)
         {
-            return $"Type [{identifiableLabels.type}] is not supported by {model.GetType().Name}: [a={model.NameWithParent}]";
+            return $"Type [{companionLabels.type}] is not supported by {model.GetType().Name}: [a={model.NameWithParent}]";
         }
 
         /// <summary>
         /// Return a error message string for Unknown identifier
         /// </summary>
         /// <param name="model">Model throwing the error</param>
-        /// <param name="identifiableLabels">The details of labels saught</param>
+        /// <param name="companionLabels">The details of labels saught</param>
         /// <returns>Formatted string for exception</returns>
-        public static string UnknownIdentifierErrorText(CLEMActivityBase model, (string type, string identifier, string unit) identifiableLabels)
+        public static string UnknownIdentifierErrorText(CLEMActivityBase model, (string type, string identifier, string unit) companionLabels)
         {
-            return $"Unknown identifier [{identifiableLabels.identifier}] used for [{identifiableLabels.type}] in [{model.GetType().Name}]: [{model.NameWithParent}]";
+            return $"Unknown identifier [{companionLabels.identifier}] used for [{companionLabels.type}] in [{model.GetType().Name}]: [{model.NameWithParent}]";
         }
 
         /// <summary>
         /// Return a error message string for Unknown identifier
         /// </summary>
         /// <param name="model">Model throwing the error</param>
-        /// <param name="identifiableLabels">The details of labels saught</param>
+        /// <param name="companionLabels">The details of labels saught</param>
         /// <returns>Formatted string for exception</returns>
-        public static string UnknownUnitsErrorText(CLEMActivityBase model, (string type, string identifier, string unit) identifiableLabels)
+        public static string UnknownUnitsErrorText(CLEMActivityBase model, (string type, string identifier, string unit) companionLabels)
         {
-            return $"Unknown or invalid units [{((identifiableLabels.unit == "") ? "Blank" : identifiableLabels.unit)}] specified by child component [{identifiableLabels.type}] {(((identifiableLabels.identifier ?? "")!="")?$"with the identifier [{identifiableLabels.identifier}]":"")} in [{model.GetType().Name}]: [a={model.NameWithParent}]";
+            return $"Unknown or invalid units [{((companionLabels.unit == "") ? "Blank" : companionLabels.unit)}] specified by companion component [{companionLabels.type}] {(((companionLabels.identifier ?? "")!="")?$"with the identifier [{companionLabels.identifier}]":"")} in [{model.GetType().Name}]: [a={model.NameWithParent}]";
         }
        
 
@@ -420,9 +420,9 @@ namespace Models.CLEM.Activities
         {
             // clear Resources Required list
             ResourceRequestList = new List<ResourceRequest>();
-            foreach (var key in valuesForIdentifiableModels.Keys.ToList())
+            foreach (var key in valuesForCompanionModels.Keys.ToList())
             {
-                valuesForIdentifiableModels[key] = null;
+                valuesForCompanionModels[key] = null;
             }
             Status = ActivityStatus.Ignored;
         }
@@ -478,17 +478,17 @@ namespace Models.CLEM.Activities
         }
 
         /// <summary>
-        /// Return the current metric value from the parent for a specifie identifiable child model
+        /// Return the current metric value from the parent for a specifie companion model
         /// </summary>
-        /// <param name="identifiableChildModel">Reference to identifiable child model</param>
+        /// <param name="companionModel">Reference to companion model</param>
         /// <returns>Current metric for the child</returns>
-        public double ValueForIdentifiableChild(IIdentifiableChildModel identifiableChildModel)
+        public double ValueForCompanionModel(IActivityCompanionModel companionModel)
         {
-            if(!valuesForIdentifiableModels.ContainsKey((identifiableChildModel.GetType().Name, identifiableChildModel.Identifier ?? "", identifiableChildModel.Units ?? "")))
-                throw new ApsimXException(this, $"Units for [{identifiableChildModel.GetType().Name}]-[{identifiableChildModel.Identifier ?? "BLANK"}]-[{identifiableChildModel.Units ?? "BLANK"}] have not been calculated by [a={NameWithParent}] before this request.{Environment.NewLine}Code issue. See Developers");
-            var unitsProvided = valuesForIdentifiableModels[(identifiableChildModel.GetType().Name, identifiableChildModel.Identifier ?? "", identifiableChildModel.Units ?? "")];
+            if(!valuesForCompanionModels.ContainsKey((companionModel.GetType().Name, companionModel.Identifier ?? "", companionModel.Units ?? "")))
+                throw new ApsimXException(this, $"Units for [{companionModel.GetType().Name}]-[{companionModel.Identifier ?? "BLANK"}]-[{companionModel.Units ?? "BLANK"}] have not been calculated by [a={NameWithParent}] before this request.{Environment.NewLine}Code issue. See Developers");
+            var unitsProvided = valuesForCompanionModels[(companionModel.GetType().Name, companionModel.Identifier ?? "", companionModel.Units ?? "")];
             if (unitsProvided is null)
-                throw new ApsimXException(this, $"Units for [{identifiableChildModel.GetType().Name}]-[{identifiableChildModel.Identifier ?? "BLANK"}]-[{identifiableChildModel.Units ?? "BLANK"}] have not been calculated by [a={NameWithParent}] before this request.{Environment.NewLine}Code issue. See Developers");
+                throw new ApsimXException(this, $"Units for [{companionModel.GetType().Name}]-[{companionModel.Identifier ?? "BLANK"}]-[{companionModel.Units ?? "BLANK"}] have not been calculated by [a={NameWithParent}] before this request.{Environment.NewLine}Code issue. See Developers");
             return unitsProvided.Value;
         }
 
@@ -504,12 +504,12 @@ namespace Models.CLEM.Activities
                     // get ready for time step
                     PrepareForTimestep();
 
-                    // get all identifiable child related expense requests
-                    if (this is ICanHandleIdentifiableChildModels)
+                    // get all companion related expense requests
+                    if (this is IHandlesActivityCompanionModels)
                     {
-                        // get all identifiable children except filter groups
-                        foreach (IIdentifiableChildModel identifiableChild in FindAllChildren<IIdentifiableChildModel>().Where(a => identifier!=""?(a.Identifier??"") == identifier:true))
-                            identifiableChild.PrepareForTimestep();
+                        // get all companion models except filter groups
+                        foreach (IActivityCompanionModel companionChild in FindAllChildren<IActivityCompanionModel>().Where(a => identifier!=""?(a.Identifier??"") == identifier:true))
+                            companionChild.PrepareForTimestep();
                     }
 
                     // add resources needed based on method supplied by activity
@@ -518,22 +518,22 @@ namespace Models.CLEM.Activities
                     if (requests != null)
                         ResourceRequestList.AddRange(requests);
 
-                    // get all identifiable child related expense requests
-                    if (this is ICanHandleIdentifiableChildModels)
+                    // get all companion related expense requests
+                    if (this is IHandlesActivityCompanionModels)
                     {
-                        // get all identifiable children except filter groups
-                        foreach (IIdentifiableChildModel identifiableChild in FindAllChildren<IIdentifiableChildModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
+                        // get all companion models except filter groups
+                        foreach (IActivityCompanionModel companionChild in FindAllChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
                         {
-                            if (valuesForIdentifiableModels.Any() && valuesForIdentifiableModels.Where(a => a.Key.type == identifiableChild.GetType().Name).Any())
+                            if (valuesForCompanionModels.Any() && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
                             {
-                                var unitsProvided = ValueForIdentifiableChild(identifiableChild);
+                                var unitsProvided = ValueForCompanionModel(companionChild);
                                 if (MathUtilities.IsPositive(unitsProvided))
                                 {
-                                    foreach (ResourceRequest request in identifiableChild.RequestResourcesForTimestep(unitsProvided))
+                                    foreach (ResourceRequest request in companionChild.RequestResourcesForTimestep(unitsProvided))
                                     {
                                         if(request.ActivityModel is null)
                                             request.ActivityModel = this;
-                                        request.IdentifiableChildDetails = (identifiableChild.GetType().Name, identifiableChild.Identifier, identifiableChild.Units);
+                                        request.CompanionModelDetails = (companionChild.GetType().Name, companionChild.Identifier, companionChild.Units);
                                         ResourceRequestList.Add(request);
                                     }
                                 }
@@ -560,25 +560,25 @@ namespace Models.CLEM.Activities
                     {
                         PerformTasksForTimestep(); //based on method supplied by activity
 
-                        // for all identifiable child to generate create resources where needed
-                        if (this is ICanHandleIdentifiableChildModels)
+                        // for all companion models to generate create resources where needed
+                        if (this is IHandlesActivityCompanionModels)
                         {
-                            // get all identifiable children except filter groups
-                            foreach (IIdentifiableChildModel identifiableChild in FindAllChildren<IIdentifiableChildModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
+                            // get all companion models except filter groups
+                            foreach (IActivityCompanionModel companionChild in FindAllChildren<IActivityCompanionModel>().Where(a => identifier != "" ? (a.Identifier ?? "") == identifier : true))
                             {
-                                if (valuesForIdentifiableModels.Any() && valuesForIdentifiableModels.Where(a => a.Key.type == identifiableChild.GetType().Name).Any())
+                                if (valuesForCompanionModels.Any() && valuesForCompanionModels.Where(a => a.Key.type == companionChild.GetType().Name).Any())
                                 {
-                                    var unitsProvided = valuesForIdentifiableModels[(identifiableChild.GetType().Name, identifiableChild.Identifier ?? "", identifiableChild.Units ?? "")];
+                                    var unitsProvided = valuesForCompanionModels[(companionChild.GetType().Name, companionChild.Identifier ?? "", companionChild.Units ?? "")];
                                     if (unitsProvided is null)
-                                        throw new ApsimXException(this, $"Units for [{identifiableChild.GetType().Name}]-[{identifiableChild.Identifier ?? "BLANK"}]-[{identifiableChild.Units ?? "BLANK"}] have not been calculated by [a={NameWithParent}] before use.{Environment.NewLine}Code issue. See Developers");
+                                        throw new ApsimXException(this, $"Units for [{companionChild.GetType().Name}]-[{companionChild.Identifier ?? "BLANK"}]-[{companionChild.Units ?? "BLANK"}] have not been calculated by [a={NameWithParent}] before use.{Environment.NewLine}Code issue. See Developers");
                                     else
                                     {
                                         // negative unit value (-99999) means the units were ok, but the model has alerted us to a problem that should eb reported as an error.
-                                        if (MathUtilities.IsNegative(unitsProvided ?? 0) && identifiableChild is CLEMActivityBase)
-                                            (identifiableChild as CLEMActivityBase).Status = ActivityStatus.Warning;
+                                        if (MathUtilities.IsNegative(unitsProvided ?? 0) && companionChild is CLEMActivityBase)
+                                            (companionChild as CLEMActivityBase).Status = ActivityStatus.Warning;
                                         else
                                         {
-                                            identifiableChild.PerformTasksForTimestep(unitsProvided ?? 0);
+                                            companionChild.PerformTasksForTimestep(unitsProvided ?? 0);
                                         }
                                     }
                                 }
@@ -598,9 +598,9 @@ namespace Models.CLEM.Activities
 
         /// <summary>
         /// Determine the min proportion shortfall for the current resource request
-        /// Only considers those coming from the IIdentifiable childen
+        /// Only considers those coming from the companion model childen
         /// </summary>
-        /// <param name="affectsActivityOnly">Only uses identifiable chilren flags as affetcs Activity in calculations if True</param>
+        /// <param name="affectsActivityOnly">Only uses companion model flags as affects Activity in calculations if True</param>
         /// <param name="reduceAllIdentifableShortfalls"></param>
         /// <returns>Minimum proportion found</returns>
         public IEnumerable<ResourceRequest> MinimumShortfallProportion(bool affectsActivityOnly = true, bool reduceAllIdentifableShortfalls = true)
@@ -608,11 +608,11 @@ namespace Models.CLEM.Activities
             double min = 1;
             if (ResourceRequestList != null && ResourceRequestList.Any())
             {
-                var shortfallRequests =  ResourceRequestList.Where(a => Math.Round(Math.Max(0, a.Provided - a.Required), 4) > 0 && a.AdditionalDetails is IIdentifiableChildModel && (!affectsActivityOnly || (a.AdditionalDetails as IIdentifiableChildModel).ShortfallCanAffectParentActivity)).ToList();
+                var shortfallRequests =  ResourceRequestList.Where(a => Math.Round(Math.Max(0, a.Provided - a.Required), 4) > 0 && a.AdditionalDetails is IActivityCompanionModel && (!affectsActivityOnly || (a.AdditionalDetails as IActivityCompanionModel).ShortfallCanAffectParentActivity)).ToList();
                 if (shortfallRequests.Any())
                 {
                     min = shortfallRequests.Select(a => a.Provided / a.Required).Min();
-                    foreach (var request in ResourceRequestList.Where(a => a.Provided / a.Required != min && a.AdditionalDetails is IIdentifiableChildModel && (!affectsActivityOnly || (a.AdditionalDetails as IIdentifiableChildModel).ShortfallCanAffectParentActivity)))
+                    foreach (var request in ResourceRequestList.Where(a => a.Provided / a.Required != min && a.AdditionalDetails is IActivityCompanionModel && (!affectsActivityOnly || (a.AdditionalDetails as IActivityCompanionModel).ShortfallCanAffectParentActivity)))
                         request.Required = Math.Min(request.Provided, request.Required * min);
 
                     return shortfallRequests.OrderBy(a => a.Provided / a.Required);
@@ -627,11 +627,11 @@ namespace Models.CLEM.Activities
         [EventSubscribe("CLEMInitialiseResource")]
         protected virtual void OnValidateIdenfiableChildrenIdentifiersAndUnits(object sender, EventArgs e)
         {
-            if (this is ICanHandleIdentifiableChildModels)
+            if (this is IHandlesActivityCompanionModels)
             {
-                foreach (var iChild in FindAllChildren<IIdentifiableChildModel>())
+                foreach (var iChild in FindAllChildren<IActivityCompanionModel>())
                 {
-                    var identifiers = DefineIdentifiableChildModelLabels(iChild.GetType().Name).Identifiers;
+                    var identifiers = DefineCompanionModelLabels(iChild.GetType().Name).Identifiers;
 
                     // tests for invalid identifier
                     bool test = ((iChild.Identifier ?? "") == "") == identifiers.Any();
@@ -643,7 +643,7 @@ namespace Models.CLEM.Activities
                         Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
                     }
 
-                    var units = DefineIdentifiableChildModelLabels(iChild.GetType().Name).Units;
+                    var units = DefineCompanionModelLabels(iChild.GetType().Name).Units;
                     test = ((iChild.Units ?? "") == "") == units.Any();
                     test2 = units.Any() && ((iChild.Units ?? "") != "") && !units.Contains(iChild.Units ?? "");
                     if (test | test2)

@@ -26,7 +26,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     [Version(1, 0, 2, "Includes improvements such as a relationship to define numbers purchased based on pasture biomass and allows placement of purchased individuals in a specified paddock")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantBuy.htm")]
-    public class RuminantActivityRequestPurchase : CLEMRuminantActivityBase, IValidatableObject, ICanHandleIdentifiableChildModels
+    public class RuminantActivityRequestPurchase : CLEMRuminantActivityBase, IValidatableObject, IHandlesActivityCompanionModels
     {
         private string grazeStore = "";
         private RuminantType herdToUse;
@@ -56,18 +56,18 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
             switch (type)
             {
                 case "RuminantGroup":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
                         units: new List<string>()
                         );
                 case "RuminantActivityFee":
                 case "LabourRequirement":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
                             "Number purchased",
                         },
@@ -77,7 +77,7 @@ namespace Models.CLEM.Activities
                         }
                         );
                 default:
-                    return new LabelsForIdentifiableChildren();
+                    return new LabelsForCompanionModels();
             }
         }
 

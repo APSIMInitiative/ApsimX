@@ -24,7 +24,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/GreenhouseGases/Emission.htm")]
 
-    public class GreenhouseGasActivityEmission : CLEMModel, IIdentifiableChildModel
+    public class GreenhouseGasActivityEmission : CLEMModel, IActivityCompanionModel
     {
         [Link]
         private ResourcesHolder resources = null;

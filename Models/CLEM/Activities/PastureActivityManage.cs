@@ -27,7 +27,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 2, "Added ecological indicator calculations")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Pasture/ManagePasture.htm")]
-    public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager, ICanHandleIdentifiableChildModels
+    public class PastureActivityManage: CLEMActivityBase, IValidatableObject, IPastureManager, IHandlesActivityCompanionModels
     {
         [Link]
         private Clock clock = null;
@@ -128,12 +128,12 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
             switch (type)
             {
                 case "Relationship":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
                             "Utilisation % to change in Land condition index relationship",
                             "Utilisation % to change in Grass basal area relationship"
@@ -142,7 +142,7 @@ namespace Models.CLEM.Activities
                         );
                 case "RuminantActivityFee":
                 case "LabourRequirement":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
                             "Number milked",
                             "Litres milked",
@@ -154,7 +154,7 @@ namespace Models.CLEM.Activities
                         }
                         );
                 default:
-                    return new LabelsForIdentifiableChildren();
+                    return new LabelsForCompanionModels();
             }
         }
 

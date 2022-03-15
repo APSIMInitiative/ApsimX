@@ -22,7 +22,7 @@ namespace Models.CLEM.Activities
     [Version(1, 1, 0, "Implements event based activity control")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantMilking.htm")]
-    public class RuminantActivityMilking: CLEMRuminantActivityBase, ICanHandleIdentifiableChildModels
+    public class RuminantActivityMilking: CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         private int numberToDo;
         private int numberToSkip;
@@ -49,18 +49,18 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
             switch (type)
             {
                 case "RuminantGroup":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
                         units: new List<string>()
                         );
                 case "RuminantActivityFee":
                 case "LabourRequirement":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
                             "Number milked",
                             "Litres milked",
@@ -72,7 +72,7 @@ namespace Models.CLEM.Activities
                         }
                         );
                 default:
-                    return new LabelsForIdentifiableChildren();
+                    return new LabelsForCompanionModels();
             }
         }
 
@@ -83,7 +83,7 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             this.InitialiseHerd(true, true);
-            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>( false, true);
+            filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>( false, true);
 
             // find milk store
             milkStore = Resources.FindResourceType<ResourceBaseWithTransactions, IResourceType>(this, ResourceTypeName, OnMissingResourceActionTypes.ReportErrorAndStop, OnMissingResourceActionTypes.ReportErrorAndStop);
@@ -112,8 +112,8 @@ namespace Models.CLEM.Activities
             uniqueIndividuals = GetUniqueIndividuals<RuminantFemale>(filterGroups, herd);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
-            // provide updated units of measure for identifiable children
-            foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
+            // provide updated units of measure for companion models
+            foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 int number = numberToDo;
                 switch (valueToSupply.Key.identifier)
@@ -122,10 +122,10 @@ namespace Models.CLEM.Activities
                         switch (valueToSupply.Key.unit)
                         {
                             case "fixed":
-                                valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                                valuesForCompanionModels[valueToSupply.Key] = 1;
                                 break;
                             case "per head":
-                                valuesForIdentifiableModels[valueToSupply.Key] = number;
+                                valuesForCompanionModels[valueToSupply.Key] = number;
                                 break;
                             default:
                                 throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
@@ -135,18 +135,18 @@ namespace Models.CLEM.Activities
                         switch (valueToSupply.Key.unit)
                         {
                             case "fixed":
-                                valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                                valuesForCompanionModels[valueToSupply.Key] = 1;
                                 break;
                             case "per kg fleece":
                                 amountToDo = uniqueIndividuals.Sum(a => a.MilkCurrentlyAvailable);
-                                valuesForIdentifiableModels[valueToSupply.Key] = amountToDo;
+                                valuesForCompanionModels[valueToSupply.Key] = amountToDo;
                                 break;
                             default:
                                 throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
                         }
                         break;
                     default:
-                        throw new NotImplementedException(UnknownIdentifierErrorText(this, valueToSupply.Key));
+                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
                 }
             }
             return null;
@@ -159,11 +159,11 @@ namespace Models.CLEM.Activities
             if (shortfalls.Any())
             {
                 // find shortfall by identifiers as these may have different influence on outcome
-                var numberShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "Number milked").FirstOrDefault();
+                var numberShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number milked").FirstOrDefault();
                 if (numberShort != null)
                     numberToSkip = Convert.ToInt32(numberToDo * numberShort.Required / numberShort.Provided);
 
-                var amountShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "Litres milked").FirstOrDefault();
+                var amountShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Litres milked").FirstOrDefault();
                 if (amountShort != null)
                     amountToSkip = Convert.ToInt32(amountToDo * amountShort.Required / amountShort.Provided);
 

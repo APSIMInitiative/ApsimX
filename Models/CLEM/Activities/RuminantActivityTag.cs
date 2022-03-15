@@ -27,7 +27,7 @@ namespace Models.CLEM.Activities
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantTag.htm")]
 
-    public class RuminantActivityTag : CLEMRuminantActivityBase, ICanHandleIdentifiableChildModels
+    public class RuminantActivityTag : CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         private int numberToDo;
         private int numberToSkip;
@@ -64,24 +64,24 @@ namespace Models.CLEM.Activities
         {
             // get all ui tree herd filters that relate to this activity
             this.InitialiseHerd(true, true);
-            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>(true, false);
+            filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(true, false);
             // activity is performed in ManageAnimals
             this.AllocationStyle = ResourceAllocationStyle.Manual;
         }
 
         /// <inheritdoc/>
-        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
             switch (type)
             {
                 case "RuminantGroup":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>() ,
                         units: new List<string>()
                         );
                 case "RuminantActivityFee":
                 case "LabourRequirement":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
                             "Number tagged/untagged",
                         },
@@ -91,7 +91,7 @@ namespace Models.CLEM.Activities
                         }
                         );
                 default:
-                    return new LabelsForIdentifiableChildren();
+                    return new LabelsForCompanionModels();
             }
         }
 
@@ -111,17 +111,17 @@ namespace Models.CLEM.Activities
             uniqueIndividuals = GetUniqueIndividuals<Ruminant>(filterGroups, herd);
             numberToDo = uniqueIndividuals?.Count() ?? 0;
 
-            // provide updated units of measure for identifiable children
-            foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
+            // provide updated units of measure for companion models
+            foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 int number = numberToDo;
                 switch (valueToSupply.Key.unit)
                 {
                     case "fixed":
-                        valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                        valuesForCompanionModels[valueToSupply.Key] = 1;
                         break;
                     case "per head":
-                        valuesForIdentifiableModels[valueToSupply.Key] = number;
+                        valuesForCompanionModels[valueToSupply.Key] = number;
                         break;
                     default:
                         if(valueToSupply.Key.type != "RuminantGroup")
@@ -141,7 +141,7 @@ namespace Models.CLEM.Activities
             if (shortfalls.Any())
             {
                 // find shortfall by identifiers as these may have different influence on outcome
-                var tagsShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "Number tagged/untagged").FirstOrDefault();
+                var tagsShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Number tagged/untagged").FirstOrDefault();
                 if (tagsShort != null)
                     numberToSkip = Convert.ToInt32(numberToDo * tagsShort.Required / tagsShort.Provided);
 

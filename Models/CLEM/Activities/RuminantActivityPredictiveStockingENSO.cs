@@ -28,7 +28,7 @@ namespace Models.CLEM.Activities
     [Description("Manage ruminant stocking based on predicted seasonal outlooks")]
     [Version(1, 0, 1, "")]
     [HelpUri(@"Content/Features/Activities/Ruminant/RuminantPredictiveStockingENSO.htm")]
-    public class RuminantActivityPredictiveStockingENSO: CLEMRuminantActivityBase, ICanHandleIdentifiableChildModels
+    public class RuminantActivityPredictiveStockingENSO: CLEMRuminantActivityBase, IHandlesActivityCompanionModels
     {
         [Link]
         private Clock clock = null;
@@ -145,18 +145,18 @@ namespace Models.CLEM.Activities
         }
 
         /// <inheritdoc/>
-        public override LabelsForIdentifiableChildren DefineIdentifiableChildModelLabels(string type)
+        public override LabelsForCompanionModels DefineCompanionModelLabels(string type)
         {
             switch (type)
             {
                 case "RuminantGroup":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>(),
                         units: new List<string>()
                         );
                 case "RuminantActivityFee":
                 case "LabourRequirement":
-                    return new LabelsForIdentifiableChildren(
+                    return new LabelsForCompanionModels(
                         identifiers: new List<string>() {
                             "Destock required",
                             "Restock required"
@@ -167,7 +167,7 @@ namespace Models.CLEM.Activities
                         }
                         );
                 default:
-                    return new LabelsForIdentifiableChildren();
+                    return new LabelsForCompanionModels();
             }
         }
 
@@ -217,7 +217,7 @@ namespace Models.CLEM.Activities
             pastureToStockingChangeElNino = this.FindAllChildren<Relationship>().Where(a => a.Name.ToLower().Contains("nino")).FirstOrDefault();
             pastureToStockingChangeLaNina = this.FindAllChildren<Relationship>().Where(a => a.Name.ToLower().Contains("nina")).FirstOrDefault();
 
-            filterGroups = GetIdentifiableChildrenByIdentifier<RuminantGroup>(true, false);
+            filterGroups = GetCompanionModelsByIdentifier<RuminantGroup>(true, false);
             paddocks = Resources.FindResourceGroup<GrazeFoodStore>()?.FindAllChildren<GrazeFoodStoreType>();
             paddockChanges = new List<(string paddockName, double AE, double AeShortfall)>();
         }
@@ -309,8 +309,8 @@ namespace Models.CLEM.Activities
                 }
             }
 
-            // provide updated units of measure for identifiable children
-            foreach (var valueToSupply in valuesForIdentifiableModels.ToList())
+            // provide updated units of measure for companion models
+            foreach (var valueToSupply in valuesForCompanionModels.ToList())
             {
                 switch (valueToSupply.Key.identifier)
                 {
@@ -318,10 +318,10 @@ namespace Models.CLEM.Activities
                         switch (valueToSupply.Key.unit)
                         {
                             case "fixed":
-                                valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                                valuesForCompanionModels[valueToSupply.Key] = 1;
                                 break;
                             case "per AE":
-                                valuesForIdentifiableModels[valueToSupply.Key] = AeToDestock;
+                                valuesForCompanionModels[valueToSupply.Key] = AeToDestock;
                                 break;
                             default:
                                 throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
@@ -331,17 +331,17 @@ namespace Models.CLEM.Activities
                         switch (valueToSupply.Key.unit)
                         {
                             case "fixed":
-                                valuesForIdentifiableModels[valueToSupply.Key] = 1;
+                                valuesForCompanionModels[valueToSupply.Key] = 1;
                                 break;
                             case "per AE":
-                                valuesForIdentifiableModels[valueToSupply.Key] = AeToRestock;
+                                valuesForCompanionModels[valueToSupply.Key] = AeToRestock;
                                 break;
                             default:
                                 throw new NotImplementedException(UnknownUnitsErrorText(this, valueToSupply.Key));
                         }
                         break;
                     default:
-                        throw new NotImplementedException(UnknownIdentifierErrorText(this, valueToSupply.Key));
+                        throw new NotImplementedException(UnknownCompanionModelErrorText(this, valueToSupply.Key));
                 }
             }
             return null;
@@ -354,11 +354,11 @@ namespace Models.CLEM.Activities
             if (shortfalls.Any())
             {
                 // find shortfall by identifiers as these may have different influence on outcome
-                var destockShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "Destock required").FirstOrDefault();
+                var destockShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Destock required").FirstOrDefault();
                 if (destockShort != null)
                     destockToSkip = Convert.ToInt32(destockToDo * destockShort.Required / destockShort.Provided);
 
-                var restockShort = shortfalls.Where(a => a.IdentifiableChildDetails.identifier == "Restock required").FirstOrDefault();
+                var restockShort = shortfalls.Where(a => a.CompanionModelDetails.identifier == "Restock required").FirstOrDefault();
                 if (restockShort != null)
                     restockToSkip = Convert.ToInt32(restockToDo * restockShort.Required / restockShort.Provided);
 

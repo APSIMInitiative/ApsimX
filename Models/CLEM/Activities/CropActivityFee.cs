@@ -23,7 +23,7 @@ namespace Models.CLEM.Activities
     [Description("A fee required to perform a crop management task")]
     [HelpUri(@"Content/Features/Activities/Crop/CropFee.htm")]
     [Version(1, 0, 1, "")]
-    public class CropActivityFee: CLEMActivityBase, IIdentifiableChildModel
+    public class CropActivityFee: CLEMActivityBase, IActivityCompanionModel
     {
         private string relatesToResourceName = "";
         private ResourceRequest resourceRequest;
@@ -92,7 +92,7 @@ namespace Models.CLEM.Activities
         /// <inheritdoc/>
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
-            double metric = (Parent as CLEMActivityBase).ValueForIdentifiableChild(this);
+            double metric = (Parent as CLEMActivityBase).ValueForCompanionModel(this);
             double charge = metric * Amount;
 
             if (MathUtilities.IsPositive(metric))
