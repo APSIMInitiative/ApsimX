@@ -93,9 +93,9 @@
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
             if (version.Build == 0)
             {
-                // button1.Sensitive = false;
-                // table2.Hide();
-                // checkbutton1.Hide();
+                button1.Sensitive = false;
+                table2.Hide();
+                checkbutton1.Hide();
             }
 
             CellRendererText textRender = new Gtk.CellRendererText();
@@ -207,10 +207,10 @@
 
             if (version.Build == 0)
             {
-                // button1.Sensitive = false;
-                // table2.Hide();
-                // checkbutton1.Hide();
-                // licenseView.Text = "You are currently using a custom build - **Upgrade is not available!**";
+                button1.Sensitive = false;
+                table2.Hide();
+                checkbutton1.Hide();
+                licenseView.Text = "You are currently using a custom build - **Upgrade is not available!**";
             }
             else
                 licenseView.Text = ReflectionUtilities.GetResourceAsString("ApsimNG.LICENSE.md");
