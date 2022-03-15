@@ -32,7 +32,7 @@ namespace Models.AgPasture
         [Link] ScriptCompiler compiler = null;
 
         private double residualBiomass;
-        private CSharpExpressionFunction expressionFunction;
+        private IBooleanFunction expressionFunction;
         private int simpleGrazingFrequency;
         private List<ModelWithDigestibleBiomass> allForages;
 
@@ -202,7 +202,7 @@ namespace Models.AgPasture
 
         /// <summary></summary>
         [Separator("Grazing species weighting")]
-        [Description("Optional proportion weighting to graze the species. Must add up to the number of species.")]
+        [Description("Optional relative weighting for grazing of forages. Must sum to the number of forages (inc. SurfaceOrganicMatter).")]
         public double[] SpeciesCutProportions { get; set; }
 
         ////////////// Callbacks to enable/disable GUI parameters //////////////
@@ -355,11 +355,10 @@ namespace Models.AgPasture
             {
                 if (string.IsNullOrEmpty(FlexibleExpressionForTimingOfGrazing))
                     throw new Exception("You must specify an expression for timing of grazing.");
-                expressionFunction = new CSharpExpressionFunction();
-                expressionFunction.Parent = this;
-                expressionFunction.Expression = "Convert.ToDouble(" + FlexibleExpressionForTimingOfGrazing + ")";
-                expressionFunction.SetCompiler(compiler);
-                expressionFunction.CompileExpression();
+                if (CSharpExpressionFunction.Compile(FlexibleExpressionForTimingOfGrazing, this, compiler, out IBooleanFunction f, out string errors))
+                    expressionFunction = f;
+                else
+                    throw new Exception(errors);
             }
 
             if (FractionExcretedNToDung != null && FractionExcretedNToDung.Length != 1 && FractionExcretedNToDung.Length != 12)
@@ -602,7 +601,7 @@ namespace Models.AgPasture
 
             // Do graze if expression is true
             else
-                return expressionFunction.Value() == 1;
+                return expressionFunction.Value();
         }
 
         /// <summary>Remove biomass from the specified forage.</summary>

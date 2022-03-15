@@ -1,19 +1,19 @@
 namespace Models.AgPasture
 {
     using System;
-    using System.Linq;
     using System.Collections.Generic;
+    using System.Linq;
     using Newtonsoft.Json;
-    using APSIM.Shared.Utilities;
     using Models.Core;
-    using Models.PMF;
-    using Models.PMF.Interfaces;
     using Models.Soils;
+    using Models.PMF;
     using Models.Soils.Arbitrator;
-    using Models.Soils.Nutrients;
-    using Models.Surface;
     using Models.Interfaces;
+    using APSIM.Shared.Utilities;
     using Models.Functions;
+    using Models.PMF.Interfaces;
+    using Models.Surface;
+    using Models.Soils.Nutrients;
 
     /// <summary>
     /// Describes a pasture species.
@@ -52,10 +52,6 @@ namespace Models.AgPasture
         /// <summary>Link to the soil water balance.</summary>
         [Link]
         private ISoilWater waterBalance = null;
-
-        /// <summary>Link to micro climate.</summary>
-        [Link]
-        private MicroClimate microClimate = null;
 
         ////- Events >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -163,31 +159,29 @@ namespace Models.AgPasture
                 InterceptedRadn = 0.0;
                 myLightProfile = value;
                 foreach (CanopyEnergyBalanceInterceptionlayerType canopyLayer in myLightProfile)
-                {
                     InterceptedRadn += canopyLayer.AmountOnGreen;
-                }
 
-                // stuff require to calculate photosynthesis using Ecomod approach
+                // (RCichota, May-2017) Made intercepted radiation equal to solar radiation and implemented the variable 'effective cover'.
+                // To compute photosynthesis AgPasture needs radiation on top of canopy, but MicroClimate only passes the value of total
+                //  intercepted radiation (over all canopy). Here it is assumed/defined that solar radiation is indeed the best value for
+                //  AgPasture to use in its photosynthesis calculations (agrees with the implementation in Ecomod).
+                // The 'effective cover' is computed using an 'effective light extinction coefficient', which is obtained based on the 
+                //  value for intercepted radiation supplied by MicroClimate. This is the light extinction coefficient that result in the
+                //  same total intercepted radiation, but using solar radiation on top of canopy.
+                //  (note that this value is only used in the calculation of photosynthesis).
+                // TODO: this approach may have to be amended when multi-layer canopies are used (the thought behind the approach here
+                //  is that things like shading (which would reduce Radn on top of canopy) are irrelevant).
                 RadiationTopOfCanopy = myMetData.Radn;
-                fractionGreenCover = 1.0;
-                swardGreenCover = 0.0;
-                if (InterceptedRadn > 0.0)
+                effectiveGreenCover = 0.0;
+                if (RadiationTopOfCanopy > 0.0)
                 {
-                    fractionGreenCover = InterceptedRadn / microClimate.RadiationInterceptionOnGreen;
-                    swardGreenCover = 1.0 - Math.Exp(-LightExtinctionCoefficient * greenLAI / fractionGreenCover);
+                    double AuxVar = 0.0;
+                    if (InterceptedRadn < RadiationTopOfCanopy)
+                        AuxVar = Math.Log(1.0 - InterceptedRadn / RadiationTopOfCanopy);
+                    double myEffectiveLightExtinctionCoefficient = MathUtilities.Divide(-AuxVar, greenLAI, 0.0);
+                    if (myEffectiveLightExtinctionCoefficient * greenLAI > Epsilon)
+                        effectiveGreenCover = 1.0 - Math.Exp(-myEffectiveLightExtinctionCoefficient * greenLAI);
                 }
-
-                // To replicate the approach to compute photosynthesis in Ecomod (from which AgPasture is adapted), the model uses
-                //  radiation on top of canopy instead of intercepted radiation. This is set equal to solar radiation here (and in
-                //  Ecomod), which means all plants in the sward are assumed to have the same height. The original functions used
-                //  the sward green cover to compute total interception and then a 'fraction' of cover to split this between plants.
-                // Currently, MicroClimate only supplies estimates for intercepted radiation and only for this species (not for the
-                //  sward). If assuming that solar radiation is the best value for radiation on top of canopy, the total interception
-                //  by green canopy from MicroClimate can be used to estimate the fraction of green cover of this plant. This in turn
-                //  can be used to estimate the sward cover (this agrees with the implementation in Ecomod).
-                //  (note that these values are only used in the calculation of photosynthesis).
-                // TODO: this approach will have to be amended when enabling variation in plant height, i.e. multi-layered canopies.
-                // In this case, things like shading (which would reduce radiation on top of canopy become relevant.
             }
         }
 
@@ -234,7 +228,7 @@ namespace Models.AgPasture
                 mySummary.WriteMessage(this, " Cannot sow the pasture species \"" + Name + "\", as it is already growing", MessageType.Warning);
             else
             {
-                ClearDailyTransferredAmounts();
+                RefreshVariables();
                 isAlive = true;
                 phenologicStage = 0;
                 mySummary.WriteMessage(this, " The pasture species \"" + Name + "\" has been sown today", MessageType.Diagnostic);
@@ -267,15 +261,15 @@ namespace Models.AgPasture
             }
 
             // zero all transfer variables
-            ClearDailyTransferredAmounts();
-
-            // zero all state variables
+            RefreshVariables();
+            // reset state variables
             Leaf.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
             Stem.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
             Stolon.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
             foreach (PastureBelowGroundOrgan root in roots)
             {
                 root.SetBiomassState(0.0, 0.0, 0.0);
+                root.ClearDailyTransferredAmounts();
             }
 
             greenLAI = 0.0;
@@ -307,7 +301,7 @@ namespace Models.AgPasture
                     PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
                     if (myRoot != null)
                     {
-                        double[] organSupply = myRoot.EvaluateSoilWaterAvailability(zone);
+                        double[] organSupply = myRoot.EvaluateSoilWaterAvailable(zone);
                         if (organSupply != null)
                         {
                             supplies.Add(organSupply);
@@ -364,7 +358,7 @@ namespace Models.AgPasture
                         zones.Add(UptakeDemands);
 
                         // get the N amount available in the soil
-                        myRoot.EvaluateSoilNitrogenAvailability(zone);
+                        myRoot.EvaluateSoilNitrogenAvailable(zone, mySoilWaterUptake);
 
                         UptakeDemands.NO3N = myRoot.mySoilNO3Available;
                         UptakeDemands.NH4N = myRoot.mySoilNH4Available;
@@ -798,9 +792,6 @@ namespace Models.AgPasture
         [Units("-")]
         public double TurnoverDefoliationCoefficient { get; set; } = 0.5;
 
-        /// <summary>Factor of function increasing the turnover rate due to defoliation (>0.0).</summary>
-        private double TurnoverDefoliationFactor { get; set; } = 1.0;
-
         /// <summary>Minimum significant daily effect of defoliation on tissue turnover rate (0-1).</summary>
         [Units("/day")]
         public double TurnoverDefoliationEffectMin { get; set; } = 0.025;
@@ -1108,12 +1099,8 @@ namespace Models.AgPasture
         /// <summary>LAI of dead plant tissues (m^2/m^2).</summary>
         private double deadLAI;
 
-        /// <summary>Estimated green cover of all species combined, for computing photosynthesis (0-1).</summary>
-        private double swardGreenCover;
-
-        /// <summary>Estimated fraction of sward green cover that can be attributed to this species (0-1).</summary>
-        /// <remarks>This is only different from one if there are multiple species</remarks>
-        private double fractionGreenCover;
+        /// <summary>Effective cover for computing photosynthesis (0-1).</summary>
+        private double effectiveGreenCover;
 
         ////- Amounts and fluxes of N in the plant >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -1244,8 +1231,8 @@ namespace Models.AgPasture
 
         ////- Harvest and digestibility >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Fraction of standing DM that was harvested (0-1).</summary>
-        private double defoliatedFraction;
+        /// <summary>Fraction of standing DM harvested (0-1), used on tissue turnover.</summary>
+        private double myDefoliatedFraction;
 
         /// <summary>Digestibility of defoliated material (0-1).</summary>
         public double DefoliatedDigestibility { get; private set; }
@@ -2239,9 +2226,15 @@ namespace Models.AgPasture
 
         /// <summary>Fraction of available dry matter actually harvested ().</summary>
         [Units("0-1")]
-        public double HarvestedFraction
+        public double HarvestedFraction         
         {
-            get { return defoliatedFraction; }
+            get
+            {
+                double preDM = 0.0;
+                foreach (var organ in AboveGroundOrgans)
+                    preDM += MathUtilities.Divide(organ.DMRemoved, organ.FractionRemoved, 0.0);
+                return MathUtilities.Divide(HarvestedWt, preDM, 0.0);
+            }
         }
 
         /// <summary>Amount of N removed by harvest (kg/ha).</summary>
@@ -2340,17 +2333,26 @@ namespace Models.AgPasture
         }
 
         /// <summary>Performs the initialisation procedures for this species (set DM, N, LAI, etc.).</summary>
-        /// <param name="sender">The sender model.</param>
-        /// <param name="e">The <see cref="EventArgs"/>The event data.</param>
+        /// <param name="sender">The sender model</param>
+        /// <param name="e">The <see cref="EventArgs"/> instance containing the event data</param>
+        /// <remarks>
+        /// This occurs in StartOfSimulation so that various other components (such as GenericTissue) have time
+        /// to initialise themselves during the Commencing event.
+        /// </remarks>
         [EventSubscribe("StartOfSimulation")]
         private void OnSimulationCommencing(object sender, EventArgs e)
         {
-            // get the number of layers in the soil profile and initialise soil related variables
-            nLayers = soilPhysical.Thickness.Length;
-            InitiliaseSoilArrays();
+            EmergingTissue = new TissuesHelper(new GenericTissue[] { Leaf.EmergingTissue, Stem.EmergingTissue, Stolon.EmergingTissue });
+            DevelopingTissue = new TissuesHelper(new GenericTissue[] { Leaf.DevelopingTissue, Stem.DevelopingTissue, Stolon.DevelopingTissue });
+            MatureTissue = new TissuesHelper(new GenericTissue[] { Leaf.MatureTissue, Stem.MatureTissue, Stolon.MatureTissue });
+            DeadTissue = new TissuesHelper(new GenericTissue[] { Leaf.DeadTissue, Stem.DeadTissue, Stolon.DeadTissue });
 
-            // initialise the base, or main, root zone; more zones can be added by user
-            roots[0].Initialise(zone, MinimumGreenWt * MinimumGreenRootProp);
+            // get the number of layers in the soil profile
+            nLayers = soilPhysical.Thickness.Length;
+
+            // set the base or main root zone (use 2 tissues, one live other dead), more zones can be added by user
+            roots[0].Initialise(zone, InitialRootDM, InitialRootDepth,
+                               MinimumGreenWt * MinimumGreenRootProp);
 
             // add any other zones that have been given at initialisation
             foreach (RootZone rootZone in RootZonesInitialisations)
@@ -2362,11 +2364,16 @@ namespace Models.AgPasture
 
                 var newRootOrgan = Apsim.Clone(roots[0]) as PastureBelowGroundOrgan;
                 // add the zone to the list
-                newRootOrgan.Initialise(zone, MinimumGreenWt * MinimumGreenRootProp);
+                newRootOrgan.Initialise(zone,
+                                        rootZone.RootDM, rootZone.RootDepth,
+                                        MinimumGreenWt * MinimumGreenRootProp);
                 roots.Add(newRootOrgan);
             }
 
-            // initialise the base aboveground organs
+            // initialise soil water and N variables
+            InitiliaseSoilArrays();
+
+            // Set the minimum green DM
             Leaf.Initialise(MinimumGreenWt * MinimumGreenLeafProp);
             Stem.Initialise(MinimumGreenWt * (1.0 - MinimumGreenLeafProp));
             Stolon.Initialise(0.0);
@@ -2376,12 +2383,6 @@ namespace Models.AgPasture
 
             // initialise parameter for DM allocation during reproductive season
             InitReproductiveGrowthFactor();
-
-            // initialise helper variables, group organs by tissue type
-            EmergingTissue = new TissuesHelper(new GenericTissue[] { Leaf.EmergingTissue, Stem.EmergingTissue, Stolon.EmergingTissue });
-            DevelopingTissue = new TissuesHelper(new GenericTissue[] { Leaf.DevelopingTissue, Stem.DevelopingTissue, Stolon.DevelopingTissue });
-            MatureTissue = new TissuesHelper(new GenericTissue[] { Leaf.MatureTissue, Stem.MatureTissue, Stolon.MatureTissue });
-            DeadTissue = new TissuesHelper(new GenericTissue[] { Leaf.DeadTissue, Stem.DeadTissue, Stolon.DeadTissue });
         }
 
         /// <summary>Initialises arrays to same length as soil layers.</summary>
@@ -2443,9 +2444,7 @@ namespace Models.AgPasture
                                    matureWt: shootDM * initialDMFractions[10],
                                    matureN: shootDM * initialDMFractions[10] * Stolon.NConcOptimum,
                                    deadWt: 0.0, deadN: 0.0);
-            roots[0].SetBiomassState(rootWt: rootDM,
-                                     rootN: rootDM * roots[0].NConcOptimum,
-                                     rootDepth: InitialRootDepth);
+            roots[0].Reset(rootDM, InitialRootDepth);
 
             // set initial phenological stage
             if (MathUtilities.IsGreaterThan(InitialShootDM, 0))
@@ -2572,15 +2571,17 @@ namespace Models.AgPasture
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            // zero out several variables
-            ClearDailyTransferredAmounts();
+            // 1. Zero out several variables
+            RefreshVariables();
+            Leaf.OnDoDailyInitialisation();
+            Stem.OnDoDailyInitialisation();
+            Stolon.OnDoDailyInitialisation();
         }
 
         /// <summary>Reset the transfer amounts in the plant and all organs.</summary>
-        internal void ClearDailyTransferredAmounts()
+        internal void RefreshVariables()
         {
             // reset variables for whole plant
-            defoliatedFraction = 0.0;
             DefoliatedDigestibility = 0.0;
 
             grossPhotosynthesis = 0.0;
@@ -2818,7 +2819,7 @@ namespace Models.AgPasture
             glfRadn = MathUtilities.Divide((0.25 * Pl1) + (0.75 * Pl2), (0.25 * Pmax1) + (0.75 * Pmax2), 1.0);
 
             // Photosynthesis for whole canopy, per ground area (mg CO2/m^2/day)
-            double Pc_Daily = Pl_Daily * swardGreenCover * fractionGreenCover / LightExtinctionCoefficient;
+            double Pc_Daily = Pl_Daily * effectiveGreenCover / LightExtinctionCoefficient;
 
             //  Carbon assimilation per leaf area (g C/m^2/day)
             double carbonAssimilation = Pc_Daily * 0.001 * (12.0 / 44.0); // Convert from mgCO2 to gC           
@@ -3605,7 +3606,14 @@ namespace Models.AgPasture
         /// <summary>Resets this plant to its initial state.</summary>
         public void Reset()
         {
-            ClearDailyTransferredAmounts();
+            Leaf.ClearDailyTransferredAmounts();
+            Stem.ClearDailyTransferredAmounts();
+            Stolon.ClearDailyTransferredAmounts();
+            foreach (PastureBelowGroundOrgan root in roots)
+            {
+                root.ClearDailyTransferredAmounts();
+            }
+
             SetInitialState();
         }
 
@@ -3779,6 +3787,7 @@ namespace Models.AgPasture
             else
                 mySummary.WriteMessage(this, " Biomass removed from " + Name + " by grazing: " + defoliatedDM.ToString("#0.0") + "kg/ha", MessageType.Diagnostic);
 
+            myDefoliatedFraction = HarvestedFraction;
             return new Biomass()
             {
                 StructuralWt = defoliatedDM,
@@ -4119,22 +4128,25 @@ namespace Models.AgPasture
         private double DefoliationEffectOnTissueTurnover()
         {
             double defoliationEffect = 0.0;
-            cumDefoliationFactor += defoliatedFraction;
-            if ((cumDefoliationFactor > 0.0) && (TurnoverDefoliationFactor > 0.0))
+            cumDefoliationFactor += myDefoliatedFraction;
+            if (cumDefoliationFactor > 0.0)
             {
                 double todaysFactor = Math.Pow(cumDefoliationFactor, TurnoverDefoliationCoefficient + 1.0);
                 todaysFactor /= (TurnoverDefoliationCoefficient + 1.0);
                 if (cumDefoliationFactor - todaysFactor < TurnoverDefoliationEffectMin)
                 {
-                    defoliationEffect = cumDefoliationFactor * TurnoverDefoliationFactor;
+                    defoliationEffect = cumDefoliationFactor;
                     cumDefoliationFactor = 0.0;
                 }
                 else
                 {
-                    defoliationEffect = (cumDefoliationFactor - todaysFactor) * TurnoverDefoliationFactor;
+                    defoliationEffect = cumDefoliationFactor - todaysFactor;
                     cumDefoliationFactor = todaysFactor;
                 }
             }
+
+            // clear fraction defoliated after use
+            myDefoliatedFraction = 0.0;
 
             return defoliationEffect;
         }

@@ -112,7 +112,12 @@
             if (Verbosity >= messageType)
             {
                 if (storage == null)
-                    throw new ApsimXException(author, "No datastore is available!");
+                {
+                    if (author == null)
+                        throw new Exception("No datastore is available!");
+                    else
+                        throw new ApsimXException(author, "No datastore is available!");
+                }
 
                 Initialise();
 
@@ -120,7 +125,9 @@
                 DataTable table = messages.Clone();
 
                 // Remove the path of the simulation within the .apsimx file.
-                string relativeModelPath = author.FullPath.Replace($"{simulation.FullPath}.", string.Empty);
+                string relativeModelPath = null;
+                if (author != null)
+                    relativeModelPath = author.FullPath.Replace($"{simulation.FullPath}.", string.Empty);
 
                 DataRow row = table.NewRow();
                 row[0] = simulation.Name;
@@ -231,6 +238,8 @@
         public IEnumerable<Message> GetMessages(string simulationName)
         {
             IDataStore storage = this.storage ?? FindInScope<IDataStore>();
+            if (storage == null)
+                yield break;
             DataTable messages = storage.Reader.GetData("_Messages", simulationNames: simulationName.ToEnumerable());
             if (messages == null)
                 yield break;
@@ -255,6 +264,8 @@
         public IEnumerable<InitialConditionsTable> GetInitialConditions(string simulationName)
         {
             IDataStore storage = this.storage ?? FindInScope<IDataStore>();
+            if (storage == null)
+                yield break;
             DataTable table = storage.Reader.GetData("_InitialConditions", simulationNames: simulationName.ToEnumerable());
             if (table == null)
                 yield break;

@@ -1,10 +1,10 @@
 ﻿namespace Models.AgPasture
 {
-    using System;
-    using System.Linq;
     using APSIM.Shared.Utilities;
     using Models.Core;
     using Models.Surface;
+    using System;
+    using Newtonsoft.Json;
 
     /// <summary>Describes a generic tissue of a pasture species.</summary>
     [Serializable]
@@ -28,6 +28,10 @@
 
         /// <summary>Carbon to nitrogen ratio of cell walls (kg/kg).</summary>
         private const double CNratioCellWall = 100.0;
+
+        //----------------------- Backing fields for states -----------------------
+
+        private AGPBiomass dryMatter = new AGPBiomass();
 
         //---------------------------- Parameters -----------------------
 
@@ -66,14 +70,14 @@
 
         //----------------------- States -----------------------
 
-        /// <summary>Tissue dry matter biomass.</summary>
-        private AGPBiomass dryMatter = new AGPBiomass();
-
         /// <summary>Dry matter biomass.</summary>
         public IAGPBiomass DM { get { return dryMatter; } }
 
         /// <summary>DM removed from this tissue (kg/ha).</summary>
         public double DMRemoved { get; private set; }
+
+        /// <summary>The fraction of DM removed from this tissue.</summary>
+        public double FractionRemoved { get; private set; }
 
         /// <summary>N removed from this tissue (kg/ha).</summary>
         public double NRemoved { get; private set; }
@@ -84,12 +88,18 @@
 
         //----------------------- Public methods -----------------------
 
-        /// <summary>Performs the initialisation procedures for this tissue.</summary>
-        /// <param name="sender">The sender model.</param>
-        /// <param name="e">The <see cref="EventArgs"/>The event data.</param>
         [EventSubscribe("Commencing")]
-        private void OnSimulationCommencing(object sender, EventArgs e)
+        private void OnSimulationCommencing(object sender, EventArgs args)
         {
+            ClearDailyTransferredAmounts();
+        }
+
+        /// <summary>Preparation before the main daily processes.</summary>
+        public void OnDoDailyInitialisation()
+        {
+            DMRemoved = 0;
+            NRemoved = 0;
+            FractionRemoved = 0;
             ClearDailyTransferredAmounts();
         }
 
@@ -125,6 +135,7 @@
 
             DMRemoved = totalFraction * dryMatter.Wt;
             NRemoved = totalFraction * dryMatter.N;
+            FractionRemoved = fractionToRemove;
 
             if (totalFraction > 0.0)
             {
@@ -149,7 +160,7 @@
             CalculateDigestibility();
         }
 
-        /// <summary>Reset the transfer amounts in this tissue.</summary>
+        /// <summary>Clear the daily flows of DM and N.</summary>
         public void ClearDailyTransferredAmounts()
         {
             DMTransferedIn = 0.0;
