@@ -97,6 +97,11 @@ namespace Models.CLEM.Activities
                     break;
                 case "per tonne km":
                     amountOfEmission = activityMetric * Amount;
+                    if(Amount == 0)
+                    {
+                        string warn = $"No vehicle mass or km travelled has been provided for [a={NameWithParent}] as per tonne km to generate greenhouse gas emissions. Ensure vehicle mass is specified in Trucking settings of [{Parent.Name}]";
+                        Warnings.CheckAndWrite(warn, Summary, this, MessageType.Error);
+                    }
                     break;
                 default:
                     throw new NotImplementedException($"Unknown units [{((Units == "") ? "Blank" : Units)}] in [a={NameWithParent}]");
