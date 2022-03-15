@@ -53,6 +53,10 @@ namespace Models.AgPasture
         [Link]
         private ISoilWater waterBalance = null;
 
+        /// <summary>Link to micro climate (aboveground resource arbitrator).</summary>
+        [Link]
+        private MicroClimate microClimate = null;
+
         ////- Events >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         /// <summary>Invoked for incorporating surface OM.</summary>
@@ -159,41 +163,46 @@ namespace Models.AgPasture
                 InterceptedRadn = 0.0;
                 myLightProfile = value;
                 foreach (CanopyEnergyBalanceInterceptionlayerType canopyLayer in myLightProfile)
-                    InterceptedRadn += canopyLayer.AmountOnGreen;
-
-                // (RCichota, May-2017) Made intercepted radiation equal to solar radiation and implemented the variable 'effective cover'.
-                // To compute photosynthesis AgPasture needs radiation on top of canopy, but MicroClimate only passes the value of total
-                //  intercepted radiation (over all canopy). Here it is assumed/defined that solar radiation is indeed the best value for
-                //  AgPasture to use in its photosynthesis calculations (agrees with the implementation in Ecomod).
-                // The 'effective cover' is computed using an 'effective light extinction coefficient', which is obtained based on the 
-                //  value for intercepted radiation supplied by MicroClimate. This is the light extinction coefficient that result in the
-                //  same total intercepted radiation, but using solar radiation on top of canopy.
-                //  (note that this value is only used in the calculation of photosynthesis).
-                // TODO: this approach may have to be amended when multi-layer canopies are used (the thought behind the approach here
-                //  is that things like shading (which would reduce Radn on top of canopy) are irrelevant).
-                RadiationTopOfCanopy = myMetData.Radn;
-                effectiveGreenCover = 0.0;
-                if (RadiationTopOfCanopy > 0.0)
                 {
-                    double AuxVar = 0.0;
-                    if (InterceptedRadn < RadiationTopOfCanopy)
-                        AuxVar = Math.Log(1.0 - InterceptedRadn / RadiationTopOfCanopy);
-                    double myEffectiveLightExtinctionCoefficient = MathUtilities.Divide(-AuxVar, greenLAI, 0.0);
-                    if (myEffectiveLightExtinctionCoefficient * greenLAI > Epsilon)
-                        effectiveGreenCover = 1.0 - Math.Exp(-myEffectiveLightExtinctionCoefficient * greenLAI);
+                    InterceptedRadn += canopyLayer.AmountOnGreen;
                 }
+
+                // stuff required to calculate photosynthesis using Ecomod approach
+                RadiationTopOfCanopy = myMetData.Radn;
+                fractionGreenCover = 1.0;
+                swardGreenCover = 0.0;
+                if (InterceptedRadn > 0.0)
+                {
+                    fractionGreenCover = InterceptedRadn / microClimate.RadiationInterceptionOnGreen;
+                    swardGreenCover = 1.0 - Math.Exp(-LightExtinctionCoefficient * greenLAI / fractionGreenCover);
+                }
+
+                // The approach for computing photosynthesis in Ecomod (from which AgPasture is adapted) uses radiation on top of
+                //  canopy instead of intercepted radiation (as is in PMF, and supplied by MicroClimate). Thus, total solar radiation
+                //  is used here for all and any species, with further conversion to PAR (following the same procedure as in Ecomod).
+                //  This means that all plants in the sward are assumed to have the same height (!). The original functions used the
+                //  value of sward green cover to compute total interception and then a 'fraction' of cover to split the intercepted
+                //  radiation between plants.
+                // Currently, MicroClimate only supplies estimates for intercepted radiation and only for this species (not for the
+                //  sward, and there is no way for one plant to know what the other intercepts). If assuming that solar radiation is
+                //  the best value for radiation on top of canopy, the total interception by the green canopy from MicroClimate can
+                //  be used to estimate the fraction of green cover of this plant. This in turn, can be used to estimate the overall
+                //  sward cover (which agrees with the implementation in Ecomod).
+                //  (note that these values are only used in the calculation of photosynthesis).
+                // TODO: this approach will have to be amended when enabling variation in plant height, i.e. multi-layered canopies.
+                // In that case, things like shading (which would reduce radiation on top of canopy will become quite relevant.
             }
         }
 
         #endregion  --------------------------------------------------------------------------------------------------------
 
-        #region ICrop implementation  --------------------------------------------------------------------------------------
+            #region ICrop implementation  --------------------------------------------------------------------------------------
 
-        /// <summary>Flag indicating the type of plant (currently the name of the species)</summary>
-        /// <remarks>
-        /// This used to be a marker for 'how leguminous' a plant was (in PMF and Stock).
-        /// In AgPasture there is the parameter SpeciesFamily flagging whether a species is a grass or a legume...
-        /// </remarks>
+            /// <summary>Flag indicating the type of plant (currently the name of the species)</summary>
+            /// <remarks>
+            /// This used to be a marker for 'how leguminous' a plant was (in PMF and Stock).
+            /// In AgPasture there is the parameter SpeciesFamily flagging whether a species is a grass or a legume...
+            /// </remarks>
         public string PlantType { get; set; }
 
         /// <summary>Flag indicating whether the biomass is from a c4 plant or not</summary>
@@ -1103,8 +1112,12 @@ namespace Models.AgPasture
         /// <summary>LAI of dead plant tissues (m^2/m^2).</summary>
         private double deadLAI;
 
-        /// <summary>Effective cover for computing photosynthesis (0-1).</summary>
-        private double effectiveGreenCover;
+        /// <summary>Estimated green cover of all species combined, for computing photosynthesis (0-1).</summary>
+        private double swardGreenCover;
+
+        /// <summary>Estimated fraction of sward green cover that can be attributed to this species (0-1).</summary>
+        /// <remarks>This is only different from one if there are multiple species</remarks>
+        private double fractionGreenCover;
 
         ////- Amounts and fluxes of N in the plant >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -2819,7 +2832,7 @@ namespace Models.AgPasture
             glfRadn = MathUtilities.Divide((0.25 * Pl1) + (0.75 * Pl2), (0.25 * Pmax1) + (0.75 * Pmax2), 1.0);
 
             // Photosynthesis for whole canopy, per ground area (mg CO2/m^2/day)
-            double Pc_Daily = Pl_Daily * effectiveGreenCover / LightExtinctionCoefficient;
+            double Pc_Daily = Pl_Daily * swardGreenCover*fractionGreenCover / LightExtinctionCoefficient;
 
             //  Carbon assimilation per leaf area (g C/m^2/day)
             double carbonAssimilation = Pc_Daily * 0.001 * (12.0 / 44.0); // Convert from mgCO2 to gC           
