@@ -448,7 +448,8 @@
                 Soil currentSoil = this.explorerPresenter.ApsimXFile.FindByPath(this.explorerPresenter.CurrentNodePath)?.Value as Soil;
                 if (currentSoil != null)
                 {
-                    SoilChecker.CheckWithStandardisation(currentSoil);
+                    ISummary summary = currentSoil.FindInScope<ISummary>(this.explorerPresenter.CurrentNodePath);
+                    SoilChecker.CheckWithStandardisation(currentSoil, summary);
                     explorerPresenter.MainPresenter.ShowMessage("Soil water parameters are valid.", Simulation.MessageType.Information);
                 }
             }
@@ -698,7 +699,7 @@
         /// </summary>
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
-        [ContextMenu(MenuName = "Add model...", FollowsSeparator = true)]
+        [ContextMenu(MenuName = "Add model...", FollowsSeparator = true, ShortcutKey = "Ctrl+N")]
         public void AddModel(object sender, EventArgs e)
         {
             try

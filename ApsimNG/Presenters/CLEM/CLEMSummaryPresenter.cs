@@ -101,6 +101,7 @@ namespace UserInterface.Presenters
         /// </summary>
         public void Detach()
         {
+            (genericView as MarkdownView).Dispose();
         }
     }
 }

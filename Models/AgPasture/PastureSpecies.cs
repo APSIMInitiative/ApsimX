@@ -1231,9 +1231,6 @@ namespace Models.AgPasture
 
         ////- Harvest and digestibility >>> - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
-        /// <summary>Fraction of standing DM that was harvested (0-1).</summary>
-        private double defoliatedFraction;
-
         /// <summary>Fraction of standing DM harvested (0-1), used on tissue turnover.</summary>
         private double myDefoliatedFraction;
 
@@ -2229,9 +2226,15 @@ namespace Models.AgPasture
 
         /// <summary>Fraction of available dry matter actually harvested ().</summary>
         [Units("0-1")]
-        public double HarvestedFraction
+        public double HarvestedFraction         
         {
-            get { return defoliatedFraction; }
+            get
+            {
+                double preDM = 0.0;
+                foreach (var organ in AboveGroundOrgans)
+                    preDM += MathUtilities.Divide(organ.DMRemoved, organ.FractionRemoved, 0.0);
+                return MathUtilities.Divide(HarvestedWt, preDM, 0.0);
+            }
         }
 
         /// <summary>Amount of N removed by harvest (kg/ha).</summary>
@@ -2579,7 +2582,6 @@ namespace Models.AgPasture
         internal void RefreshVariables()
         {
             // reset variables for whole plant
-            defoliatedFraction = 0.0;
             DefoliatedDigestibility = 0.0;
 
             grossPhotosynthesis = 0.0;
@@ -3785,6 +3787,7 @@ namespace Models.AgPasture
             else
                 mySummary.WriteMessage(this, " Biomass removed from " + Name + " by grazing: " + defoliatedDM.ToString("#0.0") + "kg/ha", MessageType.Diagnostic);
 
+            myDefoliatedFraction = HarvestedFraction;
             return new Biomass()
             {
                 StructuralWt = defoliatedDM,

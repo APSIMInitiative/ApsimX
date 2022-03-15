@@ -17,12 +17,13 @@
         /// Standardises the soil before performing tests.
         /// </summary>
         /// <param name="soilToCheck">The soil to check.</param>
-        public static void CheckWithStandardisation(Soil soilToCheck)
+        /// <param name="summary">A summary instance to write warning messages to.</param>
+        public static void CheckWithStandardisation(Soil soilToCheck, ISummary summary)
         {
             var soil = Apsim.Clone(soilToCheck) as Soil;
             SoilStandardiser.Standardise(soil);
 
-            Check(soil);
+            Check(soil, summary);
         }
 
         /// <summary>
@@ -30,7 +31,8 @@
         /// Does not standardise the soil before performing tests.
         /// </summary>
         /// <param name="soil">The soil to check.</param>
-        public static void Check(Soil soil)
+        /// <param name="summary">A summary instance to write warning messages to.</param>
+        public static void Check(Soil soil, ISummary summary)
         {
             var weirdo = soil.FindChild<WEIRDO>();
             var initial = soil.FindChild<Sample>();
@@ -127,8 +129,7 @@
                         if (initial.OC[layer] == MathUtilities.MissingValue || double.IsNaN(initial.OC[layer]))
                             message.AppendLine($"OC value missing in layer {layerNumber}");
                         else if (MathUtilities.LessThan(initial.OC[layer], 0.01, 3))
-                            message.AppendLine($"OC value of {initial.OC[layer].ToString("f3")} in layer {layerNumber} is less than 0.01");
-
+                            summary.WriteMessage(null, $"OC value of {initial.OC[layer].ToString("f3")} in layer {layerNumber} is less than 0.01", MessageType.Warning);
                         if (initial.PH[layer] == MathUtilities.MissingValue || double.IsNaN(initial.PH[layer]))
                             message.AppendLine($"PH value missing in layer {layerNumber}");
                         else if (MathUtilities.LessThan(initial.PH[layer], 3.5, 3))

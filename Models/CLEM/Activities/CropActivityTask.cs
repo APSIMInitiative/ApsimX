@@ -24,9 +24,6 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Crop/CropTask.htm")]
     public class CropActivityTask: CLEMActivityBase, IValidatableObject, ICanHandleIdentifiableChildModels
     {
-        [Link]
-        private Clock Clock = null;
-
         private string relatesToResourceName = "";
         private bool timingIssueReported = false;
         private CropActivityManageCrop parentManagementActivity;
@@ -77,24 +74,21 @@ namespace Models.CLEM.Activities
         public override List<ResourceRequest> RequestResourcesForTimestep(double argument = 0)
         {
             amountToSkip = 0;
-
-            // if first step of parent rotation
-            // and timer failed because of harvest data
-            int start = FindAncestor<CropActivityManageProduct>().FirstTimeStepOfRotation;
-            if (Clock.Today.Year * 100 + Clock.Today.Month == start)
+            if (TimingOK)
             {
-                // check if it can only occur before this rotation started
-                ActivityTimerCropHarvest chtimer = this.FindAllChildren<ActivityTimerCropHarvest>().FirstOrDefault();
-                if (chtimer != null)
+                if (FindAncestor<CropActivityManageProduct>().CurrentlyManaged)
+                    Status = ActivityStatus.Success;
+                else
                 {
-                    if (chtimer.ActivityPast)
+                    Status = ActivityStatus.Warning;
+                    foreach (var child in FindAllChildren<CLEMActivityBase>())
                     {
-                        this.Status = ActivityStatus.Warning;
-                        if (!timingIssueReported)
-                        {
-                            Summary.WriteMessage(this, $"The harvest timer for crop task [a={this.NameWithParent}] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.", MessageType.Warning);
-                            timingIssueReported = true;
-                        }
+                        child.Status = ActivityStatus.Warning;
+                    }
+                    if (!timingIssueReported)
+                    {
+                        Summary.WriteMessage(this, $"The harvest timer for crop task [a={this.NameWithParent}] did not allow the task to be performed. This is likely due to insufficient time between rotating to a crop and the next harvest date.", MessageType.Warning);
+                        timingIssueReported = true;
                     }
                 }
             }

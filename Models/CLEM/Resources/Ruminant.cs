@@ -34,7 +34,7 @@ namespace Models.CLEM.Resources
                 case RuminantTransactionsGroupingStyle.Combined:
                     return "All";
                 case RuminantTransactionsGroupingStyle.ByPriceGroup:
-                    return BreedParams.ValueofIndividual(this, pricingStyle)?.Name??$"{pricingStyle}NotSet";
+                    return BreedParams.GetPriceGroupOfIndividual(this, pricingStyle)?.Name??$"{pricingStyle}NotSet";
                 case RuminantTransactionsGroupingStyle.ByClass:
                     return this.Class;
                 case RuminantTransactionsGroupingStyle.BySexAndClass:
@@ -48,7 +48,7 @@ namespace Models.CLEM.Resources
         /// <summary>
         /// Current animal price group for this individual 
         /// </summary>
-        public AnimalPriceGroup CurrentPrice { get; set; } = null;
+        public (AnimalPriceGroup Buy, AnimalPriceGroup Sell) CurrentPriceGroups { get; set; } = (null, null);
 
         /// <inheritdoc/>
         public IndividualAttributeList Attributes { get; set; } = new IndividualAttributeList();
@@ -269,6 +269,19 @@ namespace Models.CLEM.Resources
                 return Convert.ToInt32(result, CultureInfo.InvariantCulture);
             }
         }
+
+        /// <summary>
+        /// A label combining sex and class for reporting
+        /// </summary>
+        [FilterByProperty]
+        public string SexAndClass
+        {
+            get
+            {
+                return $"{Sex}.{Class}";
+            }
+        }
+
 
         /// <summary>
         /// Determine the category of this individual

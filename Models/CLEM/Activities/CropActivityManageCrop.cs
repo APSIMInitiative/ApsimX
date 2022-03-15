@@ -25,10 +25,8 @@ namespace Models.CLEM.Activities
     [HelpUri(@"Content/Features/Activities/Crop/ManageCrop.htm")]
     public class CropActivityManageCrop: CLEMActivityBase, IValidatableObject, IPastureManager
     {
-        [Link]
-        private Clock clock = null;
-
         private int currentCropIndex = 0;
+        private int numberOfCrops = 0;
 
         /// <summary>
         /// Land type where crop is to be grown
@@ -93,15 +91,15 @@ namespace Models.CLEM.Activities
         /// <param name="sender">The sender.</param>
         /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
         [EventSubscribe("FinalInitialise")]
-        private void OnFinalInitialise(object sender, EventArgs e)
+        private void OnFinalInitialiseForCrop(object sender, EventArgs e)
         {
             // set and enable first crop in the list for rotational cropping.
             int i = 0;
             foreach (CropActivityManageProduct item in this.Children.OfType<CropActivityManageProduct>())
             {
-                item.ActivityEnabled = (i == currentCropIndex);
-                item.FirstTimeStepOfRotation = clock.StartDate.Year * 100 + clock.StartDate.Month;
-                if (item.ActivityEnabled && LinkedLandItem != null)
+                numberOfCrops = i+1;
+                item.CurrentlyManaged = (i == currentCropIndex);
+                if (item.CurrentlyManaged && LinkedLandItem != null)
                 {
                     // get land for this crop (first crop in list)
                     // this may include a multiplier to modify the crop area planted and needed
@@ -119,24 +117,18 @@ namespace Models.CLEM.Activities
         /// </summary>
         public void RotateCrop()
         {
-            int numberCrops = this.FindAllChildren<CropActivityManageProduct>().Count();
-            if (numberCrops>1)
+            if (numberOfCrops > 1)
             {
                 currentCropIndex++;
-                if (currentCropIndex >= numberCrops)
+                if (currentCropIndex >= numberOfCrops)
                     currentCropIndex = 0;
 
                 int i = 0;
                 foreach (CropActivityManageProduct item in this.FindAllChildren<CropActivityManageProduct>())
                 {
-                    item.ActivityEnabled = (i == currentCropIndex);
-                    if (item.ActivityEnabled)
-                    {
-                        item.FirstTimeStepOfRotation = item.FirstTimeStepOfRotation = clock.Today.AddDays(1).Year * 100 + clock.Today.AddDays(1).Month;
+                    item.CurrentlyManaged = (i == currentCropIndex);
+                    if (item.CurrentlyManaged)
                         AdjustLand(item);
-                    }
-                    else
-                        item.FirstTimeStepOfRotation = 0;
                     i++;
                 }
             }

@@ -94,10 +94,7 @@
                   "HarvestTypeColumnName": null,
                   "Notes": null,
                   "SelectedTab": "Properties",
-                  "CurrentAncestorList": [
-                    "ZoneCLEM",
-                    "FileCrop"
-                  ],
+                  "CurrentAncestorList": [],
                   "Name": "FileForage",
                   "Children": [],
                   "Enabled": true,
@@ -107,10 +104,7 @@
                   "$type": "Models.CLEM.Resources.ResourcesHolder, Models",
                   "Notes": null,
                   "SelectedTab": null,
-                  "CurrentAncestorList": [
-                    "ZoneCLEM",
-                    "ResourcesHolder"
-                  ],
+                  "CurrentAncestorList": [],
                   "Name": "Resources",
                   "Children": [
                     {
@@ -119,11 +113,7 @@
                       "UnitsOfAreaToHaConversion": 1.0,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [
-                        "ZoneCLEM",
-                        "ResourcesHolder",
-                        "Land"
-                      ],
+                      "CurrentAncestorList": [],
                       "Name": "Land",
                       "Children": [
                         {
@@ -134,12 +124,7 @@
                           "SoilType": "2",
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ResourcesHolder",
-                            "Land",
-                            "LandType"
-                          ],
+                          "CurrentAncestorList": [],
                           "Name": "Paddock1",
                           "Children": [],
                           "Enabled": true,
@@ -156,8 +141,6 @@
                       "Notes": null,
                       "SelectedTab": null,
                       "CurrentAncestorList": [
-                        "ZoneCLEM",
-                        "ResourcesHolder",
                         "Finance"
                       ],
                       "Name": "Finances",
@@ -172,8 +155,6 @@
                           "Notes": null,
                           "SelectedTab": null,
                           "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ResourcesHolder",
                             "Finance",
                             "FinanceType"
                           ],
@@ -191,11 +172,7 @@
                       "TransactionStyle": 0,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [
-                        "ZoneCLEM",
-                        "ResourcesHolder",
-                        "RuminantHerd"
-                      ],
+                      "CurrentAncestorList": [],
                       "Name": "Ruminants",
                       "Children": [
                         {
@@ -272,12 +249,7 @@
                           "MethaneProductionCoefficient": 20.7,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ResourcesHolder",
-                            "RuminantHerd",
-                            "RuminantType"
-                          ],
+                          "CurrentAncestorList": [],
                           "Name": "Bos indicus",
                           "Children": [
                             {
@@ -285,13 +257,7 @@
                               "WeightWarningOccurred": false,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ResourcesHolder",
-                                "RuminantHerd",
-                                "RuminantType",
-                                "RuminantInitialCohorts"
-                              ],
+                              "CurrentAncestorList": [],
                               "Name": "Initial cohorts",
                               "Children": [
                                 {
@@ -305,14 +271,7 @@
                                   "Sire": false,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
-                                    "RuminantHerd",
-                                    "RuminantType",
-                                    "RuminantInitialCohorts",
-                                    "RuminantTypeCohort"
-                                  ],
+                                  "CurrentAncestorList": [],
                                   "Name": "WeanerF",
                                   "Children": [],
                                   "Enabled": true,
@@ -329,14 +288,7 @@
                                   "Sire": false,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
-                                    "RuminantHerd",
-                                    "RuminantType",
-                                    "RuminantInitialCohorts",
-                                    "RuminantTypeCohort"
-                                  ],
+                                  "CurrentAncestorList": [],
                                   "Name": "WeanerM",
                                   "Children": [],
                                   "Enabled": true,
@@ -353,14 +305,7 @@
                                   "Sire": false,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
-                                    "RuminantHerd",
-                                    "RuminantType",
-                                    "RuminantInitialCohorts",
-                                    "RuminantTypeCohort"
-                                  ],
+                                  "CurrentAncestorList": [],
                                   "Name": "Female3_4",
                                   "Children": [],
                                   "Enabled": true,
@@ -377,14 +322,7 @@
                                   "Sire": false,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
-                                    "RuminantHerd",
-                                    "RuminantType",
-                                    "RuminantInitialCohorts",
-                                    "RuminantTypeCohort"
-                                  ],
+                                  "CurrentAncestorList": [],
                                   "Name": "Male2_3",
                                   "Children": [],
                                   "Enabled": true,
@@ -401,14 +339,7 @@
                                   "Sire": true,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
-                                    "RuminantHerd",
-                                    "RuminantType",
-                                    "RuminantInitialCohorts",
-                                    "RuminantTypeCohort"
-                                  ],
+                                  "CurrentAncestorList": [],
                                   "Name": "Male3_4",
                                   "Children": [],
                                   "Enabled": true,
@@ -422,13 +353,7 @@
                               "$type": "Models.CLEM.Resources.AnimalPricing, Models",
                               "Notes": null,
                               "SelectedTab": "Summary",
-                              "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ResourcesHolder",
-                                "RuminantHerd",
-                                "RuminantType",
-                                "AnimalPricing"
-                              ],
+                              "CurrentAncestorList": [],
                               "Name": "Prices",
                               "Children": [
                                 {
@@ -438,14 +363,7 @@
                                   "PurchaseOrSale": 0,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
-                                    "RuminantHerd",
-                                    "RuminantType",
-                                    "AnimalPricing",
-                                    "AnimalPriceGroup"
-                                  ],
+                                  "CurrentAncestorList": [],
                                   "Name": "Weaners_LT_12m",
                                   "Children": [
                                     {
@@ -456,15 +374,7 @@
                                       "Value": "12",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [
-                                        "ZoneCLEM",
-                                        "ResourcesHolder",
-                                        "RuminantHerd",
-                                        "RuminantType",
-                                        "AnimalPricing",
-                                        "AnimalPriceGroup",
-                                        "FilterByProperty"
-                                      ],
+                                      "CurrentAncestorList": [],
                                       "Name": "LT_12m",
                                       "Children": [],
                                       "Enabled": true,
@@ -481,14 +391,7 @@
                                   "PurchaseOrSale": 1,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
-                                    "RuminantHerd",
-                                    "RuminantType",
-                                    "AnimalPricing",
-                                    "AnimalPriceGroup"
-                                  ],
+                                  "CurrentAncestorList": [],
                                   "Name": "Female1_3_Buy",
                                   "Children": [
                                     {
@@ -499,15 +402,7 @@
                                       "Value": "Female",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [
-                                        "ZoneCLEM",
-                                        "ResourcesHolder",
-                                        "RuminantHerd",
-                                        "RuminantType",
-                                        "AnimalPricing",
-                                        "AnimalPriceGroup",
-                                        "FilterByProperty"
-                                      ],
+                                      "CurrentAncestorList": [],
                                       "Name": "Female",
                                       "Children": [],
                                       "Enabled": true,
@@ -521,15 +416,7 @@
                                       "Value": "36",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [
-                                        "ZoneCLEM",
-                                        "ResourcesHolder",
-                                        "RuminantHerd",
-                                        "RuminantType",
-                                        "AnimalPricing",
-                                        "AnimalPriceGroup",
-                                        "FilterByProperty"
-                                      ],
+                                      "CurrentAncestorList": [],
                                       "Name": "less36months",
                                       "Children": [],
                                       "Enabled": true,
@@ -546,14 +433,7 @@
                                   "PurchaseOrSale": 2,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
-                                    "RuminantHerd",
-                                    "RuminantType",
-                                    "AnimalPricing",
-                                    "AnimalPriceGroup"
-                                  ],
+                                  "CurrentAncestorList": [],
                                   "Name": "Female1_3_Sell",
                                   "Children": [
                                     {
@@ -564,15 +444,7 @@
                                       "Value": "Female",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [
-                                        "ZoneCLEM",
-                                        "ResourcesHolder",
-                                        "RuminantHerd",
-                                        "RuminantType",
-                                        "AnimalPricing",
-                                        "AnimalPriceGroup",
-                                        "FilterByProperty"
-                                      ],
+                                      "CurrentAncestorList": [],
                                       "Name": "Female",
                                       "Children": [],
                                       "Enabled": true,
@@ -586,15 +458,7 @@
                                       "Value": "36",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [
-                                        "ZoneCLEM",
-                                        "ResourcesHolder",
-                                        "RuminantHerd",
-                                        "RuminantType",
-                                        "AnimalPricing",
-                                        "AnimalPriceGroup",
-                                        "FilterByProperty"
-                                      ],
+                                      "CurrentAncestorList": [],
                                       "Name": "less36months",
                                       "Children": [],
                                       "Enabled": true,
@@ -611,14 +475,7 @@
                                   "PurchaseOrSale": 0,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
-                                    "RuminantHerd",
-                                    "RuminantType",
-                                    "AnimalPricing",
-                                    "AnimalPriceGroup"
-                                  ],
+                                  "CurrentAncestorList": [],
                                   "Name": "Female 3plus",
                                   "Children": [
                                     {
@@ -629,15 +486,7 @@
                                       "Value": "Female",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [
-                                        "ZoneCLEM",
-                                        "ResourcesHolder",
-                                        "RuminantHerd",
-                                        "RuminantType",
-                                        "AnimalPricing",
-                                        "AnimalPriceGroup",
-                                        "FilterByProperty"
-                                      ],
+                                      "CurrentAncestorList": [],
                                       "Name": "Female",
                                       "Children": [],
                                       "Enabled": true,
@@ -651,15 +500,7 @@
                                       "Value": "36",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [
-                                        "ZoneCLEM",
-                                        "ResourcesHolder",
-                                        "RuminantHerd",
-                                        "RuminantType",
-                                        "AnimalPricing",
-                                        "AnimalPriceGroup",
-                                        "FilterByProperty"
-                                      ],
+                                      "CurrentAncestorList": [],
                                       "Name": "36months",
                                       "Children": [],
                                       "Enabled": true,
@@ -676,14 +517,7 @@
                                   "PurchaseOrSale": 0,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
-                                    "RuminantHerd",
-                                    "RuminantType",
-                                    "AnimalPricing",
-                                    "AnimalPriceGroup"
-                                  ],
+                                  "CurrentAncestorList": [],
                                   "Name": "Breeding Sires",
                                   "Children": [
                                     {
@@ -694,15 +528,7 @@
                                       "Value": null,
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [
-                                        "ZoneCLEM",
-                                        "ResourcesHolder",
-                                        "RuminantHerd",
-                                        "RuminantType",
-                                        "AnimalPricing",
-                                        "AnimalPriceGroup",
-                                        "FilterByProperty"
-                                      ],
+                                      "CurrentAncestorList": [],
                                       "Name": "isSire",
                                       "Children": [],
                                       "Enabled": true,
@@ -719,14 +545,7 @@
                                   "PurchaseOrSale": 0,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
-                                    "RuminantHerd",
-                                    "RuminantType",
-                                    "AnimalPricing",
-                                    "AnimalPriceGroup"
-                                  ],
+                                  "CurrentAncestorList": [],
                                   "Name": "Male1_3",
                                   "Children": [
                                     {
@@ -737,15 +556,7 @@
                                       "Value": "Male",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [
-                                        "ZoneCLEM",
-                                        "ResourcesHolder",
-                                        "RuminantHerd",
-                                        "RuminantType",
-                                        "AnimalPricing",
-                                        "AnimalPriceGroup",
-                                        "FilterByProperty"
-                                      ],
+                                      "CurrentAncestorList": [],
                                       "Name": "Male",
                                       "Children": [],
                                       "Enabled": true,
@@ -759,15 +570,7 @@
                                       "Value": "36",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [
-                                        "ZoneCLEM",
-                                        "ResourcesHolder",
-                                        "RuminantHerd",
-                                        "RuminantType",
-                                        "AnimalPricing",
-                                        "AnimalPriceGroup",
-                                        "FilterByProperty"
-                                      ],
+                                      "CurrentAncestorList": [],
                                       "Name": "less36months",
                                       "Children": [],
                                       "Enabled": true,
@@ -784,14 +587,7 @@
                                   "PurchaseOrSale": 0,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
-                                    "RuminantHerd",
-                                    "RuminantType",
-                                    "AnimalPricing",
-                                    "AnimalPriceGroup"
-                                  ],
+                                  "CurrentAncestorList": [],
                                   "Name": "Male 3plus",
                                   "Children": [
                                     {
@@ -802,15 +598,7 @@
                                       "Value": "Male",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [
-                                        "ZoneCLEM",
-                                        "ResourcesHolder",
-                                        "RuminantHerd",
-                                        "RuminantType",
-                                        "AnimalPricing",
-                                        "AnimalPriceGroup",
-                                        "FilterByProperty"
-                                      ],
+                                      "CurrentAncestorList": [],
                                       "Name": "Male",
                                       "Children": [],
                                       "Enabled": true,
@@ -824,15 +612,7 @@
                                       "Value": "36",
                                       "Notes": null,
                                       "SelectedTab": null,
-                                      "CurrentAncestorList": [
-                                        "ZoneCLEM",
-                                        "ResourcesHolder",
-                                        "RuminantHerd",
-                                        "RuminantType",
-                                        "AnimalPricing",
-                                        "AnimalPriceGroup",
-                                        "FilterByProperty"
-                                      ],
+                                      "CurrentAncestorList": [],
                                       "Name": "36months",
                                       "Children": [],
                                       "Enabled": true,
@@ -853,13 +633,7 @@
                               "ConceptionRateAsymptote": 90.0,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ResourcesHolder",
-                                "RuminantHerd",
-                                "RuminantType",
-                                "RuminantConceptionCurve"
-                              ],
+                              "CurrentAncestorList": [],
                               "Name": "RuminantConceptionCurve",
                               "Children": [],
                               "Enabled": true,
@@ -877,11 +651,7 @@
                       "$type": "Models.CLEM.Resources.GrazeFoodStore, Models",
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [
-                        "ZoneCLEM",
-                        "ResourcesHolder",
-                        "GrazeFoodStore"
-                      ],
+                      "CurrentAncestorList": [],
                       "Name": "GrazeFoodStore",
                       "Children": [
                         {
@@ -904,12 +674,7 @@
                           "NumberMonthsForInitialBiomass": 5,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ResourcesHolder",
-                            "GrazeFoodStore",
-                            "GrazeFoodStoreType"
-                          ],
+                          "CurrentAncestorList": [],
                           "Name": "NativePasture",
                           "Children": [],
                           "Enabled": true,
@@ -923,11 +688,7 @@
                       "$type": "Models.CLEM.Resources.AnimalFoodStore, Models",
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [
-                        "ZoneCLEM",
-                        "ResourcesHolder",
-                        "AnimalFoodStore"
-                      ],
+                      "CurrentAncestorList": [],
                       "Name": "AnimalFoodStore",
                       "Children": [
                         {
@@ -938,12 +699,7 @@
                           "StartingAmount": 100.0,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ResourcesHolder",
-                            "AnimalFoodStore",
-                            "AnimalFoodStoreType"
-                          ],
+                          "CurrentAncestorList": [],
                           "Name": "Hay",
                           "Children": [
                             {
@@ -954,13 +710,7 @@
                               "TransactionCategory": "Transmutation",
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ResourcesHolder",
-                                "AnimalFoodStore",
-                                "AnimalFoodStoreType",
-                                "Transmutation"
-                              ],
+                              "CurrentAncestorList": [],
                               "Name": "Purchase",
                               "Children": [
                                 {
@@ -972,14 +722,7 @@
                                   "FinanceTypeForTransactionsName": "No transactions",
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ResourcesHolder",
-                                    "AnimalFoodStore",
-                                    "AnimalFoodStoreType",
-                                    "Transmutation",
-                                    "Transmute"
-                                  ],
+                                  "CurrentAncestorList": [],
                                   "Name": "Transmute",
                                   "Children": [],
                                   "Enabled": true,
@@ -1005,10 +748,7 @@
                   "$type": "Models.CLEM.Activities.ActivitiesHolder, Models",
                   "Notes": null,
                   "SelectedTab": null,
-                  "CurrentAncestorList": [
-                    "ZoneCLEM",
-                    "ActivitiesHolder"
-                  ],
+                  "CurrentAncestorList": [],
                   "Name": "Activities",
                   "Children": [
                     {
@@ -1020,11 +760,7 @@
                       "OnPartialResourcesAvailableAction": 0,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [
-                        "ZoneCLEM",
-                        "ActivitiesHolder",
-                        "CropActivityManageCrop"
-                      ],
+                      "CurrentAncestorList": [],
                       "Name": "Native Pasture on farm",
                       "Children": [
                         {
@@ -1035,16 +771,18 @@
                           "ProportionKept": 1.0,
                           "PlantedMultiplier": 1.0,
                           "TreesPerHa": 0.0,
+                          "Harvests": {
+                            "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
+                            "Item1": null,
+                            "Item2": null,
+                            "Item3": null,
+                            "Item4": null
+                          },
                           "TransactionCategory": "Crop.[Product]",
                           "OnPartialResourcesAvailableAction": 0,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ActivitiesHolder",
-                            "CropActivityManageCrop",
-                            "CropActivityManageProduct"
-                          ],
+                          "CurrentAncestorList": [],
                           "Name": "Native Pasture to GrazeFoodStore",
                           "Children": [],
                           "Enabled": true,
@@ -1060,11 +798,7 @@
                       "OnPartialResourcesAvailableAction": 0,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [
-                        "ZoneCLEM",
-                        "ActivitiesHolder",
-                        "ActivityFolder"
-                      ],
+                      "CurrentAncestorList": [],
                       "Name": "Manage herd",
                       "Children": [
                         {
@@ -1075,12 +809,7 @@
                           "TransactionCategory": "Livestock.Manage",
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ActivitiesHolder",
-                            "ActivityFolder",
-                            "RuminantActivityGrow"
-                          ],
+                          "CurrentAncestorList": [],
                           "Name": "Grow all ruminants",
                           "Children": [],
                           "Enabled": true,
@@ -1095,12 +824,7 @@
                           "OnPartialResourcesAvailableAction": 0,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ActivitiesHolder",
-                            "ActivityFolder",
-                            "RuminantActivityMove"
-                          ],
+                          "CurrentAncestorList": [],
                           "Name": "Move to pasture",
                           "Children": [
                             {
@@ -1108,13 +832,7 @@
                               "Identifier": "",
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ActivitiesHolder",
-                                "ActivityFolder",
-                                "RuminantActivityMove",
-                                "RuminantGroup"
-                              ],
+                              "CurrentAncestorList": [],
                               "Name": "All",
                               "Children": [],
                               "Enabled": true,
@@ -1131,12 +849,7 @@
                           "OnPartialResourcesAvailableAction": 2,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ActivitiesHolder",
-                            "ActivityFolder",
-                            "RuminantActivityGrazeAll"
-                          ],
+                          "CurrentAncestorList": [],
                           "Name": "Graze all",
                           "Children": [],
                           "Enabled": true,
@@ -1152,12 +865,7 @@
                           "OnPartialResourcesAvailableAction": 2,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ActivitiesHolder",
-                            "ActivityFolder",
-                            "RuminantActivityFeed"
-                          ],
+                          "CurrentAncestorList": [],
                           "Name": "Feed hay",
                           "Children": [
                             {
@@ -1165,13 +873,7 @@
                               "Value": 1.0,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ActivitiesHolder",
-                                "ActivityFolder",
-                                "RuminantActivityFeed",
-                                "RuminantFeedGroup"
-                              ],
+                              "CurrentAncestorList": [],
                               "Name": "Feed all",
                               "Children": [],
                               "Enabled": true,
@@ -1189,12 +891,7 @@
                           "OnPartialResourcesAvailableAction": 0,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ActivitiesHolder",
-                            "ActivityFolder",
-                            "RuminantActivityBreed"
-                          ],
+                          "CurrentAncestorList": [],
                           "Name": "Breed",
                           "Children": [
                             {
@@ -1205,13 +902,7 @@
                               "OnPartialResourcesAvailableAction": 0,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ActivitiesHolder",
-                                "ActivityFolder",
-                                "RuminantActivityBreed",
-                                "RuminantActivityControlledMating"
-                              ],
+                              "CurrentAncestorList": [],
                               "Name": "ControlledMating",
                               "Children": [
                                 {
@@ -1220,14 +911,7 @@
                                   "MonthDue": 3,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ActivitiesHolder",
-                                    "ActivityFolder",
-                                    "RuminantActivityBreed",
-                                    "RuminantActivityControlledMating",
-                                    "ActivityTimerInterval"
-                                  ],
+                                  "CurrentAncestorList": [],
                                   "Name": "Controlled mating",
                                   "Children": [],
                                   "Enabled": true,
@@ -1252,9 +936,6 @@
                           "Notes": null,
                           "SelectedTab": null,
                           "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ActivitiesHolder",
-                            "ActivityFolder",
                             "RuminantActivityWean"
                           ],
                           "Name": "Wean",
@@ -1266,9 +947,6 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ActivitiesHolder",
-                                "ActivityFolder",
                                 "RuminantActivityWean",
                                 "ActivityTimerInterval"
                               ],
@@ -1283,9 +961,6 @@
                               "Notes": null,
                               "SelectedTab": null,
                               "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ActivitiesHolder",
-                                "ActivityFolder",
                                 "RuminantActivityWean",
                                 "RuminantGroup"
                               ],
@@ -1338,12 +1013,7 @@
                           "OnPartialResourcesAvailableAction": 0,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ActivitiesHolder",
-                            "ActivityFolder",
-                            "RuminantActivityManage"
-                          ],
+                          "CurrentAncestorList": [],
                           "Name": "Manage numbers",
                           "Children": [
                             {
@@ -1352,13 +1022,7 @@
                               "MonthDue": 8,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ActivitiesHolder",
-                                "ActivityFolder",
-                                "RuminantActivityManage",
-                                "ActivityTimerInterval"
-                              ],
+                              "CurrentAncestorList": [],
                               "Name": "every August",
                               "Children": [],
                               "Enabled": true,
@@ -1370,13 +1034,7 @@
                               "Proportion": 1.0,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ActivitiesHolder",
-                                "ActivityFolder",
-                                "RuminantActivityManage",
-                                "SpecifyRuminant"
-                              ],
+                              "CurrentAncestorList": [],
                               "Name": "Breeders",
                               "Children": [
                                 {
@@ -1390,14 +1048,7 @@
                                   "Sire": false,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ActivitiesHolder",
-                                    "ActivityFolder",
-                                    "RuminantActivityManage",
-                                    "SpecifyRuminant",
-                                    "RuminantTypeCohort"
-                                  ],
+                                  "CurrentAncestorList": [],
                                   "Name": "24mth breeder",
                                   "Children": [],
                                   "Enabled": true,
@@ -1413,13 +1064,7 @@
                               "Proportion": 1.0,
                               "Notes": null,
                               "SelectedTab": null,
-                              "CurrentAncestorList": [
-                                "ZoneCLEM",
-                                "ActivitiesHolder",
-                                "ActivityFolder",
-                                "RuminantActivityManage",
-                                "SpecifyRuminant"
-                              ],
+                              "CurrentAncestorList": [],
                               "Name": "Sires",
                               "Children": [
                                 {
@@ -1433,14 +1078,7 @@
                                   "Sire": true,
                                   "Notes": null,
                                   "SelectedTab": null,
-                                  "CurrentAncestorList": [
-                                    "ZoneCLEM",
-                                    "ActivitiesHolder",
-                                    "ActivityFolder",
-                                    "RuminantActivityManage",
-                                    "SpecifyRuminant",
-                                    "RuminantTypeCohort"
-                                  ],
+                                  "CurrentAncestorList": [],
                                   "Name": "36mth sire",
                                   "Children": [],
                                   "Enabled": true,
@@ -1461,12 +1099,7 @@
                           "OnPartialResourcesAvailableAction": 0,
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ActivitiesHolder",
-                            "ActivityFolder",
-                            "RuminantActivityBuySell"
-                          ],
+                          "CurrentAncestorList": [],
                           "Name": "Buy and sell",
                           "Children": [],
                           "Enabled": true,
@@ -1482,11 +1115,7 @@
                       "HerdFilters": null,
                       "Notes": null,
                       "SelectedTab": null,
-                      "CurrentAncestorList": [
-                        "ZoneCLEM",
-                        "ActivitiesHolder",
-                        "SummariseRuminantHerd"
-                      ],
+                      "CurrentAncestorList": [],
                       "Name": "SummariseHerd",
                       "Children": [],
                       "Enabled": true,
@@ -1497,11 +1126,7 @@
                       "ReportAtStart": true,
                       "Notes": null,
                       "SelectedTab": "Summary",
-                      "CurrentAncestorList": [
-                        "ZoneCLEM",
-                        "ActivitiesHolder",
-                        "ReportRuminantHerd"
-                      ],
+                      "CurrentAncestorList": [],
                       "Name": "ReportHerd",
                       "Children": [
                         {
@@ -1509,12 +1134,7 @@
                           "Identifier": "",
                           "Notes": null,
                           "SelectedTab": null,
-                          "CurrentAncestorList": [
-                            "ZoneCLEM",
-                            "ActivitiesHolder",
-                            "ReportRuminantHerd",
-                            "RuminantGroup"
-                          ],
+                          "CurrentAncestorList": [],
                           "Name": "RuminantGroup",
                           "Children": [],
                           "Enabled": true,

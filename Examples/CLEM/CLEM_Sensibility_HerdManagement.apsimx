@@ -1005,6 +1005,13 @@
                       "ProportionKept": 1.0,
                       "PlantedMultiplier": 1.0,
                       "TreesPerHa": 0.0,
+                      "Harvests": {
+                        "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
+                        "Item1": null,
+                        "Item2": null,
+                        "Item3": null,
+                        "Item4": null
+                      },
                       "TransactionCategory": "Crop.[Product]",
                       "OnPartialResourcesAvailableAction": 0,
                       "Notes": null,
@@ -2415,6 +2422,13 @@
                       "ProportionKept": 1.0,
                       "PlantedMultiplier": 1.0,
                       "TreesPerHa": 0.0,
+                      "Harvests": {
+                        "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
+                        "Item1": null,
+                        "Item2": null,
+                        "Item3": null,
+                        "Item4": null
+                      },
                       "TransactionCategory": "Crop.[Product]",
                       "OnPartialResourcesAvailableAction": 0,
                       "Notes": null,
@@ -3788,6 +3802,13 @@
                       "ProportionKept": 1.0,
                       "PlantedMultiplier": 1.0,
                       "TreesPerHa": 0.0,
+                      "Harvests": {
+                        "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
+                        "Item1": null,
+                        "Item2": null,
+                        "Item3": null,
+                        "Item4": null
+                      },
                       "TransactionCategory": "Crop.[Product]",
                       "OnPartialResourcesAvailableAction": 0,
                       "Notes": null,
@@ -5175,6 +5196,13 @@
                       "ProportionKept": 1.0,
                       "PlantedMultiplier": 1.0,
                       "TreesPerHa": 0.0,
+                      "Harvests": {
+                        "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
+                        "Item1": null,
+                        "Item2": null,
+                        "Item3": null,
+                        "Item4": null
+                      },
                       "TransactionCategory": "Crop.[Product]",
                       "OnPartialResourcesAvailableAction": 0,
                       "Notes": null,
@@ -6630,6 +6658,13 @@
                       "ProportionKept": 1.0,
                       "PlantedMultiplier": 1.0,
                       "TreesPerHa": 0.0,
+                      "Harvests": {
+                        "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
+                        "Item1": null,
+                        "Item2": null,
+                        "Item3": null,
+                        "Item4": null
+                      },
                       "TransactionCategory": "Crop.[Product]",
                       "OnPartialResourcesAvailableAction": 0,
                       "Notes": null,
@@ -8133,6 +8168,13 @@
                       "ProportionKept": 1.0,
                       "PlantedMultiplier": 1.0,
                       "TreesPerHa": 0.0,
+                      "Harvests": {
+                        "$type": "System.ValueTuple`4[[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models],[Models.CLEM.CropDataType, Models]], System.Private.CoreLib",
+                        "Item1": null,
+                        "Item2": null,
+                        "Item3": null,
+                        "Item4": null
+                      },
                       "TransactionCategory": "Crop.[Product]",
                       "OnPartialResourcesAvailableAction": 0,
                       "Notes": null,
@@ -8380,7 +8422,7 @@
                         },
                         {
                           "$type": "Models.CLEM.Groupings.RuminantGroup, Models",
-                          "Identifier": "",
+                          "Identifier": "RemoveBreedersFromHerd",
                           "Notes": null,
                           "SelectedTab": null,
                           "CurrentAncestorList": [

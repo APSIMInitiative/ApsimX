@@ -377,6 +377,10 @@ namespace Models.WaterModel
         [JsonIgnore]
         public double LeachUrea { get { if (FlowUrea == null) return 0; else return FlowUrea.Last(); } }
 
+        /// <summary>Amount of Cl leaching from the deepest soil layer (kg /ha). Note that SoilWater does not currently handle chlorid at all!</summary>
+        [JsonIgnore]
+        public double LeachCl => 0.0; 
+
         /// <summary>Amount of N leaching as NO3 from each soil layer (kg /ha)</summary>
         [JsonIgnore]
         public double[] FlowNO3 { get; private set; }

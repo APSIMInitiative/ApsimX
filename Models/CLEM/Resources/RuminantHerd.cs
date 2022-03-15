@@ -271,17 +271,43 @@ namespace Models.CLEM.Resources
         public void RemoveRuminant(Ruminant ind, IModel model)
         {
             // Remove mother ID from any suckling offspring
-            if (ind.Sex == Sex.Female)
+            if (ind is RuminantFemale)
             {
-                foreach (var offspring in (ind as RuminantFemale).SucklingOffspringList)
+                string reason;
+                switch (ind.SaleFlag)
+                {
+                    case HerdChangeReason.Consumed:
+                    case HerdChangeReason.DiedUnderweight:
+                    case HerdChangeReason.DiedMortality:
+                        reason = "MotherDied";
+                        break;
+                    case HerdChangeReason.MarkedSale:
+                    case HerdChangeReason.TradeSale:
+                    case HerdChangeReason.ExcessBreederSale:
+                    case HerdChangeReason.MaxAgeSale:
+                        reason = "MotherSold";
+                        break;
+                    default:
+                        reason = "Unknown";
+                        break;
+                }
+
+                while ((ind as RuminantFemale).SucklingOffspringList.Any())
+                {
+                    Ruminant offspring = (ind as RuminantFemale).SucklingOffspringList.FirstOrDefault();
+                    offspring.Wean(true, reason);
                     offspring.Mother = null;
+                }
             }
 
             // if sold and unweaned set mothers weaning count + 1 as effectively weaned in process and not death
             if (!ind.Weaned & !ind.SaleFlag.ToString().Contains("Died"))
             {
                 if (ind.Mother != null)
+                {
+                    ind.Mother.SucklingOffspringList.Remove(ind);
                     ind.Mother.NumberOfWeaned++;
+                }
             }
 
             Herd.Remove(ind);
@@ -456,7 +482,7 @@ namespace Models.CLEM.Resources
                                                      Count = catind.Count(),
                                                      TotalAdultEquivalent = catind.Sum(a => a.AdultEquivalent),
                                                      TotalWeight = catind.Sum(a => a.Weight),
-                                                     TotalPrice = catind.Sum(a => a.BreedParams.ValueofIndividual(a, priceStyle, warningMessage)?.CalculateValue(a))
+                                                     TotalPrice = catind.Sum(a => a.BreedParams.GetPriceGroupOfIndividual(a, priceStyle, warningMessage)?.CalculateValue(a))
                                                  }
                                     };
             return groupedInd;

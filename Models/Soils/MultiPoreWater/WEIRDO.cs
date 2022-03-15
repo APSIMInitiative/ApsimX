@@ -128,6 +128,11 @@ namespace Models.Soils
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double LeachUrea { get; set; }
+
+        /// <summary>Amount of Cl leaching from the deepest soil layer (kg /ha)</summary>
+        [JsonIgnore]
+        public double LeachCl { get; set; }
+
         ///<summary> Who knows</summary>
         [JsonIgnore]
         public double[] LL15mm { get; set; }
