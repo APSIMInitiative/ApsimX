@@ -498,35 +498,17 @@
         /// </summary>
         private void WriteUpgradeRegistration(string version)
         {
-            string url = "https://apsimdev.apsim.info/APSIM.Registration.Service/Registration.svc/AddRegistration";
-            url += "?firstName=" + firstNameBox.Text;
-
-            url = AddToURL(url, "lastName", lastNameBox.Text);
-            url = AddToURL(url, "organisation", organisationBox.Text);
-            url = AddToURL(url, "country", countryBox.GetActiveText());
-            url = AddToURL(url, "email", emailBox.Text);
-            url = AddToURL(url, "product", "APSIM Next Generation");
-            url = AddToURL(url, "version", version);
-            url = AddToURL(url, "platform", GetPlatform());
-            url = AddToURL(url, "type", "Upgrade");
+            string url = $"https://registration.apsim.info/api/upgrade?email={emailBox.Text}&version={version}&platform={GetPlatform()}";
 
             try
             {
-                WebUtilities.CallRESTService<object>(url);
+                WebUtilities.PostRestService<object>(url);
             }
             catch
             {
                 // Retry once.
                 WebUtilities.CallRESTService<object>(url);
             }
-        }
-
-        /// <summary>Add a key / value pair to url if not empty</summary>
-        private string AddToURL(string url, string key, string value)
-        {
-            if (value == null || value == string.Empty)
-                value = "-";
-            return url + "&" + key + "=" + value;
         }
 
         /// <summary>
@@ -540,7 +522,7 @@
                 return "Mac";
             else if (ProcessUtilities.CurrentOS.IsLinux)
                 return "Linux";
-            return "?";
+            throw new PlatformNotSupportedException($"No upgrade is available for this operating system.");
         }
 
         /// <summary>
