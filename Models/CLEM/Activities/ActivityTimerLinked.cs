@@ -20,10 +20,19 @@ namespace Models.CLEM.Activities
     [PresenterName("UserInterface.Presenters.PropertyPresenter")]
     [Description("This timer provides a link to another existing timer")]
     [HelpUri(@"Content/Features/Timers/Linked.htm")]
+    [ValidParent(ParentType = typeof(CLEMActivityBase))]
+    [ValidParent(ParentType = typeof(ActivityFolder))]
+    [ValidParent(ParentType = typeof(ActivitiesHolder))]
+    [ValidParent(ParentType = typeof(ResourcePricing))]
+    [ValidParent(ParentType = typeof(ReportResourceBalances))]
+    [ValidParent(ParentType = typeof(SummariseRuminantHerd))]
+    [ValidParent(ParentType = typeof(ReportRuminantHerd))]
     [Version(1, 0, 1, "")]
     public class ActivityTimerLinked : CLEMModel, IActivityTimer, IActivityPerformedNotifier, IValidatableObject
     {
+        [NonSerialized]
         private IEnumerable<IActivityTimer> timersAvailable;
+        [NonSerialized]
         private IActivityTimer linkedTimer;
 
         /// <summary>
@@ -56,7 +65,7 @@ namespace Models.CLEM.Activities
         private List<string> GetAllTimerNames()
         {
             GetAllTimersAvailable();
-            return timersAvailable.Cast<Model>().Select(a => $"{Parent.Name}.{Name}").ToList();
+            return timersAvailable.Cast<Model>().Select(a => $"{a.Parent.Name}.{a.Name}").ToList();
         }
 
         /// <inheritdoc/>
@@ -75,9 +84,9 @@ namespace Models.CLEM.Activities
         private void OnCLEMInitialiseActivity(object sender, EventArgs e)
         {
             GetAllTimersAvailable();
-            linkedTimer = timersAvailable.Where(a => $"{(a as Model).Parent.Name}.{(a as Model).Name}" == ExistingTimerName).FirstOrDefault();
+            linkedTimer = timersAvailable.Cast<Model>().Where(a => $"{a.Parent.Name}.{a.Name}" == ExistingTimerName).FirstOrDefault() as IActivityTimer;
 
-            throw new NotImplementedException("This timer is in developement and not yet available");
+            //throw new NotImplementedException("This timer is in developement and not yet available");
         }
 
         /// <inheritdoc/>
