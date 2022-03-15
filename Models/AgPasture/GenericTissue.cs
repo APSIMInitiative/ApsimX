@@ -109,7 +109,7 @@
         {
             dryMatter.Wt = dmAmount;
             dryMatter.N = nAmount;
-            CalculateDigestibility();
+            calculateDigestibility();
         }
 
         /// <summary>Adds an amount of biomass to this tissue.</summary>
@@ -120,7 +120,7 @@
             dryMatter.Wt += dmAmount;
             dryMatter.N += nAmount;
 
-            CalculateDigestibility();
+            calculateDigestibility();
         }
 
         /// <summary>Removes a fraction of the biomass from this tissue.</summary>
@@ -148,7 +148,7 @@
                 surfaceOrganicMatter.Add(dmToSoil, nToSoil, 0.0, species.Name, species.Name);
             }
 
-            CalculateDigestibility();
+            calculateDigestibility();
         }
 
         /// <summary>Updates the tissue state, make changes in DM and N effective.</summary>
@@ -156,7 +156,7 @@
         {
             dryMatter.Wt += DMTransferedIn - DMTransferedOut;
             dryMatter.N += NTransferedIn - (NTransferedOut + NRemobilised);
-            CalculateDigestibility();
+            calculateDigestibility();
         }
 
         /// <summary>Clear the daily flows of DM and N.</summary>
@@ -177,7 +177,7 @@
 
         /// <summary>Calculate the values for calculated states.</summary>
         /// <remarks>Digestibility of sugars is assumed to be 100%.</remarks>
-        private void CalculateDigestibility()
+        private void calculateDigestibility()
         {
             Digestibility = 0.0;
             if (DM.Wt > 0.0)

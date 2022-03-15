@@ -237,7 +237,7 @@ namespace Models.AgPasture
                 mySummary.WriteMessage(this, " Cannot sow the pasture species \"" + Name + "\", as it is already growing", MessageType.Warning);
             else
             {
-                RefreshVariables();
+                ClearDailyTransferredAmounts();
                 isAlive = true;
                 phenologicStage = 0;
                 mySummary.WriteMessage(this, " The pasture species \"" + Name + "\" has been sown today", MessageType.Diagnostic);
@@ -270,7 +270,8 @@ namespace Models.AgPasture
             }
 
             // zero all transfer variables
-            RefreshVariables();
+            ClearDailyTransferredAmounts();
+
             // reset state variables
             Leaf.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
             Stem.SetBiomassState(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
@@ -2582,15 +2583,11 @@ namespace Models.AgPasture
         [EventSubscribe("DoDailyInitialisation")]
         private void OnDoDailyInitialisation(object sender, EventArgs e)
         {
-            // 1. Zero out several variables
-            RefreshVariables();
-            Leaf.OnDoDailyInitialisation();
-            Stem.OnDoDailyInitialisation();
-            Stolon.OnDoDailyInitialisation();
+            ClearDailyTransferredAmounts();
         }
 
         /// <summary>Reset the transfer amounts in the plant and all organs.</summary>
-        internal void RefreshVariables()
+        internal void ClearDailyTransferredAmounts()
         {
             // reset variables for whole plant
             DefoliatedDigestibility = 0.0;
