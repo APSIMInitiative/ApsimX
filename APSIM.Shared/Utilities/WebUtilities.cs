@@ -135,7 +135,7 @@
                     string st = loResponseStream.ReadToEnd();
                     if (typeof(T).Name == "Object")
                         return default(T);
-    
+
                     JsonSerializerOptions options = new JsonSerializerOptions()
                     {
                         PropertyNameCaseInsensitive = true
