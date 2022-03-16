@@ -26,6 +26,7 @@
     using APSIM.Interop.Documentation;
     using System.Threading.Tasks;
     using System.Threading;
+    using APSIM.Server.Sensibility;
 
     /// <summary>
     /// This class contains methods for all context menu items that the ExplorerView exposes to the user.
@@ -881,6 +882,27 @@
         {
             IModel model = explorerPresenter.CurrentNode as IModel;
             return model.ReadOnly;
+        }
+
+        /// <summary>
+        /// Ensure that the selected simulation will reset its state correctly
+        /// when used by an apsim server.
+        /// </summary>
+        /// <param name="sender">Sender object.</param>
+        /// <param name="args">Event arguments.</param>
+        [ContextMenu(MenuName = "Verify Server Compatibility", FollowsSeparator = true)]
+        public void CheckServerCompatibility(object sender, EventArgs args)
+        {
+            try
+            {
+                SimulationChecker checker = new SimulationChecker(explorerPresenter.CurrentNode, false);
+                RunCommand command = new RunCommand("State validation", checker, explorerPresenter);
+                command.Do();
+            }
+            catch (Exception error)
+            {
+                explorerPresenter.MainPresenter.ShowError(error);
+            }
         }
 
         /// <summary>
