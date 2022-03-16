@@ -911,7 +911,6 @@
         /// <param name="sender">Sender of the event</param>
         /// <param name="e">Event arguments</param>
         [ContextMenu(MenuName = "Create documentation",
-                     AppliesTo = new Type[] { typeof(Simulations) },
                      FollowsSeparator = true)]
         public void CreateFileDocumentation(object sender, EventArgs e)
         {
@@ -920,7 +919,8 @@
                 explorerPresenter.MainPresenter.ShowMessage("Creating documentation...", Simulation.MessageType.Information);
                 explorerPresenter.MainPresenter.ShowWaitCursor(true);
 
-                IModel modelToDocument = explorerPresenter.CurrentNode;
+                IModel modelToDocument = explorerPresenter.CurrentNode.Clone();
+                explorerPresenter.ApsimXFile.Links.Resolve(modelToDocument, true, true, false);
 
                 PdfWriter pdf = new PdfWriter();
                 string fileNameWritten = Path.ChangeExtension(explorerPresenter.ApsimXFile.FileName, ".pdf");
