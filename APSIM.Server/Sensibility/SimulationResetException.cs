@@ -1,5 +1,6 @@
 using System;
 using System.Text;
+using Models.Core;
 
 namespace APSIM.Server.Sensibility
 {
@@ -15,7 +16,7 @@ namespace APSIM.Server.Sensibility
         /// </summary>
         private readonly string newJson;
 
-        public SimulationResetException(string simulationName, string oldJson, string newJson) : base($"Simulation {simulationName} failed to reset its state")
+        public SimulationResetException(string simulationName, IModel model, string oldJson, string newJson) : base($"Model {model.Name} in simulation {simulationName} failed to reset its state")
         {
             this.oldJson = oldJson;
             this.newJson = newJson;
@@ -25,9 +26,9 @@ namespace APSIM.Server.Sensibility
         {
             StringBuilder message = new StringBuilder();
             message.AppendLine(Message);
-            message.AppendLine("Simulation before being run:");
+            message.AppendLine("Before being run:");
             message.AppendLine(oldJson);
-            message.AppendLine("Simulation after being run once:");
+            message.AppendLine("After being run once:");
             message.AppendLine(newJson);
             message.AppendLine(StackTrace);
 
