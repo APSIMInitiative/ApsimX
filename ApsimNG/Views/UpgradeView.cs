@@ -19,11 +19,14 @@
         public class Upgrade
         {
             public DateTime ReleaseDate { get; set; }
-            public int IssueNumber { get; set; }
-            public string IssueTitle { get; set; }
-            public string IssueURL { get; set; }
-            public string ReleaseURL { get; set; }
-            public uint RevisionNumber { get; set; }
+            public uint Issue { get; set; }
+            public string Title { get; set; }
+            public string DownloadLinkDebian { get; set; }
+            public string DownloadLinkWindows { get; set; }
+            public string DownloadLinkMacOS { get; set; }
+            public string InfoUrl { get; set; }
+            public string Version { get; set; }
+            public uint Revision { get; set; }
         }
 
         /// <summary>
@@ -220,14 +223,17 @@
         {
             Version version = Assembly.GetExecutingAssembly().GetName().Version;
             // version = new Version(0, 0, 0, 652);  
+            int minRevision;
             if (oldVersions.Active && allUpgrades.Length < 1)
-                allUpgrades = WebUtilities.CallRESTService<Upgrade[]>("https://apsimdev.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=-1");
+                minRevision = -1;
             else if (!oldVersions.Active && upgrades.Length < 1)
-                upgrades = WebUtilities.CallRESTService<Upgrade[]>("https://apsimdev.apsim.info/APSIM.Builds.Service/Builds.svc/GetUpgradesSinceIssue?issueID=" + version.Revision);
+                minRevision = version.Revision;
+
+            upgrades = WebUtilities.PostRestService<Upgrade[]>($"https://builds.apsim.info/api/nextgen/list?min={version.Revision}");
             foreach (Upgrade upgrade in oldVersions.Active ? allUpgrades : upgrades)
             {
-                string versionNumber = $"{upgrade.ReleaseDate:yyyy.MM}.{upgrade.RevisionNumber}";
-                listmodel.AppendValues(versionNumber, upgrade.IssueTitle, "");
+                string versionNumber = $"{upgrade.ReleaseDate:yyyy.MM}.{upgrade.Revision}";
+                listmodel.AppendValues(versionNumber, upgrade.Title, "");
             }
             if (listmodel.IterNChildren() > 0)
                 listview1.SetCursor(new TreePath("0"), null, false);
@@ -254,7 +260,7 @@
                 if (selIndex >= 0)
                 {
                     Upgrade[] upgradeList = oldVersions.Active ? allUpgrades : upgrades;
-                    Process.Start(upgradeList[selIndex].IssueURL);
+                    ProcessUtilities.ProcessStart(upgradeList[selIndex].InfoUrl);
                 }
             }
             catch (Exception err)
@@ -299,7 +305,7 @@
 
                     Upgrade[] upgradeList = oldVersions.Active ? allUpgrades : upgrades;
                     Upgrade upgrade = upgradeList[selIndex];
-                    versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.IssueNumber;
+                    versionNumber = upgrade.ReleaseDate.ToString("yyyy.MM.dd.") + upgrade.Issue;
 
                     if ((Gtk.ResponseType)ViewBase.MasterView.ShowMsgDialog("Are you sure you want to upgrade to version " + versionNumber + "?",
                                             "Are you sure?", MessageType.Question, ButtonsType.YesNo, window1) == Gtk.ResponseType.Yes)
@@ -323,20 +329,18 @@
 
                         string sourceURL;
 
-                        upgrade.ReleaseURL = upgrade.ReleaseURL.Replace("ApsimSetup", "apsim-");
-
                         if (ProcessUtilities.CurrentOS.IsMac)
                         {
-                            sourceURL = Path.ChangeExtension(upgrade.ReleaseURL, "dmg");
+                            sourceURL = upgrade.DownloadLinkMacOS;
                             tempSetupFileName = Path.ChangeExtension(tempSetupFileName, "dmg");
                         }
                         else if (ProcessUtilities.CurrentOS.IsUnix)
                         {
-                            sourceURL = System.IO.Path.ChangeExtension(upgrade.ReleaseURL, "deb");
+                            sourceURL = upgrade.DownloadLinkDebian;
                             tempSetupFileName = System.IO.Path.ChangeExtension(tempSetupFileName, "deb");
                         }
                         else
-                            sourceURL = upgrade.ReleaseURL;
+                            sourceURL = upgrade.DownloadLinkWindows;
 
                         if (File.Exists(tempSetupFileName))
                             File.Delete(tempSetupFileName);
@@ -494,35 +498,17 @@
         /// </summary>
         private void WriteUpgradeRegistration(string version)
         {
-            string url = "https://apsimdev.apsim.info/APSIM.Registration.Service/Registration.svc/AddRegistration";
-            url += "?firstName=" + firstNameBox.Text;
-
-            url = AddToURL(url, "lastName", lastNameBox.Text);
-            url = AddToURL(url, "organisation", organisationBox.Text);
-            url = AddToURL(url, "country", countryBox.GetActiveText());
-            url = AddToURL(url, "email", emailBox.Text);
-            url = AddToURL(url, "product", "APSIM Next Generation");
-            url = AddToURL(url, "version", version);
-            url = AddToURL(url, "platform", GetPlatform());
-            url = AddToURL(url, "type", "Upgrade");
+            string url = $"https://registration.apsim.info/api/upgrade?email={emailBox.Text}&version={version}&platform={GetPlatform()}";
 
             try
             {
-                WebUtilities.CallRESTService<object>(url);
+                WebUtilities.PostRestService<object>(url);
             }
             catch
             {
                 // Retry once.
                 WebUtilities.CallRESTService<object>(url);
             }
-        }
-
-        /// <summary>Add a key / value pair to url if not empty</summary>
-        private string AddToURL(string url, string key, string value)
-        {
-            if (value == null || value == string.Empty)
-                value = "-";
-            return url + "&" + key + "=" + value;
         }
 
         /// <summary>
@@ -536,7 +522,7 @@
                 return "Mac";
             else if (ProcessUtilities.CurrentOS.IsLinux)
                 return "Linux";
-            return "?";
+            throw new PlatformNotSupportedException($"No upgrade is available for this operating system.");
         }
 
         /// <summary>
