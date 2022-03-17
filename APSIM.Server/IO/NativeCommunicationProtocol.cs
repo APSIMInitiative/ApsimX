@@ -32,10 +32,14 @@ namespace APSIM.Server.IO
             DoubleArray = 6,
         }
 
+        private const int protocolVersionMajor = 1; // Increment every time there is a breaking protocol change
+        private const int protocolVersionMinor = 0; // Increment every time there is a non-breaking protocol change, set to 0 when the major version changes
+
         private const string commandRun = "RUN";
         private const string commandRead = "READ";
         private const string ack = "ACK";
         private const string fin = "FIN";
+        private const string commandVersion = "VERSION";
         private Stream connection;
 
         /// <summary>
@@ -66,6 +70,13 @@ namespace APSIM.Server.IO
                 {
                     SendMessage(ack);
                     return ReadReadCommand();
+                }
+                else if (input == commandVersion)
+                {
+                    SendMessage(ack);
+                    SendInt(protocolVersionMajor);
+                    SendInt(protocolVersionMinor);
+                    SendMessage(fin);
                 }
                 else
                 {
@@ -202,120 +213,54 @@ namespace APSIM.Server.IO
                 throw new Exception($"Expected {expected} but received {actual}");
         }
 
+        private void SendInt(int value)
+        {
+            PipeUtilities.SendIntToPipe(connection, value);
+        }
+
         private void SendMessage(string message)
         {
-            byte[] buffer = Encoding.UTF8.GetBytes(message);
-            PipeUtilities.SendToPipe(connection, buffer);
+            SendString(message);
+        }
+
+        public void SendString(string s)
+        {
+            PipeUtilities.SendStringToPipe(connection, s);
         }
 
         public int ReadInt()
         {
-            byte[] buffer = PipeUtilities.GetBytesFromPipe(connection);
-            return BitConverter.ToInt32(buffer);
+            return PipeUtilities.GetIntFromPipe(connection);
         }
 
         public double ReadDouble()
         {
-            byte[] buffer = PipeUtilities.GetBytesFromPipe(connection);
-            return BitConverter.ToDouble(buffer);
+            return PipeUtilities.GetDoubleFromPipe(connection);
         }
 
         public double[] ReadDoubleArray()
         {
-            byte[] buffer = PipeUtilities.GetBytesFromPipe(connection);
-            const int bytesPerNumber = sizeof(double) / sizeof(byte);
-            int length = buffer.Length / bytesPerNumber;
-            double[] result = new double[length];
-            for (int i = 0; i < length; i++)
-                result[i] = BitConverter.ToDouble(new ArraySegment<byte>(buffer, i * bytesPerNumber, bytesPerNumber));
-            return result;
+            return PipeUtilities.GetDoubleArrayFromPipe(connection);
         }
 
         public object ReadBool()
         {
-            byte[] buffer = PipeUtilities.GetBytesFromPipe(connection);
-            return BitConverter.ToBoolean(buffer);
+            return PipeUtilities.GetBoolFromPipe(connection);
         }
 
         public DateTime ReadDate()
         {
-            return IntToDate(ReadInt());
+            return PipeUtilities.GetDateFromPipe(connection);
         }
 
         public string ReadString()
         {
-            byte[] buffer = PipeUtilities.GetBytesFromPipe(connection);
-            if (buffer == null)
-                return null;
-            return Encoding.UTF8.GetString(buffer);
+            return PipeUtilities.GetStringFromPipe(connection);
         }
 
         private void SendArray(Array data)
         {
-            PipeUtilities.SendToPipe(connection, GetBytes(data).ToArray());
-        }
-
-        private IEnumerable<byte> GetBytes(Array data)
-        {
-            if (data == null || data.Length < 1)
-                return new byte[0];
-            Type arrayType = data.GetValue(0).GetType();
-            if (arrayType == typeof(int))
-                return data.Cast<int>().SelectMany(IntBytes);
-            else if (arrayType == typeof(double))
-                return data.Cast<double>().SelectMany(DoubleBytes);
-            else if (arrayType == typeof(bool))
-                return data.Cast<bool>().SelectMany(BoolBytes);
-            else if (arrayType == typeof(DateTime)) {
-                return data.Cast<DateTime>().SelectMany(DateBytes);
-            } else if (arrayType == typeof(string))
-                return data.Cast<string>().SelectMany(StringBytesWithLength);
-            else
-                throw new NotImplementedException();
-        }
-
-        private IEnumerable<byte> IntBytes(int i)
-        {
-            return BitConverter.GetBytes(i);
-        }
-
-        private IEnumerable<byte> DoubleBytes(double d)
-        {
-            return BitConverter.GetBytes(d);
-        }
-
-        private IEnumerable<byte> BoolBytes(bool b)
-        {
-            return BitConverter.GetBytes(b);
-        }
-
-        private IEnumerable<byte> DateBytes(DateTime date)
-        {
-            return IntBytes(DateToInt(date));
-        }
-
-        private IEnumerable<byte> StringBytes(string s)
-        {
-            return Encoding.UTF8.GetBytes(s);
-        }
-
-        private IEnumerable<byte> StringBytesWithLength(string s)
-        {
-            IEnumerable<byte> data = StringBytes(s);
-            return IntBytes(data.Count()).Concat(data);
-        }
-
-        // Over the wire we represent dates as an int.
-        // This assumes that we never care about the time of day, and that we won't have issues with timezone conversion changing the date.
-        // We simply convert the DateTime to an int, e.g. 20220307 represents the seventh of March, 2022.
-        private int DateToInt(DateTime date)
-        {
-            return date.Year * 10000 + date.Month * 100 + date.Day;
-        }
-
-        private DateTime IntToDate(int d)
-        {
-            return new DateTime(d / 10000, (d % 10000) / 100, d % 100);
+            PipeUtilities.SendArrayToPipe(connection, data);
         }
 
         public void SendCommand(ICommand command)
