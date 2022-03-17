@@ -226,6 +226,7 @@ namespace Models.PMF.Organs
                     RightDist = plant.SowingData.RowSpacing * 0.5;
                 }
             }
+            root.RootShape.CalcRootProportionInLayers(this);
         }
 
         /// <summary>Clears this instance.</summary>

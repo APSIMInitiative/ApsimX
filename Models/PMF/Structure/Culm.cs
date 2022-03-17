@@ -82,6 +82,13 @@ namespace Models.PMF.Struct
 		public void AddNewLeaf(double dltLeaf)
         {
 			dltLeafNo = dltLeaf;
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		public void UpdateVars()
+		{
 			CurrentLeafNo += dltLeafNo;
 		}
 
