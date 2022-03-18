@@ -2606,7 +2606,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[SWIM3_SetLowerBC].Script.LowerBCType=gradient",
-                        "[SWIM3].MaxWaterIncrement=1"
+                        "[SWIM3].MaxWaterIncrement=0.1"
                       ],
                       "Paths": null,
                       "Values": null,
