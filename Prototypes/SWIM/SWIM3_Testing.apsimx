@@ -1,6 +1,6 @@
 {
   "$type": "Models.Core.Simulations, Models",
-  "ExplorerWidth": 300,
+  "ExplorerWidth": 335,
   "Version": 148,
   "Name": "Simulations",
   "Children": [
@@ -6613,7 +6613,7 @@
                       "$type": "Models.Factorial.CompositeFactor, Models",
                       "Specifications": [
                         "[SetSurfaceBoundaryCondition].Script.SurfaceBCType = CurveNumber",
-                        "[Swim3].CN2Bare = 90"
+                        "[Swim3].CN2Bare = 50"
                       ],
                       "Paths": null,
                       "Values": null,
