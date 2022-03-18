@@ -232,7 +232,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "These parameters are overridden by cultivar parameter descriptions to capture the difference between individual cultivars in terms of their phenological development.  Responses shown here are only indicative.  See cultivar descriptions for more information.",
+                      "Text": "These parameters are aimed at capturing the delay in emergence seen in spring sowing trials. No data available to explain fully what is happening in the spring to cause the delay.",
                       "Name": "Memo",
                       "Children": [],
                       "Enabled": true,
@@ -276,7 +276,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "These parameters are overridden by cultivar parameter descriptions to capture the difference between individual cultivars in terms of their phenological development.  Responses shown here are only indicative.  See cultivar descriptions for more information.",
+                      "Text": " The base, optimal, and maximum temperatures from the original generic legume model ([robertson_simulation_2002]) were 7.5, 30, and 40C, respectively. The values were slightly adjusted to reflect the phenology recorded in Drs. Grant and Pasley's more recent trials.",
                       "Name": "Memo",
                       "Children": [],
                       "Enabled": true,
@@ -318,7 +318,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "These parameters are overridden by cultivar parameter descriptions to capture the difference between individual cultivars in terms of their phenological development.  Responses shown here are only indicative.  See cultivar descriptions for more information.",
+                      "Text": "These parameters were sources from a study using the king cultivar ([imrie1990time]).",
                       "Name": "Memo",
                       "Children": [],
                       "Enabled": true,
@@ -376,6 +376,14 @@
                       "Children": [],
                       "Enabled": true,
                       "ReadOnly": false
+                    },
+                    {
+                      "$type": "Models.Memo, Models",
+                      "Text": " The base, optimal, and maximum temperatures from the original generic legume model ([robertson_simulation_2002]) were 7.5, 30, and 40C, respectively. The values were slightly adjusted to reflect the phenology recorded in Drs. Grant and Pasley's more recent trials.",
+                      "Name": "Memo",
+                      "Children": [],
+                      "Enabled": true,
+                      "ReadOnly": false
                     }
                   ],
                   "Enabled": true,
@@ -405,7 +413,7 @@
                     },
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "These parameters are overridden by cultivar parameter descriptions to capture the difference between individual cultivars in terms of their phenological development.  Responses shown here are only indicative.  See cultivar descriptions for more information.",
+                      "Text": "These parameters were sources from a study using the king cultivar ([imrie1990time]).",
                       "Name": "Memo",
                       "Children": [],
                       "Enabled": true,
@@ -564,7 +572,7 @@
                   "Children": [
                     {
                       "$type": "Models.Memo, Models",
-                      "Text": "\r\nTime from sowing (minus 10 for emergence) to first flower (average TT from Kylie Wenham's Time of Sowing Trial at Gatton).",
+                      "Text": "\r\nTime from sowing (minus 100 for emergence) to first flower (average TT from Kylie Wenham's Time of Sowing Trial at Gatton). This value is adjusted for each cultivar (the dua",
                       "Name": "Memo",
                       "Children": [],
                       "Enabled": true,
