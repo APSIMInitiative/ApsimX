@@ -317,6 +317,7 @@ namespace Models.AgPasture
                             supplies.Add(organSupply);
                             zones.Add(zone.Zone);
                             waterSupply += MathUtilities.Sum(organSupply) * zone.Zone.Area;
+                            mySoilWaterAvailable = MathUtilities.Add(mySoilWaterAvailable, organSupply);
                         }
                     }
                 }
@@ -328,7 +329,9 @@ namespace Models.AgPasture
                 // 3. estimate fraction of water used up
                 double fractionUsed = 0.0;
                 if (waterSupply > Epsilon)
+                {
                     fractionUsed = Math.Min(1.0, waterDemand / waterSupply);
+                }
 
                 // 4. apply demand supply ratio to each zone and create a ZoneWaterAndN structure to return to caller.
                 List<ZoneWaterAndN> ZWNs = new List<ZoneWaterAndN>();
@@ -341,10 +344,13 @@ namespace Models.AgPasture
                     uptake.NH4N = new double[uptake.Water.Length];
                     ZWNs.Add(uptake);
                 }
+
                 return ZWNs;
             }
             else
+            {
                 return null;
+            }
         }
 
         /// <summary>Gets the potential plant N uptake for each layer (mm).</summary>
@@ -396,7 +402,6 @@ namespace Models.AgPasture
 
                 mySoilNH4Uptake = MathUtilities.Multiply_Value(mySoilNH4Available, fractionUsed);
                 mySoilNO3Uptake = MathUtilities.Multiply_Value(mySoilNO3Available, fractionUsed);
-                NitrogenUptake = MathUtilities.Add(mySoilNO3Uptake, mySoilNH4Uptake);
 
                 // reduce the PotentialUptakes that we pass to the soil arbitrator
                 foreach (ZoneWaterAndN UptakeDemands in zones)
@@ -1178,7 +1183,7 @@ namespace Models.AgPasture
         private double[] mySoilNO3Uptake;
 
         /// <summary>Amount of soil water taken up (mm).</summary>
-        public IReadOnlyList<double> NitrogenUptake { get; private set; }
+        public IReadOnlyList<double> NitrogenUptake  => MathUtilities.Add(mySoilNH4Uptake, mySoilNO3Uptake);
 
         ////- Water uptake process >>>  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
@@ -3227,24 +3232,6 @@ namespace Models.AgPasture
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
         #region - Water uptake processes  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
-
-        /// <summary>Computes the potential plant water uptake.</summary>
-        internal void EvaluateSoilWaterUptake()
-        {
-            // 1. get the amount of soil water available
-            double supply = mySoilWaterAvailable.Sum();
-
-            // 2. get the amount of soil water demanded
-            double demand = myWaterDemand;
-
-            // 3. estimate fraction of water used up
-            double fractionUsed = 0.0;
-            if (supply > Epsilon)
-                fractionUsed = Math.Min(1.0, demand / supply);
-
-            // 4. get the amount of water actually taken up
-            mySoilWaterUptake = MathUtilities.Multiply_Value(mySoilWaterAvailable, fractionUsed);
-        }
 
         #endregion  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -
 
