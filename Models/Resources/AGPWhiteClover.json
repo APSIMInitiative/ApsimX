@@ -79,10 +79,10 @@
       "Children": [
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-          "NConcOptimum": 0.045,
-          "NConcMinimum": 0.02,
-          "NConcMaximum": 0.055,
           "Name": "Leaf",
+          "NConcOptimum": 0.050,
+          "NConcMinimum": 0.025,
+          "NConcMaximum": 0.060,
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
@@ -129,10 +129,10 @@
         },
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-          "NConcOptimum": 0.0225,
-          "NConcMinimum": 0.01,
-          "NConcMaximum": 0.0275,
           "Name": "Stem",
+          "NConcOptimum": 0.025,
+          "NConcMinimum": 0.010,
+          "NConcMaximum": 0.030,
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
@@ -179,11 +179,11 @@
         },
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-          "FractionStanding": 0.3,
-          "NConcOptimum": 0.0225,
-          "NConcMinimum": 0.01,
-          "NConcMaximum": 0.0275,
           "Name": "Stolon",
+          "NConcOptimum": 0.025,
+          "NConcMinimum": 0.010,
+          "NConcMaximum": 0.030,
+          "FractionStanding": 0.3,
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
@@ -230,8 +230,9 @@
         },
         {
           "$type": "Models.AgPasture.PastureBelowGroundOrgan, Models",
+          "Name": "Root",
           "NConcOptimum": 0.0225,
-          "NConcMinimum": 0.01,
+          "NConcMinimum": 0.0125,
           "NConcMaximum": 0.0275,
           "RootDistributionDepthParam": 70.0,
           "RootDistributionExponent": 2.5,
@@ -245,7 +246,6 @@
           "MaximumNUptake": 10.0,
           "ReferenceRLD": 5.0,
           "ReferenceKSuptake": 15.0,
-          "Name": "Root",
           "Children": [
             {
               "$type": "Models.AgPasture.RootTissue, Models",

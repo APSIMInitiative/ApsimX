@@ -330,8 +330,6 @@ namespace Models.AgPasture
                 double fractionUsed = 0.0;
                 if (waterSupply > Epsilon)
                 {
-                    if (waterDemand > waterSupply)
-                        fractionUsed = 1;
                     fractionUsed = Math.Min(1.0, waterDemand / waterSupply);
                 }
 
@@ -399,8 +397,6 @@ namespace Models.AgPasture
                 double fractionUsed = 0.0;
                 if (NSupply > Epsilon)
                 {
-                    if (NDemand > NSupply)
-                        fractionUsed = 1;
                     fractionUsed = Math.Min(1.0, NDemand / NSupply);
                 }
 
