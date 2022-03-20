@@ -311,14 +311,12 @@ namespace Models.AgPasture
                     PastureBelowGroundOrgan myRoot = roots.Find(root => root.IsInZone(zone.Zone.Name));
                     if (myRoot != null)
                     {
-                        double[] organSupply = myRoot.EvaluateSoilWaterAvailability(zone);
-                        if (organSupply != null)
-                        {
-                            supplies.Add(organSupply);
-                            zones.Add(zone.Zone);
-                            waterSupply += MathUtilities.Sum(organSupply) * zone.Zone.Area;
-                            mySoilWaterAvailable = MathUtilities.Add(mySoilWaterAvailable, organSupply);
-                        }
+                        // get the amount of water available in the soil
+                        myRoot.EvaluateSoilWaterAvailability(zone);
+
+                        supplies.Add(myRoot.mySoilWaterAvailable);
+                        zones.Add(zone.Zone);
+                        waterSupply += myRoot.mySoilWaterAvailable.Sum() * zone.Zone.Area;
                     }
                 }
 
@@ -1191,7 +1189,17 @@ namespace Models.AgPasture
         private double myWaterDemand;
 
         /// <summary>Amount of plant available water in the soil (mm).</summary>
-        private double[] mySoilWaterAvailable;
+        private double[] mySoilWaterAvailable
+        {
+            get
+            {
+                double[] available = new double[nLayers];
+                foreach (PastureBelowGroundOrgan root in roots)
+                    for (int layer = 0; layer < nLayers; layer++)
+                        available[layer] += root.mySoilWaterAvailable[layer];
+                return available;
+            }
+        }
 
         /// <summary>Amount of soil water taken up (mm).</summary>
         private double[] mySoilWaterUptake;
@@ -2403,7 +2411,6 @@ namespace Models.AgPasture
         /// <summary>Initialises arrays to same length as soil layers.</summary>
         private void InitiliaseSoilArrays()
         {
-            mySoilWaterAvailable = new double[nLayers];
             mySoilWaterUptake = new double[nLayers];
             mySoilNH4Uptake = new double[nLayers];
             mySoilNO3Uptake = new double[nLayers];

@@ -319,6 +319,7 @@
             nLayers = soilPhysical.Thickness.Length;
             mySoilNH4Available = new double[nLayers];
             mySoilNO3Available = new double[nLayers];
+            mySoilWaterAvailable = new double[nLayers];
 
             // save minimum DM and get target root distribution
             minimumLiveDM = minLiveDM;
@@ -397,16 +398,13 @@
 
         /// <summary>Finds out the amount of plant available water in the soil.</summary>
         /// <param name="myZone">The soil information</param>
-        internal double[] EvaluateSoilWaterAvailability(ZoneWaterAndN myZone)
+        internal void EvaluateSoilWaterAvailability(ZoneWaterAndN myZone)
         {
-            double[] result = new double[nLayers];
             for (int layer = 0; layer <= BottomLayer; layer++)
             {
-                result[layer] = Math.Max(0.0, myZone.Water[layer] - soilCropData.LLmm[layer]);
-                result[layer] *= FractionLayerWithRoots(layer) * soilCropData.KL[layer] * KLModiferDueToDamage(layer);
+                mySoilWaterAvailable[layer] = Math.Max(0.0, myZone.Water[layer] - soilCropData.LLmm[layer]);
+                mySoilWaterAvailable[layer] *= FractionLayerWithRoots(layer) * soilCropData.KL[layer] * KLModiferDueToDamage(layer);
             }
-
-            return result;
         }
 
         /// <summary>KL modifier due to root damage (0-1).</summary>
