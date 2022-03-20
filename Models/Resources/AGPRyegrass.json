@@ -79,10 +79,10 @@
       "Children": [
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-          "NConcOptimum": 0.04,
-          "NConcMinimum": 0.012,
-          "NConcMaximum": 0.05,
           "Name": "Leaf",
+          "NConcOptimum": 0.04,
+          "NConcMinimum": 0.02,
+          "NConcMaximum": 0.05,
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
@@ -129,10 +129,10 @@
         },
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-          "NConcOptimum": 0.02,
-          "NConcMinimum": 0.006,
-          "NConcMaximum": 0.025,
           "Name": "Stem",
+          "NConcOptimum": 0.020,
+          "NConcMinimum": 0.010,
+          "NConcMaximum": 0.025,
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
@@ -179,11 +179,11 @@
         },
         {
           "$type": "Models.AgPasture.PastureAboveGroundOrgan, Models",
-          "FractionStanding": 0.0,
+          "Name": "Stolon",
           "NConcOptimum": 0.0,
           "NConcMinimum": 0.0,
           "NConcMaximum": 0.0,
-          "Name": "Stolon",
+          "FractionStanding": 0.0,
           "Children": [
             {
               "$type": "Models.AgPasture.GenericTissue, Models",
@@ -230,8 +230,9 @@
         },
         {
           "$type": "Models.AgPasture.PastureBelowGroundOrgan, Models",
-          "NConcOptimum": 0.02,
-          "NConcMinimum": 0.006,
+          "Name": "Root",
+          "NConcOptimum": 0.020,
+          "NConcMinimum": 0.010,
           "NConcMaximum": 0.025,
           "RootDistributionDepthParam": 90.0,
           "RootDistributionExponent": 3.2,
@@ -245,7 +246,6 @@
           "MaximumNUptake": 10.0,
           "ReferenceRLD": 5.0,
           "ReferenceKSuptake": 15.0,
-          "Name": "Root",
           "Children": [
             {
               "$type": "Models.AgPasture.RootTissue, Models",
