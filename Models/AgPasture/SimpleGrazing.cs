@@ -612,7 +612,7 @@ namespace Models.AgPasture
             // What about non harvestable biomass?
             // What about PreferenceForGreenOverDead and PreferenceForLeafOverStems?
 
-            if (MathUtilities.FloatsAreEqual(removeAmount*0.1, 0.0))
+            if (MathUtilities.IsGreaterThan(removeAmount*0.1, 0.0))
             {
                 // Remove a proportion of required DM from each species
                 double totalHarvestableWt = 0.0;
