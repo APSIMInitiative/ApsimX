@@ -277,10 +277,17 @@ namespace UserInterface.Intellisense
                     return;
 
                 IEnumerable<NeedContextItemsArgs.ContextItem> contextItems = task.Result.OrderBy(c => c.Name);
+                // Iff owned is true, the list will be freed by calls to Dispose().
+                bool owned = true;
+                // Iff elementsOwned is true, the list elements will be freed
+                // when the list is freed, which will result in double disposal
+                // of the list elements.
+                bool elementsOwned = false;
+
                 List proposals = new List(contextItems.Select(c => new CompletionProposalAdapter(new CustomScriptCompletionProposal(c))).ToArray(),
                                           typeof(CompletionProposalAdapter),
-                                          true,
-                                          true);
+                                          owned,
+                                          elementsOwned);
                 context.AddProposals(this, proposals, true);
             }
             catch (Exception err)
