@@ -134,6 +134,8 @@
                 throw new ArgumentException("textEditor cannot be null.");
 
             view = new IntellisenseView(textEditor);
+            if (methodCompletionView != null)
+                methodCompletionView.Dispose();
             methodCompletionView = new MethodCompletionView(textEditor);
 
             // The way that the ItemSelected event handler works is a little complicated. If the user has half-typed 
