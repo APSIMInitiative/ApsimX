@@ -127,6 +127,7 @@ namespace UserInterface.Intellisense
             this.ShowError = ShowError;
             this.view = view;
             view.Completion.ShowHeaders = false;
+            view.KeyPressEvent += OnCompletionInfoKeyPress;
         }
 
         /// <summary>
@@ -169,7 +170,6 @@ namespace UserInterface.Intellisense
                 // We need to attach the popup window to the sourceview, so it
                 // gets hidden/removed when the sourceview loses focus.
                 methodSignaturePopup.AttachedTo = view;
-                view.KeyPressEvent += OnCompletionInfoKeyPress;
 
                 // Move the info window to the location of the cursor.
                 methodSignaturePopup.MoveToIter(view, iter);
@@ -186,10 +186,10 @@ namespace UserInterface.Intellisense
         {
             try
             {
-                if (args.Event.Key == Gdk.Key.Escape)
+                if (methodSignaturePopup != null && args.Event.Key == Gdk.Key.Escape)
                 {
-                    methodSignaturePopup.Hide();
                     methodSignaturePopup.Dispose();
+                    methodSignaturePopup = null;
                 }
             }
             catch (Exception err)
