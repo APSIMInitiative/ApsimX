@@ -100,6 +100,8 @@ namespace UserInterface.Views
 
             // Dispose of current properties table.
             box.Remove(propertyTable);
+            propertyTable.DetachAllHandlers();
+            propertyTable.Destroy();
             propertyTable.Dispose();
 
             // Construct a new properties table.
