@@ -612,7 +612,7 @@ namespace Models.AgPasture
             // What about non harvestable biomass?
             // What about PreferenceForGreenOverDead and PreferenceForLeafOverStems?
 
-            if (removeAmount > 0)
+            if (MathUtilities.FloatsAreEqual(removeAmount*0.1, 0.0))
             {
                 // Remove a proportion of required DM from each species
                 double totalHarvestableWt = 0.0;
@@ -632,7 +632,7 @@ namespace Models.AgPasture
                     var amountToRemove = removeAmount * proportion;
                     if (amountToRemove > 0)
                     {
-                        var grazed = allForages[i].RemoveBiomass(amountToRemove/10);
+                        var grazed = allForages[i].RemoveBiomass(amountToRemove*0.1);
                         double grazedDigestibility = grazed.Digestibility;
                         var grazedMetabolisableEnergy = PotentialMEOfHerbage * grazedDigestibility;
 

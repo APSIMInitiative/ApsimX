@@ -45,7 +45,7 @@ namespace Models.ForageDigestibility
                     {
                         var minimumConsumable = materialParameters.MinimumAmount / 10; // kg/ha to g/m2
                         var consumableAmount = Math.Max(0.0, material.Total.Wt * materialParameters.FractionConsumable - minimumConsumable);
-                        var consumableFraction = MathUtilities.Divide(consumableAmount, material.Total.Wt, 0);
+                        var consumableFraction = MathUtilities.Divide(consumableAmount, material.Total.Wt, 1.0);
                         
                         yield return new DigestibleBiomass(new DamageableBiomass(material.Name, material.Total, consumableFraction, material.IsLive, material.Digestibility),
                                                            materialParameters);
