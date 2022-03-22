@@ -481,7 +481,7 @@ namespace Models.AgPasture
             summary.WriteMessage(this, string.Format("Grazed {0:0.0} kgDM/ha, N content {1:0.0} kgN/ha, ME {2:0.0} MJME/ha", GrazedDM, GrazedN, GrazedME), MessageType.Diagnostic);
 
             // Reduce plant population if necessary.
-            if (FractionPopulationDecline > 0)
+            if (MathUtilities.IsGreaterThan(FractionPopulationDecline, 0.0))
             {
                 foreach (var forage in allForages)
                 {
@@ -556,7 +556,7 @@ namespace Models.AgPasture
                 (DaysSinceGraze >= simpleGrazingFrequency && simpleGrazingFrequency > 0))
             {
                 residualBiomass = SimpleGrazingResidual;
-                if (PreGrazeHarvestableDM > SimpleMinGrazable)
+                if (MathUtilities.IsGreaterThan(PreGrazeHarvestableDM, SimpleMinGrazable))
                     return true;
                 else
                 {
@@ -630,7 +630,7 @@ namespace Models.AgPasture
                     var harvestableWt = allForages[i].Material.Sum(m => m.Consumable.Wt);  // g/m2
                     var proportion = harvestableWt * SpeciesCutProportions[i] / totalWeightedHarvestableWt;
                     var amountToRemove = removeAmount * proportion;
-                    if (amountToRemove > 0)
+                    if (MathUtilities.IsGreaterThan(amountToRemove, 0.0))
                     {
                         var grazed = allForages[i].RemoveBiomass(amountToRemove*0.1);
                         double grazedDigestibility = grazed.Digestibility;
