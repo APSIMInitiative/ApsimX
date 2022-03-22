@@ -630,7 +630,7 @@ namespace Models.AgPasture
                     var harvestableWt = allForages[i].Material.Sum(m => m.Consumable.Wt);  // g/m2
                     var proportion = harvestableWt * SpeciesCutProportions[i] / totalWeightedHarvestableWt;
                     var amountToRemove = removeAmount * proportion;
-                    if (MathUtilities.IsGreaterThan(amountToRemove, 0.0))
+                    if (MathUtilities.IsGreaterThan(amountToRemove*0.1, 0.0))
                     {
                         var grazed = allForages[i].RemoveBiomass(amountToRemove*0.1);
                         double grazedDigestibility = grazed.Digestibility;
@@ -645,7 +645,7 @@ namespace Models.AgPasture
                 }
 
                 // Check the amount grazed is the same as requested amount to graze.
-                if (!MathUtilities.FloatsAreEqual(GrazedDM, removeAmount))
+                if (!MathUtilities.FloatsAreEqual(GrazedDM, removeAmount, 0.0001))
                     throw new Exception("Mass balance check fail. The amount of biomass removed by SimpleGrazing is not equal to amount that should have been removed.");
 
                 double returnedToSoilWt = 0;
