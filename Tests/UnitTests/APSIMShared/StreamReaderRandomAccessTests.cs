@@ -99,8 +99,8 @@ namespace UnitTests.APSIMShared
         /// correctly within the file, accounting for the presence of the BOM.
         /// </summary>
         /// <param name="inputFile">Input file (stored as embedded resource in this assembly).</param>
-        // [TestCase("UnitTests.APSIMShared.Resources.test-utf8.csv")]
-        // [TestCase("UnitTests.APSIMShared.Resources.test-utf8-bom.csv")]
+        [TestCase("UnitTests.APSIMShared.Resources.test-utf8.csv")]
+        [TestCase("UnitTests.APSIMShared.Resources.test-utf8-bom.csv")]
         [TestCase("UnitTests.APSIMShared.Resources.test-utf16-le.csv")]
         [TestCase("UnitTests.APSIMShared.Resources.test-utf16-be.csv")]
         public void TestBomParsing(string inputFile)
@@ -116,7 +116,7 @@ namespace UnitTests.APSIMShared
             using (Stream stream = GetResourceStream(inputFile))
             {
                 StreamReaderRandomAccess reader = new StreamReaderRandomAccess(stream);
-                int endOfFirstLine = -1;
+                long endOfFirstLine = -1;
                 for (int i = 0; i < expected.Length; i++)
                 {
                     string line = reader.ReadLine();
