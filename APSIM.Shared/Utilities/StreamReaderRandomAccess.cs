@@ -141,6 +141,7 @@ namespace APSIM.Shared.Utilities
             char ch = '\0';
             bool endOfLine = false;
             int numBytesRead = 0;
+            long bufferOffsetStart = bufferOffset;
 
             while (!endOfLine)
             {
@@ -174,8 +175,10 @@ namespace APSIM.Shared.Utilities
 
             // Update the offset. Note that offet is measured in bytes, whereas
             // position is measured in characters. These will be different in
-            // multi-byte encodings.
-            offset = bufferOffset + numBytesRead;
+            // multi-byte encodings. Note also that the buffer offset will
+            // change when we reach the end of the buffer, so we need to use the
+            // buffer offset from before we started reading.
+            offset = bufferOffsetStart + numBytesRead;
             return lineBuffer.ToString();
         }
 
