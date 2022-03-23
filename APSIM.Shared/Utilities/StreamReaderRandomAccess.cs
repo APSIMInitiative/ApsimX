@@ -2,7 +2,6 @@ using APSIM.Shared.Extensions;
 using System.IO;
 using System.Text;
 using System;
-using System.Globalization;
 
 namespace APSIM.Shared.Utilities
 {
@@ -176,9 +175,8 @@ namespace APSIM.Shared.Utilities
             // Update the offset. Note that offet is measured in bytes, whereas
             // position is measured in characters. These will be different in
             // multi-byte encodings.
-            string result = lineBuffer.ToString();
             offset = bufferOffset + numBytesRead;
-            return result;
+            return lineBuffer.ToString();
         }
 
         /// <summary>
