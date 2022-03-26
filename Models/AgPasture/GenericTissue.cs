@@ -35,8 +35,8 @@
 
         //---------------------------- Parameters -----------------------
 
-        /// <summary>Fraction of luxury N remobilisable per day (0-1).</summary>
-        public double FractionNLuxuryRemobilisable { get; set; } = 0.1;
+        /// <summary>Fraction of excess N, above optimum N for live tissues and minimum for dead tissue, that is remobilisable per day (0-1).</summary>
+        public double FractionNRemobilisable { get; set; } = 0.1;
 
         /// <summary>Sugar fraction on new growth, i.e. soluble carbohydrate (0-1).</summary>
         public double FractionSugarNewGrowth { get; set; } = 0.0;

@@ -332,13 +332,13 @@
                         // get the N amounts remobilisable as luxury N (all N in this tissue above optimum concentration)
                         double totalLuxuryN = (Tissue[t].DM.Wt - Tissue[t].DMTransferedOut) * Math.Max(0.0, Tissue[t].DM.NConc - NConcOptimum);
                         totalLuxuryN += Math.Max(0.0, Tissue[t].NTransferedIn - Tissue[t].DMTransferedIn * NConcOptimum);
-                        Tissue[t].NRemobilisable = Math.Max(0.0, totalLuxuryN * Tissue[t].FractionNLuxuryRemobilisable);
+                        Tissue[t].NRemobilisable = Math.Max(0.0, totalLuxuryN * Tissue[t].FractionNRemobilisable);
                     }
                     else
                     { // dead tissue
                         // get the N amounts remobilisable as senesced N (all N transferred into this tissue in excess of minimum concentration)
                         double remobilisableN = Math.Max(0.0, Tissue[t].NTransferedIn - Tissue[t].DMTransferedIn * NConcMinimum);
-                        Tissue[t].NRemobilisable = Math.Max(0.0, remobilisableN);
+                        Tissue[t].NRemobilisable = Math.Max(0.0, remobilisableN * Tissue[t].FractionNRemobilisable);
                     }
                 }
             }

@@ -31,6 +31,11 @@
         /// <summary>Fraction of luxury N remobilisable per day (0-1).</summary>
         private const double fractionNLuxuryRemobilisable = 0.1;
 
+        //---------------------------- Parameters -----------------------
+
+        /// <summary>Fraction of excess N, above optimum N for live tissues and minimum for dead tissue, that is remobilisable per day (0-1).</summary>
+        public double FractionNRemobilisable { get; set; } = 0.1;
+
         //----------------------- Daily Deltas -----------------------
 
         /// <summary>Amount of dry matter transferred into this tissue, for each layer (kg/ha).</summary>
