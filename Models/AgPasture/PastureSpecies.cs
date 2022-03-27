@@ -279,7 +279,6 @@ namespace Models.AgPasture
             foreach (PastureBelowGroundOrgan root in roots)
             {
                 root.SetBiomassState(0.0, 0.0, 0.0);
-                root.ClearDailyTransferredAmounts();
             }
 
             greenLAI = 0.0;

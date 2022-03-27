@@ -102,6 +102,12 @@
             ClearDailyTransferredAmounts();
         }
 
+        /// <summary>Preparation before the main daily processes.</summary>
+        public void OnDoDailyInitialisation()
+        {
+            ClearDailyTransferredAmounts();
+        }
+
         /// <summary>Initialise this tissue instance.</summary>
         public void Initialise()
         {

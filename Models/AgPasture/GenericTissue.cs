@@ -96,9 +96,6 @@
         /// <summary>Preparation before the main daily processes.</summary>
         public void OnDoDailyInitialisation()
         {
-            DMRemoved = 0.0;
-            NRemoved = 0.0;
-            FractionRemoved = 0.0;
             ClearDailyTransferredAmounts();
         }
 
