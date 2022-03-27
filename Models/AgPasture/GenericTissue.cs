@@ -51,16 +51,25 @@
         // These get applied once each day during Update()
 
         /// <summary>DM transferred into this tissue (kg/ha).</summary>
-        public double DMTransferedIn { get; set; }
+        public double DMTransferredIn { get; set; }
 
         /// <summary>DM transferred out of this tissue (kg/ha).</summary>
-        public double DMTransferedOut { get; set; }
+        public double DMTransferredOut { get; set; }
 
         /// <summary>N transferred into this tissue (kg/ha).</summary>
-        public double NTransferedIn { get; set; }
+        public double NTransferredIn { get; set; }
 
         /// <summary>N transferred out of this tissue (kg/ha).</summary>
-        public double NTransferedOut { get; set; }
+        public double NTransferredOut { get; set; }
+
+        /// <summary>DM removed from this tissue (kg/ha).</summary>
+        public double DMRemoved { get; private set; }
+
+        /// <summary>The fraction of DM removed from this tissue.</summary>
+        public double FractionRemoved { get; private set; }
+
+        /// <summary>N removed from this tissue (kg/ha).</summary>
+        public double NRemoved { get; private set; }
 
         /// <summary>N available for remobilisation (kg/ha).</summary>
         public double NRemobilisable { get; set; }
@@ -72,15 +81,6 @@
 
         /// <summary>Dry matter biomass.</summary>
         public IAGPBiomass DM { get { return dryMatter; } }
-
-        /// <summary>DM removed from this tissue (kg/ha).</summary>
-        public double DMRemoved { get; private set; }
-
-        /// <summary>The fraction of DM removed from this tissue.</summary>
-        public double FractionRemoved { get; private set; }
-
-        /// <summary>N removed from this tissue (kg/ha).</summary>
-        public double NRemoved { get; private set; }
 
         /// <summary>Digestibility of this tissue (kg/kg).</summary>
         public double Digestibility { get; private set; }
@@ -125,7 +125,7 @@
 
         /// <summary>Removes a fraction of the biomass from this tissue.</summary>
         /// <param name="fractionToRemove">The fraction of biomass to remove.</param>
-        /// <param name="fractionToSoil">The fraction of removed biomass to send to soil.</param>
+        /// <param name="fractionToSoil">The fraction of removed biomass to send to soil surface.</param>
         public void RemoveBiomass(double fractionToRemove, double fractionToSoil)
         {
             var dmToSoil = fractionToSoil * dryMatter.Wt;
@@ -154,18 +154,51 @@
         /// <summary>Updates the tissue state, make changes in DM and N effective.</summary>
         public void Update()
         {
-            dryMatter.Wt += DMTransferedIn - DMTransferedOut;
-            dryMatter.N += NTransferedIn - (NTransferedOut + NRemobilised);
+            dryMatter.Wt += DMTransferredIn - DMTransferredOut;
+            dryMatter.N += NTransferredIn - (NTransferredOut + NRemobilised);
             calculateDigestibility();
+        }
+
+        /// <summary>Computes the DM and N amounts turned over for this tissue.</summary>
+        /// <param name="turnoverRate">The turnover rate for the tissue today.</param>
+        /// <param name="receivingTissue">The tissue to move the turned over biomass to.</param>
+        /// <param name="nConc">The N concentration threshold to consider.</param>
+        /// <remarks>For live tissues, potential N remobilisable is above optimum concentration, for dead is all above minimum</remarks>
+        public void DoTissueTurnover(double turnoverRate, GenericTissue receivingTissue, double nConc)
+        {
+            if (turnoverRate > 0.0)
+            {
+                var turnedoverDM = DM.Wt * turnoverRate;
+                var turnedoverN = DM.N * turnoverRate;
+                DMTransferredOut += turnedoverDM;
+                NTransferredOut += turnedoverN;
+                if (receivingTissue != null)
+                {
+                    receivingTissue.DMTransferredIn += turnedoverDM;
+                    receivingTissue.NTransferredIn += turnedoverN;
+                }
+
+                // get the N amount remobilisable (all N in this tissue above the given nConc concentration)
+                double totalRemobilisableN = (DM.Wt - DMTransferredOut) * Math.Max(0.0, DM.NConc - nConc);
+                totalRemobilisableN += Math.Max(0.0, NTransferredIn - DMTransferredIn * nConc);
+                NRemobilisable = Math.Max(0.0, totalRemobilisableN * FractionNRemobilisable);
+            }
+        }
+
+        /// <summary>Removes a fraction of remobilisable N for use into new growth.</summary>
+        /// <param name="fraction">The fraction to remove (0-1)</param>
+        public void DoRemobiliseN(double fraction)
+        {
+            NRemobilised = NRemobilisable * fraction;
         }
 
         /// <summary>Clear the daily flows of DM and N.</summary>
         public void ClearDailyTransferredAmounts()
         {
-            DMTransferedIn = 0.0;
-            DMTransferedOut = 0.0;
-            NTransferedIn = 0.0;
-            NTransferedOut = 0.0;
+            DMTransferredIn = 0.0;
+            DMTransferredOut = 0.0;
+            NTransferredIn = 0.0;
+            NTransferredOut = 0.0;
             NRemobilisable = 0.0;
             NRemobilised = 0.0;
             DMRemoved = 0.0;
@@ -185,7 +218,7 @@
                 double cnTissue = DM.Wt * CarbonFractionInDM / DM.N;
                 double ratio1 = CNratioCellWall / cnTissue;
                 double ratio2 = CNratioCellWall / CNratioProtein;
-                double fractionSugar = DMTransferedIn * FractionSugarNewGrowth / DM.Wt;
+                double fractionSugar = DMTransferredIn * FractionSugarNewGrowth / DM.Wt;
                 double fractionProtein = (ratio1 - (1.0 - fractionSugar)) / (ratio2 - 1.0);
                 double fractionCellWall = 1.0 - fractionSugar - fractionProtein;
                 Digestibility = fractionSugar + (fractionProtein * DigestibilityProtein) + (fractionCellWall * DigestibilityCellWall);

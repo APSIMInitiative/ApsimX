@@ -32,6 +32,9 @@
         [Link(Type = LinkType.Child, ByName = true)]
         public GenericTissue DeadTissue { get; private set; }
 
+        /// <summary>Array of live tissue.</summary>
+        public GenericTissue[] LiveTissue { get; private set; }
+
         //---------------------------- Parameters -----------------------
 
         /// <summary>N concentration for optimum growth (kg/kg).</summary>
@@ -46,13 +49,10 @@
         /// <summary>Proportion of organ DM that is standing, available to harvest (0-1).</summary>
         public double FractionStanding { get; set; } = 1.0;
 
-        //----------------------- States -----------------------
-
-        /// <summary>Array of live tissue.</summary>
-        public GenericTissue[] LiveTissue { get; private set; }
-
         /// <summary>Minimum DM amount of live tissues (kg/ha).</summary>
         public double MinimumLiveDM { get; set; }
+
+        //----------------------- States -----------------------
 
         /// <summary>Flag indicating whether the biomass is above ground or not.</summary>
         public bool IsAboveGround { get { return true; } }
@@ -60,26 +60,27 @@
         /// <summary>Return live biomass. Used by STOCK (g/m2).</summary>
         public Biomass Live { get; private set; } = new Biomass();
 
-        /// <summary>Digestibility of live biomass. Used by STOCK (g/m2).</summary>
-        public double LiveDigestibility { get; private set; }
-
         /// <summary>Dead biomass. Used by STOCK (g/m2).</summary>
         public Biomass Dead { get; private set; } = new Biomass();
+
+        /// <summary>Digestibility of live biomass. Used by STOCK (g/m2).</summary>
+        public double LiveDigestibility { get; private set; }
 
         /// <summary>Digestibility of dead biomass. Used by STOCK (g/m2).</summary>
         public double DeadDigestibility { get; private set; }
 
         /// <summary>Total dry matter in this organ (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMTotal { get; private set; }
+        public double DMTotal { get { return DMLive + DMDead; } }
 
         /// <summary>Dry matter in the live (green) tissues (kg/ha).</summary>
         [Units("kg/ha")]
         public double DMLive { get; private set; }
+        //public double DMLive { get { return LiveTissue.Sum(tissue => tissue.DM.Wt); } }
 
         /// <summary>Dry matter in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMDead { get; private set; }
+        public double DMDead { get { return DeadTissue.DM.Wt; } }
 
         /// <summary>Standing herbage weight (kg/ha).</summary>
         [Units("kg/ha")]
@@ -90,10 +91,10 @@
         public double StandingLiveHerbageWt { get { return DMLive * FractionStanding; } }
 
         /// <summary>Standing live digestibility (0-1).</summary>
-        public double StandingLiveDigestibility { get { return 0; } }  // Todo: need to fix
+        public double StandingLiveDigestibility { get { return DigestibilityLive; } }
 
         /// <summary>Standing live digestibility (0-1).</summary>
-        public double StandingDeadDigestibility { get { return 0; } }  // Todo: need to fix
+        public double StandingDeadDigestibility { get { return DigestibilityDead; } }
 
         /// <summary>Standing dead herbage weight (kg/ha).</summary>
         [Units("kg/ha")]
@@ -113,75 +114,58 @@
 
         /// <summary>Total harvestable dry matter (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMTotalHarvestable { get; private set; }
+        public double DMTotalHarvestable { get { return DMLiveHarvestable + DMDeadHarvestable; } }
 
         /// <summary>Harvestable dry matter in the live (green) tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMLiveHarvestable { get; private set; }
+        public double DMLiveHarvestable { get { return Math.Max(0.0, DMLive * FractionStanding - MinimumLiveDM); } }
 
         /// <summary>Dry matter in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double DMDeadHarvestable { get; private set; }
+        public double DMDeadHarvestable { get { return DMDead * FractionStanding; } }
 
         /// <summary>N in the total harvestable dry matter (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NTotalHarvestable { get; private set; }
+        public double NTotalHarvestable { get { return NLiveHarvestable + NDeadHarvestable; } }
 
         /// <summary>N in the harvestable dry matter in the live (green) tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NLiveHarvestable { get; private set; }
+        public double NLiveHarvestable { get { return NLive * MathUtilities.Divide(DMLiveHarvestable, DMLive, 0.0); } }
 
         /// <summary>N in the harvestable dry matter in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NDeadHarvestable { get; private set; }
+        public double NDeadHarvestable { get { return NDead * MathUtilities.Divide(DMDeadHarvestable, DMDead, 0.0); } }
 
         /// <summary>Total N in this tissue (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NTotal { get; private set; }
+        public double NTotal { get { return NLive + NDead; } }
 
         /// <summary>N in the live (green) tissues (kg/ha).</summary>
         [Units("kg/ha")]
         public double NLive { get; private set; }
+        //public double NLive { get { return LiveTissue.Sum(tissue => tissue.DM.N); } }
 
         /// <summary>N amount in the dead tissues (kg/ha).</summary>
         [Units("kg/ha")]
-        public double NDead { get; private set; }
+        public double NDead { get { return DeadTissue.DM.N; } }
 
-        /// <summary>Average N concentration.</summary>
+        /// <summary>Average total N concentration.</summary>
         [Units("kg/kg")]
-        public double NConcTotal { get; private set; }
+        public double NConcTotal { get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); } }
 
         /// <summary>Average N concentration in the live tissues (kg/kg).</summary>
         [Units("kg/kg")]
-        public double NConcLive { get; private set; }
+        public double NConcLive { get { return MathUtilities.Divide(NLive, DMLive, 0.0); } }
 
         /// <summary>Average N concentration in dead tissues (kg/kg).</summary>
         [Units("kg/kg")]
-        public double NConcDead { get; private set; }
+        public double NConcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0); } }
 
         /// <summary>Luxury N available for remobilisation (kg/ha).</summary>
-        public double NLuxuryRemobilisable => LiveTissue.Sum(tissue => tissue.NRemobilisable);
+        public double NLuxuryRemobilisable { get { return LiveTissue.Sum(tissue => tissue.NRemobilisable); } }
 
         /// <summary>Luxury N remobilised into new growth (kg/ha).</summary>
-        public double NLuxuryRemobilised => LiveTissue.Sum(tissue => tissue.NRemobilised);
-
-        /// <summary>DM added to this organ via growth (kg/ha).</summary>
-        public double DMGrowth { get { return EmergingTissue.DMTransferedIn; } }
-
-        /// <summary>N added to this organ via growth (kg/ha).</summary>
-        public double NGrowth { get { return EmergingTissue.NTransferedIn; } }
-
-        /// <summary>DM senescing from this organ (kg/ha).</summary>
-        public double DMSenesced { get { return MatureTissue.DMTransferedOut; } }
-
-        /// <summary>N senescing from this organ (kg/ha).</summary>
-        public double NSenesced { get { return MatureTissue.NTransferedOut; } }
-
-        /// <summary>DM detached from this organ (kg/ha).</summary>
-        public double DMDetached { get { return DeadTissue.DMTransferedOut; } }
-
-        /// <summary>N detached from this organ (kg/ha).</summary>
-        public double NDetached { get { return DeadTissue.NTransferedOut; } }
+        public double NLuxuryRemobilised { get { return LiveTissue.Sum(tissue => tissue.NRemobilised); } }
 
         /// <summary>Senesced N available for remobilisation (kg/ha).</summary>
         public double NSenescedRemobilisable { get { return DeadTissue.NRemobilisable; } }
@@ -189,11 +173,23 @@
         /// <summary>Senesced N remobilised into new growth (kg/ha).</summary>
         public double NSenescedRemobilised { get { return DeadTissue.NRemobilised; } }
 
+        /// <summary>DM senescing from this organ (kg/ha).</summary>
+        public double DMSenesced { get { return MatureTissue.DMTransferredOut; } }
+
+        /// <summary>N senescing from this organ (kg/ha).</summary>
+        public double NSenesced { get { return MatureTissue.NTransferredOut; } }
+
+        /// <summary>DM detached from this organ (kg/ha).</summary>
+        public double DMDetached { get { return DeadTissue.DMTransferredOut; } }
+
+        /// <summary>N detached from this organ (kg/ha).</summary>
+        public double NDetached { get { return DeadTissue.NTransferredOut; } }
+
         /// <summary>DM removed from this tissue (kg/ha).</summary>
-        public double DMRemoved => Tissue.Sum(t => t.DMRemoved);
+        public double DMRemoved { get { return LiveTissue.Sum(tissue => tissue.DMRemoved) + DeadTissue.DMRemoved; } }
 
         /// <summary>N removed from this tissue (kg/ha).</summary>
-        public double NRemoved => Tissue.Sum(t => t.NRemoved);
+        public double NRemoved { get { return LiveTissue.Sum(tissue => tissue.NRemoved) + DeadTissue.NRemoved; } }
 
         /// <summary>Fraction of DM removed from organ.</summary>
         [Units("kg/kg")]
@@ -210,21 +206,34 @@
             }
         }
 
+        /// <summary>DM added to this organ via growth (kg/ha).</summary>
+        public double DMGrowth { get { return EmergingTissue.DMTransferredIn; } }
+
+        /// <summary>N added to this organ via growth (kg/ha).</summary>
+        public double NGrowth { get { return EmergingTissue.NTransferredIn; } }
+
         /// <summary>Average digestibility of all biomass.</summary>
         [Units("kg/kg")]
-        public double DigestibilityTotal { get; private set; }
+        public double DigestibilityTotal { 
+            get
+            { 
+                return MathUtilities.Divide(LiveTissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt)
+                                            + DeadTissue.Digestibility * DeadTissue.DM.Wt,
+                                            DMTotal, 0.0);
+            }
+        }
 
         /// <summary>Average digestibility of live biomass.</summary>
         [Units("kg/kg")]
-        public double DigestibilityLive { get; private set; }
+        public double DigestibilityLive { get { return MathUtilities.Divide(LiveTissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt), DMLive, 0.0); } }
 
         /// <summary>Average digestibility of dead biomass.</summary>
         [Units("kg/kg")]
-        public double DigestibilityDead { get; private set; }
+        public double DigestibilityDead { get { return DeadTissue.Digestibility; } }
 
         /// <summary>Digestibility of standing herbage.</summary>
         [Units("kg/kg")]
-        public double StandingDigestibility { get; private set; }
+        public double StandingDigestibility { get { return DigestibilityTotal; } }
 
         //----------------------- Public methods -----------------------
 
@@ -297,7 +306,7 @@
                 for (int t = 0; t < Tissue.Length - 1; t++)
                 {
                     DeadTissue.AddBiomass(Tissue[t].DM.Wt * fractionToRemove, Tissue[t].DM.N * fractionToRemove);
-                    Tissue[t].RemoveBiomass(fractionToRemove, 0.0);
+                    Tissue[t].AddBiomass(-Tissue[t].DM.Wt * fractionToRemove, -Tissue[t].DM.N * fractionToRemove);
                 }
             }
 
@@ -307,41 +316,12 @@
 
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>
         /// <param name="turnoverRate">The turnover rate for each tissue</param>
-        /// <returns>The DM and N amount detached from this organ</returns>
         public void CalculateTissueTurnover(double[] turnoverRate)
         {
-            double turnedoverDM;
-            double turnedoverN;
-
-            // get the amounts of DM and N turned over for each tissue
-            for (int t = 0; t < Tissue.Length; t++)
-            {
-                if (turnoverRate[t] > 0.0)
-                {
-                    turnedoverDM = Tissue[t].DM.Wt * turnoverRate[t];
-                    turnedoverN = Tissue[t].DM.N * turnoverRate[t];
-                    Tissue[t].DMTransferedOut += turnedoverDM;
-                    Tissue[t].NTransferedOut += turnedoverN;
-
-                    if (t < Tissue.Length - 1)
-                    { // live tissues
-                        // pass amounts turned over from this tissue to the next (except last one)
-                        Tissue[t + 1].DMTransferedIn += turnedoverDM;
-                        Tissue[t + 1].NTransferedIn += turnedoverN;
-
-                        // get the N amounts remobilisable as luxury N (all N in this tissue above optimum concentration)
-                        double totalLuxuryN = (Tissue[t].DM.Wt - Tissue[t].DMTransferedOut) * Math.Max(0.0, Tissue[t].DM.NConc - NConcOptimum);
-                        totalLuxuryN += Math.Max(0.0, Tissue[t].NTransferedIn - Tissue[t].DMTransferedIn * NConcOptimum);
-                        Tissue[t].NRemobilisable = Math.Max(0.0, totalLuxuryN * Tissue[t].FractionNRemobilisable);
-                    }
-                    else
-                    { // dead tissue
-                        // get the N amounts remobilisable as senesced N (all N transferred into this tissue in excess of minimum concentration)
-                        double remobilisableN = Math.Max(0.0, Tissue[t].NTransferedIn - Tissue[t].DMTransferedIn * NConcMinimum);
-                        Tissue[t].NRemobilisable = Math.Max(0.0, remobilisableN * Tissue[t].FractionNRemobilisable);
-                    }
-                }
-            }
+            EmergingTissue.DoTissueTurnover(turnoverRate[0], DevelopingTissue, NConcOptimum);
+            DevelopingTissue.DoTissueTurnover(turnoverRate[0], MatureTissue, NConcOptimum);
+            MatureTissue.DoTissueTurnover(turnoverRate[0], DeadTissue, NConcOptimum);
+            DeadTissue.DoTissueTurnover(turnoverRate[0], null, NConcMinimum);
         }
 
         /// <summary>Updates each tissue, make changes in DM and N effective.</summary>
@@ -353,14 +333,16 @@
             double previousN = NTotal;
 
             // update all tissues
-            for (int t = 0; t < Tissue.Length; t++)
-                Tissue[t].Update();
+            EmergingTissue.Update();
+            DevelopingTissue.Update();
+            MatureTissue.Update();
+            DeadTissue.Update();
 
             CalculateStates();
 
             // check mass balance
-            bool dmIsOk = MathUtilities.FloatsAreEqual(Math.Abs(previousDM + DMGrowth - DMDetached - DMTotal), 0);
-            bool nIsOk = MathUtilities.FloatsAreEqual(Math.Abs(previousN + NGrowth - NSenescedRemobilised - NDetached - NTotal), 0);
+            bool dmIsOk = MathUtilities.FloatsAreEqual(Math.Abs(previousDM + DMGrowth - DMDetached - DMTotal), 0.0);
+            bool nIsOk = MathUtilities.FloatsAreEqual(Math.Abs(previousN + NGrowth - NLuxuryRemobilised - NSenescedRemobilised - NDetached - NTotal), 0.0);
             return (dmIsOk || nIsOk);
         }
 
@@ -368,29 +350,7 @@
         private void CalculateStates()
         {
             DMLive = LiveTissue.Sum(tissue => tissue.DM.Wt);
-            DMDead = DeadTissue.DM.Wt;
-            DMTotal = DMLive + DMDead;
-            DMLiveHarvestable = Math.Max(0, DMLive * FractionStanding - MinimumLiveDM);
-            DMDeadHarvestable = DMDead * FractionStanding;
-            DMTotalHarvestable = DMLiveHarvestable + DMDeadHarvestable;
-
             NLive = LiveTissue.Sum(tissue => tissue.DM.N);
-            NDead = DeadTissue.DM.N;
-            NTotal = Tissue.Sum(tissue => tissue.DM.N);
-            NConcLive = MathUtilities.Divide(NLive, DMLive, 0.0);
-            NConcDead = MathUtilities.Divide(NDead, DMDead, 0.0);
-            NConcTotal = MathUtilities.Divide(NTotal, DMTotal, 0.0);
-            NLiveHarvestable = MathUtilities.Divide(DMLiveHarvestable, DMLive * NLive, 0);
-            NDeadHarvestable = MathUtilities.Divide(DMDeadHarvestable, DMDead * NDead, 0);
-            NTotalHarvestable = NLiveHarvestable + NDeadHarvestable;
-
-            double liveDigestableDM = LiveTissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt);
-            double totalDigestableDM = Tissue.Sum(tissue => tissue.Digestibility * tissue.DM.Wt);
-            
-            DigestibilityLive = MathUtilities.Divide(liveDigestableDM, DMLive, 0.0);
-            DigestibilityDead = DeadTissue.Digestibility;
-            DigestibilityTotal = MathUtilities.Divide(totalDigestableDM, DMTotal, 0.0);
-            StandingDigestibility = DigestibilityTotal * FractionStanding;
 
             Live.StructuralWt = DMLive / 10.0;  // to g/m2
             Live.StructuralN = NLive / 10.0;    // to g/m2

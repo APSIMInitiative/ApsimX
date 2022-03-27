@@ -1796,7 +1796,7 @@ namespace Models.AgPasture
             get
             {
                 return Leaf.NSenescedRemobilisable + Stem.NSenescedRemobilisable +
-                       Stolon.NSenescedRemobilisable + roots[0].NSenescedRemobilisable;
+                       Stolon.NSenescedRemobilisable + Root.NSenescedRemobilisable;
                 // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
             }
         }
@@ -1815,7 +1815,7 @@ namespace Models.AgPasture
             get
             {
                 return Leaf.NLuxuryRemobilisable + Stem.NLuxuryRemobilisable +
-                           Stolon.NLuxuryRemobilisable + roots[0].NLuxuryRemobilisable;
+                           Stolon.NLuxuryRemobilisable + Root.NLuxuryRemobilisable;
                 // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
             }
         }
@@ -3016,10 +3016,7 @@ namespace Models.AgPasture
 
             // - Roots (only 2 tissues)
             turnoverRates = new double[] { gamaR, 1.0 };
-
-            var rootBiomassDetached = roots[0].DoTissueTurnover(turnoverRates);
-            //foreach (PastureBelowGroundOrgan root in roots)
-            //    root.DoTissueTurnover(turnoverRates);
+            Root.CalculateTissueTurnover(turnoverRates);
             // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
 
             // TODO: consider C remobilisation
@@ -3035,12 +3032,8 @@ namespace Models.AgPasture
             // Get the amounts detached today
             detachedShootDM = Leaf.DMDetached + Stem.DMDetached + Stolon.DMDetached;
             detachedShootN = Leaf.NDetached + Stem.NDetached + Stolon.NDetached;
-            detachedRootDM = rootBiomassDetached.Wt;
-            detachedRootN = rootBiomassDetached.N;
-            //foreach (PastureBelowGroundOrgan root in roots)
-            //{
-            //    detachedRootDM += root.DMDetached;
-            //    detachedRootN += root.NDetached;
+            detachedRootDM = Root.DMDetached;
+            detachedRootN = Root.NDetached;
             // TODO: currently only the roots at the main/home zone are considered, must add the other zones too
             //}
         }
@@ -3053,6 +3046,7 @@ namespace Models.AgPasture
                 // Get the actual growth above and below ground
                 dGrowthShootDM = dGrowthAfterNutrientLimitations * fractionToShoot;
                 dGrowthRootDM = Math.Max(0.0, dGrowthAfterNutrientLimitations - dGrowthShootDM);
+                dGrowthRootN = 0.0;
 
                 // Get the fractions of new growth to allocate to each plant organ
                 double toLeaf = fractionToShoot * fractionToLeaf;
@@ -3060,15 +3054,10 @@ namespace Models.AgPasture
                 double toStolon = fractionToShoot * FractionToStolon;
                 double toRoot = 1.0 - fractionToShoot;
 
-                double dmToRoot = 0;
-                double nToRoot = 0;
-
                 // Allocate new DM growth to the growing tissues
-                Leaf.Tissue[0].DMTransferedIn += toLeaf * dGrowthAfterNutrientLimitations;
-                Stem.Tissue[0].DMTransferedIn += toStem * dGrowthAfterNutrientLimitations;
-                Stolon.Tissue[0].DMTransferedIn += toStolon * dGrowthAfterNutrientLimitations;
-                dmToRoot = toRoot * dGrowthAfterNutrientLimitations;
-                // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
+                Leaf.EmergingTissue.DMTransferredIn += toLeaf * dGrowthAfterNutrientLimitations;
+                Stem.EmergingTissue.DMTransferredIn += toStem * dGrowthAfterNutrientLimitations;
+                Stolon.EmergingTissue.DMTransferredIn += toStolon * dGrowthAfterNutrientLimitations;
 
                 // Evaluate allocation of N
                 if (dNewGrowthN > demandOptimumN)
@@ -3076,14 +3065,13 @@ namespace Models.AgPasture
                     // Available N was more than enough to meet basic demand (i.e. there is luxury uptake)
                     // allocate N taken up based on maximum N content
                     double Nsum = (toLeaf * Leaf.NConcMaximum) + (toStem * Stem.NConcMaximum)
-                                + (toStolon * Stolon.NConcMaximum) + (toRoot * roots[0].NConcMaximum);
+                                + (toStolon * Stolon.NConcMaximum) + (toRoot * Root.NConcMaximum);
                     if (Nsum > Epsilon)
                     {
-                        Leaf.Tissue[0].NTransferedIn += dNewGrowthN * toLeaf * Leaf.NConcMaximum / Nsum;
-                        Stem.Tissue[0].NTransferedIn += dNewGrowthN * toStem * Stem.NConcMaximum / Nsum;
-                        Stolon.Tissue[0].NTransferedIn += dNewGrowthN * toStolon * Stolon.NConcMaximum / Nsum;
-                        nToRoot = dNewGrowthN * toRoot * roots[0].NConcMaximum / Nsum;
-                        // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
+                        Leaf.EmergingTissue.NTransferredIn += dNewGrowthN * toLeaf * Leaf.NConcMaximum / Nsum;
+                        Stem.EmergingTissue.NTransferredIn += dNewGrowthN * toStem * Stem.NConcMaximum / Nsum;
+                        Stolon.EmergingTissue.NTransferredIn += dNewGrowthN * toStolon * Stolon.NConcMaximum / Nsum;
+                        dGrowthRootN += dNewGrowthN * toRoot * Root.NConcMaximum / Nsum;
                     }
                     else
                     {
@@ -3095,14 +3083,13 @@ namespace Models.AgPasture
                 {
                     // Available N was not enough to meet basic demand, allocate N taken up based on optimum N content
                     double Nsum = (toLeaf * Leaf.NConcOptimum) + (toStem * Stem.NConcOptimum)
-                                + (toStolon * Stolon.NConcOptimum) + (toRoot * roots[0].NConcOptimum);
+                                + (toStolon * Stolon.NConcOptimum) + (toRoot *Root.NConcOptimum);
                     if (Nsum > Epsilon)
                     {
-                        Leaf.Tissue[0].NTransferedIn += dNewGrowthN * toLeaf * Leaf.NConcOptimum / Nsum;
-                        Stem.Tissue[0].NTransferedIn += dNewGrowthN * toStem * Stem.NConcOptimum / Nsum;
-                        Stolon.Tissue[0].NTransferedIn += dNewGrowthN * toStolon * Stolon.NConcOptimum / Nsum;
-                        nToRoot = dNewGrowthN * toRoot * roots[0].NConcOptimum / Nsum;
-                        // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
+                        Leaf.EmergingTissue.NTransferredIn += dNewGrowthN * toLeaf * Leaf.NConcOptimum / Nsum;
+                        Stem.EmergingTissue.NTransferredIn += dNewGrowthN * toStem * Stem.NConcOptimum / Nsum;
+                        Stolon.EmergingTissue.NTransferredIn += dNewGrowthN * toStolon * Stolon.NConcOptimum / Nsum;
+                        dGrowthRootN += dNewGrowthN * toRoot * Root.NConcOptimum / Nsum;
                     }
                     else
                     {
@@ -3110,20 +3097,15 @@ namespace Models.AgPasture
                         throw new ApsimXException(this, "Allocation of new growth could not be completed");
                     }
                 }
-                var rootGrowth = roots[0].SetNewGrowthAllocation(dmToRoot, nToRoot);
 
                 // Update N variables
-                dGrowthShootN = Leaf.Tissue[0].NTransferedIn + Stem.Tissue[0].NTransferedIn + Stolon.Tissue[0].NTransferedIn;
-                dGrowthRootN = rootGrowth.N;
-                //foreach (PastureBelowGroundOrgan root in roots)
-                //    dGrowthRootN += root.Tissue[0].NTransferedIn;
-                // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
+                dGrowthShootN = Leaf.EmergingTissue.NTransferredIn + Stem.EmergingTissue.NTransferredIn + Stolon.EmergingTissue.NTransferredIn;
 
                 // Evaluate root elongation and allocate new growth in each layer
                 if (phenologicStage > 0)
-                    roots[0].EvaluateRootElongation(dGrowthRootDM, detachedRootDM, TemperatureLimitingFactor(Tmean(0.5)));
+                    Root.EvaluateRootElongation(dGrowthRootDM, detachedRootDM, TemperatureLimitingFactor(Tmean(0.5)));
 
-                roots[0].DoRootGrowthAllocation(dGrowthRootDM, dGrowthRootN);
+                Root.DoRootGrowthAllocation(dGrowthRootDM, dGrowthRootN);
             }
             else
             {
@@ -3140,8 +3122,8 @@ namespace Models.AgPasture
             dGrowthNet = (dGrowthShootDM - detachedShootDM) + (dGrowthRootDM - detachedRootDM);
 
             // Save some variables for mass balance check
-            double preTotalWt = AboveGroundWt + BelowGroundWt;
-            double preTotalN = AboveGroundN + BelowGroundN;
+            double preTotalWt = TotalWt;
+            double preTotalN = TotalN;
 
             // Update each organ, returns test for mass balance
             if (Leaf.Update() == false)
@@ -3153,12 +3135,8 @@ namespace Models.AgPasture
             if (Stolon.Update() == false)
                 throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for stolons");
 
-            roots[0].DoOrganUpdate();
-
-            // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
-
-            double postTotalWt = AboveGroundWt + BelowGroundWt;
-            double postTotalN = AboveGroundN + BelowGroundN;
+            if(Root.Update() == false)
+                throw new ApsimXException(this, "Growth and tissue turnover resulted in loss of mass balance for roots");
 
             // Since changing the N uptake method from basic to defaultAPSIM the tolerances below
             // need to be changed from the default of 0.00001 to 0.0001. Not sure why but was getting
@@ -3168,10 +3146,10 @@ namespace Models.AgPasture
             //    Examples\Tutorials\Sensitivity_SobolMethod.apsimx
 
             // Check for loss of mass balance in the whole plant
-            if (!MathUtilities.FloatsAreEqual(preTotalWt + dGrowthAfterNutrientLimitations - detachedShootDM - detachedRootDM - postTotalWt, 0, 0.0001))
+            if (!MathUtilities.FloatsAreEqual(preTotalWt + dGrowthAfterNutrientLimitations - detachedShootDM - detachedRootDM, TotalWt, 0.0001))
                 throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
 
-            if (!MathUtilities.FloatsAreEqual(preTotalN + dNewGrowthN - senescedNRemobilised - luxuryNRemobilised - detachedShootN - detachedRootN - postTotalN, 0, 0.0001))
+            if (!MathUtilities.FloatsAreEqual(preTotalN + dNewGrowthN - luxuryNRemobilised - senescedNRemobilised - detachedShootN - detachedRootN, TotalN, 0.00001))
                 throw new ApsimXException(this, "  " + Name + " - Growth and tissue turnover resulted in loss of mass balance");
 
             // Update LAI
@@ -3321,12 +3299,10 @@ namespace Models.AgPasture
             // Update N remobilised in each organ
             if (senescedNRemobilised > Epsilon)
             {
-                Leaf.DeadTissue.NRemobilised = Leaf.DeadTissue.NRemobilisable * fracRemobilised;
-                Stem.DeadTissue.NRemobilised = Stem.DeadTissue.NRemobilisable * fracRemobilised;
-                Stolon.DeadTissue.NRemobilised = Stolon.DeadTissue.NRemobilisable * fracRemobilised;
-                roots[0].RemobiliseDeadN(fracRemobilised);
-                //foreach (PastureBelowGroundOrgan root in roots)
-                //    root.Tissue[root.Tissue.Length - 1].DoRemobiliseN(fracRemobilised);
+                Leaf.DeadTissue.DoRemobiliseN(fracRemobilised);
+                Stem.DeadTissue.DoRemobiliseN(fracRemobilised);
+                Stolon.DeadTissue.DoRemobiliseN(fracRemobilised);
+                Root.Dead.DoRemobiliseN(fracRemobilised);
                 // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
             }
         }
@@ -3351,14 +3327,12 @@ namespace Models.AgPasture
                         // remove the luxury N
                         for (int tissue = 0; tissue < 3; tissue++)
                         {
-                            Leaf.Tissue[tissue].NRemobilised = Leaf.Tissue[tissue].NRemobilisable;
-                            Stem.Tissue[tissue].NRemobilised = Stem.Tissue[tissue].NRemobilisable;
-                            Stolon.Tissue[tissue].NRemobilised = Stolon.Tissue[tissue].NRemobilisable;
+                            Leaf.Tissue[tissue].DoRemobiliseN(1.0);
+                            Stem.Tissue[tissue].DoRemobiliseN(1.0);
+                            Stolon.Tissue[tissue].DoRemobiliseN(1.0);
                             if (tissue == 0)
                             {
-                                roots[0].RemobiliseLiveN(1.0);
-                                //foreach (PastureBelowGroundOrgan root in roots)
-                                //    root.Tissue[tissue].DoRemobiliseN(1.0);
+                                Root.Live.DoRemobiliseN(1.0);
                                 // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
                             }
                         }
@@ -3375,21 +3349,17 @@ namespace Models.AgPasture
                         Nluxury = Leaf.Tissue[tissue].NRemobilisable + Stem.Tissue[tissue].NRemobilisable + Stolon.Tissue[tissue].NRemobilisable;
                         if (tissue == 0)
                         {
-                            Nluxury += roots[0].NLiveRemobilisable;
-                            //foreach (PastureBelowGroundOrgan root in roots)
-                            //    Nluxury += root.Tissue[tissue].NRemobilisable;
+                            Nluxury += Root.Live.NRemobilisable;
                             // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
                         }
                         Nusedup = Math.Min(Nluxury, Nmissing);
                         fracRemobilised = MathUtilities.Divide(Nusedup, Nluxury, 0.0);
-                        Leaf.Tissue[tissue].NRemobilised = Leaf.Tissue[tissue].NRemobilisable * fracRemobilised;
-                        Stem.Tissue[tissue].NRemobilised = Stem.Tissue[tissue].NRemobilisable * fracRemobilised;
-                        Stolon.Tissue[tissue].NRemobilised = Stolon.Tissue[tissue].NRemobilisable * fracRemobilised;
+                        Leaf.Tissue[tissue].DoRemobiliseN(fracRemobilised);
+                        Stem.Tissue[tissue].DoRemobiliseN(fracRemobilised);
+                        Stolon.Tissue[tissue].DoRemobiliseN(fracRemobilised);
                         if (tissue == 0)
                         {
-                            roots[0].RemobiliseLiveN(fracRemobilised);
-                            //foreach (PastureBelowGroundOrgan root in roots)
-                            //    root.Tissue[tissue].DoRemobiliseN(fracRemobilised);
+                            Root.Live.DoRemobiliseN(fracRemobilised);
                             // TODO: currently only the roots at the main / home zone are considered, must add the other zones too
                         }
 

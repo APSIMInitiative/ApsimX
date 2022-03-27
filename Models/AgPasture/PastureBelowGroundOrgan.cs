@@ -96,6 +96,12 @@
 
         //----------------------- States -----------------------
 
+        /// <summary>Root live tissue.</summary>
+        public RootTissue Live { get; private set; }
+
+        /// <summary>Root dead tissue.</summary>
+        public RootTissue Dead { get; private set; }
+
         /// <summary>Rooting depth (mm).</summary>
         public double Depth { get; set; }
 
@@ -105,127 +111,73 @@
         /// <summary>Target (idealised) DM fractions for each layer (0-1).</summary>
         internal double[] TargetDistribution { get; set; }
 
-        /// <summary>Root live tissue.</summary>
-        public RootTissue Live { get; private set; }
-
-        /// <summary>Root dead tissue.</summary>
-        public RootTissue Dead { get; private set; }
-
         /// <summary>Total dry matter in this organ (kg/ha).</summary>
-        internal double DMTotal
-        {
-            get
-            {
-                double result = 0.0;
-                for (int t = 0; t < tissue.Length; t++)
-                    result += tissue[t].DM.Wt;
-
-                return result;
-            }
-        }
+        internal double DMTotal { get { return Live.DM.Wt + Dead.DM.Wt; } }
 
         /// <summary>Dry matter in the live (green) tissues (kg/ha).</summary>
-        internal double DMLive
-        {
-            get
-            {
-                double result = 0.0;
-                for (int t = 0; t < tissue.Length - 1; t++)
-                    result += tissue[t].DM.Wt;
-
-                return result;
-            }
-        }
+        internal double DMLive { get { return Live.DM.Wt; } }
 
         /// <summary>Dry matter in the dead tissues (kg/ha).</summary>
         /// <remarks>Last tissue is assumed to represent dead material.</remarks>
-        internal double DMDead
-        {
-            get { return tissue[tissue.Length - 1].DM.Wt; }
-        }
+        internal double DMDead { get { return Dead.DM.Wt; } }
 
         /// <summary>Proportion of dry matter in each soil layer (0-1).</summary>
-        internal double[] DMFractions
-        {
-            get
-            {
-                double[] result = new double[soilPhysical.Thickness.Length];
-                for (int layer = 0; layer < soilPhysical.Thickness.Length; layer++)
-                    result[layer] = tissue[0].FractionWt[layer];
-
-                return result;
-            }
-        }
+        internal double[] DMFractions { get { return Live.FractionWt; } }
 
         /// <summary>Total N amount in this organ (kg/ha).</summary>
-        internal double NTotal
-        {
-            get
-            {
-                double result = 0.0;
-                for (int t = 0; t < tissue.Length; t++)
-                    result += tissue[t].DM.N;
-
-                return result;
-            }
-        }
+        internal double NTotal { get { return Live.DM.N + Dead.DM.N; } }
 
         /// <summary>N amount in the live (green) tissues (kg/ha).</summary>
-        internal double NLive
-        {
-            get
-            {
-                double result = 0.0;
-                for (int t = 0; t < tissue.Length - 1; t++)
-                    result += tissue[t].DM.N;
-
-                return result;
-            }
-        }
+        internal double NLive { get { return Live.DM.N; } }
 
         /// <summary>N amount in the dead tissues (kg/ha).</summary>
         /// <remarks>Last tissues is assumed to represent dead material.</remarks>
-        internal double NDead
-        {
-            get { return tissue[tissue.Length - 1].DM.N; }
-        }
+        internal double NDead { get { return Dead.DM.N; } }
 
         /// <summary>Average N concentration in this organ (kg/kg).</summary>
-        internal double NconcTotal
-        {
-            get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); }
-        }
+        internal double NconcTotal{ get { return MathUtilities.Divide(NTotal, DMTotal, 0.0); } }
 
         /// <summary>Average N concentration in the live tissues (kg/kg).</summary>
-        internal double NconcLive
-        {
-            get { return MathUtilities.Divide(NLive, DMLive, 0.0); }
-        }
+        internal double NconcLive { get { return MathUtilities.Divide(NLive, DMLive, 0.0); } }
 
         /// <summary>Average N concentration in dead tissues (kg/kg).</summary>
-        internal double NconcDead
-        {
-            get { return MathUtilities.Divide(NDead, DMDead, 0.0); }
-        }
-
-        /// <summary>Amount of senesced N available for remobilisation (kg/ha).</summary>
-        internal double NSenescedRemobilisable
-        {
-            get { return tissue[tissue.Length - 1].NRemobilisable; }
-        }
+        internal double NconcDead { get { return MathUtilities.Divide(NDead, DMDead, 0.0); } }
 
         /// <summary>Amount of luxury N available for remobilisation (kg/ha).</summary>
-        internal double NLuxuryRemobilisable
-        {
-            get
-            {
-                double result = 0.0;
-                for (int t = 0; t < tissue.Length - 1; t++)
-                    result += tissue[t].NRemobilisable;
+        internal double NLuxuryRemobilisable { get { return Live.NRemobilisable; } }
 
-                return result;
-            }
-        }
+        /// <summary>Luxury N remobilised into new growth (kg/ha).</summary>
+        internal double NLuxuryRemobilised { get { return Live.NRemobilised; } }
+
+        /// <summary>Amount of senesced N available for remobilisation (kg/ha).</summary>
+        internal double NSenescedRemobilisable { get { return Dead.NRemobilisable; } }
+
+        /// <summary>Senesced N remobilised into new growth (kg/ha).</summary>
+        internal double NSenescedRemobilised { get { return Dead.NRemobilised; } }
+
+        /// <summary>DM senescing from this organ (kg/ha).</summary>
+        public double DMSenesced { get { return Live.DMTransferredOut; } }
+
+        /// <summary>N senescing from this organ (kg/ha).</summary>
+        public double NSenesced { get { return Live.NTransferredOut; } }
+
+        /// <summary>DM detached from this organ (kg/ha).</summary>
+        public double DMDetached { get { return Dead.DMTransferredOut; } }
+
+        /// <summary>N detached from this organ (kg/ha).</summary>
+        public double NDetached { get { return Dead.NTransferredOut; } }
+
+        /// <summary>DM removed from this tissue (kg/ha).</summary>
+        public double DMRemoved { get { return Live.DMRemoved + Dead.DMRemoved; } }
+
+        /// <summary>N removed from this tissue (kg/ha).</summary>
+        public double NRemoved { get { return Live.NRemoved + Dead.NRemoved; } }
+
+        /// <summary>DM added to this organ via growth (kg/ha).</summary>
+        public double DMGrowth { get { return Live.DMTransferredIn; } }
+
+        /// <summary>N added to this organ via growth (kg/ha).</summary>
+        public double NGrowth { get { return Live.NTransferredIn; } }
 
         /// <summary>Root length density by volume (mm/mm^3).</summary>
         public double[] LengthDensity
@@ -242,9 +194,6 @@
                 return result;
             }
         }
-
-        /// <summary>N remobilised from live tissue.</summary>
-        public double NLiveRemobilisable { get { return tissue[0].NRemobilisable; } }
 
         /// <summary>Amount of plant available water in the soil (mm).</summary>
         internal double[] mySoilWaterAvailable { get; private set; }
@@ -351,15 +300,13 @@
         /// <param name="biomassToRemove">The fractions of biomass to remove</param>
         public void RemoveBiomass(string biomassRemoveType, OrganBiomassRemovalType biomassToRemove)
         {
-            // Live removal
-            Live.RemoveBiomass(biomassToRemove.FractionLiveToRemove, sendToSoil: false);
-            Live.RemoveBiomass(biomassToRemove.FractionLiveToResidue, sendToSoil: true);
+            // Remove live tissue
+            Live.RemoveBiomass(biomassToRemove.FractionLiveToRemove, biomassToRemove.FractionLiveToResidue);
 
-            // Dead removal
-            Dead.RemoveBiomass(biomassToRemove.FractionDeadToRemove, sendToSoil: false);
-            Dead.RemoveBiomass(biomassToRemove.FractionDeadToResidue, sendToSoil: true);
+            // Remove dead tissue
+            Dead.RemoveBiomass(biomassToRemove.FractionDeadToRemove, biomassToRemove.FractionDeadToResidue);
 
-            if (biomassRemoveType != "Harvest")
+            if (biomassRemoveType != "Harvest" || biomassRemoveType != "Cut")
             {
                 IsKLModiferDueToDamageActive = true;
             }
@@ -378,22 +325,37 @@
         /// <param name="fractionToRemove">The fraction to kill in each tissue</param>
         internal void KillOrgan(double fractionToRemove)
         {
-            Live.MoveFractionToTissue(fractionToRemove, Dead);
+            double[] dmKilled = MathUtilities.Multiply_Value(Live.FractionWt, Live.DM.Wt * fractionToRemove);
+            double[] nKilled = MathUtilities.Multiply_Value(Live.FractionWt, Live.DM.N * fractionToRemove);
+            Dead.AddBiomass(dmKilled, nKilled);
+            Live.AddBiomass(MathUtilities.Multiply_Value(dmKilled, -1.0), MathUtilities.Multiply_Value(nKilled, -1.0));
         }
 
         /// <summary>Computes the DM and N amounts turned over for all tissues.</summary>
         /// <param name="turnoverRate">The turnover rate for each tissue</param>
-        /// <returns>The DM and N amount detached from this organ</returns>
-        internal BiomassAndN DoTissueTurnover(double[] turnoverRate)
+        internal void CalculateTissueTurnover(double[] turnoverRate)
         {
-            Live.DoTissueTurnover(turnoverRate[0], BottomLayer, Dead, NconcLive - NConcOptimum);
-            return Dead.DoTissueTurnover(turnoverRate[1], BottomLayer, null, NconcLive - NConcMinimum);
+            Live.DoTissueTurnover(turnoverRate[0], Dead, NConcOptimum);
+            Dead.DoTissueTurnover(turnoverRate[1], null, NConcMinimum);
         }
 
         /// <summary>Updates each tissue, make changes in DM and N effective.</summary>
-        internal void DoOrganUpdate()
+        internal bool Update()
         {
-            RootTissue.UpdateTissues(Live, Dead);
+            // save current state
+            double previousDM = DMTotal;
+            double previousN = NTotal;
+
+            // update all tissues
+            Live.Update();
+            Dead.Update();
+
+            // check mass balance
+            bool dmIsOk = MathUtilities.FloatsAreEqual(Math.Abs(previousDM + DMGrowth - DMDetached - DMTotal), 0.0);
+            bool nIsOk = MathUtilities.FloatsAreEqual(Math.Abs(previousN + NGrowth - NLuxuryRemobilised - NSenescedRemobilised - NDetached - NTotal), 0.0);
+            if (dmIsOk == false || nIsOk == false)
+                previousDM += 0.0;
+            return (dmIsOk || nIsOk);
         }
 
         /// <summary>Finds out the amount of plant available water in the soil.</summary>
@@ -682,35 +644,12 @@
             }
         }
 
-        /// <summary>Set new growth to root.</summary>
-        /// <param name="dmToRoot">Dry matter growth.</param>
-        /// <param name="nToRoot">Nitrogen growth.</param>
-        /// <returns></returns>
-        public BiomassAndN SetNewGrowthAllocation(double dmToRoot, double nToRoot)
-        {
-            return Live.SetNewGrowthAllocation(dmToRoot, nToRoot);
-        }
-
         /// <summary>Detach roots.</summary>
         /// <param name="dryMatter">Dry matter to detach.</param>
         /// <param name="nitrogen">Nitrogen to detach.</param>
         public void DetachRoots(double dryMatter, double nitrogen)
         {
             Live.DetachBiomass(dryMatter, nitrogen);
-        }
-
-        /// <summary>Remobilise N from live tissues.</summary>
-        /// <param name="fracRemobilised">Fraction remobilised.</param>
-        public void RemobiliseLiveN(double fracRemobilised)
-        {
-            Live.DoRemobiliseN(fracRemobilised);
-        }
-
-        /// <summary>Remobilise N from live tissues.</summary>
-        /// <param name="fracRemobilised">Fraction remobilised.</param>
-        public void RemobiliseDeadN(double fracRemobilised)
-        {
-            tissue[1].DoRemobiliseN(fracRemobilised);
         }
 
         /// <summary>Remove water from soil - uptake.</summary>
